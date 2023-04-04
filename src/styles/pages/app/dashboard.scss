@@ -1,0 +1,28 @@
+.banner {
+  //background-image:    url('static/images/bg2.jpg');
+  background-image:    url('static/images/bg5.jpg');
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center right;              /* optional, center the image */
+
+}
+
+.circleFloat {
+  top:-30px;
+}
+
+.avatarAnim {
+  top: 50%;  /* position the top  edge of the element at the middle of the parent */
+  left: 50%; /* position the left edge of the element at the middle of the parent */
+
+  transform: translate(-50%, -50%);
+}
+
+
+.product {
+  background-image:    url('static/images/temp/example.jpeg');
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center right;              /* optional, center the image */
+
+}

@@ -1,0 +1,88 @@
+.flip-container {
+  padding: 0px !important;
+  margin-left: auto !important;
+  margin-right: 0px !important;
+  justify-content: flex-end!important;
+  display: flex!important;
+}
+.flip-card {
+  font-size: 1.3rem !important;
+}
+
+.flip-clock__slot {
+  font-size: 10px !important;
+  text-transform: lowercase;
+  color:black;
+}
+.forceWhite {
+  .flip-clock__slot {
+    color:white;
+  }
+}
+@media screen and (max-width: 700px) {
+    .flip-clock__slot {
+      color: white;
+    }
+}
+.flip-card__top,
+.flip-card__top-4digits,
+.flip-card__bottom,
+.flip-card__bottom-4digits,
+.flip-card__back-bottom,
+.flip-card__back-bottom-4digits,
+.flip-card__back::before,
+.flip-card__back::after {
+  color: white !important;
+}
+
+
+.flip-card__top, .flip-card__top-4digits {
+  background: $navy-bg !important;
+}
+
+.flip-card__bottom, .flip-card__bottom-4digits {
+  background: $accent !important;
+}
+
+.flip-card__back-bottom, .flip-card__back-bottom-4digits {
+  background: $accent !important;
+}
+
+
+.flip-card__back::before,
+.flip-card__back::after,
+.flip-card__back-4digits::before,
+.flip-card__back-4digits::after {
+  background: $accent !important;
+}
+
+.pending {
+  .flip-card__top, .flip-card__top-4digits {
+    background: #e7e7e7 !important;
+    color:$navy-bg!important;
+
+  }
+
+  .flip-card__bottom {
+    background: #818181 !important;
+    color:$navy-bg!important;
+
+  }
+
+  .flip-card__back-bottom {
+    background: #e7e7e7 !important;
+    color:$navy-bg!important;
+
+  }
+
+
+  .flip-card__back::before,
+  .flip-card__back::after {
+    background: #818181 !important;
+    color:$navy-bg!important;
+  }
+}
+
+.flip-card__bottom, .flip-card__back-bottom {
+  border-top: 0 !important;
+}

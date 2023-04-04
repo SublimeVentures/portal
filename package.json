@@ -11,6 +11,14 @@
   "dependencies": {
     "next": "13.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "sass": "1.60.0",
+    "vanilla-tilt": "1.8.0"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "7.0.0",
+    "autoprefixer": "10.4.14",
+    "postcss": "8.4.21",
+    "tailwindcss": "3.3.1"
   }
 }

@@ -1,0 +1,76 @@
+$alias-easeOut: cubic-bezier(0.43, 0.195, 0.02, 1);
+$alias-easeOut2: cubic-bezier(0.77, 0, 0.175, 1);
+$alias-easeOut3: cubic-bezier(0.165, 0.84, 0.44, 1);
+$alias-easeOut4: cubic-bezier(0.4, 0, 0.2, 1);
+$trns-comm: cubic-bezier(0.03,0.98,0.52,0.99);
+
+.nav-enter-active,
+.nav-leave-active {
+  transition: opacity 500ms $alias-easeOut4!important;
+}
+
+.nav-enter,
+.nav-leave-to {
+  opacity: 0!important;
+}
+
+//page fade
+  .fade-enter-active,
+  .fade-leave-active {
+      transition: opacity 0.3s!important;
+  }
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0!important;
+}
+
+
+.faded-enter-active, .faded-leave-active {
+    transition: opacity .5s;
+}
+.faded-enter, .faded-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+
+.layout-enter-active,
+.layout-leave-active {
+    transition: opacity 0.5s;
+}
+.layout-enter,
+.layout-leave-active {
+    opacity: 0;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+    transition: all 0.5s ease;
+}
+.scale-enter-from,
+.scale-leave-to {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.drain-enter-active, .drain-leave-active {
+    transition: transform 1s;
+}
+
+.drain-enter, .drain-leave-to {
+    transform: translateY(100%);
+}
+
+.drain-enter-to, .drain-leave {
+    transform: translateY(0);
+}
+
+
+.modal-fade-enter,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}

@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&family=Work+Sans:wght@300;400;500;700&display=swap');
+
+@import 'transitions';
+@import 'gradients';
+
+@import 'components/spacer';
+@import 'components/hamburger';
+@import 'components/navbar';
+@import 'components/button';
+@import 'components/carousel';
+@import 'components/modal';
+
+
+@import 'pages/home/about';
+
+
+$animation-length: 0.5s;
+$navy: #12151e;
+$navy-accent: #101d2d;
+$navy-bg: #161b26;
+$btn: #f5a400;
+$accent: #242836;
+$btn_hover: #ffbc28;
+$bright_pink: #F4157E;
+$dull_pink:   #CD106E;
+$dull_black:   #fffff;
+$dull_empty:   #729db0;
+$original_pink:   #ff0083;
+$btn: #f5a400;
+$btn_hover: #ffbc28;
+$btn_active: #c2890d;
+
+//@import "compass";
+
+//loader options
+$theme: #ff0083;
+$loader-size: 150px;
+$speed: 1.5s;
+
+
+//@import 'pages/investments/investments';
+//@import 'pages/app/sidebar';
+//@import 'pages/app/dashboard';
+
+//@import 'components/toggle';
+//@import 'components/wavelink';
+//@import 'components/timeline';
+//@import 'components/fliper';
+//@import 'components/input';
+//@import 'components/tooltip';
+//@import 'components/table';
+//@import 'components/dropdown';
+//@import 'components/chroma';
+
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-kerning: normal;
+  -webkit-text-size-adjust: 100%;
+  font-family: 'Montserrat', sans-serif;
+
+}
+
+.bg {
+  background-image:    url('/img/bg5.jpg');
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center center;              /* optional, center the image */
+  //
+  //&::before{
+  //  content: '';
+  //  position: absolute;
+  //  display: flex;
+  //  left: 0;
+  //  right: 0;
+  //  top: 0;
+  //  bottom: 0;
+  //  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 80%, rgb(18, 21, 30) 100%);
+  //  opacity: 0.9;
+  //}
+}
+
+.bgFit {
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center center;              /* optional, center the image */
+
+}
+
+.disabled {
+  opacity: 0.75;
+  pointer-events: none!important;
+  cursor: not-allowed! important;
+}
+
+
+//
+//.f-montserrat {
+//    font-family: 'Montserrat', sans-serif;
+//}
+
+//.f-work {
+//    font-family: 'Work Sans', sans-serif;
+//}
+//
+
+//
+//.w-17{
+//    width:3.75rem;
+//}
+//.h-17{
+//    height:3.75rem;
+//}
+//.w-16{
+//    width:3.5rem;
+//}
+//.h-16{
+//    height:3.5rem;
+//}
+//.min-w-16{
+//    min-width:3.5rem;
+//}
+//.min-h-16{
+//    min-height:3.5rem;
+//}
+//.w-15{
+//    width:3rem;
+//}
+//.h-15{
+//    height:3rem;
+//}
+//.w-14{
+//    width:2.5rem;
+//}
+//.h-14{
+//    height:2.5rem;
+//}
+//.w-13{
+//    width:2rem;
+//}
+//.h-13{
+//    height:2rem;
+//}
+//.w-12{
+//    width:1.75rem;
+//}
+//.h-12{
+//    height:1.75rem;
+//}
+//.w-11{
+//    width:1.5rem;
+//}
+//.h-11{
+//    height:1.5rem;
+//}
+//.w-icon{
+//    width:2.1rem;
+//}
+//
+//.test234 {
+//    margin-right: -150px!important;
+//}
+//.percentMove {
+//    margin-right: -60px!important;
+//}
+//
+//
+//.glowing {
+//    text-shadow: rgba(185,37,81,0.9) 0px 0px 52px;
+//}

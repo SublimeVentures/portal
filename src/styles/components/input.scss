@@ -1,0 +1,166 @@
+/* Setting general styles (font, variables, centering) */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+.inputStyle {
+  --color-white: black;
+  --color-bg: rgba(126, 201, 7, 0.34);
+  --color-gray: #767676;
+  --color-black: #242424;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  box-sizing: border-box;
+
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 16px;
+    width: 270px;
+  }
+
+  /* General input styles */
+
+  input,
+  .input-group {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 48px;
+
+    border-radius: 8px;
+    border: 0px;
+    font-size: inherit;
+    box-sizing: border-box;
+  }
+
+  /* Text Fields */
+
+  input:not([type="submit"]) {
+    border: 2px solid var(--color-gray);
+    padding: 16px;
+    background-color: var(--color-bg);
+  }
+
+  input:not([type="submit"]):focus {
+    background-color: var(--color-white);
+    border: 2px solid var(--color-black);
+    outline: none;
+  }
+
+  input:not([type="submit"]):not([value=""]) {
+    border: 2px solid var(--color-black);
+  }
+
+  label {
+    font-size: 16px;
+    position: absolute;
+    display: inline-block;
+    left: 16px;
+    top: 14px;
+    pointer-events: none;
+    z-index: 1;
+    color: var(--color-gray);
+    opacity: 0.5;
+
+    transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    -moz-transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    -webkit-transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+  }
+
+  input[type="password"] {
+    letter-spacing: 2;
+  }
+
+  input:focus ~ label,
+  input.highlight ~ label,
+  //input:not([value=""]) ~ label
+  {
+    top: -10px;
+    left: 8px;
+    font-size: 14px;
+    opacity: 1;
+    padding: 1px 8px;
+    border-radius: 2px;
+  }
+
+  input.highlight ~ label {
+    top: -10px;
+    left: 8px;
+    font-size: 14px;
+    opacity: 1;
+    padding: 1px 8px;
+    border-radius: 2px;
+    background-color: var(--color-bg);
+    color: var(--color-black);
+  }
+
+  input:focus ~ label {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+
+.currency-input-group {
+  display: flex;
+  flex-direction: row;
+
+  input{
+    color: white;
+    background: #0e1118;
+    outline: none;
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+  }
+  @media screen and (max-width: 640px) {
+    input {
+      width:200px
+    }
+  }
+  .centr {
+    padding-top:1px;
+    padding-bottom:1px;
+  }
+
+  label {
+    left: 16px;
+    top: 18px;
+    pointer-events: none;
+    z-index: 1;
+    color: #d3d3d3;
+    opacity: 0.7;
+    transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    -moz-transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    -webkit-transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+  }
+
+  .active {
+    label {
+      top: -10px;
+      left: 8px;
+      font-size: 14px;
+      opacity: 1;
+      padding: 1px 8px;
+      border-radius: 2px;
+      background-color: #5f87a6;
+      color: white;
+    }
+  }
+
+}

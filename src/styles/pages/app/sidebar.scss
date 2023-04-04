@@ -1,0 +1,24 @@
+.sidebar-item {
+  will-change: transform, box-shadow, background, border;
+  z-index:2;
+  transform-style: preserve-3d;
+  transform: perspective(250px) scale3d(1,1,1);
+  transition: all 0.5s cubic-bezier(0.03,0.98,0.52,0.99);
+  border: 1px solid transparent;
+  min-height: 50px;
+
+  &.nuxt-link-exact-active {
+    background:white;
+    color: black!important;
+    border: 1px solid white;
+    box-shadow: 0 0 20px -10px white;
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  &:hover{
+    border: 1px solid white;
+    backdrop-filter: blur(5px);
+    transform: scale3d(1.1, 1.1, 1.1);
+
+  }
+}
