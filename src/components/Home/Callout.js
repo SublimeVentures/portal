@@ -2,6 +2,7 @@ import { ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PlusIcon from "@/svg/Plus.svg";
 import DiscordIcon from "@/svg/Discord.svg";
 import TwitterIcon from "@/svg/Twitter.svg";
+
 export default function Investors() {
   return (
   <div className="calloutGradient flex flex-col justify-center text-white pt-10">
@@ -32,65 +33,3 @@ export default function Investors() {
   </div>
 
 )}
-//
-// <script setup>
-// import IconDiscord from '@/assets/svg/Discord.svg?component'
-// import IconTwitter from '@/assets/svg/Twitter.svg?component'
-// import IconPlus from '@/assets/svg/Plus.svg?component'
-//
-//
-// // export default {
-// //   name: 'About',
-// //   components: {
-// //     IconDiscord, IconTwitter, IconPlus
-// //   },
-// //   mounted() {
-// //     // this.socket = this.$nuxtSocket({
-// //     //   name: 'main',
-// //     //   reconnection: true,
-// //     // })
-// //     // /* Listen for events: */
-// //     // this.socket.on('msg', (msg) => {
-// //     //     /* Handle event */
-// //     //     console.log("tickkkkke!", msg)
-// //     //   })
-// //     // this.showInvestmentRisk = !(this.$cookie.get('investmentReminder')?.length > 5);
-// //     // this.$store.dispatch('citizen/autoLogin', {}, {root: true})
-// //     // document.onreadystatechange = () => {
-// //     //   if (document.readyState === 'complete') {
-// //     //     this.$store.commit('system/showLoading', {
-// //     //       type: 'assets',
-// //     //       status: true
-// //     //     })
-// //     //   }
-// //     // }
-// //
-// //   },
-// //   methods: {
-// //     method1() {
-// //       console.log("aaa2")
-// //       /* Emit events */
-// //       this.socket.emit('hello', {
-// //         hello: 'world'
-// //       }, (resp) => {
-// //         /* Handle response, if any */
-// //       })
-// //     },
-// //     async method2() {
-// //       const aaa = await this.$axios.$get('/api/test')
-// //       console.log("aaa",aaa)
-// //     },
-// //     // handleReminder(){
-// //     //   this.$cookie.set('investmentReminder', `${this.$moment.now()}`, 30)
-// //     //   this.showInvestmentRisk = false;
-// //     // },
-// //     async login(){
-// //       const web3 = new this.$Web3(ethereum);
-// //       const wallets = await web3.currentProvider.request({ method: 'eth_requestAccounts' })
-// //       console.log("dupa", wallets)
-// //       this.wallets = wallets
-// //       // window.web3 = new this.$Web3(window.ethereum);
-// //     }
-// //   },
-// // }
-// </script>

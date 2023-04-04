@@ -3,8 +3,6 @@ import { useRouter } from 'next/router'
 export default function Navbar() {
     const router = useRouter()
 
-
-
     return (
         <div className="bg-footer f-work text-white w-full p-10 text-center ">
             {/*:class="{'notFullGradient': routeName==='login' || routeName==='investments' || routeName==='join'}"*/}

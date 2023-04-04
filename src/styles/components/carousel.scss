@@ -1,4 +1,38 @@
-//@import "vue3-carousel-3d/dist/index.css";
-//.carousel-3d-slide {
-//  background:theme('colors.slides')!important;
-//}
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+.slick-slide {
+      float: left;
+      height: 100%;
+      min-height: 1px;
+}
+.slick-track{
+      display: flex!important;
+      align-items: center;
+}
+
+.center .slick-center .customSlide {
+      color: #e67e22;
+      opacity: 1;
+      -ms-transform: scale(1.08);
+      transform: scale(1.08);
+}
+
+.center .customSlide {
+      opacity: .8;
+      transition: all .3s ease;
+}
+
+
+.customSlide {
+      color: #fff;
+      font-size: 36px;
+      line-height: 100px;
+      margin: 15px;
+      position: relative;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      background:theme('colors.slides')!important;
+      padding:20px;
+}
