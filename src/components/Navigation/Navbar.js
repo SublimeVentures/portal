@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import Link from 'next/link';
-import useScrollPosition from "@/hooks/useScrollPosition";
+import useScrollPosition from "@/lib/hooks/useScrollPosition";
 
 export default function Navbar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false)

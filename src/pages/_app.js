@@ -1,6 +1,7 @@
 import '@/styles/globals.scss'
-
 import Layout from '@/components/Layout/Layout';
+
+
 
 export default function App({ Component, pageProps }) {
     const renderWithLayout =
@@ -10,6 +11,8 @@ export default function App({ Component, pageProps }) {
         };
 
   return renderWithLayout(
-      <Component {...pageProps} />
+      <main>
+        <Component {...pageProps} />
+      </main>
   );
 }
