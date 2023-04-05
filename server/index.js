@@ -4,9 +4,8 @@ import next from 'next';
 import * as socketio from 'socket.io';
 import {connectDB} from "./services/mongo";
 import {connectQueue} from "./services/zeromq";
-const public_routes = require('./routes/public')
-
-
+import {getOffersPublic} from "./queries/offer";
+import publicRoute from './routes/public.js';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -21,11 +20,8 @@ nextApp.prepare().then(async() => {
 
     await connectDB()
     // await connectQueue()
+    app.use('/api/public', publicRoute);
 
-    app.use(public_routes)
-    app.get('/hello', async (_, res) => {
-        res.send('Hello World')
-    });
 
     io.on('connection', (socket) => {
         console.log('connection');

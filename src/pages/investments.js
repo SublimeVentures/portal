@@ -1,30 +1,63 @@
 import HeroBg from "@/components/Home/HeroBg";
+import {
+    useQuery,
+    dehydrate, QueryClient
+} from '@tanstack/react-query'
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import {fetchPublicInvestments} from "@/fetchers/public";
+
+export const getServerSideProps = async() => {
+    const queryClient = new QueryClient()
+    await queryClient.prefetchQuery({queryKey: ["publicInvestment"], queryFn: fetchPublicInvestments})
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient)
+        }
+    }
+}
 
 
 export default function InvestmentsPublic() {
-    const investments = [];
+    const { isLoading, error, data, isFetching, isError } = useQuery({
+            queryKey: ["publicInvestment"],
+            queryFn: fetchPublicInvestments,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            staleTime: 144000
+        }
+    );
+
+
+
     const renderList = () => {
+        if(isLoading) {
+            return;
+        }
+        if(isError) {
+            return;
+        }
         return (
-            <ul className="masonry-list flex flex-wrap justify-center mx-auto sinvest:ml-0 sinvest:mr-0 ">
-                {investments.map(el => {
-                    return (<li className="tile-case" id={el.name}>
-                        <a href="#">
-                            <div className="tile-primary-content bgFit"
-                                 style={{backgroundImage: 'url(' + el.d_image + ')'}}></div>
-                            <div className="tile-secondary-content">
-                                <h2>{el.d_type}</h2>
-                                <p>{el.b_name}</p>
-                            </div>
-                        </a>
-                    </li>)
-                })
-                }
-            </ul>)
+                <ul className="masonry-list flex flex-wrap justify-center mx-auto sinvest:ml-0 sinvest:mr-0 ">
+                    {data.map((el,i) => {
+                        return <li className="tile-case" key={i}>
+                            <a href="#">
+                                <div className="tile-primary-content bgFit"
+                                     style={{backgroundImage: 'url(' + el.d_image + ')'}}></div>
+                                <div className="tile-secondary-content">
+                                    <h2>{el.d_type}</h2>
+                                    <p>{el.b_name}</p>
+                                </div>
+                            </a>
+                        </li>
+                    })
+                    }
+                </ul>)
     }
 
     return (
         <>
-            <HeroBg subtitle={'who we support'} title={'previous deals'}/>
+            <HeroBg subtitle={'who we support'} title={'previous deals'} content={renderList()} extraClass={"investmentsPublic"}/>
+            {/*<ReactQueryDevtools initialIsOpen />*/}
         </>
     )
 }

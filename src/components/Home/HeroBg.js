@@ -1,4 +1,4 @@
-export default function HeroBg({subtitle, title, content}) {
+export default function HeroBg({subtitle, title, content, extraClass}) {
     return (
         <div className="min-h-screen bg-navy">
             <div className="bg min-h-screen"></div>
@@ -14,8 +14,8 @@ export default function HeroBg({subtitle, title, content}) {
                     </div>
 
                 </div>
-                <div className="flex p-10 md:max-w-[80%] md:mx-auto xl:max-w-[1200px]">
-                    {content}
+                <div className={`flex p-10 md:max-w-[80%] md:mx-auto xl:max-w-[1200px] ${extraClass}`}>
+                   {content}
                 </div>
             </div>
 

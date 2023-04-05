@@ -1,14 +1,15 @@
-import { Router } from'express';
+import express from 'express';
+const router = express.Router();
 import {getOffersPublic} from "../queries/offer";
 import {getPartners} from "../queries/partner";
-const router = Router()
 
-router.get('/public/investments', async (req, res) => {
+router.get('/investments', async (req, res) => {
   res.status(200).json(await getOffersPublic())
-})
 
-router.get('/public/partners', async (req, res) => {
+});
+
+router.get('/partners', async (req, res) => {
   res.status(200).json(await getPartners())
 })
 
-module.exports = router
+export default router;

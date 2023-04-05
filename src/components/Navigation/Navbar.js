@@ -19,7 +19,6 @@ export default function Navbar() {
     const disableMobile = () => setIsMobileOpen(false)
 
     useEffect(() => {
-
         setIsOnTop(scrollPosition < 50);
     }, [scrollPosition])
 
