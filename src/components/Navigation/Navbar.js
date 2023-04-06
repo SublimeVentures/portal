@@ -23,7 +23,7 @@ export default function Navbar() {
     }, [scrollPosition])
 
     return (
-        <div className="fixed w-full z-20 text-uppercase tracking-widest">
+        <div className="fixed w-full z-10 text-uppercase tracking-widest">
             <div
                 className={`flex flex-row items-center w-full py-7 px-10 navShadow hamburger ${!isOnTop || isMobileOpen ? 'blurredBG' : ''}`}>
                 <Link href="/" onClick={disableMobile}>

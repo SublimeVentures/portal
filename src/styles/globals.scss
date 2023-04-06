@@ -98,7 +98,15 @@ body {
   cursor: not-allowed! important;
 }
 
+.fullWidth {
+  .btn-wrap {
+    width: 100%;
+  }
 
+  button {
+    width: 100%;
+  }
+}
 //
 //.f-montserrat {
 //    font-family: 'Montserrat', sans-serif;

@@ -7,7 +7,7 @@ export const ButtonIconSize = {
 }
 
 
-export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, isPrimary, isWide, isWider, size, zoom, slot, icon}) {
+export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, isPrimary, isWide, isWider, size, zoom, slot, icon, handler}) {
     const [isActive, setIsActive] = useState(false)
     const tilt = useRef(null);
 
@@ -22,6 +22,9 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
                 setIsActive(false)
             }, 2000);
         }
+        if(handler) {
+            handler()
+        }
     }
 
 
@@ -34,14 +37,12 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
               ${!isPrimary && "out-btn"}
               ${isLoading || isDisabled && "disabled"}  
             `}>
-                {/* add tilt*/}
                     <button className={`btn ${size}`} onClick={animate} ref={tilt}>
                     <div className={`
                       flex items-center justify-center relative
                       ${isWide && "ls-md"}
                       ${isWider && "ls-lg"}
                     `}>
-                        {/*{RenderIcon}*/}
                         {icon}
                         {text}
                         {isLoading && <div  className={`

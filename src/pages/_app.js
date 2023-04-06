@@ -1,10 +1,13 @@
 import '@/styles/globals.scss'
+import { WagmiConfig } from 'wagmi'
 import Layout from '@/components/Layout/Layout';
 import {
     Hydrate,
     QueryClient,
     QueryClientProvider,
 } from '@tanstack/react-query'
+
+import { chains, client, walletConnectProjectId } from '@/lib/web3/wagmi'
 import axios from 'axios';
 import {useState} from "react";
 
@@ -20,10 +23,12 @@ export default function App({ Component, pageProps }) {
         };
 
   return renderWithLayout(
-      <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-              <Component  {...pageProps} />
-          </Hydrate>
-      </QueryClientProvider>
+      <WagmiConfig client={client}>
+          <QueryClientProvider client={queryClient}>
+              <Hydrate state={pageProps.dehydratedState}>
+                  <Component  {...pageProps} />
+              </Hydrate>
+          </QueryClientProvider>
+      </WagmiConfig>
   );
 }

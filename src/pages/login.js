@@ -3,6 +3,7 @@ import Link from "next/link";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import RocketIcon from "@/svg/Rocket.svg";
 import PartnerSlide from "@/components/SignupFlow/PartnerSlide";
+import LoginModal from "@/components/SignupFlow/LoginModal";
 import {dehydrate, QueryClient, useQuery} from "@tanstack/react-query";
 import {fetchPartners} from "@/fetchers/public";
 import { Slider3D } from 'react-slider-3d';
@@ -51,7 +52,7 @@ export default function InvestmentsPublic() {
                                 <RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
                             </Link>
                         </div>
-                        {/*<HomeLoginModal :login-partner="false" />*/}
+                        <LoginModal isPartner={false}/>
                     </div>
 
                 </div>
@@ -83,7 +84,8 @@ export default function InvestmentsPublic() {
                     </div>
 
                     <div className="flex flex-1 mx-auto items-end mt-5 lg:mt-0">
-                        {/*<HomeLoginModal :login-partner="true" />*/}
+                        <LoginModal isPartner={true}/>
+
                     </div>
                 </div>
 

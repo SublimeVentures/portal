@@ -4,9 +4,10 @@
     "allowJs": true,
     "checkJs": false,
     "esModuleInterop": true,
-    "module": "commonjs",
+    "module": "CommonJS",
     "outDir": "dist",
-    "noEmit": false
+    "noEmit": false,
+    "target": "es6"
   },
   "include": ["server"]
 }
