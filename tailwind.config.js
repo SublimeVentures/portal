@@ -26,17 +26,16 @@ module.exports = {
 
         //
         //
-        // 'navy-accent': '#161b26',
-        // 'footer': '#090b0f',
-        // 'app-bg': '#182122',
-        // 'app-bg-split': '#273031',
-        // 'app-success': '#b1e365',
-        // 'app-error': '#b92551',
-        // 'app-success-dark': '#6ca21a',
-        // 'app-success2': '#ace160',
-        // 'app-accent': '#383a9b',
-        // 'app-accent2': '#5f87a6',
-        // 'app-white': '#f9fbfa',//
+        'navy-accent': '#161b26',
+        'app-bg': '#182122',
+        'app-bg-split': '#273031',
+        'app-success': '#b1e365',
+        'app-error': '#b92551',
+        'app-success-dark': '#6ca21a',
+        'app-success2': '#ace160',
+        'app-accent': '#383a9b',
+        'app-accent2': '#5f87a6',
+        'app-white': '#f9fbfa',
       },
       screens: {
         sinvest: '700px',

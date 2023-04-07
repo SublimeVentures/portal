@@ -17,6 +17,8 @@
 
 @import 'pages/home/about';
 @import 'pages/home/investments';
+@import 'pages/app/dashboard';
+@import 'pages/app/sidebar';
 
 
 $animation-length: 0.5s;
@@ -45,7 +47,6 @@ $speed: 1.5s;
 
 //@import 'pages/investments/investments';
 //@import 'pages/app/sidebar';
-//@import 'pages/app/dashboard';
 
 //@import 'components/toggle';
 //@import 'components/wavelink';

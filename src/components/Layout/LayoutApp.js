@@ -1,26 +1,10 @@
-import {getServerSession} from "next-auth/next";
-
-// export const getServerSideProps = async(context) => {
-//     const session = await getServerSession(context.req, context.res)
-//     console.log("seesion", session)
-//     if(!session){
-//         return {
-//             redirect: {
-//                 permanent: false,
-//                 destination: "/login"
-//             }
-//         }
-//     }
-//
-// }
+import Sidebar from "@/components/Navigation/Sidebar";
 
 export default function Layout({ children }) {
     return (
-        <>
-            <header>Website2</header>
+        <div className="w-full flex flex-col collap:flex-row bg-navy2 min-h-screen">
+            <Sidebar/>
             <main>{children}</main>
-            <aside>Sidebar</aside>
-            <footer>&copy; Website</footer>
-        </>
+        </div>
     );
 }

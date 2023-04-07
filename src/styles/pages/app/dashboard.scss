@@ -1,6 +1,6 @@
 .banner {
   //background-image:    url('static/images/bg2.jpg');
-  background-image:    url('static/images/bg5.jpg');
+  background-image:    url('/img/bg5.jpg');
   background-size:     cover;                      /* <------ */
   background-repeat:   no-repeat;
   background-position: center right;              /* optional, center the image */
@@ -20,7 +20,7 @@
 
 
 .product {
-  background-image:    url('static/images/temp/example.jpeg');
+  background-image:    url('/img/temp/example.jpeg');
   background-size:     cover;                      /* <------ */
   background-repeat:   no-repeat;
   background-position: center right;              /* optional, center the image */

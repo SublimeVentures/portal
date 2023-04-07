@@ -36,3 +36,45 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+## ToDo
+
+- change network
+- upewnić się że fetchery nie trigerrują się co chwilę
+- lazy loading na ofertach i vault
+- w vault osobna kategoria z aktywnymi 
+- 
+
+//ticker per investment | whale | partner
+//data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne
+//bump w inwestycyjny barze
+
+- https://docs.delegate.cash/delegatecash/
+- logowanie, whale nft / partner nft check on login on-chain
+- osobna tablica na "one time thing" z przypisanymi inwestycjami
+- smartcontract - usunąć nft check na partnerach, zostawić tylko address /// usnąć checki gdzie się da?
+- dates per whale and community
+
+
+- connect discord to notifs
+- list files / updates from projects
+- align connect to the bottom
+- alternative login
+- connect
+- loader
+- transition on pages
+- client-only
+- metadata
+
+transition on onbaording
+
+
+- timeline (dashboard, setting)
+- modal
+- responsive (sidebar, pages)
+- invest page
+  -- counter
+
+
+referral systems

@@ -27,7 +27,7 @@ export default function Navbar() {
             <div
                 className={`flex flex-row items-center w-full py-7 px-10 navShadow hamburger ${!isOnTop || isMobileOpen ? 'blurredBG' : ''}`}>
                 <Link href="/" onClick={disableMobile}>
-                    <div className="f-work text-white text-2xl flex">
+                    <div className="flex">
                         <img className="w-15 " src="/img/logo.png"/>
                     </div>
                 </Link>
@@ -42,7 +42,7 @@ export default function Navbar() {
 
                 <div className="md:hidden flex flex-1 justify-end">
                     <div onClick={toggleMobile}>
-                        <div className={` burger ${isMobileOpen ? 'opened' : ''}`}>
+                        <div className={` burger ${isMobileOpen && 'opened'}`}>
                             <div></div>
                         </div>
                         <label>
