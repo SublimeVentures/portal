@@ -1,4 +1,5 @@
 import '@/styles/globals.scss'
+import { SessionProvider } from "next-auth/react"
 import { WagmiConfig } from 'wagmi'
 import Layout from '@/components/Layout/Layout';
 import {
@@ -13,7 +14,7 @@ import {useState} from "react";
 
 axios.defaults.baseURL = 'http://localhost:3000';
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
     const [queryClient] = useState(() => new QueryClient())
 
     const renderWithLayout =
@@ -24,11 +25,13 @@ export default function App({ Component, pageProps }) {
 
   return renderWithLayout(
       <WagmiConfig client={client}>
-          <QueryClientProvider client={queryClient}>
-              <Hydrate state={pageProps.dehydratedState}>
-                  <Component  {...pageProps} />
-              </Hydrate>
-          </QueryClientProvider>
+          <SessionProvider session={session}>
+              <QueryClientProvider client={queryClient}>
+                  <Hydrate state={pageProps.dehydratedState}>
+                      <Component  {...pageProps} />
+                  </Hydrate>
+              </QueryClientProvider>
+          </SessionProvider>
       </WagmiConfig>
   );
 }

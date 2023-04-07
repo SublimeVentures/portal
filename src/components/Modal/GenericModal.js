@@ -1,9 +1,7 @@
-import {Fragment, useState} from "react";
+import {Fragment} from "react";
 import { Dialog, Transition } from '@headlessui/react'
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import WalletIcon from "@/svg/Wallet.svg";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/svg/Cancel.svg";
-import Image from "next/image";
 export default function LoginModal({isOpen, closeModal, title, content }) {
 
   return (

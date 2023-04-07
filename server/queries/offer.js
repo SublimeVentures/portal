@@ -1,6 +1,6 @@
-import Offer from "../models/offer.js";
+const Offer = require("../models/offer.js");
 
-export async function upsertOffer(data) {
+ async function upsertOffer(data) {
     return Offer.findOneAndUpdate(
         {
             id: data.id
@@ -23,6 +23,8 @@ export async function upsertOffer(data) {
     );
 }
 
-export async function getOffersPublic() {
+ async function getOffersPublic() {
   return Offer.find({c_showPublic: true}, {b_name:1, d_image:1, d_type:1, _id:0})
 }
+
+module.exports = { upsertOffer, getOffersPublic }

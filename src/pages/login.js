@@ -1,25 +1,21 @@
+import {useState} from "react";
+import dynamic from "next/dynamic";
 import HeroBg from "@/components/Home/HeroBg";
 import Link from "next/link";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import RocketIcon from "@/svg/Rocket.svg";
 import PartnerSlide from "@/components/SignupFlow/PartnerSlide";
-import LoginModal from "@/components/SignupFlow/LoginModal";
+const LoginModal = dynamic(() => import('@/components/SignupFlow/LoginModal'), {ssr: false,})
 import {dehydrate, QueryClient, useQuery} from "@tanstack/react-query";
 import {fetchPartners} from "@/fetchers/public";
 import { Slider3D } from 'react-slider-3d';
-export const getServerSideProps = async() => {
-    const queryClient = new QueryClient()
-    await queryClient.prefetchQuery({queryKey: ["partnerList"], queryFn: fetchPartners})
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient)
-        }
-    }
-}
-
+import { getServerSession } from "next-auth/next"
+import {useAccount, useNetwork, useSignMessage} from "wagmi";
+import {SiweMessage} from "siwe";
+import {getCsrfToken, signIn} from "next-auth/react";
+import RocketIcon from "@/svg/Rocket.svg";
+import WalletIcon from "@/svg/Wallet.svg";
 //todo: store
-//todo: login button
-export default function InvestmentsPublic() {
+export default function Login() {
     const { isLoading, error, data, isFetching, isError } = useQuery({
             queryKey: ["partnerList"],
             queryFn: fetchPartners,
@@ -28,6 +24,63 @@ export default function InvestmentsPublic() {
             staleTime: 144000
         }
     );
+
+    const { signMessageAsync } = useSignMessage()
+    const { chain } = useNetwork()
+    const { address, connector, isConnected  } = useAccount()
+    let [errorMsg, setErrorMsg] = useState("")
+    let [messageSigned, setMessageSigned] = useState(false)
+    let [isPartnerLogin, setIsPartnerLogin] = useState(false)
+    let [walletSelectionOpen, setIsWalletSelectionOpen] = useState(false)
+
+
+    const signMessage = async (forcedAddress) => {
+        setMessageSigned(true)
+        try {
+            const message = new SiweMessage({
+                domain: window.location.host,
+                address: forcedAddress? forcedAddress : address,
+                statement: "INVEST GROUND FLOOR\n" +
+                    "DON'T BE EXIT LIQUIDITY",
+                uri: window.location.origin,
+                version: "1",
+                chainId: chain?.id,
+                nonce: await getCsrfToken(),
+            })
+            const signature = await signMessageAsync({
+                message: message.prepareMessage(),
+            })
+            await signIn("credentials", {
+                message: JSON.stringify(message),
+                // redirect: false,
+                signature
+            })
+        } catch (error) {
+            setMessageSigned(false)
+            setErrorMsg(error.message)
+        }
+    }
+
+
+    const handleConnect = async (isPartner) => {
+        if(address && isConnected) {
+            await signMessage()
+            return;
+        }
+
+        setIsPartnerLogin(isPartner)
+        setIsWalletSelectionOpen(true)
+    }
+
+    const account = useAccount({
+        async onConnect({ address, connector, isReconnected }) {
+            console.log('Connected login change', { address, connector, isReconnected })
+            if(!messageSigned && walletSelectionOpen && address) {
+                await signMessage(address)
+            }
+        },
+    })
+
 
 
 
@@ -52,7 +105,8 @@ export default function InvestmentsPublic() {
                                 <RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
                             </Link>
                         </div>
-                        <LoginModal isPartner={false}/>
+                        <RoundButton text={'Connect'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(false)} />
+
                     </div>
 
                 </div>
@@ -84,19 +138,41 @@ export default function InvestmentsPublic() {
                     </div>
 
                     <div className="flex flex-1 mx-auto items-end mt-5 lg:mt-0">
-                        <LoginModal isPartner={true}/>
+                        <RoundButton text={'Connect'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(true)} />
 
                     </div>
                 </div>
 
             </div>
-    )
+        )
     }
 
     return (
         <>
             <HeroBg subtitle={'Welcome'} title={'sing with whales'} content={renderOptions()} />
+            <LoginModal isPartner={isPartnerLogin} signError={errorMsg} model={walletSelectionOpen} setter={() => {setIsWalletSelectionOpen(false)}}/>
         </>
     )
 }
 
+export const getServerSideProps = async(context) => {
+    const session = await getServerSession(context.req, context.res)
+    console.log("session", session)
+    if(session){
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/app"
+            }
+        }
+    }
+
+    const queryClient = new QueryClient()
+    await queryClient.prefetchQuery({queryKey: ["partnerList"], queryFn: fetchPartners})
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient),
+            csrfToken: await getCsrfToken(context),
+        }
+    }
+}

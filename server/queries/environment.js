@@ -1,6 +1,7 @@
-import Environment from "../models/environment.js";
+// import Environment from "../models/environment.js";
+const Environment = require("../models/environment.js");
 
-export async function upsertEnvironment(name, value) {
+async function upsertEnvironment(name, value) {
     return Environment.findOneAndUpdate(
         {
             name: name.toLowerCase()
@@ -10,7 +11,10 @@ export async function upsertEnvironment(name, value) {
     );
 }
 
-export async function getEnvironment() {
+async function getEnvironment() {
     const env = await Environment.find({}, 'name value -_id')
     return Object.assign({}, ...(env.map(item => ({ [item.name]: item.value }) )));
 }
+
+
+module.exports = { getEnvironment, upsertEnvironment }

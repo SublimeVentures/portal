@@ -1,9 +1,10 @@
-import mongoose from "mongoose";
-import {getEnvironment} from "../queries/environment";
+const mongoose = require("mongoose");
+const {getEnvironment} = require("../queries/environment");
 
-export let env = {}
 
-export async function connectDB() {
+let env = {}
+
+async function connectDB() {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
             keepAlive: true,
@@ -20,3 +21,5 @@ export async function connectDB() {
         console.error("DB connection failed.", err);
     }
 }
+
+module.exports = { connectDB, env }

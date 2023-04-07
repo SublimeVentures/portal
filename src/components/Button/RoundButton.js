@@ -9,13 +9,16 @@ export const ButtonIconSize = {
 
 export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, isPrimary, isWide, isWider, size, zoom, slot, icon, handler}) {
     const [isActive, setIsActive] = useState(false)
+    const [isExecuting, setExecuting] = useState(false)
     const tilt = useRef(null);
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {scale: zoom ? zoom : 1, speed: 1000, max: is3d ? 10 : 1});
     }, [zoom]);
 
-    const animate = () => {
+    const animate = async () => {
+        if(isExecuting) return;
+        setExecuting(true)
         if (showParticles) {
             setIsActive(true)
             setTimeout(function () {
@@ -23,8 +26,9 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
             }, 2000);
         }
         if(handler) {
-            handler()
+            await handler()
         }
+        setExecuting(false)
     }
 
 
@@ -35,7 +39,7 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
               ${showParticles && "particles"}
               ${isPrimary && "full-btn"}
               ${!isPrimary && "out-btn"}
-              ${isLoading || isDisabled && "disabled"}  
+              ${isLoading || isDisabled || isExecuting && "disabled"}  
             `}>
                     <button className={`btn ${size}`} onClick={animate} ref={tilt}>
                     <div className={`

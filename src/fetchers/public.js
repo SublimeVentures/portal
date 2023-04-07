@@ -11,7 +11,7 @@ export const fetchPublicInvestments = async () => {
 export const fetchPartners = async () => {
     console.log("Fetching partners");
     const {data} = await axios.get("/api/public/partners")
-    console.log("partners", data)
+    // console.log("partners", data)
     return data
 }
 

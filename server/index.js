@@ -1,11 +1,13 @@
-import express from 'express';
-import * as http from 'http';
-import next from 'next';
-import * as socketio from 'socket.io';
-import {connectDB} from "./services/mongo";
-import {connectQueue} from "./services/zeromq";
-import {getOffersPublic} from "./queries/offer";
-import publicRoute from './routes/public.js';
+// import express from 'express';
+const express = require('express')
+const { createServer } = require('http')
+const next = require('next')
+const socketio = require('socket.io')
+const {connectDB} = require("./services/mongo");
+const {router: publicRoute} = require("./routes/public.js");
+// import {connectQueue} from "./services/zeromq";
+// import {getOffersPublic} from "./queries/offer";
+// import publicRoute from './routes/public.js';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -14,7 +16,7 @@ const nextHandler = nextApp.getRequestHandler();
 
 nextApp.prepare().then(async() => {
     const app = express();
-    const server = http.createServer(app);
+    const server = createServer(app);
     const io = new socketio.Server();
     io.attach(server);
 
