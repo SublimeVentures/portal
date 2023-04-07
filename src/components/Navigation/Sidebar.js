@@ -16,7 +16,6 @@ import IconSetting from "@/svg/Setting.svg";
 export default function Sidebar() {
     let [isMobileOpen, setIsMobileOpen] = useState(false)
 
-
     const toggleMobile = (e) => {
         e.preventDefault();
         setIsMobileOpen(isMobileOpen => !isMobileOpen)
@@ -61,7 +60,7 @@ export default function Sidebar() {
     return (
         <aside className="flex sticky top-0 z-50 collap:relative">
             <div
-                className="p-7 flex flex-col border-r border-app-bg-split text-white max-h-screen sticky top-0  hidden collap:flex">
+                className="p-7 flex flex-col border-r border-app-bg-split text-app-white max-h-screen sticky top-0 hidden collap:flex">
                 <div className="flex">
                     <Link href="/app">
                         <div className="flex">
@@ -69,7 +68,7 @@ export default function Sidebar() {
                         </div>
                     </Link>
                 </div>
-                <nav className="flex flex-col pt-10 flex-1 f-work text-md font-medium">
+                <nav className="flex flex-col pt-10 flex-1 font-accent text-md font-medium">
                     <div className="flex flex-col gap-2">
                         {menu.groupUser.map(el => {
                             return <Link href={el.link} key={el.name}
@@ -132,7 +131,7 @@ export default function Sidebar() {
                     leaveTo="opacity-0"
                 >
                     <div
-                        className="blurredBgColor border-b border-app-bg-split absolute top-[72px] text-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest">
+                        className="blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest">
                         <div className="flex flex-col gap-2">
                             {menu.groupUser.map(el => {
                                 return <Link href={el.link} key={el.name}
@@ -161,8 +160,6 @@ export default function Sidebar() {
                 </Transition.Child>
             </Transition>
         </aside>
-
-
     )
 }
 

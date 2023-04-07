@@ -78,3 +78,5 @@ transition on onbaording
 
 
 referral systems
+
+- extract transition variable to separate file (dialogs)
