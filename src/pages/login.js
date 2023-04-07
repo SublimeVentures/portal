@@ -11,6 +11,7 @@ import { Slider3D } from 'react-slider-3d';
 import { getServerSession } from "next-auth/next"
 import {useAccount, useNetwork, useSignMessage} from "wagmi";
 import {SiweMessage} from "siwe";
+import { useRouter } from 'next/router';
 import {getCsrfToken, signIn} from "next-auth/react";
 import RocketIcon from "@/svg/Rocket.svg";
 import WalletIcon from "@/svg/Wallet.svg";
@@ -24,7 +25,7 @@ export default function Login() {
             staleTime: 144000
         }
     );
-
+    const router = useRouter();
     const { signMessageAsync } = useSignMessage()
     const { chain } = useNetwork()
     const { address, connector, isConnected  } = useAccount()
@@ -50,11 +51,13 @@ export default function Login() {
             const signature = await signMessageAsync({
                 message: message.prepareMessage(),
             })
+
+            const callbackUrl= router.query.callbackUrl;
             await signIn("credentials", {
                 message: JSON.stringify(message),
                 redirect: true,
                 signature,
-                callbackUrl:'/'
+                callbackUrl: callbackUrl ?? '/app'
             })
         } catch (error) {
             setMessageSigned(false)
