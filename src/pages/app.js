@@ -21,7 +21,7 @@ export default function ProtectedApp() {
     <>
 
         <div className={"h-[500px] w-[500px] mt-10"}>
-            <button className={'cursor cursor-pointer'} onClick={()=>{signOut()}}>logout</button>
+            <button className={'cursor cursor-pointer'} onClick={()=>{signOut({ callbackUrl: "/" })}}>logout</button>
 
         </div>
     </>

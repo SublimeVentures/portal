@@ -161,7 +161,6 @@ export default function Login() {
 
 export const getServerSideProps = async(context) => {
     const session = await getServerSession(context.req, context.res)
-    console.log("session", session)
     if(session){
         return {
             redirect: {
