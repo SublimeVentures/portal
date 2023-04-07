@@ -5,7 +5,7 @@ export default function RoundBanner({title, subtitle, action}) {
             <div className="m-10 ml-12 flex flex-col items-start max-w-[70%] relative flex flex-1">
                 <div className="text-3xl font-bold mb-2 mt-2">{ title }</div>
                 <div>{ subtitle }</div>
-                <div className="mt-auto -ml-1 mt-5">
+                <div className="mt-5 -ml-1">
                     {action}
                 </div>
             </div>

@@ -1,16 +1,11 @@
-import '@/styles/globals.scss'
 import { SessionProvider } from "next-auth/react"
 import { WagmiConfig } from 'wagmi'
-import Layout from '@/components/Layout/Layout';
-import {
-    Hydrate,
-    QueryClient,
-    QueryClientProvider,
-} from '@tanstack/react-query'
-
-import { chains, client, walletConnectProjectId } from '@/lib/web3/wagmi'
 import axios from 'axios';
 import {useState} from "react";
+import {Hydrate, QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import { client } from '@/lib/web3/wagmi'
+import Layout from '@/components/Layout/Layout';
+import '@/styles/globals.scss'
 
 axios.defaults.baseURL = 'http://localhost:3000';
 

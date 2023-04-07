@@ -77,7 +77,7 @@ export default function ProtectedApp() {
                         <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
                                      action={<RoundButton text={'Learn more'} isWide={true} zoom={1.1}
                                                           size={'text-sm sm'}
-                                                          icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}/>
+                                                          icon={<ReadIcon className={ButtonIconSize.hero} />}/>}/>
 
                     </div>
                     <div className="grid grid-cols-1 w-full pt-5 gap-5 sm:grid-cols-12 sm:gap-0">
