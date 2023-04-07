@@ -52,8 +52,9 @@ export default function Login() {
             })
             await signIn("credentials", {
                 message: JSON.stringify(message),
-                // redirect: false,
-                signature
+                redirect: true,
+                signature,
+                callbackUrl:'/'
             })
         } catch (error) {
             setMessageSigned(false)

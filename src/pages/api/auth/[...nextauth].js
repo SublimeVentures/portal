@@ -63,7 +63,10 @@ export default async function auth(req, res) {
         session: {
             strategy: "jwt",
         },
-
+        pages:{
+          signIn:'/login',
+          signOut:'/login',
+        },
         secret: process.env.NEXTAUTH_SECRET,
         callbacks: {
             async session({ session, token }) {
