@@ -42,27 +42,34 @@ export default function AppDashboard() {
 
     return (
         <>
-            <div className="flex flex-col tablet:flex-row">
-                <div className="flex flex-col flex-1">
-                    <div className="sm:p-5">
+            <div className="grid grid-cols-12  gap-y-10 mobile:gap-10">
+                    <div className="col-span-12 flex flex-col gap-10 custom:col-span-8">
                         <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
                                      action={<RoundButton text={'Learn more'} isWide={true} zoom={1.1}
                                                           size={'text-sm sm'}
                                                           icon={<ReadIcon className={ButtonIconSize.hero} />}/>}/>
-                    </div>
-                    <div className="grid grid-cols-1 w-full pt-5 gap-5 sm:grid-cols-12 sm:gap-0">
                         <Stats/>
                     </div>
+                    <div className="col-span-12 flex custom:col-span-4">
+                        <Profile/>
+                    </div>
+
+            </div>
+
+
+            <div className="grid grid-cols-12 flex flex-1 gap-y-10 mobile:gap-10">
+                <div className="col-span-12 flex flex-1 custom:col-span-8">
+                    <div className="flex flex-1 bg-navy-accent rounded-xl">s</div>
                 </div>
-                <div className="flex flex-1 pb-5 sm:p-5 overflow-hidden tablet:max-w-[30%]">
-                    <Profile/>
+                <div className="col-span-12 flex flex-1 custom:col-span-4">
+                    <div className="flex flex-1 flex-col bg-navy-accent rounded-xl">d</div>
                 </div>
             </div>
 
-            <div  className="flex flex-col tablet:flex-row min-h-[300px] flex-1">
-                <div className="flex flex-1 flex-col bg-navy-accent m-5 rounded-xl">ww</div>
-                <div className="flex flex-1 flex-col bg-navy-accent m-5 rounded-xl tablet:max-w-[30%]"></div>
-            </div>
+            {/*<div  className="flex flex-col tablet:flex-row min-h-[300px] flex-1">*/}
+            {/*    <div className="flex flex-1 flex-col bg-navy-accent m-5 rounded-xl">ww</div>*/}
+            {/*    <div className="flex flex-1 flex-col bg-navy-accent m-5 rounded-xl tablet:max-w-[30%]"></div>*/}
+            {/*</div>*/}
 
             {/*<div className="sm:m-5 rounded-xl bg-navy-accent flex flex-1 tablet:max-h-[400px] min-h-[300px]">*/}
             {/*    <div className="min-w-[500px] flex-col flex flex-1 pt-5 sm:pt-0 sm:pl-5 tablet:flex-none sm:flex-row">*/}

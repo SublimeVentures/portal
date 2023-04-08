@@ -27,21 +27,21 @@ export default function Stats({isSuccess, icon, content}) {
 
 
     return (
-        <>
-            <div className="col-span-4 py-5 sm:p-5 flex  ">
+        <div className="flex grid grid-cols-12 mt-5 gap-y-10 mobile:gap-10 ">
+            <div className="col-span-12 mt-5 flex sm:col-span-4 sm:mt-0">
                 <RoundContainer isSuccess={true} icon={<BitcoinIcon className="w-14 -mt-2"/>}
                                 content={projectInvestedWidget()} forcedClass={"min-h-[150px]"}/>
             </div>
-            <div className="col-span-4  py-5 sm:p-5 flex ">
+            <div className="col-span-12 mt-5 flex sm:col-span-4 sm:mt-0">
                 <RoundContainer isSuccess={false} icon={<KeyIcon className="w-10 -mt-2"/>}
                                 content={stakeLeftWidget()} forcedClass={"min-h-[150px]"}/>
             </div>
-            <div className="col-span-4 py-5 sm:p-5 flex ">
+            <div className="col-span-12 mt-5 flex sm:col-span-4 sm:mt-0">
                 <RoundContainer isSuccess={false} icon={<ChartIcon className="w-10 -mt-2"/>}
                                 content={apyWidget()} forcedClass={"min-h-[150px]"}/>
 
             </div>
-        </>
+        </div>
 
     )
 }

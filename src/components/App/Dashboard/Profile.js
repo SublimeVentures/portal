@@ -19,8 +19,8 @@ export default function Profile({isSuccess, icon, content}) {
 
     return (
         <div
-            className="rounded-xl bg-navy-accent flex flex-1 justify-center items-center flex-col sm:gap-10 sm:flex-row tablet:flex-col tablet:gap-0">
-            <div className="relative cursor-pointer p-10 sm:p-5 tablet:p-0" ref={tiltAvatar}>
+            className="flex flex-1 flex-col justify-center items-center rounded-xl bg-navy-accent sm:flex-row custom:flex-col">
+            <div className="relative cursor-pointer p-10" ref={tiltAvatar}>
                 <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
                     <lottie-player
                         ref={ref}

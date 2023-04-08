@@ -38,9 +38,11 @@ module.exports = {
         'app-white': '#f9fbfa',
       },
       screens: {
+        mobile: '520px',
         sinvest: '700px',
         collap: '900px',
-        tablet: '1200px',
+        custom: '1100px',
+        // tablet: '1200px',
         invest: '1420px',
       },
       inset: {
