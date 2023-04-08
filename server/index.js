@@ -4,10 +4,10 @@ const { createServer } = require('http')
 const next = require('next')
 const socketio = require('socket.io')
 const {connectDB} = require("./services/mongo");
+const {connectWeb3} = require("./services/web3");
 const {router: publicRoute} = require("./routes/public.js");
+const {router: validateRoute} = require("./routes/validate.js");
 // import {connectQueue} from "./services/zeromq";
-// import {getOffersPublic} from "./queries/offer";
-// import publicRoute from './routes/public.js';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -22,7 +22,9 @@ nextApp.prepare().then(async() => {
 
     await connectDB()
     // await connectQueue()
+    await connectWeb3()
     app.use('/api/public', publicRoute);
+    app.use('/api/validate', validateRoute);
 
 
     io.on('connection', (socket) => {

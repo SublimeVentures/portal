@@ -40,7 +40,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 
-- change network
 - upewnić się że fetchery nie trigerrują się co chwilę
 - lazy loading na ofertach i vault
 - w vault osobna kategoria z aktywnymi 
@@ -57,28 +56,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - dates per whale and community
 
 
+
+- watch for chain on investment page
+- timeline (dashboard, setting)
+
+
+- loader
+- metadata
+- DEPLOY
+- connect delegate address delegate.cash
 - connect discord to notifs
 - list files / updates from projects
-- align connect to the bottom
-- alternative login
-- connect
-- loader
 - transition on pages
-- client-only
-- metadata
-
-transition on onbaording
-
-
-- timeline (dashboard, setting)
-- modal
-- responsive (sidebar, pages)
-- invest page
-  -- counter
-
-
-referral systems
-
 - extract transition variable to separate file (dialogs)
 - extract style for citcap
 - citcap - https://layerzero.network/ menu effect + font
+- onboarding whales
+- referral systems

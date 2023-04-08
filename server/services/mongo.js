@@ -4,6 +4,10 @@ const {getEnvironment} = require("../queries/environment");
 
 let env = {}
 
+function getEnv () {
+    return env
+}
+
 async function connectDB() {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
@@ -22,4 +26,4 @@ async function connectDB() {
     }
 }
 
-module.exports = { connectDB, env }
+module.exports = { connectDB, getEnv }

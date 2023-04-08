@@ -1,8 +1,11 @@
 import ArrowIcon from "@/assets/svg/Arrow.svg";
 import VanillaTilt from "vanilla-tilt";
 import {useEffect, useRef} from "react";
+import { useSession } from "next-auth/react"
+import {fetchPublicInvestments} from "@/fetchers/login";
+export default function Profile() {
+    const { data: session, status } = useSession()
 
-export default function Profile({isSuccess, icon, content}) {
     const tiltAvatar = useRef(null);
     const ref = useRef(null);
 
@@ -40,8 +43,9 @@ export default function Profile({isSuccess, icon, content}) {
                 <div className="flex flex-row gap-5 justify-center items-center mt-3">
                     <div>
                         <div
-                            className="bg-app-success2 rounded-3xl text-black px-2 py-1 text-sm font-bold">+12.34%
+                            className="bg-app-success2 rounded-3xl text-black px-2 py-1 text-sm font-bold" onClick={async () => {await fetchPublicInvestments("0x3C02Eb9Ea7e0Ef7C80d13D4d83856c83b033ED6a")}}>+12.34%
                         </div>
+                        {JSON.stringify(session)}
                     </div>
                     <div
                         className="bg-app-success2 rounded-full text-black px-2 py-1 text-sm rotate-180 h-10 w-10 flex justify-center items-center">

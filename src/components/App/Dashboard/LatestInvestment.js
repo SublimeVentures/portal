@@ -6,11 +6,6 @@ import RocketIcon from "@/assets/svg/Rocket.svg";
 export default function LatestInvestment({isSuccess, icon, content}) {
     const tiltAvatar = useRef(null);
 
-    const openNFT = () => {
-
-    }
-
-
     useEffect(() => {
         VanillaTilt.init(tiltAvatar.current, {scale: 1.1, speed: 1000, max: 10});
     }, []);

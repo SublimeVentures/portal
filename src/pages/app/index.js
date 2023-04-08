@@ -3,44 +3,14 @@ import {getServerSession} from "next-auth/next";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import RoundBanner from "@/components/App/RoundBanner";
 import ReadIcon from "@/assets/svg/Read.svg";
-import RocketIcon from "@/assets/svg/Rocket.svg";
-import VanillaTilt from "vanilla-tilt";
-import {useEffect, useRef} from "react";
 import Stats from "@/components/App/Dashboard/Stats";
 import Profile from "@/components/App/Dashboard/Profile";
 import LatestInvestment from "@/components/App/Dashboard/LatestInvestment";
 import Updates from "@/components/App/Dashboard/Updates";
 
 
-// export const getServerSideProps = async(context) => {
-//     const session = await getServerSession(context.req, context.res)
-//     console.log("seesion", session)
-//     if(!session){
-//         return {
-//             redirect: {
-//                 permanent: false,
-//                 destination: "/login"
-//             }
-//         }
-//     }
-//
-// }
-
 //todo: project's updates updates
 export default function AppDashboard() {
-    const tiltOffer = useRef(null);
-
-    const investmentActive = true
-
-    const offerTiltData = () => {
-        if (true) return {scale: 1.01, speed: 1000, max: 5}
-        else return {scale: 1, max: 0}
-    }
-
-    useEffect(() => {
-        VanillaTilt.init(tiltOffer.current, offerTiltData);
-    }, []);
-
 
     return (
         <>
