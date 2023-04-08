@@ -4,15 +4,15 @@ import {Transition} from '@headlessui/react'
 import {useState} from "react";
 import { useRouter } from "next/router";
 import {signOut} from "next-auth/react";
-import IconDashboard from "@/svg/Dashboard.svg";
-import IconVault from "@/svg/Vault.svg";
-import IconLight from "@/svg/Light.svg";
-import IconExchange from "@/svg/Exchange.svg";
-import IconBell from "@/svg/Bell.svg";
-import IconDiscord from "@/svg/Discord.svg";
-import IconWiki from "@/svg/Wiki.svg";
-import IconLogout from "@/svg/Logout.svg";
-import IconSetting from "@/svg/Setting.svg";
+import IconDashboard from "@/assets/svg/Dashboard.svg";
+import IconVault from "@/assets/svg/Vault.svg";
+import IconLight from "@/assets/svg/Light.svg";
+import IconExchange from "@/assets/svg/Exchange.svg";
+import IconBell from "@/assets/svg/Bell.svg";
+import IconDiscord from "@/assets/svg/Discord.svg";
+import IconWiki from "@/assets/svg/Wiki.svg";
+import IconLogout from "@/assets/svg/Logout.svg";
+import IconSetting from "@/assets/svg/Setting.svg";
 
 export default function Sidebar() {
     let [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -69,7 +69,6 @@ export default function Sidebar() {
         })
     }
 
-    console.log("aa", router.asPath)
     return (
         <aside className="flex sticky top-0 z-50 collap:relative">
             <div

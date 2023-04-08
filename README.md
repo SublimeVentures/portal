@@ -80,3 +80,5 @@ transition on onbaording
 referral systems
 
 - extract transition variable to separate file (dialogs)
+- extract style for citcap
+- citcap - https://layerzero.network/ menu effect + font

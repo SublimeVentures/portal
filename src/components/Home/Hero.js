@@ -1,5 +1,5 @@
 import {RoundButton, ButtonIconSize} from '@/components/Button/RoundButton';
-import PlayIcon from "@/svg/Play.svg";
+import PlayIcon from "@/assets/svg/Play.svg";
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router'
 

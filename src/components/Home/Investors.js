@@ -1,13 +1,13 @@
 import Slider from "react-slick";
-import Multicoin from '@/svg/logo/Multicoin.svg?component'
-import Binance from '@/svg/logo/BinanceLabs.svg?component'
-import CitCap from '@/svg/logo/CitCap.svg?component'
-import CryptoCom from '@/svg/logo/CryptoCom.svg?component'
-import Coinbase from '@/svg/logo/Coinbase.svg?component'
-import A16z from '@/svg/logo/A16z.svg?component'
-import Animoca from '@/svg/logo/Animoca.svg?component'
-import Qcp from '@/svg/logo/Qcp.svg?component'
-import Sequoia from '@/svg/logo/Sequoia.svg?component'
+import Multicoin from '@/assets/svg/logo/Multicoin.svg?component'
+import Binance from '@/assets/svg/logo/BinanceLabs.svg?component'
+import CitCap from '@/assets/svg/logo/CitCap.svg?component'
+import CryptoCom from '@/assets/svg/logo/CryptoCom.svg?component'
+import Coinbase from '@/assets/svg/logo/Coinbase.svg?component'
+import A16z from '@/assets/svg/logo/A16z.svg?component'
+import Animoca from '@/assets/svg/logo/Animoca.svg?component'
+import Qcp from '@/assets/svg/logo/Qcp.svg?component'
+import Sequoia from '@/assets/svg/logo/Sequoia.svg?component'
 
 export default function Investors() {
 

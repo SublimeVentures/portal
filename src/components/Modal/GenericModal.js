@@ -1,7 +1,7 @@
 import {Fragment} from "react";
 import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import CancelIcon from "@/svg/Cancel.svg";
+import CancelIcon from "@/assets/svg/Cancel.svg";
 export default function LoginModal({isOpen, closeModal, title, content }) {
 
   return (

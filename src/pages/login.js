@@ -13,8 +13,8 @@ import {useAccount, useNetwork, useSignMessage} from "wagmi";
 import {SiweMessage} from "siwe";
 import { useRouter } from 'next/router';
 import {getCsrfToken, signIn} from "next-auth/react";
-import RocketIcon from "@/svg/Rocket.svg";
-import WalletIcon from "@/svg/Wallet.svg";
+import RocketIcon from "@/assets/svg/Rocket.svg";
+import WalletIcon from "@/assets/svg/Wallet.svg";
 //todo: store
 export default function Login() {
     const { isLoading, error, data, isFetching, isError } = useQuery({

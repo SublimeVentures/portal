@@ -1,7 +1,7 @@
 import { ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import PlusIcon from "@/svg/Plus.svg";
-import DiscordIcon from "@/svg/Discord.svg";
-import TwitterIcon from "@/svg/Twitter.svg";
+import PlusIcon from "@/assets/svg/Plus.svg";
+import DiscordIcon from "@/assets/svg/Discord.svg";
+import TwitterIcon from "@/assets/svg/Twitter.svg";
 
 export default function Investors() {
   return (
