@@ -19,8 +19,8 @@ export default function Profile({isSuccess, icon, content}) {
 
     return (
         <div
-            className="flex flex-1 flex-col justify-center items-center rounded-xl bg-navy-accent sm:flex-row custom:flex-col">
-            <div className="relative cursor-pointer p-10" ref={tiltAvatar}>
+            className="flex flex-1 flex-col justify-center items-center rounded-xl bg-navy-accent py-10 sm:flex-row custom:flex-col">
+            <div className="relative cursor-pointer px-10 sm:-ml-10 custom:ml-0" ref={tiltAvatar}>
                 <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
                     <lottie-player
                         ref={ref}
@@ -34,9 +34,9 @@ export default function Profile({isSuccess, icon, content}) {
                 <img className="w-27 h-27 rounded-full shadow-lg" onClick={openNFT}
                      src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=80"/>
             </div>
-            <div className="flex flex-col justify-center items-center pb-10 sm:pb-0">
-                <div className="sm:mt-7 mb-1">Portfolio Size</div>
-                <div className="font-bold text-3xl">$41 000</div>
+            <div className="flex flex-col justify-center items-center pt-10 sm:pt-0 custom:pt-10">
+                <div>Portfolio Size</div>
+                <div className="font-bold text-3xl mt-1">$41 000</div>
                 <div className="flex flex-row gap-5 justify-center items-center mt-3">
                     <div>
                         <div

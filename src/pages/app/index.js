@@ -8,6 +8,8 @@ import VanillaTilt from "vanilla-tilt";
 import {useEffect, useRef} from "react";
 import Stats from "@/components/App/Dashboard/Stats";
 import Profile from "@/components/App/Dashboard/Profile";
+import LatestInvestment from "@/components/App/Dashboard/LatestInvestment";
+import Updates from "@/components/App/Dashboard/Updates";
 
 
 // export const getServerSideProps = async(context) => {
@@ -58,49 +60,13 @@ export default function AppDashboard() {
 
 
             <div className="grid grid-cols-12 flex flex-1 gap-y-10 mobile:gap-10">
-                <div className="col-span-12 flex flex-1 custom:col-span-8">
-                    <div className="flex flex-1 bg-navy-accent rounded-xl">s</div>
+                <div className="col-span-12 flex flex-1 custom:col-span-8 ">
+                    <LatestInvestment/>
                 </div>
-                <div className="col-span-12 flex flex-1 custom:col-span-4">
-                    <div className="flex flex-1 flex-col bg-navy-accent rounded-xl">d</div>
+                <div className="col-span-12 custom:col-span-4 flex">
+                    <Updates/>
                 </div>
             </div>
-
-            {/*<div  className="flex flex-col tablet:flex-row min-h-[300px] flex-1">*/}
-            {/*    <div className="flex flex-1 flex-col bg-navy-accent m-5 rounded-xl">ww</div>*/}
-            {/*    <div className="flex flex-1 flex-col bg-navy-accent m-5 rounded-xl tablet:max-w-[30%]"></div>*/}
-            {/*</div>*/}
-
-            {/*<div className="sm:m-5 rounded-xl bg-navy-accent flex flex-1 tablet:max-h-[400px] min-h-[300px]">*/}
-            {/*    <div className="min-w-[500px] flex-col flex flex-1 pt-5 sm:pt-0 sm:pl-5 tablet:flex-none sm:flex-row">*/}
-            {/*        /!*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="true" className="hidden sm:flex"/>*!/*/}
-            {/*        /!*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="false" className="flex sm:hidden"/>*!/*/}
-            {/*        <div className="flex flex-col justify-center items-center mx-auto pb-5 sm:pb-0">*/}
-            {/*            <div className="text-2xl font-bold pt-5 sm:pt-0">Heroes of Mavia</div>*/}
-            {/*            <div className="flex flex-col flex-wrap justify-center items-center pb-5">*/}
-            {/*                /!*<div className="text-xl font-bold mt-1 mb-2 sm:mb-0 whitespace-nowrap">{{ investmentSteps[currentInvestmentStep].step }} ends in</div>*!/*/}
-            {/*                /!*<client-only>*!/*/}
-            {/*                /!*    <div className="forceWhite">*!/*/}
-            {/*                /!*        <FlipCountdown deadline="2025-12-25 00:00:00"></FlipCountdown>*!/*/}
-            {/*                /!*    </div>*!/*/}
-            {/*                /!*</client-only>*!/*/}
-            {/*            </div>*/}
-            {/*            <RoundButton text={'Read more'} isWide={true} size={'text-sm sm'}*/}
-            {/*                         icon={<RocketIcon className={ButtonIconSize.hero}/>}/>*/}
-
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*    <div className="rounded-tr-xl rounded-br-xl flex-1 p-5 cursor-pointer product hidden tablet:flex"*/}
-            {/*         ref={tiltOffer}>*/}
-            {/*        <div*/}
-            {/*            className={` flex flex-1 w-full h-full ${ !investmentActive && 'blur-sm brightness-75'} `}></div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<div className="mt-5 sm:m-5 rounded-xl bg-navy-accent flex flex-1 tablet:max-h-[400px] min-h-[300px]  tablet:hidden">*/}
-            {/*    <div className="rounded-xl  flex-1 p-5 cursor-pointer product" ref={tiltOffer}>*/}
-            {/*        <div className={` flex flex-1 w-full h-full ${!investmentActive && 'blur-sm brightness-75'} `}></div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
 
 
         </>
