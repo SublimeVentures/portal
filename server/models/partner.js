@@ -44,6 +44,12 @@ const PartnerSchema = new mongoose.Schema(
             default: false,
             index: true
         },
+        isEnabled: {
+            type: Boolean,
+            required: true,
+            default: false,
+            index: true
+        },
     },
     {
         versionKey: false,

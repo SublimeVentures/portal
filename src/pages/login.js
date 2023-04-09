@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import {getCsrfToken, signIn} from "next-auth/react";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
+import PAGE from "@/routes";
 //todo: store
 export default function Login() {
     const { isLoading, error, data, isFetching, isError } = useQuery({
@@ -105,7 +106,7 @@ export default function Login() {
                     </div>
                     <div className="flex flex-col gap-5 justify-end flex-1 mt-10 lg:mt-0">
                         <div className="my-auto disabled">
-                            <Link href="/">
+                            <Link href={PAGE.Join}>
                                 <RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
                             </Link>
                         </div>

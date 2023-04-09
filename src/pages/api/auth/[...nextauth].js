@@ -1,9 +1,10 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 // import { getCsrfToken } from "next-auth/react"
-import { SiweMessage } from "siwe"
+import {SiweMessage} from "siwe"
 import {fetchSessionData} from "@/fetchers/login";
 import {checkDelegate} from "@/lib/web3/checkDelegate";
+import PAGE from "@/routes";
 
 
 export default async function auth(req, res) {
@@ -37,11 +38,11 @@ export default async function auth(req, res) {
                         nonce: csrf,
                     })
 
-                    if(!result.success) return null;
+                    if (!result.success) return null;
 
                     const type = await fetchSessionData(siwe.address)
 
-                    if(type) {
+                    if (type) {
                         return {...{address: siwe.address}, ...type}
                     } else {
                         return await checkDelegate(siwe.address)
@@ -65,17 +66,17 @@ export default async function auth(req, res) {
         session: {
             strategy: "jwt",
         },
-        pages:{
-          signIn:'/login',
-          signOut:'/',
+        pages: {
+            signIn: PAGE.Login,
+            signOut: PAGE.Landing,
         },
         secret: process.env.NEXTAUTH_SECRET,
         callbacks: {
-            jwt: async ({ token, user }) => {
+            jwt: async ({token, user}) => {
                 user && (token.user = user)
                 return token
             },
-            session: async ({ session, token }) => {
+            session: async ({session, token}) => {
                 session.user = token.user
                 return session
             }

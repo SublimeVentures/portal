@@ -46,6 +46,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 --- dates per whale and community
 ---  data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne
 
+- przenieść się na sepolię 
+- //todo: replace with env
 - smartcontract - usunąć nft check na partnerach, zostawić tylko address /// usnąć checki gdzie się da?
 - zaktualizować model offer na soldiity
 - poprawić testy solidity
@@ -55,7 +57,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - upewnić się że fetchery nie trigerrują się co chwilę
 
 
-
+- filler for portfolio size
 - loader (login)
 - timeline (dashboard, setting)
 - metadata

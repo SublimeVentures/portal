@@ -1,6 +1,6 @@
 const {getEnv} = require("../services/mongo");
 const {getWeb3} = require("../services/web3");
-const {getPartners, getPartner} = require("../queries/partner");
+const {getPartner, getEnabledPartners} = require("../queries/partner");
 const {getInjectedUser} = require("../queries/injectedUser");
 
 
@@ -23,7 +23,7 @@ async function isWhale(vault) {
 
 async function isPartner(vault) {
     console.log("AUTH :: Checking if Partner")
-    const partners = await getPartners()
+    const partners = await getEnabledPartners()
     let linkedPartner = [];
     for (let i = 0; i < partners.length; i++) {
         const result = vault.filter(el => el.contract.address === partners[i].address)

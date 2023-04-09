@@ -7,11 +7,8 @@ export default function Profile() {
     const { data: session } = useSession()
 
     const tiltAvatar = useRef(null);
-    const ref = useRef(null);
 
-    const openNFT = () => {
 
-    }
 
 
     useEffect(() => {
@@ -34,8 +31,7 @@ export default function Profile() {
                     />
                 </div>
                 {session?.user ? (
-                    <img className="rounded-full shadow-lg h-[14rem] w-[14rem]" onClick={openNFT}
-                              src={session.user.img}/>
+                    <img className="rounded-full shadow-lg h-[14rem] w-[14rem]" src={session.user.img}/>
                 ) : (
                     <lottie-player
                         autoplay

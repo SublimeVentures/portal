@@ -13,14 +13,19 @@ import IconDiscord from "@/assets/svg/Discord.svg";
 import IconWiki from "@/assets/svg/Wiki.svg";
 import IconLogout from "@/assets/svg/Logout.svg";
 import IconSetting from "@/assets/svg/Setting.svg";
+import PAGE from "@/routes";
 
 export default function Sidebar() {
     let [isMobileOpen, setIsMobileOpen] = useState(false)
     const router = useRouter();
 
     const toggleMobile = (e) => {
-        e.preventDefault();
-        setIsMobileOpen(isMobileOpen => !isMobileOpen)
+        e?.preventDefault();
+        if(e) {
+            setIsMobileOpen(isMobileOpen => !isMobileOpen)
+        } else {
+            setIsMobileOpen(false)
+        }
     }
 
     const openDiscord = (e) => {
@@ -42,18 +47,18 @@ export default function Sidebar() {
 
     const menu = {
         groupUser: [
-            {name: 'Dashboard', link: '/app', icon: <IconDashboard className="w-8 mr-3"/>},
-            {name: 'Vault', link: '/app/vault', icon: <IconVault className="w-8 mr-3"/>},
-            {name: 'Opportunities', link: '/app/invest', icon: <IconLight className="w-8 mr-3"/>},
-            {name: 'OTC', link: '/app/otc', icon: <IconExchange className="w-8 mr-3"/>},
-            {name: 'Notifications', link: '/app/latest', disabled: true, icon: <IconBell className="w-8 mr-3"/>},
+            {name: 'Dashboard', link: PAGE.App, icon: <IconDashboard className="w-8 mr-3"/>},
+            {name: 'Vault', link: PAGE.Vault, icon: <IconVault className="w-8 mr-3"/>},
+            {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
+            {name: 'OTC', link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
+            {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
         groupHelp: [
             {name: 'Community', icon: <IconDiscord className="w-6 ml-1 mr-3"/>, action: true, handler: openDiscord},
             {name: 'Wiki', icon: <IconWiki className="w-6 ml-1 mr-3"/>, action: true, handler: openNotion},
         ],
         groupProfile: [
-            {name: 'Settings', link: '/app/settings', icon: <IconSetting className="w-8 mr-3"/>},
+            {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
             {name: 'Log out', icon: <IconLogout className="w-8 mr-3"/>, action: true, handler: logout},
         ]
     }
@@ -63,7 +68,7 @@ export default function Sidebar() {
             if (el.action) return <div key={el.name}
                                        className={`flex cursor-pointer items-center px-5 py-2 rounded-xl sidebar-item select-none ${el.disabled ? 'disabled' : ''}`}
                                        onClick={el.handler}>{el.icon}{el.name}</div>
-            else return <Link href={el.link} key={el.name}
+            else return <Link href={el.link} key={el.name} onClick={() => {toggleMobile()}}
                               className={`flex items-center px-5 py-2 rounded-xl sidebar-item select-none ${el.disabled ? 'disabled' : ''} ${router.asPath === el.link ? "arl" : ""}`}>{el.icon}{el.name}</Link>
 
         })
@@ -74,7 +79,7 @@ export default function Sidebar() {
             <div
                 className="p-7 flex flex-col border-r border-app-bg-split text-app-white max-h-screen sticky top-0 hidden collap:flex">
                 <div className="flex">
-                    <Link href="/app">
+                    <Link href={PAGE.App}>
                         <div className="flex">
                             <img className="w-15 " src="/img/logo.png"/>
                         </div>
@@ -95,7 +100,7 @@ export default function Sidebar() {
             <div
                 className={`p-5 flex blurredBgColor flex flex-1 -mt-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? '!bg-navy-accent' : ''}`}>
                 <div className="mt-1 flex flex-row flex-1">
-                    <Link href="/app">
+                    <Link href={PAGE.App}>
                         <div className="flex">
                             <img className="w-15 " src="/img/logo.png"/>
                         </div>
