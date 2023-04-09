@@ -12,6 +12,11 @@ const InjectedUserSchema = new mongoose.Schema(
             required: true,
             index: true
         },
+        multi: {
+            type: Number,
+            required: true,
+            default: 1
+        },
         offerAccess: {
             required: true,
             type: [Number]

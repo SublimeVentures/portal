@@ -39,37 +39,33 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
+- copy investment and vault page
+--- w vault osobna kategoria z aktywnymi
+- investment updates
+- offer model w db i wyświetlanie danych 
+--- dates per whale and community
+---  data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne
 
-- upewnić się że fetchery nie trigerrują się co chwilę
-- lazy loading na ofertach i vault
-- w vault osobna kategoria z aktywnymi 
-- 
-
-//ticker per investment | whale | partner
-//data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne
-//bump w inwestycyjny barze
-
-- https://docs.delegate.cash/delegatecash/
-- logowanie, whale nft / partner nft check on login on-chain
-- osobna tablica na "one time thing" z przypisanymi inwestycjami
 - smartcontract - usunąć nft check na partnerach, zostawić tylko address /// usnąć checki gdzie się da?
-- dates per whale and community
-
-
+- zaktualizować model offer na soldiity
+- poprawić testy solidity
+- connect delegate address delegate.cash (solidity)
 
 - watch for chain on investment page
+- upewnić się że fetchery nie trigerrują się co chwilę
+
+
+
+- loader (login)
 - timeline (dashboard, setting)
-
-
-- loader
 - metadata
 - DEPLOY
-- connect delegate address delegate.cash
-- connect discord to notifs
+- connect discord to user profile
 - list files / updates from projects
 - transition on pages
 - extract transition variable to separate file (dialogs)
 - extract style for citcap
 - citcap - https://layerzero.network/ menu effect + font
+- lazy loading na ofertach i vault
 - onboarding whales
 - referral systems

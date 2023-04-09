@@ -3,7 +3,7 @@ import BitcoinIcon from "@/assets/svg/Bitcoin.svg";
 import KeyIcon from "@/assets/svg/Key.svg";
 import ChartIcon from "@/assets/svg/Chart.svg";
 
-export default function Stats({isSuccess, icon, content}) {
+export default function Stats() {
     const projectInvestedWidget = () => {
         return (<>
             <div className="font-bold text-3xl">3</div>
@@ -13,8 +13,8 @@ export default function Stats({isSuccess, icon, content}) {
 
     const stakeLeftWidget = () => {
         return (<>
-            <div className="font-bold text-3xl">$41 000</div>
-            <div className="text-sm capitalize mt-2">stake left</div>
+            <div className="font-bold text-3xl">Q1 2024</div>
+            <div className="text-sm capitalize mt-2">nearest unlock</div>
         </>)
     }
 

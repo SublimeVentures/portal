@@ -7,54 +7,67 @@ const {getInjectedUser} = require("../queries/injectedUser");
 async function isWhale(vault) {
     console.log("AUTH :: Checking if Whale")
     const whaleAddress = getEnv().whale
-    const result = vault.filter(el => el.contract.address === whaleAddress)
-    return result.length>0 ? {nfts: result, ACL:0} : false
+    const result = vault.find(el => el.contract.address === whaleAddress)
+    if (!result) return false;
+
+    return {
+        amt: 1,
+        name: result.contract.name,
+        symbol: result.contract.symbol,
+        type: result.contract.tokenType,
+        img: result.contract.openSea.imageUrl,
+        id: result.tokenId,
+        ACL: 0
+    }
 }
 
 async function isPartner(vault) {
     console.log("AUTH :: Checking if Partner")
     const partners = await getPartners()
     let linkedPartner = [];
-    for(let i=0; i<partners.length; i++) {
+    for (let i = 0; i < partners.length; i++) {
         const result = vault.filter(el => el.contract.address === partners[i].address)
-        if(result.length>0) linkedPartner = [...linkedPartner, ...result]
+        if (result.length > 0) linkedPartner = [...linkedPartner, ...result]
     }
-    return linkedPartner.length>0 ? {nfts: linkedPartner, ACL:1} : false
+    if (linkedPartner.length === 0) return false
+
+    return {
+        amt: linkedPartner.length,
+        name: linkedPartner[0].contract.name,
+        symbol: linkedPartner[0].contract.symbol,
+        type: linkedPartner[0].contract.tokenType,
+        img: linkedPartner[0].contract.openSea.imageUrl,
+        id: linkedPartner[0].tokenId,
+        ACL: 1
+    }
 }
 
 async function isInjectedUser(address) {
     console.log("AUTH :: Checking if Injected User")
     const user = await getInjectedUser(address)
-    if(user.length>0) {
-        const partnerData = await getPartner(user[0].partner)
-        return {
-            ACL: 2,
-            partner: partnerData[0]
-        }
-    } else {
-        return false
-    }
-}
+    if (!user) return false
+    const partnerData = await getPartner(user.partner)
 
-async function isDelegatedAccess(address) {
-    const delegations = await getWeb3().dc.getDelegationsByDelegate(address)
-    console.log("dele", delegations)
+    return {
+        amt: user.multi,
+        name: partnerData.name,
+        symbol: partnerData.symbol,
+        type: `ERC${partnerData.type}`,
+        img: partnerData.logo,
+        id: null,
+        ACL: 2
+    }
 }
 
 //todo: sprawdź delegated
 //todo: switch to SEPOLIA & TEST IT!!!
 async function login(address) {
-    //todo: add pagekey
-    const { ownedNfts } = await getWeb3().eth.nft.getNftsForOwner(address)
-    console.log("ownedNFT", ownedNfts)
-    console.log("one", JSON.stringify(ownedNfts[0]))
-
+    //@dev: maybe add pageKey support?
+    const {ownedNfts} = await getWeb3().eth.nft.getNftsForOwner(address)
     let type = await isWhale(ownedNfts)
-    // if(!type) type = await isPartner(ownedNfts)
-    // if(!type) type = await isInjectedUser(address)
-    if(!type) type = await isDelegatedAccess(address)
-    console.log("TYPE", type)
+    if (!type) type = await isPartner(ownedNfts)
+    if (!type) type = await isInjectedUser(address)
     return type
 }
 
-module.exports = { login }
+module.exports = {login}

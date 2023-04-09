@@ -1,11 +1,11 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { getCsrfToken } from "next-auth/react"
+// import { getCsrfToken } from "next-auth/react"
 import { SiweMessage } from "siwe"
-import {fetchPublicInvestments} from "@/fetchers/login";
+import {fetchSessionData} from "@/fetchers/login";
+import {checkDelegate} from "@/lib/web3/checkDelegate";
 
-// For more information on each option (and a full list of options) go to
-// https://next-auth.js.org/configuration/options
+
 export default async function auth(req, res) {
     const providers = [
         CredentialsProvider({
@@ -36,14 +36,16 @@ export default async function auth(req, res) {
                         domain: nextAuthUrl.host,
                         nonce: csrf,
                     })
-                    if (result.success) {
-                        const type = await fetchPublicInvestments(siwe.address)
-                        return {
-                            id: siwe.address,
-                            type:type,
-                        }
+
+                    if(!result.success) return null;
+
+                    const type = await fetchSessionData(siwe.address)
+
+                    if(type) {
+                        return {...{address: siwe.address}, ...type}
+                    } else {
+                        return await checkDelegate(siwe.address)
                     }
-                    return null
 
                 } catch (e) {
                     return null
@@ -54,14 +56,11 @@ export default async function auth(req, res) {
 
     const isDefaultSigninPage =
         req.method === "GET" && req.query.nextauth.includes("signin")
-
-    // Hide Sign-In with Ethereum from default sign page
     if (isDefaultSigninPage) {
         providers.pop()
     }
 
     return await NextAuth(req, res, {
-        // https://next-auth.js.org/configuration/providers/oauth
         providers,
         session: {
             strategy: "jwt",
@@ -72,19 +71,30 @@ export default async function auth(req, res) {
         },
         secret: process.env.NEXTAUTH_SECRET,
         callbacks: {
-            jwt: async ({ token, user, type, id }) => {
-                console.log("jwt", token, user, type, id)
+            jwt: async ({ token, user }) => {
                 user && (token.user = user)
                 return token
             },
-            async session({ session, token }) {
-                console.log("session", session)
-                console.log("token", token)
-                //todo: tutaj dodawaja dodatkoe dane
-                session.user.address = token.sub
-                session.address = token.sub
+            session: async ({ session, token }) => {
+                session.user = token.user
                 return session
-            },
+            }
+            // jwt: async ({ token, account, profile }) => {
+            //     console.log("jwt", token, account, profile)
+            //     if (account) {
+            //         token.accessToken = account.access_token
+            //         token.id = profile?.id
+            //     }
+            //     return token
+            // },
+            // async session({ session, token }) {
+            //     console.log("session", session)
+            //     console.log("token", token)
+            //     //todo: tutaj dodawaja dodatkoe dane
+            //     session.user.address = token.sub
+            //     session.address = token.sub
+            //     return session
+            // },
         },
     })
 }

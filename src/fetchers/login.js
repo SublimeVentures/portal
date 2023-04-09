@@ -1,13 +1,12 @@
 import axios from "axios";
 
-export const fetchPublicInvestments = async (address) => {
+export const fetchSessionData = async (address) => {
     console.log("Fetching user type", address);
     try {
         const {data} = await axios.get(`/api/validate/l0gin/${address}`)
-        console.log("public investments", data)
-
+        return data
     } catch(e) {
-        console.log("e",e)
+        console.log("e: fetchSessionData",e)
     }
     return {}
 }

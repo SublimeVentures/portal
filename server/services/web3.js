@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const {getEnvironment} = require("../queries/environment");
 const { Alchemy, Network } = require('alchemy-sdk');
 const Web3Utils = require("web3-utils");
-const { DelegateCash } = require("delegatecash");
 let web3 = {}
 
 function getWeb3 () {
@@ -38,15 +37,12 @@ async function connectWeb3() {
         const web3_matic =  new Alchemy(process.env.NODE_ENV==='dev' ? configMATIC_dev : configMATIC_prod);
         console.log("|---- Blockchain MATIC: OK")
 
-        const ethProvider = await web3_eth.config.getHttpProvider();
-
-        const dc = new DelegateCash(ethProvider);
+        // const ethProvider = await web3_eth.config.getHttpProvider();
 
         web3 = {
             utils: Web3Utils,
             matic: web3_matic,
             eth: web3_eth,
-            dc: dc
         }
         console.log("|---- Web3: connected")
 
