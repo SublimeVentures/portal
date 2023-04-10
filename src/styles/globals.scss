@@ -19,6 +19,7 @@
 @import 'pages/home/investments';
 @import 'pages/app/dashboard';
 @import 'pages/app/sidebar';
+@import 'components/chroma';
 
 
 $animation-length: 0.5s;
@@ -45,7 +46,6 @@ $loader-size: 150px;
 $speed: 1.5s;
 
 
-//@import 'pages/investments/investments';
 //@import 'components/toggle';
 //@import 'components/wavelink';
 //@import 'components/timeline';
@@ -54,7 +54,6 @@ $speed: 1.5s;
 //@import 'components/tooltip';
 //@import 'components/table';
 //@import 'components/dropdown';
-//@import 'components/chroma';
 
 
 body {
@@ -107,18 +106,11 @@ body {
   }
 }
 
-//
-//.glowing {
-//    text-shadow: rgba(185,37,81,0.9) 0px 0px 52px;
-//}
 
-
-.fliper {
-
-  .rpv-core__inner-page {
-    background: theme('colors.navy2')!important;
-  }
+.glowing {
+    text-shadow: rgba(185,37,81,0.9) 0px 0px 52px;
 }
+
 
 .flipbook {
   width: 90vw;
