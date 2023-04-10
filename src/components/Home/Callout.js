@@ -2,7 +2,6 @@ import { ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PlusIcon from "@/assets/svg/Plus.svg";
 import DiscordIcon from "@/assets/svg/Discord.svg";
 import TwitterIcon from "@/assets/svg/Twitter.svg";
-
 export default function Investors() {
   return (
   <div className="calloutGradient flex flex-col justify-center text-white pt-10">
@@ -29,6 +28,7 @@ export default function Investors() {
         </a>
       </div>
     </div>
+
 
   </div>
 

@@ -1,0 +1,26 @@
+{
+  "name": "webapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server/index.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server/index.js",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-pdf-viewer/core": "3.12.0",
+    "@react-pdf-viewer/full-screen": "3.12.0",
+    "@react-pdf-viewer/get-file": "3.12.0",
+    "@react-pdf-viewer/zoom": "3.12.0",
+    "pdfjs-dist": "3.4.120",
+    "react-pageflip": "2.0.3",
+    "react-pdf-viewer": "0.1.0"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "7.0.0",
+    "autoprefixer": "10.4.14",
+    "postcss": "8.4.21",
+    "tailwindcss": "3.3.1"
+  }
+}

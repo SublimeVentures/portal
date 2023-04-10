@@ -5,7 +5,7 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import IconDownload from "@/assets/svg/Download.svg";
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 import dynamic from "next/dynamic";
-// const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
+const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
 // import OfferDetailsFlipbook from '@/components/App/Offer/OfferDetailsFlipbook'
 
 
@@ -42,7 +42,7 @@ export default function AppOfferDetails() {
 
             <div className="flex flex-col col-span-12 ">
 
-                {/*<OfferDetailsFlipbook/>*/}
+                <OfferDetailsFlipbook/>
 
             </div>
         </div>
