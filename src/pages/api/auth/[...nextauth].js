@@ -27,7 +27,7 @@ export default async function auth(req, res) {
                 try {
                     const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
                     const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
-                    const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
+                    const csrf = req.cookies['next-auth.csrf-token']?.split("|")[0]
 
                     //todo: test in prod
                     // const csrf = await getCsrfToken({req})

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+    reactStrictMode: false,
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/i,
@@ -10,7 +10,16 @@ const nextConfig = {
 
         return config
     },
-
+    // images: {
+    //     remotePatterns: [
+    //         {
+    //             protocol: 'https',
+    //             hostname: 'basedvc.s3.amazonaws.com',
+    //             port: '',
+    //             pathname: '/rr_test/**',
+    //         },
+    //     ],
+    // },
 
 }
 

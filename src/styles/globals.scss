@@ -111,3 +111,16 @@ body {
 //.glowing {
 //    text-shadow: rgba(185,37,81,0.9) 0px 0px 52px;
 //}
+
+
+.fliper {
+
+  .rpv-core__inner-page {
+    background: theme('colors.navy2')!important;
+  }
+}
+
+.flipbook {
+  width: 90vw;
+  height: 90vh;
+}
