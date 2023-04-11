@@ -28,32 +28,7 @@
 
 
 
-
-$animation-length: 0.5s;
-$navy: #12151e;
-$navy-accent: #101d2d;
-$navy-bg: #161b26;
-$btn: #f5a400;
-$accent: #242836;
-$btn_hover: #ffbc28;
-$bright_pink: #F4157E;
-$dull_pink:   #CD106E;
-$dull_black:   #fffff;
-$dull_empty:   #729db0;
-$original_pink:   #ff0083;
-$btn: #f5a400;
-$btn_hover: #ffbc28;
-$btn_active: #c2890d;
-
-//@import "compass";
-
-//loader options
-$theme: #ff0083;
-$loader-size: 150px;
-$speed: 1.5s;
-
-
-@import 'components/toggle';
+//@import 'components/toggle';
 //@import 'components/wavelink';
 //@import 'components/timeline';
 //@import 'components/tooltip';

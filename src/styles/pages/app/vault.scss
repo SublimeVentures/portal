@@ -33,8 +33,8 @@
 
   .active {
     .icon {
-      box-shadow: 0 0 40px -10px #b1e365!important;
-      background: #b1e365!important;
+      box-shadow: 0 0 40px -10px theme('colors.app-success') !important;
+      background: theme('colors.app-success') !important;
       border:0;
       color: black;
 
