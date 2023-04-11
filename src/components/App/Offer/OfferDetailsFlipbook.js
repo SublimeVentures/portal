@@ -8,7 +8,7 @@ export default function OfferDetailsFlipbook({}) {
     return (
         <>
             <div className="px-10 py-8  rounded-xl bg-navy-accent relative">
-                <div className="text-xl uppercase font-medium text-app-accent2">About project</div>
+                <div className="text-xl uppercase font-medium text-outline">About project</div>
                 <div className="absolute right-10 top-4">
                     <div className="hidden sm:flex">
                         <RoundButton text={'PDF'} isLoading={false} isDisabled={false} is3d={true} isWide={true}

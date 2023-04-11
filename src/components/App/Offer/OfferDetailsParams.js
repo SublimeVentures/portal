@@ -10,7 +10,7 @@ export default function OfferDetailsParams({offer}) {
 
         <>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1">
-                <div className="text-xl uppercase font-medium text-app-accent2 mb-2">TOKEN</div>
+                <div className="text-xl uppercase font-medium text-outline mb-2">TOKEN</div>
 
                 <div className="flex ">
                     <div className="flex-1 ">TICKER</div>
@@ -38,7 +38,7 @@ export default function OfferDetailsParams({offer}) {
                 </div>
             </div>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1 xl:mt-10">
-                <div className="text-xl uppercase font-medium text-app-accent2 mb-2">ALLOCATION</div>
+                <div className="text-xl uppercase font-medium text-outline mb-2">ALLOCATION</div>
 
                 <div className="flex ">
                     <div className="flex-1 ">TOTAL</div>

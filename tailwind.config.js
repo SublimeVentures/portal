@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'white': '#ffffff',//
+        'white': '#ffffff',
         'gray': '#c0c0c0',
         'black': '#000000',
         'gold': '#f5a400',
@@ -20,21 +20,15 @@ module.exports = {
         'outline': '#729db0',
         'slides': '#101d2d',
         'footer': '#090b0f',
-        'red': '#b00101',
         'navy': '#12151e',
-        'navy2': '#0e1118',
-
-        //
-        //
+        'navy2': '#0e1118',//background
         'navy-accent': '#161b26',
-        'app-bg': '#182122',
         'app-bg-split': '#273031',
         'app-success': '#b1e365',
         'app-error': '#b92551',
         'app-success-dark': '#6ca21a',
         'app-success2': '#ace160',
         'app-accent': '#383a9b',
-        'app-accent2': '#5f87a6',
         'app-white': '#f9fbfa',
       },
       screens: {

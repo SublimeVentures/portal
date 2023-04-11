@@ -51,14 +51,14 @@ export default function Sidebar() {
             {name: 'Vault', link: PAGE.Vault, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'OTC', link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
-            {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
+            // {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
         groupHelp: [
             {name: 'Community', icon: <IconDiscord className="w-6 ml-1 mr-3"/>, action: true, handler: openDiscord},
             {name: 'Wiki', icon: <IconWiki className="w-6 ml-1 mr-3"/>, action: true, handler: openNotion},
         ],
         groupProfile: [
-            {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
+            // {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
             {name: 'Log out', icon: <IconLogout className="w-8 mr-3"/>, action: true, handler: logout},
         ]
     }

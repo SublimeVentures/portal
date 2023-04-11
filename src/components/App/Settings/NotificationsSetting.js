@@ -1,16 +1,12 @@
-import VanillaTilt from "vanilla-tilt";
-import moment from 'moment'
-import {useEffect, useRef} from "react";
-import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
-export default function NotificationsSetting({offer}) {
+export default function NotificationsSetting({}) {
     // let {image, name, starts, ends} = offer
 
     return (
 
         <>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1">
-                <div className="text-xl uppercase font-medium text-app-accent2 mb-2">CHANNELS</div>
+                <div className="text-xl uppercase font-medium text-outline mb-2">CHANNELS</div>
 
                 <div className="flex ">
                     <div className="flex-1 ">E-MAIL</div>
@@ -32,7 +28,7 @@ export default function NotificationsSetting({offer}) {
 
             </div>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1 ">
-                <div className="text-xl uppercase font-medium text-app-accent2 mb-2">NOTIFICATIONS</div>
+                <div className="text-xl uppercase font-medium text-outline mb-2">NOTIFICATIONS</div>
 
                 <div className="flex ">
                     <div className="flex-1 ">ANNOUNCEMENTS</div>

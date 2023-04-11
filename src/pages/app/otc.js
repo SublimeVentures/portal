@@ -71,7 +71,7 @@ export default function AppOtc() {
                             <div className="overflow-x-auto flex flex-col">
                                 <div className="font-bold text-2xl p-5">Markets</div>
                                 <table>
-                                    <thead className="bg-navy border-gray-300 border-t border-b border-navy">
+                                    <thead className="bg-navy ">
                                     <tr>
                                         <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
                                             <label>OFFERS</label></th>
@@ -115,7 +115,7 @@ export default function AppOtc() {
                                     </div>
 
                                     <table>
-                                        <thead className="bg-navy border-gray-300 border-t border-b border-navy">
+                                        <thead className="bg-navy ">
                                         <tr>
                                             <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
                                                 <label>TOKENS</label></th>
