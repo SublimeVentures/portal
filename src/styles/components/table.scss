@@ -96,4 +96,16 @@ tbody tr:nth-child(odd) {
   table td:nth-child(4) {
     //font-size: 0.8em;
   }
+
+}
+
+.hoverTable {
+  &:hover {
+    background:  theme('colors.app-success');
+
+    .text-app-success {
+      color: theme('colors.app-error')!important;
+    }
+  }
+
 }

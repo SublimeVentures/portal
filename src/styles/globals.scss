@@ -17,9 +17,11 @@
 @import 'components/input';
 @import 'components/dropdown';
 @import 'components/fliper';
+@import 'components/table';
 
 @import 'pages/home/about';
 @import 'pages/home/investments';
+
 @import 'pages/app/dashboard';
 @import 'pages/app/sidebar';
 @import 'pages/app/vault';
@@ -51,11 +53,10 @@ $loader-size: 150px;
 $speed: 1.5s;
 
 
-//@import 'components/toggle';
+@import 'components/toggle';
 //@import 'components/wavelink';
 //@import 'components/timeline';
 //@import 'components/tooltip';
-//@import 'components/table';
 
 
 body {

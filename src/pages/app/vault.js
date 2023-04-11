@@ -1,7 +1,7 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
 import RoundBanner from "@/components/App/RoundBanner";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import ReadIcon from "@/assets/svg/Read.Svg";
+import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
 
 
