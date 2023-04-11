@@ -4,6 +4,9 @@ import {Dialog, Transition} from '@headlessui/react'
 import {debounce} from "debounce";
 import {Fragment, useEffect, useState} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
+import dynamic from "next/dynamic";
+// import Dropdown from "@/components/App/Dropdown";
+const Dropdown = dynamic(() => import('@/components/App/Dropdown'), {ssr: false,})
 
 
 export default function CurrencyInput({type, placeholder, max, min, currency}) {
@@ -120,9 +123,7 @@ export default function CurrencyInput({type, placeholder, max, min, currency}) {
                     </Transition.Child>
                 </Transition>
             </div>
-            {/*<client-only>*/}
-            {/*     <CommonDropdown :options="['USDT', 'USDC']" style="font-size: 18px"/>*/}
-            {/* </client-only>*/}
+            <Dropdown options={['USDT', 'USDC']} classes={'customSize'}/>
             <Transition appear show={showInfo} as={Fragment}>
                 <Transition.Child
                     as={Fragment}

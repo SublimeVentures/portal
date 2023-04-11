@@ -16,6 +16,10 @@
     }
   }
 
+  &.customSize {
+    font-size: 18px!important;
+  }
+
   select,
   .button {
     font-family: inherit;

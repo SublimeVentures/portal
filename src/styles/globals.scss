@@ -21,6 +21,7 @@
 @import 'pages/app/sidebar';
 @import 'components/chroma';
 @import 'components/input';
+@import 'components/dropdown';
 
 
 $animation-length: 0.5s;
@@ -53,7 +54,6 @@ $speed: 1.5s;
 //@import 'components/fliper';
 //@import 'components/tooltip';
 //@import 'components/table';
-//@import 'components/dropdown';
 
 
 body {
