@@ -13,16 +13,18 @@
 @import 'components/button';
 @import 'components/carousel';
 @import 'components/modal';
-
+@import 'components/chroma';
+@import 'components/input';
+@import 'components/dropdown';
+@import 'components/fliper';
 
 @import 'pages/home/about';
 @import 'pages/home/investments';
 @import 'pages/app/dashboard';
 @import 'pages/app/sidebar';
-@import 'components/chroma';
-@import 'components/input';
-@import 'components/dropdown';
-@import 'components/fliper';
+@import 'pages/app/vault';
+
+
 
 
 $animation-length: 0.5s;

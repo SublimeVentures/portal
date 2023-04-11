@@ -39,13 +39,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- copy investment and vault page
---- w vault osobna kategoria z aktywnymi
 - investment updates
 - offer model w db i wyświetlanie danych 
 --- dates per whale and community
 ---  data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne
 
+- modal fullscreen
 - przenieść się na sepolię 
 - //todo: replace with env
 - smartcontract - usunąć nft check na partnerach, zostawić tylko address /// usnąć checki gdzie się da?
@@ -59,7 +58,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - filler for portfolio size
 - loader (login)
-- timeline (dashboard, setting)
+- timeline (dashboard, setting, vault)
 - metadata
 - DEPLOY
 - connect discord to user profile
@@ -68,6 +67,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - extract transition variable to separate file (dialogs)
 - extract style for citcap
 - citcap - https://layerzero.network/ menu effect + font
+- w vault osobna kategoria z aktywnymi
 - lazy loading na ofertach i vault
 - onboarding whales
 - referral systems
