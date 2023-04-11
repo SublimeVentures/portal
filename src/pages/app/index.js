@@ -15,16 +15,16 @@ export default function AppDashboard() {
     return (
         <>
             <div className="grid grid-cols-12 gap-y-10 mobile:gap-10">
-                    <div className="col-span-12 flex flex-col gap-10 custom:col-span-8">
-                        <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
-                                     action={<RoundButton text={'Learn more'} isWide={true} zoom={1.1}
-                                                          size={'text-sm sm'}
-                                                          icon={<ReadIcon className={ButtonIconSize.hero} />}/>}/>
-                        <Stats/>
-                    </div>
-                    <div className="col-span-12 flex custom:col-span-4">
-                        <Profile/>
-                    </div>
+                <div className="col-span-12 flex flex-col gap-10 custom:col-span-8">
+                    <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
+                                 action={<RoundButton text={'Learn more'} isWide={true} zoom={1.1}
+                                                      size={'text-sm sm'}
+                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}/>
+                    <Stats/>
+                </div>
+                <div className="col-span-12 flex custom:col-span-4">
+                    <Profile/>
+                </div>
 
             </div>
 
@@ -41,12 +41,11 @@ export default function AppDashboard() {
 
         </>
 
-)
+    )
 }
 
 
-AppDashboard.getLayout = function(page)
-    {
-        return <LayoutApp>{page}</LayoutApp>;
-    }
+AppDashboard.getLayout = function (page) {
+    return <LayoutApp>{page}</LayoutApp>;
+}
 ;

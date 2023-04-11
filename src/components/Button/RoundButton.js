@@ -6,6 +6,7 @@ export const ButtonIconSize = {
     hero: "w-8 mr-5",
     small: "w-8",
     clicks: "w-5",
+    invest: "w-9 mr-5",
 }
 
 
