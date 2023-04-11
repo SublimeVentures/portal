@@ -1,16 +1,14 @@
-
-import {Fragment, useEffect, useState} from "react";
-
+import {useRef, useState} from "react";
+import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 
 export default function Dropdown({options, classes}) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(0)
     const [direction, setDirection] = useState(0)
     const [moved, setMoved] = useState(0)
-
+    const ref = useRef();
 
     const changeOption = (index) => {
-        console.log("aaaa", index)
         setMoved(index * -62)
         let _selected = selected
         setSelected(index)
@@ -21,6 +19,7 @@ export default function Dropdown({options, classes}) {
         }, 500);
     }
 
+    useOnClickOutside(ref, () => setIsOpen(false));
 
     return (
         <div
@@ -28,10 +27,11 @@ export default function Dropdown({options, classes}) {
             onClick={() => {
                 setIsOpen(true)
             }}
+            ref={ref}
         >
             <select data-menu="">
                 {options.map((el, i) => {
-                    return <option key={i} selected={i === selected}>{ el }</option>
+                    return <option key={i} defaultValue={i === selected ? 'selected' : ''}>{ el }</option>
                 })}
 
             </select>

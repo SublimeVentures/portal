@@ -34,7 +34,7 @@ export default function AppOffer() {
 
 
     return (
-        <div className="grid grid-cols-12 gap-y-10 mobile:gap-10">
+        <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
             {investments.map(el =>
                     <OfferItem offer={el} key={el.id}/>
             )}

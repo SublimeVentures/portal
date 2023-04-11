@@ -29,7 +29,7 @@ export default function OfferDetailsParams({offer}) {
 
     return (
 
-        <div className="flex flex-1 flex-col min-h-[300px] pt-10 sinvest:pl-5 sinvest:pt-0 sinvest:flex-row relative">
+        <div className="flex flex-1 flex-col min-h-[300px] ">
             {/*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="true" className="hidden sinvest:flex"/>*/}
             {/*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="false" className="flex sinvest:hidden"/>*/}
             {isClosed() ? <OfferDetailsInvestPhases phases={investmentSteps} active={currentInvestmentStep}/> :

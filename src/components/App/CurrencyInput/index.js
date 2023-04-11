@@ -1,12 +1,8 @@
-import {useRouter} from 'next/router'
-import {Dialog, Transition} from '@headlessui/react'
-
+import {Transition} from '@headlessui/react'
 import {debounce} from "debounce";
 import {Fragment, useEffect, useState} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
-import dynamic from "next/dynamic";
-// import Dropdown from "@/components/App/Dropdown";
-const Dropdown = dynamic(() => import('@/components/App/Dropdown'), {ssr: false,})
+import Dropdown from "@/components/App/Dropdown";
 
 
 export default function CurrencyInput({type, placeholder, max, min, currency}) {
@@ -20,24 +16,23 @@ export default function CurrencyInput({type, placeholder, max, min, currency}) {
         if (event.key.length === 1 && /\D/.test(event.key)) {
             return;
         }
-        console.log("even", event)
-
+        // console.log("even", event)
     }
 
 
     const setValue = (data) => {
-        console.log("odpalam", data)
+        // console.log("odpalam", data)
         if (!Number.isInteger(data)) {
             data = data.replace(/[^0-9]/g, '')
         }
         setInput(data)
         let formatted = Number(data).toLocaleString()
-        console.log("formatted",formatted)
+        // console.log("formatted",formatted)
         if(formatted==0) {
             formatted = ""
         }
         setInputFormatted(formatted)
-        console.log("input - ", data)
+        // console.log("input - ", data)
     }
 
     const dbc = debounce(function (e) {
@@ -45,7 +40,7 @@ export default function CurrencyInput({type, placeholder, max, min, currency}) {
     }, 1500)
 
     const checkRequirements = () => {
-        console.log("debounce", input)
+        // console.log("debounce", input)
         if (max && input > max) {
             return false
         }

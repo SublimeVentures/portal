@@ -45,6 +45,9 @@ module.exports = {
         // tablet: '1200px',
         invest: '1420px',
       },
+      margin: {
+        '15': '3.75rem',
+      },
       inset: {
         '12': '1.5rem',
       },

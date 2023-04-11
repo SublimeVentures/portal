@@ -14,7 +14,7 @@ export default function AppDashboard() {
 
     return (
         <>
-            <div className="grid grid-cols-12 gap-y-10 mobile:gap-10">
+            <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex flex-col gap-10 custom:col-span-8">
                     <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
                                  action={<RoundButton text={'Learn more'} isWide={true} zoom={1.1}

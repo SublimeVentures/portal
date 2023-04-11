@@ -1471,6 +1471,13 @@
   resolved "https://registry.npmjs.org/@ledgerhq/connect-kit-loader/-/connect-kit-loader-1.0.2.tgz"
   integrity sha512-TQ21IjcZOw/scqypaVFY3jHVqI7X7Hta3qN/us6FvTol3AY06UmrhhXGww0E9xHmAbdX241ddwXEiMBSQZFr9g==
 
+"@leenguyen/react-flip-clock-countdown@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@leenguyen/react-flip-clock-countdown/-/react-flip-clock-countdown-1.4.0.tgz#b2ae582e172c31f4910c4053c45b48ab6694ba6a"
+  integrity sha512-+4xry1UEUvWS8armT7vaK5cEqIYEYdHproaSBz2nKehGnFEmuhKQ0Ju7XBVoTI+ZEDGqdaINd/XW1TgSRWO2vg==
+  dependencies:
+    clsx "^1.1.1"
+
 "@lit-labs/ssr-dom-shim@^1.0.0", "@lit-labs/ssr-dom-shim@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@lit-labs/ssr-dom-shim/-/ssr-dom-shim-1.1.0.tgz"

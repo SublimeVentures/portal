@@ -9,6 +9,11 @@ import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
 import CurrencyInput from "@/components/App/CurrencyInput";
+import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
+import '@leenguyen/react-flip-clock-countdown/dist/index.css';
+
+
+
 
 export default function OfferDetailsInvestPhases({phases, active}) {
 
@@ -26,40 +31,40 @@ export default function OfferDetailsInvestPhases({phases, active}) {
         }
     }
 
+   const handleComplete = ()  =>{
+        // this.setState({ isCompleted: true });
+    }
+
     return (
 
-        <div className="flex flex-1 flex-col justify-end items-center px-5 py-10 sinvest:p-10">
+        <div className="flex flex-1 flex-col items-center">
             <div
-                className="flex flex-col flex-wrap justify-center items-center mb-5 sm:gap-5 sinvest:mb-0 sinvest:items-start sinvest:flex-row sinvest:absolute sinvest:top-5 sinvest:right-5">
-                <div
-                    className="text-xl font-bold mt-1 mb-2 sm:mb-0 whitespace-nowrap">{phases[active].step} ends
-                    in
-                </div>
-                {/*        <client-only>*/}
-                {/*            <div className="" :className="{'forceWhite': front}">*/}
-                {/*            <FlipCountdown deadline="2025-12-25 00:00:00"></FlipCountdown>*/}
-                {/*    </div>*/}
+                className="flex flex-col flex-wrap justify-center items-center pt-5 sinvest:flex-row sinvest:pr-5 sinvest:self-end sinvest:items-start">
 
-                {/*</client-only>*/}
+                <div className="text-lg mt-3 mb-5 sinvest:mb-0 sinvest:mr-3 sinvest:mt-[0.70rem]">Phase <span className="text-gold uppercase  font-[500]">{phases[active].step}</span> ends in</div>
+                <FlipClockCountdown
+                    className="flip-clock"
+                    onComplete={handleComplete}
+                    to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
+                    labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
+                />
+
             </div>
-            {/*    <CommonCurrencyInput :type="'number'" :max="10000000" :min="10000" :currency="'USDT'"*/}
-            {/*:placeholder="'Investment size'" className=""/>*/}
-            <CurrencyInput type={'number'} placeholder={'Investment size'} max={10000000} min={10000} currency={'USDT'}/>
+            <div className="mt-15 xl:mt-auto">
+                <CurrencyInput type={'number'} placeholder={'Investment size'} max={10000000} min={10000}/>
+            </div>
 
-            <div className="flex flex-row  gap-2 sinvest:gap-10 pt-10">
-
-
+            <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">
                 <RoundButton text={phases[active].action} isPrimary={true} showParticles={true}
                              isLoading={false} isDisabled={false} is3d={true} isWide={true} zoom={1.1}
                              size={'text-sm sm'} icon={getButtonIcon()}/>
-                <div className="hidden invest:flex">
+                <div className="hidden sinvest:flex">
                     <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}
                                  icon={<WalletIcon className={ButtonIconSize.hero}/>}/>
                 </div>
-                <div className="flex invest:hidden">
+                <div className="flex sinvest:hidden">
                     <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
                                  icon={<WalletIcon className={ButtonIconSize.small}/>}/>
-
                 </div>
 
             </div>
