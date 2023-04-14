@@ -6,8 +6,8 @@ const {getInjectedUser} = require("../queries/injectedUser");
 
 async function isWhale(vault) {
     console.log("AUTH :: Checking if Whale")
-    const whaleAddress = getEnv().whale
-    const result = vault.find(el => el.contract.address === whaleAddress)
+    const whaleAddress = getEnv().id
+    const result = vault.find(el => el.contract.address.toLowerCase() === whaleAddress.toLowerCase())
     if (!result) return false;
 
     return {
@@ -26,7 +26,7 @@ async function isPartner(vault) {
     const partners = await getEnabledPartners()
     let linkedPartner = [];
     for (let i = 0; i < partners.length; i++) {
-        const result = vault.filter(el => el.contract.address === partners[i].address)
+        const result = vault.filter(el => el.contract.address.toLowerCase() === partners[i].address.toLowerCase())
         if (result.length > 0) linkedPartner = [...linkedPartner, ...result]
     }
     if (linkedPartner.length === 0) return false
@@ -64,8 +64,10 @@ async function login(address) {
     //@dev: maybe add pageKey support?
     const {ownedNfts} = await getWeb3().eth.nft.getNftsForOwner(address)
     let type = await isWhale(ownedNfts)
-    if (!type) type = await isPartner(ownedNfts)
-    if (!type) type = await isInjectedUser(address)
+    console.log("owned NFTs", ownedNfts)
+    console.log("type", type)
+    // if (!type) type = await isPartner(ownedNfts)
+    // if (!type) type = await isInjectedUser(address)
     return type
 }
 

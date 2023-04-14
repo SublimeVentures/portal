@@ -56,6 +56,14 @@ const OfferSchema = new mongoose.Schema(
             type: Number,
             required: false
         },
+        alloRequired: { //total raised
+            type: Number,
+            required: false
+        },
+        rrPages: {
+            type: Number,
+            required: false
+        },
         genre: { //description for public investment
             type: String,
             required: false
@@ -65,10 +73,6 @@ const OfferSchema = new mongoose.Schema(
             required: false
         },
         description: { //long description
-            type: String,
-            required: false
-        },
-        descriptionShort: { //short description
             type: String,
             required: false
         },
@@ -109,7 +113,18 @@ const OfferSchema = new mongoose.Schema(
             required: false,
             default: "fill"
         },
-
+        t_vesting: {
+            type: String,
+            required: false,
+        },
+        t_cliff: {
+            type: String,
+            required: false,
+        },
+        t_start: {
+          type:Number,
+          required: false
+        },
         display: {
             type: Boolean,
             required: true,
@@ -121,11 +136,11 @@ const OfferSchema = new mongoose.Schema(
             default: false
         },
 
-        open: {
+        d_open: {
             type: Number,
             required: true
         },
-        close: {
+        d_close: {
             type: Number,
             required: true
         },

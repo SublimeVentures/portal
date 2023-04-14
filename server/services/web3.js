@@ -27,15 +27,17 @@ async function connectWeb3() {
         };
         const configMATIC_dev = {
             apiKey: process.env.ALCHEMY_MATIC,
-            network: Network.MATIC_MAINNET,
+            network: Network.MATIC_MUMBAI,
             maxRetries: 10
         };
 
-        const web3_eth =  new Alchemy(process.env.NODE_ENV==='dev' ? configETH_dev : configETH_prod);
-        console.log("|---- Blockchain ETH: OK")
+        const isDev = process.env.ENV == "dev"
 
-        const web3_matic =  new Alchemy(process.env.NODE_ENV==='dev' ? configMATIC_dev : configMATIC_prod);
-        console.log("|---- Blockchain MATIC: OK")
+        const web3_eth =  new Alchemy(isDev ? configETH_dev : configETH_prod);
+        console.log("|---- Blockchain ETH: OK", isDev ? 'TESTNET' : 'MAINNET')
+
+        const web3_matic =  new Alchemy(isDev ? configMATIC_dev : configMATIC_prod);
+        console.log("|---- Blockchain MATIC: OK", isDev ? 'TESTNET' : 'MAINNET')
 
         // const ethProvider = await web3_eth.config.getHttpProvider();
 

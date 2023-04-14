@@ -7,6 +7,7 @@ const {connectDB} = require("./services/mongo");
 const {connectWeb3} = require("./services/web3");
 const {router: publicRoute} = require("./routes/public.js");
 const {router: validateRoute} = require("./routes/validate.js");
+const {router: offerRoute} = require("./routes/offer.js");
 // import {connectQueue} from "./services/zeromq";
 
 const port = parseInt(process.env.PORT || '3000', 10);
@@ -25,6 +26,7 @@ nextApp.prepare().then(async() => {
     await connectWeb3()
     app.use('/api/public', publicRoute);
     app.use('/api/validate', validateRoute);
+    app.use('/api/offer', offerRoute);
 
 
     io.on('connection', (socket) => {
@@ -39,6 +41,6 @@ nextApp.prepare().then(async() => {
     app.all('*', (req, res) => nextHandler(req, res));
 
     server.listen(port, () => {
-        console.log(`> Ready on http://localhost:${port}`);
+        console.log(`> Ready on http://127.0.0.1:${port}`);
     });
 });

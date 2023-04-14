@@ -7,6 +7,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
 const rightChains = process.env.NEXT_PUBLIC_ENV === 'dev' ? [sepolia, polygonMumbai] : [mainnet, polygon]
+
 const { chains, provider, webSocketProvider } = configureChains(
     rightChains,
     [alchemyProvider({ apiKey: process.env.ALCHEMY_API_ETH, priority: 0 }), publicProvider({priority: 1})],

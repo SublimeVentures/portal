@@ -39,14 +39,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- invest facet
-- uzupełnij dane front
-- potwierdź public investments
 - investment display depending on tier (data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne)
 - investment dates & progress depending on tier
 - investing fcfs & unlimited depending on tier
 - invest total allocation lockup
-- przenieść się na sepolię (- //todo: replace with env /// webapp)
 - invest
 - investment updates
 
@@ -58,7 +54,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - filler for portfolio size
 - loader (login)
 - timeline (dashboard, setting, vault)
+- scaling linków na ofercie
 - metadata
+- 404 page
+
 - DEPLOY
 
 - connect discord to user profile
