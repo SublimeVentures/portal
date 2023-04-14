@@ -10,3 +10,9 @@ export const fetchSessionData = async (address) => {
     }
     return {}
 }
+
+export const fetchEnabledPartners = async () => {
+    const {data} = await axios.get("/api/validate/partners")
+    return data
+}
+

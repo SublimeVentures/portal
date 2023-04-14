@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const {getOffersPublic} = require("../queries/offer");
-const {getPartners} = require("../queries/partner");
+const {getPublicPartners} = require("../queries/partner");
 
 router.get('/investments', async (req, res) => {
   res.status(200).json(await getOffersPublic())
@@ -9,7 +9,7 @@ router.get('/investments', async (req, res) => {
 });
 
 router.get('/partners', async (req, res) => {
-  res.status(200).json(await getPartners())
+  res.status(200).json(await getPublicPartners())
 })
 
 module.exports = { router }

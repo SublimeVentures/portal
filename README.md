@@ -39,35 +39,37 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
+- invest facet
+- uzupełnij dane front
+- potwierdź public investments
+- investment display depending on tier (data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne)
+- investment dates & progress depending on tier
+- investing fcfs & unlimited depending on tier
+- invest total allocation lockup
+- przenieść się na sepolię (- //todo: replace with env /// webapp)
+- invest
 - investment updates
-- offer model w db i wyświetlanie danych 
---- dates per whale and community
----  data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne
 
+- loading na login + error na login
 - modal fullscreen
-- przenieść się na sepolię 
-- //todo: replace with env
-- smartcontract - usunąć nft check na partnerach, zostawić tylko address /// usnąć checki gdzie się da?
-- zaktualizować model offer na soldiity
-- poprawić testy solidity
-- connect delegate address delegate.cash (solidity)
-
+- save vault delegatcash
 - watch for chain on investment page
 - upewnić się że fetchery nie trigerrują się co chwilę
-
-
 - filler for portfolio size
 - loader (login)
 - timeline (dashboard, setting, vault)
 - metadata
 - DEPLOY
+
 - connect discord to user profile
 - list files / updates from projects
 - transition on pages
 - extract transition variable to separate file (dialogs)
 - extract style for citcap
 - citcap - https://layerzero.network/ menu effect + font
+
 - w vault osobna kategoria z aktywnymi
 - lazy loading na ofertach i vault
 - onboarding whales
+- connect delegate address delegate.cash (solidity)
 - referral systems

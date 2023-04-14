@@ -7,129 +7,129 @@ const OfferSchema = new mongoose.Schema(
             required: true,
             index: true
         },
-        b_name: {
-            type: String,
-            required: true
-        },
-        b_data: {
-            type: String,
-            required: false
-        },
-        b_otc: {
+        //blockchain
+        b_otc: { //otc channel
             type: Number,
             required: true,
             default: 0
         },
-        b_ppu: {
+        b_ppu: { //price per unit
             type: Number,
             required: true
         },
-        b_alloMin: {
+        b_alloMin: { //min. allocation
             type: Number,
             required: true
         },
-        b_alloRaised: {
+        b_alloRaised: { //allocation raised
             type: Number,
             required: true,
             default:0
         },
-        b_alloTotal: {
+        b_tax: { //tax
             type: Number,
             required: true
         },
-        b_dopen: {
-            type: Number,
-            required: true
-        },
-        b_dclose: {
-            type: Number,
-            required: true
-        },
-        b_tax: {
-            type: Number,
-            required: true
-        },
-        b_isMultiphase: {
+        b_isPaused: { //pause status
             type: Boolean,
             required: true
         },
-        b_isPaused: {
+        b_isSettled: { //settled status
             type: Boolean,
             required: true
         },
-        b_isSettled: {
+        b_isRefund: { //refund status
             type: Boolean,
             required: true
         },
-        b_isRefund: {
-            type: Boolean,
-            required: true
-        },
-        d_type: {
+
+        //description
+        name: { //project name
             type: String,
             required: false
         },
-        d_image: {
+        dealStructure: { //equity/token //old data
             type: String,
             required: false
         },
-        d_desc: {
-            type: String,
-            required: false
-        },
-        d_ticker: {
-            type: String,
-            required: false
-        },
-        d_tgePrice: {
+        alloTotal: { //total raised
             type: Number,
             required: false
         },
-        d_url_discord: {
+        genre: { //description for public investment
             type: String,
             required: false
         },
-        d_url_twitter: {
+        image: { //link to the image
             type: String,
             required: false
         },
-        d_url_web: {
+        description: { //long description
             type: String,
             required: false
         },
-        d_url_telegram: {
+        descriptionShort: { //short description
             type: String,
             required: false
         },
-        d_url_medium: {
+        ticker: { //ticker
             type: String,
             required: false
         },
-        c_display: {
-            type: Boolean,
-            required: true,
-            default: false
+        tge: { //tge price
+            type: Number,
+            required: false
         },
-        c_type: {
+        url_discord: { //link
+            type: String,
+            required: false
+        },
+        url_twitter: { //link
+            type: String,
+            required: false
+        },
+        url_web: { //link
+            type: String,
+            required: false
+        },
+        url_telegram: { //link
+            type: String,
+            required: false
+        },
+        url_medium: { //link
+            type: String,
+            required: false
+        },
+        icon: { //name of extra icon
             type: String,
             required: false,
-            default: "hot"
         },
-        c_url: {
+        slug: { //url
             type: String,
             required: false,
             default: "fill"
         },
-        c_filled: {
+
+        display: {
             type: Boolean,
-            required: false,
+            required: true,
             default: false
         },
-      c_showPublic: {
-        type: Boolean,
-        required: true,
-        default: false
-      }
+        displayPublic: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+
+        open: {
+            type: Number,
+            required: true
+        },
+        close: {
+            type: Number,
+            required: true
+        },
+
     },
     {
         versionKey: false,

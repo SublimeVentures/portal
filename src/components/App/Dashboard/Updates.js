@@ -4,9 +4,9 @@ import {useEffect, useRef} from "react";
 export default function Updates({}) {
     const ref = useRef(null);
 
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
+    // useEffect(() => {
+        // import('@lottiefiles/lottie-player');
+    // }, []);
 
 
     return (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PartnerSlide from "@/components/SignupFlow/PartnerSlide";
 const LoginModal = dynamic(() => import('@/components/SignupFlow/LoginModal'), {ssr: false,})
-import {dehydrate, QueryClient, useQuery} from "@tanstack/react-query";
+import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchPartners} from "@/fetchers/public";
 import { Slider3D } from 'react-slider-3d';
 import { getServerSession } from "next-auth/next"
@@ -16,20 +16,23 @@ import {getCsrfToken, signIn} from "next-auth/react";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
 import PAGE from "@/routes";
-//todo: store
+import { queryClient } from '@/lib/web3/queryCache'
+
+
 export default function Login() {
-    const { isLoading, error, data, isFetching, isError } = useQuery({
+    const { isLoading, data, isError } = useQuery({
             queryKey: ["partnerList"],
             queryFn: fetchPartners,
+            cacheTime: 180 * 60 * 1000,
+            staleTime: 90 * 60 * 1000,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            staleTime: 144000
         }
     );
     const router = useRouter();
     const { signMessageAsync } = useSignMessage()
     const { chain } = useNetwork()
-    const { address, connector, isConnected  } = useAccount()
+    const { address, isConnected  } = useAccount()
     let [errorMsg, setErrorMsg] = useState("")
     let [messageSigned, setMessageSigned] = useState(false)
     let [isPartnerLogin, setIsPartnerLogin] = useState(false)
@@ -102,7 +105,7 @@ export default function Login() {
                     <div className="text-3xl font-bold">3VC Whale</div>
                     <div className="pt-3">3VC was formed to provide the best opportunities for serious web3 investors. Whale pass get
                         you access to the investment before everyone else.
-                        <span className="font-bold">Mint soon 👀</span>
+                        <span className="font-bold"> Mint soon 👀</span>
                     </div>
                     <div className="flex flex-col gap-5 justify-end flex-1 mt-10 lg:mt-0">
                         <div className="my-auto disabled">
@@ -171,8 +174,12 @@ export const getServerSideProps = async(context) => {
         }
     }
 
-    const queryClient = new QueryClient()
-    await queryClient.prefetchQuery({queryKey: ["partnerList"], queryFn: fetchPartners})
+    await queryClient.prefetchQuery({
+        queryKey: ["partnerList"],
+        queryFn: fetchPartners,
+        cacheTime: 180 * 60 * 1000,
+        staleTime: 90 * 60 * 1000
+    })
     return {
         props: {
             dehydratedState: dehydrate(queryClient),

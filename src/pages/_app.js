@@ -2,16 +2,16 @@ import { SessionProvider } from "next-auth/react"
 import { WagmiConfig } from 'wagmi'
 import axios from 'axios';
 import {useState} from "react";
-import {Hydrate, QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
 import { client } from '@/lib/web3/wagmi'
+import { queryClient } from '@/lib/web3/queryCache'
 import Layout from '@/components/Layout/Layout';
 import '@/styles/globals.scss'
 
 axios.defaults.baseURL = 'http://localhost:3000';
 
-export default function App({ Component, pageProps: { session, ...pageProps } }) {
-    const [queryClient] = useState(() => new QueryClient())
 
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
     const renderWithLayout =
         Component.getLayout ||
         function (page) {

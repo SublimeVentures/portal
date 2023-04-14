@@ -5,25 +5,16 @@ import {
 } from '@tanstack/react-query'
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {fetchPublicInvestments} from "@/fetchers/public";
-
-export const getServerSideProps = async() => {
-    const queryClient = new QueryClient()
-    await queryClient.prefetchQuery({queryKey: ["publicInvestment"], queryFn: fetchPublicInvestments})
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient)
-        }
-    }
-}
-
+import { queryClient } from '@/lib/web3/queryCache'
 
 export default function InvestmentsPublic() {
-    const { isLoading, error, data, isFetching, isError } = useQuery({
+    const { isLoading, data, isError } = useQuery({
             queryKey: ["publicInvestment"],
             queryFn: fetchPublicInvestments,
+            cacheTime: 180 * 60 * 1000,
+            staleTime: 90 * 60 * 1000,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            staleTime: 144000
         }
     );
 
@@ -40,12 +31,12 @@ export default function InvestmentsPublic() {
                 <ul className="masonry-list flex flex-wrap justify-center mx-auto sinvest:ml-0 sinvest:mr-0 ">
                     {data.map((el,i) => {
                         return <li className="tile-case" key={i}>
-                            <a href="#">
+                            <a href={el.url_web} target="_blank">
                                 <div className="tile-primary-content bgFit"
-                                     style={{backgroundImage: 'url(' + el.d_image + ')'}}></div>
+                                     style={{backgroundImage: 'url(' + el.image + ')'}}></div>
                                 <div className="tile-secondary-content">
-                                    <h2>{el.d_type}</h2>
-                                    <p>{el.b_name}</p>
+                                    <h2>{el.genre}</h2>
+                                    <p>{el.name}</p>
                                 </div>
                             </a>
                         </li>
@@ -60,4 +51,19 @@ export default function InvestmentsPublic() {
             {/*<ReactQueryDevtools initialIsOpen />*/}
         </>
     )
+}
+
+
+export const getServerSideProps = async() => {
+    await queryClient.prefetchQuery({
+        queryKey: ["publicInvestment"],
+        queryFn: fetchPublicInvestments,
+        cacheTime: 180 * 60 * 1000,
+        staleTime: 90 * 60 * 1000
+    })
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient)
+        }
+    }
 }

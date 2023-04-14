@@ -1,6 +1,7 @@
 import {DelegateCash} from "delegatecash";
 import {Network, Alchemy} from 'alchemy-sdk';
 import {fetchPartners} from "@/fetchers/public";
+import {fetchEnabledPartners} from "@/fetchers/login";
 
 //todo: replace with env
 const settings = {
@@ -20,8 +21,7 @@ export const checkDelegate = async (address) => {
     try {
         const delegations = await dc.getDelegationsByDelegate(address);
         if (delegations?.length > 0) {
-            const partners = await fetchPartners()
-
+            const partners = await fetchEnabledPartners()
             let amt = 0;
             let tokenId = 0;
             let tokenIdContract;
@@ -35,11 +35,12 @@ export const checkDelegate = async (address) => {
                             tokenIdContract = el.contract
                         }
                     })
+                    if (!tokenIdContract) {
+                        tokenIdContract = isDelegated[0].contract
+                    }
                 }
 
-                if (!tokenIdContract) {
-                    tokenIdContract = isDelegated[0].contract
-                }
+
             }
 
             if (amt > 0) {

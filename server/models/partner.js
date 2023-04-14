@@ -36,19 +36,16 @@ const PartnerSchema = new mongoose.Schema(
             type: Boolean,
             required: true,
             default: false,
-            index: true
         },
         isVisible: {
             type: Boolean,
             required: true,
             default: false,
-            index: true
         },
         isEnabled: {
             type: Boolean,
             required: true,
             default: false,
-            index: true
         },
     },
     {

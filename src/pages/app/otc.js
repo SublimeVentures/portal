@@ -69,7 +69,7 @@ export default function AppOtc() {
                     <div className="col-span-12 lg:col-span-4 flex flex-1">
                         <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
                             <div className="overflow-x-auto flex flex-col">
-                                <div className="font-bold text-2xl p-5">Markets</div>
+                                <div className="text-xl uppercase font-medium text-outline p-5">Markets</div>
                                 <table>
                                     <thead className="bg-navy ">
                                     <tr>
@@ -104,7 +104,7 @@ export default function AppOtc() {
                         <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
                                 <div className="overflow-x-auto flex flex-col flex-1">
                                     <div className="p-5 flex flex-row relative">
-                                        <div className="font-bold text-2xl flex flex-1">
+                                        <div className="text-xl uppercase font-medium text-outline flex flex-1">
                                             Offers
                                         </div>
                                         <div className="absolute right-5 top-3">

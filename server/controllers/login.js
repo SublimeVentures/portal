@@ -59,7 +59,6 @@ async function isInjectedUser(address) {
     }
 }
 
-//todo: sprawdź delegated
 //todo: switch to SEPOLIA & TEST IT!!!
 async function login(address) {
     //@dev: maybe add pageKey support?
