@@ -44,18 +44,21 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - invest
 - investment updates
 - progress depending on tier
+- watch for chain selected on investment page
+
+- handle empty response from offer details
+- 404 page
 
 - loading na login + error na login
 - modal fullscreen
 - save vault delegatcash
-- watch for chain on investment page
-- upewnić się że fetchery nie trigerrują się co chwilę
+
 - filler for portfolio size
 - loader (login)
 - timeline (dashboard, setting, vault)
 - scaling linków na ofercie
 - metadata
-- 404 page
+
 
 - DEPLOY
 

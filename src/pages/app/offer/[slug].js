@@ -6,19 +6,20 @@ import {queryClient} from "@/lib/web3/queryCache";
 import {fetchOfferDetails} from "@/fetchers/offer";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
+
 const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
-import { getToken } from "next-auth/jwt"
+import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
 
 
 export const AppOfferDetails = () => {
     const router = useRouter()
-    const { slug } = router.query
-    const { data: session, status } = useSession()
+    const {slug} = router.query
+    const {data: session, status} = useSession()
     const ACL = session?.user?.ACL
-    const ADDRESS = session?.user?.address
+    const ADDRESS = ACL !== 2 ? 0 : session?.user?.address
 
-    const { isLoading, data: investment, isError } = useQuery({
+    const {isLoading, data: investment, isError} = useQuery({
             queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
             queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
             refetchOnMount: false,
@@ -32,7 +33,7 @@ export const AppOfferDetails = () => {
     // alloFilled
     // alloMy
     // loading
-    if(status !== "authenticated") return <>Loading</>
+    if (status !== "authenticated") return <>Loading</>
     return (
         <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
             <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
@@ -52,18 +53,20 @@ export const AppOfferDetails = () => {
 }
 
 
-export const getServerSideProps = async({params, req}) => {
-    const { slug } = params
+export const getServerSideProps = async ({params, req}) => {
+    const {slug} = params
     const token = await getToken({
         req,
         secret: process.env.NEXTAUTH_SECRET,
         encryption: true
     })
     const ACL = token?.user?.ACL
+    const ADDRESS = ACL !== 2 ? 0 : token?.user?.address
     console.log("server side props", token)
+
     await queryClient.prefetchQuery({
-        queryKey: ["offerDetails", {slug, ACL}],
-        queryFn: () => fetchOfferDetails(slug, ACL),
+        queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
+        queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
         cacheTime: 30 * 60 * 1000,
         staleTime: 15 * 60 * 1000,
     })

@@ -9,7 +9,7 @@ import {getToken} from "next-auth/jwt";
 export default function AppOffer() {
     const { data: session, status } = useSession()
     const ACL = session?.user?.ACL
-    const ADDRESS = session?.user?.address
+    const ADDRESS = (ACL !==2 && ACL !== undefined) ? 0 : session?.user?.address
 
     const { isLoading, data: investments, isError } = useQuery({
             queryKey: ["offerList", {ACL, ADDRESS}],
@@ -40,7 +40,7 @@ export const getServerSideProps = async({req}) => {
         encryption: true
     })
     const ACL = token?.user?.ACL
-    const ADDRESS = token?.user?.address
+    const ADDRESS = ACL !==2 ? 0 : token?.user?.address
     console.log("server side props", token)
 
     await queryClient.prefetchQuery({
