@@ -39,12 +39,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- investment display depending on tier (data kiedy widoczne dla partnerów a kiedy dla whale + kiedy niewidoczne)
-- investment dates & progress depending on tier
 - investing fcfs & unlimited depending on tier
 - invest total allocation lockup
 - invest
 - investment updates
+- progress depending on tier
 
 - loading na login + error na login
 - modal fullscreen

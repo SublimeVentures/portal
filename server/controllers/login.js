@@ -59,16 +59,16 @@ async function isInjectedUser(address) {
     }
 }
 
-//todo: switch to SEPOLIA & TEST IT!!!
 async function login(address) {
     //@dev: maybe add pageKey support?
     const {ownedNfts} = await getWeb3().eth.nft.getNftsForOwner(address)
     let type = await isWhale(ownedNfts)
     console.log("owned NFTs", ownedNfts)
     console.log("type", type)
-    // if (!type) type = await isPartner(ownedNfts)
-    // if (!type) type = await isInjectedUser(address)
+    if (!type) type = await isPartner(ownedNfts)
+    if (!type) type = await isInjectedUser(address)
     return type
 }
+
 
 module.exports = {login}

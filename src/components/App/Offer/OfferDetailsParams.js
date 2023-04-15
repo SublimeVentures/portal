@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
 export default function OfferDetailsParams({offer}) {
-    let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal, alloFilled, alloMy, alloRequired} = offer
+    let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal} = offer
 
     let [normalized_ppu, setNormalizedPpu] = useState("")
     let [normalized_tge, setNormalizedTge] = useState("")
@@ -21,13 +21,14 @@ export default function OfferDetailsParams({offer}) {
     useEffect(() => {
         setNormalizedTotal(alloTotal?.toLocaleString())
     }, [alloTotal]);
-    useEffect(() => {
-        setNormalizedFilled(alloFilled?.toLocaleString())
-    }, [alloFilled]);
-    useEffect(() => {
-        setNormalizedMy(alloMy?.toLocaleString())
-    }, [alloMy]);
+    // useEffect(() => {
+    //     setNormalizedFilled(alloFilled?.toLocaleString())
+    // }, [alloFilled]);
+    // useEffect(() => {
+    //     setNormalizedMy(alloMy?.toLocaleString())
+    // }, [alloMy]);
 
+    // alloFilled, alloMy, alloRequired
 
     return (
 
@@ -80,7 +81,7 @@ export default function OfferDetailsParams({offer}) {
                     <div className="">${normalized_my}</div>
                 </div>
                 <div className="flex flex-1 items-end">
-                    <OfferDetailsProgress alloTotal={alloTotal} alloFilled={alloFilled} alloRequired={alloRequired}/>
+                    <OfferDetailsProgress alloTotal={alloTotal} alloFilled={10} alloRequired={500}/>
 
                 </div>
 

@@ -15,7 +15,7 @@ import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 
 
 
-export default function OfferDetailsInvestPhases({phases, active}) {
+export default function OfferDetailsInvestPhases({offer}) {
 
     const getButtonIcon = () => {
         switch (active) {

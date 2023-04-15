@@ -1,24 +1,24 @@
 const express = require('express')
 const router = express.Router();
-const {getOfferList, getOfferDetails} = require("../queries/offer");
 const {getEnv} = require("../services/mongo");
+const {getAccessToken} = require("../services/auth");
+const {getParamOfferDetails} = require("../controllers/offerDetails");
+const {getParamOfferList} = require("../controllers/offerList");
+const {getInjectedUser} = require("../queries/injectedUser");
 
 router.get('/', async (req, res) => {
-  //todo: has to be logged in
-  res.status(200).json(await getOfferList())
+    const session = await getAccessToken(req)
+    if (!session) return res.status(401).json({})
+
+    return res.status(200).json(await getParamOfferList(session, req))
 });
 
 router.get('/:slug', async (req, res) => {
-  //todo: has to be logged in
-  const offer = await getOfferDetails(req.params.slug);
-  const offerData = {...offer._doc, ...{
-      alloFilled: 90000,
-      alloMy:35000,
-      research: getEnv().research
-  }}
-  console.log("offer", offerData)
-  res.status(200).json(offerData)
+    const session = await getAccessToken(req)
+    if (!session) return res.status(401).json({})
+
+    res.status(200).json(await getParamOfferDetails(session, req))
 });
 
 
-module.exports = { router }
+module.exports = {router}

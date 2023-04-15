@@ -3,18 +3,26 @@ import OfferItem from "@/components/App/Offer/OfferItem";
 import {queryClient} from "@/lib/web3/queryCache";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchOfferList} from "@/fetchers/offer";
+import {useSession} from "next-auth/react";
+import {getToken} from "next-auth/jwt";
 
 export default function AppOffer() {
+    const { data: session, status } = useSession()
+    const ACL = session?.user?.ACL
+    const ADDRESS = session?.user?.address
+
     const { isLoading, data: investments, isError } = useQuery({
-            queryKey: ["offerList"],
-            queryFn: fetchOfferList,
+            queryKey: ["offerList", {ACL, ADDRESS}],
+            queryFn: () => fetchOfferList(ACL),
             cacheTime: 30 * 60 * 1000,
             staleTime: 15 * 60 * 1000,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
+            enabled: !!ACL
         }
     );
 
+    if(status !== "authenticated") return <>Loading</>
     return (
         <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
             {!!investments && investments.map(el =>
@@ -25,11 +33,19 @@ export default function AppOffer() {
     )
 }
 
+export const getServerSideProps = async({req}) => {
+    const token = await getToken({
+        req,
+        secret: process.env.NEXTAUTH_SECRET,
+        encryption: true
+    })
+    const ACL = token?.user?.ACL
+    const ADDRESS = token?.user?.address
+    console.log("server side props", token)
 
-export const getServerSideProps = async() => {
     await queryClient.prefetchQuery({
-        queryKey: ["offerList"],
-        queryFn: fetchOfferList,
+        queryKey: ["offerList", {ACL, ADDRESS}],
+        queryFn: ()=>fetchOfferList(ACL, ADDRESS),
         cacheTime: 30 * 60 * 1000,
         staleTime: 15 * 60 * 1000
     })

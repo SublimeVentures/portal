@@ -42,7 +42,6 @@ const OfferSchema = new mongoose.Schema(
             type: Boolean,
             required: true
         },
-
         //description
         name: { //project name
             type: String,
@@ -56,9 +55,18 @@ const OfferSchema = new mongoose.Schema(
             type: Number,
             required: false
         },
+        alloTotalPartner: { //total raised
+            type: Number,
+            required: false
+        },
         alloRequired: { //total raised
             type: Number,
             required: false
+        },
+        alloRequiredPartner: { //total raised
+            type: Number,
+            required: true,
+            default:0,
         },
         rrPages: {
             type: Number,
@@ -96,14 +104,6 @@ const OfferSchema = new mongoose.Schema(
             type: String,
             required: false
         },
-        url_telegram: { //link
-            type: String,
-            required: false
-        },
-        url_medium: { //link
-            type: String,
-            required: false
-        },
         icon: { //name of extra icon
             type: String,
             required: false,
@@ -111,7 +111,9 @@ const OfferSchema = new mongoose.Schema(
         slug: { //url
             type: String,
             required: false,
-            default: "fill"
+            default: "fill",
+            index: true
+
         },
         t_vesting: {
             type: String,
@@ -135,12 +137,29 @@ const OfferSchema = new mongoose.Schema(
             required: true,
             default: false
         },
-
+        access: {
+            type: Number,
+            required: true,
+            default: 0, //0-everyone, 1-whale, 2-partner
+            index: true
+        },
+        accessPartnerDate: {
+            type: Number,
+            required: false
+        },
         d_open: {
             type: Number,
             required: true
         },
         d_close: {
+            type: Number,
+            required: true
+        },
+        d_openPartner: {
+            type: Number,
+            required: true
+        },
+        d_closePartner: {
             type: Number,
             required: true
         },
