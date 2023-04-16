@@ -41,7 +41,6 @@ export const getServerSideProps = async({req}) => {
     })
     const ACL = token?.user?.ACL
     const ADDRESS = ACL !==2 ? 0 : token?.user?.address
-    console.log("server side props", token)
 
     await queryClient.prefetchQuery({
         queryKey: ["offerList", {ACL, ADDRESS}],

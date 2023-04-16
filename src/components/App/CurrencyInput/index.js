@@ -5,7 +5,7 @@ import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 
 
-export default function CurrencyInput({type, placeholder, max, min, currency}) {
+export default function CurrencyInput({type, placeholder, max, min, setStatus}) {
     const [input, setInput] = useState(null)
     const [inputFormatted, setInputFormatted] = useState("")
     const [showInfo, setShowInfo] = useState(false)
@@ -71,12 +71,20 @@ export default function CurrencyInput({type, placeholder, max, min, currency}) {
 
     useEffect(() => {
         if (input < min) {
+            setStatus(true)
             return setIsError({state: true, msg: `Minimum investment: $${min.toLocaleString()}`})
         } else if (input > max) {
+            setStatus(true)
             return setIsError({state: true, msg: `Maximum investment: $${max.toLocaleString()}`})
         } else {
+            if(input % 100 > 0) {
+                setStatus(true)
+                return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
+            }
+            setStatus(false)
             return setIsError({state: false, msg: `Minimum investment: $${min.toLocaleString()}`})
         }
+
     }, [input]);
 
     useEffect(() => {

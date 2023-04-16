@@ -42,6 +42,7 @@ async function getParamOfferDetails(session, req) {
         d_close: null,
         alloTotal: null,
         alloRequired: null,
+        alloMax: null
     }
 
     switch (ACL) {
@@ -65,6 +66,7 @@ function getOfferDetailsWhale (offer, template) {
         template.d_close = offer.d_close;
         template.alloTotal = offer.alloTotal;
         template.alloRequired = offer.alloRequired;
+        template.alloMax = offer.alloMax ? offer.alloMax : offer.alloTotal;
         return template;
     } else return false
 }
@@ -98,6 +100,7 @@ function fillPartnerData (offer, template) {
     template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerdelay)
     template.alloTotal = offer.alloTotalPartner ? offer.alloTotalPartner : offer.alloTotal;
     template.alloRequired = offer.alloRequiredPartner>=0 ? offer.alloTotalPartner : offer.alloTotal;
+    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.b_alloMin * Number(getEnv().defaultpartnermulti);
     return template;
 }
 

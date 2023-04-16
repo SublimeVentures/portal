@@ -1,38 +1,35 @@
-import VanillaTilt from "vanilla-tilt";
-import moment from 'moment'
-import {useEffect, useRef} from "react";
-import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import IconPantheon from "@/assets/svg/Pantheon.svg";
-import IconCart from "@/assets/svg/Cart.svg";
-import IconLock from "@/assets/svg/Lock.svg";
-import IconCalculator from "@/assets/svg/Calculator.svg";
-import WalletIcon from "@/assets/svg/Wallet.svg";
+
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
+import {parsePhase} from "@/lib/phases/parsePhase";
+import {useEffect, useState} from "react";
 
-export default function OfferDetailsParams({offer}) {
-    // let {image, name, starts, ends} = offer
+export const OfferDetailsInvest = ({offer, session}) => {
+    let {user} = session
+    let [phases, setPhases] = useState(null)
+    let [current, setCurrent] = useState(0)
+    let [isLast, setIsLast] = useState(0)
 
-    const currentInvestmentStep = 1
-    const investmentSteps = [
-        {step: 'Vote', action: "Pledge", date: '2022-10-15', icon: "vote"},
-        //todo: fcfs
-        {step: 'Open', action: "Invest", date: '2022-10-15', icon: "open"},
-        {step: 'Closed', action: "Closed", date: '2022-10-15', icon: "closed", extraClass: '-mt-1'},
-    ]
+    let isClosed = !!phases && phases.length-1 !== current
 
-
-    const isClosed = () => {
-        return currentInvestmentStep !== 2
+    const feedPhases = () => {
+        const {phase, active, isLast} = parsePhase(user.ACL, offer, 0)
+        setPhases(phase)
+        setCurrent(active)
+        setIsLast(isLast)
     }
+
+    useEffect(() => {
+        feedPhases()
+    }, [user])
 
     return (
 
         <div className="flex flex-1 flex-col min-h-[300px] ">
             {/*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="true" className="hidden sinvest:flex"/>*/}
             {/*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="false" className="flex sinvest:hidden"/>*/}
-            {isClosed() ? <OfferDetailsInvestPhases phases={investmentSteps} active={currentInvestmentStep}/> :
+            {isClosed ?
+                <OfferDetailsInvestPhases offer={offer} phases={phases} active={current} isLast={isLast} refresh={feedPhases} user={user}/> :
                 <OfferDetailsInvestClosed/>}
 
         </div>

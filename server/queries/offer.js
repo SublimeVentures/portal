@@ -5,10 +5,8 @@ async function getOffersPublic() {
 }
 
 async function getOfferList(extraFilter) {
-  console.log("filtr", {display: true, ...extraFilter})
   return Offer.find({display: true, ...extraFilter})
 }
-
 
 async function getOfferDetails(slug) {
   return Offer.findOne({display: true, slug:slug})

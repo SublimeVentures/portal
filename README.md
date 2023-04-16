@@ -39,7 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- investing fcfs & unlimited depending on tier
 - invest total allocation lockup
 - invest
 - investment updates
@@ -62,6 +61,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - DEPLOY
 
+- otc
 - connect discord to user profile
 - list files / updates from projects
 - transition on pages

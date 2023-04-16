@@ -1,6 +1,6 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import OfferDetailsParams from "@/components/App/Offer/OfferDetailsParams";
-import OfferDetailsInvest from "@/components/App/Offer/OfferDetailsInvest";
+import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
+import {OfferDetailsInvest} from "@/components/App/Offer/OfferDetailsInvest";
 import dynamic from "next/dynamic";
 import {queryClient} from "@/lib/web3/queryCache";
 import {fetchOfferDetails} from "@/fetchers/offer";
@@ -37,7 +37,7 @@ export const AppOfferDetails = () => {
     return (
         <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
             <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
-                <OfferDetailsInvest offer={investment}/>
+                <OfferDetailsInvest offer={investment} session={session}/>
             </div>
             <div
                 className="flex flex-col col-span-12 gap-5 mobile:gap-10 sinvest:flex-row xl:col-span-4 xl:!flex-col xl:gap-0">

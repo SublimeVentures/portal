@@ -1,6 +1,5 @@
 import {DelegateCash} from "delegatecash";
 import {Network, Alchemy} from 'alchemy-sdk';
-import {fetchPartners} from "@/fetchers/public";
 import {fetchEnabledPartners} from "@/fetchers/login";
 
 //todo: replace with env

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
-export default function OfferDetailsParams({offer}) {
+export const OfferDetailsParams = ({offer}) => {
     let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal} = offer
 
     let [normalized_ppu, setNormalizedPpu] = useState("")

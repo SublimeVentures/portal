@@ -163,6 +163,19 @@ const OfferSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
+        alloMax: {
+            type: Number,
+            required: false
+        },
+        alloMaxPartner: {
+            type: Number,
+            required: false
+        },
+        isPhased: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
 
     },
     {
