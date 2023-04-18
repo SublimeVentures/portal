@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 
-export default function Dropdown({options, classes}) {
+export default function Dropdown({options, classes, propSelected}) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(0)
     const [direction, setDirection] = useState(0)
@@ -12,6 +12,7 @@ export default function Dropdown({options, classes}) {
         setMoved(index * -62)
         let _selected = selected
         setSelected(index)
+        propSelected(index)
         setDirection(_selected < index ? -1 : 1)
         setTimeout(() => {
             setDirection(0)

@@ -75,6 +75,7 @@
     }
   }
   &.particles {
+
     .particles-circle{
       position: absolute;
       background-color: #ddeff3;
@@ -84,7 +85,7 @@
       top: 10px;
       left: 50%;
       margin-left: -15px;
-      z-index: -1;
+      z-index: 0;
       border-radius: 50%;
       transform: scale(0);
       visibility: hidden;

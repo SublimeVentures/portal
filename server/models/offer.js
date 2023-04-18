@@ -51,23 +51,7 @@ const OfferSchema = new mongoose.Schema(
             type: String,
             required: false
         },
-        alloTotal: { //total raised
-            type: Number,
-            required: false
-        },
-        alloTotalPartner: { //total raised
-            type: Number,
-            required: false
-        },
-        alloRequired: { //total raised
-            type: Number,
-            required: false
-        },
-        alloRequiredPartner: { //total raised
-            type: Number,
-            required: true,
-            default:0,
-        },
+
         rrPages: {
             type: Number,
             required: false
@@ -163,6 +147,11 @@ const OfferSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
+        isPhased: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
         alloMax: {
             type: Number,
             required: false
@@ -171,12 +160,23 @@ const OfferSchema = new mongoose.Schema(
             type: Number,
             required: false
         },
-        isPhased: {
-            type: Boolean,
-            required: true,
-            default: false,
+        alloTotal: { //total raised
+            type: Number,
+            required: false
         },
-
+        alloTotalPartner: { //total raised
+            type: Number,
+            required: false
+        },
+        alloRequired: { //total raised
+            type: Number,
+            required: false
+        },
+        alloRequiredPartner: { //total raised
+            type: Number,
+            required: true,
+            default:0,
+        },
     },
     {
         versionKey: false,

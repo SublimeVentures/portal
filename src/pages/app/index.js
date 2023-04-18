@@ -1,5 +1,4 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import {getServerSession} from "next-auth/next";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import RoundBanner from "@/components/App/RoundBanner";
 import ReadIcon from "@/assets/svg/Read.svg";
@@ -9,7 +8,6 @@ import LatestInvestment from "@/components/App/Dashboard/LatestInvestment";
 import Updates from "@/components/App/Dashboard/Updates";
 
 
-//todo: project's updates updates
 export default function AppDashboard() {
 
     return (

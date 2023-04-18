@@ -39,37 +39,42 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- invest total allocation lockup
-- invest
+
+- invest & refeed investe
+- create Raise along with new offer
 - investment updates
-- progress depending on tier
+  - isConfirmed, isExpired
+  - zapisz do participants
+- vault
+- investment status on list
 - watch for chain selected on investment page
+- fcfs only one investment
+
 
 - handle empty response from offer details
 - 404 page
-
+- loader page
 - loading na login + error na login
-- modal fullscreen
-- save vault delegatcash
+- react context for session
 
-- filler for portfolio size
-- loader (login)
+- save vault delegatcash
+- homepage datafeed
+- otc
 - timeline (dashboard, setting, vault)
 - scaling linków na ofercie
+- calculator
 - metadata
 
-
 - DEPLOY
-
-- otc
+- whale deposit/ withdraw features in settings
 - connect discord to user profile
-- list files / updates from projects
 - transition on pages
 - extract transition variable to separate file (dialogs)
 - extract style for citcap
 - citcap - https://layerzero.network/ menu effect + font
 
-- w vault osobna kategoria z aktywnymi
+- list files / updates from projects
+- w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
 - connect delegate address delegate.cash (solidity)

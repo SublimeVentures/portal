@@ -1,6 +1,6 @@
-import Currency from "../models/currency.js";
+const Currency = require("../models/currency.js");
 
-export async function upsertCurrency(address, logo, name, symbol, precision, isSettlement) {
+async function upsertCurrency(address, logo, name, symbol, precision, isSettlement) {
     return Currency.findOneAndUpdate(
         {
             address: address.toLowerCase()
@@ -13,3 +13,8 @@ export async function upsertCurrency(address, logo, name, symbol, precision, isS
         }, {upsert: true}
     );
 }
+
+ async function getPayableCurrencies() {
+    return Currency.find({isSettlement: true},{address:1, precision:1, symbol:1, _id:0});
+}
+module.exports = { getPayableCurrencies }

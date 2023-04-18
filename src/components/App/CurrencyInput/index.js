@@ -5,7 +5,7 @@ import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 
 
-export default function CurrencyInput({type, placeholder, max, min, setStatus}) {
+export default function CurrencyInput({type, placeholder, max, min, currencies, setStatus, shareInput, shareCurrency}) {
     const [input, setInput] = useState(null)
     const [inputFormatted, setInputFormatted] = useState("")
     const [showInfo, setShowInfo] = useState(false)
@@ -16,8 +16,8 @@ export default function CurrencyInput({type, placeholder, max, min, setStatus}) 
         if (event.key.length === 1 && /\D/.test(event.key)) {
             return;
         }
-        // console.log("even", event)
     }
+
 
 
     const setValue = (data) => {
@@ -26,6 +26,7 @@ export default function CurrencyInput({type, placeholder, max, min, setStatus}) 
             data = data.replace(/[^0-9]/g, '')
         }
         setInput(data)
+        shareInput(data)
         let formatted = Number(data).toLocaleString()
         // console.log("formatted",formatted)
         if(formatted==0) {
@@ -57,9 +58,6 @@ export default function CurrencyInput({type, placeholder, max, min, setStatus}) 
     }
 
     const onInputChange = (event) => {
-        console.log("onInputChange", {
-            [event.target.name]: event.target.value
-        })
         setValue(event.target.value)
     }
 
@@ -126,7 +124,7 @@ export default function CurrencyInput({type, placeholder, max, min, setStatus}) 
                     </Transition.Child>
                 </Transition>
             </div>
-            <Dropdown options={['USDT', 'USDC']} classes={'customSize'}/>
+            <Dropdown options={currencies} classes={'customSize'} propSelected={shareCurrency}/>
             <Transition appear show={showInfo} as={Fragment}>
                 <Transition.Child
                     as={Fragment}

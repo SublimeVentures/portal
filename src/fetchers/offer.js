@@ -37,3 +37,20 @@ export const fetchOfferDetails = async (slug, acl, address) => {
 }
 
 
+export const fetchOfferAllocation = async (id) => {
+    if(!id) return {}
+
+    console.log("Fetching Offer Allocation", id,);
+    try {
+        let url = `/api/offer/${id}/allocation`
+        console.log("allocation url", url)
+        const {data} = await axios.get(url)
+        console.log("offer allocation from server", data)
+        return data
+    } catch(e) {
+        console.log("e: fetchOfferAllocation",e)
+    }
+    return {}
+}
+
+

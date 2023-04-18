@@ -1,12 +1,23 @@
-import {Fragment} from "react";
+import {Fragment, useState} from "react";
 import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
-export default function LoginModal({isOpen, closeModal, title, content }) {
+export default function LoginModal({isOpen, closeModal, title, content, persistent }) {
+    const [isShake, setShake] = useState(false)
+
+    const closeModalOnBg = () => {
+        if(!persistent) closeModal()
+        else {
+            setShake(true)
+            setTimeout(function () {
+                setShake(false)
+            }, 1000);
+        }
+    }
 
   return (
        <Transition appear show={isOpen} as={Fragment}>
-              <Dialog as="div" className="relative z-10 " onClose={closeModal}>
+              <Dialog as="div" className="relative z-10 " onClose={()=>closeModalOnBg()}>
                   <Transition.Child
                       as={Fragment}
                       enter="ease-out duration-300"
@@ -20,7 +31,7 @@ export default function LoginModal({isOpen, closeModal, title, content }) {
                   </Transition.Child>
 
                   <div className="fixed inset-0 overflow-y-auto">
-                      <div className="flex min-h-full items-center justify-center p-4 text-center ">
+                      <div className="flex min-h-full items-center justify-center sm:p-4 text-center ">
                           <Transition.Child
                               as={Fragment}
                               enter="ease-out duration-300"
@@ -30,7 +41,7 @@ export default function LoginModal({isOpen, closeModal, title, content }) {
                               leaveFrom="opacity-100 scale-100"
                               leaveTo="opacity-0 scale-95"
                           >
-                              <Dialog.Panel className="w-full glareBg max-w-md transform overflow-hidden  glareBg text-white p-10 md:rounded-xl bg-navy2 text-start transition-all">
+                              <Dialog.Panel className={`w-full min-h-screen glareBg w-full sm:min-h-min sm:max-w-md transform overflow-hidden  glareBg text-white p-10 md:rounded-xl bg-navy2 text-start transition-all ${isShake ? 'shake' : ''}`}>
                                   <Dialog.Title
                                       as="h3"
                                       className="text-3xl font-bold pb-5 pt-5"

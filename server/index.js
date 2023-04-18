@@ -8,6 +8,8 @@ const {connectWeb3} = require("./services/web3");
 const {router: publicRoute} = require("./routes/public.js");
 const {router: validateRoute} = require("./routes/validate.js");
 const {router: offerRoute} = require("./routes/offer.js");
+const {router: investRoute} = require("./routes/invest.js");
+const {router: payableRoute} = require("./routes/payable.js");
 // import {connectQueue} from "./services/zeromq";
 
 const port = parseInt(process.env.PORT || '3000', 10);
@@ -27,6 +29,8 @@ nextApp.prepare().then(async() => {
     app.use('/api/public', publicRoute);
     app.use('/api/validate', validateRoute);
     app.use('/api/offer', offerRoute);
+    app.use('/api/invest', investRoute);
+    app.use('/api/payable', payableRoute);
 
 
     io.on('connection', (socket) => {

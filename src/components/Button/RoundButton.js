@@ -35,15 +35,15 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
         setExecuting(false)
     }
 
-
+    //todo: loading state vs login state
     return (
         <div className={`v-align ${isActive ? 'active' : ''}`}>
             <div className={`
               btn-wrap
-              ${showParticles && "particles"}
-              ${isPrimary && "full-btn"}
-              ${!isPrimary && "out-btn"}
-              ${isLoading || isDisabled || isExecuting && "disabled"}  
+              ${showParticles ? "particles" :''}
+              ${isPrimary ? "full-btn" :''}
+              ${!isPrimary ? "out-btn":''}
+              ${isLoading || isDisabled || isExecuting ? "disabled": ''}  
             `}>
                     <button className={`btn ${size}`} onClick={animate} ref={tilt}>
                     <div className={`

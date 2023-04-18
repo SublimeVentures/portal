@@ -1,5 +1,5 @@
 const {getEnv} = require("../services/mongo");
-const {getOfferDetails} = require("../queries/offer");
+const {getOfferDetails, getOfferAllocationData} = require("../queries/offer");
 const moment = require("moment");
 const {getInjectedUser} = require("../queries/injectedUser");
 const {checkAcl} = require("./acl");
@@ -37,6 +37,8 @@ async function getParamOfferDetails(session, req) {
         t_vesting: offer.t_vesting,
         rrPages: offer.rrPages,
         research: getEnv().research,
+        diamond: getEnv().diamond,
+        whale: getEnv().id,
         slug: offer.slug,
         d_open: null,
         d_close: null,
@@ -104,5 +106,21 @@ function fillPartnerData (offer, template) {
     return template;
 }
 
+async function getOfferAllocation(session, req) {
+    const {ACL} = checkAcl(session, req)
+    const allocation = await getOfferAllocationData(Number(req.params.id))
+    if(ACL === 0) {
+        return {
+            alloFilled: allocation.alloFilled + allocation.alloSide,
+            alloRes: allocation.alloRes
+        }
+    } else {
+        return {
+            alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
+            alloRes: allocation.alloResPartner
+        }
+    }
+}
 
-module.exports = {getParamOfferDetails}
+
+module.exports = {getParamOfferDetails, getOfferAllocation}

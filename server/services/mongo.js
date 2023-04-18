@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const {getEnvironment} = require("../queries/environment");
 const Offer = require("../models/offer.js");
 const InjectedUsers = require("../models/injectedUser.js");
+const Raise = require("../models/raise.js");
 
 
 let env = {}
@@ -63,6 +64,10 @@ async function connectDB() {
         //     address: "0x493ACbD63218bf5b4507a756FBf76952335861b3",
         //     partner: "0x900FDa71Cf0A823692F99bAe87944252894994cA",
         //     offerAccess: [1]
+        // })
+
+        // await Raise.create({
+        //     id:1,
         // })
 
         console.log("|---- DB: connected",)

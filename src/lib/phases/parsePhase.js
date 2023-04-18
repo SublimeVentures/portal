@@ -60,7 +60,7 @@ function parseRegular(offer) {
 
 function parseMaxAllocation (ACL, amt, offer, phase, allocationLeft) {
     if(ACL === 0) {
-        return allocationLeft
+        return offer.alloMax < allocationLeft ? offer.alloMax : allocationLeft
     } else {
         const partnerAllocation = offer.alloMax * amt < allocationLeft ? offer.alloMax * amt : allocationLeft
         if(offer.isPhased) {

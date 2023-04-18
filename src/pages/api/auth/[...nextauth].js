@@ -29,9 +29,6 @@ export default async function auth(req, res) {
                     const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
                     const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
 
-                    //todo: test in prod
-                    // const csrf = await getCsrfToken({req})
-
                     const result = await siwe.verify({
                         signature: credentials?.signature || "",
                         domain: nextAuthUrl.host,
@@ -91,7 +88,7 @@ export default async function auth(req, res) {
             // async session({ session, token }) {
             //     console.log("session", session)
             //     console.log("token", token)
-            //     //todo: tutaj dodawaja dodatkoe dane
+            //     tutaj dodawaja dodatkoe dane
             //     session.user.address = token.sub
             //     session.address = token.sub
             //     return session

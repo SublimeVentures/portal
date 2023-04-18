@@ -1,34 +1,22 @@
 import {useEffect, useState} from "react";
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
-export const OfferDetailsParams = ({offer}) => {
-    let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal} = offer
+export const OfferDetailsParams = ({offer, allocation}) => {
+    let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
-    let [normalized_ppu, setNormalizedPpu] = useState("")
-    let [normalized_tge, setNormalizedTge] = useState("")
-    let [normalized_tgeDiff, setNormalizedTgeDiff] = useState("")
-    let [normalized_total, setNormalizedTotal] = useState("")
-    let [normalized_filled, setNormalizedFilled] = useState("")
-    let [normalized_my, setNormalizedMy] = useState("")
 
-    useEffect(() => {
-        setNormalizedPpu(b_ppu?.toLocaleString())
-    }, [b_ppu]);
-    useEffect(() => {
-        setNormalizedTge(tge?.toLocaleString())
-        setNormalizedTgeDiff((100*(tge - b_ppu)/b_ppu)?.toLocaleString())
-    }, [tge]);
-    useEffect(() => {
-        setNormalizedTotal(alloTotal?.toLocaleString())
-    }, [alloTotal]);
-    // useEffect(() => {
-    //     setNormalizedFilled(alloFilled?.toLocaleString())
-    // }, [alloFilled]);
-    // useEffect(() => {
-    //     setNormalizedMy(alloMy?.toLocaleString())
-    // }, [alloMy]);
 
-    // alloFilled, alloMy, alloRequired
+    const normalized_ppu = b_ppu?.toLocaleString()
+    const normalized_tge = tge?.toLocaleString()
+    const normalized_tgeDiff = (100*(tge - b_ppu)/b_ppu)?.toLocaleString()
+    const normalized_total = alloTotal?.toLocaleString()
+    const normalized_filled = allocation?.alloFilled?.toLocaleString()
+    // const normalized_my = allocation?.alloFilled?.toLocaleString()
+    const normalized_my = 10
+
+    //todo:
+    // alloMy
+
 
     return (
 
@@ -78,11 +66,10 @@ export const OfferDetailsParams = ({offer}) => {
                 </div>
                 <div className="flex text-app-success mb-1">
                     <div className="flex-1 ">MINE</div>
-                    <div className="">${normalized_my}</div>
+                    <div className="">${normalized_my} /// {allocation?.alloRes}</div>
                 </div>
                 <div className="flex flex-1 items-end">
-                    <OfferDetailsProgress alloTotal={alloTotal} alloFilled={10} alloRequired={500}/>
-
+                    <OfferDetailsProgress alloTotal={alloTotal} alloFilled={allocation?.alloFilled} alloRequired={alloRequired}/>
                 </div>
 
             </div>
