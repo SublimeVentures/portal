@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
-export const OfferDetailsParams = ({offer, allocation}) => {
+export const OfferDetailsParams = ({offer, allocation, userAllocation}) => {
     let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
 
@@ -11,11 +11,7 @@ export const OfferDetailsParams = ({offer, allocation}) => {
     const normalized_tgeDiff = (100*(tge - b_ppu)/b_ppu)?.toLocaleString()
     const normalized_total = alloTotal?.toLocaleString()
     const normalized_filled = allocation?.alloFilled?.toLocaleString()
-    // const normalized_my = allocation?.alloFilled?.toLocaleString()
-    const normalized_my = 10
-
-    //todo:
-    // alloMy
+    const normalized_my = userAllocation?.invested?.toLocaleString()
 
 
     return (

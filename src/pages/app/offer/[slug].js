@@ -11,6 +11,8 @@ const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferD
 import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
 import {fetchPayableCurrency} from "@/fetchers/currency";
+import {ACL as ACLs} from "@/lib/acl";
+import {fetchInvestment} from "@/fetchers/investment";
 
 
 export const AppOfferDetails = () => {
@@ -18,7 +20,8 @@ export const AppOfferDetails = () => {
     const {slug} = router.query
     const {data: session, status} = useSession()
     const ACL = session?.user?.ACL
-    const ADDRESS = ACL !== 2 ? 0 : session?.user?.address
+    const address = session?.user?.address
+    const ADDRESS = ACL !== ACLs.PartnerInjected ? 0 : address //todo: fix
 
     const {isSuccess: currenciesState, data: currencies} = useQuery({
             queryKey: ["payableCurrencies"],
@@ -30,7 +33,7 @@ export const AppOfferDetails = () => {
         }
     );
 
-    const {isSuccess: offerDetailsState, data: investment} = useQuery({
+    const {isSuccess: offerDetailsState, data: offer} = useQuery({
             queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
             queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
             refetchOnMount: false,
@@ -42,28 +45,57 @@ export const AppOfferDetails = () => {
     );
 
     const {data: allocation, refetch: refetchAllocation} = useQuery({
-            queryKey: ["offerDetails", investment?.id],
-            queryFn: () => fetchOfferAllocation(investment?.id),
-            // refetchOnMount: true,
-            // refetchOnWindowFocus: true,
-            enabled:!!investment,
+            queryKey: ["offerAllocation", offer?.id],
+            queryFn: () => fetchOfferAllocation(offer?.id),
+            refetchOnMount: true,
+            refetchOnWindowFocus: true,
+            enabled:!!offer,
             // refetchInterval: 15000
         }
     );
+
+    //todo: extract
+    const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
+            queryKey: ["userAllocation", offer?.id, address],
+            queryFn: () => fetchInvestment(offer?.id),
+            refetchOnMount: false,
+            refetchOnWindowFocus: true,
+            enabled:!!offer,
+        }
+    );
+
+    const paramsInvest = {
+        offer,
+        currencies,
+        refetchUserAllocation,
+        allocation
+    }
+
+    const paramsParams = {
+        offer,
+        currencies,
+        refetchUserAllocation,
+        allocation
+    }
+
+    const paramsFlipbook = {
+        offer
+    }
+
 
     if (status !== "authenticated" || !currenciesState || !offerDetailsState ) return <>Loading</>
     return (
         <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
             <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
-                <OfferDetailsInvest offer={investment} currencies={currencies} refetchAllocation={refetchAllocation} allocation={allocation}/>
+                <OfferDetailsInvest offer={offer} currencies={currencies} refetchAllocation={refetchAllocation} refetchUserAllocation={refetchUserAllocation} allocation={allocation} />
             </div>
             <div
                 className="flex flex-col col-span-12 gap-5 mobile:gap-10 sinvest:flex-row xl:col-span-4 xl:!flex-col xl:gap-0">
-                <OfferDetailsParams offer={investment} allocation={allocation}/>
+                <OfferDetailsParams offer={offer} allocation={allocation} userAllocation={userAllocation}/>
             </div>
 
             <div className="flex flex-col col-span-12 ">
-                <OfferDetailsFlipbook offer={investment}/>
+                <OfferDetailsFlipbook offer={offer}/>
             </div>
         </div>
 
@@ -79,8 +111,7 @@ export const getServerSideProps = async ({params, req}) => {
         encryption: true
     })
     const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== 2 ? 0 : token?.user?.address
-    console.log("server side props", token)
+    const ADDRESS = ACL !== ACLs.PartnerInjected ? 0 : token?.user?.address
 
     await queryClient.prefetchQuery({
         queryKey: ["offerDetails", {slug, ACL, ADDRESS}],

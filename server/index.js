@@ -10,6 +10,7 @@ const {router: validateRoute} = require("./routes/validate.js");
 const {router: offerRoute} = require("./routes/offer.js");
 const {router: investRoute} = require("./routes/invest.js");
 const {router: payableRoute} = require("./routes/payable.js");
+const {router: vaultRoute} = require("./routes/investments.js");
 // import {connectQueue} from "./services/zeromq";
 
 const port = parseInt(process.env.PORT || '3000', 10);
@@ -31,7 +32,7 @@ nextApp.prepare().then(async() => {
     app.use('/api/offer', offerRoute);
     app.use('/api/invest', investRoute);
     app.use('/api/payable', payableRoute);
-
+    app.use('/api/vault', vaultRoute);
 
     io.on('connection', (socket) => {
         console.log('connection');

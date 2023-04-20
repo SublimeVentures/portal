@@ -38,6 +38,12 @@ function dynamicSchema(investment) {
                 required: true,
                 default: false
             },
+            nftId: {
+                type: Number,
+                required: false,
+                default: 0
+            }
+
         },
         {
             versionKey: false,

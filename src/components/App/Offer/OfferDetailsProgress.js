@@ -1,23 +1,15 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
 
 export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequired}) {
-    let [filled, setFilled] = useState(0)
-    let [required, setRequired] = useState(0)
-
-
     const tilt = useRef(null);
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: 5});
     }, []);
 
-    useEffect(() => {
-        setFilled(100*alloFilled/alloTotal)
-    }, [alloFilled]);
-    useEffect(() => {
-        setRequired(100*alloRequired/alloTotal)
-    }, [alloFilled]);
+    const filled = parseInt(100*alloFilled/alloTotal)
+    const required = parseInt(100*alloRequired/alloTotal)
 
     return (
         <>

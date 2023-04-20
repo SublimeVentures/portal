@@ -27,6 +27,32 @@ export default function InvestModal({model, setter, expires, amount, offer, curr
     const liquidityStart = (ACL === ACLs.Whale && stakeReady !== 0) || ACL !== ACLs.Whale
     console.log("liquidityStart",liquidityStart,liquidityReady, allowanceReady)
 
+
+    const cleanModalEnv = (triggerViewCleanup) => {
+        if(triggerViewCleanup) {
+            afterInvestment()
+        }
+        setStake(0)
+        setLiquidity(false)
+        setAllowance(false)
+        setSuccess("")
+    }
+
+    const closeModal = () => {
+        setter()
+        if(success.length > 0) {
+            cleanModalEnv(true)
+        }
+    }
+
+
+    useEffect(() => {
+        if (!model) {
+            cleanModalEnv()
+        }
+    }, [model])
+
+
     const title = () => {
         return (
             <>
@@ -96,30 +122,6 @@ export default function InvestModal({model, setter, expires, amount, offer, curr
     const content = () => {
        return success.length>0 ? contentSuccess() : contentSteps()
     }
-
-    const cleanModalEnv = (triggerViewCleanup) => {
-        if(triggerViewCleanup) {
-            afterInvestment()
-        }
-        setStake(0)
-        setLiquidity(false)
-        setAllowance(false)
-        setSuccess("")
-    }
-
-    const closeModal = () => {
-        if(success.length > 0) {
-            cleanModalEnv(true)
-        }
-        setter()
-    }
-
-
-    useEffect(() => {
-        if (!model) {
-            cleanModalEnv()
-        }
-    }, [model])
 
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)

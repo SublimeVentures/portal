@@ -7,6 +7,7 @@ export default function InvestStep({amount, currency, isReady, isFromStake, offe
     const {data: session} = useSession()
     const ACL = session.user.ACL
     const ID = session.user.id
+    const amountLocal = Number(amount).toLocaleString()
 
     const investFunction = getInvestFunction(ACL, isFromStake, amount, offer, currency, hash, ID)
     console.log("invest function", investFunction)
@@ -33,13 +34,20 @@ export default function InvestStep({amount, currency, isReady, isFromStake, offe
     const executeTransfer = (state) => {
         if (state === Transaction.Failed) {
             write()
-        } else {
-            confirmSuccess(transactionData?.hash)
-            console.log("OFICJALNIE ZAKONCZYLEM INWESTYCJE", transactionData?.hash)
         }
     }
 
-    const amountLocal = Number(amount).toLocaleString()
+    useEffect(()=>{
+        if(confirmationData) {
+            confirmSuccess(transactionData?.hash)
+            console.log("OFICJALNIE ZAKONCZYLEM INWESTYCJE", transactionData?.hash, isReady, confirmationData, isSuccessConfig)
+        } else if(isReady && isSuccessConfig) {
+            console.log("URUCHAMIAM INWESTYCJE", transactionData?.hash, isReady, confirmationData, isSuccessConfig)
+
+            executeTransfer(Transaction.Failed)
+        }
+    }, [isReady, confirmationData, isSuccessConfig])
+
 
     const statuses = (state) => {
         switch (state) {
@@ -69,12 +77,6 @@ export default function InvestStep({amount, currency, isReady, isFromStake, offe
             </div>
         </div>
     }
-
-    useEffect(()=>{
-        if(isReady && isSuccessConfig) {
-            executeTransfer(Transaction.Failed)
-        }
-    }, [isReady, confirmationData, isSuccessConfig])
 
 
     if (!isReady) return prepareRow(Transaction.Waiting)

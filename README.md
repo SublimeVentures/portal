@@ -39,34 +39,45 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
+- investment flow redo
+- investment updates - isPaused, isConfirmed, isExpired (check on backed)
+- fcfs only one investment
+- replace investment currency
+- is expired only those without amount
 
-- invest & refeed investe
-- create Raise along with new offer
-- investment updates
-  - isConfirmed, isExpired
-  - zapisz do participants
-- vault
+- clear hash if different/fresh
+- //todo: fix, zalezy od tego czy partner wlaczony czy nie
+
 - investment status on list
 - watch for chain selected on investment page
-- fcfs only one investment
-
-
-- handle empty response from offer details
 - 404 page
+- handle empty response from offer details
+- handle empty response from offer list
 - loader page
 - loading na login + error na login
-- react context for session
-
 - save vault delegatcash
 - homepage datafeed
-- otc
-- timeline (dashboard, setting, vault)
 - scaling linków na ofercie
+
+
+- vault
+- vault empty
+- reassign facet
+- confiential facet
+
+- see if custom express is needed
+- optimize rerenders/hooks/dataprops /context for session?
+
 - calculator
 - metadata
+- react context for session
+
+- otc
+- timeline (dashboard, setting, vault)
 
 - DEPLOY
 - whale deposit/ withdraw features in settings
+- whale page
 - connect discord to user profile
 - transition on pages
 - extract transition variable to separate file (dialogs)
@@ -79,3 +90,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - onboarding whales
 - connect delegate address delegate.cash (solidity)
 - referral systems
+- promo codes

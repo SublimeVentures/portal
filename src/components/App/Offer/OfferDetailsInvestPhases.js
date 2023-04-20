@@ -26,6 +26,7 @@ export default function OfferDetailsInvestPhases({
                                                      refreshInvestmentPhase,
                                                      currencies,
                                                      refetchAllocation,
+                                                     refetchUserAllocation,
                                                      allocation
                                                  }) {
     const {data: session} = useSession()
@@ -83,9 +84,16 @@ export default function OfferDetailsInvestPhases({
 
     const bookingExpire = () => {
         removeCookie(`hash_${id}`)
+        setHash(0)
+        setExpires(0)
         setInvestModal(false)
         setRestoreHashModal(false)
         refetchAllocation()
+    }
+
+    const afterInvestmentCleanup = () => {
+        removeCookie(`hash_${id}`)
+        refetchUserAllocation()
     }
 
     const openInvestmentModal = (hash, expires) => {
@@ -115,6 +123,7 @@ export default function OfferDetailsInvestPhases({
             removeCookie(`hash_${id}`)
             await startInvestmentProcess()
         } else if(Number(cookieData[1]) === investmentSize) {
+            //todo: check if same currency/update
             openInvestmentModal(cookieData[0], cookieData[2])
         } else {
             setOldAllocation(Number(cookieData[1]))
@@ -149,10 +158,7 @@ export default function OfferDetailsInvestPhases({
         }
     }
 
-    const afterInvestmentCleanup = () => {
-        removeCookie(`hash_${id}`)
-        //todo: refetch user allocation
-    }
+
 
     useEffect(() => {
         if (alloTotal <= allocation?.alloFilled + allocation?.alloRes) {

@@ -3,7 +3,7 @@ const {checkAcl} = require("./acl");
 const crypto = require("crypto");
 const {getOfferAllocation} = require("../queries/offer");
 const {reserveAllocation} = require("../queries/invest");
-const {addReservedTransaction, expireReservedTransaction} = require("../queries/participantLog");
+const {addReservedTransaction, expireReservedTransaction, removeReservedTransaction} = require("../queries/participantLog");
 
 let CACHE = {}
 
@@ -12,12 +12,9 @@ async function reserveExpire(session, req) {
 
     const ID = Number(req.query.id)
     const HASH = Number(req.query.hash)
-    if (!CACHE[ID]?.date || CACHE[ID].date < moment().unix()) {
-        const allocation = await getOfferAllocation(ID)
-        CACHE[ID] = {...allocation._doc, ...{date: moment().unix() + 30 * 60}}
-    }
 
-    await expireReservedTransaction(ID, CACHE[ID].slug, ADDRESS, HASH)
+
+    await expireReservedTransaction(ID, ADDRESS, HASH)
 
     return {
         ok: true
@@ -25,7 +22,7 @@ async function reserveExpire(session, req) {
 }
 
 async function reserveSpot(session, req) {
-    const {ACL, ADDRESS} = checkAcl(session, req)
+    const {ACL, ADDRESS, id} = checkAcl(session, req)
 
     const ID = Number(req.query.id)
     if (!CACHE[ID]?.date || CACHE[ID].date < moment().unix()) {
@@ -43,20 +40,26 @@ async function reserveSpot(session, req) {
         code: "BAD_CURRENCY"
     }
 
-    const isReserved = await reserveAllocation(ID, AMOUNT, TOTAL_ALLOCATION, isSeparatePool)
-    if (!isReserved) return {
-        ok: false,
-        code: "OVERALLOCATED",
-    }
 
     const now = moment().unix()
+    const expire = now + 15*60//15min validity
     const hash = createHash(`${ADDRESS}` + `${now}`)
-    await addReservedTransaction(ID, CACHE[ID].slug, ADDRESS, hash, AMOUNT, CURRENCY, ACL)
+    await addReservedTransaction(ID, ADDRESS, hash, AMOUNT, CURRENCY, ACL, id)
+
+    const isReserved = await reserveAllocation(ID, AMOUNT, TOTAL_ALLOCATION, isSeparatePool)
+    if (!isReserved) {
+        await removeReservedTransaction(ID, ADDRESS, hash)
+        return {
+            ok: false,
+            code: "OVERALLOCATED",
+        }
+    }
+
 
     return {
         ok: true,
         hash: hash,
-        expires: now + 14*60 //15min validity
+        expires: expire
     }
 }
 

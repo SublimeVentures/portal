@@ -11,7 +11,6 @@ async function reserveAllocation(id, amount, totalAllocation, separatePools) {
     updateConditions = { $inc: { alloRes: amount } }
   }
 
-  //todo: utwórz razem z dodaniem oferty
   return Raise.findOneAndUpdate({id: id, ...extraFilter},  updateConditions, {new:true})
 }
 

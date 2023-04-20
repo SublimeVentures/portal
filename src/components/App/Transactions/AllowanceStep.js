@@ -1,10 +1,11 @@
 import {erc20ABI, useContractRead, usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {useSession} from "next-auth/react";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 export default function AllowanceStep({amount, spender, currency, isReady, confirmSuccess}) {
     const {data: session} = useSession()
+    const [success, setSuccess] = useState(false)
 
     const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
         address: currency.address,
@@ -84,7 +85,11 @@ export default function AllowanceStep({amount, spender, currency, isReady, confi
             if(!isEnoughAllowance) {
                 setAllowance(Transaction.Failed)
             } else {
-                confirmSuccess()
+                if(!success) {
+                    setSuccess(true)
+                    confirmSuccess()
+                }
+
             }
         }
     }, [isSuccessConfig, allowance, isReady])

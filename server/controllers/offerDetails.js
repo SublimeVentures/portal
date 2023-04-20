@@ -106,6 +106,7 @@ function fillPartnerData (offer, template) {
     return template;
 }
 
+//todo: fix, zalezy od tego czy partner wlaczony czy nie
 async function getOfferAllocation(session, req) {
     const {ACL} = checkAcl(session, req)
     const allocation = await getOfferAllocationData(Number(req.params.id))
