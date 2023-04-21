@@ -9,9 +9,14 @@ async function expireReservedTransaction(id, address, hash) {
   return await ParticipantLog.findOneAndUpdate({address, hash}, {isExpired: true});
 }
 
+async function updateCurrencyReservedTransaction(id, address, hash, currency) {
+  const ParticipantLog = require("../models/participantLog.js")(`${id}`);
+  return await ParticipantLog.findOneAndUpdate({address, hash}, {currency});
+}
+
 async function removeReservedTransaction(id, address, hash) {
   const ParticipantLog = require("../models/participantLog.js")(`${id}`);
   return await ParticipantLog.findOneAndDelete({address, hash});
 }
 
-module.exports = { addReservedTransaction, expireReservedTransaction, removeReservedTransaction }
+module.exports = { addReservedTransaction, expireReservedTransaction, removeReservedTransaction, updateCurrencyReservedTransaction }

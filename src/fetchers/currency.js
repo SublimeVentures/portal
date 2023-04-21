@@ -5,7 +5,6 @@ export const fetchPayableCurrency = async () => {
     try {
         let url = `/api/payable`
         const {data} = await axios.get(url)
-        console.log("FETCH :: Currency list", data)
         return data
     } catch(e) {
         console.log("e: fetchPayableCurrency",e)

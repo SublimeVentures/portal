@@ -1,9 +1,8 @@
-import {useEffect, useState} from "react";
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
-export const OfferDetailsParams = ({offer, allocation, userAllocation}) => {
+export const OfferDetailsParams = ({paramsParams}) => {
+    const {offer, allocation, userAllocation} = paramsParams
     let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
-
 
 
     const normalized_ppu = b_ppu?.toLocaleString()

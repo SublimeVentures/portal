@@ -3,28 +3,34 @@ import {useSession} from "next-auth/react";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect, useState} from "react";
 
-export default function AllowanceStep({amount, spender, currency, isReady, confirmSuccess}) {
+export default function AllowanceStep({stepProps}) {
+    const {amount, selectedCurrency, spender, stepAllowanceFinished: stepAllowance, setStepAllowance, stepAllowanceReady} = stepProps
+
     const {data: session} = useSession()
-    const [success, setSuccess] = useState(false)
 
     const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
-        address: currency.address,
+        address: selectedCurrency.address,
         abi: erc20ABI,
         functionName: 'approve',
-        args: [spender, amount * 10 ** currency.precision],
+        args: [spender, amount * 10 ** selectedCurrency.precision],
+        enabled: stepAllowanceReady,
     })
 
     const {
         data: allowance
     } = useContractRead(
         {
-            address: currency.address,
+            address: selectedCurrency.address,
             abi: erc20ABI,
             functionName: 'allowance',
             args: [session.user.address, spender],
             watch: true,
+            // enabled: stepAllowanceReady
+            // watch: stepAllowanceReady && !stepAllowance,
+            // enabled: stepAllowanceReady
         }
     )
+
 
     const {
         data: transactionData,
@@ -39,7 +45,7 @@ export default function AllowanceStep({amount, spender, currency, isReady, confi
     })
 
 
-    const allowanceHuman = (allowance ? allowance.toNumber() : 0) / 10 ** currency.precision
+    const allowanceHuman = (allowance ? allowance.toNumber() : 0) / 10 ** selectedCurrency.precision
     const isEnoughAllowance = amount <= allowanceHuman
     const amountLocale = Number(amount).toLocaleString()
     const allowanceLocale = Number(allowanceHuman).toLocaleString()
@@ -49,6 +55,24 @@ export default function AllowanceStep({amount, spender, currency, isReady, confi
             write()
         }
     }
+
+    useEffect(()=>{
+        if(isSuccessConfig && !stepAllowance && stepAllowanceReady) {
+            if(isEnoughAllowance) {
+                setStepAllowance(true)
+            } else {
+                setAllowance(Transaction.Failed)
+            }
+        }
+    }, [isSuccessConfig, allowance, stepAllowanceReady])
+
+    console.log("TT :: READ - isSuccessConfig", isSuccessConfig)
+    console.log("TT :: READ - allowance", allowance?.toNumber())
+    console.log("TT :: READ - stepAllowanceReady", stepAllowanceReady)
+    console.log("TT :: READ - stepAllowance / enabled", stepAllowance)
+    console.log("TT :: READ - stepAllowance / watch", stepAllowanceReady && !stepAllowance)
+
+
 
     const statuses = (state) => {
         switch (state) {
@@ -80,23 +104,9 @@ export default function AllowanceStep({amount, spender, currency, isReady, confi
         </div>
     }
 
-    useEffect(()=>{
-        if(isSuccessConfig && isReady) {
-            if(!isEnoughAllowance) {
-                setAllowance(Transaction.Failed)
-            } else {
-                if(!success) {
-                    setSuccess(true)
-                    confirmSuccess()
-                }
 
-            }
-        }
-    }, [isSuccessConfig, allowance, isReady])
-
-
-    if (!isReady) return prepareRow(Transaction.Waiting)
-    if (isEnoughAllowance) return prepareRow(Transaction.Executed)
+    if (stepAllowance) return prepareRow(Transaction.Executed)
+    if (!stepAllowanceReady) return prepareRow(Transaction.Waiting)
     if (isErrorWrite || isErrorPending) return prepareRow(Transaction.Failed)
     else return prepareRow(Transaction.Processing)
 

@@ -1,23 +1,28 @@
-import {erc20ABI, useContractRead, usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
+import {usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {useSession} from "next-auth/react";
 import {getIcon, getInvestFunction, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect} from "react";
 
-export default function InvestStep({amount, currency, isReady, isFromStake, offer, hash, confirmSuccess}) {
+export default function InvestStep({stepProps}) {
+    const {amount, selectedCurrency, isFromStake, hash, offer, stepInvestment, setStepInvestment, stepInvestmentReady, setTransactionData} = stepProps
+
+
     const {data: session} = useSession()
     const ACL = session.user.ACL
     const ID = session.user.id
     const amountLocal = Number(amount).toLocaleString()
 
-    const investFunction = getInvestFunction(ACL, isFromStake, amount, offer, currency, hash, ID)
+    const investFunction = getInvestFunction(ACL, isFromStake, amount, offer, selectedCurrency, hash, ID)
     console.log("invest function", investFunction)
     const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
         address: investFunction.address,
         abi: investFunction.abi,
         functionName: investFunction.method,
         args: investFunction.args,
-        enabled: isReady
+        enabled: stepInvestmentReady
     })
+
+
 
     const {
         data: transactionData,
@@ -38,15 +43,19 @@ export default function InvestStep({amount, currency, isReady, isFromStake, offe
     }
 
     useEffect(()=>{
-        if(confirmationData) {
-            confirmSuccess(transactionData?.hash)
-            console.log("OFICJALNIE ZAKONCZYLEM INWESTYCJE", transactionData?.hash, isReady, confirmationData, isSuccessConfig)
-        } else if(isReady && isSuccessConfig) {
-            console.log("URUCHAMIAM INWESTYCJE", transactionData?.hash, isReady, confirmationData, isSuccessConfig)
-
-            executeTransfer(Transaction.Failed)
+        if(isSuccessConfig && !stepInvestment && stepInvestmentReady) {
+            if(confirmationData) {
+                setStepInvestment(true)
+                setTransactionData(transactionData?.hash)
+            } else {
+                executeTransfer(Transaction.Failed)
+            }
         }
-    }, [isReady, confirmationData, isSuccessConfig])
+    }, [isSuccessConfig, confirmationData, isSuccessConfig, stepInvestmentReady])
+
+    console.log("TT :: INVEST - isSuccessConfig", isSuccessConfig)
+    console.log("TT :: INVEST - confirmationData", confirmationData)
+    console.log("TT :: INVEST - stepInvestmentReady / enabled", stepInvestmentReady)
 
 
     const statuses = (state) => {
@@ -78,9 +87,8 @@ export default function InvestStep({amount, currency, isReady, isFromStake, offe
         </div>
     }
 
-
-    if (!isReady) return prepareRow(Transaction.Waiting)
     if (confirmationData) return prepareRow(Transaction.Executed)
+    if (!stepInvestmentReady) return prepareRow(Transaction.Waiting)
     if (isErrorWrite || isErrorPending) return prepareRow(Transaction.Failed)
     return prepareRow(Transaction.Processing)
 

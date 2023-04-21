@@ -4,9 +4,7 @@ export const fetchInvestment = async (offerId) => {
     console.log("Fetching Offer List");
     try {
         let url = `/api/vault?offer=${offerId}`
-        console.log("user investment", url)
         const {data} = await axios.get(url)
-        console.log("offer user investment", data)
         return data
     } catch(e) {
         console.log("e: fetchInvestment",e)
@@ -23,9 +21,7 @@ export const fetchInvestments = async (slug, acl, address) => {
         if(acl !== undefined) {
             url+= `?acl=${acl}&address=${address}`
         }
-        console.log("details url", url)
         const {data} = await axios.get(url)
-        console.log("offer details from server", data)
         return data
     } catch(e) {
         console.log("e: fetchOfferDetails",e)

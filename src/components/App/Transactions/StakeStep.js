@@ -4,12 +4,12 @@ import {useEffect} from "react";
 import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
 import {useSession} from "next-auth/react";
 import IconError from "@/assets/svg/Error.svg";
-import {useState} from "react";
+import {StakeSteps} from "@/components/App/Offer/InvestModal";
 
-export default function StakeStep({amount, offer, isReady, confirmSuccess}) {
+export default function StakeStep({stepProps}) {
+    const {amount, offer, stepStake, setStepStake } = stepProps
+
     const {data: session} = useSession()
-    const [useStake, setUseStake] = useState(0)
-
     const {id} = session.user
 
     const {
@@ -21,6 +21,7 @@ export default function StakeStep({amount, offer, isReady, confirmSuccess}) {
             abi: IdFacet,
             functionName: 'identityStake',
             args: [id],
+            watch:true
         }
     )
 
@@ -32,11 +33,14 @@ export default function StakeStep({amount, offer, isReady, confirmSuccess}) {
     const isEnoughLiquidity = (currentBalanceHuman >= amountLocale)
 
 
+    useEffect(()=>{
+        if(!isEnoughLiquidity) {
+            setStepStake(StakeSteps.Skip)
+        }
+    }, [currentBalance])
+
     const statuses = (state) => {
         switch (state) {
-            case Transaction.Waiting: {
-                return <>Check whale stake</>
-            }
             case Transaction.Processing: {
                 return <>Checking whale stake</>
             }
@@ -52,38 +56,31 @@ export default function StakeStep({amount, offer, isReady, confirmSuccess}) {
         }
     }
 
+
     const prepareRow = (state) => {
         return <div className={`flex flex-row items-center ${getStatusColor(state=== Transaction.Failed ? Transaction.Waiting : state)}`}>
-            {state=== Transaction.Failed ? <IconError className="w-7 text-gray mr-2"/> : getIcon(state)}
+            {state === Transaction.Failed ? <IconError className="w-7 text-gray mr-2"/> : getIcon(state)}
 
-            {useStake === 0 && <div>
+            {stepStake === StakeSteps.Select && <div>
                 {statuses(state)}
-                {state !== Transaction.Executed && <span className=" "> (current:  ${currentBalanceLocale})</span>}
+                {state !== Transaction.Executed && <span className=""> (current:  ${currentBalanceLocale})</span>}
                 {state === Transaction.Executed && <div className="flex flex-row gap-5 text-app-error">
-                    <div className="hover:underline cursor-pointer" onClick={()=> setUseStake(1)}>Use stake</div>
-                    <div className="hover:underline cursor-pointer" onClick={()=> setUseStake(2)}>Invest from wallet</div>
+                    <div className="hover:underline cursor-pointer" onClick={()=> {setStepStake(StakeSteps.Use)}}>Use stake</div>
+                    <div className="hover:underline cursor-pointer" onClick={()=> {setStepStake(StakeSteps.Skip)}}>Invest from wallet</div>
                 </div>}
             </div>}
-            {useStake === 1 && <div>
+
+            {stepStake === StakeSteps.Use && <div>
                 Investing from Whale ID stake
             </div>}
-            {useStake === 2 && <div>
+
+            {stepStake === StakeSteps.Skip && <div>
                 Investment from external wallet
             </div>}
         </div>
     }
 
-    useEffect(()=>{
-          if(!isEnoughLiquidity) {
-              confirmSuccess(2)
-          }
-    }, [currentBalance])
 
-    useEffect(()=>{
-          if(useStake !== 0)  confirmSuccess(useStake)
-    }, [useStake])
-
-    if (!isReady) return prepareRow(Transaction.Waiting)
     if (isEnoughLiquidity) return prepareRow(Transaction.Executed)
     if (isSuccess && !isEnoughLiquidity) return prepareRow(Transaction.Failed)
     return prepareRow(Transaction.Processing)

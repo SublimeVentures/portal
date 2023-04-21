@@ -1,10 +1,10 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {RoundButton} from "@/components/Button/RoundButton";
 import moment from "moment";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 
-export default function RestoreHashModal({model, setter, expires, expireHandle, allocationOld, allocationNew, bookingRestore, bookingCreateNew}) {
-
+export default function RestoreHashModal({model, setter, restoreModalProps}) {
+    const { expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps
     const title = () => {
         return (
             <>
@@ -14,7 +14,7 @@ export default function RestoreHashModal({model, setter, expires, expireHandle, 
     }
 
     const allocationOldLocal = allocationOld.toLocaleString()
-    const allocationNewLocal = allocationNew.toLocaleString()
+    const allocationNewLocal = investmentSize.toLocaleString()
 
     const content = () => {
         return (
@@ -29,7 +29,7 @@ export default function RestoreHashModal({model, setter, expires, expireHandle, 
                     <div>Old booking is going to expire in</div>
                     <FlipClockCountdown
                         className="flip-clock"
-                        onComplete={expireHandle}
+                        onComplete={()=> bookingExpire()}
                         to={moment.unix(expires)}
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                         labelStyle={{fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color: 'white'}}

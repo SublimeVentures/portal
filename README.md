@@ -39,34 +39,32 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- investment flow redo
+- is expired only those without amount
+- clear hash if different/fresh
+- investment status on list
+- 404 page
+- loader page
+
+- vote vs pledge
 - investment updates - isPaused, isConfirmed, isExpired (check on backed)
 - fcfs only one investment
-- replace investment currency
-- is expired only those without amount
-
-- clear hash if different/fresh
 - //todo: fix, zalezy od tego czy partner wlaczony czy nie
-
-- investment status on list
 - watch for chain selected on investment page
-- 404 page
+
 - handle empty response from offer details
 - handle empty response from offer list
-- loader page
+
 - loading na login + error na login
 - save vault delegatcash
 - homepage datafeed
 - scaling linków na ofercie
-
 
 - vault
 - vault empty
 - reassign facet
 - confiential facet
 
-- see if custom express is needed
-- optimize rerenders/hooks/dataprops /context for session?
+
 
 - calculator
 - metadata

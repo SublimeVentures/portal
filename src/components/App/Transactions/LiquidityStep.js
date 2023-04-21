@@ -3,29 +3,44 @@ import {useSession} from "next-auth/react";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect} from "react";
 
-export default function LiquidityStep({amount, currency, isReady, confirmSuccess}) {
+export default function LiquidityStep({stepProps}) {
+    const {amount, selectedCurrency, setStepLiquidity, stepLiquidityReady, stepLiquidityFinished: stepLiquidity} = stepProps
     const {data: session} = useSession()
 
     const {
-        isSuccess,
+        isSuccess: balanceFed,
         data: currentBalance
     } = useContractRead(
         {
-            address: currency.address,
+            address: selectedCurrency.address,
             abi: erc20ABI,
             functionName: 'balanceOf',
             args: [session.user.address],
             watch: true,
+            // enabled: stepLiquidityReady
         }
     )
 
-    const currentBalanceHuman = (currentBalance ? currentBalance.toNumber() : 0) / 10 ** currency.precision
+
+
+    const currentBalanceHuman = (currentBalance ? currentBalance.toNumber() : 0) / 10 ** selectedCurrency.precision
     const currentBalanceLocale = currentBalanceHuman.toLocaleString()
     const amountLocale = Number(amount).toLocaleString()
 
-
-    const liquidityHuman = (currentBalance ? currentBalance.toNumber() : 0) / 10 ** currency.precision
+    const liquidityHuman = (currentBalance ? currentBalance.toNumber() : 0) / 10 ** selectedCurrency.precision
     const isEnoughLiquidity = amount < liquidityHuman
+
+
+    useEffect(()=>{
+        if(balanceFed && !stepLiquidity && stepLiquidityReady) {
+            if(isEnoughLiquidity) {
+                setStepLiquidity(true)
+            }
+        }
+    }, [stepLiquidityReady])
+
+
+
 
     const statuses = (state) => {
         switch (state) {
@@ -39,7 +54,7 @@ export default function LiquidityStep({amount, currency, isReady, confirmSuccess
                 return <>Availability of funds confirmed </>
             }
             case Transaction.Failed: {
-                return <span className="underline">Wallet doesn't hold {amountLocale} {currency.symbol}</span>
+                return <span className="underline">Wallet doesn't hold {amountLocale} {selectedCurrency.symbol}</span>
             }
             default: {
                 return <>Check allowance</>
@@ -52,23 +67,15 @@ export default function LiquidityStep({amount, currency, isReady, confirmSuccess
             {getIcon(state)}
             <div>
                 {statuses(state)}
-                {state !== Transaction.Executed && <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {currency.symbol}</div>}
+                {state !== Transaction.Executed && stepLiquidityReady && <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {selectedCurrency.symbol}</div>}
             </div>
         </div>
     }
 
-    useEffect(()=>{
-          if(isEnoughLiquidity && isReady) {
-              confirmSuccess()
-          }
-    }, [currentBalance, isReady])
-
-
-    if (!isReady) return prepareRow(Transaction.Waiting)
-    if (isEnoughLiquidity) return prepareRow(Transaction.Executed)
-    if (isSuccess && !isEnoughLiquidity) return prepareRow(Transaction.Failed)
+    if (stepLiquidity) return prepareRow(Transaction.Executed)
+    if (!stepLiquidityReady) return prepareRow(Transaction.Waiting)
+    if (balanceFed && !isEnoughLiquidity) return prepareRow(Transaction.Failed)
     return prepareRow(Transaction.Processing)
-
 
 }
 

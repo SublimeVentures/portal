@@ -4,10 +4,8 @@ const {getUserInvestment, getUserInvestments} = require("../queries/investment")
 
 async function userInvestment(session, req) {
     const {ACL, ADDRESS, USER} = checkAcl(session, req)
-    console.log("userInvestment - acl",ACL, ADDRESS, USER.id)
 
     const owner = ACL === 0 ? USER.id : ADDRESS
-    console.log("userInvestment - owner",owner)
 
     const offerId = Number(req.query.offer)
     const investment = await getUserInvestment(owner, offerId)

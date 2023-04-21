@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 
-export default function ErrorModal({model, setter, code}) {
-
+export default function ErrorModal({model, setter, errorModalProps}) {
+    const {code} = errorModalProps
     const title = () => {
         return (
             <>

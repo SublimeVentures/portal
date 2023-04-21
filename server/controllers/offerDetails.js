@@ -8,10 +8,6 @@ const {checkAcl} = require("./acl");
 async function getParamOfferDetails(session, req) {
     const {ACL, ADDRESS} = checkAcl(session, req)
 
-    console.log("SLUG DATA session", session)
-    console.log("SLUG DATA req.query", req.query)
-    console.log("SLUG DATA acl", ACL)
-    console.log("SLUG DATA address", ADDRESS)
 
     const offer = await getOfferDetails(req.params.slug);
     if(!offer) return {}

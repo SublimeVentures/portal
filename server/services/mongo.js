@@ -3,6 +3,7 @@ const {getEnvironment} = require("../queries/environment");
 const Offer = require("../models/offer.js");
 const InjectedUsers = require("../models/injectedUser.js");
 const Raise = require("../models/raise.js");
+const {getCurrencies} = require("../queries/currency");
 
 
 let env = {}
@@ -72,6 +73,8 @@ async function connectDB() {
 
         console.log("|---- DB: connected",)
         env = await getEnvironment()
+        env.currency = await getCurrencies()
+
         console.log("|---- ENV: ", env)
         mongoose.connection.on('error', console.log)
     } catch (err) {

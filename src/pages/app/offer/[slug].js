@@ -21,7 +21,7 @@ export const AppOfferDetails = () => {
     const {data: session, status} = useSession()
     const ACL = session?.user?.ACL
     const address = session?.user?.address
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? 0 : address //todo: fix
+    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : address
 
     const {isSuccess: currenciesState, data: currencies} = useQuery({
             queryKey: ["payableCurrencies"],
@@ -50,11 +50,10 @@ export const AppOfferDetails = () => {
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             enabled:!!offer,
-            // refetchInterval: 15000
+            refetchInterval: 15000
         }
     );
 
-    //todo: extract
     const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
             queryKey: ["userAllocation", offer?.id, address],
             queryFn: () => fetchInvestment(offer?.id),
@@ -68,18 +67,14 @@ export const AppOfferDetails = () => {
         offer,
         currencies,
         refetchUserAllocation,
+        refetchAllocation,
         allocation
     }
 
     const paramsParams = {
         offer,
-        currencies,
-        refetchUserAllocation,
-        allocation
-    }
-
-    const paramsFlipbook = {
-        offer
+        allocation,
+        userAllocation
     }
 
 
@@ -87,11 +82,11 @@ export const AppOfferDetails = () => {
     return (
         <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
             <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
-                <OfferDetailsInvest offer={offer} currencies={currencies} refetchAllocation={refetchAllocation} refetchUserAllocation={refetchUserAllocation} allocation={allocation} />
+                <OfferDetailsInvest paramsInvest={paramsInvest} />
             </div>
             <div
                 className="flex flex-col col-span-12 gap-5 mobile:gap-10 sinvest:flex-row xl:col-span-4 xl:!flex-col xl:gap-0">
-                <OfferDetailsParams offer={offer} allocation={allocation} userAllocation={userAllocation}/>
+                <OfferDetailsParams paramsParams={paramsParams}/>
             </div>
 
             <div className="flex flex-col col-span-12 ">
@@ -111,7 +106,7 @@ export const getServerSideProps = async ({params, req}) => {
         encryption: true
     })
     const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? 0 : token?.user?.address
+    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : token?.user?.address
 
     await queryClient.prefetchQuery({
         queryKey: ["offerDetails", {slug, ACL, ADDRESS}],

@@ -10,25 +10,25 @@ import CurrencyInput from "@/components/App/CurrencyInput";
 import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import {parseMaxAllocation} from "@/lib/phases/parsePhase";
-import {expireHash, fetchHash} from "@/fetchers/invest";
+import {expireHash, fetchHash, updateCurrency} from "@/fetchers/invest";
 import {useSession} from "next-auth/react";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
-import { useCookies } from 'react-cookie';
+import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 
-
-export default function OfferDetailsInvestPhases({
-                                                     offer,
-                                                     phases,
-                                                     active,
-                                                     isLast,
-                                                     refreshInvestmentPhase,
-                                                     currencies,
-                                                     refetchAllocation,
-                                                     refetchUserAllocation,
-                                                     allocation
-                                                 }) {
+export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
+    const {
+        offer,
+        phases,
+        activePhase,
+        isLastPhase,
+        feedPhases: refreshInvestmentPhase,
+        currencies,
+        refetchAllocation,
+        refetchUserAllocation,
+        allocation
+    } = paramsInvestPhase;
     const {data: session} = useSession()
 
     const [isErrorModal, setErrorModal] = useState(false)
@@ -55,12 +55,11 @@ export default function OfferDetailsInvestPhases({
     const {ACL, amt} = session.user
     const {id, alloTotal, b_tax, isPaused} = offer
 
-    const currentPhase = phases[active]
-    const nextPhase = isLast ? currentPhase : phases[active + 1]
+    const currentPhase = phases[activePhase]
+    const nextPhase = isLastPhase ? currentPhase : phases[activePhase + 1]
 
-    const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
-    console.log("isProcessing",isProcessing, isPaused)
+    const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
 
     const currencyList = currencies.map(el => el.symbol)
     const selectedCurrency = currencies[investmentCurrency]
@@ -104,13 +103,13 @@ export default function OfferDetailsInvestPhases({
 
     const startInvestmentProcess = async () => {
         setButtonLoading(true)
-        const response = await fetchHash(id, investmentSize, selectedCurrency.symbol)
+        const response = await fetchHash(id, investmentSize, selectedCurrency.address)
         if (!response.ok) {
             setErrorMsg(response.code)
             setErrorModal(true)
             refetchAllocation()
         } else {
-            setCookie(`hash_${id}`,`${hash}_${investmentSize}_${expires}`, {expires: new Date(expires*1000)})
+            setCookie(`hash_${id}`, `${response.hash}_${investmentSize}_${response.expires}_${response.currency}`, {expires: new Date(response.expires * 1000)})
             openInvestmentModal(response.hash, response.expires)
         }
         setButtonLoading(false)
@@ -119,11 +118,17 @@ export default function OfferDetailsInvestPhases({
     const processExistingSession = async (cookie) => {
         setButtonLoading(true)
         const cookieData = cookie.split('_')
-        if(Number(cookieData[2]) < moment().unix()) {
+        if (Number(cookieData[2]) < moment().unix()) {
             removeCookie(`hash_${id}`)
             await startInvestmentProcess()
-        } else if(Number(cookieData[1]) === investmentSize) {
-            //todo: check if same currency/update
+        } else if (Number(cookieData[1]) === Number(investmentSize)) {
+            if (cookieData[3] !== selectedCurrency.symbol) {
+                updateCurrency(id, cookieData[0], selectedCurrency.address).then(response => {
+                    if (response.ok) {
+                        setCookie(`hash_${id}`, `${cookieData[0]}_${cookieData[1]}_${cookieData[2]}_${response.currency}`, {expires: new Date(Number(cookieData[2]) * 1000)})
+                    }
+                })
+            }
             openInvestmentModal(cookieData[0], cookieData[2])
         } else {
             setOldAllocation(Number(cookieData[1]))
@@ -151,14 +156,12 @@ export default function OfferDetailsInvestPhases({
     }
 
     const makeInvestment = async () => {
-        if(!!cookies && Object.keys.length>0 && cookies[`hash_${offer.id}`]?.length>0) {
+        if (!!cookies && Object.keys.length > 0 && cookies[`hash_${offer.id}`]?.length > 0) {
             await processExistingSession(cookies[`hash_${offer.id}`])
         } else {
             await startInvestmentProcess()
         }
     }
-
-
 
     useEffect(() => {
         if (alloTotal <= allocation?.alloFilled + allocation?.alloRes) {
@@ -167,9 +170,15 @@ export default function OfferDetailsInvestPhases({
             setFilled(false)
         }
         const allocationLeft = alloTotal - allocation?.alloFilled - allocation?.alloRes
-        const calcMaxAllo = parseMaxAllocation(ACL, amt, offer, active, allocationLeft)
+        const calcMaxAllo = parseMaxAllocation(ACL, amt, offer, activePhase, allocationLeft)
         setMaxAllocation(calcMaxAllo)
     }, [allocation?.alloFilled, allocation?.alloRes])
+
+
+    const restoreModalProps = {expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew}
+    const errorModalProps = {errorMsg}
+    const investModalProps = {expires, investmentSize, offer, bookingExpire, hash, selectedCurrency, afterInvestmentCleanup}
+
 
     return (
         <div className="flex flex-1 flex-col items-center">
@@ -200,7 +209,8 @@ export default function OfferDetailsInvestPhases({
 
             <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
-                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.copy} isPrimary={true} showParticles={true}
+                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.copy} isPrimary={true}
+                                 showParticles={true}
                                  isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
                                  handler={makeInvestment}
                                  size={'text-sm sm'} icon={getInvestmentButtonIcon()}/>
@@ -218,9 +228,9 @@ export default function OfferDetailsInvestPhases({
 
             </div>
 
-            <RestoreHashModal model={isRestoreHash} setter={() => {setRestoreHashModal(false)}} expires={expires} allocationOld={allocationOld} allocationNew={investmentSize} expireHandle={bookingExpire} bookingRestore={bookingRestore} bookingCreateNew={bookingCreateNew}/>
-            <ErrorModal model={isErrorModal} setter={() => {setErrorModal(false)}} code={errorMsg}/>
-            <InvestModal model={isInvestModal} setter={() => {setInvestModal(false)}} expires={expires} amount={investmentSize} offer={offer} expireHandle={bookingExpire} hash={hash} currency={selectedCurrency} afterInvestment={afterInvestmentCleanup}/>
+            <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreHash} setter={() => {setRestoreHashModal(false)}}/>
+            <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {setErrorModal(false)}} />
+            <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {setInvestModal(false)}}/>
 
         </div>
 
