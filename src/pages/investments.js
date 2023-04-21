@@ -48,7 +48,6 @@ export default function InvestmentsPublic() {
     return (
         <>
             <HeroBg subtitle={'who we support'} title={'previous deals'} content={renderList()} extraClass={"investmentsPublic"}/>
-            {/*<ReactQueryDevtools initialIsOpen />*/}
         </>
     )
 }

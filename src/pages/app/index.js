@@ -45,5 +45,4 @@ export default function AppDashboard() {
 
 AppDashboard.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
-}
-;
+};

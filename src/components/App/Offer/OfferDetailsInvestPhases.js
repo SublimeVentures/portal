@@ -63,6 +63,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const currencyList = currencies.map(el => el.symbol)
     const selectedCurrency = currencies[investmentCurrency]
+    const cookieReservation = `hash_${id}`
 
     const getInvestmentButtonIcon = () => {
         switch (currentPhase.icon) {
@@ -82,7 +83,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const bookingExpire = () => {
-        removeCookie(`hash_${id}`)
+        removeCookie(cookieReservation)
         setHash(0)
         setExpires(0)
         setInvestModal(false)
@@ -91,7 +92,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const afterInvestmentCleanup = () => {
-        removeCookie(`hash_${id}`)
+        removeCookie(cookieReservation)
         refetchUserAllocation()
     }
 
@@ -109,7 +110,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setErrorModal(true)
             refetchAllocation()
         } else {
-            setCookie(`hash_${id}`, `${response.hash}_${investmentSize}_${response.expires}_${response.currency}`, {expires: new Date(response.expires * 1000)})
+            setCookie(cookieReservation, `${response.hash}_${investmentSize}_${response.expires}_${response.currency}`, {expires: new Date(response.expires * 1000)})
             openInvestmentModal(response.hash, response.expires)
         }
         setButtonLoading(false)
@@ -119,13 +120,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setButtonLoading(true)
         const cookieData = cookie.split('_')
         if (Number(cookieData[2]) < moment().unix()) {
-            removeCookie(`hash_${id}`)
+            removeCookie(cookieReservation)
             await startInvestmentProcess()
         } else if (Number(cookieData[1]) === Number(investmentSize)) {
             if (cookieData[3] !== selectedCurrency.symbol) {
                 updateCurrency(id, cookieData[0], selectedCurrency.address).then(response => {
                     if (response.ok) {
-                        setCookie(`hash_${id}`, `${cookieData[0]}_${cookieData[1]}_${cookieData[2]}_${response.currency}`, {expires: new Date(Number(cookieData[2]) * 1000)})
+                        setCookie(cookieReservation, `${cookieData[0]}_${cookieData[1]}_${cookieData[2]}_${response.currency}`, {expires: new Date(Number(cookieData[2]) * 1000)})
                     }
                 })
             }
@@ -141,23 +142,23 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const bookingRestore = async () => {
         setRestoreHashModal(false)
-        const cookieData = cookies[`hash_${offer.id}`].split('_')
+        const cookieData = cookies[cookieReservation].split('_')
         setInvestmentSize(Number(cookieData[1]))
         openInvestmentModal(cookieData[0], cookieData[2])
     }
 
     const bookingCreateNew = async () => {
         setButtonLoading(true)
-        removeCookie(`hash_${id}`)
+        removeCookie(cookieReservation)
         setRestoreHashModal(false)
-        const cookieData = cookies[`hash_${offer.id}`].split('_')
+        const cookieData = cookies[cookieReservation].split('_')
         expireHash(id, cookieData[0])
         await startInvestmentProcess()
     }
 
     const makeInvestment = async () => {
-        if (!!cookies && Object.keys.length > 0 && cookies[`hash_${offer.id}`]?.length > 0) {
-            await processExistingSession(cookies[`hash_${offer.id}`])
+        if (!!cookies && Object.keys.length > 0 && cookies[cookieReservation]?.length > 0) {
+            await processExistingSession(cookies[cookieReservation])
         } else {
             await startInvestmentProcess()
         }

@@ -18,6 +18,7 @@
 @import 'components/dropdown';
 @import 'components/fliper';
 @import 'components/table';
+@import 'components/loading';
 
 @import 'pages/home/about';
 @import 'pages/home/investments';
@@ -94,3 +95,27 @@ body {
   width: 90vw;
   height: 90vh;
 }
+
+.image-container {
+
+  width: 100%;
+
+  > div {
+    position: unset !important;
+  }
+
+  .image {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+  }
+
+  .imageOfferList {
+    object-fit: cover;
+    width: 100% !important;
+    position: relative !important;
+    height: 300px!important;
+  }
+}
+

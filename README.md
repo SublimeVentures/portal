@@ -39,12 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- is expired only those without amount
-- clear hash if different/fresh
-- investment status on list
-- 404 page
-- loader page
-
 - vote vs pledge
 - investment updates - isPaused, isConfirmed, isExpired (check on backed)
 - fcfs only one investment
@@ -74,6 +68,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - timeline (dashboard, setting, vault)
 
 - DEPLOY
+
 - whale deposit/ withdraw features in settings
 - whale page
 - connect discord to user profile

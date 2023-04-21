@@ -13,6 +13,7 @@ import {useSession} from "next-auth/react";
 import {fetchPayableCurrency} from "@/fetchers/currency";
 import {ACL as ACLs} from "@/lib/acl";
 import {fetchInvestment} from "@/fetchers/investment";
+import Loader from "@/components/App/Loader";
 
 
 export const AppOfferDetails = () => {
@@ -77,8 +78,7 @@ export const AppOfferDetails = () => {
         userAllocation
     }
 
-
-    if (status !== "authenticated" || !currenciesState || !offerDetailsState ) return <>Loading</>
+    if (status !== "authenticated" || !currenciesState || !offerDetailsState ) return <Loader/>
     return (
         <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
             <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
