@@ -16,6 +16,9 @@ export const OfferDetailsInvest = ({paramsInvest}) => {
 
     const feedPhases = () => {
         const {phase, active, isLast} = parsePhase(session.user.ACL, offer, 0)
+        console.log("phase", phase)
+        console.log("active", active, phase[active])
+        console.log("isLast", isLast)
         setPhases(phase)
         setActivePhase(active)
         setIsLastPhase(isLast)

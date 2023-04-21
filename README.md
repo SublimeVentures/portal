@@ -39,26 +39,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- vote vs pledge
-- investment updates - isPaused, isConfirmed, isExpired (check on backed)
-- fcfs only one investment
+- disable invest button if vefore start
 - //todo: fix, zalezy od tego czy partner wlaczony czy nie
 - watch for chain selected on investment page
 
 - handle empty response from offer details
 - handle empty response from offer list
 
-- loading na login + error na login
-- save vault delegatcash
-- homepage datafeed
-- scaling linków na ofercie
-
 - vault
 - vault empty
 - reassign facet
 - confiential facet
 
-
+- loading na login + error na login
+- save vault delegatcash
+- homepage datafeed
+- scaling linków na ofercie
 
 - calculator
 - metadata

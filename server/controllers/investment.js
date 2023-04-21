@@ -9,7 +9,6 @@ async function userInvestment(session, req) {
 
     const offerId = Number(req.query.offer)
     const investment = await getUserInvestment(owner, offerId)
-    console.log("offerId ",offerId, investment)
     return investment
 }
 

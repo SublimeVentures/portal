@@ -22,6 +22,16 @@ export default function ErrorModal({model, setter, errorModalProps}) {
                     <br/><br/><div className="font-bold">There is still a chance!</div>Bookings are expiring after 15 minutes.<br/>Please wait for button to enable back again!
                     <div className="mt-5"><a href="#" target="_blank">Read more.</a></div>
                 </>}
+                {code === "IS_PAUSED" && <>
+                    Investment is <span className="text-gold">currently paused</span>.
+                    <br/><br/>Please wait for the Discord update from the staff.
+                    <div className="mt-5"><a href="#" target="_blank">Read more.</a></div>
+                </>}
+                {code === "NOT_OPEN" && <>
+                    Investment is <span className="text-gold">not yet open</span>.
+                    <br/><br/>Don't cheat the timer!
+                    <div className="mt-5"><a href="#" target="_blank">Read more.</a></div>
+                </>}
             </div>
         )
     }

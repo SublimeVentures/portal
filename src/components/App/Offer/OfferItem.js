@@ -26,7 +26,7 @@ export default function OfferItem({offer, ACL}) {
             <Link href={`${PAGE.Opportunities}/${slug}`} className="flex flex-1 flex-col">
                 <div className="bg-center relative min-h-[300px]">
                     <div className={'image-container min-h-[300px]'}>
-                        <Image src={image} layout="fill" className={'imageOfferList rounded-tl-xl rounded-tr-xl'} alt={slug}/>
+                        <Image src={image} fill className={'imageOfferList rounded-tl-xl rounded-tr-xl'} alt={slug} sizes="(max-width: 768px) 100vw"/>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col text-left p-10">
