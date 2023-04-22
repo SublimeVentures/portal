@@ -9,7 +9,6 @@ export const fetchOfferList = async (acl, address) => {
         }
         console.log("list url", url)
         const {data} = await axios.get(url)
-        console.log("offer list", data)
         return data
     } catch(e) {
         console.log("e: fetchOfferList",e)

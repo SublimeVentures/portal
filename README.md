@@ -40,10 +40,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 
-
-- handle empty response from offer details
-- handle empty response from offer list
-
 - vault
 - vault empty
 - reassign facet

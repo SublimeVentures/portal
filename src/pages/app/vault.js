@@ -3,9 +3,29 @@ import RoundBanner from "@/components/App/RoundBanner";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
+import {useSession} from "next-auth/react";
+import {ACL as ACLs} from "@/lib/acl";
+import {useQuery} from "@tanstack/react-query";
+import {fetchOfferDetails} from "@/fetchers/offer";
 
 
 export default function AppVault() {
+    const {data: session} = useSession()
+    const ACL = session?.user?.ACL
+    const address = session?.user?.address
+    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : address
+
+    const {isSuccess: offerDetailsState, data: offer} = useQuery({
+            queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
+            queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            cacheTime: 30 * 60 * 1000,
+            staleTime: 15 * 60 * 1000,
+            enabled: !!ACL
+        }
+    );
+
 
     const investmentActivityLog = [
         {type: 'details', step: 'Project details', date: '', icon: "vote"},
