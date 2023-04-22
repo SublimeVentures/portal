@@ -13,12 +13,12 @@ async function getOfferDetails(slug) {
   return Offer.findOne({display: true, slug:slug})
 }
 
-async function getOfferAllocation(id) {
+async function getOfferReservedData(id) {
   return Offer.findOne({id: id}, {alloTotal:1, slug:1, alloTotalPartner:1, b_tax:1, b_isPaused:1, d_open:1, d_openPartner:1, _id:0})
 }
 
-async function getOfferAllocationData(id) {
+async function getOfferRaise(id) {
   return Raise.findOne({id: id}, {_id:0})
 }
 
-module.exports = { getOffersPublic, getOfferList, getOfferDetails, getOfferAllocation, getOfferAllocationData }
+module.exports = { getOffersPublic, getOfferList, getOfferDetails, getOfferReservedData, getOfferRaise }

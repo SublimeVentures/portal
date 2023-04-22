@@ -15,6 +15,9 @@ import IconLogout from "@/assets/svg/Logout.svg";
 import IconSetting from "@/assets/svg/Setting.svg";
 
 import PAGE from "@/routes";
+import dynamic from "next/dynamic";
+const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
+
 
 export default function Sidebar() {
     let [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -52,14 +55,14 @@ export default function Sidebar() {
             {name: 'Vault', link: PAGE.Vault, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'OTC', link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
-            // {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
+            {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
         groupHelp: [
             {name: 'Community', icon: <IconDiscord className="w-6 ml-1 mr-3"/>, action: true, handler: openDiscord},
             {name: 'Wiki', icon: <IconWiki className="w-6 ml-1 mr-3"/>, action: true, handler: openNotion},
         ],
         groupProfile: [
-            // {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
+            {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
             {name: 'Log out', icon: <IconLogout className="w-8 mr-3"/>, action: true, handler: logout},
         ]
     }
@@ -79,12 +82,14 @@ export default function Sidebar() {
         <aside className="flex sticky top-0 z-8 collap:relative">
             <div
                 className="p-7 flex flex-col border-r border-app-bg-split text-app-white max-h-screen sticky top-0 hidden collap:flex">
-                <div className="flex">
+                <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex">
                             <img className="w-15 " src="/img/logo.png"/>
                         </div>
                     </Link>
+                    <ChangeNetwork/>
+
                 </div>
                 <nav className="flex flex-col pt-10 flex-1 font-accent text-md font-medium">
                     <div className="flex flex-col gap-2">

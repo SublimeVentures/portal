@@ -1,5 +1,5 @@
 const {getEnv} = require("../services/mongo");
-const {getOfferDetails, getOfferAllocationData} = require("../queries/offer");
+const {getOfferDetails, getOfferRaise} = require("../queries/offer");
 const moment = require("moment");
 const {getInjectedUser} = require("../queries/injectedUser");
 const {checkAcl} = require("./acl");
@@ -105,7 +105,7 @@ function fillPartnerData (offer, template) {
 //todo: fix, zalezy od tego czy partner wlaczony czy nie
 async function getOfferAllocation(session, req) {
     const {ACL} = checkAcl(session, req)
-    const allocation = await getOfferAllocationData(Number(req.params.id))
+    const allocation = await getOfferRaise(Number(req.params.id))
     if(ACL === 0) {
         return {
             alloFilled: allocation.alloFilled + allocation.alloSide,

@@ -2,7 +2,7 @@ import {Fragment, useState} from "react";
 import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
-export default function LoginModal({isOpen, closeModal, title, content, persistent }) {
+export default function LoginModal({isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false)
 
     const closeModalOnBg = () => {
@@ -47,9 +47,9 @@ export default function LoginModal({isOpen, closeModal, title, content, persiste
                                       className="text-3xl font-bold pb-5 pt-5"
                                   >
                                       {title}
-                                      <div className={`absolute top-[20px] right-[0px] cursor-pointer`} onClick={closeModal}>
+                                      {!noClose && <div className={`absolute top-[20px] right-[0px] cursor-pointer`} onClick={closeModal}>
                                           <CancelIcon className={ButtonIconSize.hero}/>
-                                      </div>
+                                      </div>}
                                   </Dialog.Title>
                                   {content}
 

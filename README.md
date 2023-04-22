@@ -39,9 +39,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- disable invest button if vefore start
-- //todo: fix, zalezy od tego czy partner wlaczony czy nie
-- watch for chain selected on investment page
+
 
 - handle empty response from offer details
 - handle empty response from offer list
@@ -58,7 +56,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - calculator
 - metadata
-- react context for session
+- //todo: fix, zalezy od tego czy partner wlaczony czy nie
 
 - otc
 - timeline (dashboard, setting, vault)

@@ -20,6 +20,16 @@
     font-size: 18px!important;
   }
 
+
+  &.network {
+    font-size: 15px!important;
+    select {
+      padding: 8px 10px 8px 10px;
+      visibility: hidden;
+    }
+  }
+
+
   select,
   .button {
     font-family: inherit;

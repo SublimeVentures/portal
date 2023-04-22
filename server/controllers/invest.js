@@ -1,7 +1,7 @@
 const moment = require('moment');
 const {checkAcl} = require("./acl");
 const crypto = require("crypto");
-const {getOfferAllocation} = require("../queries/offer");
+const {getOfferReservedData} = require("../queries/offer");
 const {reserveAllocation} = require("../queries/invest");
 const {
     addReservedTransaction,
@@ -10,7 +10,6 @@ const {
     updateCurrencyReservedTransaction
 } = require("../queries/participantLog");
 const {getEnv} = require("../services/mongo");
-const Offer = require("../models/offer");
 
 let CACHE = {}
 
@@ -50,7 +49,7 @@ async function reserveSpot(session, req) {
 
     const ID = Number(req.query.id)
     if (!CACHE[ID]?.date || CACHE[ID].date < moment().unix()) {
-        const allocation = await getOfferAllocation(ID)
+        const allocation = await getOfferReservedData(ID)
         CACHE[ID] = {...allocation._doc, ...{date: moment().unix() + 3 * 60}}
     }
 
