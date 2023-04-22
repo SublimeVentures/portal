@@ -4,25 +4,25 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
 import {useSession} from "next-auth/react";
-import {ACL as ACLs} from "@/lib/acl";
-import {useQuery} from "@tanstack/react-query";
-import {fetchOfferDetails} from "@/fetchers/offer";
+import { useQuery} from "@tanstack/react-query";
+import {fetchInvestments} from "@/fetchers/vault";
+import Loader from "@/components/App/Loader";
+import Empty from "@/components/App/Empty";
 
 
 export default function AppVault() {
-    const {data: session} = useSession()
+    const {data: session, status} = useSession()
     const ACL = session?.user?.ACL
     const address = session?.user?.address
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : address
 
-    const {isSuccess: offerDetailsState, data: offer} = useQuery({
-            queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
-            queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
+    const {isSuccess: isSuccessDataFeed, data: vault} = useQuery({
+            queryKey: ["userVault", {ACL, address}],
+            queryFn: () => fetchInvestments(ACL, address),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            cacheTime: 30 * 60 * 1000,
-            staleTime: 15 * 60 * 1000,
-            enabled: !!ACL
+            cacheTime: 5 * 60 * 1000,
+            staleTime: 1 * 60 * 1000,
+            enabled: ACL>=0
         }
     );
 
@@ -37,33 +37,19 @@ export default function AppVault() {
         {type: 'claim0', step: 'Tokens to claim', date: '2022-10-16', icon: "vote"},
         {type: 'claim1', step: 'Tokens claimed', date: '2022-10-16', icon: "vote"},
     ]
-    const vault = [
-        {
-            date: "2022-10-15",//
-            name: "Heroes of Mavia",//
-            allocation: 4500,//
-            vested: 65,
-            nextUnlock: "2022-10-15",
-            nextUnlockSize: 653300,
-            tge: 1.6,//
-            url: "https://citcap-public.s3.us-east-2.amazonaws.com/mavia_logo.jpeg"//
-        },
-        {
-            date: "2022-10-15",
-            name: "Heroes of Mavia",
-            allocation: 4500,
-            vested: 65,
-            nextUnlock: "2022-10-15",
-            nextUnlockSize: 653300,
-            tge: 1.6,
-            url: "https://citcap-public.s3.us-east-2.amazonaws.com/mavia_logo.jpeg"
-        },
 
-    ]
 
+    const renderList = () => {
+        if(status !== "authenticated" || !isSuccessDataFeed) return <div className={'col-span-12'}><Loader/></div>
+        if(status === "authenticated" && vault.length===0) return <div className={'col-span-12'}><Empty/></div>
+        return vault.map((el, i) => {
+            return <VaultItem item={el} key={i}/>
+        })
+    }
 
     return (
         <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+
             <div className="col-span-12 flex">
                 <RoundBanner title={'Vault'} subtitle={'All your investments in one place.'}
                              action={<RoundButton text={'Learn more'} isWide={true}
@@ -71,17 +57,14 @@ export default function AppVault() {
                                                   icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
                 />
             </div>
-            {vault.map((el, i) => {
-                return <VaultItem item={el} key={i} />
-            })}
+
+            {renderList()}
 
         </div>
 
     )
 }
 
-
 AppVault.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
-}
-;
+};

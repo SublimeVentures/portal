@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const {getAccessToken} = require("../services/auth");
-const {userInvestment, userInvestments} = require("../controllers/investment");
+const {userInvestment, userInvestments} = require("../controllers/vault");
 
 router.get('/', async (req, res) => {
     const session = await getAccessToken(req)

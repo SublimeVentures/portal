@@ -107,6 +107,10 @@ const OfferSchema = new mongoose.Schema(
             type: String,
             required: false,
         },
+        t_unlock: {
+            type: Array,
+            required: false,
+        },
         t_start: {
           type:Number,
           required: false

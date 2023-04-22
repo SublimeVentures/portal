@@ -12,7 +12,7 @@ import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
 import {fetchPayableCurrency} from "@/fetchers/currency";
 import {ACL as ACLs} from "@/lib/acl";
-import {fetchInvestment} from "@/fetchers/investment";
+import {fetchInvestment} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 
@@ -42,7 +42,7 @@ export const AppOfferDetails = () => {
             refetchOnWindowFocus: false,
             cacheTime: 30 * 60 * 1000,
             staleTime: 15 * 60 * 1000,
-            enabled: !!ACL
+            enabled: ACL>=0
         }
     );
 

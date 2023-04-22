@@ -13,7 +13,7 @@ const {router: validateRoute} = require("./server/routes/validate.js");
 const {router: offerRoute} = require("./server/routes/offer.js");
 const {router: investRoute} = require("./server/routes/invest.js");
 const {router: payableRoute} = require("./server/routes/payable.js");
-const {router: vaultRoute} = require("./server/routes/investments.js");
+const {router: vaultRoute} = require("./server/routes/vault.js");
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';

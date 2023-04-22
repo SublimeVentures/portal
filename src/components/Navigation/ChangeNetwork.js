@@ -12,7 +12,7 @@ export default function ChangeNetwork() {
     const {error, isLoading, pendingChainId, switchNetwork} = useSwitchNetwork()
     const [enabled, setEnabled] = useState(false)
 
-    const isNetworkSupported = !!chains.find(el => el.id === chain.id)
+    const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
 
     useEffect(() => {
@@ -21,9 +21,9 @@ export default function ChangeNetwork() {
         } else {
             switchNetwork?.(chains[1].id)
         }
-        if (chain.id === chains[0].id) {
+        if (chain?.id === chains[0].id) {
             setEnabled(false)
-        } else if (chain.id === chains[1].id) {
+        } else if (chain?.id === chains[1].id) {
             setEnabled(true)
         }
     }, [enabled, chain])

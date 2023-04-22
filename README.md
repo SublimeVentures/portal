@@ -39,12 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-
-- vault
-- vault empty
-- reassign facet
-- confiential facet
-
 - loading na login + error na login
 - save vault delegatcash
 - homepage datafeed
@@ -56,6 +50,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - otc
 - timeline (dashboard, setting, vault)
+-- reassign facet
+-- confiential facet
 
 - DEPLOY
 
