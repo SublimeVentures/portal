@@ -16,3 +16,14 @@ export const fetchEnabledPartners = async () => {
     return data
 }
 
+
+export const saveDelegation = async (address, vault, partner, tokenId) => {
+    const {data} = await axios.post("/api/validate/delegate", {address, vault, partner, tokenId}, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    return data
+}
+

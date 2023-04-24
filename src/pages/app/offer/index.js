@@ -24,7 +24,6 @@ export default function AppOffer() {
             enabled: !!ACL
         }
     );
-
     if(status !== "authenticated") return <Loader/>
     if(investments.length ===0) return  <Empty/>
     return (

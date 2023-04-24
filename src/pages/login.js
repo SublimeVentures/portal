@@ -180,10 +180,11 @@ export const getServerSideProps = async(context) => {
         cacheTime: 180 * 60 * 1000,
         staleTime: 90 * 60 * 1000
     })
+
     return {
         props: {
             dehydratedState: dehydrate(queryClient),
-            csrfToken: await getCsrfToken(context),
+            // csrfToken: await getCsrfToken(context),
         }
     }
 }

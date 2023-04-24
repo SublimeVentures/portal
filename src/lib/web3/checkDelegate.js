@@ -1,11 +1,10 @@
 import {DelegateCash} from "delegatecash";
 import {Network, Alchemy} from 'alchemy-sdk';
-import {fetchEnabledPartners} from "@/fetchers/login";
+import {fetchEnabledPartners, saveDelegation} from "@/fetchers/login";
 
-//todo: replace with env
 const settings = {
-    apiKey: 'A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku', // Replace with your Alchemy API Key.
-    network: Network.ETH_MAINNET, // Replace with your network.
+    apiKey: 'A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku',
+    network: Network.ETH_MAINNET,
 };
 
 let alchemy, provider, dc
@@ -24,6 +23,7 @@ export const checkDelegate = async (address) => {
             let amt = 0;
             let tokenId = 0;
             let tokenIdContract;
+            let vault;
             for (let i = 0; i < partners.length; i++) {
                 const isDelegated = delegations.filter(el => el.contract === partners[i].address)
                 if (isDelegated.length > 0) {
@@ -32,10 +32,13 @@ export const checkDelegate = async (address) => {
                         if (el.tokenId > 0) {
                             tokenId = el.tokenId
                             tokenIdContract = el.contract
+                            vault = el.vault
+
                         }
                     })
                     if (!tokenIdContract) {
                         tokenIdContract = isDelegated[0].contract
+                        vault = isDelegated[0].vault
                     }
                 }
 
@@ -50,7 +53,10 @@ export const checkDelegate = async (address) => {
                      const metadata = await alchemy.nft.getNftMetadata(tokenIdContract, tokenId)
                         image = metadata.contract.openSea.imageUrl
                 }
+
+                await saveDelegation(address, vault, partner.address, tokenId)
                 return {
+                    address: address,
                     amt: amt,
                     name: partner.name,
                     symbol: partner.symbol,

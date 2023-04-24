@@ -7,7 +7,7 @@ import {useSession} from "next-auth/react";
 import { useQuery} from "@tanstack/react-query";
 import {fetchInvestments} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
-import Empty from "@/components/App/Empty";
+import EmptyVault from "@/components/App/EmptyVault";
 
 
 export default function AppVault() {
@@ -41,7 +41,7 @@ export default function AppVault() {
 
     const renderList = () => {
         if(status !== "authenticated" || !isSuccessDataFeed) return <div className={'col-span-12'}><Loader/></div>
-        if(status === "authenticated" && vault.length===0) return <div className={'col-span-12'}><Empty/></div>
+        if(status === "authenticated" && vault.length===0) return <div className={'col-span-12'}><EmptyVault/></div>
         return vault.map((el, i) => {
             return <VaultItem item={el} key={i}/>
         })

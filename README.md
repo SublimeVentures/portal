@@ -39,12 +39,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- loading na login + error na login
-- save vault delegatcash
-- homepage datafeed
-- scaling linków na ofercie
+express json - fix w serverze
 
-- calculator
+- loading na login + error na login
+- homepage datafeed
 - metadata
 - //todo: fix, zalezy od tego czy partner wlaczony czy nie
 
@@ -52,6 +50,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - timeline (dashboard, setting, vault)
 -- reassign facet
 -- confiential facet
+
+- scaling linków na ofercie
+- calculator
 
 - DEPLOY
 
@@ -70,3 +71,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - connect delegate address delegate.cash (solidity)
 - referral systems
 - promo codes
+
+

@@ -31,7 +31,7 @@ export default function LoginModal({isPartner, signError, model, setter}) {
 
                 ))}
             </div>
-            <div className="-mb-2 mt-2 text-center text-red h-[10px]">{signError.length>0 ? signError : (error ? error.message : "")}</div>
+            <div className="-mb-2 mt-2 text-center text-red h-[10px]">{signError?.length>0 ? signError : (error ? error.message : "")}</div>
         </>)
     }
 

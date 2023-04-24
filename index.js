@@ -72,6 +72,8 @@ if (!dev && cluster.isMaster) {
         // server.get('/b', (req, res) => {
         //     return nextApp.render(req, res, '/a', req.query)
         // })
+
+
         server.use(express.json());
         server.use('/api/public', publicRoute);
         server.use('/api/validate', validateRoute);
@@ -82,7 +84,7 @@ if (!dev && cluster.isMaster) {
 
 
         // Default catch-all renders Next app
-        server.get('*', (req, res) => {
+        server.all('*', (req, res) => {
             // res.set({
             //   'Cache-Control': 'public, max-age=3600'
             // });
