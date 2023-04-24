@@ -8,8 +8,11 @@ import {fetchPublicInvestments} from "@/fetchers/public";
 import { queryClient } from '@/lib/web3/queryCache'
 import Head from "next/head";
 import {NextSeo} from "next-seo";
+import {seoConfig} from "@/lib/seoConfig";
+import PAGE from "@/routes";
 
 export default function InvestmentsPublic() {
+    const seo = seoConfig(PAGE.Investments)
     const { isLoading, data, isError } = useQuery({
             queryKey: ["publicInvestment"],
             queryFn: fetchPublicInvestments,
@@ -50,37 +53,11 @@ export default function InvestmentsPublic() {
     return (
         <>
             <NextSeo
-                title="3VC - our investments"
-                description="DON'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES."
-                canonical="https://www.3vc.fund/investments"
-                openGraph={{
-                    type: 'website',
-                    url: 'https://www.3vc.fund/investments',
-                    title: '3VC - login',
-                    description: 'DON\'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES.',
-                    images: [
-                        {
-                            url: 'https://www.example.ie/og-image-01.jpg',
-                            width: 800,
-                            height: 600,
-                            alt: 'Og Image Alt',
-                            type: 'image/jpeg',
-                        },
-                        {
-                            url: 'https://www.example.ie/og-image-02.jpg',
-                            width: 800,
-                            height: 600,
-                            alt: 'Og Image Alt2',
-                            type: 'image/jpeg',
-                        },
-                    ],
-                    siteName: '3VC',
-                }}
-                twitter={{
-                    handle: '@3VCfund',
-                    site: '@3VCfund',
-                    cardType: 'summary_large_image',
-                }}
+                title={seo.title}
+                description={seo.description}
+                canonical={seo.url}
+                openGraph={seo.og}
+                twitter={seo.twitter}
             />
             <HeroBg subtitle={'who we support'} title={'previous deals'} content={renderList()} extraClass={"investmentsPublic"}/>
         </>
