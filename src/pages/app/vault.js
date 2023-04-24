@@ -8,6 +8,7 @@ import { useQuery} from "@tanstack/react-query";
 import {fetchInvestments} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
+import Head from "next/head";
 
 
 export default function AppVault() {
@@ -48,19 +49,25 @@ export default function AppVault() {
     }
 
     return (
-        <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+        <>
+            <Head>
+                <title>Vault - 3VC</title>
+            </Head>
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
 
-            <div className="col-span-12 flex">
-                <RoundBanner title={'Vault'} subtitle={'All your investments in one place.'}
-                             action={<RoundButton text={'Learn more'} isWide={true}
-                                                  size={'text-sm sm'}
-                                                  icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
-                />
+                <div className="col-span-12 flex">
+                    <RoundBanner title={'Vault'} subtitle={'All your investments in one place.'}
+                                 action={<RoundButton text={'Learn more'} isWide={true}
+                                                      size={'text-sm sm'}
+                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
+                    />
+                </div>
+
+                {renderList()}
+
             </div>
 
-            {renderList()}
-
-        </div>
+        </>
 
     )
 }

@@ -15,6 +15,7 @@ import {ACL as ACLs} from "@/lib/acl";
 import {fetchInvestment} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
+import Head from "next/head";
 
 
 export const AppOfferDetails = () => {
@@ -42,7 +43,7 @@ export const AppOfferDetails = () => {
             refetchOnWindowFocus: false,
             cacheTime: 30 * 60 * 1000,
             staleTime: 15 * 60 * 1000,
-            enabled: ACL>=0
+            enabled: ACL >= 0
         }
     );
 
@@ -51,7 +52,7 @@ export const AppOfferDetails = () => {
             queryFn: () => fetchOfferAllocation(offer?.id),
             refetchOnMount: true,
             refetchOnWindowFocus: true,
-            enabled:!!offer,
+            enabled: !!offer,
             refetchInterval: 15000
         }
     );
@@ -61,7 +62,7 @@ export const AppOfferDetails = () => {
             queryFn: () => fetchInvestment(offer?.id),
             refetchOnMount: false,
             refetchOnWindowFocus: true,
-            enabled:!!offer,
+            enabled: !!offer,
         }
     );
 
@@ -79,23 +80,34 @@ export const AppOfferDetails = () => {
         userAllocation
     }
 
-    if (status !== "authenticated" || !currenciesState || !offerDetailsState ) return <Loader/>
-    if(!offer) return <Empty/>
+    const renderPage = () => {
+        if (status !== "authenticated" || !currenciesState || !offerDetailsState) return <Loader/>
+        if (!offer) return <Empty/>
+        return (
+
+                <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                    <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
+                        <OfferDetailsInvest paramsInvest={paramsInvest}/>
+                    </div>
+                    <div
+                        className="flex flex-col col-span-12 gap-5 mobile:gap-10 sinvest:flex-row xl:col-span-4 xl:!flex-col xl:gap-0">
+                        <OfferDetailsParams paramsParams={paramsParams}/>
+                    </div>
+
+                    <div className="flex flex-col col-span-12 ">
+                        <OfferDetailsFlipbook offer={offer}/>
+                    </div>
+                </div>
+        )
+    }
+
     return (
-        <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
-            <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
-                <OfferDetailsInvest paramsInvest={paramsInvest} />
-            </div>
-            <div
-                className="flex flex-col col-span-12 gap-5 mobile:gap-10 sinvest:flex-row xl:col-span-4 xl:!flex-col xl:gap-0">
-                <OfferDetailsParams paramsParams={paramsParams}/>
-            </div>
-
-            <div className="flex flex-col col-span-12 ">
-                <OfferDetailsFlipbook offer={offer}/>
-            </div>
-        </div>
-
+        <>
+            <Head>
+                <title>{offer.name} - Invest - 3VC</title>
+            </Head>
+            {renderPage()}
+        </>
     )
 }
 

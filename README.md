@@ -39,13 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-express json - fix w serverze
-
-- loading na login + error na login
-- homepage datafeed
-- metadata
-- //todo: fix, zalezy od tego czy partner wlaczony czy nie
-
 - otc
 - timeline (dashboard, setting, vault)
 -- reassign facet
@@ -54,6 +47,15 @@ express json - fix w serverze
 - scaling linków na ofercie
 - calculator
 
+- express json - fix w serverze
+- loading na login + error na login
+
+- investment states && empty details response
+- //todo: fix, zalezy od tego czy partner wlaczony czy nie
+- homepage datafeed
+
+
+- images for seo
 - DEPLOY
 
 - whale deposit/ withdraw features in settings

@@ -17,6 +17,8 @@ import RocketIcon from "@/assets/svg/Rocket.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
 import PAGE from "@/routes";
 import { queryClient } from '@/lib/web3/queryCache'
+import Head from "next/head";
+import {NextSeo} from "next-seo";
 
 
 export default function Login() {
@@ -157,6 +159,39 @@ export default function Login() {
 
     return (
         <>
+            <NextSeo
+                title="3VC - login"
+                description="DON'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES."
+                canonical="https://www.3vc.fund/login"
+                openGraph={{
+                    type: 'website',
+                    url: 'https://www.3vc.fund/login',
+                    title: '3VC - login',
+                    description: 'DON\'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES.',
+                    images: [
+                        {
+                            url: 'https://www.example.ie/og-image-01.jpg',
+                            width: 800,
+                            height: 600,
+                            alt: 'Og Image Alt',
+                            type: 'image/jpeg',
+                        },
+                        {
+                            url: 'https://www.example.ie/og-image-02.jpg',
+                            width: 800,
+                            height: 600,
+                            alt: 'Og Image Alt2',
+                            type: 'image/jpeg',
+                        },
+                    ],
+                    siteName: '3VC',
+                }}
+                twitter={{
+                    handle: '@3VCfund',
+                    site: '@3VCfund',
+                    cardType: 'summary_large_image',
+                }}
+            />
             <HeroBg subtitle={'Welcome'} title={'sing with whales'} content={renderOptions()} />
             <LoginModal isPartner={isPartnerLogin} signError={errorMsg} model={walletSelectionOpen} setter={() => {setIsWalletSelectionOpen(false)}}/>
         </>

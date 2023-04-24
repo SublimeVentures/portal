@@ -8,6 +8,7 @@ import {getToken} from "next-auth/jwt";
 import Loader from "@/components/App/Loader";
 import {ACL as ACLs} from "@/lib/acl";
 import Empty from "@/components/App/Empty";
+import Head from "next/head";
 
 export default function AppOffer() {
     const { data: session, status } = useSession()
@@ -24,15 +25,25 @@ export default function AppOffer() {
             enabled: !!ACL
         }
     );
-    if(status !== "authenticated") return <Loader/>
-    if(investments.length ===0) return  <Empty/>
-    return (
-        <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-            {!!investments && investments.map(el =>
-                    <OfferItem offer={el} key={el.slug} ACL={ACL}/>
-            )}
-        </div>
-    )
+
+    const renderPage = () => {
+        if(status !== "authenticated") return <Loader/>
+        if(investments.length ===0) return  <Empty/>
+        return (
+                <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                    {!!investments && investments.map(el =>
+                        <OfferItem offer={el} key={el.slug} ACL={ACL}/>
+                    )}
+                </div>
+        )
+    }
+
+    return <>
+        <Head>
+            <title>Opportunities - 3VC</title>
+        </Head>
+        {renderPage()}
+    </>
 }
 
 export const getServerSideProps = async({req}) => {

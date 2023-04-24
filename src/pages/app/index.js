@@ -6,12 +6,15 @@ import Stats from "@/components/App/Dashboard/Stats";
 import Profile from "@/components/App/Dashboard/Profile";
 import LatestInvestment from "@/components/App/Dashboard/LatestInvestment";
 import Updates from "@/components/App/Dashboard/Updates";
-
+import Head from 'next/head'
 
 export default function AppDashboard() {
 
     return (
         <>
+            <Head>
+                <title>Dashboard - 3VC</title>
+            </Head>
             <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex flex-col gap-10 custom:col-span-8">
                     <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}

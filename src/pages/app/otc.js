@@ -3,6 +3,7 @@ import RoundBanner from "@/components/App/RoundBanner";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
 import IconCart from "@/assets/svg/Cart.svg";
+import Head from "next/head";
 
 
 export default function AppOtc() {
@@ -55,53 +56,57 @@ export default function AppOtc() {
 
 
     return (
-        <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-            <div className="col-span-12 flex">
-                <RoundBanner title={'Over the counter'} subtitle={'Need liquidity? Trade your allocation.'}
-                             action={<RoundButton text={'Learn more'} isWide={true}
-                                                  size={'text-sm sm'}
-                                                  icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
-                />
-            </div>
+        <>
+            <Head>
+                <title>OTC Market - 3VC</title>
+            </Head>
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                <div className="col-span-12 flex">
+                    <RoundBanner title={'Over the counter'} subtitle={'Need liquidity? Trade your allocation.'}
+                                 action={<RoundButton text={'Learn more'} isWide={true}
+                                                      size={'text-sm sm'}
+                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
+                    />
+                </div>
 
-            <div className="col-span-12">
-                <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10 ">
-                    <div className="col-span-12 lg:col-span-4 flex flex-1">
-                        <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
-                            <div className="overflow-x-auto flex flex-col">
-                                <div className="text-xl uppercase font-medium text-outline p-5">Markets</div>
-                                <table>
-                                    <thead className="bg-navy ">
-                                    <tr>
-                                        <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
-                                            <label>OFFERS</label></th>
-                                        <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                                            <label>MARKET</label></th>
-                                        <th className="font-bold text-sm text-left sm:py-4 sm:pl-2 sm:pr-5">
-                                            <label>TICKER</label></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {markets.map((el, i) => {
-                                        return <tr key={el.marketKey}
-                                                   className={`cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${i === 1 ? 'font-bold bg-app-success text-black' : ''}`}>
-                                            <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
-                                                data-label="OFFERS">{el.offers}</td>
-                                            <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2 "
-                                                data-label="MARKET">{el.market}</td>
-                                            <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
-                                                data-label="TICKER">{el.ticker}</td>
+                <div className="col-span-12">
+                    <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10 ">
+                        <div className="col-span-12 lg:col-span-4 flex flex-1">
+                            <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
+                                <div className="overflow-x-auto flex flex-col">
+                                    <div className="text-xl uppercase font-medium text-outline p-5">Markets</div>
+                                    <table>
+                                        <thead className="bg-navy ">
+                                        <tr>
+                                            <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
+                                                <label>OFFERS</label></th>
+                                            <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
+                                                <label>MARKET</label></th>
+                                            <th className="font-bold text-sm text-left sm:py-4 sm:pl-2 sm:pr-5">
+                                                <label>TICKER</label></th>
                                         </tr>
-                                    })}
+                                        </thead>
+                                        <tbody>
+                                        {markets.map((el, i) => {
+                                            return <tr key={el.marketKey}
+                                                       className={`cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${i === 1 ? 'font-bold bg-app-success text-black' : ''}`}>
+                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
+                                                    data-label="OFFERS">{el.offers}</td>
+                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2 "
+                                                    data-label="MARKET">{el.market}</td>
+                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
+                                                    data-label="TICKER">{el.ticker}</td>
+                                            </tr>
+                                        })}
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-span-12 lg:col-span-8 flex flex-1">
-                        <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
+                        <div className="col-span-12 lg:col-span-8 flex flex-1">
+                            <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
                                 <div className="overflow-x-auto flex flex-col flex-1">
                                     <div className="p-5 flex flex-row relative">
                                         <div className="text-xl uppercase font-medium text-outline flex flex-1">
@@ -154,12 +159,14 @@ export default function AppOtc() {
                                     </table>
 
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-        </div>
+        </>
 
     )
 }
