@@ -5,6 +5,7 @@ import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
 import {client} from '@/lib/web3/wagmi'
 import {queryClient} from '@/lib/web3/queryCache'
 import Layout from '@/components/Layout/Layout';
+import 'react-tooltip/dist/react-tooltip.css';
 import '@/styles/globals.scss'
 
 axios.defaults.baseURL = 'http://localhost:3000';

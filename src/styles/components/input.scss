@@ -121,9 +121,30 @@
   display: flex;
   flex-direction: row;
 
+  &.light {
+    input {
+      background: theme('colors.slides');
+    }
+
+    .after {
+      background: theme('colors.slides');
+    }
+  }
+  &.full {
+
+    .centr {
+      width:100%!important;
+    }
+
+    input {
+      width:100%!important;
+    }
+
+  }
+
   input{
     color: white;
-    background: #0e1118;
+    background: theme('colors.navy2');
     outline: none;
     border-bottom-left-radius: 6px;
     border-top-left-radius: 6px;

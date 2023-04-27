@@ -5,8 +5,7 @@ import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 
 
-export default function CurrencyInput({type, placeholder, max, min, currencies, setStatus, shareInput, shareCurrency}) {
-    const [input, setInput] = useState(null)
+export default function Input({type, placeholder, max, min, setStatus, input, setInput, after, light, full, dividable, customClear, initialValue}) {
     const [inputFormatted, setInputFormatted] = useState("")
     const [showInfo, setShowInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
@@ -18,71 +17,88 @@ export default function CurrencyInput({type, placeholder, max, min, currencies, 
         }
     }
 
-
-    const setValue = (data) => {
-        // console.log("odpalam", data)
+    const setValueNumber = (data) => {
         if (!Number.isInteger(data)) {
             data = data.replace(/[^0-9]/g, '')
         }
         setInput(data)
-        shareInput(data)
-        let formatted = Number(data).toLocaleString()
-        // console.log("formatted",formatted)
-        if(formatted==0) {
-            formatted = ""
-        }
-        setInputFormatted(formatted)
-        // console.log("input - ", data)
+
     }
 
-    const dbc = debounce(function (e) {
-        this.checkRequirements()
-    }, 1500)
-
-    const checkRequirements = () => {
-        // console.log("debounce", input)
-        if (max && input > max) {
-            return false
-        }
-        if (min && input < min) {
-            return false
-        }
-        return true
+    const setValueString = (data) => {
+        setInput(data)
     }
 
     const isActive = () => {
         if (type === 'number') {
             return input > 0
+        } else {
+            return input?.length>0
         }
     }
 
     const onInputChange = (event) => {
-        setValue(event.target.value)
+        if (type === "number") {
+            setValueNumber(event.target.value)
+        } else {
+            setValueString(event.target.value)
+        }
+    }
+
+
+    const clearInput = () => {
+        if (type === "number") {
+            if(min) setValueNumber(min)
+            else setValueNumber(0)
+        } else {
+            setValueString(customClear ? customClear : "")
+        }
     }
 
     useEffect(() => {
+        if (type === "number") {
+            let formatted = Number(input).toLocaleString()
+            if(formatted==0) {
+                formatted = ""
+            }
+            setInputFormatted(formatted)
+        } else {
+            setInputFormatted(input)
+        }
+    }, [input]);
+
+    useEffect(() => {
         if (type === "number" && min) {
-            setValue(min)
+            setValueNumber(min)
+        } else {
+            setValueString(initialValue)
         }
     }, []);
 
     useEffect(() => {
-        if (input < min) {
-            setStatus(true)
-            return setIsError({state: true, msg: `Minimum investment: $${min.toLocaleString()}`})
-        } else if (input > max) {
-            setStatus(true)
-            return setIsError({state: true, msg: `Maximum investment: $${max.toLocaleString()}`})
-        } else {
-            if(input % 100 > 0) {
+        if(type === "number") {
+            if (min && input < min) {
                 setStatus(true)
-                return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
+                return setIsError({state: true, msg: `Minimum amount: $${min.toLocaleString()}`})
+            } else if (max && input > max) {
+                setStatus(true)
+                return setIsError({state: true, msg: `Maximum amount: $${max.toLocaleString()}`})
+            } else {
+                if(dividable && input % dividable > 0) {
+                    setStatus(true)
+                    return setIsError({state: true, msg: `Amount has to be divisible by $10`})
+                }
+                setStatus(true)
+                return setIsError({state: false})
             }
-            setStatus(false)
-            return setIsError({state: false, msg: `Minimum investment: $${min.toLocaleString()}`})
+        } else if(type === "address") {
+
         }
 
+
     }, [input]);
+
+
 
     useEffect(() => {
         if (showInfo) {
@@ -95,8 +111,8 @@ export default function CurrencyInput({type, placeholder, max, min, currencies, 
     }, [showInfo]);
 
     return (
-        <div className="currency-input-group relative">
-            <div className={`relative centr ${input > 0 ? 'active' : ''}`}>
+        <div className={`currency-input-group relative ${light ? 'light' : ''} ${full ? 'full' : ''}`}>
+            <div className={`relative centr  ${isActive() ? 'active' : ''}`}>
                 <label className="absolute text-accent block">{placeholder}</label>
                 <input tabIndex="0"
                        value={inputFormatted}
@@ -117,14 +133,12 @@ export default function CurrencyInput({type, placeholder, max, min, currencies, 
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div className="absolute top-5 right-5 cursor-pointer " onClick={() => {
-                            setValue(min)
-                        }}><IconCancel className="w-6 opacity-70"/></div>
+                        <div className="absolute top-5 right-5 cursor-pointer" onClick={() => clearInput()}><IconCancel className="w-6 opacity-70"/></div>
                     </Transition.Child>
                 </Transition>
             </div>
-            <Dropdown options={currencies} classes={'customSize'} propSelected={shareCurrency}/>
-            <Transition appear show={showInfo} as={Fragment}>
+            {after && <div className={"after rounded-tr-md rounded-br-md px-5 flex justify-center items-center mt-[1px] mb-[1px]"}>{after}</div>}
+            {isError?.state &&<Transition appear show={showInfo} as={Fragment}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -134,10 +148,11 @@ export default function CurrencyInput({type, placeholder, max, min, currencies, 
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
+
                     <div
                         className={`select-none absolute px-4 py-2 status text-sm ${isError?.state ? 'error' : ''}`}>{isError?.msg}</div>
                 </Transition.Child>
-            </Transition>
+            </Transition>}
 
         </div>
     )

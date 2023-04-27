@@ -3,7 +3,7 @@ import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import {useState , useEffect} from "react";
 import AllowanceStep from "@/components/App/Transactions/AllowanceStep";
-import InvestStep from "@/components/App/Transactions/InvestStep";
+import TransactStep from "@/components/App/Transactions/TransactStep";
 import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import IconVault from "@/assets/svg/Vault.svg";
@@ -153,7 +153,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                     }
                         <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
                         <AllowanceStep stepProps={{...stepProps, ...stepAllowanceProps}} />
-                        <InvestStep stepProps={{...stepProps, ...stepInvestProps}}/>
+                        <TransactStep stepProps={{...stepProps, ...stepInvestProps}}/>
                 </div>
                 <div className="">Booked allocation will be released when the timer runs to zero. <a
                     href="#" target="_blank" className="text-app-error">Read more.</a></div>

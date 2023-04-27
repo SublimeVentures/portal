@@ -1,0 +1,150 @@
+[
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "nftId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "offerId_",
+          "type": "uint32"
+        },
+        {
+          "internalType": "address",
+          "name": "payout",
+          "type": "address"
+        }
+      ],
+      "name": "addOffer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "offerId_",
+          "type": "uint32"
+        }
+      ],
+      "name": "addOfferPartner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "nftId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "offerId_",
+          "type": "uint32"
+        }
+      ],
+      "name": "removeOffer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "offerId_",
+          "type": "uint32"
+        }
+      ],
+      "name": "removeOfferPartner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "nftId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "offerId_",
+          "type": "uint32"
+        },
+        {
+          "internalType": "address",
+          "name": "currency_",
+          "type": "address"
+        }
+      ],
+      "name": "settleOffer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "offerId_",
+          "type": "uint32"
+        },
+        {
+          "internalType": "address",
+          "name": "currency_",
+          "type": "address"
+        }
+      ],
+      "name": "settleOfferPartner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]

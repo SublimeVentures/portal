@@ -4,56 +4,106 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
 import IconCart from "@/assets/svg/Cart.svg";
 import Head from "next/head";
+import {queryClient} from "@/lib/web3/queryCache";
+import {dehydrate, useQuery} from "@tanstack/react-query";
+import {fetchMarkets, fetchOffers} from "@/fetchers/otc";
+import Empty from "@/components/App/Empty";
+import Loader from "@/components/App/Loader";
+import {useRouter} from "next/router";
+import {useEffect} from "react";
+import PAGE from "@/routes";
+import {fetchInvestments} from "@/fetchers/vault";
+import {useSession} from "next-auth/react";
+import OtcMarkets from "@/components/App/Otc/Markets";
+import OtcOffers from "@/components/App/Otc/Offers";
 
 
 export default function AppOtc() {
+    const router = useRouter()
+    const {data: session} = useSession()
+    const ACL = session?.user?.ACL
+    const address = session?.user?.address
 
-    const markets = [
-        {
-            marketKey: 1,
-            offers: 6,
-            market: "Mavia",
-            ticker: "MVN",
-        },
-        {
-            marketKey: 2,
-            offers: 6,
-            market: "Mavia",
-            ticker: "MVN",
-        },
-        {
-            marketKey: 3,
-            offers: 6,
-            market: "Mavia",
-            ticker: "MVN",
-        },
-        {
-            marketKey: 4,
-            offers: 6,
-            market: "Mavia",
-            ticker: "MVN",
-        },
 
-    ]
-    const offers = [
-        {
-            tokens: 64443,
-            allocation: 456,
-            price: 632,
-        },
-        {
-            tokens: 234324,
-            allocation: 355,
-            price: 1200,
-        },
-        {
-            tokens: 344,
-            allocation: 100,
-            price: 200,
-        },
+    const {isSuccess: marketsIsSuccess, data: markets} = useQuery({
+            queryKey: ["otcMarkets"],
+            queryFn: fetchMarkets,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            cacheTime: 4 * 60 * 60 * 1000,
+            staleTime: 2 * 60 * 60 * 1000
+        }
+    );
 
-    ]
+    const {isSuccess: vaultIsSuccess, data: vault, refetch: refetchVault} = useQuery({
+            queryKey: ["userVault", {ACL, address}],
+            queryFn: () => fetchInvestments(ACL, address),
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            cacheTime: 5 * 60 * 1000,
+            staleTime: 0,
+            enabled: ACL>=0
+        }
+    );
 
+    const {market} = router.query
+    const currentMarket = markets?.open.find(el => el.slug === market)
+
+    const {isSuccess: offersIsSuccess, data: offers, refetch: refetchOffers} = useQuery({
+            queryKey: ["otcOffers", currentMarket?.id],
+            queryFn: () => fetchOffers(currentMarket?.id),
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            cacheTime: 5 * 60 * 1000,
+            staleTime: 0,
+            enabled: !!currentMarket
+        }
+    );
+
+    const changeMarket = (slug) => {
+        router.push(`${PAGE.OTC}/?market=${slug}`, undefined, {shallow: true})
+    }
+
+    useEffect(() => {
+        if (!!market && !!currentMarket) {
+        } else {
+            changeMarket(markets.open[0]?.slug)
+        }
+    }, [market, markets])
+
+
+    const propMarkets = {
+        markets,
+        currentMarket,
+        changeMarket
+    }
+
+    const propOffers = {
+        refetchVault,
+        offers,
+        vault,
+        refetchOffers,
+        session,
+        currentMarket,
+        ...{source:  markets.source},
+        ...{otcFee:  markets.otcFee},
+        ...{currencies:  markets.currencies}
+    }
+
+    const renderPage = () => {
+        if (!marketsIsSuccess || !vaultIsSuccess || !offersIsSuccess) return <Loader/>
+        if (markets.open.length === 0) return <Empty/>
+        return <div className="col-span-12">
+            <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10 ">
+                <div className="col-span-12 lg:col-span-4 flex flex-1">
+                    <OtcMarkets propMarkets={propMarkets}/>
+                </div>
+                <div className="col-span-12 lg:col-span-8 flex flex-1">
+                    <OtcOffers propOffers={propOffers}/>
+                </div>
+            </div>
+        </div>
+    }
 
     return (
         <>
@@ -68,107 +118,28 @@ export default function AppOtc() {
                                                       icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
                     />
                 </div>
-
-                <div className="col-span-12">
-                    <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10 ">
-                        <div className="col-span-12 lg:col-span-4 flex flex-1">
-                            <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
-                                <div className="overflow-x-auto flex flex-col">
-                                    <div className="text-xl uppercase font-medium text-outline p-5">Markets</div>
-                                    <table>
-                                        <thead className="bg-navy ">
-                                        <tr>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
-                                                <label>OFFERS</label></th>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                                                <label>MARKET</label></th>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:pl-2 sm:pr-5">
-                                                <label>TICKER</label></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {markets.map((el, i) => {
-                                            return <tr key={el.marketKey}
-                                                       className={`cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${i === 1 ? 'font-bold bg-app-success text-black' : ''}`}>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
-                                                    data-label="OFFERS">{el.offers}</td>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2 "
-                                                    data-label="MARKET">{el.market}</td>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
-                                                    data-label="TICKER">{el.ticker}</td>
-                                            </tr>
-                                        })}
-
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-span-12 lg:col-span-8 flex flex-1">
-                            <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
-                                <div className="overflow-x-auto flex flex-col flex-1">
-                                    <div className="p-5 flex flex-row relative">
-                                        <div className="text-xl uppercase font-medium text-outline flex flex-1">
-                                            Offers
-                                        </div>
-                                        <div className="absolute right-5 top-3">
-                                            <RoundButton text={'SELL'} isWide={true} size={'text-sm xs'}
-                                                         icon={<IconCart className={ButtonIconSize.hero}/>}/>
-                                        </div>
-
-                                    </div>
-
-                                    <table>
-                                        <thead className="bg-navy ">
-                                        <tr>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
-                                                <label>TOKENS</label></th>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                                                <label>ALLOCATION</label></th>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                                                <label>PRICE</label>
-                                            </th>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                                                <label>MULTIPLIER</label></th>
-                                            <th className="font-bold text-sm text-left sm:py-4 sm:pl-2 sm:pr-5">
-                                                <label>ACTION</label></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {offers.map(el => {
-                                            return <tr key={el.tokens}
-                                                       className="hoverTable transition-all duration-300 hover:text-black">
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
-                                                    data-label="TOKENS">{el.tokens}</td>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2"
-                                                    data-label="ALLOCATION">{el.allocation}</td>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2"
-                                                    data-label="PRICE">{el.price}</td>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2"
-                                                    data-label="MULTIPLIER"><span
-                                                    className="text-app-success">{Number(el.price / el.allocation).toFixed(2)}x</span>
-                                                </td>
-                                                <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
-                                                    data-label="ACTION">cash, close
-                                                </td>
-                                            </tr>
-                                        })}
-
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                {renderPage()}
             </div>
 
         </>
 
     )
+}
+
+export const getServerSideProps = async ({req}) => {
+
+    await queryClient.prefetchQuery({
+        queryKey: ["otcMarkets"],
+        queryFn: fetchMarkets,
+        cacheTime: 4 * 60 * 60 * 1000,
+        staleTime: 2 * 60 * 60 * 1000
+    })
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient)
+        }
+    }
 }
 
 

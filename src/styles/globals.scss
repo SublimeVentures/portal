@@ -20,6 +20,7 @@
 @import 'components/table';
 @import 'components/loading';
 @import 'components/switch';
+@import 'components/tooltip';
 
 @import 'pages/home/about';
 @import 'pages/home/investments';
@@ -29,12 +30,9 @@
 @import 'pages/app/vault';
 
 
-
 //@import 'components/toggle';
 //@import 'components/wavelink';
 //@import 'components/timeline';
-//@import 'components/tooltip';
-
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -71,7 +69,7 @@ body {
 }
 
 .disabled {
-  opacity: 0.75;
+  opacity: 0.55;
   pointer-events: none!important;
   cursor: not-allowed! important;
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const fetchInvestment = async (offerId) => {
-    console.log("Fetching Offer List");
+    console.log("Fetching Vault List");
     try {
         let url = `/api/vault?offer=${offerId}`
         const {data} = await axios.get(url)

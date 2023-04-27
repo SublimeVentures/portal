@@ -20,11 +20,8 @@ const nextHandler = nextApp.getRequestHandler();
 nextApp.prepare().then(async() => {
     const app = express();
     const server = createServer(app);
-    // const io = new socketio.Server();
-    // io.attach(server);
 
     await connectDB()
-    // await connectQueue()
     await connectWeb3()
     app.use('/api/public', publicRoute);
     app.use('/api/validate', validateRoute);

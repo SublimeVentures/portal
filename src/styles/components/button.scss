@@ -5,6 +5,12 @@
   width: fit-content;
   margin: auto;
 
+  &.icons {
+    width:auto!important;
+    margin:0;
+    display: flex;
+  }
+
   .btn {
     border-radius: 9999px;
     -moz-border-radius: 9999px;
@@ -48,6 +54,10 @@
       padding: 0 15px;
       min-width: 200px;
       height: 50px;
+    }
+
+    &.onlyIcon {
+      border:0!important;
     }
 
     //.threeD { //pop out button

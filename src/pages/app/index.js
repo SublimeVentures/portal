@@ -26,7 +26,6 @@ export default function AppDashboard() {
                 <div className="col-span-12 flex custom:col-span-4">
                     <Profile/>
                 </div>
-
             </div>
 
 
@@ -38,8 +37,6 @@ export default function AppDashboard() {
                     <Updates/>
                 </div>
             </div>
-
-
         </>
 
     )

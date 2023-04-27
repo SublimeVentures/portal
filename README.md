@@ -39,23 +39,28 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- otc
-- timeline (dashboard, setting, vault)
--- reassign facet
--- confiential facet
+- na sell i cancel fix processing loading/ wywalić cache
+
 
 - scaling linków na ofercie
 - calculator
-
 - express json - fix w serverze
 - loading na login + error na login
 
+- force from specific wallet
+- investment get currencies on slug page from getEnvs
 - investment states && empty details response
 - //todo: fix, zalezy od tego czy partner wlaczony czy nie
+- oferty widoczne dla wszystkich ale nie do inwestowania
 - homepage datafeed
 
-
+- wrong chain
 - images for seo
+
+- timeline (dashboard, setting, vault)
+  -- reassign facet
+  -- confiential facet
+
 - DEPLOY
 
 - whale deposit/ withdraw features in settings

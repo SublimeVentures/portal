@@ -90,8 +90,7 @@ export default function ChangeNetwork() {
 
                 </span>
             </Switch>
-            <GenericModal isOpen={!isNetworkSupported} closeModal={() => {
-            }} title={title()} content={content()} persistent={true} noClose={true}/>
+            <GenericModal isOpen={!isNetworkSupported} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>
         </div>
     )
 }

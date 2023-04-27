@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 
-export default function Empty() {
+export default function Empty({text, maxSize}) {
     useEffect(() => {
         import('@lottiefiles/lottie-player');
     }, []);
@@ -9,12 +9,12 @@ export default function Empty() {
         <div className="h-full text-center">
             <lottie-player
                 autoplay
-
-                style={{width:'100%', height:'100%', maxHeight: '700px', maxWidth:'700px', margin: '0 auto'}}
+                loop
+                style={{width:'100%', height:'100%', maxHeight: `${maxSize ? maxSize : 700}px`, maxWidth:`${maxSize ? maxSize : 700}px`, margin: '0 auto'}}
                 mode="normal"
                 src="/static/lottie/empty2.json"
             />
-            <div className="text-2xl -mt-10 uppercase text-hero font-medium !text-3xl tracking-wider">More opportunities soon...</div>
+            <div className="text-2xl uppercase pb-10 text-hero font-medium !text-3xl tracking-wider">{text ? text : 'More opportunities soon...'}</div>
         </div>
 
 

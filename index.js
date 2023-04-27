@@ -14,6 +14,7 @@ const {router: offerRoute} = require("./server/routes/offer.js");
 const {router: investRoute} = require("./server/routes/invest.js");
 const {router: payableRoute} = require("./server/routes/payable.js");
 const {router: vaultRoute} = require("./server/routes/vault.js");
+const {router: otcRoute} = require("./server/routes/otc.js");
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -74,13 +75,14 @@ if (!dev && cluster.isMaster) {
         // })
 
 
-        server.use(express.json());
+        // server.use(express.json());
         server.use('/api/public', publicRoute);
         server.use('/api/validate', validateRoute);
         server.use('/api/offer', offerRoute);
         server.use('/api/invest', investRoute);
         server.use('/api/payable', payableRoute);
         server.use('/api/vault', vaultRoute);
+        server.use('/api/otc', otcRoute);
 
 
         // Default catch-all renders Next app
