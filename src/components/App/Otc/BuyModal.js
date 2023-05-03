@@ -37,14 +37,14 @@ export default function BuyModal({model, setter, props}) {
     const [stepLiquidity, setStepLiquidity] = useState(false)
     const [stepAllowance, setStepAllowance] = useState(false)
     const [stepTransact, setStepTransact] = useState(false)
-    const [success, setSuccess] = useState(true)
+    const [success, setSuccess] = useState(false)
 
     const [processing, setProcessing] = useState(false)
-    const [error, setError] = useState(false)
+    const [errors, setError] = useState(false)
 
     const buttonDisabled = !stepLiquidity || processing
 
-    console.log("props", props, success)
+    // console.log("props", props, success)
 
     const closeModal = async () => {
         if(success) {
@@ -55,17 +55,17 @@ export default function BuyModal({model, setter, props}) {
         setProcessing(false)
     }
 
-    //todo: restart last step
     const buyProceed = async ()  => {
         setProcessing(true)
         // write()
     }
 
     useEffect(()=> {
-        if(error) {
+        console.log("ERROR: jest")
+        if(errors) {
             setProcessing(false)
         }
-    },[error])
+    },[errors])
 
     // useEffect(()=> {
     //     if(!!transactionData || isErrorWrite || isErrorConfirmation) setProcessing(false)
@@ -82,6 +82,7 @@ export default function BuyModal({model, setter, props}) {
         amount: finalPrice
     }
 
+
     const stepLiquidityProps = {
         isReady: model,
         isFinished: stepLiquidity,
@@ -89,9 +90,10 @@ export default function BuyModal({model, setter, props}) {
         ...stepProps
     }
 
-
+    const allowancePrevStep = model && stepLiquidity
     const isAllowanceReady = processing && model && stepLiquidity
     const stepAllowanceProps = {
+        prevStep: allowancePrevStep,
         isReady: isAllowanceReady,
         isFinished: stepAllowance,
         setFinished: setStepAllowance,
@@ -100,10 +102,12 @@ export default function BuyModal({model, setter, props}) {
         ...stepProps
     }
 
+    const isTransactionPrevStep = allowancePrevStep && stepAllowance
     const isTransactionReady = isAllowanceReady && stepAllowance
     console.log("RECHANGE - isTransactionReady", isTransactionReady)
 
     const stepTransactProps = {
+        prevStep: isTransactionPrevStep,
         isReady: isTransactionReady,
         isFinished: stepTransact,
         setFinished: setStepTransact,

@@ -10,13 +10,14 @@ import {IconButton} from "@/components/Button/IconButton";
 import {useQuery} from "@tanstack/react-query";
 import {fetchHistory, fetchOffers} from "@/fetchers/otc";
 import moment from "moment";
+import Loader from "@/components/App/Loader";
 const SellModal = dynamic(() => import('@/components/App/Otc/SellModal'), {ssr: false,})
 const CancelModal = dynamic(() => import('@/components/App/Otc/CancelModal'), {ssr: false,})
 const BuyModal = dynamic(() => import('@/components/App/Otc/BuyModal'), {ssr: false,})
 
 
 export default function OtcOffers({propOffers}) {
-    let { offers, vault, currentMarket, session} = propOffers
+    let { offers, vault, currentMarket, session, refetchOffers} = propOffers
     const [isSellModal, setIsSellModal] = useState(false);
     const [isBuyModal, setIsBuyModal] = useState(false);
     const [buyOffer, setBuyOffer] = useState(false);
@@ -37,7 +38,7 @@ export default function OtcOffers({propOffers}) {
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 5 * 60 * 1000,
-            staleTime: 2.5 * 60 * 1000,
+            staleTime: 3 * 60 * 1000,
             enabled: showHistory
         }
     );
@@ -59,6 +60,12 @@ export default function OtcOffers({propOffers}) {
     useEffect(() => {
         import('@lottiefiles/lottie-player');
     }, []);
+
+    useEffect(() => {
+        if(!showHistory) {
+            refetchOffers()
+        }
+    }, [showHistory]);
 
 
     const renderOfferTable = () => {
@@ -137,12 +144,18 @@ export default function OtcOffers({propOffers}) {
             </tr>
             </thead>
             <tbody>
-            {history.length === 0 && <tr>
+
+            {(!history || !historyIsSuccess) && <tr>
+                <td colSpan="4" className={"text-center pt-3"}>
+                    <Loader/>
+                </td>
+            </tr>}
+            {!!history && history.length === 0 && <tr>
                 <td colSpan="4" className={"text-center pt-3"}>
                     <Empty text={"No history on this market"} maxSize={280}/>
                 </td>
             </tr>}
-            {history.length !== 0 && history.map(el => {
+            {!!history && history.length !== 0 && history.map(el => {
                 return <tr key={el.dealId}
                            className="hoverTable transition-all duration-300 hover:text-black">
 

@@ -12,6 +12,7 @@ export default function CancelModal({model, setter, props}) {
     const {data: session} = useSession()
     const {address, ACL, id} = session.user
     const [processing, setProcessing] = useState(false)
+    const [success, setSuccess] = useState(false)
 
     const cancelOfferAmount_parsed = cancelOffer?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = cancelOffer?.price?.toLocaleString()
@@ -34,7 +35,7 @@ export default function CancelModal({model, setter, props}) {
         isLoading: isLoadingWrite
     } = useContractWrite(config)
 
-    const {data: confirmationData, isError: isErrorConfirmation } = useWaitForTransaction({
+    const {data: confirmationData, isError: isErrorConfirmation, isLoading: isLoadingConfirmation, } = useWaitForTransaction({
         confirmations: 1,
         hash: transactionData?.hash,
     })
@@ -42,9 +43,16 @@ export default function CancelModal({model, setter, props}) {
     const buttonDisabled = !isSuccessPrepare || isLoading || processing
 
     const closeModal = async () => {
-        await refetchVault()
-        await refetchOffers()
+        if(success) {
+            await refetchVault()
+            await refetchOffers()
+        }
         setter()
+        setTimeout(() => {
+            console.log("USTAWIAM :: success", false)
+            setSuccess(false)
+            setProcessing(false)
+        }, 1000);
     }
 
     const cancelProceed = async ()  => {
@@ -54,13 +62,17 @@ export default function CancelModal({model, setter, props}) {
 
 
     useEffect(()=> {
-        if(!!transactionData || isErrorWrite || isErrorConfirmation) setProcessing(false)
-    }, [transactionData, isErrorWrite, isErrorConfirmation])
+        if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) {
+            console.log("USTAWIAM :: success", true)
+            setSuccess(true)
+            setProcessing(false)
+        }
+    }, [confirmationData, isErrorWrite, isErrorConfirmation, isLoadingConfirmation])
 
     const title = () => {
         return (
             <>
-                {!!confirmationData ?
+                {success ?
                     <>OTC offer <span className="text-app-success">cancelled</span></>
                     :
                     <><span className="text-app-error">Cancel</span> OTC offer</>
@@ -84,7 +96,7 @@ export default function CancelModal({model, setter, props}) {
                    <RoundButton text={'proceed'} handler={cancelProceed} isLoading={processing} isDisabled={buttonDisabled} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconTrash className={ButtonIconSize.hero2}/> } />
                 </div>
                 {(isErrorPrep) && <div className={"text-app-error mt-5  text-center"}>{errorPrep?.cause?.reason ? errorPrep?.cause?.reason : errorPrep.reason}</div>}
-                {(isErrorWrite) && <div className={"text-app-error mt-5text-center"}>{errorWrite?.cause?.reason ? errorWrite?.cause?.reason : "Unexpected wallet error"}</div>}
+                {(isErrorWrite) && <div className={"text-app-error mt-5 text-center"}>{errorWrite?.cause?.reason ? errorWrite?.cause?.reason : "Unexpected wallet error"}</div>}
 
             </div>
         )
@@ -105,7 +117,7 @@ export default function CancelModal({model, setter, props}) {
     }
 
     const content = () => {
-       return !!confirmationData ? contentSuccess() : contentQuery()
+       return success ? contentSuccess() : contentQuery()
     }
 
     return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)

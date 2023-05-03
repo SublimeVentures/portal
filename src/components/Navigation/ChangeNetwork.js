@@ -1,4 +1,4 @@
-import {useNetwork, useSwitchNetwork} from "wagmi";
+import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
 import {useEffect, useState} from "react";
 import IconEth from "@/assets/svg/Eth.svg";
 import IconMatic from "@/assets/svg/Matic.svg";
@@ -9,12 +9,13 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 
 export default function ChangeNetwork() {
     const {chain, chains} = useNetwork()
+    const { connector: activeConnector, isConnected } = useAccount()
     const {error, isLoading, pendingChainId, switchNetwork} = useSwitchNetwork()
     const [enabled, setEnabled] = useState(false)
 
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
-
+    console.log("aaa",activeConnector,  isConnected, isLoading)
     useEffect(() => {
         if (!enabled) {
             switchNetwork?.(chains[0].id)
@@ -57,13 +58,14 @@ export default function ChangeNetwork() {
                             isWide={true}
                             zoom={1.05}
                             size={'text-sm sm'}
-                            isDisabled={!switchNetwork || x.id === chain?.id}
+                            isDisabled={ x.id === chain?.id}
                             icon={getIcon(index)}
                         />
 
                     ))}
                 </div>
-                <div className="text-app-error text-center">{error && error.message}</div>
+
+                <div className="text-app-error text-center">{error && error.message}{!isConnected && "Connect wallet"}</div>
                 <div className="mt-5"><a href="#" target="_blank">Read more.</a></div>
             </div>
         )

@@ -20,7 +20,7 @@ export default function LiquidityStep({stepProps}) {
             abi: erc20ABI,
             functionName: 'balanceOf',
             args: [session.user.address],
-            watch: true,
+            watch: !isFinished,
             enabled: isReady && selectedCurrency
         }
     )

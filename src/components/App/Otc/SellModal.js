@@ -57,6 +57,7 @@ export default function SellModal({model, setter, props}) {
     })
 
     const buttonDisabled = statusCheck || !isSuccessPrepare || isLoading || processing
+    console.log("SELL :: disabled button", buttonDisabled)
 
     const closeModal = async () => {
         await refetchVault()
@@ -65,6 +66,7 @@ export default function SellModal({model, setter, props}) {
         setTimeout(() => {
             setAmount(allocationMin)
             setMultiplier(1)
+            setProcessing(false)
         }, 1000);
 
     }
@@ -82,6 +84,7 @@ export default function SellModal({model, setter, props}) {
         setAmount(amt)
         if(amt) calcPrice(multiplier, amt)
     }
+
     const setPriceHandler = (amt) => {
         setPrice(amt)
         if(amt && amount) calcMulti(amt)
@@ -106,8 +109,8 @@ export default function SellModal({model, setter, props}) {
     }
 
     useEffect(()=> {
-        if(!!transactionData || isErrorWrite || isErrorConfirmation) setProcessing(false)
-    }, [transactionData, isErrorWrite, isErrorConfirmation])
+        if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) setProcessing(false)
+    }, [confirmationData, isErrorWrite, isErrorConfirmation, isLoadingWrite])
 
     const title = () => {
         return (
@@ -123,21 +126,24 @@ export default function SellModal({model, setter, props}) {
 
     const contentSuccess = () => {
         return (
-            <div className="min-h-[442px] flex flex-col flex-1">
+            <div className=" flex flex-col flex-1">
                 <div>Congratulations! You have successfully created OTC offer to sell <span className="text-app-success font-bold">${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
                 <lottie-player
                     autoplay
                     loop
-                    style={{width: '320px', margin: '30px auto 0px'}}
+                    style={{width: '320px', margin: '-40px auto 0px'}}
                     mode="normal"
                     src="/static/lottie/otc.json"
                 />
-                <div className="flex flex-1 justify-center items-center -mt-5 mb-5">
-                    <Link href={PAGE.Vault}>
-                        <RoundButton text={'Announce on Discord'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDiscord className={ButtonIconSize.hero}/> } />
-                    </Link>
-                </div>
+                <div className="mt-auto fullWidth">
+
+                    <div className="flex flex-1 justify-center items-center -mt-5 mb-5">
+                        <Link href={PAGE.Vault} className={"w-full"}>
+                            <RoundButton text={'Announce'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDiscord className={ButtonIconSize.hero}/> } />
+                        </Link>
+                    </div>
                 <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more.</a></div>
+                </div>
             </div>
         )
     }
@@ -146,7 +152,7 @@ export default function SellModal({model, setter, props}) {
 
     const contentForm = () => {
         return (
-            <div className="min-h-[442px] flex flex-col">
+            <div className=" flex flex-1 flex-col">
                 <div className={'pt-10'}>
                     <Input type={'number'}
                            placeholder={'Selling allocation'}
@@ -179,7 +185,8 @@ export default function SellModal({model, setter, props}) {
                     />
                 </div>
 
-                <div className={"fullWidth py-10"}>
+
+                <div className={"fullWidth py-10 mt-auto"}>
                     <RoundButton text={'Make offer'} isWide={true} size={'text-sm sm'} isDisabled={buttonDisabled} handler={makeOffer}
                                  isLoading={processing}
                                  icon={<RocketIcon className={ButtonIconSize.hero}/>}/>

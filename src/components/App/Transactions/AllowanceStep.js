@@ -4,7 +4,7 @@ import {getIcon, getStatusColor, Transaction} from "@/components/App/Transaction
 import {useEffect, useState} from "react";
 
 export default function AllowanceStep({stepProps}) {
-    const {selectedCurrency, isReady, spender,  session, amount, isFinished, setFinished, errorHandler} = stepProps
+    const {selectedCurrency, isReady, spender,  session, amount, isFinished, setFinished, errorHandler, prevStep} = stepProps
     // const {amount, selectedCurrency, spender, stepAllowanceFinished: stepAllowance, setStepAllowance, stepAllowanceReady} = stepProps
 
     const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
@@ -16,6 +16,10 @@ export default function AllowanceStep({stepProps}) {
     })
 
     const {
+        isLoading: isLoadingRead,
+        isFetching: isFetchingRead,
+        isSuccess: isSuccessRead,
+        isFetched: isFetchedRead,
         data: allowance
     } = useContractRead(
         {
@@ -30,11 +34,17 @@ export default function AllowanceStep({stepProps}) {
     const {
         data: transactionData,
         write,
-        isError: isErrorWrite
+        isError: isErrorWrite,
+        isSuccess: isSuccessWrite,
+        isLoading: isLoadingWrite,
     } = useContractWrite(config)
 
 
-    const {isError: isErrorPending} = useWaitForTransaction({
+    const {isError: isErrorPending,
+        data: confirmationData,
+        isSuccess: isSuccessPending,
+        isLoading: isLoadingPending,
+        isFetching: isFetchingPending} = useWaitForTransaction({
         confirmations: 2,
         hash: transactionData?.hash,
     })
@@ -63,6 +73,7 @@ export default function AllowanceStep({stepProps}) {
     }, [isSuccessConfig, allowance, isReady])
 
     useEffect(()=>{
+        console.log("ERROR THROW ", isErrorWrite || isErrorPending || !isEnoughAllowance)
         if(isErrorWrite || isErrorPending || !isEnoughAllowance) {
             errorHandler(true)
         } else {
@@ -107,11 +118,19 @@ export default function AllowanceStep({stepProps}) {
             </div>
         </div>
     }
+    // console.log("======" )
+    // console.log("STATE :: modal " , isReady, isFinished)
+    // console.log("STATE :: read " ,!!allowance, isLoadingRead, isFetchingRead, isSuccessRead, isFetchedRead,)
+    // console.log("STATE :: write " ,transactionData, isErrorWrite, isSuccessWrite, isLoadingWrite)
+    // console.log("STATE :: prep " , isSuccessConfig)
+    // console.log("STATE :: confirm " ,confirmationData, isErrorPending, isSuccessPending, isLoadingPending, isFetchingPending)
+    // console.log("======" )
 
     if (isFinished && isEnoughAllowance) return prepareRow(Transaction.Executed)
-    if (!isReady) return prepareRow(Transaction.Waiting)
-    if (isErrorWrite || isErrorPending || !isEnoughAllowance) return prepareRow(Transaction.Failed)
-    else return prepareRow(Transaction.Processing)
+    if ((isErrorWrite || isErrorPending) && prevStep) return prepareRow(Transaction.Failed)
+    if (isLoadingWrite || isLoadingPending || isFetchingPending) return prepareRow(Transaction.Processing)
+    return prepareRow(Transaction.Waiting)
+
 
 
 }

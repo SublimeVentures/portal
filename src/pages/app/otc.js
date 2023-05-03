@@ -31,7 +31,7 @@ export default function AppOtc() {
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 4 * 60 * 60 * 1000,
-            staleTime: 2 * 60 * 60 * 1000
+            staleTime: 3 * 60 * 60 * 1000
         }
     );
 

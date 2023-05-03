@@ -4,7 +4,7 @@ import {getIcon, getInvestFunction, getStatusColor, Transaction} from "@/compone
 import {useEffect} from "react";
 
 export default function TransactStep({stepProps}) {
-    const {isReady, setSuccess, amount, isFinished, setFinished, writeFunction, errorHandler} = stepProps
+    const {isReady, setSuccess, amount, isFinished, setFinished, writeFunction, errorHandler, prevStep} = stepProps
 
     // const {amount, selectedCurrency, isFromStake, hash, offer, stepInvestment, setStepInvestment, stepInvestmentReady, setTransactionData} = stepProps
 
@@ -27,11 +27,13 @@ export default function TransactStep({stepProps}) {
     const {
         data: transactionData,
         write,
-        isError: isErrorWrite
+        isError: isErrorWrite,
+        isSuccess: isSuccessWrite,
+        isLoading: isLoadingWrite
     } = useContractWrite(config)
 
 
-    const {data: confirmationData, isError: isErrorPending} = useWaitForTransaction({
+    const {data: confirmationData, isError: isErrorPending, isSuccess:isSuccessConfirmed, isLoading: isLoadingConfirmed, isFetching: isFetchingConfirmed} = useWaitForTransaction({
         confirmations: 2,
         hash: transactionData?.hash,
     })
@@ -43,16 +45,17 @@ export default function TransactStep({stepProps}) {
     }
 
     useEffect(()=>{
-        if(isSuccessConfig && !isFinished && isReady) {
-            if(confirmationData) {
+        console.log("EFFECT :: ", isSuccessConfig, !isFinished, !!confirmationData, isSuccessConfirmed)
+        if(isSuccessConfig && !isFinished) {
+            if(!!confirmationData && isSuccessConfirmed) {
                 setFinished(true)
-                console.log("ustawiam transakcje",transactionData?.hash, transactionData )
-                setSuccess(transactionData?.hash)
+                // setSuccess(transactionData?.hash)
+                setSuccess(true)
             } else {
                 executeTransfer(Transaction.Failed)
             }
         }
-    }, [isSuccessConfig, confirmationData, isSuccessConfig, isReady])
+    }, [isSuccessConfig, confirmationData, isSuccessConfirmed])
 
 
     useEffect(()=>{
@@ -97,10 +100,17 @@ export default function TransactStep({stepProps}) {
         </div>
     }
 
-    if (isFinished && confirmationData) return prepareRow(Transaction.Executed)
-    if (!isReady) return prepareRow(Transaction.Waiting)
-    if (isErrorWrite || isErrorPending) return prepareRow(Transaction.Failed)
-    return prepareRow(Transaction.Processing)
+    console.log("======" )
+    console.log("STATE :: modal " , isReady, isFinished)
+    console.log("STATE :: write " ,transactionData, isErrorWrite, isSuccessWrite, isLoadingWrite)
+    console.log("STATE :: prep " , isSuccessConfig)
+    console.log("STATE :: confirm " ,confirmationData, isErrorPending, isSuccessConfirmed, isLoadingConfirmed, isFetchingConfirmed)
+    console.log("======" )
+
+    if (isFinished && !!confirmationData) return prepareRow(Transaction.Executed)
+    if ((isErrorWrite || isErrorPending) && prevStep) return prepareRow(Transaction.Failed)
+    if (isLoadingWrite || isLoadingConfirmed || isFetchingConfirmed) return prepareRow(Transaction.Processing)
+    return prepareRow(Transaction.Waiting)
 
 
 }

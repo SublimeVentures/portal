@@ -37,16 +37,17 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-
 ## ToDo
-- na sell i cancel fix processing loading/ wywalić cache
-
+- otc on success buy not moving to success
+- on succesful buy not refreshing offers
+- fix grida na buy otc offer (wiecej dla prawje strony)
 
 - scaling linków na ofercie
-- calculator
+- component as separate page
 - express json - fix w serverze
-- loading na login + error na login
+- DEPLOY
 
+- loading na login + error na login
 - force from specific wallet
 - investment get currencies on slug page from getEnvs
 - investment states && empty details response
@@ -61,10 +62,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
   -- reassign facet
   -- confiential facet
 
-- DEPLOY
+- calculator
+- todo: reassign facet sprawdź ownership
+- wszędzie dodaj check na <10 000 (otc remove, settle, reassign) - dodaj modifier
+- validate payout address
 
-- whale deposit/ withdraw features in settings
-- whale page
+- DEPLOY
+==========
 - connect discord to user profile
 - transition on pages
 - extract transition variable to separate file (dialogs)
@@ -75,8 +79,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
-- connect delegate address delegate.cash (solidity)
-- referral systems
+- whale deposit/ withdraw features in settings
+- whale page
 - promo codes
 
-
+- connect delegate address delegate.cash (solidity)
+- referral systems
