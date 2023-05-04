@@ -1,5 +1,5 @@
 const moment = require( 'moment' );
-const {getInjectedUser} = require("../queries/injectedUser");
+const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getOfferList} = require("../queries/offer");
 const {checkAcl} = require("./acl");
 const {getEnv} = require("../services/mongo");
@@ -60,7 +60,7 @@ async function getOfferListPartnerInjected (address) {
     console.log("LIST OFFERS for INJECTED USER - injectedUser", injectedUser)
     const filter = {
         id: {
-            $in: injectedUser.offerAccess
+            $in: injectedUser.accesss
         }
     }
     console.log("LIST OFFERS for INJECTED USER - filter", filter)
@@ -91,8 +91,8 @@ function fillPartnerData (offer) {
         image:offer.image,
         genre:offer.genre,
         slug:offer.slug,
-        d_open: offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerdelay),
-        d_close: offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerdelay)
+        d_open: offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay),
+        d_close: offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
     }
 }
 

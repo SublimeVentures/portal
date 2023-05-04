@@ -1,20 +1,23 @@
+require('dotenv').config()
+require('dotenv').config({ path: `.env.local`, override: true });
 const express = require('express');
 const next = require('next');
-const path = require('path');
 const url = require('url');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const cookieParser = require("cookie-parser");
 
-const {connectDB} = require("./server/services/mongo");
-const {connectWeb3} = require("./server/services/web3");
+const {connectDB, getEnv} = require("./server/services/db/utils");
+const {connectWeb3, getWeb3} = require("./server/services/web3");
 
-const {router: publicRoute} = require("./server/routes/public.js");
-const {router: validateRoute} = require("./server/routes/validate.js");
-const {router: offerRoute} = require("./server/routes/offer.js");
-const {router: investRoute} = require("./server/routes/invest.js");
-const {router: payableRoute} = require("./server/routes/payable.js");
-const {router: vaultRoute} = require("./server/routes/vault.js");
-const {router: otcRoute} = require("./server/routes/otc.js");
+const {router: validateRoute} = require("./server/routes/validate.router.js");
+const {router: publicRoute} = require("./server/routes/public.router.js");
+const {feedNfts, login} = require("./server/controllers/login");
+// const {router: offerRoute} = require("./server/routes/offer.js");
+// const {router: investRoute} = require("./server/routes/invest.js");
+// const {router: payableRoute} = require("./server/routes/payable.js");
+// const {router: vaultRoute} = require("./server/routes/vault.js");
+// const {router: otcRoute} = require("./server/routes/otc.js");
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -40,9 +43,11 @@ if (!dev && cluster.isMaster) {
 
     nextApp.prepare().then(async () => {
         const server = express();
-
         await connectDB()
         await connectWeb3()
+
+        // await login("0x58562fb1dceF236d5d0Ed1C5A58725C1D5e61cCd")
+
 
         if (!dev) {
             // Enforce SSL & HSTS in production
@@ -61,7 +66,7 @@ if (!dev && cluster.isMaster) {
         // Static files
         // https://github.com/zeit/next.js/tree/4.2.3#user-content-static-file-serving-eg-images
         // server.use('/static', express.static(path.join(__dirname, 'static'), {
-        //     maxAge: dev ? '0' : '365d'
+        //     maxAge: dev ? '0' : '365d'e
         // }));
         //
         // // Example server-side routing
@@ -75,15 +80,17 @@ if (!dev && cluster.isMaster) {
         // })
 
 
-        // server.use(express.json());
-        server.use('/api/public', publicRoute);
-        server.use('/api/validate', validateRoute);
-        server.use('/api/offer', offerRoute);
-        server.use('/api/invest', investRoute);
-        server.use('/api/payable', payableRoute);
-        server.use('/api/vault', vaultRoute);
-        server.use('/api/otc', otcRoute);
+        server.use(express.json());
+        server.use(express.urlencoded({ extended: true }));
+        server.use(cookieParser());
 
+        server.use('/api/validate', validateRoute);
+        server.use('/api/public', publicRoute);
+        // server.use('/api/offer', offerRoute);
+        // server.use('/api/invest', investRoute);
+        // server.use('/api/payable', payableRoute);
+        // server.use('/api/vault', vaultRoute);
+        // server.use('/api/otc', otcRoute);
 
         // Default catch-all renders Next app
         server.all('*', (req, res) => {

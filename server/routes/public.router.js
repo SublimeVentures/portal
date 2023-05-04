@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router();
-const {getOffersPublic} = require("../queries/offer");
-const {getPublicPartners} = require("../queries/partner");
+const {getPublicPartners} = require("../queries/partners.query");
+const {getOffersPublic} = require("../queries/offers.query");
 
 router.get('/investments', async (req, res) => {
   res.status(200).json(await getOffersPublic())
-
 });
 
 router.get('/partners', async (req, res) => {

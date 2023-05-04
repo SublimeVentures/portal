@@ -7,8 +7,13 @@ import Profile from "@/components/App/Dashboard/Profile";
 import LatestInvestment from "@/components/App/Dashboard/LatestInvestment";
 import Updates from "@/components/App/Dashboard/Updates";
 import Head from 'next/head'
+import {useEffect} from "react";
 
 export default function AppDashboard() {
+    useEffect(() => {
+        import('@lottiefiles/lottie-player');
+    }, []);
+
 
     return (
         <>

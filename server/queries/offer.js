@@ -1,10 +1,6 @@
 const Offer = require("../models/offer.js");
 const Raise = require("../models/raise.js");
 
-async function getOffersPublic() {
-  return Offer.find({displayPublic: true}, {name:1, image:1, genre:1, url_web:1, _id:0})
-}
-
 async function getOfferList(extraFilter) {
   return Offer.find({display: true, ...extraFilter})
 }
@@ -25,4 +21,4 @@ async function getOffersWithOpenOtc() {
   return Offer.find({b_otc: {$ne : 0}}, {name:1, ticker:1, b_ppu:1, slug:1, b_otc:1, id:1, _id:0 })
 }
 
-module.exports = { getOffersWithOpenOtc, getOffersPublic, getOfferList, getOfferDetails, getOfferReservedData, getOfferRaise }
+module.exports = { getOffersWithOpenOtc, getOfferList, getOfferDetails, getOfferReservedData, getOfferRaise }

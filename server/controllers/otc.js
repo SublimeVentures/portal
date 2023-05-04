@@ -5,7 +5,7 @@ const {getActiveOffers, getHistoryOffers} = require("../queries/otc");
 
 async function getMarkets() {
     let markets = await getOffersWithOpenOtc()
-    return markets ? {open: markets, source: getEnv().diamond, otcFee: getEnv().feeotc, currencies: getEnv().currency} : {open: markets}
+    return markets ? {open: markets, source: getEnv().diamond, otcFee: getEnv().feeOtc, currencies: getEnv().currency} : {open: markets}
 }
 
 async function getOffers(req) {

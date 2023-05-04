@@ -37,22 +37,24 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+
 ## ToDo
+- oferty widoczne dla wszystkich ale nie do inwestowania
+
 - otc on success buy not moving to success
 - on succesful buy not refreshing offers
 - fix grida na buy otc offer (wiecej dla prawje strony)
 
 - scaling linków na ofercie
 - component as separate page
-- express json - fix w serverze
+
 - DEPLOY
 
 - loading na login + error na login
 - force from specific wallet
 - investment get currencies on slug page from getEnvs
 - investment states && empty details response
-- //todo: fix, zalezy od tego czy partner wlaczony czy nie
-- oferty widoczne dla wszystkich ale nie do inwestowania
+
 - homepage datafeed
 
 - wrong chain
@@ -85,3 +87,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - connect delegate address delegate.cash (solidity)
 - referral systems
+
+
+# 1. Add env variables
+- whaleId
+- vault
+- diamond
+- feeOtc
+- feeReassign
+- research
+- partnerDelay
+- partnerDefaultMulti
+
+# 2. Add currencies 
+For each chainId
+
+

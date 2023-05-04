@@ -1,11 +1,8 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-// import { getCsrfToken } from "next-auth/react"
 import {SiweMessage} from "siwe"
 import {fetchSessionData} from "@/fetchers/login";
-import {checkDelegate} from "@/lib/web3/checkDelegate";
 import PAGE from "@/routes";
-
 
 export default async function auth(req, res) {
     const providers = [
@@ -42,7 +39,7 @@ export default async function auth(req, res) {
                     if (type) {
                         return {...{address: siwe.address}, ...type}
                     } else {
-                        return await checkDelegate(siwe.address)
+                        return null
                     }
 
                 } catch (e) {

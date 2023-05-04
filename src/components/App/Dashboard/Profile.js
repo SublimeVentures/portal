@@ -8,12 +8,8 @@ export default function Profile() {
 
     const tiltAvatar = useRef(null);
 
-
-
-
     useEffect(() => {
         VanillaTilt.init(tiltAvatar.current, {scale: 1.1, speed: 1000, max: 10});
-        import('@lottiefiles/lottie-player');
     }, []);
 
 
@@ -31,7 +27,7 @@ export default function Profile() {
                     />
                 </div>
                 {session?.user ? (
-                    <img className="rounded-full shadow-lg h-[14rem] w-[14rem]" src={session.user.img}/>
+                    <div className={"h-[14rem] w-[14rem] flex rounded-full shadow-lg"}><img className="flex  w-[14rem] my-auto" src={session.user.img}/></div>
                 ) : (
                     <lottie-player
                         autoplay

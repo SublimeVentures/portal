@@ -4,7 +4,7 @@ const {getEnv} = require("../services/mongo");
 const {getAccessToken} = require("../services/auth");
 const {getParamOfferDetails, getOfferAllocation} = require("../controllers/offerDetails");
 const {getParamOfferList} = require("../controllers/offerList");
-const {getInjectedUser} = require("../queries/injectedUser");
+const {getInjectedUser} = require("../queries/injectedUser.query");
 
 router.get('/', async (req, res) => {
     const session = await getAccessToken(req)

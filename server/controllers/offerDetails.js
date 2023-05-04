@@ -1,7 +1,7 @@
 const {getEnv} = require("../services/mongo");
 const {getOfferDetails, getOfferRaise} = require("../queries/offer");
 const moment = require("moment");
-const {getInjectedUser} = require("../queries/injectedUser");
+const {getInjectedUser} = require("../queries/injectedUser.query");
 const {checkAcl} = require("./acl");
 
 
@@ -34,7 +34,7 @@ async function getParamOfferDetails(session, req) {
         rrPages: offer.rrPages,
         research: getEnv().research,
         diamond: getEnv().diamond,
-        whale: getEnv().id,
+        whale: getEnv().whaleId,
         slug: offer.slug,
         d_open: null,
         d_close: null,
@@ -82,7 +82,7 @@ async function getOfferDetailsPartnerInjected (offer, template, address) {
     const injectedUser = await getInjectedUser(address)
     console.log("DETAILS injected user", injectedUser)
 
-    const isAssigned = injectedUser.offerAccess.find(el=> el === offer.id)
+    const isAssigned = injectedUser.accesss.find(el=> el === offer.id)
     console.log("DETAILS injected user isAssigned", isAssigned)
 
     if(isAssigned) {
@@ -94,11 +94,11 @@ function fillPartnerData (offer, template) {
     if(offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
         return false
     }
-    template.d_open = offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerdelay)
-    template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerdelay)
+    template.d_open = offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay)
+    template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
     template.alloTotal = offer.alloTotalPartner ? offer.alloTotalPartner : offer.alloTotal;
     template.alloRequired = offer.alloRequiredPartner>=0 ? offer.alloTotalPartner : offer.alloTotal;
-    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.b_alloMin * Number(getEnv().defaultpartnermulti);
+    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.b_alloMin * Number(getEnv().partnerDefaultMulti);
     return template;
 }
 

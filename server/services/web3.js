@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const {getEnvironment} = require("../queries/environment");
-const { Alchemy, Network } = require('alchemy-sdk');
+const Moralis = require("moralis").default;
+const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const Web3Utils = require("web3-utils");
+const {getEnv} = require("./db/utils");
 let web3 = {}
 
 function getWeb3 () {
@@ -10,46 +10,22 @@ function getWeb3 () {
 
 async function connectWeb3() {
     try {
-        // PROD
-        const configETH_prod = {
-            apiKey: process.env.ALCHEMY_ETH,
-            network: Network.ETH_MAINNET,
-        };
-        const configMATIC_prod = {
-            apiKey: process.env.ALCHEMY_MATIC,
-            network: Network.MATIC_MAINNET,
-            maxRetries: 10
-        };
-        // DEV
-        const configETH_dev = {
-            apiKey: process.env.ALCHEMY_ETH,
-            network: Network.ETH_SEPOLIA,
-        };
-        const configMATIC_dev = {
-            apiKey: process.env.ALCHEMY_MATIC,
-            network: Network.MATIC_MUMBAI,
-            maxRetries: 10
-        };
+        await Moralis.start({
+            apiKey: "Qs4I1cwoJD9uROTUX4ifIZQTdeldqjUPQM1UWhUQFwpYeYpqnlEhS8xLz5PIQqcq",
+        });
 
-        const isDev = process.env.ENV == "dev"
 
-        const web3_eth =  new Alchemy(isDev ? configETH_dev : configETH_prod);
-        console.log("|---- Blockchain ETH: OK", isDev ? 'TESTNET' : 'MAINNET')
-
-        const web3_matic =  new Alchemy(isDev ? configMATIC_dev : configMATIC_prod);
-        console.log("|---- Blockchain MATIC: OK", isDev ? 'TESTNET' : 'MAINNET')
-
-        // const ethProvider = await web3_eth.config.getHttpProvider();
+        const chains = getEnv().isDev ? [EvmChain.SEPOLIA, EvmChain.BSC_TESTNET, EvmChain.MUMBAI] : [EvmChain.ETHEREUM, EvmChain.BSC, EvmChain.POLYGON];
 
         web3 = {
             utils: Web3Utils,
-            matic: web3_matic,
-            eth: web3_eth,
+            query: Moralis,
+            chains,
         }
         console.log("|---- Web3: connected")
 
     } catch (err) {
-        console.error("DB connection failed.", err);
+        console.error("Web3 connection failed.", err);
     }
 }
 

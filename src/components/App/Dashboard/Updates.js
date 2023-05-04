@@ -1,13 +1,7 @@
-
-import {useEffect, useRef} from "react";
+import {useRef} from "react";
 
 export default function Updates({}) {
     const ref = useRef(null);
-
-    // useEffect(() => {
-        // import('@lottiefiles/lottie-player');
-    // }, []);
-
 
     return (
         <div className="flex flex-1 flex-col bg-navy-accent rounded-xl justify-center items-center relative">
