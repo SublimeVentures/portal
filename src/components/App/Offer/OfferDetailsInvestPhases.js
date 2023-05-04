@@ -16,6 +16,7 @@ import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
 import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
+import CalculateModal from "@/components/App/Offer/CalculateModal";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -39,6 +40,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const [isInvestModal, setInvestModal] = useState(false)
 
+    const [isCalculateModal, setCalculateModal] = useState(false)
+
+
     const [expires, setExpires] = useState(0)
     const [isAllocationOk, setIsAllocationOk] = useState(true)
     const [isButtonLoading, setButtonLoading] = useState(false)
@@ -50,6 +54,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [hash, setHash] = useState(0)
 
     const [cookies, setCookie, removeCookie] = useCookies();
+
 
 
     const {ACL, amt} = session.user
@@ -179,6 +184,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const restoreModalProps = {expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {errorMsg}
+    const calculateModalProps = { investmentSize, maxAllocation, offer}
     const investModalProps = {expires, investmentSize, offer, bookingExpire, hash, selectedCurrency, afterInvestmentCleanup}
 
 
@@ -218,19 +224,20 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                                  size={'text-sm sm'} icon={getInvestmentButtonIcon()}/>
                 </div>
                 <div className="hidden sinvest:flex">
-                    <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}
+                    <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => setCalculateModal(true)}
                                  icon={<IconCalculator className={ButtonIconSize.hero}/>}/>
                 </div>
 
 
                 <div className="flex sinvest:hidden">
-                    <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
+                    <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'} handler={() => setCalculateModal(true)}
                                  icon={<IconCalculator className={ButtonIconSize.small}/>}/>
                 </div>
 
             </div>
 
             <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreHash} setter={() => {setRestoreHashModal(false)}}/>
+            <CalculateModal calculateModalProps={calculateModalProps} model={isCalculateModal} setter={() => {setCalculateModal(false)}}/>
             <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {setErrorModal(false)}} />
             <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {setInvestModal(false)}}/>
 

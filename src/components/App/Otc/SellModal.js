@@ -167,7 +167,7 @@ export default function SellModal({model, setter, props}) {
                            after={"USD"}
                     />
                 </div>
-                <div className={"py-10 flex flex-row justify-center items-center"}>
+                <div className={"py-10 flex flex-row justify-center items-center select-none"}>
                     <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconMinus className={"w-8"}/>} handler={() => setMultiplierHandler(false)}/>
                     <div className={`px-6 font-bold tabular-nums transition-colors duration-300 text-2xl ${multiplier>1 ? ' text-app-success' : ' text-app-error'}`}>x<span className={"text-5xl"}>{multiplierParsed}</span></div>
                     <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconPlus className={"w-8"}/>} handler={() => setMultiplierHandler(true)}/>
