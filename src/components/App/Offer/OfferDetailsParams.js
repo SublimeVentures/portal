@@ -2,12 +2,12 @@ import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
 export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userAllocation} = paramsParams
-    let {ticker, b_ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
+    let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
 
-    const normalized_ppu = b_ppu?.toLocaleString()
+    const normalized_ppu = ppu?.toLocaleString()
     const normalized_tge = tge?.toLocaleString()
-    const normalized_tgeDiff = (100*(tge - b_ppu)/b_ppu)?.toLocaleString()
+    const normalized_tgeDiff = (100*(tge - ppu)/ppu)?.toLocaleString()
     const normalized_total = alloTotal?.toLocaleString()
     const normalized_filled = allocation?.alloFilled?.toLocaleString()
     const normalized_my = userAllocation?.invested?.toLocaleString()

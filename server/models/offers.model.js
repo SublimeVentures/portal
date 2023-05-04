@@ -117,7 +117,7 @@ module.exports = (sequelize) => {
         },
         access: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
+            defaultValue: 0, //0 - only whales, 1- everyone, 2-only partners
             allowNull: false,
         },
         accessPartnerDate: {

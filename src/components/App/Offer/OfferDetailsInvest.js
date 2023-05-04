@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
 
 export const OfferDetailsInvest = ({paramsInvest}) => {
-    const {offer } = paramsInvest
+    const { offer } = paramsInvest
     const {data: session} = useSession()
     let [phases, setPhases] = useState(null)
     let [activePhase, setActivePhase] = useState(0)
@@ -21,6 +21,7 @@ export const OfferDetailsInvest = ({paramsInvest}) => {
         setIsLastPhase(isLast)
     }
 
+
     useEffect(() => {
         feedPhases()
     }, [])
@@ -33,6 +34,12 @@ export const OfferDetailsInvest = ({paramsInvest}) => {
         isLastPhase
     }
 
+    const paramsInvestClosed = {
+        session,
+        isClosed,
+        offer
+    }
+
     return (
 
         <div className="flex flex-1 flex-col min-h-[300px] ">
@@ -40,7 +47,7 @@ export const OfferDetailsInvest = ({paramsInvest}) => {
             {/*<TimelineWrap :list="investmentSteps" :spacer-size="12" :step="currentInvestmentStep" :is-vertical="false" className="flex sinvest:hidden"/>*/}
             {isClosed ?
                 <OfferDetailsInvestPhases paramsInvestPhase={paramsInvestPhase}  /> :
-                <OfferDetailsInvestClosed/>}
+                <OfferDetailsInvestClosed paramsInvestClosed={paramsInvestClosed}/>}
 
         </div>
 

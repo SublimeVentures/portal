@@ -62,6 +62,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
 
     const currencyList = currencies.map(el => el.symbol)
+    console.log("currencies",currencyList, currencies)
     const selectedCurrency = currencies[investmentCurrency]
     const cookieReservation = `hash_${id}`
 
@@ -201,7 +202,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                     type={'number'}
                     placeholder={'Investment size'}
                     max={maxAllocation}
-                    min={offer.b_alloMin}
+                    min={offer.alloMin}
                     currencies={currencyList}
                     setStatus={setIsAllocationOk}
                     shareInput={setInvestmentSize}

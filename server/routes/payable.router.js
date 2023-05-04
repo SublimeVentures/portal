@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router();
 const {getAccessToken} = require("../services/auth");
-const {reserveSpot} = require("../controllers/invest");
-const {getPayableCurrencies} = require("../queries/currency");
+const {getPayableCurrencies} = require("../queries/currencies.query");
+const {getEnv} = require("../services/db/utils");
 
-router.get('/', async (req, res) => {
+router.get('/currencies', async (req, res) => {
     const session = await getAccessToken(req)
     if (!session) return res.status(401).json({})
 
-    return res.status(200).json(await getPayableCurrencies())
+    return res.status(200).json(await getPayableCurrencies(getEnv().isDev))
 });
 
 

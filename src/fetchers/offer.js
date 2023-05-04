@@ -16,14 +16,14 @@ export const fetchOfferList = async (acl, address) => {
     return {}
 }
 
-export const fetchOfferDetails = async (slug, acl, address) => {
+export const fetchOfferDetails = async (slug, acl) => {
     if(!slug) return {}
 
     console.log("Fetching Offer Details", slug, acl);
     try {
         let url = `/api/offer/${slug}`
         if(acl !== undefined) {
-            url+= `?acl=${acl}&address=${address}`
+            url+= `?acl=${acl}`
         }
         console.log("details url", url)
         const {data} = await axios.get(url)

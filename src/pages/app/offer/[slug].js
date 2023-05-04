@@ -6,39 +6,25 @@ import {queryClient} from "@/lib/web3/queryCache";
 import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
-
 const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
 import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
-import {fetchPayableCurrency} from "@/fetchers/currency";
-import {ACL as ACLs} from "@/lib/acl";
 import {fetchInvestment} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
-import Head from "next/head";
+import {NextSeo} from "next-seo";
 
 
 export const AppOfferDetails = () => {
+    const {data: session, status} = useSession()
     const router = useRouter()
     const {slug} = router.query
-    const {data: session, status} = useSession()
     const ACL = session?.user?.ACL
     const address = session?.user?.address
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : address
 
-    const {isSuccess: currenciesState, data: currencies} = useQuery({
-            queryKey: ["payableCurrencies"],
-            queryFn: fetchPayableCurrency,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 24 * 60 * 1000,
-            staleTime: 20 * 60 * 1000,
-        }
-    );
-
-    const {isSuccess: offerDetailsState, data: offer} = useQuery({
-            queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
-            queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
+    const {isSuccess: offerDetailsState, data: offerData} = useQuery({
+            queryKey: ["offerDetails", {slug, ACL}],
+            queryFn: () => fetchOfferDetails(slug, ACL),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 30 * 60 * 1000,
@@ -48,43 +34,44 @@ export const AppOfferDetails = () => {
     );
 
     const {data: allocation, refetch: refetchAllocation} = useQuery({
-            queryKey: ["offerAllocation", offer?.id],
-            queryFn: () => fetchOfferAllocation(offer?.id),
+            queryKey: ["offerAllocation", offerData?.offer?.id],
+            queryFn: () => fetchOfferAllocation(offerData?.offer?.id),
             refetchOnMount: true,
             refetchOnWindowFocus: true,
-            enabled: !!offer,
+            enabled: !!offerData?.offer?.id,
             refetchInterval: 15000
         }
     );
 
     const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
-            queryKey: ["userAllocation", offer?.id, address],
-            queryFn: () => fetchInvestment(offer?.id),
+            queryKey: ["userAllocation", offerData?.offer?.id, address],
+            queryFn: () => fetchInvestment(offerData?.offer?.id),
             refetchOnMount: false,
             refetchOnWindowFocus: true,
-            enabled: !!offer,
+            enabled: !!offerData?.offer?.id,
         }
     );
 
     const paramsInvest = {
-        offer,
-        currencies,
+        offer: offerData?.offer,
+        currencies: offerData?.currencies,
         refetchUserAllocation,
         refetchAllocation,
         allocation
     }
 
     const paramsParams = {
-        offer,
+        offer: offerData?.offer,
         allocation,
         userAllocation
     }
 
-    const renderPage = () => {
-        if (status !== "authenticated" || !currenciesState || !offerDetailsState) return <Loader/>
-        if (!offer) return <Empty/>
-        return (
+    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData.offer.name}  - Invest - 3VC`
 
+    const renderPage = () => {
+        if (status !== "authenticated" || !offerDetailsState) return <Loader/>
+        if (!offerData.offer) return <Empty/>
+        return (
                 <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
                     <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
                         <OfferDetailsInvest paramsInvest={paramsInvest}/>
@@ -95,7 +82,7 @@ export const AppOfferDetails = () => {
                     </div>
 
                     <div className="flex flex-col col-span-12 ">
-                        <OfferDetailsFlipbook offer={offer}/>
+                        <OfferDetailsFlipbook offer={offerData.offer}/>
                     </div>
                 </div>
         )
@@ -103,9 +90,7 @@ export const AppOfferDetails = () => {
 
     return (
         <>
-            <Head>
-                <title>{offer.name} - Invest - 3VC</title>
-            </Head>
+            <NextSeo title={pageTitle}/>
             {renderPage()}
         </>
     )
@@ -120,11 +105,10 @@ export const getServerSideProps = async ({params, req}) => {
         encryption: true
     })
     const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : token?.user?.address
 
     await queryClient.prefetchQuery({
-        queryKey: ["offerDetails", {slug, ACL, ADDRESS}],
-        queryFn: () => fetchOfferDetails(slug, ACL, ADDRESS),
+        queryKey: ["offerDetails", {slug, ACL}],
+        queryFn: () => fetchOfferDetails(slug, ACL),
         cacheTime: 30 * 60 * 1000,
         staleTime: 15 * 60 * 1000,
     })
@@ -135,7 +119,6 @@ export const getServerSideProps = async ({params, req}) => {
         }
     }
 }
-
 
 AppOfferDetails.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;

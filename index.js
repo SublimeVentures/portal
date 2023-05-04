@@ -12,10 +12,10 @@ const {connectWeb3, getWeb3} = require("./server/services/web3");
 
 const {router: validateRoute} = require("./server/routes/validate.router.js");
 const {router: publicRoute} = require("./server/routes/public.router.js");
-const {feedNfts, login} = require("./server/controllers/login");
-// const {router: offerRoute} = require("./server/routes/offer.js");
+const {router: offerRoute} = require("./server/routes/offer.router.js");
+const {router: chainRoute} = require("./server/routes/payable.router.js");
+
 // const {router: investRoute} = require("./server/routes/invest.js");
-// const {router: payableRoute} = require("./server/routes/payable.js");
 // const {router: vaultRoute} = require("./server/routes/vault.js");
 // const {router: otcRoute} = require("./server/routes/otc.js");
 
@@ -86,9 +86,10 @@ if (!dev && cluster.isMaster) {
 
         server.use('/api/validate', validateRoute);
         server.use('/api/public', publicRoute);
-        // server.use('/api/offer', offerRoute);
+        server.use('/api/offer', offerRoute);
+        server.use('/api/chain', chainRoute);
+
         // server.use('/api/invest', investRoute);
-        // server.use('/api/payable', payableRoute);
         // server.use('/api/vault', vaultRoute);
         // server.use('/api/otc', otcRoute);
 

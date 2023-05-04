@@ -1,8 +1,7 @@
 const moment = require( 'moment' );
-const {getInjectedUser} = require("../queries/injectedUser.query");
-const {getOfferList} = require("../queries/offer");
 const {checkAcl} = require("./acl");
-const {getEnv} = require("../services/mongo");
+const {getEnv} = require("../services/db/utils");
+const {getOfferList} = require("../queries/offers.query");
 
 async function getParamOfferList (session, req) {
     const {ACL, ADDRESS} = checkAcl(session, req)
@@ -12,61 +11,25 @@ async function getParamOfferList (session, req) {
     console.log("LIST DATA acl", ACL)
     console.log("LIST DATA address", ADDRESS)
 
+    const offers =  await getOfferList()
 
     switch (ACL) {
-        case 0: { //whale
-            return await getOfferListWhale()
+        case 0: {
+            return getOfferListWhale(offers)
         }
-        case 2: { //injected
-            return await getOfferListPartnerInjected(ADDRESS)
-        }
-        default: { //partners
-            return await getOfferListPartner()
+        default: {
+            return offerListPartner(offers)
         }
     }
 }
 
-async function getOfferListWhale () {
-    const filter = {
-        access: {
-            $in: [0,1]
-        }
-    }
-    console.log("LIST OFFERS for WHALE - filter", filter)
-    const data =  await getOfferList(filter)
-    console.log("data whale", data)
+function getOfferListWhale (offers) {
     let offerList = []
-    data.forEach(el=> {
+    offers.forEach(el=> {
         offerList.push(fillWhaleData(el))
     })
     console.log("offer list", offerList)
     return offerList
-}
-
-async function getOfferListPartner () {
-    const filter = {
-        access: {
-            $in: [0,2]
-        }
-    }
-    const data = await getOfferList(filter)
-    console.log("LIST OFFERS for PARTNER USER", filter)
-    return offerListPartner(data)
-}
-
-async function getOfferListPartnerInjected (address) {
-    const injectedUser = await getInjectedUser(address)
-    console.log("LIST OFFERS for INJECTED USER", address)
-    console.log("LIST OFFERS for INJECTED USER - injectedUser", injectedUser)
-    const filter = {
-        id: {
-            $in: injectedUser.accesss
-        }
-    }
-    console.log("LIST OFFERS for INJECTED USER - filter", filter)
-    const data = await getOfferList(filter)
-
-    return offerListPartner(data)
 }
 
 

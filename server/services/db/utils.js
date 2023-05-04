@@ -11,7 +11,7 @@ async function connectDB() {
     try {
         await db.authenticate();
         // await db.sync({alter: true});
-        await db.sync();
+        // await db.sync();
         console.log("|---- DB: connected")
         env = await getEnvironment()
         console.log("|---- ENV: ", env)

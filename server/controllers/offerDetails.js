@@ -1,24 +1,24 @@
-const {getEnv} = require("../services/mongo");
-const {getOfferDetails, getOfferRaise} = require("../queries/offer");
 const moment = require("moment");
 const {getInjectedUser} = require("../queries/injectedUser.query");
 const {checkAcl} = require("./acl");
+const {getOfferDetails, getOfferRaise} = require("../queries/offers.query");
+const {getEnv} = require("../services/db/utils");
+const {getPayableCurrencies} = require("../queries/currencies.query");
 
 
 async function getParamOfferDetails(session, req) {
-    const {ACL, ADDRESS} = checkAcl(session, req)
-
+    const {ACL} = checkAcl(session, req)
 
     const offer = await getOfferDetails(req.params.slug);
-    if(!offer) return {}
-
+    if (!offer) return {}
     let template = {
         id: offer.id,
-        b_alloMin: offer.b_alloMin,
-        b_isPaused: offer.b_isPaused,
-        b_isSettled: offer.b_isSettled,
-        b_ppu: offer.b_ppu,
-        b_tax: offer.b_tax,
+        alloMin: offer.alloMin,
+        isPaused: offer.isPaused,
+        isSettled: offer.isSettled,
+        isPhased: offer.isPhased,
+        ppu: offer.ppu,
+        tax: offer.tax,
         dealStructure: offer.dealStructure,
         description: offer.description,
         genre: offer.genre,
@@ -26,16 +26,17 @@ async function getParamOfferDetails(session, req) {
         name: offer.name,
         ticker: offer.ticker,
         tge: offer.tge,
+        access: offer.access,
         url_discord: offer.url_discord,
         url_twitter: offer.url_twitter,
         url_web: offer.url_web,
         t_cliff: offer.t_cliff,
         t_vesting: offer.t_vesting,
         rrPages: offer.rrPages,
+        slug: offer.slug,
         research: getEnv().research,
         diamond: getEnv().diamond,
         whale: getEnv().whaleId,
-        slug: offer.slug,
         d_open: null,
         d_close: null,
         alloTotal: null,
@@ -43,78 +44,61 @@ async function getParamOfferDetails(session, req) {
         alloMax: null
     }
 
+
+    let response = {}
+    response.currencies = await getPayableCurrencies(getEnv().isDev)
+
     switch (ACL) {
         case 0: { //whale
-            return getOfferDetailsWhale(offer, template)
-        }
-        case 2: { //injected
-            return await getOfferDetailsPartnerInjected(offer, template, ADDRESS)
+            response.offer = getOfferDetailsWhale(offer, template)
+            break;
         }
         default: { //partners
-           return getOfferDetailsPartner(offer, template)
+            response.offer =  fillPartnerData(offer, template)
+            break;
         }
     }
 
+    return response
+
+
 }
 
-function getOfferDetailsWhale (offer, template) {
+function getOfferDetailsWhale(offer, template) {
     console.log("DETAILS whale", offer.id, offer.access)
-    if(offer.access === 0 || offer.access === 1) {
-        template.d_open = offer.d_open;
-        template.d_close = offer.d_close;
-        template.alloTotal = offer.alloTotal;
-        template.alloRequired = offer.alloRequired;
-        template.alloMax = offer.alloMax ? offer.alloMax : offer.alloTotal;
-        return template;
-    } else return false
+    template.d_open = offer.d_open;
+    template.d_close = offer.d_close;
+    template.alloTotal = offer.alloTotal;
+    template.alloRequired = offer.alloRequired;
+    template.alloMax = offer.alloMax ? offer.alloMax : offer.alloTotal;
+    return template;
 }
 
-
-function getOfferDetailsPartner (offer, template) {
-    console.log("DETAILS partner", offer.id, offer.access)
-    if(offer.access === 0 || offer.access === 2) {
-        return fillPartnerData(offer, template)
-    } else return false
-}
-
-async function getOfferDetailsPartnerInjected (offer, template, address) {
-    console.log("DETAILS injected", offer.id, offer.access)
-    const injectedUser = await getInjectedUser(address)
-    console.log("DETAILS injected user", injectedUser)
-
-    const isAssigned = injectedUser.accesss.find(el=> el === offer.id)
-    console.log("DETAILS injected user isAssigned", isAssigned)
-
-    if(isAssigned) {
-        return fillPartnerData(offer, template)
-    } else return false
-}
-
-function fillPartnerData (offer, template) {
-    if(offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
+function fillPartnerData(offer, template) {
+    if (offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
         return false
     }
     template.d_open = offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay)
     template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
     template.alloTotal = offer.alloTotalPartner ? offer.alloTotalPartner : offer.alloTotal;
-    template.alloRequired = offer.alloRequiredPartner>=0 ? offer.alloTotalPartner : offer.alloTotal;
-    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.b_alloMin * Number(getEnv().partnerDefaultMulti);
+    template.alloRequired = offer?.alloRequiredPartner >= 0 ? offer.alloRequiredPartner : offer.alloTotal;
+    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.alloMin * Number(getEnv().partnerDefaultMulti);
     return template;
 }
 
-//todo: fix, zalezy od tego czy partner wlaczony czy nie
 async function getOfferAllocation(session, req) {
     const {ACL} = checkAcl(session, req)
-    const allocation = await getOfferRaise(Number(req.params.id))
-    if(ACL === 0) {
-        return {
-            alloFilled: allocation.alloFilled + allocation.alloSide,
-            alloRes: allocation.alloRes
-        }
-    } else {
+    const data = await getOfferRaise(Number(req.params.id))
+    const allocation = data.get({plain: true})
+    if(allocation.offer.alloTotalPartner > 0 && ACL !== 0) {
         return {
             alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
             alloRes: allocation.alloResPartner
+        }
+    } else {
+        return {
+            alloFilled: allocation.alloFilled + allocation.alloSide,
+            alloRes: allocation.alloRes
         }
     }
 }

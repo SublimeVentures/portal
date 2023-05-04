@@ -22,7 +22,7 @@ export default function AppOffer() {
             staleTime: 15 * 60 * 1000,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            enabled: !!ACL
+            enabled: ACL >= 0
         }
     );
 

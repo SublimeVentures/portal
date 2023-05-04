@@ -40,14 +40,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 - oferty widoczne dla wszystkich ale nie do inwestowania
+- currencies fix
+
+- scaling linków na ofercie
+- component as separate page
 
 - otc on success buy not moving to success
 - on succesful buy not refreshing offers
 - fix grida na buy otc offer (wiecej dla prawje strony)
 
-- scaling linków na ofercie
-- component as separate page
 
+- heroku db in same region
 - DEPLOY
 
 - loading na login + error na login
