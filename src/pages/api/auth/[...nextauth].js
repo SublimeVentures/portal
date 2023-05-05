@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import {SiweMessage} from "siwe"
-import {fetchSessionData} from "@/fetchers/login";
+import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
 
 export default async function auth(req, res) {

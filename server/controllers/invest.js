@@ -1,7 +1,6 @@
 const moment = require('moment');
 const {checkAcl} = require("./acl");
 const crypto = require("crypto");
-const {getOfferReservedData} = require("../queries/offer");
 const {reserveAllocation} = require("../queries/invest");
 const {
     addReservedTransaction,
@@ -9,7 +8,7 @@ const {
     removeReservedTransaction,
     updateCurrencyReservedTransaction
 } = require("../queries/participantLog");
-const {getEnv} = require("../services/mongo");
+const {getOfferReservedData} = require("../queries/offers.query");
 
 let CACHE = {}
 
@@ -50,12 +49,12 @@ async function reserveSpot(session, req) {
     const ID = Number(req.query.id)
     if (!CACHE[ID]?.date || CACHE[ID].date < moment().unix()) {
         const allocation = await getOfferReservedData(ID)
-        CACHE[ID] = {...allocation._doc, ...{date: moment().unix() + 3 * 60}}
+        CACHE[ID] = {...allocation, ...{date: moment().unix() + 3 * 60}}
     }
 
     const isSeparatePool = CACHE[ID].alloTotalPartner > 0 && ACL !== 0;
     const TOTAL_ALLOCATION = isSeparatePool ? CACHE[ID].alloTotalPartner : CACHE[ID].alloTotal;
-    const AMOUNT = Number(req.query.amount) * (100 - CACHE[ID].b_tax) / 100
+    const AMOUNT = Number(req.query.amount) * (100 - CACHE[ID].tax) / 100
     const CURRENCY = getEnv().currency[req.query.currency]
 
     const checkIsReadyForStart = isReadyForInvestment(ACL, isSeparatePool, CACHE[ID])

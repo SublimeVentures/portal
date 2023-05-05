@@ -39,8 +39,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- oferty widoczne dla wszystkich ale nie do inwestowania
-- currencies fix
+- force from specific wallet
 
 - scaling linków na ofercie
 - component as separate page
@@ -52,9 +51,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - heroku db in same region
 - DEPLOY
-
+- providers for bsc, matic, eth ---- https://www.ankr.com/ // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 - loading na login + error na login
-- force from specific wallet
+
 - investment get currencies on slug page from getEnvs
 - investment states && empty details response
 

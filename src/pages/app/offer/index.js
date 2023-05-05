@@ -2,7 +2,7 @@ import LayoutApp from '@/components/Layout/LayoutApp';
 import OfferItem from "@/components/App/Offer/OfferItem";
 import {queryClient} from "@/lib/web3/queryCache";
 import {dehydrate, useQuery} from "@tanstack/react-query";
-import {fetchOfferList} from "@/fetchers/offer";
+import {fetchOfferList} from "@/fetchers/offer.fetcher";
 import {useSession} from "next-auth/react";
 import {getToken} from "next-auth/jwt";
 import Loader from "@/components/App/Loader";

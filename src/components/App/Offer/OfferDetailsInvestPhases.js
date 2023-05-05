@@ -17,6 +17,7 @@ import InvestModal from "@/components/App/Offer/InvestModal";
 import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
+import {useNetwork} from "wagmi";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -31,6 +32,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         allocation
     } = paramsInvestPhase;
     const {data: session} = useSession()
+    const { chain } = useNetwork()
 
     const [isErrorModal, setErrorModal] = useState(false)
     const [errorMsg, setErrorMsg] = useState("")
@@ -58,7 +60,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
 
     const {ACL, amt} = session.user
-    const {id, alloTotal, b_tax, isPaused} = offer
+    const {id, alloTotal, tax, isPaused} = offer
 
     const currentPhase = phases[activePhase]
     const nextPhase = isLastPhase ? currentPhase : phases[activePhase + 1]
@@ -66,9 +68,22 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
 
-    const currencyList = currencies.map(el => el.symbol)
-    console.log("currencies",currencyList, currencies)
-    const selectedCurrency = currencies[investmentCurrency]
+    const currencyList = currencies[chain.id] ? Object.keys(currencies[chain.id]).map(el => {
+        let currency = currencies[chain.id][el]
+        currency.address = el
+        return currency
+    }) : [{}]
+
+    const currencyNames = currencyList.map(el => el.symbol)
+    const selectedCurrency = currencyList[investmentCurrency]
+
+    // console.log("curr - ==================")
+    // console.log("curr - currencyList",currencyList)
+    // console.log("curr - currencyNames",currencyNames)
+    // console.log("curr - selectedCurrency",selectedCurrency)
+    // console.log("curr - ==================")
+    // console.log("DROP - investmentCurrency",investmentCurrency)
+
     const cookieReservation = `hash_${id}`
 
     const getInvestmentButtonIcon = () => {
@@ -181,6 +196,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setMaxAllocation(calcMaxAllo)
     }, [allocation?.alloFilled, allocation?.alloRes])
 
+    useEffect(() => {
+        setInvestmentCurrency(0)
+    }, [chain])
+
 
     const restoreModalProps = {expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {errorMsg}
@@ -209,10 +228,11 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                     placeholder={'Investment size'}
                     max={maxAllocation}
                     min={offer.alloMin}
-                    currencies={currencyList}
+                    currencies={currencyNames}
                     setStatus={setIsAllocationOk}
                     shareInput={setInvestmentSize}
-                    shareCurrency={setInvestmentCurrency}/>
+                    shareCurrency={setInvestmentCurrency}
+                    investmentCurrency={investmentCurrency}/>
             </div>
 
             <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">

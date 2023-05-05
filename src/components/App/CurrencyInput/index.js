@@ -5,7 +5,7 @@ import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 
 
-export default function CurrencyInput({type, placeholder, max, min, currencies, setStatus, shareInput, shareCurrency}) {
+export default function CurrencyInput({type, investmentCurrency, placeholder, max, min, currencies, setStatus, shareInput, shareCurrency}) {
     const [input, setInput] = useState(null)
     const [inputFormatted, setInputFormatted] = useState("")
     const [showInfo, setShowInfo] = useState(false)
@@ -123,7 +123,7 @@ export default function CurrencyInput({type, placeholder, max, min, currencies, 
                     </Transition.Child>
                 </Transition>
             </div>
-            <Dropdown options={currencies} classes={'customSize'} propSelected={shareCurrency}/>
+            <Dropdown options={currencies} classes={'customSize'} propSelected={shareCurrency} position={investmentCurrency}/>
             <Transition appear show={showInfo} as={Fragment}>
                 <Transition.Child
                     as={Fragment}

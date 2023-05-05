@@ -1,14 +1,12 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import {useState} from "react";
 import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconMinus from "@/assets/svg/MinusZ.svg";
 import IconPlus from "@/assets/svg/PlusZ.svg";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 
 export default function CalculateModal({model, setter, calculateModalProps}) {
-    const { investmentSize, maxAllocation, offer } = calculateModalProps
+    const { maxAllocation, offer } = calculateModalProps
 
     const [amount, setAmount] = useState(0)
     const [price, setPrice] = useState(0)
@@ -25,7 +23,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
         if(amt) calcPrice(multiplier, amt)
     }
 
-    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi - amt).toFixed(2)))}
+    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * (100 - offer.tax)/100  * multi - amt ).toFixed(2)))}
 
 
     const setMultiplierHandler = (add) => {
@@ -46,20 +44,12 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
         }
     }
 
-
-
     const title = () => {
         return (
             <>
                 <span className="text-app-success">Profit</span> calculator
             </>
         )
-    }
-
-
-    function invest() {
-        setInvestmentSize(amount)
-        setter()
     }
 
     const content = () => {

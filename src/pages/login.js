@@ -6,7 +6,7 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PartnerSlide from "@/components/SignupFlow/PartnerSlide";
 const LoginModal = dynamic(() => import('@/components/SignupFlow/LoginModal'), {ssr: false,})
 import {dehydrate, useQuery} from "@tanstack/react-query";
-import {fetchPartners} from "@/fetchers/public";
+import {fetchPartners} from "@/fetchers/public.fecher";
 import { Slider3D } from 'react-slider-3d';
 import { getServerSession } from "next-auth/next"
 import {useAccount, useNetwork, useSignMessage} from "wagmi";

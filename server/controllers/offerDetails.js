@@ -46,7 +46,8 @@ async function getParamOfferDetails(session, req) {
 
 
     let response = {}
-    response.currencies = await getPayableCurrencies(getEnv().isDev)
+    // response.currencies = await getPayableCurrencies(getEnv().isDev)
+    response.currencies = getEnv().currencies
 
     switch (ACL) {
         case 0: { //whale

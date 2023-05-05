@@ -3,7 +3,7 @@ import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
 import {OfferDetailsInvest} from "@/components/App/Offer/OfferDetailsInvest";
 import dynamic from "next/dynamic";
 import {queryClient} from "@/lib/web3/queryCache";
-import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer";
+import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
 const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
