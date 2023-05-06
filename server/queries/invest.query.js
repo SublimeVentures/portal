@@ -70,7 +70,6 @@ async function expireAllocation(offerId, address, hash) {
 
     await db.query(participants, {
         model: models.participants,
-        // mapToModel: true // pass true here if you have any mapped fields
     });
 }
 

@@ -45,12 +45,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - heroku db in same region
 
 
-
 - investment states && empty details response
 - loading na login + error na login
 - processor dane
 - vault
 - bubbles invest
+- invest button
 
 - DEPLOY
 - otc on success buy not moving to success

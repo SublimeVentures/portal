@@ -38,8 +38,10 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
-
     }, {
+        indexes: [
+            {unique: true, fields: ['address']},
+        ],
         freezeTableName: true,
         timestamps: true
     });

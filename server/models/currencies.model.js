@@ -24,6 +24,9 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
         },
     }, {
+        indexes: [
+            {unique: false, fields: ['isSettlement']},
+        ],
         freezeTableName: true,
         timestamps: true
     });

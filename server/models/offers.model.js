@@ -158,7 +158,6 @@ module.exports = (sequelize) => {
     }, {
         indexes: [
             {unique: true, fields: ['slug']},
-            {unique: true, fields: ['id']}
         ],
         freezeTableName: true,
         timestamps: true

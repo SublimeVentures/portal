@@ -15,6 +15,9 @@ module.exports = (sequelize) => {
             type: DataTypes.ARRAY(DataTypes.INTEGER)
         }
     }, {
+        indexes: [
+            {unique: false, fields: ['access']},
+        ],
         freezeTableName: true,
         timestamps: true
     });

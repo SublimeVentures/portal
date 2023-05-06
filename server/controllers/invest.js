@@ -15,7 +15,6 @@ async function reserveExpire(session, req) {
         await expireAllocation(ID, ADDRESS, req.query.hash)
     }
 
-
     return {
         ok: true
     }

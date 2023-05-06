@@ -17,7 +17,4 @@ router.get('/hash', async (req, res) => {
     return res.status(200).json(await reserveExpire(session, req))
 });
 
-
-
-
 module.exports = {router}

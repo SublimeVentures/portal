@@ -17,6 +17,9 @@ module.exports = (sequelize) => {
             defaultValue: true
         },
     }, {
+        indexes: [
+            {unique: false, fields: ['isDev']},
+        ],
         freezeTableName: true,
         timestamps: true
     });
