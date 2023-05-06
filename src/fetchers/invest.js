@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const fetchHash = async (id, amount, currency) => {
+export const fetchHash = async (id, amount, currency, chain) => {
     console.log("Fetching Investment Hash");
     try {
-        let url = `/api/invest?id=${id}&amount=${amount}&currency=${currency}`
+        let url = `/api/invest?id=${id}&amount=${amount}&currency=${currency}&chain=${chain}`
         console.log("list url", url)
         const {data} = await axios.get(url)
         console.log("investment hash", data)
@@ -25,21 +25,3 @@ export const expireHash = async (id, hash) => {
     }
     return {}
 }
-
-export const updateCurrency = async (id, hash, currency) => {
-    try {
-        let url = `/api/invest/update`
-        const {data} = await axios.post(url, JSON.stringify({id, hash, currency}), {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        console.log("obsolete hash", data, url)
-        return data
-    } catch(e) {
-        console.log("e: expireHash",e)
-    }
-    return {}
-}
-

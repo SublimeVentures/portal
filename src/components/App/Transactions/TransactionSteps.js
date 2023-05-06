@@ -5,6 +5,7 @@ import IconError from "@/assets/svg/Error.svg";
 import InvestFacet from "@/components/App/Transactions/InvestFacet.json";
 import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
 import {ACL as ACLs}  from "@/lib/acl";
+import {erc20ABI} from "wagmi";
 
 export const Transaction = {
     Waiting: 0,
@@ -71,30 +72,25 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                 }
             } else {
                 return {
-                    method:'invest',
+                    method:'transfer',
                     args: [
-                        nftId,
+                        offer.vault,
                         amount * 10 ** currency.precision,
-                        offer.id,
-                        currency.address,
-                        hash
                     ],
-                    address: offer.diamond,
-                    abi: InvestFacet
+                    address: currency.address,
+                    abi: erc20ABI
                 }
             }
         }
         default: {
             return {
-                method:'investPartner',
+                method:'transfer',
                 args: [
+                    offer.vault,
                     amount * 10 ** currency.precision,
-                    offer.id,
-                    currency.address,
-                    hash
                 ],
-                address: offer.diamond,
-                abi: InvestFacet
+                address: currency.address,
+                abi: erc20ABI
             }
         }
     }

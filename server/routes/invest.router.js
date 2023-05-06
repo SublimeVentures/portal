@@ -17,12 +17,7 @@ router.get('/hash', async (req, res) => {
     return res.status(200).json(await reserveExpire(session, req))
 });
 
-router.post('/update', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
 
-    return res.status(200).json(await replaceCurrency(session, req))
-});
 
 
 module.exports = {router}

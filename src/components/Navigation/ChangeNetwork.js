@@ -7,8 +7,8 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 
 export default function ChangeNetwork() {
     const {chain, chains} = useNetwork()
-    const {isConnected} = useAccount()
     const {error, isLoading, pendingChainId, switchNetwork} = useSwitchNetwork()
+    const {isConnected} = useAccount()
 
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
@@ -57,15 +57,13 @@ export default function ChangeNetwork() {
                 </div>
 
                 <div
-                    className="text-app-error text-center">{error && error.message}{!isConnected && "Connect wallet"}</div>
+                    className="text-app-error text-center">{error && error.message}</div>
                 <div className="mt-5"><a href="#" target="_blank">Read more.</a></div>
             </div>
         )
     }
 
     return (
-        <GenericModal isOpen={!isNetworkSupported} closeModal={() => {
-        }} title={title()} content={content()} persistent={true} noClose={true}/>
-
+        <GenericModal isOpen={!isNetworkSupported && isConnected} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>
     )
 }

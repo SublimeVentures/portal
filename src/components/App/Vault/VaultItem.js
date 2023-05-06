@@ -11,7 +11,7 @@ export default function VaultItem({item}) {
     const {offerDetails, createdAt, invested } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
-    const normalized_tgeDiff = (100*(offerDetails?.tge - offerDetails.b_ppu)/offerDetails.b_ppu)?.toLocaleString()
+    const normalized_tgeDiff = (100*(offerDetails?.tge - offerDetails.ppu)/offerDetails.ppu)?.toLocaleString()
     const normalized_invested = Number(invested).toLocaleString()
     const tge = offerDetails?.tge > 0 ? `${normalized_tgeDiff}%` : "TBA"
 

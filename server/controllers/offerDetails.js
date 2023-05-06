@@ -1,9 +1,8 @@
 const moment = require("moment");
-const {getInjectedUser} = require("../queries/injectedUser.query");
 const {checkAcl} = require("./acl");
-const {getOfferDetails, getOfferRaise} = require("../queries/offers.query");
+const {getOfferDetails} = require("../queries/offers.query");
 const {getEnv} = require("../services/db/utils");
-const {getPayableCurrencies} = require("../queries/currencies.query");
+const {getOfferRaise} = require("../queries/invest.query");
 
 
 async function getParamOfferDetails(session, req) {
@@ -36,6 +35,7 @@ async function getParamOfferDetails(session, req) {
         slug: offer.slug,
         research: getEnv().research,
         diamond: getEnv().diamond,
+        vault: getEnv().vault,
         whale: getEnv().whaleId,
         d_open: null,
         d_close: null,
@@ -46,7 +46,6 @@ async function getParamOfferDetails(session, req) {
 
 
     let response = {}
-    // response.currencies = await getPayableCurrencies(getEnv().isDev)
     response.currencies = getEnv().currencies
 
     switch (ACL) {

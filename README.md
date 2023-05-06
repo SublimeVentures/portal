@@ -38,58 +38,55 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-## ToDo
-- force from specific wallet
-
+## ToD
+- nałożyć indexy
 - scaling linków na ofercie
 - component as separate page
+- heroku db in same region
+
+- investment states && empty details response
+- loading na login + error na login
+- processor dane
+- bubbles invest
 
 - otc on success buy not moving to success
 - on succesful buy not refreshing offers
 - fix grida na buy otc offer (wiecej dla prawje strony)
 
-
-- heroku db in same region
 - DEPLOY
 - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
-- loading na login + error na login
-
-- investment get currencies on slug page from getEnvs
-- investment states && empty details response
-
 - homepage datafeed
 
-- wrong chain
+- sign message
 - images for seo
 
 - timeline (dashboard, setting, vault)
   -- reassign facet
   -- confiential facet
-
-- calculator
 - todo: reassign facet sprawdź ownership
 - wszędzie dodaj check na <10 000 (otc remove, settle, reassign) - dodaj modifier
 - validate payout address
 
 - DEPLOY
 ==========
+- onWaitForTransaction on speed up refresh hash
 - connect discord to user profile
 - transition on pages
 - extract transition variable to separate file (dialogs)
 - extract style for citcap
 - citcap - https://layerzero.network/ menu effect + font
-
 - list files / updates from projects
+- promo codes
+
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
 - whale deposit/ withdraw features in settings
 - whale page
-- promo codes
+
 
 - connect delegate address delegate.cash (solidity)
 - referral systems
-
 
 # 1. Add env variables
 - whaleId
@@ -104,4 +101,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 # 2. Add currencies 
 For each chainId
 
-
+# 3. For every new investment add Offer, Raise and logs.SLUG

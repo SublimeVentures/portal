@@ -1,33 +1,14 @@
 const moment = require('moment');
 const {checkAcl} = require("./acl");
 const crypto = require("crypto");
-const {reserveAllocation} = require("../queries/invest");
 const {
-    addReservedTransaction,
     expireReservedTransaction,
-    removeReservedTransaction,
-    updateCurrencyReservedTransaction
 } = require("../queries/participantLog");
 const {getOfferReservedData} = require("../queries/offers.query");
+const {getEnv} = require("../services/db/utils");
+const {bookAllocation} = require("../queries/invest.query");
 
 let CACHE = {}
-
-async function replaceCurrency(session, req) {
-    const {ADDRESS} = checkAcl(session, req)
-
-    const ID = Number(req.body.id)
-    const HASH = req.body.hash
-
-    const CURRENCY = getEnv().currency[req.body.currency]
-    if (!CURRENCY?.isSettlement) return {ok: false}
-
-    await updateCurrencyReservedTransaction(ID, ADDRESS, HASH, CURRENCY.symbol)
-
-    return {
-        ok: true,
-        currency: CURRENCY.symbol
-    }
-}
 
 async function reserveExpire(session, req) {
     const {ADDRESS} = checkAcl(session, req)
@@ -44,20 +25,18 @@ async function reserveExpire(session, req) {
 
 
 async function reserveSpot(session, req) {
-    const {ACL, ADDRESS, id} = checkAcl(session, req)
-
-    const ID = Number(req.query.id)
-    if (!CACHE[ID]?.date || CACHE[ID].date < moment().unix()) {
-        const allocation = await getOfferReservedData(ID)
-        CACHE[ID] = {...allocation, ...{date: moment().unix() + 3 * 60}}
+    const {ACL, ADDRESS, USER} = checkAcl(session, req)
+    const offerId = Number(req.query.id)
+    if (!CACHE[offerId]?.expire || CACHE[offerId].expire < moment().unix()) {
+        const allocation = await getOfferReservedData(offerId)
+        CACHE[offerId] = {...allocation, ...{expire: moment().unix() + 3 * 60}}
     }
 
-    const isSeparatePool = CACHE[ID].alloTotalPartner > 0 && ACL !== 0;
-    const TOTAL_ALLOCATION = isSeparatePool ? CACHE[ID].alloTotalPartner : CACHE[ID].alloTotal;
-    const AMOUNT = Number(req.query.amount) * (100 - CACHE[ID].tax) / 100
-    const CURRENCY = getEnv().currency[req.query.currency]
-
-    const checkIsReadyForStart = isReadyForInvestment(ACL, isSeparatePool, CACHE[ID])
+    const isSeparatePool = CACHE[offerId].alloTotalPartner > 0 && ACL !== 0;
+    const TOTAL_ALLOCATION = isSeparatePool ? CACHE[offerId].alloTotalPartner : CACHE[offerId].alloTotal;
+    const AMOUNT = Number(req.query.amount) * (100 - CACHE[offerId].tax) / 100
+    const CURRENCY = getEnv().currencies[req.query.chain][req.query.currency]
+    const checkIsReadyForStart = isReadyForInvestment(ACL, isSeparatePool, CACHE[offerId])
     if(!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
     if (!CURRENCY || !CURRENCY.isSettlement) return {
@@ -66,13 +45,11 @@ async function reserveSpot(session, req) {
     }
 
     const now = moment().unix()
-    const expire = now + 15 * 60//15min validity
+    const expire = now + 15 * 60 //15min validity
     const hash = createHash(`${ADDRESS}` + `${now}`)
-    await addReservedTransaction(ID, ADDRESS, hash, AMOUNT, CURRENCY.symbol, ACL, id)
+    const isBooked = await bookAllocation(offerId, isSeparatePool, TOTAL_ALLOCATION, ADDRESS, hash, AMOUNT, ACL, USER.id)
 
-    const isReserved = await reserveAllocation(ID, AMOUNT, TOTAL_ALLOCATION, isSeparatePool)
-    if (!isReserved) {
-        await removeReservedTransaction(ID, ADDRESS, hash)
+    if (!isBooked) {
         return {
             ok: false,
             code: "OVERALLOCATED",
@@ -82,7 +59,6 @@ async function reserveSpot(session, req) {
     return {
         ok: true,
         hash: hash,
-        currency: CURRENCY.symbol,
         expires: expire
     }
 }
@@ -126,4 +102,4 @@ const createHash = (data) => {
         .digest("hex");
 }
 
-module.exports = {reserveSpot, reserveExpire, replaceCurrency}
+module.exports = {reserveSpot, reserveExpire}

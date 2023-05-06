@@ -28,16 +28,6 @@ async function getOfferDetails(slug) {
     })
 }
 
-async function getOfferRaise(id) {
-    return await models.raises.findOne({
-        where: {id},
-        include: {
-            attributes: ['id', 'alloTotalPartner'],
-            model: models.offers
-        }
-    })
-}
-
 async function getOfferReservedData(id) {
     return await models.offers.findOne({
         where: {id},
@@ -50,4 +40,4 @@ async function getOfferReservedData(id) {
 // }
 
 
-module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferRaise, getOfferReservedData}
+module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferReservedData}

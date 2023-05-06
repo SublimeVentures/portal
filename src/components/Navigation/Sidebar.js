@@ -17,6 +17,7 @@ import IconSetting from "@/assets/svg/Setting.svg";
 import PAGE from "@/routes";
 import dynamic from "next/dynamic";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
+const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 
 
 export default function Sidebar() {
@@ -89,6 +90,7 @@ export default function Sidebar() {
                         </div>
                     </Link>
                     <ChangeNetwork/>
+                    <ChangeAddress/>
 
                 </div>
                 <nav className="flex flex-col pt-10 flex-1 font-accent text-md font-medium">

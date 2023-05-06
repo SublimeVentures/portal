@@ -13,6 +13,8 @@ import {useSession} from "next-auth/react";
 import StakeStep from "@/components/App/Transactions/StakeStep";
 import {ACL as ACLs}  from "@/lib/acl";
 import VanillaTilt from "vanilla-tilt";
+import RocketIcon from "@/assets/svg/Rocket.svg";
+import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
 
 export const StakeSteps = {
     Select: 0,
@@ -23,20 +25,20 @@ export const StakeSteps = {
 export default function InvestModal({model, setter, investModalProps}) {
     const {expires, investmentSize, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
     const {data: session} = useSession()
-    const {ACL} = session.user
+    const {ACL, id, address} = session.user
 
     const [stepStake, setStepStake] = useState(StakeSteps.Select)
     const [stepLiquidity, setStepLiquidity] = useState(false)
-    const [stepAllowance, setStepAllowance] = useState(false)
     const [stepInvestment, setStepInvestment] = useState(false)
-    const [transactionData, setTransactionData] = useState("")
+    const [errors, setError] = useState(false)
 
     const amountLocale = investmentSize.toLocaleString()
 
-
+    const usingStakedFunds = stepStake === StakeSteps.Use
     const stepLiquidityReady = (ACL === ACLs.Whale && stepStake === StakeSteps.Skip) || ACL !== ACLs.Whale
-    const stepLiquidityFinished = stepLiquidity || stepStake === StakeSteps.Use
-    const stepAllowanceFinished = stepAllowance || stepStake === StakeSteps.Use
+    const stepLiquidityFinished = stepLiquidity || usingStakedFunds
+
+    const investFunction = getInvestFunction(ACL, usingStakedFunds, investmentSize, offer, selectedCurrency, hash, id)
 
     useEffect(() => {
         import('@lottiefiles/lottie-player');
@@ -45,25 +47,22 @@ export default function InvestModal({model, setter, investModalProps}) {
 
     const closeModal = () => {
         setter()
-        if(transactionData.length > 0) {
+        if(stepInvestment) {
             afterInvestmentCleanup()
         }
         setTimeout(() => {
             setStepStake(StakeSteps.Select)
             setStepLiquidity(false)
-            setStepAllowance(false)
             setStepInvestment(false)
-            setTransactionData("")
         }, 1000);
-
     }
-
 
     const stepProps = {
         ...{amount: investmentSize},
         offer,
         selectedCurrency,
         hash,
+        session
     }
 
     const stepStakeProps = {
@@ -72,33 +71,28 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     const stepLiquidityProps = {
-        ...stepProps,
-        stepLiquidityFinished, //as stepLiquidity extension
-        setStepLiquidity,
-        stepLiquidityReady,
+        isReady: stepLiquidityReady,
+        isFinished: stepLiquidityFinished,
+        setFinished: setStepLiquidity,
+        ...stepProps
     }
 
-    const stepAllowanceProps = {
-        ...stepProps,
-        stepAllowanceFinished,//as stepLiquidity extension
-        setStepAllowance,
-        ...{stepAllowanceReady: stepLiquidityFinished},
-        ...{spender: offer.diamond}
-    }
-    const stepInvestProps = {
-        ...stepProps,
-        stepInvestment,
-        setStepInvestment,
-        setTransactionData,
-        ...{stepInvestmentReady: stepAllowanceFinished},
-        ...{isFromStake: stepStake===StakeSteps.Use}
+
+    const stepTransactProps = {
+        isReady: stepLiquidityFinished,
+        isFinished: stepInvestment,
+        setFinished: setStepInvestment,
+        writeFunction: investFunction,
+        errorHandler: setError,
+        userAddress: address,
+        ...stepProps
     }
 
 
     const title = () => {
         return (
             <>
-                {transactionData.length === 0 ?
+                {stepInvestment ?
                     <>Booking <span className="text-app-success">success</span></>
                     :
                     <>Investment <span className="text-app-success">successful</span></>
@@ -109,7 +103,7 @@ export default function InvestModal({model, setter, investModalProps}) {
 
     const contentSuccess = () => {
         return (
-            <div className="min-h-[442px] flex flex-col flex-1">
+            <div className=" flex flex-col flex-1">
                 <div>Congratulations! You have successfully invested <span className="text-app-success font-bold">${amountLocale}</span> in <span className="font-bold text-app-success">{offer.name}</span>.</div>
                 <lottie-player
                     autoplay
@@ -118,9 +112,9 @@ export default function InvestModal({model, setter, investModalProps}) {
                     mode="normal"
                     src="/static/lottie/success.json"
                 />
-                <div className="flex flex-1 justify-center items-center">
-                    <Link href={PAGE.Vault}>
-                        <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconVault className={ButtonIconSize.hero}/> } />
+                <div className="flex flex-1 justify-center items-center py-10 fullWidth">
+                    <Link href={PAGE.Vault} className={" w-full fullWidth"}>
+                        <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
                 <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more.</a></div>
@@ -129,7 +123,7 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
     const contentSteps = () => {
         return (
-            <div className="min-h-[442px]">
+            <div className="flex flex-1 flex-col">
                 <div>You have successfully booked <span
                     className="text-gold font-medium">${amountLocale}</span> allocation
                     in <span className="font-bold">{offer.name}</span>.
@@ -146,14 +140,13 @@ export default function InvestModal({model, setter, investModalProps}) {
                     <div className="mt-5"><strong>No need for gas wars!</strong></div>
                     <div>Execute transactions carefully.</div>
                 </div>
-                <div className="flex flex-col gap-2 pb-5 justify-content">
+                <div className="flex flex-col flex-1 gap-2 pb-2 justify-content">
 
                     {ACL === ACLs.Whale &&
                         <StakeStep stepProps={{...stepProps, ...stepStakeProps}} />
                     }
                         <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
-                        <AllowanceStep stepProps={{...stepProps, ...stepAllowanceProps}} />
-                        <TransactStep stepProps={{...stepProps, ...stepInvestProps}}/>
+                        <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
                 </div>
                 <div className="">Booked allocation will be released when the timer runs to zero. <a
                     href="#" target="_blank" className="text-app-error">Read more.</a></div>

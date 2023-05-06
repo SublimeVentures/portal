@@ -20,15 +20,15 @@ export default function App({Component, pageProps: {session, ...pageProps}}) {
 
     return (
         <WagmiConfig client={client}>
+            <SessionProvider session={session}>
             {renderWithLayout(
-                <SessionProvider session={session}>
                     <QueryClientProvider client={queryClient}>
                         <Hydrate state={pageProps.dehydratedState}>
                             <Component  {...pageProps} />
                         </Hydrate>
                     </QueryClientProvider>
-                </SessionProvider>
             )}
+            </SessionProvider>
         </WagmiConfig>
     );
     // return renderWithLayout(

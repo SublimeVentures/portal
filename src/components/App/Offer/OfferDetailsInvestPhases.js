@@ -10,7 +10,7 @@ import CurrencyInput from "@/components/App/CurrencyInput";
 import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import {parseMaxAllocation} from "@/lib/phases/parsePhase";
-import {expireHash, fetchHash, updateCurrency} from "@/fetchers/invest";
+import {expireHash, fetchHash} from "@/fetchers/invest";
 import {useSession} from "next-auth/react";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
@@ -68,8 +68,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
 
-    const currencyList = currencies[chain.id] ? Object.keys(currencies[chain.id]).map(el => {
-        let currency = currencies[chain.id][el]
+    const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
+    const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
+        let currency = currencies[selectedChain][el]
         currency.address = el
         return currency
     }) : [{}]
@@ -125,13 +126,14 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const startInvestmentProcess = async () => {
         setButtonLoading(true)
-        const response = await fetchHash(id, investmentSize, selectedCurrency.address)
+        const response = await fetchHash(id, investmentSize, selectedCurrency.address, chain.id)
         if (!response.ok) {
+            console.log("response.code",response.code)
             setErrorMsg(response.code)
             setErrorModal(true)
             refetchAllocation()
         } else {
-            setCookie(cookieReservation, `${response.hash}_${investmentSize}_${response.expires}_${response.currency}`, {expires: new Date(response.expires * 1000)})
+            setCookie(cookieReservation, `${response.hash}_${investmentSize}_${response.expires}`, {expires: new Date(response.expires * 1000)})
             openInvestmentModal(response.hash, response.expires)
         }
         setButtonLoading(false)
@@ -144,13 +146,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             removeCookie(cookieReservation)
             await startInvestmentProcess()
         } else if (Number(cookieData[1]) === Number(investmentSize)) {
-            if (cookieData[3] !== selectedCurrency.symbol) {
-                updateCurrency(id, cookieData[0], selectedCurrency.address).then(response => {
-                    if (response.ok) {
-                        setCookie(cookieReservation, `${cookieData[0]}_${cookieData[1]}_${cookieData[2]}_${response.currency}`, {expires: new Date(Number(cookieData[2]) * 1000)})
-                    }
-                })
-            }
             openInvestmentModal(cookieData[0], cookieData[2])
         } else {
             setOldAllocation(Number(cookieData[1]))
@@ -202,7 +197,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
 
     const restoreModalProps = {expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew}
-    const errorModalProps = {errorMsg}
+    const errorModalProps = {code: errorMsg}
     const calculateModalProps = { investmentSize, maxAllocation, offer}
     const investModalProps = {expires, investmentSize, offer, bookingExpire, hash, selectedCurrency, afterInvestmentCleanup}
 
@@ -247,13 +242,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                     <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => setCalculateModal(true)}
                                  icon={<IconCalculator className={ButtonIconSize.hero}/>}/>
                 </div>
-
-
                 <div className="flex sinvest:hidden">
                     <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'} handler={() => setCalculateModal(true)}
                                  icon={<IconCalculator className={ButtonIconSize.small}/>}/>
                 </div>
-
             </div>
 
             <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreHash} setter={() => {setRestoreHashModal(false)}}/>
