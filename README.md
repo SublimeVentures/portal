@@ -39,7 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToD
-- component as separate page
 - heroku db in same region
 - layers on invest, z-index hell
 
