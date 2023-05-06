@@ -41,9 +41,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [allocationOld, setOldAllocation] = useState(0)
 
     const [isInvestModal, setInvestModal] = useState(false)
-
     const [isCalculateModal, setCalculateModal] = useState(false)
-
 
     const [expires, setExpires] = useState(0)
     const [isAllocationOk, setIsAllocationOk] = useState(true)
@@ -56,8 +54,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [hash, setHash] = useState(0)
 
     const [cookies, setCookie, removeCookie] = useCookies();
-
-
 
     const {ACL, amt} = session.user
     const {id, alloTotal, tax, isPaused} = offer
@@ -77,13 +73,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const currencyNames = currencyList.map(el => el.symbol)
     const selectedCurrency = currencyList[investmentCurrency]
-
-    // console.log("curr - ==================")
-    // console.log("curr - currencyList",currencyList)
-    // console.log("curr - currencyNames",currencyNames)
-    // console.log("curr - selectedCurrency",selectedCurrency)
-    // console.log("curr - ==================")
-    // console.log("DROP - investmentCurrency",investmentCurrency)
 
     const cookieReservation = `hash_${id}`
 
@@ -128,7 +117,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setButtonLoading(true)
         const response = await fetchHash(id, investmentSize, selectedCurrency.address, chain.id)
         if (!response.ok) {
-            console.log("response.code",response.code)
             setErrorMsg(response.code)
             setErrorModal(true)
             refetchAllocation()
@@ -195,12 +183,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setInvestmentCurrency(0)
     }, [chain])
 
-
     const restoreModalProps = {expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
     const calculateModalProps = { investmentSize, maxAllocation, offer}
     const investModalProps = {expires, investmentSize, offer, bookingExpire, hash, selectedCurrency, afterInvestmentCleanup}
-
 
     return (
         <div className="flex flex-1 flex-col items-center">
@@ -252,9 +238,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             <CalculateModal calculateModalProps={calculateModalProps} model={isCalculateModal} setter={() => {setCalculateModal(false)}}/>
             <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {setErrorModal(false)}} />
             <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {setInvestModal(false)}}/>
-
         </div>
-
-
     )
 }

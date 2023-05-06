@@ -44,16 +44,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - component as separate page
 - heroku db in same region
 
+
+
 - investment states && empty details response
 - loading na login + error na login
 - processor dane
+- vault
 - bubbles invest
 
+- DEPLOY
 - otc on success buy not moving to success
 - on succesful buy not refreshing offers
 - fix grida na buy otc offer (wiecej dla prawje strony)
 
-- DEPLOY
 - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 - homepage datafeed
 

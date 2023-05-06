@@ -1,9 +1,5 @@
-import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
-import IconEth from "@/assets/svg/Eth.svg";
-import IconMatic from "@/assets/svg/Matic.svg";
-import IconBsc from "@/assets/svg/Bsc.svg";
+import {useAccount} from "wagmi";
 import GenericModal from "@/components/Modal/GenericModal";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import {signOut, useSession} from "next-auth/react";
 import {useEffect} from "react";
 
@@ -13,19 +9,10 @@ export default function ChangeAddress() {
     const userAddress = session?.user?.address
     const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
 
-    console.log("CONNE - userAddress", userAddress)
-    console.log("CONNE - address", address)
-    console.log("CONNE - check", userAddress !== address)
-    console.log("CONNE - isAddressNotSupported", isAddressNotSupported)
 
     useEffect(() => {
-        if(!isConnected) {
-           console.log("CONNE - nie podłączony")
+        if (!isConnected) {
             signOut({callbackUrl: "/"})
-        } else {
-            console.log("CONNE - podłączony")
-
-
         }
     }, [isConnected]);
 
@@ -54,8 +41,8 @@ export default function ChangeAddress() {
         )
     }
 
-
     return (
-        <GenericModal isOpen={isAddressNotSupported} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>
+        <GenericModal isOpen={isAddressNotSupported} closeModal={() => {
+        }} title={title()} content={content()} persistent={true} noClose={true}/>
     )
 }

@@ -93,9 +93,9 @@ export default function InvestModal({model, setter, investModalProps}) {
         return (
             <>
                 {stepInvestment ?
-                    <>Booking <span className="text-app-success">success</span></>
-                    :
                     <>Investment <span className="text-app-success">successful</span></>
+                    :
+                    <>Booking <span className="text-app-success">success</span></>
                 }
             </>
         )

@@ -1,12 +1,9 @@
 const moment = require('moment');
 const {checkAcl} = require("./acl");
 const crypto = require("crypto");
-const {
-    expireReservedTransaction,
-} = require("../queries/participantLog");
 const {getOfferReservedData} = require("../queries/offers.query");
 const {getEnv} = require("../services/db/utils");
-const {bookAllocation} = require("../queries/invest.query");
+const {bookAllocation, expireAllocation} = require("../queries/invest.query");
 
 let CACHE = {}
 
@@ -14,9 +11,10 @@ async function reserveExpire(session, req) {
     const {ADDRESS} = checkAcl(session, req)
 
     const ID = Number(req.query.id)
-    const HASH = Number(req.query.hash)
+    if(req.query.hash?.length < 8) {
+        await expireAllocation(ID, ADDRESS, req.query.hash)
+    }
 
-    await expireReservedTransaction(ID, ADDRESS, HASH)
 
     return {
         ok: true

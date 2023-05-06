@@ -25,7 +25,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
 
     const date = new Date().toISOString();
     const participants = `
-        INSERT INTO public.participants_1 (address, "nftId", amount, acl, hash, "createdAt", "updatedAt")
+        INSERT INTO public.participants_${offerId} (address, "nftId", amount, acl, hash, "createdAt", "updatedAt")
         VALUES ('${address}', '${tokenId}', '${amount}', '${acl}', '${hash}', '${date}', '${date}')
             on conflict("address", "hash") do
         update set amount=EXCLUDED.amount, "acl"=EXCLUDED."acl", "nftId"=EXCLUDED."nftId", "updatedAt"=EXCLUDED."updatedAt";
@@ -61,5 +61,18 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
     }
 }
 
+async function expireAllocation(offerId, address, hash) {
+    const participants = `
+            UPDATE public.participants_${offerId} 
+            SET "isExpired"=true, "updatedAt"='${new Date().toISOString()}' 
+            WHERE "address"='${address}' AND "hash" = '${hash}';
+    `
 
-module.exports = {getOfferRaise, bookAllocation}
+    await db.query(participants, {
+        model: models.participants,
+        // mapToModel: true // pass true here if you have any mapped fields
+    });
+}
+
+
+module.exports = {getOfferRaise, bookAllocation, expireAllocation}

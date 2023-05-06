@@ -1,4 +1,3 @@
-
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import {parsePhase} from "@/lib/phases/parsePhase";
@@ -48,9 +47,6 @@ export const OfferDetailsInvest = ({paramsInvest}) => {
             {isClosed ?
                 <OfferDetailsInvestPhases paramsInvestPhase={paramsInvestPhase}  /> :
                 <OfferDetailsInvestClosed paramsInvestClosed={paramsInvestClosed}/>}
-
         </div>
-
-
     )
 }
