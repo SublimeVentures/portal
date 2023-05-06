@@ -36,6 +36,7 @@ module.exports = {
         mobile: '520px',
         sinvest: '700px',
         collap: '900px',
+        midcol: '1000px',
         custom: '1100px',
         // tablet: '1200px',
         invest: '1420px',

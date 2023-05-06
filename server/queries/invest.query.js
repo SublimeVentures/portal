@@ -3,7 +3,7 @@ const db = require('../services/db/index');
 const {Op} = require("sequelize");
 
 async function getOfferRaise(id) {
-    return await models.raises.findOne({
+    return models.raises.findOne({
         where: {id},
         include: {
             attributes: ['id', 'alloTotalPartner'],

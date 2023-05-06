@@ -4,45 +4,35 @@ import "@/webComponents/my-flip.js";
 import IconDiscord from "@/assets/svg/Discord.svg";
 import IconWebsite from "@/assets/svg/Website.svg";
 import IconTwitter from "@/assets/svg/Twitter.svg";
+import {IconButton} from "@/components/Button/IconButton";
+import IconMinus from "@/assets/svg/MinusZ.svg";
 
 
 export default function OfferDetailsFlipbook({offer}) {
-    const {url_web, url_twitter, url_discord, research, slug, description, rrPages} = offer;
+    const {url_web, url_twitter, url_discord, research, slug, description, rrPages, name} = offer;
 
     function createMarkup() {
         return {__html: description};
     }
     return (
         <>
-            <div className="px-10 py-8  rounded-xl bg-navy-accent relative">
-                <div className="text-xl uppercase font-medium text-outline">About <span className="text-gold">{name}</span></div>
-                <div className="flex gap-5 absolute right-10 top-4">
+            <div className="rounded-xl bg-navy-accent relative flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between">
+                <div className="flex mx-10 text-xl uppercase font-medium text-outline midcol:mr-0">About&nbsp;<span className="text-gold">{name}</span></div>
+                <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
                     {url_web && <a href={`${url_web}`} target="_blank">
-                        <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                     icon={<IconWebsite className={ButtonIconSize.vsmall}/>}/>
+                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconWebsite />} />
                     </a> }
 
                     {url_twitter && <a href={`${url_twitter}`} target="_blank">
-                        <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                     icon={<IconTwitter className={ButtonIconSize.vsmall}/>}/>
+                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconTwitter />}/>
                     </a> }
 
                     {url_discord && <a href={`${url_discord}`} target="_blank">
-                        <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                     icon={<IconDiscord className={ButtonIconSize.vsmall}/>}/>
+                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconDiscord />}/>
                     </a> }
 
-
                     <a href={`${research}${slug}/Research.pdf`} target="_blank">
-                        <div className="hidden sm:flex">
-                            <RoundButton text={'PDF'} isWide={true} zoom={1.1} size={'text-sm sm'}
-                                         icon={<IconDownload className={ButtonIconSize.hero}/>}/>
-
-                        </div>
-                        <div className="flex sm:hidden">
-                            <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                         icon={<IconDownload className={ButtonIconSize.vsmall}/>}/>
-                        </div>
+                        <IconButton zoom={1.1} size={'w-17 p-3'} icon={<IconDownload />}/>
                     </a>
 
                 </div>
