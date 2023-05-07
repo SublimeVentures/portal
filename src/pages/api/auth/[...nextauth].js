@@ -41,15 +41,23 @@ export default async function auth(req, res) {
 
                     // if (!result.success) return null;
 
-
-                    const type = await fetchSessionData(siwe.address)
-                    console.log("type ",type)
-
-                    if (type) {
-                        return {...{address: siwe.address}, ...type}
-                    } else {
-                        return null
+                    return {
+                        amt: 1,
+                        name: "dupa",
+                        symbol: "DUPA",
+                        type: `ERC721`,
+                        img: "image",
+                        id: 1,
+                        ACL: 0
                     }
+                    // const type = await fetchSessionData(siwe.address)
+                    // console.log("type ",type)
+                    //
+                    // if (type) {
+                    //     return {...{address: siwe.address}, ...type}
+                    // } else {
+                    //     return null
+                    // }
 
                 } catch (e) {
                     console.log("error",e)
