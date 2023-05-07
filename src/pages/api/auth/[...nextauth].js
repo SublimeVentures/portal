@@ -5,7 +5,7 @@ import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
 
 export default async function auth(req, res) {
-    console.log("auth - jestem", req)
+    console.log("auth - jestem", req.cookies)
 
     const providers = [
         CredentialsProvider({
@@ -26,17 +26,20 @@ export default async function auth(req, res) {
                 try {
                     const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
                     const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
-                    const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
+                    // console.log("nextAuthUrl",csrf)
+
+                    // const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
 
                     console.log("nextAuthUrl",nextAuthUrl)
-                    const result = await siwe.verify({
-                        signature: credentials?.signature || "",
-                        domain: nextAuthUrl.host,
-                        nonce: csrf,
-                    })
-                    console.log("result verify",result)
+                    // const result = await siwe.verify({
+                    //     signature: credentials?.signature || "",
+                    //     domain: nextAuthUrl.host,
+                    //     nonce: csrf,
+                    // })
+                    // console.log("result verify",result)
 
-                    if (!result.success) return null;
+                    // if (!result.success) return null;
+
 
                     const type = await fetchSessionData(siwe.address)
                     console.log("type ",type)
