@@ -26,12 +26,10 @@ export default async function auth(req, res) {
                 try {
                     const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
                     const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
-                    // console.log("nextAuthUrl",csrf)
 
-                    // const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
-
-                    console.log("nextAuthUrl",nextAuthUrl)
-                    console.log("siwe",siwe)
+                    console.log("cookies",req.cookies)
+                    const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
+                    console.log("nextAuthUrl",csrf)
                     // const result = await siwe.verify({
                     //     signature: credentials?.signature || "",
                     //     domain: nextAuthUrl.host,
@@ -43,22 +41,13 @@ export default async function auth(req, res) {
 
 
                     const type = await fetchSessionData(siwe.address)
-                    console.log("type ",type)
-                    return {
-                        amt: 1,
-                        name: "dupa",
-                        symbol: "DUPA",
-                        type: `ERC721`,
-                        img: "image",
-                        id: 1,
-                        ACL: 0
+
+
+                    if (type) {
+                        return {...{address: siwe.address}, ...type}
+                    } else {
+                        return null
                     }
-                    //
-                    // if (type) {
-                    //     return {...{address: siwe.address}, ...type}
-                    // } else {
-                    //     return null
-                    // }
 
                 } catch (e) {
                     console.log("error",e)
