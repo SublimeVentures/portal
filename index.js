@@ -3,8 +3,8 @@ require('dotenv').config({ path: `.env.local`, override: true });
 const express = require('express');
 const next = require('next');
 const url = require('url');
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
+// const cluster = require('cluster');
+// const numCPUs = require('os').cpus().length;
 const cookieParser = require("cookie-parser");
 
 const {connectDB} = require("./server/services/db/utils");
@@ -20,23 +20,23 @@ const {router: vaultRoute} = require("./server/routes/vault.js");
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = "127.0.0.1"
+const hostname = process.env.HOSTNAME
 
 
 // Multi-process to utilize all CPU cores.
-if (!dev && cluster.isMaster) {
-    console.log(`Node cluster master ${process.pid} is running`);
-
-    // Fork workers.
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
-
-    cluster.on('exit', (worker, code, signal) => {
-        console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
-    });
-
-} else {
+// if (!dev && cluster.isMaster) {
+//     console.log(`Node cluster master ${process.pid} is running`);
+//
+//     // Fork workers.
+//     for (let i = 0; i < numCPUs; i++) {
+//         cluster.fork();
+//     }
+//
+//     cluster.on('exit', (worker, code, signal) => {
+//         console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
+//     });
+//
+// } else {
     const nextApp = next({dir: '.', dev, hostname, port});
     const nextHandler = nextApp.getRequestHandler();
 
@@ -105,7 +105,7 @@ if (!dev && cluster.isMaster) {
             console.log(`Listening on http://localhost:${port}`);
         });
     });
-}
+// }
 
 
 

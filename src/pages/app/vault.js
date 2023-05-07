@@ -27,7 +27,6 @@ export default function AppVault() {
         }
     );
 
-    console.log("vault",vault)
 
     const investmentActivityLog = [
         {type: 'details', step: 'Project details', date: '', icon: "vote"},

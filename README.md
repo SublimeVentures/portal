@@ -38,10 +38,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-## ToD
-- todo: fetch if id =0 , whale when saving for vault
-- DEPLOY
-
+## ToDo
 - images for seo
 - homepage datafeed
 - fix button 
@@ -51,7 +48,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- - login
 - -- - connect
 
-
+- cfind elegant way to confirm vault / rollback vault
 - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 - otc on success buy not moving to success
 - on succesful buy not refreshing offers
@@ -70,7 +67,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - DEPLOY
 ==========
-- onWaitForTransaction on speed up refresh hash
+- 
 - connect discord to user profile
 - transition on pages
 - extract transition variable to separate file (dialogs)

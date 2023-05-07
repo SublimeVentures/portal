@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "preinstall": "npm install pm2 -g",
     "dev": "node index.js",
     "build": "next build",
-    "start": "pm2-runtime start ecosystem.config.js --env development",
+    "start": "NODE_ENV=production node index.js",
     "lint": "next lint"
   },
   "dependencies": {
