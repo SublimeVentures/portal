@@ -41,6 +41,9 @@ export default async function auth(req, res) {
 
                     // if (!result.success) return null;
 
+
+                    const type = await fetchSessionData(siwe.address)
+                    console.log("type ",type)
                     return {
                         amt: 1,
                         name: "dupa",
@@ -50,8 +53,6 @@ export default async function auth(req, res) {
                         id: 1,
                         ACL: 0
                     }
-                    // const type = await fetchSessionData(siwe.address)
-                    // console.log("type ",type)
                     //
                     // if (type) {
                     //     return {...{address: siwe.address}, ...type}
@@ -72,48 +73,42 @@ export default async function auth(req, res) {
     if (isDefaultSigninPage) {
         providers.pop()
     }
+    return await NextAuth(req, res, {
+        providers,
+        session: {
+            strategy: "jwt",
+        },
+        pages: {
+            signIn: PAGE.Login,
+            signOut: PAGE.Landing,
+        },
+        secret: process.env.NEXTAUTH_SECRET,
+        callbacks: {
+            jwt: async ({token, user}) => {
+                user && (token.user = user)
+                return token
+            },
+            session: async ({session, token}) => {
+                session.user = token.user
+                return session
+            }
+            // jwt: async ({ token, account, profile }) => {
+            //     console.log("jwt", token, account, profile)
+            //     if (account) {
+            //         token.accessToken = account.access_token
+            //         token.id = profile?.id
+            //     }
+            //     return token
+            // },
+            // async session({ session, token }) {
+            //     console.log("session", session)
+            //     console.log("token", token)
+            //     tutaj dodawaja dodatkoe dane
+            //     session.user.address = token.sub
+            //     session.address = token.sub
+            //     return session
+            // },
+        },
+    })
 
-    try {
-        return await NextAuth(req, res, {
-            providers,
-            session: {
-                strategy: "jwt",
-            },
-            pages: {
-                signIn: PAGE.Login,
-                signOut: PAGE.Landing,
-            },
-            secret: process.env.NEXTAUTH_SECRET,
-            callbacks: {
-                jwt: async ({token, user}) => {
-                    user && (token.user = user)
-                    return token
-                },
-                session: async ({session, token}) => {
-                    session.user = token.user
-                    return session
-                }
-                // jwt: async ({ token, account, profile }) => {
-                //     console.log("jwt", token, account, profile)
-                //     if (account) {
-                //         token.accessToken = account.access_token
-                //         token.id = profile?.id
-                //     }
-                //     return token
-                // },
-                // async session({ session, token }) {
-                //     console.log("session", session)
-                //     console.log("token", token)
-                //     tutaj dodawaja dodatkoe dane
-                //     session.user.address = token.sub
-                //     session.address = token.sub
-                //     return session
-                // },
-            },
-        })
-
-    } catch(e) {
-        console.log("more ",e)
-        return false
-    }
 }
