@@ -8,7 +8,7 @@ import Layout from '@/components/Layout/Layout';
 import 'react-tooltip/dist/react-tooltip.css';
 import '@/styles/globals.scss'
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL;
 
 
 export default function App({Component, pageProps: {session, ...pageProps}}) {
