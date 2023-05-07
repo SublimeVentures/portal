@@ -5,7 +5,7 @@ import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
 
 export default async function auth(req, res) {
-    console.log("auth - jestem")
+    console.log("auth - jestem", req)
 
     const providers = [
         CredentialsProvider({
@@ -48,6 +48,7 @@ export default async function auth(req, res) {
                     }
 
                 } catch (e) {
+                    console.log("error",e)
                     return null
                 }
             },
@@ -60,41 +61,47 @@ export default async function auth(req, res) {
         providers.pop()
     }
 
-    return await NextAuth(req, res, {
-        providers,
-        session: {
-            strategy: "jwt",
-        },
-        pages: {
-            signIn: PAGE.Login,
-            signOut: PAGE.Landing,
-        },
-        secret: process.env.NEXTAUTH_SECRET,
-        callbacks: {
-            jwt: async ({token, user}) => {
-                user && (token.user = user)
-                return token
+    try {
+        return await NextAuth(req, res, {
+            providers,
+            session: {
+                strategy: "jwt",
             },
-            session: async ({session, token}) => {
-                session.user = token.user
-                return session
-            }
-            // jwt: async ({ token, account, profile }) => {
-            //     console.log("jwt", token, account, profile)
-            //     if (account) {
-            //         token.accessToken = account.access_token
-            //         token.id = profile?.id
-            //     }
-            //     return token
-            // },
-            // async session({ session, token }) {
-            //     console.log("session", session)
-            //     console.log("token", token)
-            //     tutaj dodawaja dodatkoe dane
-            //     session.user.address = token.sub
-            //     session.address = token.sub
-            //     return session
-            // },
-        },
-    })
+            pages: {
+                signIn: PAGE.Login,
+                signOut: PAGE.Landing,
+            },
+            secret: process.env.NEXTAUTH_SECRET,
+            callbacks: {
+                jwt: async ({token, user}) => {
+                    user && (token.user = user)
+                    return token
+                },
+                session: async ({session, token}) => {
+                    session.user = token.user
+                    return session
+                }
+                // jwt: async ({ token, account, profile }) => {
+                //     console.log("jwt", token, account, profile)
+                //     if (account) {
+                //         token.accessToken = account.access_token
+                //         token.id = profile?.id
+                //     }
+                //     return token
+                // },
+                // async session({ session, token }) {
+                //     console.log("session", session)
+                //     console.log("token", token)
+                //     tutaj dodawaja dodatkoe dane
+                //     session.user.address = token.sub
+                //     session.address = token.sub
+                //     return session
+                // },
+            },
+        })
+
+    } catch(e) {
+        console.log("more ",e)
+        return false
+    }
 }
