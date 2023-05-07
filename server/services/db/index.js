@@ -1,7 +1,7 @@
 
 const {Sequelize} = require("sequelize");
 
-const sequelize = new Sequelize(process.env.POSTGRES_URI, {
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: "postgres",
     // native: true,
     ssl: true,
@@ -37,7 +37,7 @@ for (const modelDefiner of modelDefiners) {
 }
 
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, participants } = sequelize.models;
+    const { networks, partners, currencies, injectedUsers, offers, raises } = sequelize.models;
 
     networks.hasMany(partners)
     networks.hasMany(currencies)

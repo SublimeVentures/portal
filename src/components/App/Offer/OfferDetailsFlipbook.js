@@ -4,7 +4,6 @@ import IconWebsite from "@/assets/svg/Website.svg";
 import IconTwitter from "@/assets/svg/Twitter.svg";
 import {IconButton} from "@/components/Button/IconButton";
 import Script from "next/script";
-import Head from "next/head";
 
 
 export default function OfferDetailsFlipbook({offer}) {
@@ -15,9 +14,7 @@ export default function OfferDetailsFlipbook({offer}) {
     }
     return (
         <>
-            <Head>
-                    <link rel="stylesheet" href={`/browser/index-920ff239.css`} />
-            </Head>
+
             <div className="rounded-xl bg-navy-accent relative flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between">
                 <div className="flex mx-10 text-xl uppercase font-medium text-outline midcol:mr-0">About&nbsp;<span className="text-gold">{name}</span></div>
                 <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
@@ -42,9 +39,7 @@ export default function OfferDetailsFlipbook({offer}) {
             </div>
 
             <div className="my-10">
-                <Script src="/browser/index-79dca24a.js" onLoad={() => {
-                    console.log('Script has loaded');
-                }}/>
+                <Script src="/browser/index-79dca24a.js"/>
                 <div id="flipbook"></div>
             </div>
 

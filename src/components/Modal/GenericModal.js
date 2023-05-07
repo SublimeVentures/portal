@@ -17,7 +17,7 @@ export default function LoginModal({isOpen, closeModal, title, content, persiste
 
   return (
        <Transition appear show={isOpen} as={Fragment}>
-              <Dialog as="div" className="relative z-10 " onClose={()=>closeModalOnBg()}>
+              <Dialog as="div" className="relative z-30 " onClose={()=>closeModalOnBg()}>
                   <Transition.Child
                       as={Fragment}
                       enter="ease-out duration-300"

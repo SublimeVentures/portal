@@ -1,7 +1,7 @@
 const {models} = require('../services/db/index');
 
 async function getOffersPublic() {
-    return await models.offers.findAll({
+    return models.offers.findAll({
         attributes: ['name', 'image', 'genre', 'url_web'],
         where: {
             displayPublic: true
@@ -11,7 +11,7 @@ async function getOffersPublic() {
 }
 
 async function getOfferList() {
-    return await models.offers.findAll({
+    return models.offers.findAll({
         where: {
             display: true
         },
@@ -20,7 +20,7 @@ async function getOfferList() {
 }
 
 async function getOfferDetails(slug) {
-    return await models.offers.findOne({
+    return models.offers.findOne({
         where: {
             display: true, slug
         },
@@ -29,7 +29,7 @@ async function getOfferDetails(slug) {
 }
 
 async function getOfferReservedData(id) {
-    return await models.offers.findOne({
+    return models.offers.findOne({
         where: {id},
         raw: true
     })

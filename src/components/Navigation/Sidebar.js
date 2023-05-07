@@ -80,7 +80,7 @@ export default function Sidebar() {
     }
 
     return (
-        <aside className="flex sticky top-0 z-8 collap:relative">
+        <aside className="flex sticky top-0 z-20 collap:relative">
             <div
                 className="p-7 flex flex-col border-r border-app-bg-split text-app-white max-h-screen sticky top-0 hidden collap:flex">
                 <div className="flex justify-between">
