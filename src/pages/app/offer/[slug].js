@@ -66,7 +66,7 @@ export const AppOfferDetails = () => {
         userAllocation
     }
 
-    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData.offer.name}  - Invest - 3VC`
+    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - 3VC`
 
     const renderPage = () => {
         if (status !== "authenticated" || !offerDetailsState) return <Loader/>

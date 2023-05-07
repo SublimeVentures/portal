@@ -39,24 +39,23 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToD
-- investment states && empty details response
-- loading na login + error na login
 - processor dane
 - vault
 - bubbles invest
 - invest button
+- investment states && empty details response
 
 - DEPLOY
+
 - otc on success buy not moving to success
 - on succesful buy not refreshing offers
 - fix grida na buy otc offer (wiecej dla prawje strony)
-
 - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 - homepage datafeed
 
 - sign message
 - images for seo
-
+- fix button - wszystko przez handler i loader
 - timeline (dashboard, setting, vault)
   -- reassign facet
   -- confiential facet

@@ -4,8 +4,24 @@ import Image from "next/image";
 
 import {useConnect} from 'wagmi'
 
-export default function LoginModal({isPartner, signError, model, setter}) {
-    const { connect, connectors, error, pendingConnector } = useConnect()
+export default function LoginModal({isPartner, isSignin, signError, model, setter}) {
+    const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
+
+
+    console.log("===============")
+    console.log("error",error)
+    console.log("pendingConnector",pendingConnector)
+    console.log("isLoading",isLoading)
+    console.log("messageSigned",isSignin)
+    console.log("===============")
+
+
+    const buttonIsDisabled = (connector) => !connector.ready || isLoading || isSignin
+    const buttonHandler = (connector) => {
+        if(!isLoading) {
+            connect({ connector })
+        }
+    }
 
     const title = () => {
         return (<>Connect Wallet <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span></>)
@@ -20,18 +36,18 @@ export default function LoginModal({isPartner, signError, model, setter}) {
                 {connectors.map((connector) => (
                     <RoundButton
                         key={connector.id}
-                        handler={()=> {connect({ connector })}}
+                        handler={()=> {buttonHandler(connector)}}
                         text={connector.id === pendingConnector?.id && !error ? "Loading..." : connector.name}
                         isWide={true}
                         zoom={1.05}
                         size={'text-sm sm'}
-                        isDisabled={!connector.ready}
+                        isDisabled={buttonIsDisabled(connector)}
                         icon={<Image src={`/img/login/${connector.name}.png`} width={32} height={32} alt={connector.name} className={ButtonIconSize.hero}/>}
                     />
 
                 ))}
             </div>
-            <div className="-mb-2 mt-2 text-center text-red h-[10px]">{signError?.length>0 ? signError : (error ? error.message : "")}</div>
+            <div className="-mb-2 mt-2 text-center text-app-error h-[10px]">{signError?.length>0 ? signError : (error ? error.message : "")}</div>
         </>)
     }
 

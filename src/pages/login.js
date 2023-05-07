@@ -1,10 +1,11 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import dynamic from "next/dynamic";
 import HeroBg from "@/components/Home/HeroBg";
 import Link from "next/link";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PartnerSlide from "@/components/SignupFlow/PartnerSlide";
-const LoginModal = dynamic(() => import('@/components/SignupFlow/LoginModal'), {ssr: false,})
+const LoginModal = dynamic(() => import('@/components/SignupFlow/LoginModal'), {ssr: false})
+const ErrorModal = dynamic(() => import('@/components/SignupFlow/ErrorModal'), {ssr: false})
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchPartners} from "@/fetchers/public.fecher";
 import { Slider3D } from 'react-slider-3d';
@@ -24,6 +25,7 @@ import {seoConfig} from "@/lib/seoConfig";
 export default function Login() {
     const seo = seoConfig(PAGE.Login)
 
+
     const { isLoading, data, isError } = useQuery({
             queryKey: ["partnerList"],
             queryFn: fetchPartners,
@@ -41,9 +43,14 @@ export default function Login() {
     let [messageSigned, setMessageSigned] = useState(false)
     let [isPartnerLogin, setIsPartnerLogin] = useState(false)
     let [walletSelectionOpen, setIsWalletSelectionOpen] = useState(false)
+    let [errorModal, setErrorModal] = useState(false)
+
+    const isLoginLoading = false
+    console.log("messageSigned",messageSigned)
 
 
     const signMessage = async (forcedAddress) => {
+        console.log("signing messageSigned")
         setMessageSigned(true)
         try {
             const message = new SiweMessage({
@@ -93,6 +100,12 @@ export default function Login() {
         },
     })
 
+    useEffect(()=> {
+        console.log("router.query",router.query, isPartnerLogin);
+        if(router?.query?.error === "CredentialsSignin") {
+            setErrorModal(true)
+        }
+    }, [router.query])
 
 
 
@@ -117,7 +130,7 @@ export default function Login() {
                                 <RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
                             </Link>
                         </div>
-                        <RoundButton text={'Connect'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(false)} />
+                        <RoundButton text={'Connect'} isLoading={isLoginLoading} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(false)} />
 
                     </div>
 
@@ -150,7 +163,7 @@ export default function Login() {
                     </div>
 
                     <div className="flex flex-1 mx-auto items-end mt-5 lg:mt-0">
-                        <RoundButton text={'Connect'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(true)} />
+                        <RoundButton text={'Connect'} isLoading={isLoginLoading} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(true)} />
 
                     </div>
                 </div>
@@ -169,7 +182,8 @@ export default function Login() {
                 twitter={seo.twitter}
             />
             <HeroBg subtitle={'Welcome'} title={'sing with whales'} content={renderOptions()} />
-            <LoginModal isPartner={isPartnerLogin} signError={errorMsg} model={walletSelectionOpen} setter={() => {setIsWalletSelectionOpen(false)}}/>
+            <LoginModal isPartner={isPartnerLogin} isSignin={messageSigned} signError={errorMsg} model={walletSelectionOpen} setter={() => {setIsWalletSelectionOpen(false)}}/>
+            <ErrorModal isPartner={isPartnerLogin}  model={errorModal} setter={() => {setErrorModal(false)}}/>
         </>
     )
 }
@@ -195,7 +209,6 @@ export const getServerSideProps = async(context) => {
     return {
         props: {
             dehydratedState: dehydrate(queryClient),
-            // csrfToken: await getCsrfToken(context),
         }
     }
 }
