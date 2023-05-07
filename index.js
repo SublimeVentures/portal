@@ -18,7 +18,7 @@ const {router: investRoute} = require("./server/routes/invest.router.js");
 const {router: vaultRoute} = require("./server/routes/vault.js");
 // const {router: otcRoute} = require("./server/routes/otc.js");
 
-const port = process.env.PORT || 3100
+const port = process.env.PORT || 3000
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTNAME
 

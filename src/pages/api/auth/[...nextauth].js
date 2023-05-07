@@ -26,15 +26,18 @@ export default async function auth(req, res) {
                     const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
                     const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
 
+                    console.log("nextAuthUrl",nextAuthUrl)
                     const result = await siwe.verify({
                         signature: credentials?.signature || "",
                         domain: nextAuthUrl.host,
                         nonce: csrf,
                     })
+                    console.log("result verify",result)
 
                     if (!result.success) return null;
 
                     const type = await fetchSessionData(siwe.address)
+                    console.log("type ",type)
 
                     if (type) {
                         return {...{address: siwe.address}, ...type}

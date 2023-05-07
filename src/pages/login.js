@@ -46,11 +46,9 @@ export default function Login() {
     let [errorModal, setErrorModal] = useState(false)
 
     const isLoginLoading = false
-    console.log("messageSigned",messageSigned)
 
 
     const signMessage = async (forcedAddress) => {
-        console.log("signing messageSigned")
         setMessageSigned(true)
         try {
             const message = new SiweMessage({
