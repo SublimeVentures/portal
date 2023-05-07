@@ -22,6 +22,7 @@ const port = process.env.PORT || 3000
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTNAME
 
+console.log("hostname", hostname)
 
 // Multi-process to utilize all CPU cores.
 // if (!dev && cluster.isMaster) {
