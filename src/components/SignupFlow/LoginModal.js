@@ -7,13 +7,13 @@ import {useConnect} from 'wagmi'
 export default function LoginModal({isPartner, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
 
-
-    console.log("===============")
-    console.log("error",error)
-    console.log("pendingConnector",pendingConnector)
-    console.log("isLoading",isLoading)
-    console.log("messageSigned",isSignin)
-    console.log("===============")
+    //
+    // console.log("===============")
+    // console.log("error",error)
+    // console.log("pendingConnector",pendingConnector)
+    // console.log("isLoading",isLoading)
+    // console.log("messageSigned",isSignin)
+    // console.log("===============")
 
 
     const buttonIsDisabled = (connector) => !connector.ready || isLoading || isSignin

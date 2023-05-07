@@ -1,7 +1,7 @@
 const { models } = require('../services/db/index');
 
 async function getInjectedUser(address) {
-  return await models.injectedUsers.findOne({
+  return models.injectedUsers.findOne({
     where: {
       address
     },

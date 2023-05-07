@@ -14,7 +14,6 @@ async function connectWeb3() {
             apiKey: "Qs4I1cwoJD9uROTUX4ifIZQTdeldqjUPQM1UWhUQFwpYeYpqnlEhS8xLz5PIQqcq",
         });
 
-
         const chains = getEnv().isDev ? [EvmChain.SEPOLIA, EvmChain.BSC_TESTNET, EvmChain.MUMBAI] : [EvmChain.ETHEREUM, EvmChain.BSC, EvmChain.POLYGON];
 
         web3 = {

@@ -5,7 +5,7 @@ import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
 import {useSession} from "next-auth/react";
 import { useQuery} from "@tanstack/react-query";
-import {fetchInvestments} from "@/fetchers/vault";
+import {fetchVault} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
 import Head from "next/head";
@@ -18,7 +18,7 @@ export default function AppVault() {
 
     const {isSuccess: isSuccessDataFeed, data: vault} = useQuery({
             queryKey: ["userVault", {ACL, address}],
-            queryFn: () => fetchInvestments(ACL, address),
+            queryFn: () => fetchVault(ACL, address),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 5 * 60 * 1000,
@@ -27,6 +27,7 @@ export default function AppVault() {
         }
     );
 
+    console.log("vault",vault)
 
     const investmentActivityLog = [
         {type: 'details', step: 'Project details', date: '', icon: "vote"},
@@ -41,7 +42,7 @@ export default function AppVault() {
 
 
     const renderList = () => {
-        if(status !== "authenticated" || !isSuccessDataFeed) return <div className={'col-span-12'}><Loader/></div>
+        if(status !== "authenticated" || !isSuccessDataFeed || vault=== undefined) return <div className={'col-span-12'}><Loader/></div>
         if(status === "authenticated" && vault.length===0) return <div className={'col-span-12'}><EmptyVault/></div>
         return vault.map((el, i) => {
             return <VaultItem item={el} key={i}/>

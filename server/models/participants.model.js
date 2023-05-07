@@ -32,6 +32,10 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             defaultValue: 10
         },
+        isConfirmedInitial: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         isConfirmed: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
@@ -46,7 +50,6 @@ module.exports = (sequelize) => {
             {unique: true, fields: ['hash']},
             {unique: true, fields: ['address', 'hash']},
         ],
-
         freezeTableName: true,
         timestamps: true
     });

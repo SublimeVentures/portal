@@ -11,11 +11,11 @@ export default function VaultItem({item}) {
     const {offerDetails, createdAt, invested } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
-    const normalized_tgeDiff = (100*(offerDetails?.tge - offerDetails.ppu)/offerDetails.ppu)?.toLocaleString()
+    const normalized_tgeDiff = (100*(item["offer.tge"] - item["offer.ppu"])/item["offer.ppu"])?.toLocaleString()
     const normalized_invested = Number(invested).toLocaleString()
     const tge = offerDetails?.tge > 0 ? `${normalized_tgeDiff}%` : "TBA"
 
-    const {vested, nextUnlock} = parseVesting(offerDetails.t_unlock)
+    const {vested, nextUnlock} = parseVesting(item["offer.t_unlock"])
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {scale: 1.1, speed: 1000, max: 10});
@@ -25,7 +25,7 @@ export default function VaultItem({item}) {
         <div
             className="relative rounded-tl-xl rounded-bl-xl bg-navy-accent flex flex-1 flex-col p-5 rounded-tr-xl rounded-br-xl sm:rounded-tr-none sm:rounded-br-none lg:!rounded-tr-xl lg:!rounded-br-xl xl:!rounded-tr-none xl:!rounded-br-none">
             <div className="font-bold text-2xl flex items-center">
-                {offerDetails.name}
+                {item["offer.name"]}
 
             </div>
             <div className="pt-1 text-xs text-gray">Participated {participated}</div>
@@ -47,8 +47,8 @@ export default function VaultItem({item}) {
         </div>
 
         <div className={'relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex'}  ref={tilt}>
-            <Link href={`${PAGE.Opportunities}/${offerDetails.slug}`}>
-            <Image src={offerDetails.image} fill className={'imageOfferList rounded-tr-xl rounded-br-xl bg-cover '} alt={offerDetails.name} sizes="(max-width: 2000px) 200px"/>
+            <Link href={`${PAGE.Opportunities}/${item["offer.slug"]}`}>
+            <Image src={item["offer.image"]} fill className={'imageOfferList rounded-tr-xl rounded-br-xl bg-cover '} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
             </Link>
         </div>
 

@@ -4,13 +4,13 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userAllocation} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
-
+    console.log("paramsParams",paramsParams)
     const normalized_ppu = ppu?.toLocaleString()
     const normalized_tge = tge?.toLocaleString()
     const normalized_tgeDiff = (100*(tge - ppu)/ppu)?.toLocaleString()
     const normalized_total = alloTotal?.toLocaleString()
     const normalized_filled = allocation?.alloFilled?.toLocaleString()
-    const normalized_my = userAllocation?.invested?.toLocaleString()
+    const normalized_my = userAllocation?.toLocaleString()
 
 
     return (
@@ -61,7 +61,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                 </div>
                 <div className="flex text-app-success mb-1">
                     <div className="flex-1 ">MINE</div>
-                    <div className="">${normalized_my} /// {allocation?.alloRes}</div>
+                    <div className="">${normalized_my}</div>
                 </div>
                 <div className="flex flex-1 items-end">
                     <OfferDetailsProgress alloTotal={alloTotal} alloFilled={allocation?.alloFilled} alloRequired={alloRequired}/>

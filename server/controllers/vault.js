@@ -1,22 +1,22 @@
 const {checkAcl} = require("./acl");
-const {getUserInvestment, getUserInvestments, getUserInvestmentsExpanded} = require("../queries/investment");
+const {getUserVault, getUserInvestment} = require("../queries/vaults.query");
 
 
 async function userInvestment(session, req) {
     const {ACL, ADDRESS, USER} = checkAcl(session, req)
-
-    const owner = ACL === 0 ? USER.id : ADDRESS
+    const owner = ACL === 0 ? `${USER.id}` : ADDRESS
 
     const offerId = Number(req.query.offer)
-    return await getUserInvestment(owner, offerId)
+    const result =  await getUserInvestment(owner, offerId)
+    return result?.invested ? result.invested : 0
 }
 
-async function userInvestments(session, req) {
+async function userVault(session, req) {
     const {ACL, ADDRESS, USER} = checkAcl(session, req)
-    const owner = ACL === 0 ? USER.id : ADDRESS
-    return await getUserInvestmentsExpanded(owner)
+    const owner = ACL === 0 ? `${USER.id}` : ADDRESS
+    return await getUserVault(owner)
 }
 
 
 
-module.exports = {userInvestment, userInvestments}
+module.exports = {userInvestment, userVault}

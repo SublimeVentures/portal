@@ -36,7 +36,6 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
         setExecuting(false)
     }
 
-    //todo: loading state vs login state
     return (
         <div className={`v-align ${isActive ? 'active' : ''}`}>
             <div className={`

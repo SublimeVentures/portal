@@ -7,15 +7,15 @@ const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const cookieParser = require("cookie-parser");
 
-const {connectDB, getEnv} = require("./server/services/db/utils");
-const {connectWeb3, getWeb3} = require("./server/services/web3");
+const {connectDB} = require("./server/services/db/utils");
+const {connectWeb3} = require("./server/services/web3");
 
 const {router: validateRoute} = require("./server/routes/validate.router.js");
 const {router: publicRoute} = require("./server/routes/public.router.js");
 const {router: offerRoute} = require("./server/routes/offer.router.js");
 const {router: chainRoute} = require("./server/routes/payable.router.js");
 const {router: investRoute} = require("./server/routes/invest.router.js");
-// const {router: vaultRoute} = require("./server/routes/vault.js");
+const {router: vaultRoute} = require("./server/routes/vault.js");
 // const {router: otcRoute} = require("./server/routes/otc.js");
 
 const port = parseInt(process.env.PORT || '3000', 10);
@@ -88,7 +88,7 @@ if (!dev && cluster.isMaster) {
         server.use('/api/offer', offerRoute);
         server.use('/api/chain', chainRoute);
         server.use('/api/invest', investRoute);
-        // server.use('/api/vault', vaultRoute);
+        server.use('/api/vault', vaultRoute);
         // server.use('/api/otc', otcRoute);
 
         // Default catch-all renders Next app

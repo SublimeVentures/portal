@@ -59,9 +59,6 @@ module.exports = (sequelize) => {
         dealStructure: {
             type: DataTypes.STRING,
         },
-        rrPages: {
-            type: DataTypes.INTEGER,
-        },
         genre: {
             type: DataTypes.STRING,
         },

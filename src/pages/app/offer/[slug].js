@@ -9,7 +9,7 @@ import {useRouter} from "next/router";
 const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
 import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
-import {fetchInvestment} from "@/fetchers/vault";
+import {fetchUserInvestment} from "@/fetchers/vault";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import {NextSeo} from "next-seo";
@@ -45,12 +45,13 @@ export const AppOfferDetails = () => {
 
     const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
             queryKey: ["userAllocation", offerData?.offer?.id, address],
-            queryFn: () => fetchInvestment(offerData?.offer?.id),
+            queryFn: () => fetchUserInvestment(offerData?.offer?.id),
             refetchOnMount: false,
             refetchOnWindowFocus: true,
             enabled: !!offerData?.offer?.id,
         }
     );
+
 
     const paramsInvest = {
         offer: offerData?.offer,

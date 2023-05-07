@@ -5,9 +5,7 @@ async function getUserInvestment(owner, offerId) {
     return Investment.findOne({owner, offerId}, '-_id')
 }
 
-async function getUserInvestments(owner) {
-    return Investment.find({owner}, '-_id')
-}
+
 
 async function getUserInvestmentsExpanded(owner) {
     return Investment.aggregate([
@@ -45,4 +43,4 @@ async function getUserInvestmentsExpanded(owner) {
 }
 
 
-module.exports = {getUserInvestment, getUserInvestments, getUserInvestmentsExpanded}
+// module.exports = {getUserInvestment, getUserInvestments, getUserInvestmentsExpanded}

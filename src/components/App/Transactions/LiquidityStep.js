@@ -5,7 +5,6 @@ import {useEffect} from "react";
 
 export default function LiquidityStep({stepProps}) {
     const {selectedCurrency, isReady, session, amount, isFinished, setFinished} = stepProps
-    // const {amount, selectedCurrency, setStepLiquidity, stepLiquidityReady, stepLiquidityFinished: stepLiquidity} = stepProps //todo: invest
 
     const {
         isSuccess: balanceFed,

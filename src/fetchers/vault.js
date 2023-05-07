@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchInvestment = async (offerId) => {
+export const fetchUserInvestment = async (offerId) => {
     console.log("Fetching Vault List");
     try {
         let url = `/api/vault?offer=${offerId}`
@@ -12,7 +12,7 @@ export const fetchInvestment = async (offerId) => {
     return {}
 }
 
-export const fetchInvestments = async (acl, address) => {
+export const fetchVault = async (acl, address) => {
     console.log("fetchInvestments",acl, address)
     try {
         let url = `/api/vault/all`
