@@ -5,6 +5,8 @@ import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
 
 export default async function auth(req, res) {
+    console.log("auth", req, res)
+
     const providers = [
         CredentialsProvider({
             name: "Ethereum",
