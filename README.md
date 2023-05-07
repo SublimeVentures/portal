@@ -92,3 +92,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 For each chainId
 
 # 3. For every new investment add Offer, Raise and logs.SLUG
+
+//Bing
+0xBe6ccC396255c24D82D609522539a10C3B9e06FC
+0x3bd4bdcB7E9148FD14aaD842Bcdb80be869b9a57
+
+//Musthafa
+0x15980B1D93CC56a3da52d9908aB372D46Ee242a4
+0x0FfD214b8bD957ec23986c3e342c4d9065742A98

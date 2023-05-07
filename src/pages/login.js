@@ -115,7 +115,7 @@ export default function Login() {
             return;
         }
         return (
-            <div className="flex flex-col p-10 gap-10 w-full blurred glareBg rounded-xl f-montserrat lg:flex-row ">
+            <div className="flex flex-col p-10 gap-10 w-full blurred glareBg rounded-xl lg:flex-row ">
                 <div className="flex flex-col flex-1">
                     <div className="text-3xl font-bold">3VC Whale</div>
                     <div className="pt-3">3VC was formed to provide the best opportunities for serious web3 investors. Whale pass get

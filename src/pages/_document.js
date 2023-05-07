@@ -1,17 +1,22 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import {Html, Head, Main, NextScript} from 'next/document'
 import Gtag from "@/components/gtag";
 
 export default function Document() {
-  return (
-    <Html lang="en">
-      <Head>
-          <link rel="stylesheet" href={`/browser/index-920ff239.css`} />
-      </Head>
-      <body>
-        <Gtag/>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  )
+    return (
+        <Html lang="en">
+            <Head>
+                <link rel="stylesheet" href={`/browser/index-920ff239.css`}/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&family=Work+Sans:wght@300;400;500&display=swap"
+                    rel="stylesheet"/>
+            </Head>
+            <body>
+            <Gtag/>
+            <Main/>
+            <NextScript/>
+            </body>
+        </Html>
+    )
 }
