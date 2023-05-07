@@ -31,6 +31,7 @@ export default async function auth(req, res) {
                     // const csrf = req.cookies['next-auth.csrf-token'].split("|")[0]
 
                     console.log("nextAuthUrl",nextAuthUrl)
+                    console.log("siwe",siwe)
                     // const result = await siwe.verify({
                     //     signature: credentials?.signature || "",
                     //     domain: nextAuthUrl.host,
