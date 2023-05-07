@@ -29,19 +29,14 @@ export default async function auth(req, res) {
 
                     console.log("cookies",req.cookies, meta)
                     const csrf = req.cookies[meta].split("|")[0]
-                    console.log("nextAuthUrl",csrf)
-                    // const result = await siwe.verify({
-                    //     signature: credentials?.signature || "",
-                    //     domain: nextAuthUrl.host,
-                    //     nonce: csrf,
-                    // })
-                    // console.log("result verify",result)
+                    const result = await siwe.verify({
+                        signature: credentials?.signature || "",
+                        domain: nextAuthUrl.host,
+                        nonce: csrf,
+                    })
 
-                    // if (!result.success) return null;
-
-
+                    if (!result.success) return null;
                     const type = await fetchSessionData(siwe.address)
-
 
                     if (type) {
                         return {...{address: siwe.address}, ...type}
@@ -50,7 +45,7 @@ export default async function auth(req, res) {
                     }
 
                 } catch (e) {
-                    console.log("error",e)
+                    console.log("login error",e)
                     return null
                 }
             },
