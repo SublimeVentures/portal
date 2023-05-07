@@ -2,6 +2,7 @@
   "name": "webapp",
   "version": "0.1.0",
   "private": true,
+  "cacheDirectories": [".next/cache"],
   "scripts": {
     "preinstall": "npm install pm2 -g",
     "dev": "node index.js",

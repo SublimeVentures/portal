@@ -1,12 +1,11 @@
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import { polygon, mainnet, sepolia, polygonMumbai, bscTestnet, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
-const rightChains = process.env.NEXT_PUBLIC_ENV === 'dev' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
+const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production2' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc] //todo: fix
 
 const { chains, provider, webSocketProvider } = configureChains(
     rightChains,

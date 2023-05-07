@@ -39,7 +39,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- - login
 - -- - connect
 
-- isDev true hardcode fix
+- isDev true hardcode fix + wagmi fix
 - cfind elegant way to confirm vault / rollback vault
 - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 - otc on success buy not moving to success
