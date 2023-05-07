@@ -20,7 +20,7 @@ export default function ErrorModal({isPartner, model, setter}) {
                     </ul>
                 </div>
                 <div className={"fullWidth"}></div>
-                    <a href="#" target="_blank" className="text-app-error mt-10">Read more.</a>
+                    <a href="#" target="_blank" className="text-app-error mt-5 outline-0">Read more.</a>
                 </>
         )
     }
