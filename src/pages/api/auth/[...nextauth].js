@@ -5,7 +5,6 @@ import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
 const meta = process.env.ENV === "production" ? "__Host-next-auth.csrf-token" : "next-auth.csrf-token"
 
-
 export default async function auth(req, res) {
     const providers = [
         CredentialsProvider({
@@ -26,7 +25,6 @@ export default async function auth(req, res) {
                 try {
                     const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"))
                     const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
-                    console.log("cookies",req.cookies, meta)
                     const csrf = req.cookies[meta].split("|")[0]
                     const result = await siwe.verify({
                         signature: credentials?.signature || "",
