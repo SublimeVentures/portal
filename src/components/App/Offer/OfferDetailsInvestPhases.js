@@ -6,7 +6,6 @@ import IconPantheon from "@/assets/svg/Pantheon.svg";
 import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
-import CurrencyInput from "@/components/App/CurrencyInput";
 import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import {parseMaxAllocation} from "@/lib/phases/parsePhase";
@@ -18,6 +17,10 @@ import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
 import {useNetwork} from "wagmi";
+import {Transition} from "@headlessui/react";
+import {Fragment} from "react";
+import IconCancel from "@/assets/svg/Cancel.svg";
+import Dropdown from "@/components/App/Dropdown";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -48,19 +51,24 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [isButtonLoading, setButtonLoading] = useState(false)
     const [isFilled, setFilled] = useState(false)
 
-    const [investmentSize, setInvestmentSize] = useState(0)
     const [investmentCurrency, setInvestmentCurrency] = useState(0)
     const [maxAllocation, setMaxAllocation] = useState(0)
     const [hash, setHash] = useState(0)
 
+    const [investmentAmount, setInvestmentAmount] = useState(0)
+    const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
+    const [showInputInfo, setShowInputInfo] = useState(false)
+    const [showClean, setShowClean] = useState(false)
+    let [isError, setIsError] = useState({})
+
+
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const {ACL, amt} = session.user
-    const {id, alloTotal, tax, isPaused} = offer
+    const {id, alloTotal, isPaused} = offer
 
     const currentPhase = phases[activePhase]
     const nextPhase = isLastPhase ? currentPhase : phases[activePhase + 1]
-    console.log("nextPhase", nextPhase)
 
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
@@ -76,6 +84,32 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const selectedCurrency = currencyList[investmentCurrency]
 
     const cookieReservation = `hash_${id}`
+
+    const checkIfNumber = (event) => {
+        if (event.key.length === 1 && /\D/.test(event.key)) {
+            return;
+        }
+    }
+
+    const setValue = (data) => {
+        if (!Number.isInteger(data)) {
+            data = data.replace(/[^0-9]/g, '')
+        }
+        setInvestmentAmount(data)
+        let formatted = Number(data).toLocaleString()
+        if(formatted==0) {
+            formatted = ""
+        }
+        setInvestmentAmountFormatted(formatted)
+    }
+
+    const isInputActive = () => {
+            return investmentAmount > 0
+    }
+
+    const onInputChange = (event) => {
+        setValue(event.target.value)
+    }
 
     const getInvestmentButtonIcon = () => {
         switch (currentPhase.icon) {
@@ -116,13 +150,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const startInvestmentProcess = async () => {
         setButtonLoading(true)
-        const response = await fetchHash(id, investmentSize, selectedCurrency.address, chain.id)
+        const response = await fetchHash(id, investmentAmount, selectedCurrency.address, chain.id)
         if (!response.ok) {
             setErrorMsg(response.code)
             setErrorModal(true)
             refetchAllocation()
         } else {
-            setCookie(cookieReservation, `${response.hash}_${investmentSize}_${response.expires}`, {expires: new Date(response.expires * 1000)})
+            setCookie(cookieReservation, `${response.hash}_${investmentAmount}_${response.expires}`, {expires: new Date(response.expires * 1000)})
             openInvestmentModal(response.hash, response.expires)
         }
         setButtonLoading(false)
@@ -131,10 +165,11 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const processExistingSession = async (cookie) => {
         setButtonLoading(true)
         const cookieData = cookie.split('_')
+
         if (Number(cookieData[2]) < moment().unix()) {
             removeCookie(cookieReservation)
             await startInvestmentProcess()
-        } else if (Number(cookieData[1]) === Number(investmentSize)) {
+        } else if (Number(cookieData[1]) === Number(investmentAmount)) {
             openInvestmentModal(cookieData[0], cookieData[2])
         } else {
             setOldAllocation(Number(cookieData[1]))
@@ -148,7 +183,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const bookingRestore = async () => {
         setRestoreHashModal(false)
         const cookieData = cookies[cookieReservation].split('_')
-        setInvestmentSize(Number(cookieData[1]))
+        setValue(Number(cookieData[1]))
         openInvestmentModal(cookieData[0], cookieData[2])
     }
 
@@ -184,18 +219,54 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setInvestmentCurrency(0)
     }, [chain])
 
-    const restoreModalProps = {expires, allocationOld, investmentSize, bookingExpire, bookingRestore, bookingCreateNew}
+    useEffect(() => {
+          setValue(offer.alloMin)
+    }, []);
+
+    useEffect(() => {
+        if (investmentAmount < offer.alloMin) {
+            setIsAllocationOk(true)
+            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+        } else if (investmentAmount > maxAllocation) {
+            setIsAllocationOk(true)
+            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
+        } else {
+            if(investmentAmount % 100 > 0) {
+                setIsAllocationOk(true)
+                return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
+            }
+            setIsAllocationOk(false)
+            return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+        }
+
+    }, [investmentAmount]);
+
+    useEffect(() => {
+        if (showInputInfo) {
+            setShowClean(showInputInfo)
+        } else {
+            setTimeout(() => {
+                setShowClean(showInputInfo)
+            }, 500);
+        }
+    }, [showInputInfo]);
+
+
+
+    const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const calculateModalProps = {investmentSize, maxAllocation, offer}
+    const calculateModalProps = {investmentAmount, maxAllocation, offer}
     const investModalProps = {
         expires,
-        investmentSize,
+        investmentAmount,
         offer,
         bookingExpire,
         hash,
         selectedCurrency,
         afterInvestmentCleanup
     }
+
+    console.log("restoreModalProps",restoreModalProps)
 
     return (
         <div className="flex flex-1 flex-col items-center">
@@ -213,16 +284,51 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             </div>
 
             <div className="mt-15 xl:mt-auto">
-                <CurrencyInput
-                    type={'number'}
-                    placeholder={'Investment size'}
-                    max={maxAllocation}
-                    min={offer.alloMin}
-                    currencies={currencyNames}
-                    setStatus={setIsAllocationOk}
-                    shareInput={setInvestmentSize}
-                    shareCurrency={setInvestmentCurrency}
-                    investmentCurrency={investmentCurrency}/>
+                <div className="currency-input-group relative">
+                    <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
+                        <label className="absolute text-accent block">Investment size</label>
+                        <input tabIndex="0"
+                               value={investmentAmountFormatted}
+                               onChange={onInputChange}
+                               onKeyDown={checkIfNumber}
+                               onFocus={() => setShowInputInfo(true)}
+                               onBlur={() => setShowInputInfo(false)}
+                               className={`h-17 text-xl px-4 ${isInputActive ? 'highlight' : ''} ${investmentAmount >= offer.alloMin && investmentAmount <= maxAllocation ? 'valid' : ''} ${investmentAmount < offer.alloMin || investmentAmount > maxAllocation ? 'invalid' : ''}`}
+                        />
+
+                        <Transition appear show={showClean} as={Fragment}>
+                            <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0"
+                                enterTo="opacity-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100"
+                                leaveTo="opacity-0"
+                            >
+                                <div className="absolute top-5 right-5 cursor-pointer " onClick={() => {
+                                    setValue(offer.alloMin)
+                                }}><IconCancel className="w-6 opacity-70"/></div>
+                            </Transition.Child>
+                        </Transition>
+                    </div>
+                    <Dropdown options={currencyNames} classes={'customSize'} propSelected={setInvestmentCurrency} position={investmentCurrency}/>
+                    <Transition appear show={showInputInfo} as={Fragment}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <div
+                                className={`select-none absolute px-4 py-2 status text-sm ${isError?.state ? 'error' : ''}`}>{isError?.msg}</div>
+                        </Transition.Child>
+                    </Transition>
+
+                </div>
             </div>
 
             <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">
@@ -237,6 +343,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                     <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}
                                  handler={() => setCalculateModal(true)}
                                  icon={<IconCalculator className={ButtonIconSize.hero}/>}/>
+
                 </div>
                 <div className="flex sinvest:hidden">
                     <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}

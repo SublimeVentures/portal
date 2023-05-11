@@ -31,21 +31,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## ToDo
 -- https://blockeater.herokuapp.com/v3rify
 
-- When pledging i see this circle just keeps moing for "investment from external wallet" 
-- not sure what this means
-
-
-Small bug - i
-1.  booked $500, closed this page and entered $50000
-2. Message appears telling me i already have existing booking either restore or make new
-3. I click restore and page closes
-4. Again i type in $50000
-5. Message appears saying booking success for $500
-EDIT: Now it seems even after refreshing no matter how many times, if i enter same number "50000"  it shows me success message for booking only $500. If i change number, then it goes back to #2 ^
-
 
 - https://discord.com/channels/@me/997001334328918017/1105533070532169759
 - bug on allocation restart
+
 - homepage datafeed
 - connect discord to app
 - images for twitter SEO tags
@@ -61,7 +50,7 @@ EDIT: Now it seems even after refreshing no matter how many times, if i enter sa
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 
-- promo codes to reduce our fees
+- promo codes to reduce our fees + rate limit on invest
 - notifications
 - https://tagmanager.google.com/?authuser=1#/container/accounts/6099625190/containers/116524298/workspaces/2
 
@@ -69,15 +58,16 @@ EDIT: Now it seems even after refreshing no matter how many times, if i enter sa
 - migrate citcap
 - referral system
 
-- update data / refeed cach on url call
-
 - DEPLOY
 ==========
+- whale deposit/ withdraw features in settings
+- whale page
+- invest from stake
+- update data / refeed cach on url call
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
-- whale deposit/ withdraw features in settings
-- whale page
+
 
 
 

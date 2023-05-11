@@ -53,9 +53,7 @@ export const getStatusColor = (status) => {
     }
 }
 
-
 export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, hash, nftId) => {
-    console.log("invest function - inside", ACL, ACL.Whale)
     switch (ACL) {
         case ACLs.Whale: {
             console.log("invest function - isFromStake",isFromStake)

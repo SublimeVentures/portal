@@ -2,18 +2,14 @@ import GenericModal from "@/components/Modal/GenericModal";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import {useState , useEffect} from "react";
-import AllowanceStep from "@/components/App/Transactions/AllowanceStep";
 import TransactStep from "@/components/App/Transactions/TransactStep";
 import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import IconVault from "@/assets/svg/Vault.svg";
+import {RoundButton} from "@/components/Button/RoundButton";
 import PAGE from "@/routes";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import StakeStep from "@/components/App/Transactions/StakeStep";
 import {ACL as ACLs}  from "@/lib/acl";
-import VanillaTilt from "vanilla-tilt";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
 
 export const StakeSteps = {
@@ -23,7 +19,7 @@ export const StakeSteps = {
 }
 
 export default function InvestModal({model, setter, investModalProps}) {
-    const {expires, investmentSize, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
+    const {expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
     const {data: session} = useSession()
     const {ACL, id, address} = session.user
 
@@ -32,13 +28,13 @@ export default function InvestModal({model, setter, investModalProps}) {
     const [stepInvestment, setStepInvestment] = useState(false)
     const [errors, setError] = useState(false)
 
-    const amountLocale = investmentSize.toLocaleString()
+    const amountLocale = investmentAmount.toLocaleString()
 
     const usingStakedFunds = stepStake === StakeSteps.Use
     const stepLiquidityReady = (ACL === ACLs.Whale && stepStake === StakeSteps.Skip) || ACL !== ACLs.Whale
     const stepLiquidityFinished = stepLiquidity || usingStakedFunds
 
-    const investFunction = getInvestFunction(ACL, usingStakedFunds, investmentSize, offer, selectedCurrency, hash, id)
+    const investFunction = getInvestFunction(ACL, usingStakedFunds, investmentAmount, offer, selectedCurrency, hash, id)
 
     useEffect(() => {
         import('@lottiefiles/lottie-player');
@@ -58,7 +54,7 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     const stepProps = {
-        ...{amount: investmentSize},
+        ...{amount: investmentAmount},
         offer,
         selectedCurrency,
         hash,

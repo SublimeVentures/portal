@@ -19,7 +19,7 @@ export default function OfferItem({offer, ACL}) {
     const {active, phase, isLast} = parsePhase(ACL, offer, 0)
     const status = phase[active]?.step
     return (
-        // max-h-[463px] on div wrapper
+        // maxAllocation-h-[463px] on div wrapper
         <div
             className="rounded-xl bg-navy-accent flex flex-col text-center cursor-pointer col-span-12 md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4"
             ref={imageTilt}>

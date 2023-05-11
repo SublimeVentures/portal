@@ -21,17 +21,14 @@ export default function StakeStep({stepProps}) {
             abi: IdFacet,
             functionName: 'identityStake',
             args: [id],
-            watch:true
         }
     )
-
 
     const currentBalanceHuman = (currentBalance ? currentBalance.available.toNumber() : 0) / 10 ** 6
     const currentBalanceLocale = currentBalanceHuman.toLocaleString()
     const amountLocale = Number(amount).toLocaleString()
 
     const isEnoughLiquidity = (currentBalanceHuman >= amountLocale)
-
 
     useEffect(()=>{
         if(!isEnoughLiquidity) {
