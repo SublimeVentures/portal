@@ -3,13 +3,14 @@ import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
 import {OfferDetailsInvest} from "@/components/App/Offer/OfferDetailsInvest";
 import dynamic from "next/dynamic";
 import {queryClient} from "@/lib/web3/queryCache";
+import {ACL as ACLs} from "@/lib/acl";
 import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
 const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
 import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
-import {fetchUserInvestment} from "@/fetchers/vault";
+import {fetchUserInvestment} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import {NextSeo} from "next-seo";
@@ -21,10 +22,10 @@ export const AppOfferDetails = () => {
     const {slug} = router.query
     const ACL = session?.user?.ACL
     const address = session?.user?.address
-
+    const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
-            queryKey: ["offerDetails", {slug, ACL}],
-            queryFn: () => fetchOfferDetails(slug, ACL),
+            queryKey: ["offerDetails", {slug, aclCache}],
+            queryFn: () => fetchOfferDetails(slug, ACL, address),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 30 * 60 * 1000,
@@ -32,6 +33,8 @@ export const AppOfferDetails = () => {
             enabled: ACL >= 0
         }
     );
+
+    console.log("offerDetailsState",offerData)
 
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],
@@ -71,7 +74,7 @@ export const AppOfferDetails = () => {
 
     const renderPage = () => {
         if (status !== "authenticated" || !offerDetailsState) return <Loader/>
-        if (!offerData.offer) return <Empty/>
+        if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
         return (
                 <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
                     <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
@@ -106,10 +109,13 @@ export const getServerSideProps = async ({params, req}) => {
         encryption: true
     })
     const ACL = token?.user?.ACL
+    const address = token?.user?.address
+
+    const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
 
     await queryClient.prefetchQuery({
-        queryKey: ["offerDetails", {slug, ACL}],
-        queryFn: () => fetchOfferDetails(slug, ACL),
+        queryKey: ["offerDetails", {slug, aclCache}],
+        queryFn: () => fetchOfferDetails(slug, ACL, address),
         cacheTime: 30 * 60 * 1000,
         staleTime: 15 * 60 * 1000,
     })

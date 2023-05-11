@@ -9,5 +9,13 @@ async function getInjectedUser(address) {
     raw: true
   });
 }
+async function getInjectedUserAccess(address) {
+  return models.injectedUsers.findOne({
+    where: {
+      address
+    },
+    raw: true
+  });
+}
 
-module.exports = { getInjectedUser }
+module.exports = { getInjectedUser, getInjectedUserAccess }

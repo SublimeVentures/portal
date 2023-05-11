@@ -26,9 +26,11 @@ export default function AppOffer() {
         }
     );
 
+    console.log("investments",investments)
     const renderPage = () => {
         if(status !== "authenticated") return <Loader/>
-        if(investments.length ===0) return  <Empty/>
+        if(!investments || investments.length === 0) return  <Empty/>
+
         return (
                 <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                     {!!investments && investments.map(el =>

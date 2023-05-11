@@ -3,10 +3,12 @@ const {checkAcl} = require("./acl");
 const {getOfferDetails} = require("../queries/offers.query");
 const {getEnv} = require("../services/db/utils");
 const {getOfferRaise} = require("../queries/invest.query");
+const {ACL: ACLs} = require("../../src/lib/acl");
+const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
 
 async function getParamOfferDetails(session, req) {
-    const {ACL} = checkAcl(session, req)
+    const {ACL, ADDRESS} = checkAcl(session, req)
 
     const offer = await getOfferDetails(req.params.slug);
     if (!offer) return {}
@@ -49,11 +51,15 @@ async function getParamOfferDetails(session, req) {
     response.currencies = getEnv().currencies
 
     switch (ACL) {
-        case 0: { //whale
+        case ACLs.Whale: {
             response.offer = getOfferDetailsWhale(offer, template)
             break;
         }
-        default: { //partners
+        case ACLs.PartnerInjected: {
+            response.offer = fillInjectedPartnerData(offer, template, ADDRESS)
+            break;
+        }
+        default: {
             response.offer =  fillPartnerData(offer, template)
             break;
         }
@@ -72,6 +78,16 @@ function getOfferDetailsWhale(offer, template) {
     template.alloRequired = offer.alloRequired;
     template.alloMax = offer.alloMax ? offer.alloMax : offer.alloTotal;
     return template;
+}
+
+async function fillInjectedPartnerData(offer, template, address) {
+    const user = await getInjectedUserAccess(address)
+    if(!user) return false
+
+    const haveAccess = user.access.find(el => el === offer.id)
+    if(!haveAccess) return false
+
+    return fillPartnerData(offer, template);
 }
 
 function fillPartnerData(offer, template) {

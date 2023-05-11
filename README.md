@@ -42,6 +42,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - - otc on success buy not moving to success
 - - on succesful buy not refreshing offers
 - - fix grida na buy otc offer (wiecej dla prawje strony)
+
 - timeline for user activities for each investment in vault tab
 - new investment update for api
 - reassign allocation

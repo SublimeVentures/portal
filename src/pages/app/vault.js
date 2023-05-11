@@ -5,7 +5,7 @@ import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
 import {useSession} from "next-auth/react";
 import { useQuery} from "@tanstack/react-query";
-import {fetchVault} from "@/fetchers/vault";
+import {fetchVault} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
 import Head from "next/head";

@@ -10,7 +10,7 @@ import CurrencyInput from "@/components/App/CurrencyInput";
 import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import {parseMaxAllocation} from "@/lib/phases/parsePhase";
-import {expireHash, fetchHash} from "@/fetchers/invest";
+import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import {useSession} from "next-auth/react";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
