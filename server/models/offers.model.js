@@ -117,6 +117,10 @@ module.exports = (sequelize) => {
             defaultValue: 0, //0 - only whales, 1- everyone, 2-only partners
             allowNull: false,
         },
+        vault: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         accessPartnerDate: {
             type: DataTypes.INTEGER,
         },

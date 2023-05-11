@@ -44,11 +44,12 @@ export default function Login() {
     let [isPartnerLogin, setIsPartnerLogin] = useState(false)
     let [walletSelectionOpen, setIsWalletSelectionOpen] = useState(false)
     let [errorModal, setErrorModal] = useState(false)
+    let [isLoginLoading, setIsLoginLoading] = useState(false)
 
-    const isLoginLoading = false
 
 
     const signMessage = async (forcedAddress) => {
+        setIsLoginLoading(true)
         setMessageSigned(true)
         try {
             const message = new SiweMessage({
@@ -75,11 +76,16 @@ export default function Login() {
         } catch (error) {
             setMessageSigned(false)
             setErrorMsg(error.message)
+            setIsLoginLoading(false)
+
         }
     }
 
 
     const handleConnect = async (isPartner) => {
+        if(isLoginLoading) return;
+        setIsPartnerLogin(isPartner)
+
         if(address && isConnected) {
             await signMessage()
             return;
@@ -91,7 +97,6 @@ export default function Login() {
 
     const account = useAccount({
         async onConnect({ address, connector, isReconnected }) {
-            console.log('Connected login change', { address, connector, isReconnected })
             if(!messageSigned && walletSelectionOpen && address) {
                 await signMessage(address)
             }
@@ -99,7 +104,6 @@ export default function Login() {
     })
 
     useEffect(()=> {
-        console.log("router.query",router.query, isPartnerLogin);
         if(router?.query?.error === "CredentialsSignin") {
             setErrorModal(true)
         }
@@ -128,7 +132,7 @@ export default function Login() {
                                 <RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
                             </Link>
                         </div>
-                        <RoundButton text={'Connect'} isLoading={isLoginLoading} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(false)} />
+                        <RoundButton text={'Connect'} isLoading={isLoginLoading && !isPartnerLogin} isLoadingWithIcon={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(false)} />
 
                     </div>
 
@@ -161,7 +165,7 @@ export default function Login() {
                     </div>
 
                     <div className="flex flex-1 mx-auto items-end mt-5 lg:mt-0">
-                        <RoundButton text={'Connect'} isLoading={isLoginLoading} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(true)} />
+                        <RoundButton text={'Connect'} isLoading={isLoginLoading && isPartnerLogin}  isLoadingWithIcon={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(true)} />
 
                     </div>
                 </div>
@@ -180,7 +184,7 @@ export default function Login() {
                 twitter={seo.twitter}
             />
             <HeroBg subtitle={'Welcome'} title={'sing with whales'} content={renderOptions()} />
-            <LoginModal isPartner={isPartnerLogin} isSignin={messageSigned} signError={errorMsg} model={walletSelectionOpen} setter={() => {setIsWalletSelectionOpen(false)}}/>
+            <LoginModal isPartner={isPartnerLogin} isLoginLoading={isLoginLoading} handleConnect={handleConnect} isSignin={messageSigned} signError={errorMsg} model={walletSelectionOpen} setter={() => {setIsWalletSelectionOpen(false)}}/>
             <ErrorModal isPartner={isPartnerLogin}  model={errorModal} setter={() => {setErrorModal(false)}}/>
         </>
     )

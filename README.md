@@ -29,45 +29,37 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- rogi w modalu są ostre zanim jest fullscreen
-- images for seo
-- homepage datafeed
-- fix button 
-- -- - wszystko przez handler i loader && bubble loader
-- -- - bubbles invest
-- -- - invest button
-- -- - login
-- -- - connect
+-- https://blockeater.herokuapp.com/v3rify
 
-- isDev true hardcode fix + wagmi fix
-- cfind elegant way to confirm vault / rollback vault
-- providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
-- otc on success buy not moving to success
-- on succesful buy not refreshing offers
-- fix grida na buy otc offer (wiecej dla prawje strony)
-- sign message
+- offer access - injected user have only access to assigned investments
+- https://discord.com/channels/@me/997001334328918017/1105531770608300143
 - bug on allocation restart
-- add key in logs on amount
+- homepage datafeed
+- connect discord to app
+- images for twitter SEO tags
 
-- timeline (dashboard, setting, vault)
-  -- reassign facet
-  -- confiential facet
-- todo: reassign facet sprawdź ownership
-- wszędzie dodaj check na <10 000 (otc remove, settle, reassign) - dodaj modifier
-- validate payout address
-- inny adres per invewestycje i inny monitoring
+- enable OTC
+- - otc on success buy not moving to success
+- - on succesful buy not refreshing offers
+- - fix grida na buy otc offer (wiecej dla prawje strony)
+- timeline for user activities for each investment in vault tab
+- new investment update for api
+- reassign allocation
+- find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
+- -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
+
+- promo codes to reduce our fees
+- notifications
+- https://tagmanager.google.com/?authuser=1#/container/accounts/6099625190/containers/116524298/workspaces/2
+
+- extract style to 3vc / citcap
+- migrate citcap
+- referral system
+
+- update data / refeed cach on url call
 
 - DEPLOY
 ==========
-- 
-- connect discord to user profile
-- transition on pages
-- extract transition variable to separate file (dialogs)
-- extract style for citcap
-- citcap - https://layerzero.network/ menu effect + font
-- list files / updates from projects
-- promo codes
-
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
@@ -75,8 +67,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - whale page
 
 
-- connect delegate address delegate.cash (solidity)
-- referral systems
+
 
 # 1. Add env variables
 - whaleId

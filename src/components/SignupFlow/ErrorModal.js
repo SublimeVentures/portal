@@ -1,8 +1,4 @@
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import GenericModal from "@/components/Modal/GenericModal";
-import Image from "next/image";
-
-import {useConnect} from 'wagmi'
 
 export default function ErrorModal({isPartner, model, setter}) {
 

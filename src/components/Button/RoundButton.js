@@ -12,7 +12,7 @@ export const ButtonIconSize = {
 }
 
 
-export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, isPrimary, isWide, isWider, size, zoom, slot, icon, handler}) {
+export function RoundButton({text, isLoading, isLoadingWithIcon, isDisabled, showParticles, is3d, isPrimary, isWide, isWider, size, zoom, icon, handler}) {
     const [isActive, setIsActive] = useState(false)
     const [isExecuting, setExecuting] = useState(false)
     const tilt = useRef(null);
@@ -51,15 +51,7 @@ export function RoundButton({text, isLoading, isDisabled, showParticles, is3d, i
                       ${isWide && "ls-md"}
                       ${isWider && "ls-lg"}
                     `}>
-                        {icon}
-                        {text}
-                        {isLoading && <div  className={`
-                          flex items-center justify-center absolute w-full
-                          ${isPrimary && "bg-gold"}
-                          ${!isPrimary && "bg-navy2"}
-                        `}>
-                            Loading...
-                        </div>}
+                        {isLoading ? <>{isLoadingWithIcon && icon}Loading...</> : <>{icon}{text}</>}
                     </div>
                 </button>
 

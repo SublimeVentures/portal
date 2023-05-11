@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
         },
         amount: {
             type: DataTypes.INTEGER,
-            defaultValue: 10
+            defaultValue: 0
         },
         acl: {
             type: DataTypes.INTEGER,
@@ -26,11 +26,11 @@ module.exports = (sequelize) => {
         },
         hash: {
             type: DataTypes.STRING,
-            defaultValue: 10
+            defaultValue: ""
         },
         tx: {
             type: DataTypes.STRING,
-            defaultValue: 10
+            defaultValue: ""
         },
         isConfirmedInitial: {
             type: DataTypes.BOOLEAN,
@@ -50,6 +50,7 @@ module.exports = (sequelize) => {
             {unique: true, fields: ['hash']},
             {unique: true, fields: ['address', 'hash']},
         ],
+
         freezeTableName: true,
         timestamps: true
     });

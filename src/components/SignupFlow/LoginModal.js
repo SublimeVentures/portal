@@ -2,11 +2,11 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import GenericModal from "@/components/Modal/GenericModal";
 import Image from "next/image";
 
-import {useConnect} from 'wagmi'
+import {useAccount, useConnect} from 'wagmi'
 
-export default function LoginModal({isPartner, isSignin, signError, model, setter}) {
+export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
-
+    const { connector: activeConnector } = useAccount()
     //
     // console.log("===============")
     // console.log("error",error)
@@ -15,17 +15,21 @@ export default function LoginModal({isPartner, isSignin, signError, model, sette
     // console.log("messageSigned",isSignin)
     // console.log("===============")
 
-
     const buttonIsDisabled = (connector) => !connector.ready || isLoading || isSignin
     const buttonHandler = (connector) => {
         if(!isLoading) {
-            connect({ connector })
+            if(activeConnector) {
+                handleConnect()
+            } else {
+                connect({ connector })
+            }
         }
     }
 
     const title = () => {
         return (<>Connect Wallet <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span></>)
     }
+
 
     const content = () => {
         return (<> <div className="pb-10">
@@ -37,10 +41,12 @@ export default function LoginModal({isPartner, isSignin, signError, model, sette
                     <RoundButton
                         key={connector.id}
                         handler={()=> {buttonHandler(connector)}}
-                        text={connector.id === pendingConnector?.id && !error ? "Loading..." : connector.name}
+                        text={connector.name}
                         isWide={true}
                         zoom={1.05}
                         size={'text-sm sm'}
+                        isLoading={connector.id === pendingConnector?.id && !error && isLoginLoading  }
+                        isLoadingWithIcon={true}
                         isDisabled={buttonIsDisabled(connector)}
                         icon={<Image src={`/img/login/${connector.name}.png`} width={32} height={32} alt={connector.name} className={ButtonIconSize.hero}/>}
                     />
