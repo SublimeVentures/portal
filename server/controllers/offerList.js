@@ -33,7 +33,6 @@ function getOfferListWhale(offers) {
     offers.forEach(el => {
         offerList.push(fillWhaleData(el))
     })
-    console.log("offer list", offerList)
     return offerList
 }
 

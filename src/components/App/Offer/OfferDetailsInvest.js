@@ -21,6 +21,7 @@ export const OfferDetailsInvest = ({paramsInvest}) => {
     }
 
 
+
     useEffect(() => {
         feedPhases()
     }, [])

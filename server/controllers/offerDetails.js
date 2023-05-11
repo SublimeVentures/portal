@@ -56,7 +56,7 @@ async function getParamOfferDetails(session, req) {
             break;
         }
         case ACLs.PartnerInjected: {
-            response.offer = fillInjectedPartnerData(offer, template, ADDRESS)
+            response.offer = await fillInjectedPartnerData(offer, template, ADDRESS)
             break;
         }
         default: {
@@ -71,7 +71,6 @@ async function getParamOfferDetails(session, req) {
 }
 
 function getOfferDetailsWhale(offer, template) {
-    console.log("DETAILS whale", offer.id, offer.access)
     template.d_open = offer.d_open;
     template.d_close = offer.d_close;
     template.alloTotal = offer.alloTotal;

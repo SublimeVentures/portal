@@ -76,7 +76,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 </div>
                 <div>
                     <Input type={'number'}
-                           placeholder={'Profit from selling'}
+                           placeholder={'Return'}
                            input={price}
                            light={true}
                            setInput={() => {}}

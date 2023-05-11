@@ -48,7 +48,7 @@ async function isInjectedUser(address) {
         symbol: user['partner.symbol'],
         type: `ERC${user['partner.erc']}`,
         img: user['partner.logo'],
-        id: null,
+        id: 0,
         ACL: 2
     }
 }

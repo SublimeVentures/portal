@@ -13,6 +13,7 @@ export default function EmptyVault() {
         <div className="max-h-[500px] text-center -mt-10">
             <lottie-player
                 autoplay
+                loop
                 style={{width:'100%', height:'100%', maxHeight: '500px', maxWidth:'500px', margin: '0 auto'}}
                 mode="normal"
                 src="/static/lottie/vault.json"

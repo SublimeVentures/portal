@@ -23,6 +23,7 @@ export const AppOfferDetails = () => {
     const ACL = session?.user?.ACL
     const address = session?.user?.address
     const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
+
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
             queryKey: ["offerDetails", {slug, aclCache}],
             queryFn: () => fetchOfferDetails(slug, ACL, address),
@@ -34,7 +35,7 @@ export const AppOfferDetails = () => {
         }
     );
 
-    console.log("offerDetailsState",offerData)
+    console.log("offerData",offerData)
 
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],

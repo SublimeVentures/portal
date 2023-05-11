@@ -14,17 +14,14 @@ function parsePhase (ACL, offer, raised) {
 function parseWhale(offer, raised) {
     const phase = [
         {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'Vote', copy: "Pledge", icon: "vote", start: offer.d_open},
-        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_close},
+        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
         {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
     ]
-    let active = 0
     const now = moment().unix()
-
-    if(now> phase[0].start) active = 0
-    if(now> phase[1].start) active = 1
-    if(raised> offer.alloRequired) active = 2
-    if(now> phase[3].start) active = 3
+    let active
+    for(let i=0; i<phase.length; i++) {
+        if(now > phase[i].start) active = i
+    }
 
     return {phase: phase, active: active, isLast: phase.length-1 === active}
 }
@@ -39,7 +36,7 @@ function parsePhased(offer) {
     const now = moment().unix()
     let active
     for(let i=0; i<phase.length; i++) {
-        if(now > phase[i].start) active = 0
+        if(now > phase[i].start) active = i
     }
     return {phase: phase, active: active, isLast: phase.length-1 === active}
 }
@@ -53,7 +50,7 @@ function parseRegular(offer) {
     const now = moment().unix()
     let active
     for(let i=0; i<phase.length; i++) {
-        if(now > phase[i].start) active = 0
+        if(now > phase[i].start) active = i
     }
     return {phase: phase, active: active, isLast: phase.length-1 === active}
 }
