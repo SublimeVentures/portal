@@ -28,7 +28,7 @@ export default function InvestModal({model, setter, investModalProps}) {
     const [stepInvestment, setStepInvestment] = useState(false)
     const [errors, setError] = useState(false)
 
-    const amountLocale = investmentAmount.toLocaleString()
+    const amountLocale = Number(investmentAmount).toLocaleString()
 
     const usingStakedFunds = stepStake === StakeSteps.Use
     const stepLiquidityReady = (ACL === ACLs.Whale && stepStake === StakeSteps.Skip) || ACL !== ACLs.Whale

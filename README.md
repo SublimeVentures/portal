@@ -31,10 +31,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## ToDo
 -- https://blockeater.herokuapp.com/v3rify
 
-
-- https://discord.com/channels/@me/997001334328918017/1105533070532169759
-- bug on allocation restart
-
 - homepage datafeed
 - connect discord to app
 - images for twitter SEO tags
