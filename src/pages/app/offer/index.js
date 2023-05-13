@@ -26,7 +26,6 @@ export default function AppOffer() {
         }
     );
 
-    console.log("investments",investments)
     const renderPage = () => {
         if(status !== "authenticated") return <Loader/>
         if(!investments || investments.length === 0) return  <Empty/>

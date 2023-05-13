@@ -18,6 +18,7 @@ export const fetchOffers = async (offerId) => {
     console.log("Fetching Market Offer");
     try {
         let url = `/api/otc/offers/${offerId}`
+        console.log("url", url)
         const {data} = await axios.get(url)
         // console.log("offers", data)
         return data

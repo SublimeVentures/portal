@@ -190,7 +190,7 @@ export default function OtcOffers({propOffers}) {
                             Offers {showHistory && "History"}
                         </div>
                         <div className="absolute right-5 top-3 flex flex-row gap-5 items-center">
-                            <RoundButton text={'SELL'} isWide={true} size={'text-sm xs'} isDisabled={sellDisabled} handler={() => setIsSellModal(true)}
+                            <RoundButton text={'TRADE'} isWide={true} size={'text-sm xs'} handler={() => setIsSellModal(true)}
                                          icon={<IconCart className={ButtonIconSize.hero}/>}/>
                             <div>
                                 <IconButton zoom={1.1} size={'p-3'} noBorder={false} icon={<IconHistory className={"w-5"}/>} handler={() => setShowHistory((current)=> !current)} />

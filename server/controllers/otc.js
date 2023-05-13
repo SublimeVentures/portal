@@ -1,19 +1,25 @@
-const {getOffersWithOpenOtc} = require("../queries/offer");
-const {getEnv} = require("../services/mongo");
-const {getActiveOffers, getHistoryOffers} = require("../queries/otc");
+const {getEnv} = require("../services/db/utils");
+const {getActiveOffers, getHistoryOffers} = require("../queries/otc.query");
+const {getParamOfferList} = require("./offerList");
 
 
-async function getMarkets() {
-    let markets = await getOffersWithOpenOtc()
-    return markets ? {open: markets, source: getEnv().diamond, otcFee: getEnv().feeOtc, currencies: getEnv().currency} : {open: markets}
+async function getMarkets(session, req) {
+    const offers = await getParamOfferList(session, req)
+
+    return {
+        open: offers.filter(el=> el.otc !== 0),
+        source: getEnv().diamond,
+        otcFee: getEnv().feeOtc,
+        currencies: getEnv().currencies
+    }
 }
 
-async function getOffers(req) {
+async function getOffers(session, req) {
     const ID = Number(req.params.id)
     return await getActiveOffers(ID)
 }
 
-async function getHistory(req) {
+async function getHistory(session, req) {
     const ID = Number(req.params.id)
     return await getHistoryOffers(ID)
 }

@@ -1,58 +1,58 @@
 const {DataTypes} = require("sequelize");
 
+
 module.exports = (sequelize) => {
-    sequelize.define('participants_1', {
+    sequelize.define('otcSettlement', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
         },
-        address: {
+        hash: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        nftId: {
+
+        dealId: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        buyer: {
+            type: DataTypes.STRING,
+        },
+        seller: {
+            type: DataTypes.STRING,
         },
         amount: {
             type: DataTypes.INTEGER,
-            defaultValue: 0
+            defaultValue: 0,
+            allowNull: false,
         },
-        acl: {
+        price: {
             type: DataTypes.INTEGER,
-            defaultValue: 10
+            defaultValue: 0,
+            allowNull: false,
         },
-        hash: {
+        currency: {
             type: DataTypes.STRING,
-            defaultValue: ""
+            allowNull: false,
         },
-        tx: {
-            type: DataTypes.STRING,
-            defaultValue: ""
+        state: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,  //0- added, 1- filled, 3- removed
         },
-        isConfirmedInitial: {
+        used: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false
-        },
-        isConfirmed: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        },
-        isExpired: {
-            type: DataTypes.BOOLEAN,
+            allowNull: false,
             defaultValue: false
         },
     }, {
         indexes: [
-            {unique: false, fields: ['nftId']},
-            {unique: true, fields: ['hash']},
-            {unique: true, fields: ['address', 'hash']},
+            {unique: true, fields: ['offerId', 'dealId', 'hash']},
         ],
-
         freezeTableName: true,
         timestamps: true
     });
 };
-

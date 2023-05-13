@@ -30,6 +30,8 @@ const modelDefiners = [
     require('../../models/raises.model'),
     require('../../models/participants.model'),
     require('../../models/vaults.model'),
+    require('../../models/otcDeals.model'),
+    require('../../models/otcSettlement.model'),
 ];
 
 // We define all models according to their files.
@@ -38,19 +40,23 @@ for (const modelDefiner of modelDefiners) {
 }
 
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, vaults } = sequelize.models;
+    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, otcSettlement } = sequelize.models;
 
     networks.hasMany(partners)
     networks.hasMany(currencies)
     partners.hasMany(injectedUsers);
     offers.hasOne(raises);
     offers.hasMany(vaults);
+    offers.hasMany(otcDeals);
+    offers.hasMany(otcSettlement);
 
     partners.belongsTo(networks);
     currencies.belongsTo(networks);
     injectedUsers.belongsTo(partners);
     raises.belongsTo(offers);
     vaults.belongsTo(offers);
+    otcDeals.belongsTo(offers);
+    otcSettlement.belongsTo(offers);
 
 }
 // We execute any extra setup after the models are defined, such as adding associations.

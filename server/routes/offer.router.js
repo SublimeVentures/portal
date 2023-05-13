@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 router.get('/:slug', async (req, res) => {
     const session = await getAccessToken(req)
     if (!session) return res.status(401).json({})
-    console.log("PAGE :: SERVER QUERY")
+
     res.status(200).json(await getParamOfferDetails(session, req))
 });
 

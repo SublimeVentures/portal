@@ -7,21 +7,21 @@ router.get('/markets', async (req, res) => {
     const session = await getAccessToken(req)
     if (!session) return res.status(401).json({})
 
-    return res.status(200).json(await getMarkets())
+    return res.status(200).json(await getMarkets(session, req))
 });
 
 router.get('/offers/:id', async (req, res) => {
     const session = await getAccessToken(req)
     if (!session) return res.status(401).json({})
 
-    return res.status(200).json(await getOffers(req))
+    return res.status(200).json(await getOffers(session, req))
 });
 
 router.get('/history/:id', async (req, res) => {
     const session = await getAccessToken(req)
     if (!session) return res.status(401).json({})
 
-    return res.status(200).json(await getHistory(req))
+    return res.status(200).json(await getHistory(session, req))
 });
 
 

@@ -15,8 +15,8 @@ const {router: publicRoute} = require("./server/routes/public.router.js");
 const {router: offerRoute} = require("./server/routes/offer.router.js");
 const {router: chainRoute} = require("./server/routes/payable.router.js");
 const {router: investRoute} = require("./server/routes/invest.router.js");
-const {router: vaultRoute} = require("./server/routes/vault.js");
-// const {router: otcRoute} = require("./server/routes/otc.js");
+const {router: vaultRoute} = require("./server/routes/vault.router.js");
+const {router: otcRoute} = require("./server/routes/otc.router.js");
 
 const port = process.env.PORT || 3000
 const dev = process.env.NODE_ENV !== 'production';
@@ -85,7 +85,7 @@ const hostname = process.env.HOSTNAME
         server.use('/api/chain', chainRoute);
         server.use('/api/invest', investRoute);
         server.use('/api/vault', vaultRoute);
-        // server.use('/api/otc', otcRoute);
+        server.use('/api/otc', otcRoute);
 
         // Default catch-all renders Next app
         server.all('*', (req, res) => {

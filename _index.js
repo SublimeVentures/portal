@@ -15,7 +15,7 @@ const {router: publicRoute} = require("./server/routes/public.router.js");
 const {router: offerRoute} = require("./server/routes/offer.router.js");
 const {router: chainRoute} = require("./server/routes/payable.router.js");
 const {router: investRoute} = require("./server/routes/invest.router.js");
-const {router: vaultRoute} = require("./server/routes/vault.js");
+const {router: vaultRoute} = require("./server/routes/vault.router.js");
 // const {router: otcRoute} = require("./server/routes/otc.js");
 
 const port = process.env.PORT || 3100

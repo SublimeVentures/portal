@@ -66,23 +66,28 @@ function offerListPartner(data) {
 
 function fillPartnerData(offer) {
     return {
+        id: offer.id,
         name: offer.name,
         image: offer.image,
         genre: offer.genre,
         slug: offer.slug,
+        ticker: offer.ticker,
         d_open: offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay),
         d_close: offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
+
     }
 }
 
 function fillWhaleData(offer) {
     return {
+        id: offer.id,
         name: offer.name,
         image: offer.image,
         genre: offer.genre,
         slug: offer.slug,
+        ticker: offer.ticker,
         d_open: offer.d_open,
-        d_close: offer.d_close
+        d_close: offer.d_close,
     }
 }
 
