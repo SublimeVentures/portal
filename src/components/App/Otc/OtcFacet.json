@@ -1,6 +1,125 @@
 [
     {
+      "anonymous": false,
       "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "hash_",
+          "type": "string"
+        }
+      ],
+      "name": "OtcAdd",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        }
+      ],
+      "name": "OtcFeeUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "market_",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "state_",
+          "type": "bool"
+        }
+      ],
+      "name": "OtcMarketState",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "OtcRemove",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "hash_",
+          "type": "string"
+        }
+      ],
+      "name": "OtcSettle",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "address_",
+          "type": "address"
+        }
+      ],
+      "name": "OtcVault",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
         {
           "internalType": "uint256",
           "name": "amount_",
@@ -12,22 +131,115 @@
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
-          "name": "nftId_",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "currency_",
+          "type": "address"
         },
+        {
+          "internalType": "bool",
+          "name": "isBuy_",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "hash_",
+          "type": "string"
+        }
+      ],
+      "name": "add",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
         {
           "internalType": "uint32",
           "name": "offerId_",
           "type": "uint32"
-        },
-        {
-          "internalType": "address",
-          "name": "payout",
-          "type": "address"
         }
       ],
-      "name": "addOffer",
+      "name": "getIterator",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "getOtcOffer",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "seller",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "buyer",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "currency",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct OtcOffer",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "dealId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isBuy_",
+          "type": "bool"
+        }
+      ],
+      "name": "remove",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -38,19 +250,9 @@
           "internalType": "uint256",
           "name": "amount_",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "price_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint32",
-          "name": "offerId_",
-          "type": "uint32"
         }
       ],
-      "name": "addOfferPartner",
+      "name": "setFeeOtc",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -59,67 +261,29 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "dealId_",
+          "name": "channel_",
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
-          "name": "nftId_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint32",
-          "name": "offerId_",
-          "type": "uint32"
+          "internalType": "bool",
+          "name": "isOpen_",
+          "type": "bool"
         }
       ],
-      "name": "removeOffer",
+      "name": "setOtcChannel",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "dealId_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint32",
-          "name": "offerId_",
-          "type": "uint32"
-        }
-      ],
-      "name": "removeOfferPartner",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "dealId_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "nftId_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint32",
-          "name": "offerId_",
-          "type": "uint32"
-        },
         {
           "internalType": "address",
-          "name": "currency_",
+          "name": "address_",
           "type": "address"
         }
       ],
-      "name": "settleOffer",
+      "name": "setVault",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -128,21 +292,26 @@
       "inputs": [
         {
           "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "dealId_",
           "type": "uint256"
         },
         {
-          "internalType": "uint32",
-          "name": "offerId_",
-          "type": "uint32"
+          "internalType": "string",
+          "name": "hash_",
+          "type": "string"
         },
         {
-          "internalType": "address",
-          "name": "currency_",
-          "type": "address"
+          "internalType": "bool",
+          "name": "isBuy_",
+          "type": "bool"
         }
       ],
-      "name": "settleOfferPartner",
+      "name": "settle",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

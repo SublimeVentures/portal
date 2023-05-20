@@ -31,7 +31,8 @@ const modelDefiners = [
     require('../../models/participants.model'),
     require('../../models/vaults.model'),
     require('../../models/otcDeals.model'),
-    require('../../models/otcSettlement.model'),
+    require('../../models/otcPending.model'),
+    require('../../models/multichain.model'),
 ];
 
 // We define all models according to their files.
@@ -40,23 +41,37 @@ for (const modelDefiner of modelDefiners) {
 }
 
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, otcSettlement } = sequelize.models;
+    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, otcPending, multichain } = sequelize.models;
 
     networks.hasMany(partners)
-    networks.hasMany(currencies)
-    partners.hasMany(injectedUsers);
-    offers.hasOne(raises);
-    offers.hasMany(vaults);
-    offers.hasMany(otcDeals);
-    offers.hasMany(otcSettlement);
-
     partners.belongsTo(networks);
+
+    networks.hasMany(currencies)
     currencies.belongsTo(networks);
+
+    partners.hasMany(injectedUsers);
     injectedUsers.belongsTo(partners);
+
+    offers.hasOne(raises);
     raises.belongsTo(offers);
+
+    offers.hasMany(vaults);
     vaults.belongsTo(offers);
+
+    offers.hasMany(otcDeals);
     otcDeals.belongsTo(offers);
-    otcSettlement.belongsTo(offers);
+
+    offers.hasMany(otcPending);
+    otcPending.belongsTo(offers);
+
+    networks.hasMany(otcDeals)
+    otcDeals.belongsTo(networks);
+
+    networks.hasMany(otcPending)
+    otcPending.belongsTo(networks);
+
+    networks.hasMany(multichain)
+    multichain.belongsTo(networks);
 
 }
 // We execute any extra setup after the models are defined, such as adding associations.

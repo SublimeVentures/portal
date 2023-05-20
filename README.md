@@ -31,14 +31,27 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## ToDo
 -- https://blockeater.herokuapp.com/v3rify
 
+===
+
+- make offer button
+- -- (buy) check liquidity 
+- -- (buy) check allowance 
+- -- (buy) check send transaction 
+
+- processor
+- -- receive webhook
+- -- match hash with settlement
+- -- build otcDeal
+- -- expire otcPending after 5 minutes
+
+- support errorów
+- przy cancellowaniu sprawdź czy nie ma pending
+
 - homepage datafeed
 - connect discord to app
 - images for twitter SEO tags
-
-- enable OTC
-- - otc on success buy not moving to success
-- - on succesful buy not refreshing offers
-- - fix grida na buy otc offer (wiecej dla prawje strony)
+- try catch every query na backendzie
+- sprawdź transakcje
 
 - timeline for user activities for each investment in vault tab
 - new investment update for api
@@ -53,6 +66,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - extract style to 3vc / citcap
 - migrate citcap
 - referral system
+- clean old otcPending - every month after backup
 
 - DEPLOY
 ==========

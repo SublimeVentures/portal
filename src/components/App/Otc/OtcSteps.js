@@ -1,35 +1,21 @@
 import OtcFacet from "@/components/App/Otc/OtcFacet.json";
 import {ACL as ACLs}  from "@/lib/acl";
 
-export const getOtcSellFunction = (source, offerId, amount, price, ACL, address, nftId) => {
-    switch (ACL) {
-        case ACLs.Whale: {
-                return {
-                    method:'addOffer',
-                    args: [
-                        amount * 10 ** 6,
-                        price * 10 ** 6,
-                        nftId,
-                        offerId,
-                        address
-                    ],
-                    address: source,
-                    abi: OtcFacet
-                }
-        }
-        default: {
-            return {
-                method:'addOfferPartner',
-                args: [
-                    amount * 10 ** 6,
-                    price * 10 ** 6,
-                    offerId
-                ],
-                address: source,
-                abi: OtcFacet
-            }
-        }
+export const getOtcTradeFunction = (isBuy, diamond, offerId, amount, price, currency, hash) => {
+    return {
+        method:'add',
+        args: [
+            offerId,
+            amount * 10 ** 6,
+            price * 10 ** 6,
+            currency.address,
+            isBuy,
+            hash
+        ],
+        address: diamond,
+        abi: OtcFacet
     }
+
 }
 export const getOtcCancelFunction = (source, offerId, dealId, ACL, address, nftId) => {
     switch (ACL) {

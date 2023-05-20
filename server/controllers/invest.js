@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const {getOfferReservedData} = require("../queries/offers.query");
 const {getEnv} = require("../services/db/utils");
 const {bookAllocation, expireAllocation} = require("../queries/invest.query");
+const {createHash} = require("./helpers");
 
 let CACHE = {}
 
@@ -93,10 +94,6 @@ function isReadyForInvestment(ACL, isSeparatePool, offer) {
 }
 
 
-const createHash = (data) => {
-    return crypto.createHash("shake256", {outputLength: 3})
-        .update(data)
-        .digest("hex");
-}
+
 
 module.exports = {reserveSpot, reserveExpire}

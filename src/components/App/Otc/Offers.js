@@ -8,10 +8,11 @@ import {useEffect} from "react";
 import Empty from "@/components/App/Empty";
 import {IconButton} from "@/components/Button/IconButton";
 import {useQuery} from "@tanstack/react-query";
-import {fetchHistory, fetchOffers} from "@/fetchers/otc";
+import {fetchHistory, fetchOffers} from "@/fetchers/otc.fetcher";
 import moment from "moment";
 import Loader from "@/components/App/Loader";
-const SellModal = dynamic(() => import('@/components/App/Otc/SellModal'), {ssr: false,})
+import MakeOfferModal from "@/components/App/Otc/MakeOfferModal";
+const SellModal = dynamic(() => import('@/components/App/Otc/MakeOfferModal'), {ssr: false,})
 const CancelModal = dynamic(() => import('@/components/App/Otc/CancelModal'), {ssr: false,})
 const BuyModal = dynamic(() => import('@/components/App/Otc/BuyModal'), {ssr: false,})
 
@@ -27,7 +28,6 @@ export default function OtcOffers({propOffers}) {
     const [showHistory, setShowHistory] = useState(false);
 
     const haveAllocation = vault.find(el=> el.offerId === currentMarket.id)
-    const sellDisabled = !haveAllocation || haveAllocation.locked
 
     const user = session.user.ACL === 0 ? session.user.id : session.user.address
 
@@ -42,9 +42,6 @@ export default function OtcOffers({propOffers}) {
             enabled: showHistory
         }
     );
-    console.log("HISTORY - historyIsSuccess", historyIsSuccess)
-    console.log("HISTORY - history", history)
-
 
 
     const openCancel = (offer) => {
@@ -203,9 +200,9 @@ export default function OtcOffers({propOffers}) {
                 </div>
             </div>
 
-            {!sellDisabled && <SellModal model={isSellModal} setter={() => {setIsSellModal(false)}} props={{...propOffers, ...{allocation: haveAllocation}}}/>}
-            <CancelModal model={isCancelModal} setter={() => {setIsCancelModal(false)}} props={{...propOffers, ...{cancelOffer}}}/>
-            <BuyModal model={isBuyModal} setter={() => {setIsBuyModal(false)}} props={{...propOffers, ...{buyOffer}}}/>
+            <MakeOfferModal model={isSellModal} setter={() => {setIsSellModal(false)}} props={{...propOffers, ...{allocation: haveAllocation}}}/>
+            {/*<CancelModal model={isCancelModal} setter={() => {setIsCancelModal(false)}} props={{...propOffers, ...{cancelOffer}}}/>*/}
+            {/*<BuyModal model={isBuyModal} setter={() => {setIsBuyModal(false)}} props={{...propOffers, ...{buyOffer}}}/>*/}
         </>
 
 

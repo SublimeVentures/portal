@@ -6,7 +6,7 @@ import IconCart from "@/assets/svg/Cart.svg";
 import Head from "next/head";
 import {queryClient} from "@/lib/web3/queryCache";
 import {dehydrate, useQuery} from "@tanstack/react-query";
-import {fetchMarkets, fetchOffers} from "@/fetchers/otc";
+import {fetchMarkets, fetchOffers} from "@/fetchers/otc.fetcher";
 import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
 import {useRouter} from "next/router";
@@ -90,10 +90,11 @@ export default function AppOtc() {
         refetchOffers,
         session,
         currentMarket,
-        ...{source:  markets?.source},
         ...{otcFee:  markets?.otcFee},
-        ...{currencies:  markets?.currencies}
+        ...{currencies:  markets?.currencies},
+        ...{multichain:  markets?.multichain}
     }
+
 
     const renderPage = () => {
         if (!marketsIsSuccess || !vaultIsSuccess || !offersIsSuccess) return <Loader/>

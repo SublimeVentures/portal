@@ -2,7 +2,7 @@ const {DataTypes} = require("sequelize");
 
 
 module.exports = (sequelize) => {
-    sequelize.define('otcSettlement', {
+    sequelize.define('otcPending', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -13,44 +13,43 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-
-        dealId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        buyer: {
+        hashRelated: {
             type: DataTypes.STRING,
         },
-        seller: {
+        address: {
             type: DataTypes.STRING,
         },
-        amount: {
+        nftId: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
+        },
+        acl: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
-        price: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        currency: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        state: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,  //0- added, 1- filled, 3- removed
-        },
-        used: {
+        isBuyer: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: false
+        },
+        isTaker: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
+        isConfirmed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
+        isExpired: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
+        data: {
+            type: DataTypes.JSON,
         },
     }, {
         indexes: [
-            {unique: true, fields: ['offerId', 'dealId', 'hash']},
+            {unique: true, fields: ['offerId', 'hash']},
         ],
         freezeTableName: true,
         timestamps: true

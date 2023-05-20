@@ -10,37 +10,73 @@ import IconPlus from "@/assets/svg/PlusZ.svg";
 import IconMinus from "@/assets/svg/MinusZ.svg";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import IconDiscord from "@/assets/svg/Discord.svg";
-import {useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
-import { getOtcSellFunction} from "@/components/App/Otc/OtcSteps";
+import {useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
+import {getOtcTradeFunction} from "@/components/App/Otc/OtcSteps";
+import SwitchGeneric from "@/components/Switch";
+import Dropdown from "@/components/App/Dropdown";
+import {removeTransaction, saveTransaction} from "@/fetchers/otc.fetcher";
 
 
-export default function SellModal({model, setter, props}) {
-    const {currentMarket, allocation, refetchVault, refetchOffers, source} = props
+const parseError = (code) => {
+    switch(code) {
+        case "NOT_ENOUGH_ALLOCATION": {
+            return "You don't have enough available allocation."
+        }
+    }
+}
+
+
+export default function MakeOfferModal({model, setter, props}) {
+    const {currentMarket, multichain, allocation, refetchVault, refetchOffers, source, currencies} = props
     const {data: session} = useSession()
+    const {chain} = useNetwork()
+
     const {address, ACL, id} = session.user
+
+
+    const [isBuyer, setIsBuyer] = useState(false)
+    const [hash, setHash] = useState("")
+    const titleCopy = isBuyer ? 'Buying' : 'Selling';
+    const textCopy = isBuyer ? 'buy' : 'sell';
+    const [investmentCurrency, setInvestmentCurrency] = useState(0)
+    const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
+    const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
+        let currency = currencies[selectedChain][el]
+        currency.address = el
+        return currency
+    }) : [{}]
+
+    const currencyNames = currencyList.map(el => el.symbol)
+    const selectedCurrency = currencyList[investmentCurrency]
+
 
     const [amount, setAmount] = useState(0)
     const [price, setPrice] = useState(0)
     const [multiplier, setMultiplier] = useState(1)
 
-    const allocationMax = allocation.invested
+    const allocationMax = allocation.invested - allocation.locked
     const allocationMin = 50
     const priceMin = allocationMin
 
     const [statusAmount, setStatusAmount] = useState(false)
     const [statusPrice, setStatusPrice] = useState(false)
+    const [error, setError] = useState(null)
     const [processing, setProcessing] = useState(false)
-    const statusCheck = !statusAmount || !statusPrice
+    const statusCheck = statusAmount || statusPrice
     const multiplierParsed = multiplier.toFixed(2)
 
-    const otcSellFunction = getOtcSellFunction(source, currentMarket.id, amount, price, ACL, address, id)
+
+    const otcSellFunction = getOtcTradeFunction(isBuyer, multichain[selectedChain], currentMarket.id, amount, price, selectedCurrency, hash)
 
     const {config, isSuccess: isSuccessPrepare, isLoading, isError: isErrorPrep, error:errorPrep} = usePrepareContractWrite({
         address: otcSellFunction.address,
         abi: otcSellFunction.abi,
         functionName: otcSellFunction.method,
         args: otcSellFunction.args,
-        enabled: !statusCheck && model
+        overrides: {
+            from: address,
+        },
+        enabled: !statusCheck && model && hash
     })
 
     const {
@@ -56,8 +92,9 @@ export default function SellModal({model, setter, props}) {
         hash: transactionData?.hash,
     })
 
-    const buttonDisabled = statusCheck || !isSuccessPrepare || isLoading || processing
-    console.log("SELL :: disabled button", buttonDisabled)
+    const buttonDisabled = statusCheck || allocationMax <= 0
+    const buttonLoading = processing || (isSuccessPrepare && ( hash && !isSuccessPrepare || isLoading || isLoadingWrite)) //todo: waiting for confirmations
+    console.log("SELL :: buttonLoading", buttonLoading )
 
     const closeModal = async () => {
         await refetchVault()
@@ -66,6 +103,8 @@ export default function SellModal({model, setter, props}) {
         setTimeout(() => {
             setAmount(allocationMin)
             setMultiplier(1)
+            setError(null)
+            setHash("")
             setProcessing(false)
         }, 1000);
 
@@ -73,7 +112,15 @@ export default function SellModal({model, setter, props}) {
 
     const makeOffer = async ()  => {
         setProcessing(true)
-        write()
+        setError(null);
+        const result = await saveTransaction(currentMarket.id, chain.id, isBuyer, amount, price)
+        if(result.ok) {
+            setHash(result.hash)
+        } else {
+            setError(parseError(result.code))
+            await refetchVault()
+            setProcessing(false)
+        }
     }
 
 
@@ -109,8 +156,25 @@ export default function SellModal({model, setter, props}) {
     }
 
     useEffect(()=> {
-        if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) setProcessing(false)
-    }, [confirmationData, isErrorWrite, isErrorConfirmation, isLoadingWrite])
+        if(isSuccessPrepare) {
+            write()
+        }
+    }, [isSuccessPrepare])
+
+    useEffect(()=> {
+        if(isErrorWrite || isErrorConfirmation) {
+            if(hash.length>0) {
+                removeTransaction(currentMarket.id, hash)
+                setProcessing(false)
+                setHash("")
+            }
+        }
+    }, [isErrorWrite, isErrorConfirmation])
+
+    // useEffect(()=> {
+    //     // if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) setProcessing(false)
+    // }, [confirmationData, isErrorWrite, isErrorConfirmation, isLoadingWrite])
+
 
     const title = () => {
         return (
@@ -127,7 +191,7 @@ export default function SellModal({model, setter, props}) {
     const contentSuccess = () => {
         return (
             <div className=" flex flex-col flex-1">
-                <div>Congratulations! You have successfully created OTC offer to sell <span className="text-app-success font-bold">${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
+                <div>Congratulations! You have successfully created OTC offer to {textCopy} <span className="text-app-success font-bold">${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
                 <lottie-player
                     autoplay
                     loop
@@ -153,9 +217,15 @@ export default function SellModal({model, setter, props}) {
     const contentForm = () => {
         return (
             <div className=" flex flex-1 flex-col">
+                <div className={'pt-5 flex flex-row gap-5 justify-center items-center font-bold text-xl'}>
+                    <div className={"text-app-success"}>BUY</div>
+                    <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer}/>
+                    <div className={"text-app-error"}>SELL</div>
+
+                </div>
                 <div className={'pt-10'}>
                     <Input type={'number'}
-                           placeholder={'Selling allocation'}
+                           placeholder={`${titleCopy} allocation`}
                            max={allocationMax}
                            min={allocationMin}
                            setStatus={setStatusAmount}
@@ -172,28 +242,30 @@ export default function SellModal({model, setter, props}) {
                     <div className={`px-6 font-bold tabular-nums transition-colors duration-300 text-2xl ${multiplier>1 ? ' text-app-success' : ' text-app-error'}`}>x<span className={"text-5xl"}>{multiplierParsed}</span></div>
                     <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconPlus className={"w-8"}/>} handler={() => setMultiplierHandler(true)}/>
                 </div>
-                <div>
+                <div className={"flex flex-row flex-1"}>
                     <Input type={'number'}
-                           placeholder={'Selling price'}
+                           placeholder={`For price`}
                            min={priceMin}
                            setStatus={setStatusPrice}
                            setInput={setPriceHandler}
                            input={price}
                            light={true}
                            full={true}
-                           after={"USD"}
+                           customCss={"flex-1"}
                     />
+                    <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setInvestmentCurrency} position={investmentCurrency}/>
+
                 </div>
 
 
                 <div className={"fullWidth py-10 mt-auto"}>
-                    <RoundButton text={'Make offer'} isWide={true} size={'text-sm sm'} isDisabled={buttonDisabled} handler={makeOffer}
-                                 isLoading={processing}
+                    <RoundButton text={'Make offer'} isWide={true} size={'text-sm sm'} isDisabled={buttonDisabled} isLoading={buttonLoading} handler={makeOffer}
                                  icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
                 </div>
 
-                {(isErrorPrep) && <div className={"text-app-error -mt-2 mb-5 text-center"}>{errorPrep?.cause?.reason ? errorPrep?.cause?.reason : errorPrep.reason}</div>}
-                {(isErrorWrite) && <div className={"text-app-error -mt-2 mb-5 text-center"}>{errorWrite?.cause?.reason ? errorWrite?.cause?.reason : "Unexpected wallet error"}</div>}
+                {(isErrorPrep) && <div className={"text-app-error -mt-3 mb-5 text-center capitalize"}>{errorPrep?.cause?.reason ? errorPrep?.cause?.reason : errorPrep.reason}</div>}
+                {(isErrorWrite) && <div className={"text-app-error -mt-3 mb-5 text-center capitalize"}>{errorWrite?.cause?.reason ? errorWrite?.cause?.reason : "Unexpected wallet error"}</div>}
+                {(error) && <div className={"text-app-error -mt-3 mb-5 text-center capitalize"}>{error}</div>}
                  <div className="">Before creating an offer, please make sure to <a
                     href="#" target="_blank" className="text-app-error">read more.</a></div>
             </div>

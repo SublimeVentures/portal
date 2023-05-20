@@ -17,12 +17,20 @@
   }
 
   &.customSize {
-    font-size: 18px!important;
+    //font-size: 18px!important;
+  }
+
+  &.blended {
+    --background: #101d2d;
+    --list: #1c2b3b;
+
+    font-size: 16px!important;
+
   }
 
 
   &.network {
-    font-size: 15px!important;
+    //font-size: 15px!important;
     select {
       padding: 8px 10px 8px 10px;
       visibility: hidden;

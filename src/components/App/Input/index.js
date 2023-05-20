@@ -5,7 +5,7 @@ import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 
 
-export default function Input({type, placeholder, max, min, setStatus, input, setInput, after, light, full, dividable, customClear, initialValue}) {
+export default function Input({type, placeholder, max, min, setStatus, input, setInput, after, light, full, dividable, customClear, initialValue, customCss}) {
     const [inputFormatted, setInputFormatted] = useState("")
     const [showInfo, setShowInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
@@ -88,11 +88,9 @@ export default function Input({type, placeholder, max, min, setStatus, input, se
                     setStatus(true)
                     return setIsError({state: true, msg: `Amount has to be divisible by $10`})
                 }
-                setStatus(true)
+                setStatus(false)
                 return setIsError({state: false})
             }
-        } else if(type === "address") {
-
         }
 
 
@@ -111,7 +109,7 @@ export default function Input({type, placeholder, max, min, setStatus, input, se
     }, [showInfo]);
 
     return (
-        <div className={`currency-input-group relative ${light ? 'light' : ''} ${full ? 'full' : ''}`}>
+        <div className={`currency-input-group relative ${light ? 'light' : ''} ${full ? 'full' : ''} ${customCss && customCss}`}>
             <div className={`relative centr  ${isActive() ? 'active' : ''}`}>
                 <label className="absolute text-accent block">{placeholder}</label>
                 <input tabIndex="0"

@@ -44,6 +44,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
                 if (!booked[0][1]) throw new Error("Not enough allocation");
 
                 await db.query(participants, {
+                    transaction: t,
                     model: models.participants,
                     mapToModel: true // pass true here if you have any mapped fields
                 });
