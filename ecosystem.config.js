@@ -7,13 +7,5 @@ module.exports = {
       autorestart: true,
       merge_logs: false,
     }
-  ],
-
-  deploy: {
-    development: {
-      "start": "pm2-runtime start index.js -i 1",
-      'post-deploy': 'pm2 reload ecosystem.config.js --name ThreeVC',
-      'pre-setup': '',
-    },
-  }
+  ]
 };
