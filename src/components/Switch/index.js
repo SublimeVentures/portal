@@ -1,13 +1,13 @@
 import {Switch} from "@headlessui/react";
 
-export default function SwitchGeneric({checked, setChecked}) {
+export default function SwitchGeneric({checked, setChecked, isDisabled}) {
 
     return (<Switch
         checked={checked}
         onChange={(val) => {
             setChecked(!val)
         }}
-        className={`${checked ? 'bg-app-error' : 'bg-app-success'}
+        className={`${checked ? 'bg-app-error' : 'bg-app-success'} ${isDisabled ? 'disabled' : ''}
            bg-opacity-70 relative inline-flex h-[32px] w-[68px] outline-0 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-0  focus-visible:ring-white focus-visible:ring-opacity-75`}
     >
                 <span

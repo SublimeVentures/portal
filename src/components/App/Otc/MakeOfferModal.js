@@ -8,22 +8,12 @@ import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconPlus from "@/assets/svg/PlusZ.svg";
 import IconMinus from "@/assets/svg/MinusZ.svg";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 import IconDiscord from "@/assets/svg/Discord.svg";
-import {useContractWrite, useNetwork, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
-import {getOtcTradeFunction} from "@/components/App/Otc/OtcSteps";
+import {useNetwork} from "wagmi";
 import SwitchGeneric from "@/components/Switch";
 import Dropdown from "@/components/App/Dropdown";
-import {removeTransaction, saveTransaction} from "@/fetchers/otc.fetcher";
+import MakeOfferInteract from "@/components/App/Otc/MakeOfferInteract";
 
-
-const parseError = (code) => {
-    switch(code) {
-        case "NOT_ENOUGH_ALLOCATION": {
-            return "You don't have enough available allocation."
-        }
-    }
-}
 
 
 export default function MakeOfferModal({model, setter, props}) {
@@ -31,14 +21,32 @@ export default function MakeOfferModal({model, setter, props}) {
     const {data: session} = useSession()
     const {chain} = useNetwork()
 
-    const {address, ACL, id} = session.user
-
-
     const [isBuyer, setIsBuyer] = useState(false)
-    const [hash, setHash] = useState("")
+    const [dealCurrency, setDealCurrency] = useState(0)
+    const [isSuccess, setIsSuccess] = useState(false)
+
+    const [processing, setProcessing] = useState(false)
+
+
+    const [amount, setAmount] = useState(0)
+    const [statusAmount, setStatusAmount] = useState(false)
+
+    const [price, setPrice] = useState(0)
+    const [statusPrice, setStatusPrice] = useState(false)
+
+
+    const [multiplier, setMultiplier] = useState(1)
+
+
+    const multiplierParsed = multiplier.toFixed(2)
+
+    const allocationMax = allocation.invested - allocation.locked
+    const allocationMin = 50
+    const priceMin = allocationMin
+    const statusCheck = statusAmount || statusPrice
+
     const titleCopy = isBuyer ? 'Buying' : 'Selling';
     const textCopy = isBuyer ? 'buy' : 'sell';
-    const [investmentCurrency, setInvestmentCurrency] = useState(0)
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
         let currency = currencies[selectedChain][el]
@@ -47,80 +55,21 @@ export default function MakeOfferModal({model, setter, props}) {
     }) : [{}]
 
     const currencyNames = currencyList.map(el => el.symbol)
-    const selectedCurrency = currencyList[investmentCurrency]
-
-
-    const [amount, setAmount] = useState(0)
-    const [price, setPrice] = useState(0)
-    const [multiplier, setMultiplier] = useState(1)
-
-    const allocationMax = allocation.invested - allocation.locked
-    const allocationMin = 50
-    const priceMin = allocationMin
-
-    const [statusAmount, setStatusAmount] = useState(false)
-    const [statusPrice, setStatusPrice] = useState(false)
-    const [error, setError] = useState(null)
-    const [processing, setProcessing] = useState(false)
-    const statusCheck = statusAmount || statusPrice
-    const multiplierParsed = multiplier.toFixed(2)
-
-
-    const otcSellFunction = getOtcTradeFunction(isBuyer, multichain[selectedChain], currentMarket.id, amount, price, selectedCurrency, hash)
-
-    const {config, isSuccess: isSuccessPrepare, isLoading, isError: isErrorPrep, error:errorPrep} = usePrepareContractWrite({
-        address: otcSellFunction.address,
-        abi: otcSellFunction.abi,
-        functionName: otcSellFunction.method,
-        args: otcSellFunction.args,
-        overrides: {
-            from: address,
-        },
-        enabled: !statusCheck && model && hash
-    })
-
-    const {
-        data: transactionData,
-        write,
-        isError: isErrorWrite,
-        error: errorWrite,
-        isLoading: isLoadingWrite
-    } = useContractWrite(config)
-
-    const {data: confirmationData, isError: isErrorConfirmation } = useWaitForTransaction({
-        confirmations: 1,
-        hash: transactionData?.hash,
-    })
-
-    const buttonDisabled = statusCheck || allocationMax <= 0
-    const buttonLoading = processing || (isSuccessPrepare && ( hash && !isSuccessPrepare || isLoading || isLoadingWrite)) //todo: waiting for confirmations
-    console.log("SELL :: buttonLoading", buttonLoading )
+    const selectedCurrency = currencyList[dealCurrency]
 
     const closeModal = async () => {
-        await refetchVault()
-        await refetchOffers()
+        refetchVault()
+        refetchOffers()
         setter()
+        setProcessing(false)
+
         setTimeout(() => {
             setAmount(allocationMin)
             setMultiplier(1)
-            setError(null)
-            setHash("")
-            setProcessing(false)
+            // setError(null)
+            // setHash("")
         }, 1000);
 
-    }
-
-    const makeOffer = async ()  => {
-        setProcessing(true)
-        setError(null);
-        const result = await saveTransaction(currentMarket.id, chain.id, isBuyer, amount, price)
-        if(result.ok) {
-            setHash(result.hash)
-        } else {
-            setError(parseError(result.code))
-            await refetchVault()
-            setProcessing(false)
-        }
     }
 
 
@@ -155,31 +104,30 @@ export default function MakeOfferModal({model, setter, props}) {
         }
     }
 
-    useEffect(()=> {
-        if(isSuccessPrepare) {
-            write()
-        }
-    }, [isSuccessPrepare])
-
-    useEffect(()=> {
-        if(isErrorWrite || isErrorConfirmation) {
-            if(hash.length>0) {
-                removeTransaction(currentMarket.id, hash)
-                setProcessing(false)
-                setHash("")
-            }
-        }
-    }, [isErrorWrite, isErrorConfirmation])
-
-    // useEffect(()=> {
-    //     // if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) setProcessing(false)
-    // }, [confirmationData, isErrorWrite, isErrorConfirmation, isLoadingWrite])
-
+    const interactionProps = {
+        amount,
+        statusAmount,
+        statusPrice,
+        price,
+        dealCurrency,
+        isBuyer,
+        session,
+        allocationMax,
+        currentMarket,
+        selectedCurrency,
+        setIsSuccess,
+        statusCheck,
+        processing,
+        setProcessing,
+        chain,
+        refetchVault,
+        diamond: multichain[selectedChain],
+    }
 
     const title = () => {
         return (
             <>
-                {!!confirmationData ?
+                {!!isSuccess ?
                     <>OTC offer <span className="text-app-success">created</span></>
                     :
                     <><span className="text-app-success">Create</span> OTC offer</>
@@ -191,7 +139,7 @@ export default function MakeOfferModal({model, setter, props}) {
     const contentSuccess = () => {
         return (
             <div className=" flex flex-col flex-1">
-                <div>Congratulations! You have successfully created OTC offer to {textCopy} <span className="text-app-success font-bold">${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
+                <div>Congratulations! You have successfully created OTC offer to <span className="text-app-success font-bold">{textCopy} ${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
                 <lottie-player
                     autoplay
                     loop
@@ -219,7 +167,7 @@ export default function MakeOfferModal({model, setter, props}) {
             <div className=" flex flex-1 flex-col">
                 <div className={'pt-5 flex flex-row gap-5 justify-center items-center font-bold text-xl'}>
                     <div className={"text-app-success"}>BUY</div>
-                    <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer}/>
+                    <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer} isDisabled={processing}/>
                     <div className={"text-app-error"}>SELL</div>
 
                 </div>
@@ -253,27 +201,20 @@ export default function MakeOfferModal({model, setter, props}) {
                            full={true}
                            customCss={"flex-1"}
                     />
-                    <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setInvestmentCurrency} position={investmentCurrency}/>
+                    <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setDealCurrency} position={dealCurrency}/>
 
                 </div>
 
+                <MakeOfferInteract props={interactionProps}/>
 
-                <div className={"fullWidth py-10 mt-auto"}>
-                    <RoundButton text={'Make offer'} isWide={true} size={'text-sm sm'} isDisabled={buttonDisabled} isLoading={buttonLoading} handler={makeOffer}
-                                 icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
-                </div>
-
-                {(isErrorPrep) && <div className={"text-app-error -mt-3 mb-5 text-center capitalize"}>{errorPrep?.cause?.reason ? errorPrep?.cause?.reason : errorPrep.reason}</div>}
-                {(isErrorWrite) && <div className={"text-app-error -mt-3 mb-5 text-center capitalize"}>{errorWrite?.cause?.reason ? errorWrite?.cause?.reason : "Unexpected wallet error"}</div>}
-                {(error) && <div className={"text-app-error -mt-3 mb-5 text-center capitalize"}>{error}</div>}
-                 <div className="">Before creating an offer, please make sure to <a
-                    href="#" target="_blank" className="text-app-error">read more.</a></div>
+                <div className="">Before creating an offer, please <a
+                    href="#" target="_blank" className="text-app-success">read more.</a></div>
             </div>
         )
     }
 
     const content = () => {
-       return !!confirmationData ? contentSuccess() : contentForm()
+       return isSuccess ? contentSuccess() : contentForm()
     }
 
     return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)

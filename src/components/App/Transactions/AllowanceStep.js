@@ -4,14 +4,13 @@ import {getIcon, getStatusColor, Transaction} from "@/components/App/Transaction
 import {useEffect, useState} from "react";
 
 export default function AllowanceStep({stepProps}) {
-    const {selectedCurrency, isReady, spender,  session, amount, isFinished, setFinished, errorHandler, prevStep} = stepProps
-    // const {amount, selectedCurrency, spender, stepAllowanceFinished: stepAllowance, setStepAllowance, stepAllowanceReady} = stepProps
+    const {selectedCurrency, isReady, session, amount, isFinished, setFinished, otcContract} = stepProps
 
     const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
         address: selectedCurrency.address,
         abi: erc20ABI,
         functionName: 'approve',
-        args: [spender, amount * 10 ** selectedCurrency.precision],
+        args: [otcContract, amount * 10 ** selectedCurrency.precision],
         enabled: isReady,
     })
 
@@ -26,8 +25,8 @@ export default function AllowanceStep({stepProps}) {
             address: selectedCurrency.address,
             abi: erc20ABI,
             functionName: 'allowance',
-            args: [session.user.address, spender],
-            watch: true,
+            args: [session.user.address, otcContract],
+            watch: isReady && !isFinished,
         }
     )
 
@@ -63,22 +62,15 @@ export default function AllowanceStep({stepProps}) {
 
     useEffect(()=>{
         if(isSuccessConfig && !isFinished && isReady) {
-            if(isEnoughAllowance) {
-                setFinished(true)
-            } else {
-                setFinished(false)
-                setAllowance(Transaction.Failed)
-            }
+                    if(!isEnoughAllowance) {
+                        setAllowance(Transaction.Failed)
+                    }
         }
     }, [isSuccessConfig, allowance, isReady])
 
     useEffect(()=>{
         console.log("ERROR THROW ", isErrorWrite || isErrorPending || !isEnoughAllowance)
-        if(isErrorWrite || isErrorPending || !isEnoughAllowance) {
-            errorHandler(true)
-        } else {
-            errorHandler(false)
-        }
+        setFinished(isEnoughAllowance)
     }, [isErrorWrite, isErrorPending, isEnoughAllowance])
 
     // console.log("TT :: READ - isSuccessConfig", isSuccessConfig)
@@ -126,10 +118,10 @@ export default function AllowanceStep({stepProps}) {
     // console.log("STATE :: confirm " ,confirmationData, isErrorPending, isSuccessPending, isLoadingPending, isFetchingPending)
     // console.log("======" )
 
-    if (isFinished && isEnoughAllowance) return prepareRow(Transaction.Executed)
-    if ((isErrorWrite || isErrorPending) && prevStep) return prepareRow(Transaction.Failed)
-    if (isLoadingWrite || isLoadingPending || isFetchingPending) return prepareRow(Transaction.Processing)
-    return prepareRow(Transaction.Waiting)
+    if (isFinished && isEnoughAllowance && isReady) return prepareRow(Transaction.Executed)
+    if (!isReady) return prepareRow(Transaction.Waiting)
+    if ((isErrorWrite || isErrorPending) && isReady) return prepareRow(Transaction.Failed)
+    else return prepareRow(Transaction.Processing)
 
 
 
