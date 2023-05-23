@@ -1,0 +1,95 @@
+.navShadow {
+  transition-duration: 300ms;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  color: black;
+
+  .underlineHover::after {
+    background-color: black;
+  }
+
+  &.blurredBG {
+    backdrop-filter: blur(10px);
+    color: white;
+    background: rgba(18, 43, 66, 0.13);
+    //background-color: rgba(255, 255, 255, 0.05);
+    //border-bottom:2px solid #1f1d1d;
+
+    .underlineHover::after {
+      background-color: white;
+    }
+  }
+
+  .nuxt-link-active {
+    &.underlineHover::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+  }
+
+
+}
+
+
+.blurred {
+  backdrop-filter: blur(10px);
+  color: white;
+  background: rgba(18, 43, 66, 0.13);
+}
+
+.blurred3 {
+  backdrop-filter: blur(10px);
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+}
+.blurred2 {
+  backdrop-filter: blur(20px);
+  color: white;
+  background: rgba(18, 43, 66, 0.13);
+}
+
+.blurredBg {
+  backdrop-filter: blur(4px);
+}
+.blurredBgColor {
+  backdrop-filter: blur(7px);
+  background: rgba(22, 27, 38, 0.9);
+}
+
+
+.blinking-cursor {
+  animation: cursor-blink 1.5s steps(2) infinite;
+  margin-top: -4px;
+  margin-right: 2px;
+  color:white;
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+.underlineHover {
+  display: inline-block;
+  position: relative;
+}
+
+.underlineHover::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  transform-origin: bottom right;
+  //transition: transform 0.25s ease-out;
+  transition: transform 500ms $alias-easeOut2;
+}
+
+.underlineHover:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+

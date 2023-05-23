@@ -1,0 +1,31 @@
+.timeline {
+  position: relative;
+
+  .icon {
+    border-radius: 9999px;
+    -moz-border-radius: 9999px;
+    -webkit-border-radius: 9999px;
+    box-shadow: 0 0 40px -10px $dull_empty;
+    //background: transparent;
+    border: 1px solid white;
+    background: #0b0d12;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+
+
+  .active {
+    .icon {
+      box-shadow: 0 0 40px -10px #b1e365!important;
+      background: #b1e365!important;
+      border:0;
+      color: black;
+
+    }
+  }
+}
+
+

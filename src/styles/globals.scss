@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+//@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&family=Work+Sans:wght@300;400;500;700&display=swap');
+
+@import 'transitions';
+@import 'gradients';
+
+@import 'components/spacer';
+@import 'components/hamburger';
+@import 'components/navbar';
+@import 'components/button';
+@import 'components/carousel';
+@import 'components/modal';
+@import 'components/chroma';
+@import 'components/input';
+@import 'components/dropdown';
+@import 'components/fliper';
+@import 'components/table';
+@import 'components/loading';
+@import 'components/switch';
+@import 'components/tooltip';
+
+@import 'pages/home/about';
+@import 'pages/home/investments';
+
+@import 'pages/app/dashboard';
+@import 'pages/app/sidebar';
+@import 'pages/app/vault';
+
+
+//@import 'components/toggle';
+//@import 'components/wavelink';
+//@import 'components/timeline';
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-kerning: normal;
+  -webkit-text-size-adjust: 100%;
+  font-family: 'Montserrat', sans-serif;
+
+}
+
+.bg {
+  background-image:    url('/img/bg5.jpg');
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center center;              /* optional, center the image */
+  //
+  //&::before{
+  //  content: '';
+  //  position: absolute;
+  //  display: flex;
+  //  left: 0;
+  //  right: 0;
+  //  top: 0;
+  //  bottom: 0;
+  //  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 80%, rgb(18, 21, 30) 100%);
+  //  opacity: 0.9;
+  //}
+}
+
+.bgFit {
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center center;              /* optional, center the image */
+
+}
+
+.disabled {
+  opacity: 0.55;
+  pointer-events: none!important;
+  cursor: not-allowed! important;
+}
+
+.fullWidth {
+  .btn-wrap {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+
+.glowing {
+    text-shadow: rgba(185,37,81,0.9) 0px 0px 52px;
+}
+
+
+.image-container {
+  position: relative;
+  width: 100%;
+
+  .image {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+  }
+
+  .imageOfferList {
+    object-fit: cover;
+    width: 100% !important;
+    position: relative !important;
+    height: 300px!important;
+  }
+}
+
+.w-17 {
+  width:4rem;
+}
