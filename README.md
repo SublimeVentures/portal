@@ -32,9 +32,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -- https://blockeater.herokuapp.com/v3rify
 
 ===
-- cache bg
-- cache cloudfront
-- co-investors
 - og images
 - logo update
 - deploy processor
