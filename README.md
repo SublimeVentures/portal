@@ -33,7 +33,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ===
 - og images
-- logo update
 - deploy processor
 - buy moralis
 - musthafa feedback
