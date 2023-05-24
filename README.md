@@ -79,7 +79,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - onboarding whales
 
 
-
+https://episyche.com/blog/user-guide-for-deploying-the-nextjs-app-in-production-using-pm2-and-nginx
 
 
 # 1. Add env variables
