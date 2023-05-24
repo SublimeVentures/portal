@@ -5,7 +5,9 @@ module.exports = {
       script: 'index.js',
       instances: "1",
       autorestart: true,
-      merge_logs: false,
+      output: './out.log',
+      error: './error.log',
+      log: './combined.outerr.log',
     }
   ]
 };
