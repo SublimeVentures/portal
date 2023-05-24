@@ -32,6 +32,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -- https://blockeater.herokuapp.com/v3rify
 
 ===
+- cache bg
+- cache cloudfront
+- co-investors
+- og images
+- logo update
+- deploy processor
+- buy moralis
+- musthafa feedback
+- fix links and style
+- write copy
+
+
+
 
 - make offer button
 - -- (buy) check liquidity 
@@ -79,7 +92,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - onboarding whales
 
 
-https://episyche.com/blog/user-guide-for-deploying-the-nextjs-app-in-production-using-pm2-and-nginx
+
 
 
 # 1. Add env variables

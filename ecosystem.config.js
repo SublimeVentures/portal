@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "ThreeVC",
-      script: 'index.js',
+      script: './index.js',
       instances: "1",
       autorestart: true,
       output: './out.log',
