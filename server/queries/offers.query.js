@@ -2,7 +2,7 @@ const {models} = require('../services/db/index');
 
 async function getOffersPublic() {
     return models.offers.findAll({
-        attributes: ['name', 'image', 'genre', 'url_web'],
+        attributes: ['name', 'image', 'genre', 'url_web', 'slug'],
         where: {
             displayPublic: true
         },
