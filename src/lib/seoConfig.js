@@ -6,21 +6,21 @@ export const seoConfig = (page) => {
             case PAGE.Landing: {
                 return generateSeo(
                     "3VC - invest ground floor",
-                    "DON'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES.",
+                    "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
                     page
                 )
             }
             case PAGE.Login: {
                 return generateSeo(
                     "3VC - login",
-                    "DON'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES.",
+                    "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
                     page
                 )
             }
             case PAGE.Investments: {
                 return generateSeo(
                     "3VC - our investments",
-                    "DON'T BE EXIT LIQUIDITY. ACCESS OPPORTUNITIES.",
+                    "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
                     page
                 )
             }

@@ -7,7 +7,7 @@ export default function Navbar() {
     const [isOnTop, setIsOnTop] = useState(false)
     const scrollPosition = useScrollPosition();
     const menu = [
-        {name: 'DOCS', link: 'https://citizencapital.notion.site/', isExternal: true},
+        {name: 'DOCS', link: 'https://3vcfund.notion.site/3VC-7ff7dd407db54311bc5dde8d26651e88', isExternal: true},
         {name: 'INVESTMENTS', link: 'investments'},
     ]
 

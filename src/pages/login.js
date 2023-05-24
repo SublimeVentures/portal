@@ -25,7 +25,7 @@ import {seoConfig} from "@/lib/seoConfig";
 export default function Login() {
     const seo = seoConfig(PAGE.Login)
 
-
+    console.log("window.location",window.location)
     const { isLoading, data, isError } = useQuery({
             queryKey: ["partnerList"],
             queryFn: fetchPartners,
