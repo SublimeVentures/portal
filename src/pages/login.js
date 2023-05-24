@@ -25,7 +25,6 @@ import {seoConfig} from "@/lib/seoConfig";
 export default function Login() {
     const seo = seoConfig(PAGE.Login)
 
-    console.log("window.location",window.location)
     const { isLoading, data, isError } = useQuery({
             queryKey: ["partnerList"],
             queryFn: fetchPartners,
@@ -53,7 +52,7 @@ export default function Login() {
         setMessageSigned(true)
         try {
             const message = new SiweMessage({
-                domain: window.location.host,
+                domain: window.location.host.replace("www.", ""),
                 address: forcedAddress? forcedAddress : address,
                 statement: "INVEST GROUND FLOOR\n" +
                     "DON'T BE EXIT LIQUIDITY",

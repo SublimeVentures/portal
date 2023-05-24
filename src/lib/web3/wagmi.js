@@ -5,7 +5,7 @@ import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
-const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production2' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc] //todo: fix
+const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc] //todo: fix
 
 const { chains, provider, webSocketProvider } = configureChains(
     rightChains,
