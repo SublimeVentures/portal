@@ -4,7 +4,7 @@
 
 import * as Sentry from "@sentry/nextjs";
 
-const DNS = process.env.NEXT_PUBLIC_ENV == "dev" ? null : "https://45cad8926c1541e6aae53521e39930f3@o4504865409007616.ingest.sentry.io/4505141853552640"
+const DNS = process.env.NEXT_PUBLIC_ENV  !== "production" ? null : "https://45cad8926c1541e6aae53521e39930f3@o4504865409007616.ingest.sentry.io/4505141853552640"
 
 Sentry.init({
   dsn: DNS,

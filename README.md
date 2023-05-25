@@ -32,14 +32,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -- https://blockeater.herokuapp.com/v3rify
 
 ===
-inject  wallets etc
 ensure logging works as should
 deploy processor
 buy moralis cuz demo wont process more than 100 requests
 implement @MrBlank feedback
 fix links and style
 write copy to fill the links
-
 
 
 
