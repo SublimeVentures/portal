@@ -12,7 +12,7 @@ export default function Profile() {
         VanillaTilt.init(tiltAvatar.current, {scale: 1.1, speed: 1000, max: 10});
     }, []);
 
-
+    console.log("session",session)
     return (
         <div
             className="flex flex-1 flex-col justify-center items-center rounded-xl bg-navy-accent py-10 sm:flex-row custom:flex-col">
@@ -27,7 +27,12 @@ export default function Profile() {
                     />
                 </div>
                 {session?.user ? (
-                    <div className={"h-[14rem] w-[14rem] flex rounded-full shadow-lg"}><img className="flex  w-[14rem] my-auto" src={session.user.img}/></div>
+                    <div className={"max-w-[14rem] flex rounded-full shadow-lg"}>
+                        <img className="flex rounded-full my-auto" src={session.user.img}/>
+                    </div>
+                    // <div className={"h-[14rem] w-[14rem] flex rounded-full shadow-lg"}>
+                    //     <img className="flex  w-[14rem] rounded-full my-auto" src={session.user.img}/>
+                    // </div>
                 ) : (
                     <lottie-player
                         autoplay

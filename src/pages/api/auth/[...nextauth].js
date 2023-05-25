@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import {SiweMessage} from "siwe"
 import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
-const meta = process.env.ENV === "production" ? "__Host-next-auth.csrf-token" : "next-auth.csrf-token"
+const meta = process.env.URL === "localhost:3000" ? "next-auth.csrf-token" : "__Host-next-auth.csrf-token"
 
 export default async function auth(req, res) {
     const providers = [

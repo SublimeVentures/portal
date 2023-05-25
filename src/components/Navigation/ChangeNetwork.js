@@ -36,7 +36,7 @@ export default function ChangeNetwork() {
     const content = () => {
         return (
             <div>
-                Currently, platform <span className="text-gold">supports {chains.length} chains</span>.<br/>
+                Currently our platform <span className="text-gold">supports {chains.length} chains</span>.<br/>
                 Please switch to one of these to continue.
                 <div className="flex flex-col my-10 gap-5 fullWidth">
                     {chains.map((x, index) => (
