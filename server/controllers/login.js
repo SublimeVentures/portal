@@ -24,7 +24,7 @@ async function isWhale(ownedNfts) {
 async function isPartner(ownedNfts) {
     console.log("AUTH :: Checking if Partner")
     if (ownedNfts.length === 0) return false
-
+    console.log("ownedNfts",ownedNfts) //todo: remove
 
     return {
         amt: ownedNfts.length,
