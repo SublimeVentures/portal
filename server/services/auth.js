@@ -1,6 +1,6 @@
 const {decode} = require("next-auth/jwt");
 const cookie = require("cookie");
-const meta = process.env.ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token"
+const meta = process.env.FORCE_DEV === "true" ? "next-auth.session-token" : (process.env.ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token")
 
 async function getAccessToken(req) {
     if(!req.headers.cookie) {
@@ -13,7 +13,6 @@ async function getAccessToken(req) {
 }
 
 async function checkSelfCall(headers) {
-    console.log("sprawdzam czy swoj", headers.host, process.env.LOCAL_HOSTNAME, headers.host === process.env.LOCAL_HOSTNAME, headers.host === process.env.URL)
     return headers.host === process.env.LOCAL_HOSTNAME || headers.host === process.env.URL
 }
 
