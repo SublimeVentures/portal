@@ -39,8 +39,6 @@ export default function AppVault() {
         {type: 'claim1', step: 'Tokens claimed', date: '2022-10-16', icon: "vote"},
     ]
 
-    console.log("vault",vault)
-
     const renderList = () => {
         if(status !== "authenticated" || !isSuccessDataFeed || vault=== undefined) return <div className={'col-span-12 mt-5'}><Loader/></div>
         if(status === "authenticated" && vault.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
