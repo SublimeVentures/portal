@@ -25,6 +25,6 @@ export const fetchVault = async (acl, address) => {
     } catch(e) {
         console.log("e: fetchOfferDetails",e)
     }
-    return {}
+    return []
 }
 

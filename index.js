@@ -18,8 +18,7 @@ const {router: vaultRoute} = require("./server/routes/vault.router.js");
 const {router: otcRoute} = require("./server/routes/otc.router.js");
 
 const port = process.env.PORT || 3000
-const dev = true
-// const dev = process.env.ENV !== 'production';
+const dev = process.env.ENV !== 'production' || process.env.FORCE_DEV === "true" ;
 const hostname = process.env.HOSTNAME
 
 const nextApp = next({dir: '.', dev, hostname, port});
