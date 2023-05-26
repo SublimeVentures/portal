@@ -10,11 +10,11 @@ export default function EmptyVault() {
     }, []);
 
     return (
-        <div className="max-h-[500px] text-center -mt-10">
+        <>
             <lottie-player
                 autoplay
                 loop
-                style={{width:'100%', height:'100%', maxHeight: '500px', maxWidth:'500px', margin: '0 auto'}}
+                style={{width:'100%', height:'100%', maxHeight: '400px', maxWidth:'400px', margin: '0 auto', marginTop:'-50px'}}
                 mode="normal"
                 src="/static/lottie/vault.json"
             />
@@ -23,7 +23,7 @@ export default function EmptyVault() {
                     <RoundButton text={'Invest to unlock'} is3d={true} isPrimary={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconLight className={ButtonIconSize.hero}/>}/>
                 </Link>
             </div>
-        </div>
+        </>
 
 
     )

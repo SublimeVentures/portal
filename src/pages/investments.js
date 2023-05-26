@@ -1,12 +1,10 @@
 import HeroBg from "@/components/Home/HeroBg";
 import {
     useQuery,
-    dehydrate, QueryClient
+    dehydrate
 } from '@tanstack/react-query'
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {fetchPublicInvestments} from "@/fetchers/public.fecher";
 import { queryClient } from '@/lib/web3/queryCache'
-import Head from "next/head";
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";

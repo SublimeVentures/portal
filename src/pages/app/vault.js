@@ -39,10 +39,12 @@ export default function AppVault() {
         {type: 'claim1', step: 'Tokens claimed', date: '2022-10-16', icon: "vote"},
     ]
 
+    console.log("vault",vault)
 
     const renderList = () => {
-        if(status !== "authenticated" || !isSuccessDataFeed || vault=== undefined) return <div className={'col-span-12'}><Loader/></div>
-        if(status === "authenticated" && vault.length===0) return <div className={'col-span-12'}><EmptyVault/></div>
+        if(status !== "authenticated" || !isSuccessDataFeed || vault=== undefined) return <div className={'col-span-12 mt-5'}><Loader/></div>
+        if(status === "authenticated" && vault.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
+
         return vault.map((el, i) => {
             return <VaultItem item={el} key={i}/>
         })
@@ -62,11 +64,14 @@ export default function AppVault() {
                                                       icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
                     />
                 </div>
-
-                {renderList()}
-
             </div>
+            {/*<div className="grid grid-cols-12 flex flex-1 gap-y-10 mobile:gap-10">*/}
+            {/*    vault*/}
+            {/*</div>*/}
 
+            <div className="col-span-12 text-center contents">
+                {renderList()}
+            </div>
         </>
 
     )

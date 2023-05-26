@@ -6,7 +6,6 @@ const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('./delegate.abi.json')
 
 async function isWhale(ownedNfts) {
-    console.log("AUTH :: Checking if Whale")
     const whaleAddress = getEnv().whaleId
     const exists = ownedNfts.find(el => el.token_address.toLowerCase() === whaleAddress.toLowerCase())
     if (!exists) return false;
@@ -31,7 +30,7 @@ async function isPartner(ownedNfts) {
         name: ownedNfts[0].name,
         symbol: ownedNfts[0].symbol,
         type: ownedNfts[0].contract_type,
-        img: ownedNfts[0]?.media?.media_collection?.high?.url,
+        img: ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url,
         id: Number(ownedNfts[0].tokenId),
         ACL: 1
     }
@@ -154,6 +153,8 @@ async function feedNfts(address) {
 
 async function login(address) {
     const [userNfts, enabledCollections] = await feedNfts(address)
+    console.log("userNfts",userNfts)
+    console.log("enabledCollections",enabledCollections)
     let type = await isWhale(userNfts)
     if (!type) type = await isPartner(userNfts)
     if (!type) type = await isInjectedUser(address)

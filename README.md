@@ -32,13 +32,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -- https://blockeater.herokuapp.com/v3rify
 
 ===
-ensure logging works as should
-deploy processor
-buy moralis cuz demo wont process more than 100 requests
-implement @MrBlank feedback
+
+investment -> test + check vault
 fix links and style
 write copy to fill the links
-
+implement @MrBlank feedback
+https://discord.com/channels/@me/997001334328918017/1111268815238594642
 
 
 - make offer button
