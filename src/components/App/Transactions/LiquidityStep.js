@@ -1,5 +1,5 @@
 import {erc20ABI, useContractRead} from 'wagmi'
-import {useSession} from "next-auth/react";
+import { BigNumber } from 'ethers';
 import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect} from "react";
 
@@ -24,12 +24,13 @@ export default function LiquidityStep({stepProps}) {
         }
     )
 
-    const currentBalanceHuman = (currentBalance ? currentBalance.toNumber() : 0) / 10 ** selectedCurrency.precision
-    const currentBalanceLocale = currentBalanceHuman.toLocaleString()
+    const power = BigNumber.from(10).pow(selectedCurrency.precision)
+    const currentBalanceHuman = currentBalance ? currentBalance.div(power).toNumber() : 0
+    const isEnoughLiquidity = amount < currentBalanceHuman
+
+    const currentBalanceLocale = Number(currentBalanceHuman).toLocaleString()
     const amountLocale = Number(amount).toLocaleString()
 
-    const liquidityHuman = (currentBalance ? currentBalance.toNumber() : 0) / 10 ** selectedCurrency.precision
-    const isEnoughLiquidity = amount < liquidityHuman
 
 
     // console.log("RECHANGE ===============")

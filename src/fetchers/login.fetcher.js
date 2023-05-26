@@ -1,12 +1,12 @@
 import axios from "axios";
+import Sentry from "@sentry/nextjs";
 
 export const fetchSessionData = async (address) => {
-    console.log("Fetching user type", address);
     try {
         const {data} = await axios.get(`/api/validate/l0gin/${address}`)
         return data
     } catch(e) {
-        console.log("e: fetchSessionData",e)
+        Sentry.captureException({location: "fetchSessionData", e});
     }
     return {}
 }

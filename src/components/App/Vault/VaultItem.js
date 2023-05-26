@@ -7,7 +7,7 @@ import PAGE from "@/routes";
 import Link from "next/link";
 import {parseVesting} from "@/lib/vesting";
 
-export default function VaultItem({item}) {
+export default function VaultItem({item, research}) {
     const {offerDetails, createdAt, invested } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
@@ -28,7 +28,7 @@ export default function VaultItem({item}) {
                 {item["offer.name"]}
 
             </div>
-            <div className="pt-1 text-xs text-gray">Participated {participated}</div>
+            <div className="pt-1 text-xs text-gray text-left">Participated {participated}</div>
 
             <div className="text-md pt-2 w-full flex">Invested <span
                 className="ml-auto font-bold">${normalized_invested}</span></div>
@@ -36,19 +36,19 @@ export default function VaultItem({item}) {
             <div className="text-md w-full flex">TGE profit <span className={`ml-auto font-bold ${tge !== 'TBA' ? 'text-app-success' : ''}`}>+{tge}</span></div>
             <div className="text-md w-full flex">Vested <span className="ml-auto font-bold">{vested}%</span></div>
             <div className="text-md w-full flex">Next unlock <span className="ml-auto font-bold">{nextUnlock>0 ? nextUnlock : "TBA"}</span></div>
-            <div
-                className="moreVault  cursor-pointer opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">
-                <div className="flex items-center justify-center moreVaultIcon">
-                    <div className="icon z-10 w-15 h-15">
-                        <IconArrow className="w-8"/>
-                    </div>
-                </div>
-            </div>
+            {/*<div*/}
+            {/*    className="moreVault  cursor-pointer opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">*/}
+            {/*    <div className="flex items-center justify-center moreVaultIcon">*/}
+            {/*        <div className="icon z-10 w-15 h-15">*/}
+            {/*            <IconArrow className="w-8"/>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </div>
 
         <div className={'relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex'}  ref={tilt}>
             <Link href={`${PAGE.Opportunities}/${item["offer.slug"]}`}>
-            <Image src={item["offer.image"]} fill className={'imageOfferList rounded-tr-xl rounded-br-xl bg-cover '} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
+            <Image src={`${research}${item["offer.slug"]}/logo.jpg`} fill className={'imageOfferList rounded-tr-xl rounded-br-xl bg-cover '} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
             </Link>
         </div>
 

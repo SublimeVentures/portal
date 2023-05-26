@@ -36,6 +36,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 investment -> test + check vault
 fix links and style
 write copy to fill the links
+
+- homepage datafeed
+- support errorów
 implement @MrBlank feedback
 https://discord.com/channels/@me/997001334328918017/1111268815238594642
 
@@ -51,11 +54,11 @@ https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - -- build otcDeal
 - -- expire otcPending after 5 minutes
 
-- support errorów
+
 - przy cancellowaniu sprawdź czy nie ma pending
 
 
-- homepage datafeed
+
 - connect discord to app
 - try catch every query na backendzie
 - sprawdź transakcje
@@ -75,8 +78,7 @@ https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - referral system
 - clean old otcPending - every month after backup
 
-- DEPLOY
-==========
+
 - whale deposit/ withdraw features in settings
 - whale page
 - invest from stake

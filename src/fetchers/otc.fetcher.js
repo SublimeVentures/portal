@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as Sentry from "@sentry/nextjs";
 
 export const fetchMarkets = async () => {
     console.log("Fetching Market List");
@@ -8,7 +9,7 @@ export const fetchMarkets = async () => {
         console.log("fetchMarkets",data)
         return data
     } catch(e) {
-        console.log("e: fetchMarkets",e)
+        Sentry.captureException({location: "fetchMarkets", error: e});
     }
     return {}
 }
@@ -64,6 +65,7 @@ export const removeTransaction = async (offerId, hash) => {
         return data
     } catch(e) {
         console.log("e: removeTransaction",e)
+
     }
     return {}
 }

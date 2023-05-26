@@ -39,13 +39,18 @@ export default function AppVault() {
         {type: 'claim1', step: 'Tokens claimed', date: '2022-10-16', icon: "vote"},
     ]
 
-    const renderList = () => {
-        if(status !== "authenticated" || !isSuccessDataFeed || vault=== undefined) return <div className={'col-span-12 mt-5'}><Loader/></div>
-        if(status === "authenticated" && vault.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
+    const elements = vault?.elements
 
-        return vault.map((el, i) => {
-            return <VaultItem item={el} key={i}/>
+    const renderList = () => {
+        if(!elements) return
+        return elements.map((el, i) => {
+            return <VaultItem item={el} key={i} research={vault?.research}/>
         })
+    }
+
+    const placeHolder = () => {
+        if(status !== "authenticated" || !isSuccessDataFeed || elements=== undefined) return <div className={'col-span-12 mt-5'}><Loader/></div>
+        if(status === "authenticated" && elements.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
     }
 
     return (
@@ -54,7 +59,6 @@ export default function AppVault() {
                 <title>Vault - 3VC</title>
             </Head>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-
                 <div className="col-span-12 flex">
                     <RoundBanner title={'Vault'} subtitle={'All your investments in one place.'}
                                  action={<RoundButton text={'Learn more'} isWide={true}
@@ -62,13 +66,10 @@ export default function AppVault() {
                                                       icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
                     />
                 </div>
-            </div>
-            {/*<div className="grid grid-cols-12 flex flex-1 gap-y-10 mobile:gap-10">*/}
-            {/*    vault*/}
-            {/*</div>*/}
-
-            <div className="col-span-12 text-center contents">
                 {renderList()}
+            </div>
+            <div className="col-span-12 text-center contents">
+                {placeHolder()}
             </div>
         </>
 

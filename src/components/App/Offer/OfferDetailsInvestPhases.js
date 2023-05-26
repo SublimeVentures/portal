@@ -68,6 +68,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {id, alloTotal, isPaused} = offer
 
     const currentPhase = phases[activePhase]
+
+
     const nextPhase = isLastPhase ? currentPhase : phases[activePhase + 1]
 
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
@@ -231,7 +233,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setIsAllocationOk(true)
             return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
         } else {
-            if(investmentAmount % 100 > 0) {
+            if(investmentAmount % 10 > 0) {//todo: fix na 100
                 setIsAllocationOk(true)
                 return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
             }
@@ -265,8 +267,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         selectedCurrency,
         afterInvestmentCleanup
     }
-
-    console.log("restoreModalProps",restoreModalProps)
 
     return (
         <div className="flex flex-1 flex-col items-center">
@@ -333,7 +333,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
             <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
-                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.copy} isPrimary={true}
+                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.action} isPrimary={true}
                                  showParticles={true}
                                  isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
                                  handler={makeInvestment}

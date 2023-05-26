@@ -4,6 +4,7 @@ const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getEnv} = require("../services/db/utils");
 const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('./delegate.abi.json')
+const Sentry = require("@sentry/nextjs");
 
 async function isWhale(ownedNfts) {
     const whaleAddress = getEnv().whaleId
@@ -24,8 +25,8 @@ async function isWhale(ownedNfts) {
 async function isPartner(ownedNfts) {
     console.log("AUTH :: Checking if Partner")
     if (ownedNfts.length === 0) return false
-    console.log("ownedNfts",ownedNfts) //todo: remove
     const image = ownedNfts[0]?.media?.mimetype === 'image/gif' ? ownedNfts[0]?.media?.original_media_url : (ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url)
+    console.log("ownedNfts",ownedNfts,image) //todo: remove
 
     return {
         amt: ownedNfts.length,
@@ -94,7 +95,6 @@ async function isDelegated(address, enabledCollections) {
                     }
                 }
             }
-            console.log("vault", vault)
 
             if (amt > 0) {
                 const partner = enabledCollections.find(el => el.address === partnerContract)
@@ -126,7 +126,7 @@ async function isDelegated(address, enabledCollections) {
             return false;
         }
     } catch (e) {
-        console.log("e, checkDelegate ::", e)
+        Sentry.captureException({location: "checkDelegate", error: e});
         return false
     }
 }

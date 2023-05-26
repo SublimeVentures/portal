@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
 
 router.get('/all', async (req, res) => {
     const session = await getAccessToken(req)
-    console.log("XZY - VAULT -- session", session)
     if (!session) return res.status(401).json({})
 
     return res.status(200).json(await userVault(session, req))
