@@ -1,6 +1,6 @@
 const {models} = require('../services/db/index');
 const db = require('../services/db/index');
-const {Op} = require("sequelize");
+const {Op, QueryTypes} = require("sequelize");
 const Sentry = require("@sentry/nextjs");
 
 async function getOfferRaise(id) {
@@ -46,6 +46,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
 
                 await db.query(participants, {
                     transaction: t,
+                    type: QueryTypes.UPSERT,
                     model: models.participants,
                 });
 

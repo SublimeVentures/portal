@@ -17,7 +17,7 @@ async function getUserVault(owner) {
             owner
         },
         include: {
-            attributes: ['slug', 'image', 'name', 'tge', 'ppu', 't_unlock'],
+            attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
             model: models.offers
         },
         raw: true
