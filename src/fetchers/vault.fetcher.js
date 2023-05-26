@@ -9,7 +9,7 @@ export const fetchUserInvestment = async (offerId) => {
     } catch(e) {
         console.log("e: fetchInvestment",e)
     }
-    return {}
+    return 0
 }
 
 export const fetchVault = async (acl, address) => {

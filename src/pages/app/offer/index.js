@@ -15,7 +15,7 @@ export default function AppOffer() {
     const ACL = session?.user?.ACL
     const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : session?.user?.address
 
-    const { isLoading, data: investments, isError } = useQuery({
+    const { isLoading, data: response, isError } = useQuery({
             queryKey: ["offerList", {ACL, ADDRESS}],
             queryFn: () => fetchOfferList(ACL),
             cacheTime: 30 * 60 * 1000,
@@ -26,14 +26,16 @@ export default function AppOffer() {
         }
     );
 
+    const offerList = response?.offers
+
     const renderPage = () => {
         if(status !== "authenticated") return <Loader/>
-        if(!investments || investments.length === 0) return  <Empty/>
+        if(!offerList || offerList.length === 0) return  <Empty/>
 
         return (
                 <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                    {!!investments && investments.map(el =>
-                        <OfferItem offer={el} key={el.slug} ACL={ACL}/>
+                    {!!offerList && offerList.map(el =>
+                        <OfferItem offer={el} key={el.slug} ACL={ACL} research={response?.research}/>
                     )}
                 </div>
         )

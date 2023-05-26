@@ -35,8 +35,6 @@ export const AppOfferDetails = () => {
         }
     );
 
-    console.log("offerData",offerData)
-
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],
             queryFn: () => fetchOfferAllocation(offerData?.offer?.id),

@@ -15,17 +15,27 @@ async function getParamOfferList(session, req) {
 
     const offers = await getOfferList()
 
+    let response = {
+        research: getEnv().research,
+        offers: []
+    }
+
     switch (ACL) {
         case ACLs.Whale: {
-            return getOfferListWhale(offers)
+            response.offers = getOfferListWhale(offers)
+            break;
         }
         case ACLs.PartnerInjected: {
-            return offerListInjectedPartner(offers, ADDRESS)
+            response.offers = offerListInjectedPartner(offers, ADDRESS);
+            break;
         }
         default: {
-            return offerListPartner(offers)
+            response.offers =  offerListPartner(offers)
+            break;
         }
     }
+
+    return response
 }
 
 function getOfferListWhale(offers) {

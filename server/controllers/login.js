@@ -25,13 +25,14 @@ async function isPartner(ownedNfts) {
     console.log("AUTH :: Checking if Partner")
     if (ownedNfts.length === 0) return false
     console.log("ownedNfts",ownedNfts) //todo: remove
+    const image = ownedNfts[0]?.media?.mimetype === 'image/gif' ? ownedNfts[0]?.media?.original_media_url : (ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url)
 
     return {
         amt: ownedNfts.length,
         name: ownedNfts[0].name,
         symbol: ownedNfts[0].symbol,
         type: ownedNfts[0].contract_type,
-        img: ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url,
+        img: image,
         id: ownedNfts[0].tokenId ? Number(ownedNfts[0].tokenId) : Number(ownedNfts[0].token_id),
         ACL: 1
     }

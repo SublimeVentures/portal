@@ -4,7 +4,7 @@ const {Op} = require("sequelize");
 
 async function getOfferRaise(id) {
     return models.raises.findOne({
-        where: {id},
+        where: {offerId: id},
         include: {
             attributes: ['id', 'alloTotalPartner'],
             model: models.offers

@@ -12,6 +12,7 @@ export default function OfferDetailsFlipbook({offer}) {
     function createMarkup() {
         return {__html: description};
     }
+
     return (
         <>
 
@@ -30,16 +31,17 @@ export default function OfferDetailsFlipbook({offer}) {
                         <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconDiscord />}/>
                     </a> }
 
-                    <a href={`${research}${slug}/Research.pdf`} target="_blank">
+                    <a href={`${research}${slug}/ResearchReport.pdf`} target="_blank">
                         <IconButton zoom={1.1} size={'w-17 p-3'} icon={<IconDownload />}/>
                     </a>
 
                 </div>
-                {description && <div className="mt-5  " dangerouslySetInnerHTML={createMarkup()} />}
+                {description && <div className="my-5 mx-10" dangerouslySetInnerHTML={createMarkup()} />}
             </div>
 
+
             <div className="my-10">
-                <Script src="/browser/index-79dca24a.js"/>
+                <Script src="/browser/index-d5086682.js"/>
                 <div id="flipbook"></div>
             </div>
 
