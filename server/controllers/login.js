@@ -25,13 +25,14 @@ async function isPartner(ownedNfts) {
     console.log("AUTH :: Checking if Partner")
     if (ownedNfts.length === 0) return false
 
+
     return {
         amt: ownedNfts.length,
         name: ownedNfts[0].name,
         symbol: ownedNfts[0].symbol,
         type: ownedNfts[0].contract_type,
         img: ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url,
-        id: Number(ownedNfts[0].tokenId),
+        id: ownedNfts[0].tokenId ? Number(ownedNfts[0].tokenId) : Number(ownedNfts[0].token_id),
         ACL: 1
     }
 }
@@ -153,8 +154,6 @@ async function feedNfts(address) {
 
 async function login(address) {
     const [userNfts, enabledCollections] = await feedNfts(address)
-    console.log("userNfts",userNfts)
-    console.log("enabledCollections",enabledCollections)
     let type = await isWhale(userNfts)
     if (!type) type = await isPartner(userNfts)
     if (!type) type = await isInjectedUser(address)
