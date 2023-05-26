@@ -13,6 +13,7 @@ async function getAccessToken(req) {
 }
 
 async function checkSelfCall(headers) {
+    console.log("sprawdzam czy swoj", headers.host, process.env.LOCAL_HOSTNAME, headers.host === process.env.LOCAL_HOSTNAME, headers.host === process.env.URL)
     return headers.host === process.env.LOCAL_HOSTNAME || headers.host === process.env.URL
 }
 

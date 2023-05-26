@@ -36,8 +36,6 @@ async function getParamOfferDetails(session, req) {
         rrPages: offer.rrPages,
         slug: offer.slug,
         vault: offer.vault,
-        research: getEnv().research,
-        diamond: getEnv().diamond,
         whale: getEnv().whaleId,
         d_open: null,
         d_close: null,

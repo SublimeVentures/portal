@@ -29,9 +29,6 @@ export default function Profile() {
                     <div className={"max-w-[14rem] flex rounded-full shadow-lg"}>
                         <img className="flex rounded-full my-auto" src={session.user.img}/>
                     </div>
-                    // <div className={"h-[14rem] w-[14rem] flex rounded-full shadow-lg"}>
-                    //     <img className="flex  w-[14rem] rounded-full my-auto" src={session.user.img}/>
-                    // </div>
                 ) : (
                     <lottie-player
                         autoplay

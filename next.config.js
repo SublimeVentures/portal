@@ -28,7 +28,7 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'd3dnznjar52mfe.cloudfront.net',
                 port: '',
-                pathname: '/*',
+                pathname: '/**',
             },
         ],
     },

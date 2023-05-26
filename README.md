@@ -54,9 +54,9 @@ https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - support errorów
 - przy cancellowaniu sprawdź czy nie ma pending
 
+
 - homepage datafeed
 - connect discord to app
-- images for twitter SEO tags
 - try catch every query na backendzie
 - sprawdź transakcje
 

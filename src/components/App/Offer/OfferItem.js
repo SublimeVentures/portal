@@ -4,13 +4,12 @@ import {useEffect, useRef} from "react";
 import PAGE from "@/routes";
 import Link from "next/link";
 import Image from "next/image";
-import {useSession} from "next-auth/react";
 import {parsePhase} from "@/lib/phases/parsePhase";
 
-export default function OfferItem({offer, ACL}) {
+export default function OfferItem({offer, ACL, research}) {
 
     const imageTilt = useRef(null);
-    let {image, name, slug, d_open: starts, d_close:ends} = offer
+    let {name, slug, d_open: starts, d_close:ends} = offer
 
     useEffect(() => {
         VanillaTilt.init(imageTilt.current, {scale: 1.02, speed: 1000, max: 5});
@@ -26,7 +25,7 @@ export default function OfferItem({offer, ACL}) {
             <Link href={`${PAGE.Opportunities}/${slug}`} className="flex flex-1 flex-col">
                 <div className="bg-center relative min-h-[300px]">
                     <div className={'image-container min-h-[300px]'}>
-                        <Image src={image} fill className={'imageOfferList rounded-tl-xl rounded-tr-xl'} alt={slug} sizes="(max-width: 768px) 100vw"/>
+                        <Image src={`${research}${slug}/logo.jpg`} fill className={'imageOfferList rounded-tl-xl rounded-tr-xl'} alt={slug} sizes="(max-width: 768px) 100vw"/>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col text-left p-10">
