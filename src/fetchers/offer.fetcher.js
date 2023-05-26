@@ -1,31 +1,31 @@
 import axios from "axios";
+import Sentry from "@sentry/nextjs";
 
 export const fetchOfferList = async (acl, address) => {
+    let url = `/api/offer`
+    if(acl !== undefined) {
+        url+= `?acl=${acl}&address=${address}`
+    }
     try {
-        let url = `/api/offer`
-        if(acl !== undefined) {
-            url+= `?acl=${acl}&address=${address}`
-        }
         const {data} = await axios.get(url)
         return data
     } catch(e) {
-        console.log("e: fetchOfferList",e)
+        Sentry.captureException({location: "fetchOfferList", e,url});
     }
     return {}
 }
 
 export const fetchOfferDetails = async (slug, acl, address) => {
     if(!slug) return {}
-    // console.log("Fetching Offer Details", slug, acl);
+    let url = `/api/offer/${slug}`
+    if(acl !== undefined) {
+        url+= `?acl=${acl}&address=${address}`
+    }
     try {
-        let url = `/api/offer/${slug}`
-        if(acl !== undefined) {
-            url+= `?acl=${acl}&address=${address}`
-        }
         const {data} = await axios.get(url)
         return data
     } catch(e) {
-        console.log("e: fetchOfferDetails",e)
+        Sentry.captureException({location: "fetchOfferDetails", e,url});
     }
     return {}
 }
@@ -33,12 +33,12 @@ export const fetchOfferDetails = async (slug, acl, address) => {
 
 export const fetchOfferAllocation = async (id) => {
     if(!id) return {}
+    let url = `/api/offer/${id}/allocation`
     try {
-        let url = `/api/offer/${id}/allocation`
         const {data} = await axios.get(url)
         return data
     } catch(e) {
-        console.log("e: fetchOfferAllocation",e)
+        Sentry.captureException({location: "fetchOfferAllocation", e,url});
     }
     return {}
 }

@@ -2,10 +2,11 @@ import IconWait from "@/assets/svg/Wait.svg";
 import IconLoading from "@/assets/svg/LoadingCustom.svg";
 import IconSuccess from "@/assets/svg/Success.svg";
 import IconError from "@/assets/svg/Error.svg";
-import InvestFacet from "@/components/App/Transactions/InvestFacet.json";
 import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
 import {ACL as ACLs}  from "@/lib/acl";
 import {erc20ABI} from "wagmi";
+import { BigNumber } from 'ethers';
+
 
 export const Transaction = {
     Waiting: 0,
@@ -54,6 +55,8 @@ export const getStatusColor = (status) => {
 }
 
 export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, hash, nftId) => {
+    const power = BigNumber.from(10).pow(isFromStake ? 6 : currency.precision)
+    const _amount = BigNumber.from(amount).mul(power)
     switch (ACL) {
         case ACLs.Whale: {
             console.log("invest function - isFromStake",isFromStake)
@@ -62,7 +65,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                     method:'pledge',
                     args: [
                         nftId,
-                        amount * 10 ** currency.precision,
+                        _amount,
                         offer.id,
                     ],
                     address: offer.whale,
@@ -73,7 +76,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                     method:'transfer',
                     args: [
                         offer.vault,
-                        amount * 10 ** currency.precision,
+                        _amount,
                     ],
                     address: currency.address,
                     abi: erc20ABI
@@ -85,7 +88,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                 method:'transfer',
                 args: [
                     offer.vault,
-                    amount * 10 ** currency.precision,
+                    _amount,
                 ],
                 address: currency.address,
                 abi: erc20ABI

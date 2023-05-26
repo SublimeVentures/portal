@@ -1,13 +1,13 @@
 import axios from "axios";
+import Sentry from "@sentry/nextjs";
 
 export const fetchPayableCurrency = async () => {
-    console.log("Fetching Payable Currency List");
     try {
         let url = `/api/chain/currencies`
         const {data} = await axios.get(url)
         return data
     } catch(e) {
-        console.log("e: fetchPayableCurrency",e)
+        Sentry.captureException({location: "fetchPayableCurrency", e});
     }
     return {}
 }

@@ -1,6 +1,7 @@
 const {models} = require('../services/db/index');
 const db = require('../services/db/index');
 const {Op} = require("sequelize");
+const Sentry = require("@sentry/nextjs");
 
 async function getOfferRaise(id) {
     return models.raises.findOne({
@@ -25,14 +26,14 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
 
     const date = new Date().toISOString();
     const participants = `
-        INSERT INTO public.participants_${offerId} (address, "nftId", amount, acl, hash, "createdAt", "updatedAt")
-        VALUES ('${address}', '${tokenId}', '${amount}', '${acl}', '${hash}', '${date}', '${date}')
+        INSERT INTO public.participants_${offerId} ("address", "nftId", "amount", "acl", "hash", "createdAt", "updatedAt")
+        VALUES ('${address}', ${tokenId}, ${amount}, ${acl}, '${hash}', '${date}', '${date}')
             on conflict("address", "hash") do
         update set amount=EXCLUDED.amount, "acl"=EXCLUDED."acl", "nftId"=EXCLUDED."nftId", "updatedAt"=EXCLUDED."updatedAt";
     `
     try {
+        await db.transaction(async (t) => {
 
-        const result = await db.transaction(async (t) => {
                 const booked = await models.raises.increment({[variable]: amount}, {
                     where: {
                         [Op.and]: [
@@ -46,18 +47,17 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
                 await db.query(participants, {
                     transaction: t,
                     model: models.participants,
-                    mapToModel: true // pass true here if you have any mapped fields
                 });
 
                 return true;
             }
         );
+        return true;
 
-        return result
 
-    } catch
-        (error) {
-        console.log("Transaction error", error)
+    } catch (error) {
+        console.log("error",error)
+        Sentry.captureException({location: "bookAllocation", error, data: {offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId}});
         return false
     }
 }
