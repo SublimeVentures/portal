@@ -13,8 +13,11 @@ async function userInvestment(session, req) {
 
 async function userVault(session, req) {
     const {ACL, ADDRESS, USER} = checkAcl(session, req)
+    console.log("userVault - ACL, ADDRESS, USER",ACL, ADDRESS, USER)
     const owner = ACL === 0 ? `${USER.id}` : ADDRESS
-    return await getUserVault(owner)
+    const vault = await getUserVault(owner)
+    console.log("vault",vault)
+    return vault
 }
 
 

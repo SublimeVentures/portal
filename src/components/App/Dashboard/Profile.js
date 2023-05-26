@@ -12,6 +12,8 @@ export default function Profile() {
         VanillaTilt.init(tiltAvatar.current, {scale: 1.1, speed: 1000, max: 10});
     }, []);
 
+    console.log("session", session)
+
     return (
         <div
             className="flex flex-1 flex-col justify-center items-center rounded-xl bg-navy-accent py-10 sm:flex-row custom:flex-col">

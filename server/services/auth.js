@@ -13,10 +13,6 @@ async function getAccessToken(req) {
 }
 
 async function checkSelfCall(headers) {
-    console.log("=========")
-    console.log("checkSelfCall", headers.host)
-    console.log("checkSelfCall - process.env.URL", process.env.URL)
-    console.log("=========")
     return headers.host === process.env.LOCAL_HOSTNAME || headers.host === process.env.URL
 }
 
