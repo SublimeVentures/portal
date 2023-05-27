@@ -144,8 +144,8 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
                         <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
                 </div>
-                <div className="">Booked allocation will be released when the timer runs to zero. <a
-                    href="#" target="_blank" className="text-app-error">Read more.</a></div>
+                <div >Booked allocation will be released when the timer runs to zero. <a
+                    href="https://3vcfund.notion.site/Investment-booking-system-2f93893f882c49d0ab305159aa7099c4" target="_blank" className="text-app-success">Read more.</a></div>
             </div>
         )
     }

@@ -29,12 +29,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
--- https://blockeater.herokuapp.com/v3rify
 
-===
-
-fix links and style
-write copy to fill the links
+- fix links and style
 - try catch every query na backendzie / - support errorów
 - insert investment
 - homepage datafeed
@@ -42,10 +38,6 @@ write copy to fill the links
 - https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - transakcje nie działają na rollbacku
 - connect discord to app
-
-
-
-
 
 
 - make offer button
@@ -61,7 +53,7 @@ write copy to fill the links
 
 - przy cancellowaniu sprawdź czy nie ma pending
 
-
+- enable for reservation even on blocked reservation button
 - timeline for user activities for each investment in vault tab
 - new investment update for api
 - reassign allocation
