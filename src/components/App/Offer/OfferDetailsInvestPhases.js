@@ -35,7 +35,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         allocation
     } = paramsInvestPhase;
     const {data: session} = useSession()
-    const {chain} = useNetwork()
+    const {chain, chains} = useNetwork()
 
     const [isErrorModal, setErrorModal] = useState(false)
     const [errorMsg, setErrorMsg] = useState("")
@@ -74,6 +74,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
+
+    const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
@@ -361,9 +363,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {
                 setErrorModal(false)
             }}/>
-            <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
+            {isNetworkSupported && <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
                 setInvestModal(false)
-            }}/>
+            }}/> }
         </div>
     )
 }

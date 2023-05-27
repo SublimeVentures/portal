@@ -58,7 +58,7 @@ export default function ChangeNetwork() {
 
                 <div
                     className="text-app-error text-center">{error && error.message}</div>
-                <div className="mt-5 text-app-success"><a href="https://3vcfund.notion.site/Supported-networks-safe-gas-3d50096070d54efebae0590d02acbcdb" target="_blank">Read more.</a></div>
+                <div className="mt-5 text-app-success"><a href="https://3vcfund.notion.site/Supported-networks-safe-gas-3d50096070d54efebae0590d02acbcdb" target="_blank">Read more</a></div>
             </div>
         )
     }
