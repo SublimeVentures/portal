@@ -33,8 +33,8 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
 
     const content = () => {
         return (<> <div className="pb-10">
-            Don't want connect your cold wallet? You can delegate access! Read more
-            here.
+            Don't want connect your cold wallet? You can delegate access! <a href={"https://3vcfund.notion.site/Delegated-access-dc60abd8a5654641a7bd77d537256aa7"} target={"_blank"} className={"text-app-success"}>Read more
+            here.</a>
         </div>
             <div className="flex flex-col gap-5 fullWidth">
                 {connectors.map((connector) => (
