@@ -27,16 +27,15 @@ export default function AppOffer() {
     );
 
     const offerList = response?.offers
-    console.log("offerList",offerList,response)
     const renderPage = () => {
         if(status !== "authenticated") return <Loader/>
         if(!offerList || offerList.length === 0) return  <Empty/>
 
         return (
                 <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                    {/*{!!offerList && offerList.map(el =>*/}
-                    {/*    <OfferItem offer={el} key={el.slug} ACL={ACL} research={response?.research}/>*/}
-                    {/*)}*/}
+                    {!!offerList && offerList.map(el =>
+                        <OfferItem offer={el} key={el.slug} ACL={ACL} research={response?.research}/>
+                    )}
                 </div>
         )
     }
