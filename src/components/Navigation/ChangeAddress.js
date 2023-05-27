@@ -2,6 +2,9 @@ import {useAccount} from "wagmi";
 import GenericModal from "@/components/Modal/GenericModal";
 import {signOut, useSession} from "next-auth/react";
 import {useEffect} from "react";
+import Link from "next/link";
+import PAGE from "@/routes";
+import {RoundButton} from "@/components/Button/RoundButton";
 
 export default function ChangeAddress() {
     const {isConnected, address} = useAccount()
@@ -36,7 +39,13 @@ export default function ChangeAddress() {
                     <div className="truncate text-app-error">{address}</div>
                 </div>
 
-                <div className="mt-auto"><a href="#" target="_blank">Read more.</a></div>
+                <div className="mt-auto w-full">
+                    <div className={" w-full fullWidth"}>
+                        <RoundButton text={'Logout'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => {
+                            signOut({callbackUrl: "/"})
+                        }}/>
+                    </div>
+                </div>
             </div>
         )
     }

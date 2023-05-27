@@ -47,17 +47,26 @@ function getOfferListWhale(offers) {
 }
 
 async function offerListInjectedPartner(offers, address) {
+    console.log("INJECTED - START")
     const user = await getInjectedUserAccess(address)
+    console.log("INJECTED - user",user)
 
     if (!user || user.access.length===0) return false
 
     let allowedOffers = []
     for (let i = 0; i < user.access.length; i++) {
         const approved = offers.find(el => el.id === user.access[i])
+        console.log("INJECTED - approved",approved)
+
         if (approved) allowedOffers.push(approved)
     }
 
-    return offerListPartner(allowedOffers)
+    const list = offerListPartner(allowedOffers)
+    console.log("INJECTED - list", list)
+    console.log("INJECTED - END")
+    return list
+
+
 }
 
 function offerListPartner(data) {

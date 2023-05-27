@@ -38,10 +38,10 @@ export const AppOfferDetails = () => {
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],
             queryFn: () => fetchOfferAllocation(offerData?.offer?.id),
-            // refetchOnMount: true, //todo: uncomment
-            // refetchOnWindowFocus: true, //todo: uncomment
+            refetchOnMount: true,
+            refetchOnWindowFocus: true,
             enabled: !!offerData?.offer?.id,
-            // refetchInterval: 15000 //todo: uncomment
+            refetchInterval: 15000
         }
     );
 

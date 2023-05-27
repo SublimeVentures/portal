@@ -26,7 +26,6 @@ async function isPartner(ownedNfts) {
     console.log("AUTH :: Checking if Partner")
     if (ownedNfts.length === 0) return false
     const image = ownedNfts[0]?.media?.mimetype === 'image/gif' ? ownedNfts[0]?.media?.original_media_url : (ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url)
-    console.log("ownedNfts",ownedNfts,image) //todo: remove
 
     return {
         amt: ownedNfts.length,

@@ -33,14 +33,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ===
 
-investment -> test + check vault
 fix links and style
 write copy to fill the links
-
+- try catch every query na backendzie / - support errorów
+- insert investment
 - homepage datafeed
-- support errorów
-implement @MrBlank feedback
-https://discord.com/channels/@me/997001334328918017/1111268815238594642
+- implement @MrBlank feedback
+- https://discord.com/channels/@me/997001334328918017/1111268815238594642
+- transakcje nie działają na rollbacku
+- connect discord to app
+
+
+
+
 
 
 - make offer button
@@ -54,14 +59,8 @@ https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - -- build otcDeal
 - -- expire otcPending after 5 minutes
 
-
 - przy cancellowaniu sprawdź czy nie ma pending
 
-
-
-- connect discord to app
-- try catch every query na backendzie
-- sprawdź transakcje
 
 - timeline for user activities for each investment in vault tab
 - new investment update for api
@@ -77,7 +76,6 @@ https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - migrate citcap
 - referral system
 - clean old otcPending - every month after backup
-
 
 - whale deposit/ withdraw features in settings
 - whale page
