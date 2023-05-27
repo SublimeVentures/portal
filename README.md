@@ -29,8 +29,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-
-- fix links and style
 - try catch every query na backendzie / - support errorów
 - insert investment
 - homepage datafeed

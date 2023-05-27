@@ -87,7 +87,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 </div>
 
 
-                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <a href={"https://3vcfund.notion.site/Return-from-the-investment-0656411b2d4c44078c675d3f87e8b136"} target={"_blank"} className={"text-app-success"}>Read more here.</a></div>
+                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <a href={"https://3vcfund.notion.site/Return-from-the-investment-0656411b2d4c44078c675d3f87e8b136"} target={"_blank"} >Read more</a></div>
             </div>
         )
     }

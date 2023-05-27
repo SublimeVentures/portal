@@ -116,3 +116,25 @@ body {
 .max-h-3-4 {
   max-height: 75%;
 }
+
+a {
+  color:theme('colors.outline')!important;
+  transition: color .3s ease;
+  position:relative;
+
+  &:after {
+    content: " ↗";
+    font-weight: 900;
+    position: absolute;
+    font-size: .675rem;
+    margin-top:3px;
+    margin-left: 3px;
+    //line-height: 1.25rem;
+  }
+
+  &:hover {
+    color:theme('colors.app-success')!important;
+
+
+  }
+}

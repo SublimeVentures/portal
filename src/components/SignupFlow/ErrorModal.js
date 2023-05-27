@@ -16,7 +16,7 @@ export default function ErrorModal({isPartner, model, setter}) {
                     </ul>
                 </div>
                 <div className={"fullWidth"}></div>
-                    <a href="https://3vcfund.notion.site/How-to-access-3VC-f40a1142d93f4b0ba38e13114189a877" target="_blank" className="text-app-success mt-5 outline-0">Read more.</a>
+                    <a href="https://3vcfund.notion.site/How-to-access-3VC-f40a1142d93f4b0ba38e13114189a877" target="_blank" className="text-app-success mt-5 outline-0">Read more</a>
                 </>
         )
     }

@@ -154,7 +154,7 @@ export default function MakeOfferModal({model, setter, props}) {
                             <RoundButton text={'Announce'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDiscord className={ButtonIconSize.hero}/> } />
                         </Link>
                     </div>
-                <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more.</a></div>
+                <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more</a></div>
                 </div>
             </div>
         )
@@ -208,7 +208,7 @@ export default function MakeOfferModal({model, setter, props}) {
                 <MakeOfferInteract props={interactionProps}/>
 
                 <div className="">Before creating an offer, please <a
-                    href="#" target="_blank" className="text-app-success">read more.</a></div>
+                    href="#" target="_blank" className="text-app-success">read more</a></div>
             </div>
         )
     }

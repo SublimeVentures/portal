@@ -113,7 +113,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
-                <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more.</a></div>
+                <div className="mt-auto">What's next? <a href="https://3vcfund.notion.site/After-investment-7a44086b917545029d95574c53c66a7d" target="_blank" >Read more</a></div>
             </div>
         )
     }
@@ -145,7 +145,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
                 </div>
                 <div >Booked allocation will be released when the timer runs to zero. <a
-                    href="https://3vcfund.notion.site/Investment-booking-system-2f93893f882c49d0ab305159aa7099c4" target="_blank" className="text-app-success">Read more.</a></div>
+                    href="https://3vcfund.notion.site/Allocation-Booking-System-2f93893f882c49d0ab305159aa7099c4" target="_blank">Read more</a></div>
             </div>
         )
     }
