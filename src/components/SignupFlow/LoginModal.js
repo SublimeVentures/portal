@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import {useAccount, useConnect} from 'wagmi'
 import Linker from "@/components/link";
+import {ExternalLinks} from "@/routes";
 
 export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()

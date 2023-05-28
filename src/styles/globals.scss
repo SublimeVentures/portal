@@ -117,6 +117,11 @@ body {
   max-height: 75%;
 }
 
+.ws-nowrap {
+  white-space: nowrap;
+
+}
+
 .link {
   color:theme('colors.app-success')!important;
   transition-duration: 300ms;
@@ -127,6 +132,15 @@ body {
   cursor: pointer;
 
   &:after {
+    content: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Arrow / Arrow_Up_Right_MD'%3E%3Cpath id='Vector' d='M7 17L17 7M17 7H9M17 7V15' stroke='%23b1e365' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+    position: absolute;
+    width:20px;
+    height:20px;
+    right:-20px;
+    top:-2px;
+  }
+
+  &:before {
     background-color: theme('colors.app-success')!important;
     content: '';
     position: absolute;
@@ -141,7 +155,7 @@ body {
   }
 
   &:hover {
-    &:after {
+    &:before {
       transform: scaleX(1);
       transform-origin: bottom left;
     }

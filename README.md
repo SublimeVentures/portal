@@ -31,14 +31,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 - insert investment
+- join whale club responsive button
+- design from polkastarter
 - artykuły
-
+- 
 - try catch every query na backendzie / - support errorów
 - przy cancellowaniu sprawdź czy nie ma pending
 - implement @MrBlank feedback
 - https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - transakcje nie działają na rollbacku
 - connect discord to app
+- maximum investment
 
 
 =============

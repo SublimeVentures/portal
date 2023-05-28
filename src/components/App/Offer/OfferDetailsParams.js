@@ -4,7 +4,6 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userAllocation} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
-    console.log("paramsParams",paramsParams)
     const normalized_ppu = ppu?.toLocaleString()
     const normalized_tge = tge?.toLocaleString()
     const normalized_tgeDiff = (100*(tge - ppu)/ppu)?.toLocaleString()
