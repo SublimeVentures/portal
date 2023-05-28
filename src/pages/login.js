@@ -21,7 +21,7 @@ import { queryClient } from '@/lib/web3/queryCache'
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import Linker from "@/components/link";
-
+import IconWhale from "@/assets/svg/Whale.svg";
 
 export default function Login() {
     const seo = seoConfig(PAGE.Login)
@@ -129,11 +129,11 @@ export default function Login() {
                     <div className="flex flex-col gap-5 justify-end flex-1 mt-10 lg:mt-0">
                         <div className="my-auto disabled">
                             <Link href={PAGE.Join}>
-                                <RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<RocketIcon className={ButtonIconSize.hero}/>}/>
+                                <span className={"block sm:hidden"}><RoundButton text={'Join'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'}       icon={<IconWhale className={ButtonIconSize.hero}/>}/></span>
+                                <span className={"hidden sm:block"}><RoundButton text={'Join Whale Club'} isLoading={false} isDisabled={false} showParticles={true} is3d={true} isPrimary={true} isWide={true} zoom={1.1} size={'text-sm sm'}   icon={<IconWhale className={ButtonIconSize.hero}/>}/></span>
                             </Link>
                         </div>
                         <RoundButton text={'Connect'} isLoading={isLoginLoading && !isPartnerLogin} isLoadingWithIcon={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(false)} />
-
                     </div>
 
                 </div>

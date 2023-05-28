@@ -18,7 +18,7 @@ function sum(prev, next){
 export default function UserSummary({vault}) {
     const { data: session } = useSession()
     const tiltAvatar = useRef(null);
-    const portfolio = Number(vault ? vault.map(amount).reduce(sum) : 0).toLocaleString()
+    const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
 
     const projectInvestedWidget = () => {
         return (<>
