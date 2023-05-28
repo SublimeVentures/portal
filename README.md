@@ -28,15 +28,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-
-
-Also be sure to include only reward for first person that identifies bug
-Also let’s try to minimize our expenditure on bounty program kekeyar
-
 ## ToDo
-- pages - vault, dashboard merge
-- homepage datafeed
 - insert investment
+- Also be sure to include only reward for first person that identifies bug
+  Also let’s try to minimize our expenditure on bounty program kekeyar
 - arty
 
 - try catch every query na backendzie / - support errorów

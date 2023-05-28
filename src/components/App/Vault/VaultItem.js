@@ -13,7 +13,7 @@ export default function VaultItem({item, research}) {
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
     const normalized_tgeDiff = (100*(item["offer.tge"] - item["offer.ppu"])/item["offer.ppu"])?.toLocaleString()
     const normalized_invested = Number(invested).toLocaleString()
-    const tge = offerDetails?.tge > 0 ? `${normalized_tgeDiff}%` : "TBA"
+    const tge = offerDetails?.tge > 0 ? `+${normalized_tgeDiff}%` : "TBA"
 
     const {vested, nextUnlock} = parseVesting(item["offer.t_unlock"])
 
@@ -21,7 +21,7 @@ export default function VaultItem({item, research}) {
         VanillaTilt.init(tilt.current, {scale: 1.1, speed: 1000, max: 10});
     }, []);
 
-    return <div className="timeline flex col-span-12 lg:col-span-6">
+    return <div className="timeline flex col-span-12 lg:col-span-6 xl:col-span-4">
         <div
             className="relative rounded-tl-xl rounded-bl-xl bg-navy-accent flex flex-1 flex-col p-5 rounded-tr-xl rounded-br-xl sm:rounded-tr-none sm:rounded-br-none lg:!rounded-tr-xl lg:!rounded-br-xl xl:!rounded-tr-none xl:!rounded-br-none">
             <div className="font-bold text-2xl flex items-center">
@@ -33,7 +33,7 @@ export default function VaultItem({item, research}) {
             <div className="text-md pt-2 w-full flex">Invested <span
                 className="ml-auto font-bold">${normalized_invested}</span></div>
 
-            <div className="text-md w-full flex">TGE profit <span className={`ml-auto font-bold ${tge !== 'TBA' ? 'text-app-success' : ''}`}>+{tge}</span></div>
+            <div className="text-md w-full flex">TGE profit <span className={`ml-auto font-bold ${tge !== 'TBA' ? 'text-app-success' : ''}`}>{tge}</span></div>
             <div className="text-md w-full flex">Vested <span className="ml-auto font-bold">{vested}%</span></div>
             <div className="text-md w-full flex">Next unlock <span className="ml-auto font-bold">{nextUnlock>0 ? nextUnlock : "TBA"}</span></div>
             {/*<div*/}

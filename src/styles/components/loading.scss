@@ -3,9 +3,12 @@
   position:absolute;
   width:600px;
   height:36px;
-  left:50%;
-  top:40%;
-  margin-left:-300px;
+  margin: 0 auto;
+  left:0;
+  right:0;
+  //left:50%;
+  //top:40%;
+  //margin-left:-300px;
   overflow:visible;
   -webkit-user-select:none;
   -moz-user-select:none;
@@ -19,7 +22,7 @@
   width:20px;
   height:36px;
   opacity:0;
-  font-family:Helvetica, Arial, sans-serif;
+  font-family:Montserrat, sans-serif;
   animation:move 2s linear infinite;
   -o-animation:move 2s linear infinite;
   -moz-animation:move 2s linear infinite;

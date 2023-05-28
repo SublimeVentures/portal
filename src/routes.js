@@ -4,7 +4,7 @@ const PAGE = {
     Login: "/login",
     Investments: "/investments",
     App: "/app",
-    Vault: "/app/vault",
+    // Vault: "/app/vault",
     Opportunities: "/app/offer",
     OTC: "/app/otc",
     Notifs: "/app/latest",

@@ -110,7 +110,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                     src="/static/lottie/success.json"
                 />
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <Link href={PAGE.Vault} className={" w-full fullWidth"}>
+                    <Link href={PAGE.App} className={" w-full fullWidth"}>
                         <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
@@ -145,8 +145,8 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
                         <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
                 </div>
-                <div >Booked allocation will be released when the timer runs to zero. <a
-                    href="https://3vcfund.notion.site/Allocation-Booking-System-2f93893f882c49d0ab305159aa7099c4" target="_blank">Read more</a></div>
+                <div >Booked allocation will be released when the timer runs to zero. <Linker url={LinkerLinks.BOOKING_SYSTEM}/>
+                </div>
             </div>
         )
     }
