@@ -11,7 +11,7 @@ export default function VaultItem({item, research}) {
     const {offerDetails, createdAt, invested } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
-    const normalized_tgeDiff = (100*(item["offer.tge"] - item["offer.ppu"])/item["offer.ppu"])?.toLocaleString()
+    const normalized_tgeDiff = Number(100*(item["offer.tge"] - item["offer.ppu"])/item["offer.ppu"])?.toLocaleString()
     const normalized_invested = Number(invested).toLocaleString()
     const tge = offerDetails?.tge > 0 ? `+${normalized_tgeDiff}%` : "TBA"
 
@@ -21,7 +21,7 @@ export default function VaultItem({item, research}) {
         VanillaTilt.init(tilt.current, {scale: 1.1, speed: 1000, max: 10});
     }, []);
 
-    return <div className="timeline flex col-span-12 lg:col-span-6 xl:col-span-4">
+    return <div className="timeline flex col-span-12 lg:col-span-6 3xl:col-span-4">
         <div
             className="relative rounded-tl-xl rounded-bl-xl bg-navy-accent flex flex-1 flex-col p-5 rounded-tr-xl rounded-br-xl sm:rounded-tr-none sm:rounded-br-none lg:!rounded-tr-xl lg:!rounded-br-xl xl:!rounded-tr-none xl:!rounded-br-none">
             <div className="font-bold text-2xl flex items-center">

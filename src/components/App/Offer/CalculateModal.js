@@ -4,7 +4,8 @@ import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconMinus from "@/assets/svg/MinusZ.svg";
 import IconPlus from "@/assets/svg/PlusZ.svg";
-import Linker, {LinkerLinks} from "@/components/link";
+import {ExternalLinks} from "@/routes";
+import Linker from "@/components/link"; "@/components/link";
 
 export default function CalculateModal({model, setter, calculateModalProps}) {
     const { maxAllocation, offer } = calculateModalProps
@@ -88,7 +89,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 </div>
 
 
-                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <Linker url={LinkerLinks.INVESTMENT_RETURN}/></div>
+                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <Linker url={ExternalLinks.INVESTMENT_RETURN}/></div>
             </div>
         )
     }

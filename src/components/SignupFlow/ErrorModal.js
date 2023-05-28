@@ -1,5 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import Linker, {LinkerLinks} from "@/components/link";
+import Linker from "@/components/link";
+import {ExternalLinks} from "@/routes";
 
 export default function ErrorModal({isPartner, model, setter}) {
 
@@ -16,7 +17,7 @@ export default function ErrorModal({isPartner, model, setter}) {
                         <li className={"text-app-success"}>3VC Partner's NFT</li>
                     </ul>
                 </div>
-                    <Linker url={LinkerLinks.HOW_TO_ACCESS}/>
+                    <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
                 </>
         )
     }

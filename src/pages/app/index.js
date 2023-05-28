@@ -10,7 +10,8 @@ import EmptyVault from "@/components/App/EmptyVault";
 import Head from "next/head";
 import UserSummary from "@/components/App/Vault/UserSummary";
 import RoundSpacer from "@/components/App/RoundSpacer";
-import {LinkerLinks} from "@/components/link";
+import {ExternalLinks} from "@/routes";
+
 
 
 export default function AppVault() {
@@ -66,7 +67,7 @@ export default function AppVault() {
                     <RoundSpacer title={'Vault'} subtitle={'All your investments in one place.'}
                                  action={<RoundButton text={'Learn more'} isWide={true}
                                                       size={'text-sm sm'}
-                                                      handler={()=> {window.open(LinkerLinks.VAULT, '_blank');}}
+                                                      handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}
                                                       icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
                     />
                 </div>

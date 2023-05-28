@@ -5,13 +5,13 @@ import {useState , useEffect} from "react";
 import TransactStep from "@/components/App/Transactions/TransactStep";
 import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
 import {RoundButton} from "@/components/Button/RoundButton";
-import PAGE from "@/routes";
+import PAGE, {ExternalLinks} from "@/routes";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import StakeStep from "@/components/App/Transactions/StakeStep";
 import {ACL as ACLs}  from "@/lib/acl";
 import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
-import Linker, {LinkerLinks} from "@/components/link";
+import Linker from "@/components/link";
 
 export const StakeSteps = {
     Select: 0,
@@ -114,7 +114,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
-                <div className="mt-auto">What's next? <Linker url={LinkerLinks.AFTER_INVESTMENT} /></div>
+                <div className="mt-auto">What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT} /></div>
             </div>
         )
     }
@@ -145,7 +145,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
                         <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
                 </div>
-                <div >Booked allocation will be released when the timer runs to zero. <Linker url={LinkerLinks.BOOKING_SYSTEM}/>
+                <div >Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>
             </div>
         )

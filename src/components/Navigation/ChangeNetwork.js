@@ -4,7 +4,8 @@ import IconMatic from "@/assets/svg/Matic.svg";
 import IconBsc from "@/assets/svg/Bsc.svg";
 import GenericModal from "@/components/Modal/GenericModal";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import Linker, {LinkerLinks} from "@/components/link";
+import Linker from "@/components/link";
+import {ExternalLinks} from "@/routes";
 
 export default function ChangeNetwork() {
     const {chain, chains} = useNetwork()
@@ -59,7 +60,7 @@ export default function ChangeNetwork() {
 
                 <div
                     className="text-app-error text-center">{error && error.message}</div>
-                <div className="mt-5"><Linker url={LinkerLinks.SUPPORTED_NETWORKS}/></div>
+                <div className="mt-5"><Linker url={ExternalLinks.SUPPORTED_NETWORKS}/></div>
             </div>
         )
     }

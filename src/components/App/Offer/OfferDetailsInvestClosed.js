@@ -1,4 +1,5 @@
-import Linker, {LinkerLinks} from "@/components/link";
+import Linker from "@/components/link";
+import {ExternalLinks} from "@/routes";
 
 export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
     const { session, isClosed, offer } = paramsInvestClosed
@@ -6,7 +7,7 @@ export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
     const generateText = () => {
         if(isClosed) return "Investment closed"
         if(session.user.ACL !== 0 && offer.access === 0) {
-            return <>Investment reserved only for <Linker url={LinkerLinks.WHALE_CLUB} text={"3VC Whales"}/></>
+            return <>Investment reserved only for <Linker url={ExternalLinks.WHALE_CLUB} text={"3VC Whales"}/></>
         } else {
             return "Investment closed."
         }
