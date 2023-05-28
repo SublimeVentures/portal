@@ -34,12 +34,13 @@ Also be sure to include only reward for first person that identifies bug
 Also let’s try to minimize our expenditure on bounty program kekeyar
 
 ## ToDo
+- pages - vault, dashboard merge
+- homepage datafeed
+- insert investment
+- arty
 
 - try catch every query na backendzie / - support errorów
-- pages - vault, dashboard
-- insert investment
 - przy cancellowaniu sprawdź czy nie ma pending
-- homepage datafeed
 - implement @MrBlank feedback
 - https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - transakcje nie działają na rollbacku
