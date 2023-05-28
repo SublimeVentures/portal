@@ -235,7 +235,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setIsAllocationOk(true)
             return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
         } else {
-            if(investmentAmount % 10 > 0) {//todo: fix na 100
+            if(investmentAmount % 100 > 0) {
                 setIsAllocationOk(true)
                 return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
             }
