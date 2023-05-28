@@ -4,6 +4,7 @@ import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconMinus from "@/assets/svg/MinusZ.svg";
 import IconPlus from "@/assets/svg/PlusZ.svg";
+import Linker, {LinkerLinks} from "@/components/link";
 
 export default function CalculateModal({model, setter, calculateModalProps}) {
     const { maxAllocation, offer } = calculateModalProps
@@ -87,7 +88,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 </div>
 
 
-                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <a href={"https://3vcfund.notion.site/Return-from-the-investment-0656411b2d4c44078c675d3f87e8b136"} target={"_blank"} >Read more</a></div>
+                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <Linker url={LinkerLinks.INVESTMENT_RETURN}/></div>
             </div>
         )
     }

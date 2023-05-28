@@ -35,9 +35,9 @@ export default function AppDashboard() {
 
 
             <div className="grid grid-cols-12 flex flex-1 gap-y-10 mobile:gap-10">
-                {/*<div className="col-span-12 flex flex-1 custom:col-span-8 ">*/}
-                {/*    <LatestInvestment/>*/}
-                {/*</div>*/}
+                <div className="col-span-12 flex flex-1 custom:col-span-8 ">
+                    <LatestInvestment/>
+                </div>
                 <div className="col-span-12 custom:col-span-4 flex">
                     <Updates/>
                 </div>

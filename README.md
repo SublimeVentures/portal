@@ -28,9 +28,17 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
+
+
+Also be sure to include only reward for first person that identifies bug
+Also let’s try to minimize our expenditure on bounty program kekeyar
+
 ## ToDo
+
 - try catch every query na backendzie / - support errorów
+- pages - vault, dashboard
 - insert investment
+- przy cancellowaniu sprawdź czy nie ma pending
 - homepage datafeed
 - implement @MrBlank feedback
 - https://discord.com/channels/@me/997001334328918017/1111268815238594642
@@ -38,6 +46,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - connect discord to app
 
 
+=============
 - make offer button
 - -- (buy) check liquidity 
 - -- (buy) check allowance 
@@ -49,12 +58,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- build otcDeal
 - -- expire otcPending after 5 minutes
 
-- przy cancellowaniu sprawdź czy nie ma pending
-
 - enable for reservation even on blocked reservation button
 - timeline for user activities for each investment in vault tab
 - new investment update for api
 - reassign allocation
+
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 

@@ -11,6 +11,7 @@ import {useSession} from "next-auth/react";
 import StakeStep from "@/components/App/Transactions/StakeStep";
 import {ACL as ACLs}  from "@/lib/acl";
 import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
+import Linker, {LinkerLinks} from "@/components/link";
 
 export const StakeSteps = {
     Select: 0,
@@ -113,7 +114,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
-                <div className="mt-auto">What's next? <a href="https://3vcfund.notion.site/After-investment-7a44086b917545029d95574c53c66a7d" target="_blank" >Read more</a></div>
+                <div className="mt-auto">What's next? <Linker url={LinkerLinks.AFTER_INVESTMENT} /></div>
             </div>
         )
     }
