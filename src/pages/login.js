@@ -20,6 +20,7 @@ import PAGE from "@/routes";
 import { queryClient } from '@/lib/web3/queryCache'
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
+import Linker from "@/components/link";
 
 
 export default function Login() {
@@ -141,7 +142,7 @@ export default function Login() {
                 <div className="flex flex-col flex-1">
                     <div className="text-3xl font-bold">Partners</div>
                     <div className="pt-3">Login and participate in investment with our partners.<br/>
-                        <a href="https://delegate.cash">Don't want connect your cold wallet?</a>
+                        <Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Don't want connect your cold wallet?"}/>
                     </div>
 
                     <div className=" pt-5 pb-5 gap-5  smallSlider">

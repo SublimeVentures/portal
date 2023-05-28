@@ -3,6 +3,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import Image from "next/image";
 
 import {useAccount, useConnect} from 'wagmi'
+import Linker from "@/components/link";
 
 export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
@@ -33,8 +34,7 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
 
     const content = () => {
         return (<> <div className="pb-10">
-            Don't want connect your cold wallet? You can delegate access! <a href={"https://3vcfund.notion.site/Delegated-access-dc60abd8a5654641a7bd77d537256aa7"} target={"_blank"} className={"text-app-success"}>Read more
-            here.</a>
+            Don't want connect your cold wallet? You can delegate access! <Linker url={ExternalLinks.DELEGATED_ACCESS} />
         </div>
             <div className="flex flex-col gap-5 fullWidth">
                 {connectors.map((connector) => (

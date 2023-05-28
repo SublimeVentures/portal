@@ -150,11 +150,11 @@ export default function MakeOfferModal({model, setter, props}) {
                 <div className="mt-auto fullWidth">
 
                     <div className="flex flex-1 justify-center items-center -mt-5 mb-5">
-                        <Link href={PAGE.Vault} className={"w-full"}>
+                        <Link href={PAGE.App} className={"w-full"}>
                             <RoundButton text={'Announce'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDiscord className={ButtonIconSize.hero}/> } />
                         </Link>
                     </div>
-                <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more</a></div>
+                <div className="mt-auto">What's next? <a href="#" target="_blank">Read more</a></div>
                 </div>
             </div>
         )

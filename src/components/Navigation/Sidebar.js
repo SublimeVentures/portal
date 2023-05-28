@@ -16,6 +16,7 @@ import IconSetting from "@/assets/svg/Setting.svg";
 
 import PAGE from "@/routes";
 import dynamic from "next/dynamic";
+import {LinkerLinks} from "@/components/link";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 
@@ -35,13 +36,13 @@ export default function Sidebar() {
 
     const openDiscord = (e) => {
         e.preventDefault();
-        window.open("https://discord.gg/3SaqVVdzUH", '_blank');
+        window.open(LinkerLinks.DISCORD, '_blank');
         setIsMobileOpen(false)
     }
 
     const openNotion = (e) => {
         e.preventDefault();
-        window.open("https://discord.gg/3SaqVVdzUH", '_blank');
+        window.open(LinkerLinks.WIKI, '_blank');
         setIsMobileOpen(false)
     }
 
@@ -52,8 +53,8 @@ export default function Sidebar() {
 
     const menu = {
         groupUser: [
-            {name: 'Dashboard', link: PAGE.App, icon: <IconDashboard className="w-8 mr-3"/>},
-            {name: 'Vault', link: PAGE.Vault, icon: <IconVault className="w-8 mr-3"/>},
+            // {name: 'Dashboard', link: PAGE.App, icon: <IconDashboard className="w-8 mr-3"/>},
+            {name: 'Vault', link: PAGE.App, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'OTC', link: PAGE.OTC, disabled: true, icon: <IconExchange className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},

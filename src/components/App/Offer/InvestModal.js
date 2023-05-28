@@ -5,12 +5,13 @@ import {useState , useEffect} from "react";
 import TransactStep from "@/components/App/Transactions/TransactStep";
 import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
 import {RoundButton} from "@/components/Button/RoundButton";
-import PAGE from "@/routes";
+import PAGE, {ExternalLinks} from "@/routes";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import StakeStep from "@/components/App/Transactions/StakeStep";
 import {ACL as ACLs}  from "@/lib/acl";
 import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
+import Linker from "@/components/link";
 
 export const StakeSteps = {
     Select: 0,
@@ -109,11 +110,11 @@ export default function InvestModal({model, setter, investModalProps}) {
                     src="/static/lottie/success.json"
                 />
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <Link href={PAGE.Vault} className={" w-full fullWidth"}>
+                    <Link href={PAGE.App} className={" w-full fullWidth"}>
                         <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
-                <div className="mt-auto">What's next? <a href="https://3vcfund.notion.site/After-investment-7a44086b917545029d95574c53c66a7d" target="_blank" >Read more</a></div>
+                <div className="mt-auto">What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT} /></div>
             </div>
         )
     }
@@ -144,8 +145,8 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
                         <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
                 </div>
-                <div >Booked allocation will be released when the timer runs to zero. <a
-                    href="https://3vcfund.notion.site/Allocation-Booking-System-2f93893f882c49d0ab305159aa7099c4" target="_blank">Read more</a></div>
+                <div >Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
+                </div>
             </div>
         )
     }

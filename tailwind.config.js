@@ -40,6 +40,7 @@ module.exports = {
         custom: '1100px',
         // tablet: '1200px',
         invest: '1420px',
+        '3xl': '1820px',
       },
       margin: {
         '15': '3.75rem',

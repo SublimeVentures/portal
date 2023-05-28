@@ -117,24 +117,33 @@ body {
   max-height: 75%;
 }
 
-a {
-  color:theme('colors.outline')!important;
-  transition: color .3s ease;
-  position:relative;
+.link {
+  color:theme('colors.app-success')!important;
+  transition-duration: 300ms;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
 
   &:after {
-    content: " ↗";
-    font-weight: 900;
+    background-color: theme('colors.app-success')!important;
+    content: '';
     position: absolute;
-    font-size: .675rem;
-    margin-top:3px;
-    margin-left: 3px;
-    //line-height: 1.25rem;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    transform-origin: bottom right;
+    //transition: transform 0.25s ease-out;
+    transition: transform 500ms $alias-easeOut2;
   }
 
   &:hover {
-    color:theme('colors.app-success')!important;
-
-
+    &:after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
   }
 }

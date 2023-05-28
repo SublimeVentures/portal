@@ -1,10 +1,13 @@
+import Linker from "@/components/link";
+import {ExternalLinks} from "@/routes";
+
 export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
     const { session, isClosed, offer } = paramsInvestClosed
 
     const generateText = () => {
         if(isClosed) return "Investment closed"
         if(session.user.ACL !== 0 && offer.access === 0) {
-            return <>Investment reserved only for <a href="">3VC Whales</a></>
+            return <>Investment reserved only for <Linker url={ExternalLinks.WHALE_CLUB} text={"3VC Whales"}/></>
         } else {
             return "Investment closed."
         }
