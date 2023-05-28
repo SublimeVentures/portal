@@ -30,19 +30,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- insert investment
-- join whale club responsive button
 - design from polkastarter
-- artykuły
-- 
+- partner multiplier - maximum investment
 - try catch every query na backendzie / - support errorów
+- artykuły
+- transakcje nie działają na rollbacku
+
 - przy cancellowaniu sprawdź czy nie ma pending
 - implement @MrBlank feedback
 - https://discord.com/channels/@me/997001334328918017/1111268815238594642
-- transakcje nie działają na rollbacku
-- connect discord to app
-- maximum investment
+- stats for user
+=============
 
+- connect discord to app
 
 =============
 - make offer button
