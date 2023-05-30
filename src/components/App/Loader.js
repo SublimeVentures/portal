@@ -1,6 +1,6 @@
 export default function Loader() {
     return (
-        <div className="flex -ml-10 flex-1">
+        <div className="flex -ml-10 flex-1 relative">
             <div id="load">
                 <div>G</div>
                 <div>N</div>

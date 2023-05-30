@@ -30,13 +30,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- sidebar
-- design from polkastarterya
 - feed raised capital + partnered communities + funded projects (hardcode + real)
 - partner multiplier - maximum investment
 - try catch every query na backendzie / - support errorów
 - transakcje nie działają na rollbacku
 - error - No Sentry auth token configured. Source maps will not be uploaded.
+- next-auth redirect
+
 - artykuły
 - przy cancellowaniu sprawdź czy nie ma pending
 - implement @MrBlank feedback

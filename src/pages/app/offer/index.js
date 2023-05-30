@@ -12,7 +12,7 @@ import Head from "next/head";
 import Stat from "@/components/Stat";
 import IconNetwork from "@/assets/svg/Network.svg";
 import IconStars from "@/assets/svg/Stars.svg";
-import IconCapital from "@/assets/svg/Capital.svg";
+import IconMoney from "@/assets/svg/Money.svg";
 
 export default function AppOffer() {
     const { data: session, status } = useSession()
@@ -57,7 +57,7 @@ export default function AppOffer() {
                 <div className={"w-full flex gap-5 flex-col md:flex-row"}>
                     <Stat color={"gold"} title={"Investments"} value={11}  icon={<IconStars className={"w-9"}/>}/>
                     <Stat color={"teal"} title={"Partners"} value={11} icon={<IconNetwork className={"w-7"}/>}/>
-                    <Stat color={"blue"} title={"Raised"} value={11} icon={<IconCapital className={"w-7"}/>}/>
+                    <Stat color={"blue"} title={"Raised"} value={11} icon={<IconMoney className={"w-7"}/>}/>
                 </div>
             </div>
         </div>

@@ -50,20 +50,24 @@ export default function OfferItem({offer, ACL, research}) {
     }, []);
 
     const {active, phase, isLast} = parsePhase(ACL, offer, 0)
-    // const status = phase[active]?.step
+    const state = phase[active]?.step
 
     const status = getStatus(active, isLast)
+    console.log("====================")
     console.log("offer",offer)
     console.log("active",active)
     console.log("phase",phase)
     console.log("isLast",isLast)
     console.log("status",status)
+    console.log("state",state)
+    console.log("====================")
+
 
     return (
         <div
             className={`
-            rounded-xl bg-navy-accent flex flex-col text-center cursor-pointer col-span-12
-            offerGradient border-transparent border ${status}
+            bg-navy-accent flex flex-col text-center cursor-pointer col-span-12
+            border-transparent border offerItem ${status} closed
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
             ref={imageTilt}>
             <Link href={`${PAGE.Opportunities}/${slug}`} className="flex flex-1 flex-col bg-navy-accent rounded-xl">
@@ -77,26 +81,19 @@ export default function OfferItem({offer, ACL, research}) {
                         <Image src={`${research}${slug}/logo.jpg`}  className={'p-1 rounded-lg'} alt={slug} width={90} height={90}/>
                     </div>
                     <div className={"flex flex-1 items-end text-sm pb-5 "}>
-                        <div className={"offerTime w-full px-5 flex justify-between h-8 items-center"}>{showDate(status,starts,ends)}</div>
+                        <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color"}>{showDate(status,starts,ends)}</div>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col text-left ">
                     <div className={"px-10 pt-5"}>
                         <div className="text-3xl font-bold flex flex-1 glow">{name}</div>
-                        <div className="text-md flex flex-1 mt-1 pb-5">#{genre}</div>
+                        <div className="text-md flex flex-1 mt-1 pb-5 color">#{genre}</div>
                     </div>
-
-                    {/*<div className="flex justify-center items-center !flex-initial">*/}
-                    {/*    /!*<div className="ml-auto -mt-1">*!/*/}
-                    {/*    /!*    <div className={` rounded-3xl text-black px-2 py-1 text-sm font-bold uppercase ${active === 0 ? "bg-gold": (isLast ? "bg-outline" : "bg-app-success2")}`}>{status}*!/*/}
-                    {/*    /!*    </div>*!/*/}
-                    {/*    /!*</div>*!/*/}
-                    {/*</div>*/}
 
 
                     <div
-                        className=" uppercase font-bold rounded-bl-xl rounded-br-xl offerBottom text-center py-2 text-xs w-full mt-auto ">
-                        pending
+                        className="color uppercase font-bold  offerBottom text-center py-2 text-xs w-full mt-auto ">
+                        {state}
                     </div>
                 </div>
             </Link>
