@@ -83,7 +83,7 @@ export default function Sidebar() {
     return (
         <aside className="flex sticky top-0 z-20 collap:relative">
             <div
-                className="p-7 flex flex-col border-r border-app-bg-split text-app-white max-h-screen sticky top-0 hidden collap:flex">
+                className="p-7 flex flex-col border-r border-app-bg-split  boxshadow text-app-white max-h-screen sticky top-0 hidden collap:flex">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex">

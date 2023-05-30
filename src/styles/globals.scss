@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-//@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&family=Work+Sans:wght@300;400;500;700&display=swap');
 
 @import 'transitions';
 @import 'gradients';
@@ -21,6 +20,8 @@
 @import 'components/loading';
 @import 'components/switch';
 @import 'components/tooltip';
+@import 'components/stat';
+@import 'components/offerItem';
 
 @import 'pages/home/about';
 @import 'pages/home/investments';
@@ -160,4 +161,27 @@ body {
       transform-origin: bottom left;
     }
   }
+}
+
+
+.glow {
+  letter-spacing: -0.02em;
+  text-shadow: rgba(255, 255, 255, 0.3) 0px 0px 12px;
+  line-height: 125%;
+}
+
+
+.glowNormal {
+  text-shadow: rgba(255, 255, 255, 0.3) 0px 0px 12px;
+  white-space: normal;
+}
+
+
+
+.w-auto {
+  width: auto;
+}
+
+.boxshadow {
+  box-shadow: rgba(88, 104, 233, 0.15) 0px 0px 40px;
 }

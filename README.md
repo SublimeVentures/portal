@@ -30,19 +30,23 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- design from polkastarter
+- sidebar
+- design from polkastarterya
+- feed raised capital + partnered communities + funded projects (hardcode + real)
 - partner multiplier - maximum investment
 - try catch every query na backendzie / - support errorów
-- artykuły
 - transakcje nie działają na rollbacku
-
+- error - No Sentry auth token configured. Source maps will not be uploaded.
+- artykuły
 - przy cancellowaniu sprawdź czy nie ma pending
 - implement @MrBlank feedback
 - https://discord.com/channels/@me/997001334328918017/1111268815238594642
 - stats for user
+- delegated -> invest to vault or hot
 =============
-
 - connect discord to app
+- scrap based on metadata ttoo - Rarity: Soldier / Capo //// https://docs.google.com/spreadsheets/d/16TUO0TuDAfwyQrpNSDeu4_a_Rv28uWUxhY-wCAyRgRQ/edit#gid=0
+
 
 =============
 - make offer button

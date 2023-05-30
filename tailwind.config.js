@@ -85,6 +85,9 @@ module.exports = {
           // letterSpacing: '-0.01em',
           // fontWeight: '500',
         }],
+      },
+      fontWeight: {
+        // extrabold: '800',
       }
     },
   },
