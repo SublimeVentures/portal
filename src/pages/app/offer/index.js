@@ -31,6 +31,11 @@ export default function AppOffer() {
     );
 
     const offerList = response?.offers
+    const stats = response?.stats
+    const investments = stats ? stats.investments : 0;
+    const partners = stats ? stats.partners : 0;
+    const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
+
     const renderPage = () => {
         if(status !== "authenticated") return <Loader/>
         if(!offerList || offerList.length === 0) return  <Empty/>
@@ -38,7 +43,7 @@ export default function AppOffer() {
         return (
                 <div className="grid grid-cols-12 gap-y-8 mobile:gap-y-10 mobile:gap-10">
                     {!!offerList && offerList.map(el =>
-                        <OfferItem offer={el} key={el.slug} ACL={ACL} research={response?.research}/>
+                        <OfferItem offer={el} key={el.slug} ACL={ACL} cdn={response?.cdn}/>
                     )}
                 </div>
         )
@@ -55,9 +60,9 @@ export default function AppOffer() {
             </div>
             <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
                 <div className={"w-full flex gap-5 flex-col md:flex-row"}>
-                    <Stat color={"gold"} title={"Investments"} value={11}  icon={<IconStars className={"w-9"}/>}/>
-                    <Stat color={"teal"} title={"Partners"} value={11} icon={<IconNetwork className={"w-7"}/>}/>
-                    <Stat color={"blue"} title={"Raised"} value={11} icon={<IconMoney className={"w-7"}/>}/>
+                    <Stat color={"gold"} title={"Investments"} value={investments}  icon={<IconStars className={"w-9"}/>}/>
+                    <Stat color={"teal"} title={"Partners"} value={partners} icon={<IconNetwork className={"w-7"}/>}/>
+                    <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7"}/>}/>
                 </div>
             </div>
         </div>

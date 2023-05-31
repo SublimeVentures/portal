@@ -6,7 +6,7 @@ import {ACL as ACLs} from "@/lib/acl";
 import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
-const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
+const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
 import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
 import {fetchUserInvestment} from "@/fetchers/vault.fetcher";
@@ -112,11 +112,11 @@ export const AppOfferDetails = () => {
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar}/>
-                <div className="rounded-xl bg flex flex-row col-span-12 xl:col-span-8">
+                <div className="rounded-xl bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
                     {!isClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
                 </div>
                 <div
-                    className="flex flex-col col-span-12 xl:col-span-4">
+                    className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
                     <OfferDetailsParams paramsParams={paramsParams}/>
                 </div>
 

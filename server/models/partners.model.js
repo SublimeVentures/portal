@@ -38,6 +38,10 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
+        multiplier: {
+            type: DataTypes.INTEGER,
+            defaultValue: 5
+        },
     }, {
         indexes: [
             {unique: true, fields: ['address']},

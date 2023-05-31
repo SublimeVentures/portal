@@ -7,7 +7,7 @@ import PAGE from "@/routes";
 import Link from "next/link";
 import {parseVesting} from "@/lib/vesting";
 
-export default function VaultItem({item, research}) {
+export default function VaultItem({item, cdn}) {
     const {offerDetails, createdAt, invested } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
@@ -37,9 +37,9 @@ export default function VaultItem({item, research}) {
             <div className="text-md w-full flex ">Vested <span className="ml-auto text-white">{vested}%</span></div>
             <div className="text-md w-full flex ">Next unlock <span className="ml-auto text-white">{nextUnlock>0 ? nextUnlock : "TBA"}</span></div>
             <div
-                className="moreVault  cursor-pointer opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">
+                className="moreVault   opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">
                 <div className="flex items-center justify-center moreVaultIcon">
-                    <div className="icon z-10 w-15 h-15">
+                    <div className="icon z-10 w-15 h-15 cursor-pointer">
                         <IconMore className="w-8"/>
                     </div>
                 </div>
@@ -48,7 +48,7 @@ export default function VaultItem({item, research}) {
 
         <div className={'relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex'}  ref={tilt}>
             <Link href={`${PAGE.Opportunities}/${item["offer.slug"]}`}>
-            <Image src={`${research}${item["offer.slug"]}/logo.jpg`} fill className={'imageOfferList rounded-tr-xl rounded-br-xl bg-cover '} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
+            <Image src={`${cdn}${item["offer.slug"]}/logo.jpg`} fill className={'imageOfferList rounded-tr-xl rounded-br-xl bg-cover '} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
             </Link>
         </div>
 

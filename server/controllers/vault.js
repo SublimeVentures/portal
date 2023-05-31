@@ -16,7 +16,7 @@ async function userVault(session, req) {
     const {ACL, ADDRESS, USER} = checkAcl(session, req)
     const owner = ACL === 0 ? `${USER.id}` : ADDRESS
     const vault = await getUserVault(owner)
-    return {elements: vault, research: getEnv().research}
+    return {elements: vault, cdn: getEnv().cdn}
 }
 
 

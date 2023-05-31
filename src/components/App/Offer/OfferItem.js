@@ -41,7 +41,7 @@ const showDate = (status, start, ends ) => {
     }
 }
 
-export default function OfferItem({offer, ACL, research}) {
+export default function OfferItem({offer, ACL, cdn}) {
     const imageTilt = useRef(null);
     let {name, slug,genre, d_open: starts, d_close:ends} = offer
 
@@ -61,24 +61,23 @@ export default function OfferItem({offer, ACL, research}) {
     // console.log("status",status)
     // console.log("state",state)
     // console.log("====================")
-    //
 
     return (
         <div
             className={`
             bg-navy-accent flex flex-col text-center cursor-pointer col-span-12
-            border-transparent border offerItem ${status} closed
+            border-transparent border offerItem ${status}
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
             ref={imageTilt}>
             <Link href={`${PAGE.Opportunities}/${slug}`} className="flex flex-1 flex-col bg-navy-accent rounded-xl">
                 <div className="bg-center relative min-h-[300px]">
                     <div className={'image-container min-h-[300px]'}>
-                        <Image src={`${research}${slug}/logo.jpg`} fill className={'imageOfferList rounded-tl-xl rounded-tr-xl'} alt={slug} sizes="(max-width: 768px) 100vw"/>
+                        <Image src={`${cdn}${slug}/logo.jpg`} fill className={'imageOfferList rounded-tl-xl rounded-tr-xl'} alt={slug} sizes="(max-width: 768px) 100vw"/>
                     </div>
                 </div>
                 <div className={"flex flex-row ml-3 -mt-10 z-10 "}>
                     <div className={"rounded-lg bg-navy-accent"}>
-                        <Image src={`${research}${slug}/logo.jpg`}  className={'p-1 rounded-lg'} alt={slug} width={90} height={90}/>
+                        <Image src={`${cdn}${slug}/icon.jpg`}  className={'p-1 rounded-lg'} alt={slug} width={90} height={90}/>
                     </div>
                     <div className={"flex flex-1 items-end text-sm pb-5 "}>
                         <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color"}>{showDate(status,starts,ends)}</div>

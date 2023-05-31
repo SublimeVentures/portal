@@ -267,10 +267,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="flex flex-1 flex-col items-center justify-center ">
 
 
-            <div className="mt-15 xl:mt-auto">
+            <div className="mt-15 lg:mt-auto">
                 <div className="currency-input-group relative">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
                         <label className="absolute text-accent block">Investment size</label>
@@ -318,7 +318,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 </div>
             </div>
 
-            <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">
+            <div className="flex flex-row flex-wrap justify-center gap-2 py-10 px-2">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
                     <RoundButton text={isFilled ? 'Processing...' : currentPhase.action} isPrimary={true}
                                  showParticles={true}

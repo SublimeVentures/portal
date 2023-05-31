@@ -29,7 +29,7 @@ module.exports = {
         'app-success-dark': '#6ca21a',
         'app-success2': '#ace160',
         'app-accent': '#383a9b',
-        'app-accent2': '#1b4d67',
+        'app-accent2': '#56',
         'app-white': '#f9fbfa',
       },
       screens: {

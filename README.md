@@ -28,12 +28,17 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
+Joel - lead game designer, czyta się jak pisze, programuje gameplay
+Jacek - arts, designer, razem z Joelem designowali staff z gry
+Rafael - meksyk, programmer, 10y exp progreammer,
+Nabil - backend for dungeons, nft
+Rajit - strilanka dev, on-chan dev, rust dev,
+Akaam - rajitt zaczynał razem, nfts game enginge, network programming, , developing dapp
+
 
 ## ToDo
-- size of ticker
-- slider z obrazkami
-- text dla inwestycji
-- feed raised capital + partnered communities + funded projects (hardcode + real) + logo of the project
+media url db migration
+
 - partner multiplier - maximum investment
 - try catch every query na backendzie / - support errorów
 - transakcje nie działają na rollbacku

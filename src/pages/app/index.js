@@ -47,7 +47,7 @@ export default function AppVault() {
     const renderList = () => {
         if(!elements) return
         return elements.map((el, i) => {
-            return <VaultItem item={el} key={i} research={vault?.research}/>
+            return <VaultItem item={el} key={i} cdn={vault?.cdn}/>
         })
     }
 
