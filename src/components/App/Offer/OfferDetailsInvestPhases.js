@@ -62,7 +62,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const [cookies, setCookie, removeCookie] = useCookies();
 
-    const {ACL, amt} = session.user
+    const {ACL, multi} = session.user
     const {id, alloTotal, isPaused} = offer
 
 
@@ -211,7 +211,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setFilled(false)
         }
         const allocationLeft = alloTotal - allocation?.alloFilled - allocation?.alloRes
-        const calcMaxAllo = parseMaxAllocation(ACL, amt, offer, activePhase, allocationLeft)
+        const calcMaxAllo = parseMaxAllocation(ACL, multi, offer, activePhase, allocationLeft)
         setMaxAllocation(calcMaxAllo)
     }, [allocation?.alloFilled, allocation?.alloRes])
 

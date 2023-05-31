@@ -62,16 +62,17 @@ function parseRegular(offer) {
     return {phase: phase, active: active, isLast: phase.length-1 === active}
 }
 
-function parseMaxAllocation (ACL, amt, offer, phase, allocationLeft) {
+function parseMaxAllocation (ACL, multi, offer, phase, allocationLeft) {
     if(ACL === 0) {
         return offer.alloMax < allocationLeft ? offer.alloMax : allocationLeft
     } else {
-        const partnerAllocation = offer.alloMax * amt < allocationLeft ? offer.alloMax * amt : allocationLeft
+        const partnerAllocation = offer.alloMin * multi
+        const limits = offer.alloMax && offer.alloMax < partnerAllocation ? offer.alloMax : partnerAllocation
         if(offer.isPhased) {
-            if(phase<2) return partnerAllocation
+            if(phase<2) return limits
             else return allocationLeft
         } else {
-            return partnerAllocation
+            return limits
         }
     }
 }

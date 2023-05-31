@@ -28,6 +28,9 @@ export default function OfferDetailsAbout({offer}) {
     }
 
 
+    console.log("0,",media)
+
+
     const slides = [
         {type: MEDIA_TYPE.IMAGE, url: "https://polkastarter.com/_next/image?url=https%3A%2F%2Fassets.polkastarter.com%2Fv3gfgnzhxtvx2ztijji1k1f19vxb&w=2048&q=95"},
         {type: MEDIA_TYPE.IMAGE, url: "https://polkastarter.com/_next/image?url=https%3A%2F%2Fassets.polkastarter.com%2F94jk0mjyoxqojsokqqmddcwyepnn&w=2048&q=95"},
@@ -67,45 +70,45 @@ export default function OfferDetailsAbout({offer}) {
             </div>
 
 
-                <Swiper
-                    style={{
-                        "--swiper-navigation-color": "#fff",
-                        "--swiper-pagination-color": "#fff",
-                    }}
-                    loop={true}
-                    spaceBetween={10}
-                    navigation={true}
-                    thumbs={{ swiper: thumbsSwiper }}
-                    modules={[FreeMode, Navigation, Thumbs]}
-                    className="mt-5"
-                >
-                    {slides.map((el,i)=> {
-                        return <SwiperSlide key={i}>{el.type === MEDIA_TYPE.IMAGE ? <img src={el.url} alt={"img"}/> :
-                            <iframe width="100%" height="500" className={"rounded-xl"}
-                                    src={el.url}
-                                    frameBorder="0" allowFullScreen iframe-video={"true"}></iframe>}</SwiperSlide>
-                    })}
-                </Swiper>
-                <Swiper
-                    onSwiper={setThumbsSwiper}
-                    loop={true}
-                    spaceBetween={10}
-                    slidesPerView={4}
-                    freeMode={true}
-                    watchSlidesProgress={true}
-                    modules={[FreeMode, Navigation, Thumbs]}
-                    className="mt-5"
-                >
-                    {slides.map((el,i)=> {
-                        return (
-                            <SwiperSlide key={i}>
-                                <div className={"thumb rounded-xl"}>
-                                        <img src={el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb} alt={"img"}/>
-                                </div>
-                            </SwiperSlide>
-                        )
-                    })}
-                </Swiper>
+                {/*<Swiper*/}
+                {/*    style={{*/}
+                {/*        "--swiper-navigation-color": "#fff",*/}
+                {/*        "--swiper-pagination-color": "#fff",*/}
+                {/*    }}*/}
+                {/*    loop={true}*/}
+                {/*    spaceBetween={10}*/}
+                {/*    navigation={true}*/}
+                {/*    thumbs={{ swiper: thumbsSwiper }}*/}
+                {/*    modules={[FreeMode, Navigation, Thumbs]}*/}
+                {/*    className="mt-5"*/}
+                {/*>*/}
+                {/*    {slides.map((el,i)=> {*/}
+                {/*        return <SwiperSlide key={i}>{el.type === MEDIA_TYPE.IMAGE ? <img src={el.url} alt={"img"}/> :*/}
+                {/*            <iframe width="100%" height="500" className={"rounded-xl"}*/}
+                {/*                    src={el.url}*/}
+                {/*                    frameBorder="0" allowFullScreen iframe-video={"true"}></iframe>}</SwiperSlide>*/}
+                {/*    })}*/}
+                {/*</Swiper>*/}
+                {/*<Swiper*/}
+                {/*    onSwiper={setThumbsSwiper}*/}
+                {/*    loop={true}*/}
+                {/*    spaceBetween={10}*/}
+                {/*    slidesPerView={4}*/}
+                {/*    freeMode={true}*/}
+                {/*    watchSlidesProgress={true}*/}
+                {/*    modules={[FreeMode, Navigation, Thumbs]}*/}
+                {/*    className="mt-5"*/}
+                {/*>*/}
+                {/*    {slides.map((el,i)=> {*/}
+                {/*        return (*/}
+                {/*            <SwiperSlide key={i}>*/}
+                {/*                <div className={"thumb rounded-xl"}>*/}
+                {/*                        <img src={el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb} alt={"img"}/>*/}
+                {/*                </div>*/}
+                {/*            </SwiperSlide>*/}
+                {/*        )*/}
+                {/*    })}*/}
+                {/*</Swiper>*/}
 
 
 

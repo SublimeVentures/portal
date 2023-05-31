@@ -95,7 +95,7 @@ function fillPartnerData(offer, template) {
     template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
     template.alloTotal = offer.alloTotalPartner ? offer.alloTotalPartner : offer.alloTotal;
     template.alloRequired = offer?.alloRequiredPartner >= 0 ? offer.alloRequiredPartner : offer.alloTotal;
-    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.alloMin * Number(getEnv().partnerDefaultMulti);
+    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : 0;
     return template;
 }
 

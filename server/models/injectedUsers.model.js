@@ -7,7 +7,7 @@ module.exports = (sequelize) => {
             allowNull: false,
             primaryKey: true,
         },
-        multi: {
+        ownedNfts: {
             type: DataTypes.INTEGER,
             defaultValue: 1
         },

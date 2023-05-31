@@ -6,6 +6,14 @@ const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('./delegate.abi.json')
 const Sentry = require("@sentry/nextjs");
 
+const getMoralisImage = (object) => {
+    if(object?.media?.mimetype === 'image/gif') {
+        return object?.media?.original_media_url
+    } else {
+        return object?.media?.media_collection?.high?.url ? object.media.media_collection.high.url : object?.media?.original_media_url
+    }
+}
+
 async function isWhale(ownedNfts) {
     const whaleAddress = getEnv().whaleId
     const exists = ownedNfts.find(el => el.token_address.toLowerCase() === whaleAddress.toLowerCase())
@@ -15,24 +23,22 @@ async function isWhale(ownedNfts) {
         amt: 1,
         name: exists.name,
         symbol: exists.symbol,
-        type: exists.contract_type,
-        img: exists?.media?.media_collection?.high?.url,
+        img: getMoralisImage(exists),
         id: Number(exists.token_id),
         ACL: 0
     }
 }
 
-async function isPartner(ownedNfts) {
-    console.log("AUTH :: Checking if Partner")
+async function isPartner(ownedNfts, enabledCollections) {
+    console.log("AUTH :: Checking if Partner", ownedNfts[0])
     if (ownedNfts.length === 0) return false
-    const image = ownedNfts[0]?.media?.mimetype === 'image/gif' ? ownedNfts[0]?.media?.original_media_url : (ownedNfts[0]?.media?.media_collection?.high?.url ? ownedNfts[0].media.media_collection.high.url : ownedNfts[0]?.media?.original_media_url)
-
+    const used = enabledCollections.find(el=> el.address.toLowerCase() === ownedNfts[0].token_address.toLowerCase())
     return {
         amt: ownedNfts.length,
         name: ownedNfts[0].name,
         symbol: ownedNfts[0].symbol,
-        type: ownedNfts[0].contract_type,
-        img: image,
+        multi: used.multiplier,
+        img: getMoralisImage(ownedNfts[0]),
         id: ownedNfts[0].tokenId ? Number(ownedNfts[0].tokenId) : Number(ownedNfts[0].token_id),
         ACL: 1
     }
@@ -44,10 +50,10 @@ async function isInjectedUser(address) {
     if (!user) return false
 
     return {
-        amt: user.multi,
+        amt: user.ownedNfts,
         name: user['partner.name'],
         symbol: user['partner.symbol'],
-        type: `ERC${user['partner.erc']}`,
+        multi: user['partner.multiplier'],
         img: user['partner.logo'],
         id: 0,
         ACL: 2
@@ -105,7 +111,8 @@ async function isDelegated(address, enabledCollections) {
                         chain: "0x1",
                         tokenId,
                     });
-                    image = metadata?.media?.media_collection?.high?.url
+                    console.log("metadata",metadata)
+                    image = getMoralisImage(metadata)
                 }
 
                 await upsertDelegation({address, vault, partner: partner.address, tokenId})
@@ -114,7 +121,7 @@ async function isDelegated(address, enabledCollections) {
                     amt: amt,
                     name: partner.name,
                     symbol: partner.symbol,
-                    type: `ERC${partner.type}`,
+                    multi: partner.multiplier,
                     img: image,
                     id: tokenId,
                     ACL: 3
@@ -147,7 +154,6 @@ async function feedNfts(address) {
             });
             userNfts = [...userNfts, ...jsonResponse.result]
         }
-
     }
     return [userNfts, enabledCollections]
 }
@@ -155,11 +161,11 @@ async function feedNfts(address) {
 async function login(address) {
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type = await isWhale(userNfts)
-    if (!type) type = await isPartner(userNfts)
+    if (!type) type = await isPartner(userNfts, enabledCollections)
     if (!type) type = await isInjectedUser(address)
     if (!type) type = await isDelegated(address, enabledCollections)
     return type
 }
 
 
-module.exports = {login, feedNfts}
+module.exports = {login}

@@ -17,7 +17,10 @@ export default function ErrorModal({isPartner, model, setter}) {
                         <li className={"text-app-success"}>3VC Partner's NFT</li>
                     </ul>
                 </div>
+                <div>
                     <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
+
+                </div>
                 </>
         )
     }

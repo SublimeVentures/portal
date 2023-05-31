@@ -37,20 +37,17 @@ Akaam - rajitt zaczynał razem, nfts game enginge, network programming, , develo
 
 
 ## ToDo
-media url db migration
+- media url db migration
+- login with delegate
+- login with partner
 
-- partner multiplier - maximum investment
 - try catch every query na backendzie / - support errorów
-- transakcje nie działają na rollbacku
-- error - No Sentry auth token configured. Source maps will not be uploaded.
 - next-auth redirect
 
-- artykuły
-- przy cancellowaniu sprawdź czy nie ma pending
-- implement @MrBlank feedback
-- https://discord.com/channels/@me/997001334328918017/1111268815238594642
-- stats for user
-- delegated -> invest to vault or hot
+- error - No Sentry auth token configured. Source maps will not be uploaded.
+- transakcje nie działają na rollbacku
+- delgation check
+
 =============
 - connect discord to app
 - scrap based on metadata ttoo - Rarity: Soldier / Capo //// https://docs.google.com/spreadsheets/d/16TUO0TuDAfwyQrpNSDeu4_a_Rv28uWUxhY-wCAyRgRQ/edit#gid=0
@@ -72,7 +69,8 @@ media url db migration
 - timeline for user activities for each investment in vault tab
 - new investment update for api
 - reassign allocation
-
+- delegated -> invest to vault or hot
+- gtag
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 
