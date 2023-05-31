@@ -33,10 +33,10 @@ async function getParamOfferDetails(session, req) {
         url_web: offer.url_web,
         t_cliff: offer.t_cliff,
         t_vesting: offer.t_vesting,
-        rrPages: offer.rrPages,
         slug: offer.slug,
         vault: offer.vault,
         whale: getEnv().whaleId,
+        cdn: getEnv().cdn,
         d_open: null,
         d_close: null,
         alloTotal: null,
@@ -95,7 +95,7 @@ function fillPartnerData(offer, template) {
     template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
     template.alloTotal = offer.alloTotalPartner ? offer.alloTotalPartner : offer.alloTotal;
     template.alloRequired = offer?.alloRequiredPartner >= 0 ? offer.alloRequiredPartner : offer.alloTotal;
-    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : offer.alloMin * Number(getEnv().partnerDefaultMulti);
+    template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : 0;
     return template;
 }
 

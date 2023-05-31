@@ -1,11 +1,19 @@
 import {useEffect} from "react";
 import RoundContainer from "@/components/App/RoundContainer";
-import BitcoinIcon from "@/assets/svg/Bitcoin.svg";
+import IconMoney from "@/assets/svg/Money.svg";
 import ChartIcon from "@/assets/svg/Chart.svg";
 import KeyIcon from "@/assets/svg/Key.svg";
 import VanillaTilt from "vanilla-tilt";
 import {useSession} from "next-auth/react";
 import {useRef} from "react";
+import Stat from "@/components/Stat";
+import IconStars from "@/assets/svg/Stars.svg";
+import IconNetwork from "@/assets/svg/Network.svg";
+import IconClock from "@/assets/svg/Clock.svg";
+import RoundSpacer from "@/components/App/RoundSpacer";
+import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {ExternalLinks} from "@/routes";
+import ReadIcon from "@/assets/svg/Read.svg";
 
 function amount(item){
     return item.invested;
@@ -59,20 +67,20 @@ export default function UserSummary({vault}) {
                                 <lottie-player
                                     autoplay
                                     loop
-                                    style={{width: '350px'}}
+                                    style={{width: '400px'}}
                                     mode="normal"
                                     src="/static/lottie/avatar.json"
                                 />
                             </div>
                             {session?.user ? (
-                                <div className={"max-w-[12rem] flex rounded-full shadow-lg"}>
+                                <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
                                     <img className="flex rounded-full my-auto" src={session.user.img}/>
                                 </div>
                             ) : (
                                 <lottie-player
                                     autoplay
                                     loop
-                                    style={{width: '350px'}}
+                                    style={{width: '400px'}}
                                     mode="normal"
                                     src="/static/lottie/loading.json"
                                 />
@@ -82,20 +90,18 @@ export default function UserSummary({vault}) {
                     </div>
                 </div>
                 <div className="col-span-12 flex flex-col gap-10 custom:col-span-8 justify-center">
-                    <div className="flex grid grid-cols-12 mt-5 gap-y-10 mobile:gap-10 ">
-                        <div className="col-span-12 mt-5 flex sm:col-span-4 sm:mt-0">
-                            <RoundContainer isSuccess={true} icon={<BitcoinIcon className="w-14 -mt-2"/>}
-                                            content={projectInvestedWidget()} forcedClass={"min-h-[150px]"}/>
-                        </div>
-                        <div className="col-span-12 mt-5 flex sm:col-span-4 sm:mt-0">
-                            <RoundContainer isSuccess={false} icon={<ChartIcon className="w-10 -mt-2"/>}
-                                            content={portfolioWidget()} forcedClass={"min-h-[150px]"}/>
-                        </div>
-                        <div className="col-span-12 mt-5 flex sm:col-span-4 sm:mt-0">
-                            <RoundContainer isSuccess={false} icon={<KeyIcon className="w-10 -mt-2"/>}
-                                            content={stakeLeftWidget()} forcedClass={"min-h-[150px]"}/>
-                        </div>
+
+                    <div className={"w-full flex gap-5 flex-col md:flex-row"}>
+                        <Stat color={"gold"} title={"Projects Invested"} value={vault ? vault.length : 0}  icon={<IconStars className={"w-9"}/>}/>
+                        <Stat color={"teal"} title={"Nearest Unlock"} value={'TBA'} icon={<IconClock className={"w-7"}/>}/>
+                        <Stat color={"blue"} title={"Portfolio Size"} value={`$${portfolio}`} icon={<IconMoney className={"w-7"}/>}/>
                     </div>
+                    <RoundSpacer title={'Vault'} subtitle={'All your investments in one place.'}
+                                 action={<RoundButton text={'Learn more'} isWide={true}
+                                                      size={'text-sm sm'}
+                                                      handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}
+                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
+                    />
                 </div>
             </div>
         </>

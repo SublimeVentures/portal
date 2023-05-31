@@ -20,6 +20,7 @@ export const StakeSteps = {
 }
 
 export default function InvestModal({model, setter, investModalProps}) {
+    if(!model) return;
     const {expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
     const {data: session} = useSession()
     const {ACL, id, address} = session.user

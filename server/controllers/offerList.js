@@ -8,15 +8,11 @@ const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 async function getParamOfferList(session, req) {
     const {ACL, ADDRESS} = checkAcl(session, req)
 
-    console.log("LIST DATA session", session)
-    console.log("LIST DATA req.query", req.query)
-    console.log("LIST DATA acl", ACL)
-    console.log("LIST DATA address", ADDRESS)
-
     const offers = await getOfferList()
 
     let response = {
-        research: getEnv().research,
+        cdn: getEnv().cdn,
+        stats: getEnv().stats,
         offers: []
     }
 
@@ -78,7 +74,6 @@ function fillPartnerData(offer) {
     return {
         id: offer.id,
         name: offer.name,
-        image: offer.image,
         genre: offer.genre,
         slug: offer.slug,
         ticker: offer.ticker,
@@ -92,7 +87,6 @@ function fillWhaleData(offer) {
     return {
         id: offer.id,
         name: offer.name,
-        image: offer.image,
         genre: offer.genre,
         slug: offer.slug,
         ticker: offer.ticker,

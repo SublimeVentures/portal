@@ -47,12 +47,12 @@ export default function AppVault() {
     const renderList = () => {
         if(!elements) return
         return elements.map((el, i) => {
-            return <VaultItem item={el} key={i} research={vault?.research}/>
+            return <VaultItem item={el} key={i} cdn={vault?.cdn}/>
         })
     }
 
     const placeHolder = () => {
-        if(status !== "authenticated" || !isSuccessDataFeed || elements=== undefined) return <div className={'col-span-12 mt-5'}><Loader/></div>
+        if(status !== "authenticated" || !isSuccessDataFeed || elements=== undefined) return <Loader/>
         if(status === "authenticated" && elements.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
     }
 
@@ -64,12 +64,7 @@ export default function AppVault() {
             <UserSummary vault={elements}/>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex">
-                    <RoundSpacer title={'Vault'} subtitle={'All your investments in one place.'}
-                                 action={<RoundButton text={'Learn more'} isWide={true}
-                                                      size={'text-sm sm'}
-                                                      handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}
-                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
-                    />
+
                 </div>
                 {renderList()}
             </div>

@@ -62,9 +62,6 @@ module.exports = (sequelize) => {
         genre: {
             type: DataTypes.STRING,
         },
-        image: {
-            type: DataTypes.STRING,
-        },
         description: {
             type: DataTypes.STRING,
         },
@@ -81,9 +78,6 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
         },
         url_web: {
-            type: DataTypes.STRING,
-        },
-        icon: {
             type: DataTypes.STRING,
         },
         slug: {
@@ -155,6 +149,9 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
+        },
+        media: {
+            type: DataTypes.ARRAY(DataTypes.JSON)
         },
     }, {
         indexes: [

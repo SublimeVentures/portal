@@ -28,21 +28,30 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
+Joel - lead game designer, czyta się jak pisze, programuje gameplay
+Jacek - arts, designer, razem z Joelem designowali staff z gry
+Rafael - meksyk, programmer, 10y exp progreammer,
+Nabil - backend for dungeons, nft
+Rajit - strilanka dev, on-chan dev, rust dev,
+Akaam - rajitt zaczynał razem, nfts game enginge, network programming, , developing dapp
+
 
 ## ToDo
-- design from polkastarter
-- partner multiplier - maximum investment
+- media url db migration
+- login with delegate (enabledPartner use)
+- login with partner
+
 - try catch every query na backendzie / - support errorów
-- artykuły
+- next-auth redirect
+
+- error - No Sentry auth token configured. Source maps will not be uploaded.
 - transakcje nie działają na rollbacku
+- delgation check
 
-- przy cancellowaniu sprawdź czy nie ma pending
-- implement @MrBlank feedback
-- https://discord.com/channels/@me/997001334328918017/1111268815238594642
-- stats for user
 =============
-
 - connect discord to app
+- scrap based on metadata ttoo - Rarity: Soldier / Capo //// https://docs.google.com/spreadsheets/d/16TUO0TuDAfwyQrpNSDeu4_a_Rv28uWUxhY-wCAyRgRQ/edit#gid=0
+
 
 =============
 - make offer button
@@ -60,7 +69,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - timeline for user activities for each investment in vault tab
 - new investment update for api
 - reassign allocation
-
+- delegated -> invest to vault or hot
+- gtag
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 

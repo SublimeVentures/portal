@@ -1,17 +1,24 @@
 const moment = require( 'moment' );
 
-function parsePhase (ACL, offer, raised) {
+function parsePhase (ACL, offer) {
+    let state
     if(ACL===0) {
-        return parseWhale(offer, raised)
+        state=  parseWhale(offer)
     } else if(!offer.isPhased) {
-        return parseRegular(offer)
+        state= parseRegular(offer)
     } else {
-        return parsePhased(offer)
+        state= parsePhased(offer)
+    }
 
+    return {
+        ...state,
+        currentPhase: state.phase[state.active],
+        nextPhase: state.isLast ? state.phase[state.active] : state.phase[state.active + 1],
+        isClosed: !!state.phase && state.phase.length-1 === state.active || offer.isSettled
     }
 }
 
-function parseWhale(offer, raised) {
+function parseWhale(offer) {
     const phase = [
         {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
         {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
@@ -55,16 +62,17 @@ function parseRegular(offer) {
     return {phase: phase, active: active, isLast: phase.length-1 === active}
 }
 
-function parseMaxAllocation (ACL, amt, offer, phase, allocationLeft) {
+function parseMaxAllocation (ACL, multi, offer, phase, allocationLeft) {
     if(ACL === 0) {
         return offer.alloMax < allocationLeft ? offer.alloMax : allocationLeft
     } else {
-        const partnerAllocation = offer.alloMax * amt < allocationLeft ? offer.alloMax * amt : allocationLeft
+        const partnerAllocation = offer.alloMin * multi
+        const limits = offer.alloMax && offer.alloMax < partnerAllocation ? offer.alloMax : partnerAllocation
         if(offer.isPhased) {
-            if(phase<2) return partnerAllocation
+            if(phase<2) return limits
             else return allocationLeft
         } else {
-            return partnerAllocation
+            return limits
         }
     }
 }
