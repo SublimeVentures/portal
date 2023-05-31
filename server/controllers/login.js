@@ -30,7 +30,7 @@ async function isWhale(ownedNfts) {
 }
 
 async function isPartner(ownedNfts, enabledCollections) {
-    console.log("AUTH :: Checking if Partner", ownedNfts[0])
+    console.log("AUTH :: Checking if Partner")
     if (ownedNfts.length === 0) return false
     const used = enabledCollections.find(el=> el.address.toLowerCase() === ownedNfts[0].token_address.toLowerCase())
     return {
@@ -79,13 +79,16 @@ async function isDelegated(address, enabledCollections) {
             let vault;
             for (let i = 0; i < enabledCollections.length; i++) {
                 const isDelegated = delegations.filter(el => el[3] === enabledCollections[i].address)
+
                 if (isDelegated.length > 0) {
+
                     const parsedDelegation = isDelegated.map(el=>({
                         vault: el[1],
                         address: el[2],
                         partner: el[3],
                         tokenId: Number(el[4])
                     }))
+
                     amt += parsedDelegation.length
                     parsedDelegation.forEach(el => {
                         if (el.tokenId > 0) {
@@ -94,6 +97,7 @@ async function isDelegated(address, enabledCollections) {
                             vault = el.vault
                         }
                     })
+
                     if (!partnerContract) {
                         partnerContract = parsedDelegation[0].partner
                         vault = parsedDelegation[0].vault
@@ -101,19 +105,23 @@ async function isDelegated(address, enabledCollections) {
                 }
             }
 
+
             if (amt > 0) {
                 const partner = enabledCollections.find(el => el.address === partnerContract)
                 let image = partner.logo;
 
                 if (tokenId !== 0) {
-                    const {jsonResponse: metadata} = await getWeb3().query.EvmApi.nft.getNFTMetadata({
-                        partnerContract,
-                        chain: "0x1",
-                        tokenId,
-                    });
-                    console.log("metadata",metadata)
-                    image = getMoralisImage(metadata)
+                        const {jsonResponse: metadata} = await getWeb3().query.EvmApi.nft.getNFTMetadata({
+                            address: partnerContract,
+                            chain: "0x1",
+                            tokenId,
+                        });
+                        const meta = metadata?.metadata ? JSON.parse(metadata.metadata) : {}
+                         if(meta?.image?.startsWith("http")){
+                            image = meta.image
+                        }
                 }
+
 
                 await upsertDelegation({address, vault, partner: partner.address, tokenId})
 
@@ -132,6 +140,7 @@ async function isDelegated(address, enabledCollections) {
             return false;
         }
     } catch (e) {
+
         Sentry.captureException({location: "checkDelegate", error: e});
         return false
     }

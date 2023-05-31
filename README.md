@@ -37,9 +37,8 @@ Akaam - rajitt zaczynał razem, nfts game enginge, network programming, , develo
 
 
 ## ToDo
-- media url db migration
-- login with delegate (enabledPartner use)
-- login with partner
+- media url dla stronki
+- subdomain for cdn
 
 - try catch every query na backendzie / - support errorów
 - next-auth redirect
