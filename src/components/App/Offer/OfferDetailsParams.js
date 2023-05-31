@@ -4,66 +4,34 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userAllocation} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
-    const normalized_ppu = ppu?.toLocaleString()
-    const normalized_tge = tge?.toLocaleString()
-    const normalized_tgeDiff = (100*(tge - ppu)/ppu)?.toLocaleString()
-    const normalized_total = alloTotal?.toLocaleString()
-    const normalized_filled = allocation?.alloFilled?.toLocaleString()
-    const normalized_my = userAllocation?.toLocaleString()
+    const normalized_ppu = Number(ppu)?.toLocaleString()
+    const normalized_tge = Number(tge)?.toLocaleString()
+    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString()
+    const normalized_total = Number(alloTotal)?.toLocaleString()
+    const normalized_my = Number(userAllocation)?.toLocaleString()
 
+
+    const isSoldOut = allocation?.alloFilled >= alloTotal
+    console.log("userAllocation",userAllocation, allocation?.alloFilled, alloTotal,  isSoldOut)
 
     return (
 
         <>
-            <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1">
-                <div className="text-xl uppercase font-medium text-outline mb-2">TOKEN</div>
+            <div className="flex flex-col rounded-xl bg-navy-accent p-6 justify-start flex-1 offerWrap">
+                {!isSoldOut ?  <div className={"text-sm bg-app-success w-fit px-2 py-1 rounded-xl text-navy2"}>Sold out</div> : <div className={"text-sm text-outline"}>Fundraise goal</div>}
+                <div className={"text-5xl font-bold flex flex-1 glow py-1"}>${normalized_total}</div>
 
-                <div className="flex ">
-                    <div className="flex-1 ">TICKER</div>
-                    <div className="tabular-nums">${ticker}</div>
-                </div>
-                <div className="flex ">
-                    <div className="flex-1 ">PRICE</div>
-                    <div className="tabular-nums">${normalized_ppu}</div>
-                </div>
-                {tge && <div className="flex ">
-                            <div className="flex-1 ">TGE PRICE</div>
-                            <div className="tabular-nums">${normalized_tge}</div>
-                        </div>
-                }
-                {tge && <div className="flex text-app-success">
-                            <div className="flex-1 ">TGE DIFF</div>
-                            <div className="tabular-nums">{normalized_tgeDiff}%</div>
-                        </div>
-                }
-                <div className="flex ">
-                    <div className="flex-1 ">CLIFF</div>
-                    {t_cliff && <div className="tabular-nums">{t_cliff}</div>  }
-                    {!t_cliff && <div className="tabular-nums">TBA</div>  }
-                </div>
-                <div className="flex ">
-                    <div className="flex-1 ">VESTING</div>
-                    {t_vesting && <div className="tabular-nums">{t_vesting}</div>  }
-                    {!t_vesting && <div className="tabular-nums">TBA</div>  }
-                </div>
-            </div>
-            <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1 xl:mt-10">
-                <div className="text-xl uppercase font-medium text-outline mb-2">ALLOCATION</div>
-
-                <div className="flex ">
-                    <div className="flex-1 ">TOTAL</div>
-                    <div className="">${normalized_total}</div>
-                </div>
-                <div className="flex ">
-                    <div className="flex-1 ">FILLED</div>
-                    <div className="">${normalized_filled}</div>
-                </div>
-                <div className="flex text-app-success mb-1">
-                    <div className="flex-1 ">MINE</div>
-                    <div className="">${normalized_my}</div>
-                </div>
-                <div className="flex flex-1 items-end">
+                <div className={"py-2"}>
                     <OfferDetailsProgress alloTotal={alloTotal} alloFilled={allocation?.alloFilled} alloRequired={alloRequired}/>
+                </div>
+                <div className={"flex flex-col gap-2 mt-5"}>
+                    {userAllocation > 0 && <div className={"detailRow text-app-success"}><p>My Allocation</p><hr className={"spacer"}/><p>${normalized_my}</p></div>}
+                    <div className={"detailRow"}><p>Ticker</p><hr className={"spacer"}/><p>${ticker}</p></div>
+                    <div className={"detailRow"}><p>Price</p><hr className={"spacer"}/><p>${normalized_ppu}</p></div>
+                    {tge && <div className={"detailRow"}><p>TGE</p><hr className={"spacer"}/><p>({normalized_tgeDiff}%) {normalized_tge}</p></div>}
+                    <div className={"detailRow"}><p>Cliff</p><hr className={"spacer"}/><p>{t_cliff ? <>{t_cliff}</> : <>TBA</>}</p></div>
+                    <div className={"detailRow"}><p>Vesting</p><hr className={"spacer"}/><p>{t_vesting ? <>{t_vesting}</> : <>TBA</>}</p></div>
+
                 </div>
 
             </div>

@@ -53,15 +53,15 @@ export default function OfferItem({offer, ACL, research}) {
     const state = phase[active]?.step
 
     const status = getStatus(active, isLast)
-    console.log("====================")
-    console.log("offer",offer)
-    console.log("active",active)
-    console.log("phase",phase)
-    console.log("isLast",isLast)
-    console.log("status",status)
-    console.log("state",state)
-    console.log("====================")
-
+    // console.log("====================")
+    // console.log("offer",offer)
+    // console.log("active",active)
+    // console.log("phase",phase)
+    // console.log("isLast",isLast)
+    // console.log("status",status)
+    // console.log("state",state)
+    // console.log("====================")
+    //
 
     return (
         <div

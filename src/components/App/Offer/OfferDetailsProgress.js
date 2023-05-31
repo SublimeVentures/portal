@@ -8,8 +8,9 @@ export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequire
         VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: 5});
     }, []);
 
-    const filled = parseInt(100*alloFilled/alloTotal)
-    const required = parseInt(100*alloRequired/alloTotal)
+
+    const filled = alloFilled ? 100*alloFilled/alloTotal : 0
+    const required = alloRequired? 100*alloRequired/alloTotal :0
 
     return (
         <>

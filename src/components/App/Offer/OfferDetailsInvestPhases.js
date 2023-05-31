@@ -6,7 +6,6 @@ import IconPantheon from "@/assets/svg/Pantheon.svg";
 import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
-import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import {parseMaxAllocation} from "@/lib/phases/parsePhase";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
@@ -25,10 +24,9 @@ import Dropdown from "@/components/App/Dropdown";
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
         offer,
-        phases,
         activePhase,
-        isLastPhase,
-        feedPhases: refreshInvestmentPhase,
+        currentPhase,
+
         currencies,
         refetchAllocation,
         refetchUserAllocation,
@@ -67,10 +65,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {ACL, amt} = session.user
     const {id, alloTotal, isPaused} = offer
 
-    const currentPhase = phases[activePhase]
 
 
-    const nextPhase = isLastPhase ? currentPhase : phases[activePhase + 1]
 
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
@@ -271,19 +267,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className="flex flex-1 flex-col items-center">
-            <div
-                className="flex flex-col flex-wrap justify-center items-center pt-5 sinvest:flex-row sinvest:pr-5 sinvest:self-end sinvest:items-start">
-                <div className="text-lg mt-3 mb-5 sinvest:mb-0 sinvest:mr-3 sinvest:mt-[0.70rem]">Phase <span
-                    className="text-gold uppercase  font-[500]">{currentPhase.step}</span> ends in
-                </div>
-                <FlipClockCountdown
-                    className="flip-clock"
-                    onComplete={() => refreshInvestmentPhase()}
-                    to={moment.unix(nextPhase.start)}
-                    labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
-                />
-            </div>
+        <div className="flex flex-1 flex-col items-center justify-center">
+
 
             <div className="mt-15 xl:mt-auto">
                 <div className="currency-input-group relative">

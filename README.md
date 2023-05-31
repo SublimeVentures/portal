@@ -30,7 +30,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- feed raised capital + partnered communities + funded projects (hardcode + real)
+- size of ticker
+- slider z obrazkami
+- text dla inwestycji
+- feed raised capital + partnered communities + funded projects (hardcode + real) + logo of the project
 - partner multiplier - maximum investment
 - try catch every query na backendzie / - support errorów
 - transakcje nie działają na rollbacku
