@@ -1,7 +1,7 @@
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 
 export const OfferDetailsParams = ({paramsParams}) => {
-    const {offer, allocation, userAllocation} = paramsParams
+    const {offer, allocation, userAllocation, isLastPhase} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
     const normalized_ppu = Number(ppu)?.toLocaleString()
@@ -11,8 +11,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const normalized_my = Number(userAllocation)?.toLocaleString()
 
 
-    const isSoldOut = allocation?.alloFilled >= alloTotal
-    console.log("userAllocation",userAllocation, allocation?.alloFilled, alloTotal,  isSoldOut)
+    const isSoldOut = allocation?.alloFilled >= alloTotal || isLastPhase
 
     return (
 

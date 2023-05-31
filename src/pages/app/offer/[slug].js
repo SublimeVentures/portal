@@ -92,7 +92,7 @@ export const AppOfferDetails = () => {
         nextPhase,
         currentPhase,
         activePhase,
-        // isLastPhase,
+        isLastPhase,
         session,
         isClosed,
     }
@@ -100,7 +100,8 @@ export const AppOfferDetails = () => {
     const paramsParams = {
         offer: offerData?.offer,
         allocation,
-        userAllocation
+        userAllocation,
+        isLastPhase
     }
 
 
@@ -109,17 +110,17 @@ export const AppOfferDetails = () => {
         if (status !== "authenticated" || !offerDetailsState || !nextPhase) return <Loader/>
         if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
         return (
-            <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar}/>
-                <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
+                <div className="rounded-xl bg flex flex-row col-span-12 xl:col-span-8">
                     {!isClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
                 </div>
                 <div
-                    className="flex flex-col col-span-12 sinvest:flex-row xl:col-span-4 xl:!flex-col">
+                    className="flex flex-col col-span-12 xl:col-span-4">
                     <OfferDetailsParams paramsParams={paramsParams}/>
                 </div>
 
-                <div className="flex flex-col col-span-12 ">
+                <div className="flex flex-col col-span-12">
                     <OfferDetailsFlipbook offer={offerData.offer}/>
                 </div>
             </div>
