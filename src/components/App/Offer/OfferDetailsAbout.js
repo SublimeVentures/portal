@@ -28,20 +28,13 @@ export default function OfferDetailsAbout({offer}) {
     }
 
 
-    console.log("0,",media)
-
-
-    const slides = [
-        {type: MEDIA_TYPE.IMAGE, url: "https://polkastarter.com/_next/image?url=https%3A%2F%2Fassets.polkastarter.com%2Fv3gfgnzhxtvx2ztijji1k1f19vxb&w=2048&q=95"},
-        {type: MEDIA_TYPE.IMAGE, url: "https://polkastarter.com/_next/image?url=https%3A%2F%2Fassets.polkastarter.com%2F94jk0mjyoxqojsokqqmddcwyepnn&w=2048&q=95"},
-        {type: MEDIA_TYPE.IMAGE, url: "https://polkastarter.com/_next/image?url=https%3A%2F%2Fassets.polkastarter.com%2Fv3gfgnzhxtvx2ztijji1k1f19vxb&w=2048&q=95"},
-        {type: MEDIA_TYPE.YOUTUBE, url: "https://www.youtube.com/embed/V2cF4uE0mXs?enablejsapi=1&html5=1&rel=0", thumb: "https://i3.ytimg.com/vi/V2cF4uE0mXs/hqdefault.jpg"},
-    ]
+    const haveMedia = media ? media?.length>0 : false
+    const slides = haveMedia ? media : []
 
     return (
         <>
 
-            <div className="rounded-xl relative offerWrap">
+            <div className="rounded-xl relative offerWrap overflow-hidden">
                 <div className={"rounded-xl bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between "}>
                     <div className="flex mx-10 text-[1.7rem]  font-medium glowNormal midcol:mr-0">About</div>
                     <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
@@ -68,49 +61,50 @@ export default function OfferDetailsAbout({offer}) {
                 </div>
 
             </div>
-
-
-                {/*<Swiper*/}
-                {/*    style={{*/}
-                {/*        "--swiper-navigation-color": "#fff",*/}
-                {/*        "--swiper-pagination-color": "#fff",*/}
-                {/*    }}*/}
-                {/*    loop={true}*/}
-                {/*    spaceBetween={10}*/}
-                {/*    navigation={true}*/}
-                {/*    thumbs={{ swiper: thumbsSwiper }}*/}
-                {/*    modules={[FreeMode, Navigation, Thumbs]}*/}
-                {/*    className="mt-5"*/}
-                {/*>*/}
-                {/*    {slides.map((el,i)=> {*/}
-                {/*        return <SwiperSlide key={i}>{el.type === MEDIA_TYPE.IMAGE ? <img src={el.url} alt={"img"}/> :*/}
-                {/*            <iframe width="100%" height="500" className={"rounded-xl"}*/}
-                {/*                    src={el.url}*/}
-                {/*                    frameBorder="0" allowFullScreen iframe-video={"true"}></iframe>}</SwiperSlide>*/}
-                {/*    })}*/}
-                {/*</Swiper>*/}
-                {/*<Swiper*/}
-                {/*    onSwiper={setThumbsSwiper}*/}
-                {/*    loop={true}*/}
-                {/*    spaceBetween={10}*/}
-                {/*    slidesPerView={4}*/}
-                {/*    freeMode={true}*/}
-                {/*    watchSlidesProgress={true}*/}
-                {/*    modules={[FreeMode, Navigation, Thumbs]}*/}
-                {/*    className="mt-5"*/}
-                {/*>*/}
-                {/*    {slides.map((el,i)=> {*/}
-                {/*        return (*/}
-                {/*            <SwiperSlide key={i}>*/}
-                {/*                <div className={"thumb rounded-xl"}>*/}
-                {/*                        <img src={el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb} alt={"img"}/>*/}
-                {/*                </div>*/}
-                {/*            </SwiperSlide>*/}
-                {/*        )*/}
-                {/*    })}*/}
-                {/*</Swiper>*/}
-
-
+            {haveMedia && <div className={"flex flex-col"}>
+                <Swiper
+                    style={{
+                        "--swiper-navigation-color": "#fff",
+                        "--swiper-pagination-color": "#fff",
+                    }}
+                    loop={true}
+                    spaceBetween={10}
+                    navigation={true}
+                    thumbs={{ swiper: thumbsSwiper }}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="mt-5"
+                >
+                    {slides.map((el,i)=> {
+                        return <SwiperSlide key={i}>
+                            {
+                                el.type === MEDIA_TYPE.IMAGE ?
+                                    <img src={`${cdn}${slug}/slide/${el.url}`} alt={"img"}/> :
+                                    <iframe width="100%" height="500" className={"rounded-xl"} src={el.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                            }
+                        </SwiperSlide>
+                    })}
+                </Swiper>
+                <Swiper
+                    onSwiper={setThumbsSwiper}
+                    loop={true}
+                    spaceBetween={10}
+                    slidesPerView={4}
+                    freeMode={true}
+                    watchSlidesProgress={true}
+                    modules={[FreeMode, Navigation, Thumbs]}
+                    className="mt-5"
+                >
+                    {slides.map((el,i)=> {
+                        return (
+                            <SwiperSlide key={i}>
+                                <div className={"thumb rounded-xl"}>
+                                    <img src={`${cdn}${slug}/slide/${el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb}`} alt={"img"}/>
+                                </div>
+                            </SwiperSlide>
+                        )
+                    })}
+                </Swiper>
+            </div> }
 
 
             <div className="my-10">
