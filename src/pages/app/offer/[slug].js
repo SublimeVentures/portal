@@ -6,7 +6,7 @@ import {ACL as ACLs} from "@/lib/acl";
 import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
-const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
+const OfferDetailsDetails = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
 import {getToken} from "next-auth/jwt"
 import {useSession} from "next-auth/react";
 import {fetchUserInvestment} from "@/fetchers/vault.fetcher";
@@ -104,8 +104,6 @@ export const AppOfferDetails = () => {
         isLastPhase
     }
 
-
-
     const renderPage = () => {
         if (status !== "authenticated" || !offerDetailsState || !nextPhase) return <Loader/>
         if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
@@ -121,7 +119,7 @@ export const AppOfferDetails = () => {
                 </div>
 
                 <div className="flex flex-col col-span-12">
-                    <OfferDetailsFlipbook offer={offerData.offer}/>
+                    <OfferDetailsDetails offer={offerData.offer}/>
                 </div>
             </div>
         )

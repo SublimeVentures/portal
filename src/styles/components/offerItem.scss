@@ -1,4 +1,8 @@
 .offerItem {
+  .offerBottom {
+    border-bottom-right-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
+  }
 
   &.pending {
     border-radius: 8px;
@@ -134,7 +138,9 @@
 }
 
 .swiper-thumbs {
-  overflow:visible!important;
+  overflow:hidden!important;
+  padding:10px!important;
+  margin-left:-10px!important;
 
   .swiper-slide{
     max-width: 200px!important;
@@ -149,7 +155,7 @@
 
   .thumb {
     pointer-events: none;
-    box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, rgb(255, 255, 255) 0px 0px 24px;
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px, rgb(255, 255, 255) 0px 0px 10px;
     overflow: visible;
     background: rgb(14, 20, 32);
   }
