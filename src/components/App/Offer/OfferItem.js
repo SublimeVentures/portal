@@ -65,6 +65,7 @@ export default function OfferItem({offer, ACL, cdn}) {
     return (
         <div
             className={`
+            rounded-xl
             bg-navy-accent flex flex-col text-center cursor-pointer col-span-12
             border-transparent border offerItem ${status}
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
@@ -91,7 +92,7 @@ export default function OfferItem({offer, ACL, cdn}) {
 
 
                     <div
-                        className="color uppercase font-bold  offerBottom text-center py-2 text-xs w-full mt-auto ">
+                        className="color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto border-b-xl">
                         {state}
                     </div>
                 </div>

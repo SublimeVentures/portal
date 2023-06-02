@@ -51,7 +51,7 @@ const template_3VC = {
             description: '',
             images: [
                 {
-                    url: 'https://d3dnznjar52mfe.cloudfront.net/webapp/og.jpg',
+                    url: 'https://cdn.3vc.fund/webapp/og.jpg',
                     width: 800,
                     height: 600,
                     alt: 'Join 3VC',

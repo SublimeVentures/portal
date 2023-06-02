@@ -36,7 +36,7 @@ export default function InvestmentsPublic() {
                         return <li className="tile-case" key={i}>
                             <a href={el.url_web} target="_blank">
                                 <div className="tile-primary-content bgFit"
-                                     style={{backgroundImage: 'url(https://d3dnznjar52mfe.cloudfront.net/research/' + el.slug + '/logo.jpg)'}}></div>
+                                     style={{backgroundImage: 'url(https://cdn.3vc.fund/research/' + el.slug + '/logo.jpg)'}}></div>
                                 <div className="tile-secondary-content">
                                     <h2>{el.genre}</h2>
                                     <p>{el.name}</p>

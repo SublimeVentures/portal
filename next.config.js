@@ -14,19 +14,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'basedvc.s3.amazonaws.com',
-                port: '',
-                pathname: '/rr_test/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'citcap-public.s3.us-east-2.amazonaws.com',
-                port: '',
-                pathname: '/*',
-            },
-            {
-                protocol: 'https',
-                hostname: 'd3dnznjar52mfe.cloudfront.net',
+                hostname: 'cdn.3vc.fund',
                 port: '',
                 pathname: '/**',
             },
