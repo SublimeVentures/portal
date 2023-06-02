@@ -29,7 +29,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- subdomain for cdn
 - try catch every query na backendzie / - support errorów
 - next-auth redirect
 - error - No Sentry auth token configured. Source maps will not be uploaded.
