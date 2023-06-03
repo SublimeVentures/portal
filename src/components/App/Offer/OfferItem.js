@@ -4,7 +4,7 @@ import {useEffect, useRef} from "react";
 import PAGE from "@/routes";
 import Link from "next/link";
 import Image from "next/image";
-import {parsePhase} from "@/lib/phases/parsePhase";
+import {parsePhase} from "@/lib/parsePhase";
 
 export const OfferStatus = {
     PENDING: "pending",

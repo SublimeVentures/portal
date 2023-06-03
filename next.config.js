@@ -20,6 +20,9 @@ const nextConfig = {
             },
         ],
     },
+    env: {
+        SENTRY_DSN: process.env.SENTRY_DSN,
+    },
 }
 
 module.exports = nextConfig
@@ -28,7 +31,6 @@ module.exports = nextConfig
 // Injected content via Sentry wizard below
 
 const { withSentryConfig } = require("@sentry/nextjs");
-
 module.exports = withSentryConfig(
   module.exports,
   {
@@ -38,8 +40,8 @@ module.exports = withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
 
-    org: "sublimevc",
-    project: "javascript-nextjs",
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
   },
   {
     // For all available options, see:

@@ -14,9 +14,8 @@ import IconWiki from "@/assets/svg/Wiki.svg";
 import IconLogout from "@/assets/svg/Logout.svg";
 import IconSetting from "@/assets/svg/Setting.svg";
 
-import PAGE from "@/routes";
+import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
-import {LinkerLinks} from "@/components/link";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 
@@ -36,13 +35,13 @@ export default function Sidebar() {
 
     const openDiscord = (e) => {
         e.preventDefault();
-        window.open(LinkerLinks.DISCORD, '_blank');
+        window.open(ExternalLinks.DISCORD, '_blank');
         setIsMobileOpen(false)
     }
 
     const openNotion = (e) => {
         e.preventDefault();
-        window.open(LinkerLinks.WIKI, '_blank');
+        window.open(ExternalLinks.WIKI, '_blank');
         setIsMobileOpen(false)
     }
 

@@ -1,5 +1,6 @@
 require('dotenv').config()
 require('dotenv').config({path: `.env.local`, override: true});
+const Sentry = require("@sentry/nextjs");
 const express = require('express');
 const next = require('next');
 const url = require('url');
@@ -25,11 +26,10 @@ const nextApp = next({dir: '.', dev, hostname, port});
 const nextHandler = nextApp.getRequestHandler();
 
 nextApp.prepare().then(async () => {
-    const server = express();
     await connectDB()
     await connectWeb3()
 
-
+    const server = express();
     server.use(express.json());
     server.use(express.urlencoded({extended: true}));
     server.use(cookieParser());
@@ -44,15 +44,18 @@ nextApp.prepare().then(async () => {
 
     // Default catch-all renders Next app
     server.all('*', (req, res) => {
-        // res.set({
-        //   'Cache-Control': 'public, maxAllocation-age=3600'
-        // });
+        res.set({
+          'Cache-Control': 'public, maxAllocation-age=3600'
+        });
         const parsedUrl = url.parse(req.url, true);
         nextHandler(req, res, parsedUrl);
     });
 
     server.listen(port, (err) => {
-        if (err) throw err;
+        if (err) {
+            Sentry.captureException({location: "ServerListen", err});
+            throw err;
+        }
         console.log(`Listening on http://localhost:${port}`);
     });
 });

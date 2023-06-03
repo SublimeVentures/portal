@@ -4,13 +4,18 @@ const {Op, QueryTypes} = require("sequelize");
 const Sentry = require("@sentry/nextjs");
 
 async function getOfferRaise(id) {
-    return models.raises.findOne({
-        where: {offerId: id},
-        include: {
-            attributes: ['id', 'alloTotalPartner'],
-            model: models.offers
-        }
-    })
+    try {
+        return models.raises.findOne({
+            where: {offerId: id},
+            include: {
+                attributes: ['id', 'alloTotalPartner'],
+                model: models.offers
+            }
+        })
+    } catch (e) {
+        Sentry.captureException({location: "getOfferRaise", type: 'query', e});
+    }
+    return {}
 }
 
 async function bookAllocation(offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId) {
@@ -27,8 +32,8 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
     const date = new Date().toISOString();
     const participants = `
         INSERT INTO public.participants_${offerId} ("address", "nftId", "amount", "acl", "hash", "createdAt", "updatedAt")
-        VALUES ('${address}', ${tokenId}, ${amount}, ${acl}, '${hash}', '${date}', '${date}')
-            on conflict("address", "hash") do
+        VALUES ('${address}', ${tokenId}, ${amount}, ${acl}, '${hash}', '${date}', '${date}
+                ') on conflict("address", "hash") do
         update set amount=EXCLUDED.amount, "acl"=EXCLUDED."acl", "nftId"=EXCLUDED."nftId", "updatedAt"=EXCLUDED."updatedAt";
     `
     try {
@@ -57,22 +62,33 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
 
 
     } catch (error) {
-        console.log("error",error)
-        Sentry.captureException({location: "bookAllocation", error, data: {offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId}});
+        console.log("error", error)
+        Sentry.captureException({
+            location: "bookAllocation",
+            error,
+            data: {offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId}
+        });
         return false
     }
 }
 
 async function expireAllocation(offerId, address, hash) {
-    const participants = `
-            UPDATE public.participants_${offerId} 
-            SET "isExpired"=true, "updatedAt"='${new Date().toISOString()}' 
-            WHERE "address"='${address}' AND "hash" = '${hash}';
-    `
+    try {
+        const participants = `
+            UPDATE public.participants_${offerId}
+            SET "isExpired"= true,
+                "updatedAt"='${new Date().toISOString()}'
+            WHERE "address" = '${address}'
+              AND "hash" = '${hash}';
+        `
 
-    await db.query(participants, {
-        model: models.participants,
-    });
+        await db.query(participants, {
+            model: models.participants,
+        });
+    } catch (e) {
+        Sentry.captureException({location: "expireAllocation", type: 'query', e});
+    }
+    return true
 }
 
 

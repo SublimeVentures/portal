@@ -1,7 +1,7 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
 import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
 import dynamic from "next/dynamic";
-import {queryClient} from "@/lib/web3/queryCache";
+import {queryClient} from "@/lib/queryCache";
 import {ACL as ACLs} from "@/lib/acl";
 import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
 import {dehydrate, useQuery} from "@tanstack/react-query";
@@ -14,7 +14,7 @@ import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import {NextSeo} from "next-seo";
 import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
-import {parsePhase} from "@/lib/phases/parsePhase";
+import {parsePhase} from "@/lib/parsePhase";
 import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";

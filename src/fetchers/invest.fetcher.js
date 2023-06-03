@@ -1,8 +1,7 @@
 import axios from "axios";
-import Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs'
 
 export const fetchHash = async (id, amount, currency, chain) => {
-    console.log("Fetching Investment Hash");
     const url = `/api/invest?id=${id}&amount=${amount}&currency=${currency}&chain=${chain}`
     try {
         const {data} = await axios.get(url)

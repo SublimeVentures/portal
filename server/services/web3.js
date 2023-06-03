@@ -2,6 +2,7 @@ const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const Web3Utils = require("web3-utils");
 const {getEnv} = require("./db/utils");
+const Sentry = require("@sentry/nextjs");
 let web3 = {}
 
 function getWeb3 () {
@@ -24,7 +25,9 @@ async function connectWeb3() {
         console.log("|---- Web3: connected")
 
     } catch (err) {
+        Sentry.captureException({location: "connectWeb3", err});
         console.error("Web3 connection failed.", err);
+        process.exit(1);
     }
 }
 
