@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import {SiweMessage} from "siwe"
 import {fetchSessionData} from "@/fetchers/login.fetcher";
 import PAGE from "@/routes";
+import Sentry from "@sentry/nextjs";
 const meta = process.env.URL === "localhost:3000" ? "next-auth.csrf-token" : "__Host-next-auth.csrf-token"
 
 export default async function auth(req, res) {
@@ -42,7 +43,7 @@ export default async function auth(req, res) {
                     }
 
                 } catch (e) {
-                    console.log("login error",e)
+                    Sentry.captureException({location: "authorize", e});
                     return null
                 }
             },
@@ -56,6 +57,7 @@ export default async function auth(req, res) {
     }
 
     return await NextAuth(req, res, {
+        site: process.env.NEXTAUTH_URL,
         secret: process.env.NEXTAUTH_SECRET,
         providers,
         session: {
@@ -73,7 +75,32 @@ export default async function auth(req, res) {
             session: async ({session, token}) => {
                 session.user = token.user
                 return session
-            }
+            },
+            redirect: async ({ url, baseUrl }) => {
+                console.log("!!@@@ REDIRECT", url, baseUrl)
+               return baseUrl
+
+                // // url is just a path, e.g.: /videos/pets
+                // if (!url.startsWith('http')) return url
+                //
+                // // If we have a callback use only its relative path
+                // const callbackUrl = new URL(url).searchParams.get('callbackUrl')
+                // if (!callbackUrl) return url
+                //
+                // return new URL(callbackUrl as string).pathname
+            },
+            // async redirect(params: { url: string }) {
+            //     const { url } = params
+            //
+            //     // url is just a path, e.g.: /videos/pets
+            //     if (!url.startsWith('http')) return url
+            //
+            //     // If we have a callback use only its relative path
+            //     const callbackUrl = new URL(url).searchParams.get('callbackUrl')
+            //     if (!callbackUrl) return url
+            //
+            //     return new URL(callbackUrl as string).pathname
+            // },
             // jwt: async ({ token, account, profile }) => {
             //     console.log("jwt", token, account, profile)
             //     if (account) {
