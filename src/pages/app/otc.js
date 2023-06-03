@@ -4,7 +4,7 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
 import IconCart from "@/assets/svg/Cart.svg";
 import Head from "next/head";
-import {queryClient} from "@/lib/web3/queryCache";
+import {queryClient} from "@/lib/queryCache";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchMarkets, fetchOffers} from "@/fetchers/otc.fetcher";
 import Empty from "@/components/App/Empty";

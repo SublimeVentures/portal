@@ -19,6 +19,7 @@ async function getEnvironment() {
     })
 
     const funded = projects.map(item => item.alloRaised).reduce((prev, next) => prev + next);
+
     env.currencies = parsedCurrencies
     env.multichain = parsedMultichain
 

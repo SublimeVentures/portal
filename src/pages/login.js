@@ -17,7 +17,7 @@ import {getCsrfToken, signIn} from "next-auth/react";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
 import PAGE, {ExternalLinks} from "@/routes";
-import { queryClient } from '@/lib/web3/queryCache'
+import { queryClient } from '@/lib/queryCache'
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import Linker from "@/components/link";

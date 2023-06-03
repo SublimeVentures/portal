@@ -2,8 +2,8 @@ import {SessionProvider} from "next-auth/react"
 import {WagmiConfig} from 'wagmi'
 import axios from 'axios';
 import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
-import {client} from '@/lib/web3/wagmi'
-import {queryClient} from '@/lib/web3/queryCache'
+import {client} from '@/lib/wagmi'
+import {queryClient} from '@/lib/queryCache'
 import Layout from '@/components/Layout/Layout';
 import 'react-tooltip/dist/react-tooltip.css';
 import '@/styles/globals.scss'
