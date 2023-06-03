@@ -57,7 +57,6 @@ export default async function auth(req, res) {
     }
 
     return await NextAuth(req, res, {
-        site: process.env.NEXTAUTH_URL,
         secret: process.env.NEXTAUTH_SECRET,
         providers,
         session: {
