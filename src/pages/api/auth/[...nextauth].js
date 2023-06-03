@@ -76,19 +76,6 @@ export default async function auth(req, res) {
                 session.user = token.user
                 return session
             },
-            redirect: async ({ url, baseUrl }) => {
-                console.log(`URL: ${url}`)
-                console.log(`BASEURL: ${baseUrl}`)
-
-                // // url is just a path, e.g.: /videos/pets
-                // if (!url.startsWith('http')) return url
-                //
-                // // If we have a callback use only its relative path
-                // const callbackUrl = new URL(url).searchParams.get('callbackUrl')
-                // if (!callbackUrl) return url
-                //
-                // return new URL(callbackUrl as string).pathname
-            },
             // async redirect(params: { url: string }) {
             //     const { url } = params
             //
