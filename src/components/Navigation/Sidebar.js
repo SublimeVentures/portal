@@ -73,7 +73,7 @@ export default function Sidebar() {
             if (el.action) return <div key={el.name}
                                        className={`flex cursor-pointer items-center px-5 py-2 rounded-xl sidebar-item select-none ${el.disabled ? 'disabled' : ''}`}
                                        onClick={el.handler}>{el.icon}{el.name}</div>
-            else return <Link href={el.link} key={el.name} onClick={() => {toggleMobile()}}
+            else return <Link href={el.link} key={el.name} onClick={() => {toggleMobile()}} prefetch={true}
                               className={`flex items-center px-5 py-2 rounded-xl sidebar-item select-none ${el.disabled ? 'disabled' : ''} ${router.asPath === el.link ? "arl" : ""}`}>{el.icon}{el.name}</Link>
 
         })

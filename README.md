@@ -28,6 +28,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
+- reponse 307 with localhost (location header in response)
+- redirects to localhost on heroku
+- next-auth response header with localhost site:stackoverflow.com
+- signin?callbackUrl on localhost
+- debug middleware
+
 ## ToDo
 - next-auth redirect
 - transakcje nie działają na rollbacku
@@ -47,6 +53,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - enable for reservation even on blocked reservation button
 - timeline for user activities for each investment in vault tab
+- https://remaster.com/blog/next-auth-jwt-session
 - new investment update for api
 - reassign allocation
 - extract style to 3vc / citcap
