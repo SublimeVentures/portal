@@ -1,5 +1,5 @@
 import axios from "axios";
-import Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs'
 
 export const fetchPublicInvestments = async () => {
     try {

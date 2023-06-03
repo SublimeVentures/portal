@@ -30,9 +30,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 - next-auth redirect
-- error - No Sentry auth token configured. Source maps will not be uploaded.
 - transakcje nie działają na rollbacku
-
 
 
 =============
