@@ -6,8 +6,9 @@ export default withAuth(
     function middleware(req) {
 
         console.log("MIDDLEWARE - REQ", req)
+        console.log("MIDDLEWARE - REQ split", req.href.split('/app'))
         // const response = NextResponse.next();
-        return NextResponse.redirect(new URL('/login', req.url));
+        return NextResponse.redirect(new URL('/login', process.env.NEXTAUTH_URL));
     },
     {
         callbacks: {
