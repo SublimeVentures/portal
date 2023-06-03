@@ -27,6 +27,9 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+10
+[//]: # (http://localhost:3000/login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2Fapp%2Fotc)
+http://localhost:3000/login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2Fapp%2Ftest
 
 - reponse 307 with localhost (location header in response)
 - redirects to localhost on heroku

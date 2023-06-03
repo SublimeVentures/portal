@@ -192,14 +192,15 @@ export default function Login() {
 
 export const getServerSideProps = async(context) => {
     const session = await getServerSession(context.req, context.res)
-    if(session){
-        return {
-            redirect: {
-                permanent: false,
-                destination: "/app"
-            }
-        }
-    }
+    console.log("SERVER session", session)
+    // if(session){
+    //     return {
+    //         redirect: {
+    //             permanent: false,
+    //             destination: "/app"
+    //         }
+    //     }
+    // }
 
     await queryClient.prefetchQuery({
         queryKey: ["partnerList"],
