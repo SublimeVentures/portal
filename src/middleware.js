@@ -8,7 +8,7 @@ export default withAuth(
         console.log("MIDDLEWARE - REQ", req)
         console.log("MIDDLEWARE - REQ split", req.nextUrl.href.split('/app'))
         // const response = NextResponse.next();
-        return NextResponse.redirect(new URL('/login', process.env.NEXTAUTH_URL));
+        // return NextResponse.redirect(new URL('/login', process.env.NEXTAUTH_URL));
     },
     {
         callbacks: {
