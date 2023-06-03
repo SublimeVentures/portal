@@ -4,7 +4,7 @@ import {
     dehydrate
 } from '@tanstack/react-query'
 import {fetchPublicInvestments} from "@/fetchers/public.fecher";
-import { queryClient } from '@/lib/web3/queryCache'
+import { queryClient } from '@/lib/queryCache'
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";

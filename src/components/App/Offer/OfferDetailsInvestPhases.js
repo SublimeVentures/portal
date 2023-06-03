@@ -7,7 +7,7 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {parseMaxAllocation} from "@/lib/phases/parsePhase";
+import {parseMaxAllocation} from "@/lib/parsePhase";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import {useSession} from "next-auth/react";
 import ErrorModal from "@/components/App/Offer/ErrorModal";

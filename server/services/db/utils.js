@@ -1,5 +1,6 @@
 const db = require('./index');
 const {getEnvironment} = require("../../queries/environment.query");
+const Sentry = require("@sentry/nextjs");
 let env = {}
 
 
@@ -16,6 +17,7 @@ async function connectDB() {
         env = await getEnvironment()
         console.log("|---- ENV: ", env)
     } catch (error) {
+        Sentry.captureException({location: "connectDB", error});
         console.error("DB connection failed.", error);
         process.exit(1);
     }

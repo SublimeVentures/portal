@@ -3,7 +3,7 @@ import Sentry from "@sentry/nextjs";
 
 export const fetchUserInvestment = async (offerId) => {
     try {
-        let url = `/api/vault?offer=${offerId}`
+        const url = `/api/vault?offer=${offerId}`
         const {data} = await axios.get(url)
         return data
     } catch(e) {

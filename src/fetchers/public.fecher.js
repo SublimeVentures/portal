@@ -1,12 +1,24 @@
 import axios from "axios";
+import Sentry from "@sentry/nextjs";
 
 export const fetchPublicInvestments = async () => {
-    const {data} = await axios.get("/api/public/investments")
-    return data
+    try {
+        const {data} = await axios.get("/api/public/investments")
+        return data
+    } catch(e) {
+        Sentry.captureException({location: "fetchPublicInvestments", e});
+    }
+    return []
 }
 
 export const fetchPartners = async () => {
-    const {data} = await axios.get("/api/public/partners")
-    return data
+    try {
+        const {data} = await axios.get("/api/public/partners")
+        return data
+    } catch(e) {
+        Sentry.captureException({location: "fetchPartners", e});
+    }
+    return []
+
 }
 

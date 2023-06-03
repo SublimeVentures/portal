@@ -1,4 +1,4 @@
-import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import {  createClient, configureChains } from 'wagmi'
 import { polygon, mainnet, sepolia, polygonMumbai, bscTestnet, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
@@ -7,7 +7,7 @@ import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
 const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 
-const { chains, provider, webSocketProvider } = configureChains(
+const { chains, provider } = configureChains(
     rightChains,
     [publicProvider()],
     { stallTimeout: 5000 },

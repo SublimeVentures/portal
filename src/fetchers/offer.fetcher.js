@@ -25,7 +25,7 @@ export const fetchOfferDetails = async (slug, acl, address) => {
         const {data} = await axios.get(url)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferDetails", e,url});
+        Sentry.captureException({location: "fetchOfferDetails",slug, address, acl, e, url});
     }
     return {}
 }
