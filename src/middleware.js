@@ -6,12 +6,12 @@ export default withAuth(
     function middleware(req) {
 
         console.log("MIDDLEWARE - REQ", req)
-        const forbiddenURL = req.nextUrl.href.split('/app')[0]
+        const forbiddenURL = req.nextUrl.href.split('/app')[1]
         const redirect = forbiddenURL ? forbiddenURL : "/"
         console.log("MIDDLEWARE - REQ redirect", redirect)
 
         // const response = NextResponse.next();
-        return NextResponse.redirect(new URL('/login', process.env.NEXTAUTH_URL));
+        return NextResponse.redirect(new URL('/', process.env.NEXTAUTH_URL));
     },
     {
         callbacks: {
