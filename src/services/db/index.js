@@ -1,4 +1,4 @@
-const db = require('./index');
+const db = require('./db.setup');
 const {getEnvironment} = require("../../queries/environment.query");
 const Sentry = require("@sentry/nextjs");
 let env = {}

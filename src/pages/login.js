@@ -9,12 +9,8 @@ const ErrorModal = dynamic(() => import('@/components/SignupFlow/ErrorModal'), {
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchPartners} from "@/fetchers/public.fecher";
 import { Slider3D } from 'react-slider-3d';
-import { getServerSession } from "next-auth/next"
 import {useAccount, useNetwork, useSignMessage} from "wagmi";
-import {SiweMessage} from "siwe";
 import { useRouter } from 'next/router';
-import {getCsrfToken, signIn} from "next-auth/react";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
 import PAGE, {ExternalLinks} from "@/routes";
 import { queryClient } from '@/lib/queryCache'
@@ -22,8 +18,11 @@ import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import Linker from "@/components/link";
 import IconWhale from "@/assets/svg/Whale.svg";
+import {singIn} from "@/fetchers/login.fetcher";
+import moment from "moment";
+import { v4 as uuidv4 } from 'uuid';
 
-export default function Login() {
+export default function Login({}) {
     const seo = seoConfig(PAGE.Login)
 
     const { isLoading, data, isError } = useQuery({
@@ -44,39 +43,39 @@ export default function Login() {
     let [isPartnerLogin, setIsPartnerLogin] = useState(false)
     let [walletSelectionOpen, setIsWalletSelectionOpen] = useState(false)
     let [errorModal, setErrorModal] = useState(false)
-    let [isLoginLoading, setIsLoginLoading] = useState(false)
-
-
+    // let [isLoginLoading, setIsLoginLoading] = useState(false)
+    const { error, isLoading: isLoginLoading, signMessageAsync:sign, variables } = useSignMessage()
 
     const signMessage = async (forcedAddress) => {
-        setIsLoginLoading(true)
+        // setIsLoginLoading(true)
         setMessageSigned(true)
         try {
-            const message = new SiweMessage({
-                domain: window.location.host.replace("www.", ""),
-                address: forcedAddress? forcedAddress : address,
-                statement: "INVEST GROUND FLOOR\n" +
-                    "DON'T BE EXIT LIQUIDITY",
-                uri: window.location.origin,
-                version: "1",
-                chainId: chain?.id,
-                nonce: await getCsrfToken(),
-            })
-            const signature = await signMessageAsync({
-                message: message.prepareMessage(),
-            })
+            const time = moment().unix();
+            const nonce = uuidv4();
+            const message = "INVEST GROUND FLOOR\n" +
+                    "DON'T BE EXIT LIQUIDITY\n\n" +
+                    `DOMAIN: ${window.location.host.replace("www.", "")}\n` +
+                    `TIME: ${time}\n` +
+                    `NONCE: ${nonce}`
+            const signature = await sign({message})
+            console.log("signed", signature)
 
-            const callbackUrl= router.query.callbackUrl;
-            await signIn("credentials", {
-                message: JSON.stringify(message),
-                redirect: true,
-                signature,
-                callbackUrl: callbackUrl ?? '/app'
-            })
+            const callbackUrl = router.query.callbackUrl;
+
+            const isAuth = await singIn(message, signature, nonce)
+            // await signIn("credentials", {
+            //     message: JSON.stringify(message),
+            //     redirect: true,
+            //     signature,
+            //     callbackUrl: callbackUrl ?? '/app'
+            // })
+
+
         } catch (error) {
+            console.log("ee", error)
             setMessageSigned(false)
             setErrorMsg(error.message)
-            setIsLoginLoading(false)
+            // setIsLoginLoading(false)
 
         }
     }
@@ -191,8 +190,7 @@ export default function Login() {
 }
 
 export const getServerSideProps = async(context) => {
-    const session = await getServerSession(context.req, context.res)
-    console.log("SERVER session", session)
+    // const session = await getServerSession(context.req, context.res)
     // if(session){
     //     return {
     //         redirect: {
@@ -212,6 +210,7 @@ export const getServerSideProps = async(context) => {
     return {
         props: {
             dehydratedState: dehydrate(queryClient),
+            // csrfToken
         }
     }
 }

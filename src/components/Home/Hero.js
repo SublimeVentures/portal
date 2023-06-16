@@ -1,13 +1,14 @@
 import {RoundButton, ButtonIconSize} from '@/components/Button/RoundButton';
 import PlayIcon from "@/assets/svg/Play.svg";
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router'
 import PAGE from "@/routes";
 
 export default function Hero() {
-    const { status } = useSession()
-    const router = useRouter()
+    // const { status } = useSession()
+    const status = ""
 
+    const router = useRouter()
     const login = () => {
         if(status === "authenticated") {
             router.push(PAGE.App)

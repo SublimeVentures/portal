@@ -1,4 +1,3 @@
-import {SessionProvider} from "next-auth/react"
 import {WagmiConfig} from 'wagmi'
 import axios from 'axios';
 import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
@@ -20,7 +19,7 @@ export default function App({Component, pageProps: {session, ...pageProps}}) {
 
     return (
         <WagmiConfig client={client}>
-            <SessionProvider session={session}>
+            {/*<SessionProvider session={session}>*/}
             {renderWithLayout(
                     <QueryClientProvider client={queryClient}>
                         <Hydrate state={pageProps.dehydratedState}>
@@ -28,18 +27,8 @@ export default function App({Component, pageProps: {session, ...pageProps}}) {
                         </Hydrate>
                     </QueryClientProvider>
             )}
-            </SessionProvider>
+            {/*</SessionProvider>*/}
         </WagmiConfig>
     );
-    // return renderWithLayout(
-    //     <WagmiConfig client={client}>
-    //         <SessionProvider session={session}>
-    //             <QueryClientProvider client={queryClient}>
-    //                 <Hydrate state={pageProps.dehydratedState}>
-    //                     <Component  {...pageProps} />
-    //                 </Hydrate>
-    //             </QueryClientProvider>
-    //         </SessionProvider>
-    //     </WagmiConfig>
-    // );
+
 }

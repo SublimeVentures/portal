@@ -1,9 +1,9 @@
-const {getWeb3} = require("../services/web3");
+const {getWeb3} = require("@/services/web3");
 const {getPartners} = require("../queries/partners.query");
 const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getEnv} = require("../services/db/utils");
 const {upsertDelegation} = require("../queries/delegate.query");
-const delegateAbi = require('./delegate.abi.json')
+const delegateAbi = require('@/abi/delegate.abi.json')
 const Sentry = require("@sentry/nextjs");
 
 const getMoralisImage = (object) => {
@@ -167,7 +167,7 @@ async function feedNfts(address) {
     return [userNfts, enabledCollections]
 }
 
-async function login(address) {
+export async function checkACL(address) {
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type = await isWhale(userNfts)
     if (!type) type = await isPartner(userNfts, enabledCollections)
@@ -177,4 +177,4 @@ async function login(address) {
 }
 
 
-module.exports = {login}
+

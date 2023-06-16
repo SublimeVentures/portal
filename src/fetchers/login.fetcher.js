@@ -1,12 +1,14 @@
-import axios from "axios";
 import Sentry from "@sentry/nextjs";
+import {fetchWrapper} from "@/lib/fetchWrapper";
 
-export const fetchSessionData = async (address) => {
+export const singIn = async (message, signature) => {
     try {
-        const {data} = await axios.get(`/api/validate/l0gin/${address}`)
-        return data
-    } catch(e) {
-        Sentry.captureException({location: "fetchSessionData", e});
+        const request = await fetchWrapper.post(`/api/auth/login`, { message, signature })
+
+        console.log("singIn", request)
+    } catch (e) {
+        console.log("singIn", e)
+        Sentry.captureException({location: "singIn", e});
     }
     return {}
 }
