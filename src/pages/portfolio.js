@@ -3,25 +3,23 @@ import {
     useQuery,
     dehydrate
 } from '@tanstack/react-query'
-import {fetchPublicInvestments} from "@/fetchers/public.fecher";
+import {fetchPortfolio} from "@/fetchers/public.fecher";
 import { queryClient } from '@/lib/queryCache'
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
 
-export default function InvestmentsPublic() {
-    const seo = seoConfig(PAGE.Investments)
+export default function Portfolio() {
+    const seo = seoConfig(PAGE.Portfolio)
     const { isLoading, data, isError } = useQuery({
-            queryKey: ["publicInvestment"],
-            queryFn: fetchPublicInvestments,
+            queryKey: ["portfolio"],
+            queryFn: fetchPortfolio,
             cacheTime: 180 * 60 * 1000,
             staleTime: 90 * 60 * 1000,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
         }
     );
-
-
 
     const renderList = () => {
         if(isLoading) {
@@ -65,8 +63,8 @@ export default function InvestmentsPublic() {
 
 export const getServerSideProps = async() => {
     await queryClient.prefetchQuery({
-        queryKey: ["publicInvestment"],
-        queryFn: fetchPublicInvestments,
+        queryKey: ["portfolio"],
+        queryFn: fetchPortfolio,
         cacheTime: 180 * 60 * 1000,
         staleTime: 90 * 60 * 1000
     })

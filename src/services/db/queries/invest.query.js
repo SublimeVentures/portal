@@ -1,15 +1,14 @@
-const {models} = require('../services/db/index');
-const db = require('../services/db/index');
-const {Op, QueryTypes} = require("sequelize");
-const Sentry = require("@sentry/nextjs");
+import db from "@/services/db/db.setup"
+import {Op, QueryTypes} from "sequelize";
+import Sentry from "@sentry/nextjs";
 
-async function getOfferRaise(id) {
+export async function getOfferRaise(id) {
     try {
-        return models.raises.findOne({
+        return db.models.raises.findOne({
             where: {offerId: id},
             include: {
                 attributes: ['id', 'alloTotalPartner'],
-                model: models.offers
+                model: db.models.offers
             }
         })
     } catch (e) {
@@ -18,7 +17,7 @@ async function getOfferRaise(id) {
     return {}
 }
 
-async function bookAllocation(offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId) {
+export async function bookAllocation(offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId) {
     let sumFilter
     let variable
     if (isSeparatePool) {
@@ -39,7 +38,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
     try {
         await db.transaction(async (t) => {
 
-                const booked = await models.raises.increment({[variable]: amount}, {
+                const booked = await db.models.raises.increment({[variable]: amount}, {
                     where: {
                         [Op.and]: [
                             db.literal(sumFilter)
@@ -52,7 +51,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
                 await db.query(participants, {
                     transaction: t,
                     type: QueryTypes.UPSERT,
-                    model: models.participants,
+                    model: db.models.participants,
                 });
 
                 return true;
@@ -72,7 +71,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
     }
 }
 
-async function expireAllocation(offerId, address, hash) {
+export async function expireAllocation(offerId, address, hash) {
     try {
         const participants = `
             UPDATE public.participants_${offerId}
@@ -83,13 +82,10 @@ async function expireAllocation(offerId, address, hash) {
         `
 
         await db.query(participants, {
-            model: models.participants,
+            model: db.models.participants,
         });
     } catch (e) {
         Sentry.captureException({location: "expireAllocation", type: 'query', e});
     }
     return true
 }
-
-
-module.exports = {getOfferRaise, bookAllocation, expireAllocation}

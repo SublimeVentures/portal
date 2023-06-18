@@ -1,5 +1,4 @@
 import {recoverMessageAddress} from 'viem'
-import Sentry from "@sentry/nextjs";
 
 import {
     buildCookie,
@@ -34,8 +33,7 @@ const validateLogin = async (message, signature) => {
 
 
 const refreshAuth = async (userData, res) => {
-    const accessToken = await generateToken(userData, '10s', JWT_ACCESS_SECRET_encode)
-    // const accessToken = await generateToken(userData, '15m', JWT_ACCESS_SECRET_encode)
+    const accessToken = await generateToken(userData, '15m', JWT_ACCESS_SECRET_encode)
     const refreshToken = await generateToken(userData, '12h', JWT_REFRESH_SECRET_encode)
     const accessCookie = buildCookie('x-auth-access', accessToken, 60 * 60 * 5,)
 

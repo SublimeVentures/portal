@@ -2,7 +2,7 @@ const PAGE = {
     Landing: "/",
     Join: "/join",
     Login: "/login",
-    Investments: "/investments",
+    Portfolio: "/portfolio",
     App: "/app",
     // Vault: "/app/vault",
     Opportunities: "/app/offer",

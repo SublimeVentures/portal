@@ -21,6 +21,7 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import {singIn} from "@/fetchers/login.fetcher";
 import moment from "moment";
 import { v4 as uuidv4 } from 'uuid';
+import {verifyID} from "@/lib/authHelpers";
 
 export default function Login({}) {
     const seo = seoConfig(PAGE.Login)
@@ -189,16 +190,16 @@ export default function Login({}) {
     )
 }
 
-export const getServerSideProps = async(context) => {
-    // const session = await getServerSession(context.req, context.res)
-    // if(session){
-    //     return {
-    //         redirect: {
-    //             permanent: false,
-    //             destination: "/app"
-    //         }
-    //     }
-    // }
+export const getServerSideProps = async({res}) => {
+    const account = await verifyID(res.req)
+    if(account.auth){
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/app"
+            }
+        }
+    }
 
     await queryClient.prefetchQuery({
         queryKey: ["partnerList"],
@@ -210,7 +211,7 @@ export const getServerSideProps = async(context) => {
     return {
         props: {
             dehydratedState: dehydrate(queryClient),
-            // csrfToken
+            account
         }
     }
 }

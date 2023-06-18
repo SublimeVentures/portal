@@ -1,13 +1,13 @@
-const {models} = require('../services/db/index');
-const Sentry = require("@sentry/nextjs");
+import db from "@/services/db/db.setup"
+import Sentry from "@sentry/nextjs";
 
-async function getInjectedUser(address) {
+export async function getInjectedUser(address) {
     try {
-        return models.injectedUsers.findOne({
+        return db.models.injectedUsers.findOne({
             where: {
                 address
             },
-            include: {model: models.partners},
+            include: {model: db.models.partners},
             raw: true
         });
     } catch (e) {
@@ -16,9 +16,9 @@ async function getInjectedUser(address) {
     return {}
 }
 
-async function getInjectedUserAccess(address) {
+export async function getInjectedUserAccess(address) {
     try {
-        return models.injectedUsers.findOne({
+        return db.models.injectedUsers.findOne({
             where: {
                 address
             },
@@ -30,4 +30,3 @@ async function getInjectedUserAccess(address) {
     return {}
 }
 
-module.exports = {getInjectedUser, getInjectedUserAccess}

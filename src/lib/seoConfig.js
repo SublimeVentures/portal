@@ -17,7 +17,7 @@ export const seoConfig = (page) => {
                     page
                 )
             }
-            case PAGE.Investments: {
+            case PAGE.Portfolio: {
                 return generateSeo(
                     "3VC - our investments",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",

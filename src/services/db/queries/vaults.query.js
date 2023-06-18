@@ -1,10 +1,9 @@
-const Sentry = require("@sentry/nextjs");
+import Sentry from "@sentry/nextjs";
+import db from "@/services/db/db.setup"
 
-const {models} = require('../services/db/index');
-
-async function getUserInvestment(owner, offerId) {
+export async function getUserInvestment(owner, offerId) {
     try {
-        return models.vaults.findOne({
+        return db.models.vaults.findOne({
             attributes: ['invested'],
             where: {
                 owner,
@@ -19,15 +18,15 @@ async function getUserInvestment(owner, offerId) {
 
 }
 
-async function getUserVault(owner) {
+export async function getUserVault(owner) {
     try {
-        return models.vaults.findAll({
+        return db.models.vaults.findAll({
             where: {
                 owner
             },
             include: {
                 attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
-                model: models.offers
+                model: db.models.offers
             },
             raw: true
         })
@@ -39,4 +38,3 @@ async function getUserVault(owner) {
 }
 
 
-module.exports = {getUserInvestment, getUserVault}

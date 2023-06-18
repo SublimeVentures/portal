@@ -77,7 +77,7 @@ function applyExtraSetup(sequelize) {
 // We execute any extra setup after the models are defined, such as adding associations.
 applyExtraSetup(sequelize);
 
-module.exports = sequelize;
-
+// module.exports = sequelize;
+export default sequelize
 
 

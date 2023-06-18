@@ -1,9 +1,9 @@
-const {models} = require('../services/db/index');
-const Sentry = require("@sentry/nextjs");
+import db from "@/services/db/db.setup"
+import Sentry from "@sentry/nextjs";
 
-async function getOffersPublic() {
+export async function getPortfolio() {
     try {
-        return models.offers.findAll({
+        return db.models.offers.findAll({
             attributes: ['name', 'genre', 'url_web', 'slug'],
             where: {
                 displayPublic: true
@@ -11,15 +11,15 @@ async function getOffersPublic() {
             raw: true
         });
     } catch (e) {
-        Sentry.captureException({location: "getOffersPublic", type: 'query', e});
+        Sentry.captureException({location: "getPortfolio", type: 'query', e});
     }
     return []
 }
 
-async function getOfferList() {
+export async function getOfferList() {
     try {
 
-        return models.offers.findAll({
+        return db.models.offers.findAll({
             where: {
                 display: true
             },
@@ -31,10 +31,10 @@ async function getOfferList() {
     return []
 }
 
-async function getOfferDetails(slug) {
+export async function getOfferDetails(slug) {
     try {
 
-        return models.offers.findOne({
+        return db.models.offers.findOne({
             where: {
                 display: true, slug
             },
@@ -46,9 +46,9 @@ async function getOfferDetails(slug) {
     return {}
 }
 
-async function getOfferReservedData(id) {
+export async function getOfferReservedData(id) {
     try {
-        return models.offers.findOne({
+        return db.models.offers.findOne({
             where: {id},
             raw: true
         })
@@ -63,4 +63,3 @@ async function getOfferReservedData(id) {
 // }
 
 
-module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferReservedData}

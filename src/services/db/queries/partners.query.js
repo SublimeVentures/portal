@@ -1,10 +1,10 @@
-const {models} = require('../services/db/index');
-const Sentry = require("@sentry/nextjs");
+import db from "@/services/db/db.setup"
+import Sentry from "@sentry/nextjs";
 
-async function getPublicPartners() {
+export async function getPublicPartners() {
     try {
 
-        return await models.partners.findAll({
+        return await db.models.partners.findAll({
             attributes: ['logo', 'name'],
             where: {
                 isVisible: true
@@ -17,13 +17,13 @@ async function getPublicPartners() {
     return []
 }
 
-async function getPartners(isDev) {
+export async function getPartners(isDev) {
     try {
-        return await models.partners.findAll({
+        return await db.models.partners.findAll({
             where: {
                 isEnabled: true
             },
-            include: {model: models.networks, where: {isDev}},
+            include: {model: db.models.networks, where: {isDev}},
             raw: true
         });
     } catch (e) {
@@ -33,4 +33,3 @@ async function getPartners(isDev) {
 
 }
 
-module.exports = {getPublicPartners, getPartners}

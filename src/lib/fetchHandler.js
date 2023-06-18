@@ -72,7 +72,7 @@ function get(url) {
         credentials: 'include',
         // headers: authHeader(url)
     };
-    return fetch(url, requestOptions).then(handleResponse);
+    return fetch(baseUrl + url, requestOptions).then(handleResponse);
 }
 
 function put(url) {
@@ -81,7 +81,7 @@ function put(url) {
         mode: 'no-cors',
         credentials: 'include',
     };
-    return fetch(url, requestOptions).then(handleResponse);
+    return fetch(baseUrl + url, requestOptions).then(handleResponse);
 }
 
 function _delete(url) {
@@ -89,7 +89,7 @@ function _delete(url) {
         method: 'DELETE',
         credentials: 'include',
     };
-    return fetch(url, requestOptions).then(handleResponse);
+    return fetch(baseUrl + url, requestOptions).then(handleResponse);
 }
 
 

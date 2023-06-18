@@ -1,6 +1,6 @@
 require('dotenv').config()
 require('dotenv').config({path: `.env.local`, override: true});
-const Sentry = require("@sentry/nextjs");
+import Sentry from "@sentry/nextjs";
 const express = require('express');
 const next = require('next');
 const url = require('url');

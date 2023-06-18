@@ -1,11 +1,11 @@
-import axios from "axios";
 import * as Sentry from '@sentry/nextjs'
+import {fetchWrapper} from "@/lib/fetchHandler";
 
-export const fetchPublicInvestments = async () => {
+export const fetchPortfolio = async () => {
     try {
-        const {data} = await axios.get("/api/public/investments")
-        return data
+        return await fetchWrapper.get(`/api/portfolio`)
     } catch(e) {
+        console.log("fetchPortfolio",e)
         Sentry.captureException({location: "fetchPublicInvestments", e});
     }
     return []
@@ -13,9 +13,9 @@ export const fetchPublicInvestments = async () => {
 
 export const fetchPartners = async () => {
     try {
-        const {data} = await axios.get("/api/public/partners")
-        return data
+        return await fetchWrapper.get(`/api/partners`)
     } catch(e) {
+        console.log("fetchPartners",e)
         Sentry.captureException({location: "fetchPartners", e});
     }
     return []

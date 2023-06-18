@@ -2,7 +2,7 @@ const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const Web3Utils = require("web3-utils");
 const {getEnv} = require("./db/utils");
-const Sentry = require("@sentry/nextjs");
+import Sentry from "@sentry/nextjs";
 let web3 = {}
 
 function getWeb3 () {

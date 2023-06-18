@@ -1,9 +1,8 @@
-const {models} = require('../services/db/index');
-const db = require("../services/db");
-const {Op} = require("sequelize");
+import db from "@/services/db/db.setup"
+import {Op} from "sequelize"
 
 async function getActiveOffers(offerId) {
-    return models.otcDeals.findAll({
+    return db.models.otcDeals.findAll({
         attributes: ['dealId', 'offerId', 'buyer', 'seller', 'amount', 'price', 'hashCreate', 'createdAt'],
         where: {offerId, state: 0},
         raw: true
@@ -11,7 +10,7 @@ async function getActiveOffers(offerId) {
 }
 
 async function getHistoryOffers(offerId) {
-    return models.otcDeals.findAll({
+    return db.models.otcDeals.findAll({
         attributes: ['dealId', 'offerId', 'buyer', 'seller', 'amount', 'price', 'updatedAt'],
         where: {offerId, state: 1},
         raw: true
@@ -29,7 +28,7 @@ async function saveOtcHash(networkChainId, isTaker, hash, address, nftId, acl, i
         const result = await db.transaction(async (t) => {
 
                 if (!isBuyer) { //if i'm seller, check if i have enough free allocation
-                    const booked = await models.vaults.increment({"locked": amount}, {
+                    const booked = await db.models.vaults.increment({"locked": amount}, {
                         where: {
                             [Op.and]: [
                                 db.literal(`"owner" = '${owner}' AND "offerId" = ${offerId} AND ("locked" + ${amount} <= "invested")`)
@@ -40,7 +39,7 @@ async function saveOtcHash(networkChainId, isTaker, hash, address, nftId, acl, i
                     if (!booked[0][1]) throw new Error("NOT_ENOUGH_ALLOCATION");
                 }
 
-                await models.otcPending.create({
+                await db.models.otcPending.create({
                     hash,
                     address,
                     nftId,
@@ -75,7 +74,7 @@ async function removeOtcHash(offerId, networkChainId, hash, address, nftId, acl)
 
     try {
         await db.transaction(async (t) => {
-                const isProcessing = await models.otcPending.findOne({
+                const isProcessing = await db.models.otcPending.findOne({
                     where: {
                         offerId,
                         isTaker: true,
@@ -87,7 +86,7 @@ async function removeOtcHash(offerId, networkChainId, hash, address, nftId, acl)
 
                 if (isProcessing) throw new Error("TRANSACTION_PROCESSING");
 
-                const status = await models.otcPending.update({isExpired: true}, {
+                const status = await db.models.otcPending.update({isExpired: true}, {
                     where: {
                         ...filter,
                         hash,
@@ -99,7 +98,7 @@ async function removeOtcHash(offerId, networkChainId, hash, address, nftId, acl)
                 if (status[0] === 0) throw new Error("NO_PENDING_UPDATE");
 
                 const amount = status[1][0].data.amount
-                const booked = await models.vaults.decrement({"locked": amount}, {
+                const booked = await db.models.vaults.decrement({"locked": amount}, {
                     where: {
                         [Op.and]: [
                             db.literal(`"owner" = '${owner}' AND "offerId" = ${offerId} AND ("locked" - ${amount} >= 0)`)
@@ -122,4 +121,3 @@ async function removeOtcHash(offerId, networkChainId, hash, address, nftId, acl)
     }
 }
 
-module.exports = {getActiveOffers, getHistoryOffers, saveOtcHash, removeOtcHash}

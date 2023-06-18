@@ -21,9 +21,21 @@ export const JWT_ACCESS_SECRET_encode = new TextEncoder().encode(
 )
 export const alg = 'HS256'
 
-export const retrieveToken = () => localStorage.getItem("refresh")
-export const saveToken = token => localStorage.setItem("refresh", token)
-export const clearToken = () => localStorage.setItem("refresh", null)
+export const retrieveToken = () => {
+    if (typeof window !== 'undefined') {
+        localStorage.getItem("refresh")
+    } else return null
+}
+export const saveToken = token => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem("refresh", token)
+    } else return null
+}
+export const clearToken = () => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem("refresh", null)
+    } else return null
+}
 
 export const generateToken = async (userData, length, encryption) => {
     return await new SignJWT({user: userData})

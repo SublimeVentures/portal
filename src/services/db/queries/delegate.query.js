@@ -1,14 +1,12 @@
-const {models} = require("../services/db");
-const Sentry = require("@sentry/nextjs");
+import db from "@/services/db/db.setup"
+import Sentry from "@sentry/nextjs";
 
-async function upsertDelegation(data) {
+export async function upsertDelegation(data) {
     try {
         const {address, vault, partner, tokenId} = data;
-        return await models.delegates.upsert({address, vault, partner, tokenId});
+        return await db.models.delegates.upsert({address, vault, partner, tokenId});
     } catch (e) {
         Sentry.captureException({location: "upsertDelegation", type: 'query', e, data});
     }
     return {}
 }
-
-module.exports = {upsertDelegation}

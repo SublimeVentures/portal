@@ -4,7 +4,7 @@ const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getEnv} = require("../services/db/utils");
 const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('@/abi/delegate.abi.json')
-const Sentry = require("@sentry/nextjs");
+import Sentry from "@sentry/nextjs";
 
 const getMoralisImage = (object) => {
     if(object?.media?.mimetype === 'image/gif') {
