@@ -3,7 +3,7 @@ import {Fragment} from "react";
 import {Transition} from '@headlessui/react'
 import {useState} from "react";
 import { useRouter } from "next/router";
-import {signOut} from "next-auth/react";
+// import {signOut} from "next-auth/react";
 import IconDashboard from "@/assets/svg/Dashboard.svg";
 import IconVault from "@/assets/svg/Vault.svg";
 import IconLight from "@/assets/svg/Light.svg";
@@ -23,6 +23,7 @@ const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddres
 export default function Sidebar() {
     let [isMobileOpen, setIsMobileOpen] = useState(false)
     const router = useRouter();
+    const signOut = () => {} //todo: session
 
     const toggleMobile = (e) => {
         e?.preventDefault();

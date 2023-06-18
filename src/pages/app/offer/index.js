@@ -3,10 +3,10 @@ import OfferItem from "@/components/App/Offer/OfferItem";
 import {queryClient} from "@/lib/queryCache";
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchOfferList} from "@/fetchers/offer.fetcher";
-import {useSession} from "next-auth/react";
-import {getToken} from "next-auth/jwt";
+// import {useSession} from "next-auth/react";
+// import {getToken} from "next-auth/jwt";
 import Loader from "@/components/App/Loader";
-import {ACL as ACLs} from "@/lib/acl";
+import {ACLs} from "@/lib/authHelpers";
 import Empty from "@/components/App/Empty";
 import Head from "next/head";
 import Stat from "@/components/Stat";
@@ -15,7 +15,8 @@ import IconStars from "@/assets/svg/Stars.svg";
 import IconMoney from "@/assets/svg/Money.svg";
 
 export default function AppOffer() {
-    const { data: session, status } = useSession()
+    // const { data: session, status } = useSession()
+    const session = {} //todo:sesja
     const ACL = session?.user?.ACL
     const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : session?.user?.address
 
@@ -37,6 +38,8 @@ export default function AppOffer() {
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
     const renderPage = () => {
+        const status = "authenticated" //todo: sesja
+
         if(status !== "authenticated") return <Loader/>
         if(!offerList || offerList.length === 0) return  <Empty/>
 

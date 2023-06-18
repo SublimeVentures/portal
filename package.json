@@ -10,6 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "pm2-runtime start ecosystem.config.js --env production",
+    "start-local": "next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
     "debounce": "1.2.1",
     "dotenv": "16.0.3",
     "express": "4.18.2",
+    "jose": "4.14.4",
     "jsonwebtoken": "9.0.0",
     "lodash": "4.17.21",
     "moment": "2.29.4",
@@ -43,6 +45,7 @@
     "react-slick": "0.29.0",
     "react-slider-3d": "0.1.0",
     "react-tooltip": "5.11.1",
+    "refresh-fetch": "0.8.0",
     "sass": "1.60.0",
     "sequelize": "6.31.1",
     "slick-carousel": "1.8.1",

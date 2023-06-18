@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {useEffect, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import IconCart from "@/assets/svg/Cart.svg";
 import {getOtcBuyFunction} from "@/components/App/Otc/OtcSteps";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
@@ -15,7 +15,8 @@ import TransactStep from "@/components/App/Transactions/TransactStep";
 
 export default function BuyModal({model, setter, props}) {
     const {currentMarket, buyOffer, refetchVault, refetchOffers, source, otcFee, currencies} = props
-    const {data: session} = useSession()
+    // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {ACL, id} = session.user
 
     const buyOfferAmount_parsed = buyOffer?.amount?.toLocaleString()

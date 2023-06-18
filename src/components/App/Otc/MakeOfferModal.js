@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PAGE from "@/routes";
 import Link from "next/link";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconPlus from "@/assets/svg/PlusZ.svg";
@@ -18,7 +18,8 @@ import MakeOfferInteract from "@/components/App/Otc/MakeOfferInteract";
 
 export default function MakeOfferModal({model, setter, props}) {
     const {currentMarket, multichain, allocation, refetchVault, refetchOffers, source, currencies} = props
-    const {data: session} = useSession()
+    // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {chain} = useNetwork()
 
     const [isBuyer, setIsBuyer] = useState(false)

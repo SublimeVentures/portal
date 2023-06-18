@@ -1,11 +1,11 @@
 import ArrowIcon from "@/assets/svg/Arrow.svg";
 import VanillaTilt from "vanilla-tilt";
 import {useEffect, useRef} from "react";
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react"
 
 export default function Profile() {
-    const { data: session } = useSession()
-
+    // const { data: session } = useSession()
+    const session = {} //todo: sesja
     const tiltAvatar = useRef(null);
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import {useAccount} from "wagmi";
 import GenericModal from "@/components/Modal/GenericModal";
-import {signOut, useSession} from "next-auth/react";
+// import {signOut, useSession} from "next-auth/react";
 import {useEffect} from "react";
 import Link from "next/link";
 import PAGE from "@/routes";
@@ -8,7 +8,9 @@ import {RoundButton} from "@/components/Button/RoundButton";
 
 export default function ChangeAddress() {
     const {isConnected, address} = useAccount()
-    const {data: session} = useSession()
+    const session = {} //todo: sesja
+    const signOut = () => {}
+    // const {data: session} = useSession()
     const userAddress = session?.user?.address
     const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
 

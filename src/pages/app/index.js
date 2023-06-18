@@ -2,7 +2,7 @@ import LayoutApp from '@/components/Layout/LayoutApp';
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import { useQuery} from "@tanstack/react-query";
 import {fetchVault} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
@@ -15,7 +15,8 @@ import {ExternalLinks} from "@/routes";
 
 
 export default function AppVault() {
-    const {data: session, status} = useSession()
+    // const {data: session, status} = useSession()
+    const session = {} //todo: sesja
     const ACL = session?.user?.ACL
     const address = session?.user?.address
 
@@ -51,6 +52,8 @@ export default function AppVault() {
         })
     }
 
+
+    const status = "authenticated" //todo: sesja
     const placeHolder = () => {
         if(status !== "authenticated" || !isSuccessDataFeed || elements=== undefined) return <Loader/>
         if(status === "authenticated" && elements.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>

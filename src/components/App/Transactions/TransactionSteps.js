@@ -3,7 +3,8 @@ import IconLoading from "@/assets/svg/LoadingCustom.svg";
 import IconSuccess from "@/assets/svg/Success.svg";
 import IconError from "@/assets/svg/Error.svg";
 import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
-import {ACL as ACLs}  from "@/lib/acl";
+import {ACLs} from "@/lib/authHelpers";
+
 import {erc20ABI} from "wagmi";
 import { BigNumber } from 'ethers';
 

@@ -13,16 +13,18 @@ import {useRouter} from "next/router";
 import {useEffect} from "react";
 import PAGE from "@/routes";
 import {fetchVault} from "@/fetchers/vault.fetcher";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import OtcMarkets from "@/components/App/Otc/Markets";
 import OtcOffers from "@/components/App/Otc/Offers";
-import {ACL as ACLs} from "@/lib/acl";
-import {getToken} from "next-auth/jwt";
+import {ACLs} from "@/lib/authHelpers";
+
+// import {getToken} from "next-auth/jwt";
 
 
 export default function AppOtc() {
     const router = useRouter()
-    const { data: session } = useSession()
+    // const { data: session } = useSession()
+    const session = {} //todo: sesja
     const ACL = session?.user?.ACL
     const address = session?.user?.address
     const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : address

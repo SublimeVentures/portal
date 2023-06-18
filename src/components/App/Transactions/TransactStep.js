@@ -1,5 +1,5 @@
 import {usePrepareContractWrite, useContractWrite, useWaitForTransaction, usePrepareSendTransaction} from 'wagmi'
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import {getIcon, getInvestFunction, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";

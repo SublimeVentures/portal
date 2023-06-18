@@ -4,7 +4,7 @@ import IconMoney from "@/assets/svg/Money.svg";
 import ChartIcon from "@/assets/svg/Chart.svg";
 import KeyIcon from "@/assets/svg/Key.svg";
 import VanillaTilt from "vanilla-tilt";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import {useRef} from "react";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
@@ -24,7 +24,8 @@ function sum(prev, next){
 }
 
 export default function UserSummary({vault}) {
-    const { data: session } = useSession()
+    // const { data: session } = useSession()
+    const session = {} //todo: sesja
     const tiltAvatar = useRef(null);
     const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
 

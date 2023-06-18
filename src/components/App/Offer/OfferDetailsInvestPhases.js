@@ -7,9 +7,9 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {parseMaxAllocation} from "@/lib/parsePhase";
+import {parseMaxAllocation} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
 import {useCookies} from 'react-cookie';
@@ -32,7 +32,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         refetchUserAllocation,
         allocation
     } = paramsInvestPhase;
-    const {data: session} = useSession()
+    // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {chain, chains} = useNetwork()
 
     const [isErrorModal, setErrorModal] = useState(false)

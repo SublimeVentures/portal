@@ -7,9 +7,9 @@ import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
 import {RoundButton} from "@/components/Button/RoundButton";
 import PAGE, {ExternalLinks} from "@/routes";
 import Link from "next/link";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import StakeStep from "@/components/App/Transactions/StakeStep";
-import {ACL as ACLs}  from "@/lib/acl";
+import {ACLs} from "@/lib/authHelpers";
 import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
 import Linker from "@/components/link";
 
@@ -22,7 +22,8 @@ export const StakeSteps = {
 export default function InvestModal({model, setter, investModalProps}) {
     if(!model) return;
     const {expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
-    const {data: session} = useSession()
+    // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {ACL, id, address} = session.user
 
     const [stepStake, setStepStake] = useState(StakeSteps.Select)

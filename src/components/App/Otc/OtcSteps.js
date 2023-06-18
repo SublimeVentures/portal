@@ -1,5 +1,6 @@
 import OtcFacet from "@/components/App/Otc/OtcFacet.json";
-import {ACL as ACLs}  from "@/lib/acl";
+import {ACLs} from "@/lib/authHelpers";
+
 
 export const getOtcTradeFunction = (isBuy, diamond, offerId, amount, price, currency, hash) => {
     return {

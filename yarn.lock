@@ -4718,6 +4718,11 @@ jiti@^1.17.2:
   resolved "https://registry.npmjs.org/jiti/-/jiti-1.18.2.tgz"
   integrity sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==
 
+jose@4.14.4:
+  version "4.14.4"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.14.4.tgz#59e09204e2670c3164ee24cbfe7115c6f8bff9ca"
+  integrity sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==
+
 js-sha3@0.8.0, js-sha3@^0.8.0:
   version "0.8.0"
   resolved "https://registry.npmjs.org/js-sha3/-/js-sha3-0.8.0.tgz"
@@ -5857,6 +5862,13 @@ real-require@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/real-require/-/real-require-0.1.0.tgz"
   integrity sha512-r/H9MzAWtrv8aSVjPCMFpDMl5q66GqtmmRkRjpHTsp4zBAa+snZyiQNlMONiUmEJcsnaw0wCauJ2GWODr/aFkg==
+
+refresh-fetch@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/refresh-fetch/-/refresh-fetch-0.8.0.tgz#3d7216fb5377f77d8d8f56019403745cf090743d"
+  integrity sha512-4TjLYV0BWWa8TLxll6s8fzOmBQL/rpeH2D1hYF83QRKyVEQT0aanySl00qpDTMNmovhvVQr5t7efLmU2hm/f4A==
+  dependencies:
+    lodash "^4.17.21"
 
 regenerate-unicode-properties@^10.1.0:
   version "10.1.0"

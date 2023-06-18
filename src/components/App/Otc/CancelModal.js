@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {useEffect, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import IconTrash from "@/assets/svg/trash.svg";
 import {useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import {getOtcCancelFunction} from "@/components/App/Otc/OtcSteps";
@@ -9,7 +9,8 @@ import {getOtcCancelFunction} from "@/components/App/Otc/OtcSteps";
 
 export default function CancelModal({model, setter, props}) {
     const {currentMarket, cancelOffer, refetchVault, refetchOffers, source} = props
-    const {data: session} = useSession()
+    // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {address, ACL, id} = session.user
     const [processing, setProcessing] = useState(false)
     const [success, setSuccess] = useState(false)

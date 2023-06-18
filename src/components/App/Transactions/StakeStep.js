@@ -2,14 +2,15 @@ import { useContractRead} from 'wagmi'
 import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect} from "react";
 import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
-import {useSession} from "next-auth/react";
+// import {useSession} from "next-auth/react";
 import IconError from "@/assets/svg/Error.svg";
 import {StakeSteps} from "@/components/App/Offer/InvestModal";
 
 export default function StakeStep({stepProps}) {
     const {amount, offer, stepStake, setStepStake } = stepProps
 
-    const {data: session} = useSession()
+    // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {id} = session.user
 
     const {
