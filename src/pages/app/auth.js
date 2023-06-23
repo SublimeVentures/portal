@@ -13,7 +13,7 @@ export default function AuthRefresh() {
     useEffect(() => {
         const authenticate = async () => {
             const success = await refresh()
-            if(success) router.push(callbackUrl)
+            if(success && callbackUrl) router.push(callbackUrl)
             else router.push(routes.Landing)
         }
         authenticate()

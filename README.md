@@ -29,10 +29,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- flow na expiry token na query z backendu
+- extract style to 3vc / citcap
+
 - transakcje nie działają na rollbacku
-- 
-=============
+- =============
 - make offer button
 - -- (buy) check liquidity 
 - -- (buy) check allowance 
@@ -45,18 +45,18 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- expire otcPending after 5 minutes
 
 - clean old otcPending - every month after backup
-
-- enable for reservation even on blocked reservation button
 - timeline for user activities for each investment in vault tab
-- new investment update for api
 - reassign allocation
-- extract style to 3vc / citcap
+- new investment update for api
+
+
 - migrate citcap
+- enable for reservation even on blocked reservation button
 - promo codes to reduce our fees + rate limit on invest
 - connect discord to app
 - lootbox
 - notifications
-- delegated -> invest to vault or hot
+
 - gtag
 - whale deposit/ withdraw features in settings
 - whale page
@@ -65,12 +65,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
+
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
+- delegated -> invest to vault or hot
 - referral system
-
-
-
 
 
 # 1. Add env variables
