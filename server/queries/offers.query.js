@@ -4,7 +4,7 @@ const Sentry = require("@sentry/nextjs");
 async function getOffersPublic() {
     try {
         return models.offers.findAll({
-            attributes: ['name', 'image', 'genre', 'url_web', 'slug'],
+            attributes: ['name', 'genre', 'url_web', 'slug'],
             where: {
                 displayPublic: true
             },
