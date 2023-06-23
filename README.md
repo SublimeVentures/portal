@@ -54,6 +54,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - migrate citcap
 - -- transcendance
 - -- old investments
+- -- citcapx
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button

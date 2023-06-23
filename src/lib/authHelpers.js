@@ -49,7 +49,7 @@ const generateToken = async (userData, length, encryption) => {
 const buildCookie = (name, content, maxAge) => {
     return serialize(name, content, {
         httpOnly: true,
-        secure: process.env.NEXT_PUBLIC_ENV === "production",
+        secure: process.env.ENV === "production",
         sameSite: "strict",
         maxAge: maxAge,
         path: '/',
