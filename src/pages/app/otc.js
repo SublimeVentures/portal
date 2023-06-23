@@ -2,7 +2,6 @@ import LayoutApp from '@/components/Layout/LayoutApp';
 import RoundBanner from "@/components/App/RoundBanner";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import ReadIcon from "@/assets/svg/Read.svg";
-import IconCart from "@/assets/svg/Cart.svg";
 import Head from "next/head";
 import {queryClient} from "@/lib/queryCache";
 import {dehydrate, useQuery} from "@tanstack/react-query";
@@ -13,24 +12,20 @@ import {useRouter} from "next/router";
 import {useEffect} from "react";
 import PAGE from "@/routes";
 import {fetchVault} from "@/fetchers/vault.fetcher";
-import {useSession} from "next-auth/react";
 import OtcMarkets from "@/components/App/Otc/Markets";
 import OtcOffers from "@/components/App/Otc/Offers";
-import {ACL as ACLs} from "@/lib/acl";
-import {getToken} from "next-auth/jwt";
+import {ACLs, verifyID} from "@/lib/authHelpers";
+import routes from "@/routes";
 
 
-export default function AppOtc() {
+export default function AppOtc({account}) {
     const router = useRouter()
-    const { data: session } = useSession()
-    const ACL = session?.user?.ACL
-    const address = session?.user?.address
+    const {ACL, address} = account
     const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : address
-
 
     const {isSuccess: marketsIsSuccess, data: markets} = useQuery({
             queryKey: ["otcMarkets", {ACL, ADDRESS}],
-            queryFn: () => fetchMarkets(ACL),
+            queryFn: fetchMarkets,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 4 * 60 * 60 * 1000,
@@ -45,7 +40,6 @@ export default function AppOtc() {
             refetchOnWindowFocus: false,
             cacheTime: 5 * 60 * 1000,
             staleTime: 0,
-            enabled: ACL>=0
         }
     );
 
@@ -88,7 +82,7 @@ export default function AppOtc() {
         offers,
         vault,
         refetchOffers,
-        session,
+        account,
         currentMarket,
         ...{otcFee:  markets?.otcFee},
         ...{currencies:  markets?.currencies},
@@ -132,28 +126,34 @@ export default function AppOtc() {
     )
 }
 
-export const getServerSideProps = async ({req}) => {
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        encryption: true
-    })
+export const getServerSideProps = async ({res}) => {
+    const account = await verifyID(res.req)
 
-    const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : token?.user?.address
+    if(account.exists){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/app/auth?callbackUrl=${routes.App}`
+            }
+        }
+    }
 
-    await queryClient.prefetchQuery({
-        queryKey: ["otcMarkets", {ACL, ADDRESS}],
-        queryFn: () => fetchMarkets(ACL),
-        cacheTime: 4 * 60 * 60 * 1000,
-        staleTime: 2 * 60 * 60 * 1000
-    })
+    if(!account.auth){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/login?callbackUrl=${routes.App}`
+            }
+        }
+    }
 
     return {
         props: {
-            dehydratedState: dehydrate(queryClient)
+            account: account.user
         }
     }
+
+
 }
 
 

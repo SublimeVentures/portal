@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosPublic = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_URL,
+    baseURL: process.env.DOMAIN,
     headers: {
         "Content-Type": "application/json",
     },

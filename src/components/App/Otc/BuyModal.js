@@ -1,7 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {useEffect, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import {useSession} from "next-auth/react";
 import IconCart from "@/assets/svg/Cart.svg";
 import {getOtcBuyFunction} from "@/components/App/Otc/OtcSteps";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";

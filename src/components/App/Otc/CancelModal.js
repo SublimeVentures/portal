@@ -1,7 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {useEffect, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import {useSession} from "next-auth/react";
 import IconTrash from "@/assets/svg/trash.svg";
 import {useContractWrite, usePrepareContractWrite, useWaitForTransaction} from "wagmi";
 import {getOtcCancelFunction} from "@/components/App/Otc/OtcSteps";

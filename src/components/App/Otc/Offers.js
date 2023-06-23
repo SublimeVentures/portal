@@ -18,7 +18,7 @@ const BuyModal = dynamic(() => import('@/components/App/Otc/BuyModal'), {ssr: fa
 
 
 export default function OtcOffers({propOffers}) {
-    let { offers, vault, currentMarket, session, refetchOffers} = propOffers
+    let { offers, vault, currentMarket, account, refetchOffers} = propOffers
     const [isSellModal, setIsSellModal] = useState(false);
     const [isBuyModal, setIsBuyModal] = useState(false);
     const [buyOffer, setBuyOffer] = useState(false);
@@ -29,7 +29,8 @@ export default function OtcOffers({propOffers}) {
 
     const haveAllocation = vault.find(el=> el.offerId === currentMarket.id)
 
-    const user = session.user.ACL === 0 ? session.user.id : session.user.address
+    const {ACL, id, address } = account
+    const user = ACL === 0 ? id : address
 
 
     const {isSuccess: historyIsSuccess, data: history, refetch: refetchHistory} = useQuery({

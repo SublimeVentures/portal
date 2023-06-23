@@ -1,5 +1,4 @@
 import {erc20ABI, useContractRead, usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
-import {useSession} from "next-auth/react";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect, useState} from "react";
 

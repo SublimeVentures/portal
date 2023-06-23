@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PAGE from "@/routes";
 import Link from "next/link";
-import {useSession} from "next-auth/react";
 import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconPlus from "@/assets/svg/PlusZ.svg";

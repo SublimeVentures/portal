@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router();
-const {getAccessToken} = require("../services/auth");
 const {userInvestment, userVault} = require("../controllers/vault");
 const {verifyID} = require("../../src/lib/authHelpers");
 

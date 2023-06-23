@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { memoizedRefreshToken } from "./refreshToken";
 
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL;
+axios.defaults.baseURL = process.env.DOMAIN;
 axios.defaults.headers = {
     "Content-Type": "application/json",
 };

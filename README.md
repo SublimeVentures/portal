@@ -31,7 +31,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## ToDo
 - extract style to 3vc / citcap
 
-- transakcje nie działają na rollbacku
 - =============
 - make offer button
 - -- (buy) check liquidity 
@@ -45,18 +44,23 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- expire otcPending after 5 minutes
 
 - clean old otcPending - every month after backup
+
 - timeline for user activities for each investment in vault tab
 - reassign allocation
-- new investment update for api
 
+- lootbox
+- promo codes
 
 - migrate citcap
+- -- transcendance
+- -- old investments
+
+- transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button
-- promo codes to reduce our fees + rate limit on invest
 - connect discord to app
-- lootbox
 - notifications
 
+- new investment update for api
 - gtag
 - whale deposit/ withdraw features in settings
 - whale page
