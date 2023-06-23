@@ -1,12 +1,10 @@
 import {usePrepareContractWrite, useContractWrite, useWaitForTransaction, usePrepareSendTransaction} from 'wagmi'
-import {useSession} from "next-auth/react";
-import {getIcon, getInvestFunction, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
 import {useEffect} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 
 export default function TransactStep({stepProps}) {
-    const {isReady, amount, setFinished, writeFunction, userAddress} = stepProps
+    const {isReady, amount,setFinished, writeFunction, userAddress} = stepProps
     const amountLocal = Number(amount).toLocaleString()
 
     const {

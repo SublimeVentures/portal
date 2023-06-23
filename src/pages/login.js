@@ -9,12 +9,8 @@ const ErrorModal = dynamic(() => import('@/components/SignupFlow/ErrorModal'), {
 import {dehydrate, useQuery} from "@tanstack/react-query";
 import {fetchPartners} from "@/fetchers/public.fecher";
 import { Slider3D } from 'react-slider-3d';
-import { getServerSession } from "next-auth/next"
 import {useAccount, useNetwork, useSignMessage} from "wagmi";
-import {SiweMessage} from "siwe";
 import { useRouter } from 'next/router';
-import {getCsrfToken, signIn} from "next-auth/react";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 import WalletIcon from "@/assets/svg/Wallet.svg";
 import PAGE, {ExternalLinks} from "@/routes";
 import { queryClient } from '@/lib/queryCache'
@@ -22,8 +18,13 @@ import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import Linker from "@/components/link";
 import IconWhale from "@/assets/svg/Whale.svg";
+import {logIn} from "@/fetchers/auth.fetcher";
+import moment from "moment";
+import { v4 as uuidv4 } from 'uuid';
+import routes from "@/routes";
+import {verifyID} from "@/lib/authHelpers";
 
-export default function Login() {
+export default function Login({}) {
     const seo = seoConfig(PAGE.Login)
 
     const { isLoading, data, isError } = useQuery({
@@ -35,9 +36,8 @@ export default function Login() {
             refetchOnWindowFocus: false,
         }
     );
+
     const router = useRouter();
-    const { signMessageAsync } = useSignMessage()
-    const { chain } = useNetwork()
     const { address, isConnected  } = useAccount()
     let [errorMsg, setErrorMsg] = useState("")
     let [messageSigned, setMessageSigned] = useState(false)
@@ -45,35 +45,36 @@ export default function Login() {
     let [walletSelectionOpen, setIsWalletSelectionOpen] = useState(false)
     let [errorModal, setErrorModal] = useState(false)
     let [isLoginLoading, setIsLoginLoading] = useState(false)
-
-
+    const { error, isLoading: isLoadingSignature, signMessageAsync:sign, variables } = useSignMessage()
 
     const signMessage = async (forcedAddress) => {
         setIsLoginLoading(true)
         setMessageSigned(true)
         try {
-            const message = new SiweMessage({
-                domain: window.location.host.replace("www.", ""),
-                address: forcedAddress? forcedAddress : address,
-                statement: "INVEST GROUND FLOOR\n" +
-                    "DON'T BE EXIT LIQUIDITY",
-                uri: window.location.origin,
-                version: "1",
-                chainId: chain?.id,
-                nonce: await getCsrfToken(),
-            })
-            const signature = await signMessageAsync({
-                message: message.prepareMessage(),
-            })
+            const time = moment().unix();
+            const nonce = uuidv4();
+            const message = "INVEST GROUND FLOOR\n" +
+                "DON'T BE EXIT LIQUIDITY\n\n" +
+                `DOMAIN: ${window.location.host.replace("www.", "")}\n` +
+                `TIME: ${time}\n` +
+                `NONCE: ${nonce}`
+            const signature = await sign({message})
 
-            const callbackUrl= router.query.callbackUrl;
-            await signIn("credentials", {
-                message: JSON.stringify(message),
-                redirect: true,
-                signature,
-                callbackUrl: callbackUrl ?? '/app'
-            })
+            const callbackUrl = router.query.callbackUrl;
+            const isAuth = await logIn(message, signature)
+            if(isAuth?.accessToken) {
+                router.push(callbackUrl ? callbackUrl : routes.App)
+            } else {
+                router.push({
+                    pathname: routes.Login,
+                    query: {error: "CredentialsSignin"}
+                })
+                setMessageSigned(false)
+                setIsLoginLoading(false)
+            }
+
         } catch (error) {
+            console.log("ee", error, error.message)
             setMessageSigned(false)
             setErrorMsg(error.message)
             setIsLoginLoading(false)
@@ -166,7 +167,6 @@ export default function Login() {
 
                     <div className="flex flex-1 mx-auto items-end mt-5 lg:mt-0">
                         <RoundButton text={'Connect'} isLoading={isLoginLoading && isPartnerLogin}  isLoadingWithIcon={true} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<WalletIcon className={ButtonIconSize.hero}/> } handler={() => handleConnect(true)} />
-
                     </div>
                 </div>
 
@@ -190,9 +190,9 @@ export default function Login() {
     )
 }
 
-export const getServerSideProps = async(context) => {
-    const session = await getServerSession(context.req, context.res)
-    if(session){
+export const getServerSideProps = async({res}) => {
+    const account = await verifyID(res.req)
+    if(account.auth){
         return {
             redirect: {
                 permanent: false,
@@ -211,6 +211,7 @@ export const getServerSideProps = async(context) => {
     return {
         props: {
             dehydratedState: dehydrate(queryClient),
+            // account
         }
     }
 }

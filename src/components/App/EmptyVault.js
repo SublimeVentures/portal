@@ -5,9 +5,7 @@ import PAGE from "@/routes";
 import Link from "next/link";
 
 export default function EmptyVault() {
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
+
 
     return (
         <>

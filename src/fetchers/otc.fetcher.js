@@ -1,10 +1,10 @@
-import axios from "axios";
 import * as Sentry from "@sentry/nextjs";
+import {axiosPrivate} from "@/lib/axios/axiosPrivate";
 
 export const fetchMarkets = async () => {
     try {
         const url = `/api/otc/markets`
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
         Sentry.captureException({location: "fetchMarkets", error: e});
@@ -16,7 +16,7 @@ export const fetchMarkets = async () => {
 export const fetchOffers = async (offerId) => {
     try {
         const url = `/api/otc/offers/${offerId}`
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
         Sentry.captureException({location: "fetchOffers", error: e});
@@ -27,7 +27,7 @@ export const fetchOffers = async (offerId) => {
 export const fetchHistory = async (offerId) => {
     try {
         const url = `/api/otc/history/${offerId}`
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
         Sentry.captureException({location: "fetchHistory", error: e});
@@ -37,7 +37,7 @@ export const fetchHistory = async (offerId) => {
 
 export const saveTransaction = async (offerId, networkChainId, isBuyer, amount, price) => {
     try {
-        const {data} = await axios.post(`/api/otc/${offerId}/create`, {
+        const {data} = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
             isBuyer,
             amount,
             price,
@@ -52,7 +52,7 @@ export const saveTransaction = async (offerId, networkChainId, isBuyer, amount, 
 
 export const removeTransaction = async (offerId, hash) => {
     try {
-        const {data} = await axios.post(`/api/otc/${offerId}/remove`, {
+        const {data} = await axiosPrivate.post(`/api/otc/${offerId}/remove`, {
             hash
         })
         return data

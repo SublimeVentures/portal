@@ -1,4 +1,4 @@
-const {models} = require('../services/db/index');
+const {models} = require('../services/db/db.init');
 const Sentry = require("@sentry/nextjs");
 
 async function getInjectedUser(address) {

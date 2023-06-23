@@ -18,7 +18,8 @@ import MakeOfferInteract from "@/components/App/Otc/MakeOfferInteract";
 
 export default function MakeOfferModal({model, setter, props}) {
     const {currentMarket, multichain, allocation, refetchVault, refetchOffers, source, currencies} = props
-    const {data: session} = useSession()
+        // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {chain} = useNetwork()
 
     const [isBuyer, setIsBuyer] = useState(false)

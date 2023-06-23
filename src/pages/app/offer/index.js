@@ -1,34 +1,31 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
 import OfferItem from "@/components/App/Offer/OfferItem";
-import {queryClient} from "@/lib/queryCache";
-import {dehydrate, useQuery} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import {fetchOfferList} from "@/fetchers/offer.fetcher";
-import {useSession} from "next-auth/react";
-import {getToken} from "next-auth/jwt";
 import Loader from "@/components/App/Loader";
-import {ACL as ACLs} from "@/lib/acl";
 import Empty from "@/components/App/Empty";
 import Head from "next/head";
 import Stat from "@/components/Stat";
 import IconNetwork from "@/assets/svg/Network.svg";
 import IconStars from "@/assets/svg/Stars.svg";
 import IconMoney from "@/assets/svg/Money.svg";
+import {verifyID, ACLs} from "@/lib/authHelpers";
+import routes from "@/routes";
 
-export default function AppOffer() {
-    const { data: session, status } = useSession()
-    const ACL = session?.user?.ACL
-    const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : session?.user?.address
+export default function AppOffer({account}) {
+    const ACL = account.ACL
+    const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : account.address
 
     const { isLoading, data: response, isError } = useQuery({
             queryKey: ["offerList", {ACL, ADDRESS}],
-            queryFn: () => fetchOfferList(ACL),
-            cacheTime: 30 * 60 * 1000,
-            staleTime: 15 * 60 * 1000,
+            queryFn: fetchOfferList,
+            cacheTime: 5 * 60 * 1000,
+            staleTime: 1 * 60 * 1000,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            enabled: ACL >= 0
         }
     );
+
 
     const offerList = response?.offers
     const stats = response?.stats
@@ -37,11 +34,11 @@ export default function AppOffer() {
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
     const renderPage = () => {
-        if(status !== "authenticated") return <Loader/>
+        if(isLoading) return <Loader/>
         if(!offerList || offerList.length === 0) return  <Empty/>
 
         return (
-                <div className="grid grid-cols-12 gap-y-8 mobile:gap-y-10 mobile:gap-10">
+                <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                     {!!offerList && offerList.map(el =>
                         <OfferItem offer={el} key={el.slug} ACL={ACL} cdn={response?.cdn}/>
                     )}
@@ -70,29 +67,33 @@ export default function AppOffer() {
     </>
 }
 
-export const getServerSideProps = async({req}) => {
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        encryption: true
-    })
-    const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : token?.user?.address
-
-    await queryClient.prefetchQuery({
-        queryKey: ["offerList", {ACL, ADDRESS}],
-        queryFn: ()=>fetchOfferList(ACL, ADDRESS),
-        cacheTime: 30 * 60 * 1000,
-        staleTime: 15 * 60 * 1000
-    })
+export const getServerSideProps = async({res}) => {
+    const account = await verifyID(res.req)
+    if(account.exists){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/app/auth?callbackUrl=${routes.Opportunities}`
+            }
+        }
+    }
+    if(!account.auth){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/login?callbackUrl=${routes.Opportunities}`
+            }
+        }
+    }
     return {
         props: {
-            dehydratedState: dehydrate(queryClient)
+            account: account.user
         }
     }
 }
 
-
 AppOffer.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
 };
+
+

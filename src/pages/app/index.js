@@ -1,35 +1,27 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import ReadIcon from "@/assets/svg/Read.svg";
 import VaultItem from "@/components/App/Vault/VaultItem";
-import {useSession} from "next-auth/react";
 import { useQuery} from "@tanstack/react-query";
 import {fetchVault} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
 import Head from "next/head";
 import UserSummary from "@/components/App/Vault/UserSummary";
-import RoundSpacer from "@/components/App/RoundSpacer";
-import {ExternalLinks} from "@/routes";
+import {verifyID} from "@/lib/authHelpers";
+import routes from "@/routes";
 
-
-
-export default function AppVault() {
-    const {data: session, status} = useSession()
-    const ACL = session?.user?.ACL
-    const address = session?.user?.address
+export default function AppVault({account}) {
+    const ACL = account.ACL
+    const address = account.address
 
     const {isSuccess: isSuccessDataFeed, data: vault} = useQuery({
             queryKey: ["userVault", {ACL, address}],
-            queryFn: () => fetchVault(ACL, address),
+            queryFn: fetchVault,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 5 * 60 * 1000,
-            staleTime: 1 * 60 * 1000,
-            enabled: ACL>=0
+            staleTime: 1 * 60 * 1000
         }
     );
-
 
     // const investmentActivityLog = [
     //     {type: 'details', step: 'Project details', date: '', icon: "vote"},
@@ -52,8 +44,8 @@ export default function AppVault() {
     }
 
     const placeHolder = () => {
-        if(status !== "authenticated" || !isSuccessDataFeed || elements=== undefined) return <Loader/>
-        if(status === "authenticated" && elements.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
+        if(!isSuccessDataFeed || elements=== undefined) return <Loader/>
+        if(elements.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
     }
 
     return (
@@ -61,11 +53,8 @@ export default function AppVault() {
             <Head>
                 <title>Vault - 3VC</title>
             </Head>
-            <UserSummary vault={elements}/>
+            <UserSummary vault={elements} account={account}/>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                <div className="col-span-12 flex">
-
-                </div>
                 {renderList()}
             </div>
             <div className="col-span-12 text-center contents">
@@ -74,6 +63,34 @@ export default function AppVault() {
         </>
 
     )
+}
+
+export const getServerSideProps = async({res}) => {
+    const account = await verifyID(res.req)
+
+    if(account.exists){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/app/auth?callbackUrl=${routes.App}`
+            }
+        }
+    }
+
+    if(!account.auth){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/login?callbackUrl=${routes.App}`
+            }
+        }
+    }
+
+    return {
+        props: {
+            account: account.user
+        }
+    }
 }
 
 AppVault.getLayout = function (page) {

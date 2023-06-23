@@ -4,9 +4,8 @@ import moment from "moment";
 
 
 export default function OfferDetailsTopBar({paramsBar}) {
-    let {offer, currentPhase, nextPhase, refreshInvestmentPhase} = paramsBar
+    let {offer, currentPhase, nextPhase, refreshInvestmentPhase, isLastPhase} = paramsBar
     let {name, genre, slug, cdn} = offer
-
 
     return (
         <div className={"col-span-12 flex flex-col gap-10 md:flex-row"}>
@@ -20,7 +19,7 @@ export default function OfferDetailsTopBar({paramsBar}) {
                 </div>
             </div>
 
-            <div
+            { !isLastPhase && <div
                 className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row">
                 <div className="text-lg custom:-mt-5">
                     <span className="text-gold glow uppercase font-[500]">{currentPhase.step}</span> ends in
@@ -34,7 +33,7 @@ export default function OfferDetailsTopBar({paramsBar}) {
                     />
                 </div>
 
-            </div>
+            </div> }
 
         </div>
 

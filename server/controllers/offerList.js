@@ -1,14 +1,15 @@
 const moment = require('moment');
 const {checkAcl} = require("./acl");
-const {getEnv} = require("../services/db/utils");
+const {getEnv} = require("../services/db");
 const {getOfferList} = require("../queries/offers.query");
-const {ACL: ACLs} = require("../../src/lib/acl");
+const { ACLs} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
-async function getParamOfferList(session, req) {
-    const {ACL, ADDRESS} = checkAcl(session, req)
-
+async function getParamOfferList(user) {
+    const {ACL, address} = user
+    console.log("iser",user)
     const offers = await getOfferList()
+    console.log("offers",offers)
 
     let response = {
         cdn: getEnv().cdn,
@@ -22,7 +23,7 @@ async function getParamOfferList(session, req) {
             break;
         }
         case ACLs.PartnerInjected: {
-            response.offers = await offerListInjectedPartner(offers, ADDRESS);
+            response.offers = await offerListInjectedPartner(offers, address);
             break;
         }
         default: {

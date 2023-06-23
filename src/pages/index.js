@@ -6,8 +6,9 @@ import Callout from "@/components/Home/Callout";
 import { NextSeo } from 'next-seo';
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
+import {verifyID} from "@/lib/authHelpers";
 
-export default function Home() {
+export default function Home({account}) {
   const seo = seoConfig(PAGE.Landing)
   return (
     <>
@@ -18,11 +19,20 @@ export default function Home() {
             openGraph={seo.og}
             twitter={seo.twitter}
         />
-      <Hero/>
+        <Hero account={account}/>
       <Highlights/>
       <Investors/>
       <About/>
       <Callout/>
     </>
   )
+}
+
+export const getServerSideProps = async ({res}) => {
+    const account = await verifyID(res.req)
+    return {
+        props: {
+            account: account?.user ? account.user : null,
+        }
+    }
 }

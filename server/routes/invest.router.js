@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const {getAccessToken} = require("../services/auth");
-const {reserveSpot, reserveExpire, replaceCurrency} = require("../controllers/invest");
+const {reserveSpot, reserveExpire} = require("../controllers/invest");
 
 router.get('/', async (req, res) => {
     const session = await getAccessToken(req)

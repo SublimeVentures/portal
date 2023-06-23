@@ -54,9 +54,7 @@ export default function OtcOffers({propOffers}) {
         setIsBuyModal(true)
     }
 
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
+
 
     useEffect(() => {
         if(!showHistory) {

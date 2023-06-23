@@ -4,7 +4,7 @@ import {getIcon, getStatusColor, Transaction} from "@/components/App/Transaction
 import {useEffect} from "react";
 
 export default function LiquidityStep({stepProps}) {
-    const {selectedCurrency, isReady, session, amount, isFinished, setFinished} = stepProps
+    const {selectedCurrency, isReady, account, amount, isFinished, setFinished} = stepProps
 
     const {
         isSuccess: balanceFed,
@@ -18,7 +18,7 @@ export default function LiquidityStep({stepProps}) {
             address: selectedCurrency.address,
             abi: erc20ABI,
             functionName: 'balanceOf',
-            args: [session.user.address],
+            args: [account.address],
             watch: !isFinished,
             enabled: isReady && selectedCurrency
         }

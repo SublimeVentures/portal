@@ -1,9 +1,7 @@
 import {useEffect} from "react";
 
 export default function Empty({text, maxSize}) {
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
+
 
     return (
         <div className="max-h-3-4 text-center contents">

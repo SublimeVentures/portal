@@ -1,4 +1,4 @@
-const {models} = require('../services/db/index');
+const {models} = require('../services/db/db.init');
 const db = require('../services/db/index');
 const {Op, QueryTypes} = require("sequelize");
 const Sentry = require("@sentry/nextjs");

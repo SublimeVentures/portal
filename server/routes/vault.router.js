@@ -2,19 +2,19 @@ const express = require('express')
 const router = express.Router();
 const {getAccessToken} = require("../services/auth");
 const {userInvestment, userVault} = require("../controllers/vault");
+const {verifyID} = require("../../src/lib/authHelpers");
 
 router.get('/', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
-
-    return res.status(200).json(await userInvestment(session, req))
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
+    return res.status(200).json(await userInvestment(user, req))
 });
 
 router.get('/all', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
 
-    return res.status(200).json(await userVault(session, req))
+    return res.status(200).json(await userVault(user, req))
 });
 
 

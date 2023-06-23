@@ -29,10 +29,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- next-auth redirect
+- flow na expiry token na query z backendu
 - transakcje nie działają na rollbacku
-
-
+- 
 =============
 - make offer button
 - -- (buy) check liquidity 
@@ -45,29 +44,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- build otcDeal
 - -- expire otcPending after 5 minutes
 
+- clean old otcPending - every month after backup
+
 - enable for reservation even on blocked reservation button
 - timeline for user activities for each investment in vault tab
 - new investment update for api
 - reassign allocation
 - extract style to 3vc / citcap
 - migrate citcap
-
-- connect discord to app
-- scrap based on metadata ttoo - Rarity: Soldier / Capo //// https://docs.google.com/spreadsheets/d/16TUO0TuDAfwyQrpNSDeu4_a_Rv28uWUxhY-wCAyRgRQ/edit#gid=0
-- gtag
-- find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
-- -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
-
 - promo codes to reduce our fees + rate limit on invest
-- notifications
-- https://tagmanager.google.com/?authuser=1#/container/accounts/6099625190/containers/116524298/workspaces/2
+- connect discord to app
 - lootbox
+- notifications
 - delegated -> invest to vault or hot
-
-
-
-- referral system
-- clean old otcPending - every month after backup
+- gtag
 - whale deposit/ withdraw features in settings
 - whale page
 - invest from stake
@@ -75,6 +65,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
+- find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
+- -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
+- referral system
 
 
 
