@@ -25,6 +25,9 @@ async function getUserVault(owner) {
             where: {
                 owner
             },
+            order: [
+                ['createdAt', 'DESC'],
+            ],
             include: {
                 attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
                 model: models.offers
