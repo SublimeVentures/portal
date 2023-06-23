@@ -57,6 +57,7 @@ export default function Sidebar({account}) {
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'OTC', link: PAGE.OTC, disabled: true, icon: <IconExchange className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
+            {name: 'Lootboxes', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
         groupHelp: [
             {name: 'Community', icon: <IconDiscord className="w-6 ml-1 mr-3"/>, action: true, handler: openDiscord},
