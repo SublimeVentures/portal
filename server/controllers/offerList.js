@@ -7,9 +7,7 @@ const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
 async function getParamOfferList(user) {
     const {ACL, address} = user
-    console.log("iser",user)
     const offers = await getOfferList()
-    console.log("offers",offers)
 
     let response = {
         cdn: getEnv().cdn,

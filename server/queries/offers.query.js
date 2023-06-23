@@ -23,6 +23,9 @@ async function getOfferList() {
             where: {
                 display: true
             },
+            order: [
+                ['d_open', 'DESC'],
+            ],
             raw: true
         })
     } catch (e) {

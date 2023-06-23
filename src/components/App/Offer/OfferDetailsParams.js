@@ -22,7 +22,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                     <div className={"text-5xl font-bold flex flex-1 glow py-1"}>${normalized_total}</div>
 
                     <div className={"py-2"}>
-                        <OfferDetailsProgress alloTotal={alloTotal} alloFilled={allocation?.alloFilled} alloRequired={alloRequired}/>
+                        <OfferDetailsProgress alloTotal={alloTotal} alloFilled={allocation?.alloFilled} alloRequired={alloRequired} isSoldOut={isSoldOut}/>
                     </div>
                     <div className={"flex flex-col gap-2 mt-5"}>
                         {userAllocation > 0 && <div className={"detailRow text-app-success"}><p>My Allocation</p><hr className={"spacer"}/><p>${normalized_my}</p></div>}

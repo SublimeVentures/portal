@@ -100,7 +100,6 @@ export const AppOfferDetails = ({account}) => {
         isLastPhase
     }
 
-    console.log("loading",offerDetailsState, nextPhase, offerData)
     const renderPage = () => {
         if (!offerDetailsState || !nextPhase) return <Loader/>
         if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>

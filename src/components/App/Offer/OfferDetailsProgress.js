@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
 
-export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequired}) {
+export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequired, isSoldOut}) {
     const tilt = useRef(null);
 
     useEffect(() => {
@@ -9,8 +9,8 @@ export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequire
     }, []);
 
 
-    const filled = alloFilled ? 100*alloFilled/alloTotal : 0
-    const required = alloRequired? 100*alloRequired/alloTotal :0
+    const filled = isSoldOut ? (alloFilled >90 ? 100 : alloFilled) : (alloFilled ? 100*alloFilled/alloTotal : 0)
+    const required = alloRequired ? 100*alloRequired/alloTotal :0
 
     return (
         <>
@@ -22,11 +22,11 @@ export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequire
                 </div>
                 {filled >= required ?
                     <div className="absolute right-1 ">
-                        <div className="">Filled {filled}%</div>
+                        <div className="">Filled {Number(filled).toFixed(2)}%</div>
                     </div>
                     :
                     <div className="absolute w-full flex  ">
-                        <div className="border-r-2 border-app-error h-[50px] " style={{'width': `${required}%`}}></div>
+                        {filled !== null && <div className="border-r-2 border-app-error h-[50px] " style={{'width': `${required}%`}}></div>}
                         <div className="text-app-error glowing ml-2 flex items-center">Required {required}%</div>
                     </div>
                 }
