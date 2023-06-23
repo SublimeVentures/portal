@@ -18,7 +18,7 @@ export default function VaultItem({item, cdn}) {
     const {vested, nextUnlock} = parseVesting(item["offer.t_unlock"])
 
     useEffect(() => {
-        VanillaTilt.init(tilt.current, {scale: 1.1, speed: 1000, max: 10});
+        VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: 1});
     }, []);
 
     return <div className="boxshadow vaultItem rounded-xl timeline flex col-span-12 lg:col-span-6 3xl:col-span-4 ">

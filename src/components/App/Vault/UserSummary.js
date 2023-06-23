@@ -19,13 +19,7 @@ function sum(prev, next){
 }
 
 export default function UserSummary({vault, account}) {
-    const tiltAvatar = useRef(null);
     const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
-
-
-    useEffect(() => {
-        VanillaTilt.init(tiltAvatar.current, {scale: 1.1, speed: 1000, max: 10});
-    }, []);
 
     return (
         <>
@@ -33,7 +27,7 @@ export default function UserSummary({vault, account}) {
                 <div className="col-span-12 flex custom:col-span-4">
                     <div
                         className="flex flex-1 flex-col justify-center items-center">
-                        <div className="relative  px-10 sm:-ml-10 custom:ml-0" ref={tiltAvatar}>
+                        <div className="relative  px-10 sm:-ml-10 custom:ml-0" >
                             <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
                                 <lottie-player
                                     autoplay
