@@ -1,20 +1,20 @@
 const {checkAcl} = require("./acl");
 const {getUserVault, getUserInvestment} = require("../queries/vaults.query");
-const {getEnv} = require("../services/db/utils");
+const {getEnv} = require("../services/db");
 
 
-async function userInvestment(session, req) {
-    const {ACL, ADDRESS, USER} = checkAcl(session, req)
-    const owner = ACL === 0 ? `${USER.id}` : ADDRESS
+async function userInvestment(user, req) {
+    const {ACL, address, id} = user
+    const owner = ACL === 0 ? `${id}` : address
 
     const offerId = Number(req.query.offer)
     const result =  await getUserInvestment(owner, offerId)
     return result?.invested ? result.invested : 0
 }
 
-async function userVault(session, req) {
-    const {ACL, ADDRESS, USER} = checkAcl(session, req)
-    const owner = ACL === 0 ? `${USER.id}` : ADDRESS
+async function userVault(user) {
+    const {ACL, address, id} = user
+    const owner = ACL === 0 ? `${id}` : address
     const vault = await getUserVault(owner)
     return {elements: vault, cdn: getEnv().cdn}
 }

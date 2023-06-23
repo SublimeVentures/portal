@@ -9,7 +9,8 @@ import {getOtcCancelFunction} from "@/components/App/Otc/OtcSteps";
 
 export default function CancelModal({model, setter, props}) {
     const {currentMarket, cancelOffer, refetchVault, refetchOffers, source} = props
-    const {data: session} = useSession()
+        // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {address, ACL, id} = session.user
     const [processing, setProcessing] = useState(false)
     const [success, setSuccess] = useState(false)

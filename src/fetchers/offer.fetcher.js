@@ -1,44 +1,37 @@
-import axios from "axios";
 import * as Sentry from '@sentry/nextjs'
+import {axiosPrivate} from "@/lib/axios/axiosPrivate";
+import {API} from "@/routes";
 
-export const fetchOfferList = async (acl, address) => {
-    let url = `/api/offer`
-    if(acl !== undefined) {
-        url+= `?acl=${acl}&address=${address}`
-    }
+export const fetchOfferList = async () => {
+
     try {
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(API.offerList)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferList", e,url});
+        Sentry.captureException({location: "fetchOfferList"});
     }
     return {}
 }
 
-export const fetchOfferDetails = async (slug, acl, address) => {
+export const fetchOfferDetails = async (slug) => {
     if(!slug) return {}
-    let url = `/api/offer/${slug}`
-    if(acl !== undefined) {
-        url+= `?acl=${acl}&address=${address}`
-    }
     try {
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(`${API.offerDetails}${slug}`)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferDetails",slug, address, acl, e, url});
+        Sentry.captureException({location: "fetchOfferDetails",slug});
     }
-    return {}
+    return null
 }
 
 
 export const fetchOfferAllocation = async (id) => {
     if(!id) return {}
-    let url = `/api/offer/${id}/allocation`
     try {
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(`${API.offerList}/${id}/allocation`)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferAllocation", e,url});
+        Sentry.captureException({location: "fetchOfferAllocation", e});
     }
     return {}
 }

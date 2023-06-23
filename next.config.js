@@ -18,10 +18,19 @@ const nextConfig = {
                 port: '',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'cdn.citizencapital.fund',
+                port: '',
+                pathname: '/**',
+            },
         ],
     },
     env: {
         SENTRY_DSN: process.env.SENTRY_DSN,
+        DOMAIN: process.env.DOMAIN,
+        JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+        JWT_SECRET: process.env.JWT_SECRET,
     },
 }
 

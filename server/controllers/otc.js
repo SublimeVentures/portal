@@ -1,4 +1,4 @@
-const {getEnv} = require("../services/db/utils");
+const {getEnv} = require("../services/db");
 const {getActiveOffers, getHistoryOffers, saveOtcHash, removeOtcHash} = require("../queries/otc.query");
 const {getParamOfferList} = require("./offerList");
 const moment = require("moment");

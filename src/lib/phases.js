@@ -1,6 +1,6 @@
 const moment = require( 'moment' );
 
-function parsePhase (ACL, offer) {
+function phases (ACL, offer) {
     let state
     if(ACL===0) {
         state=  parseWhale(offer)
@@ -77,4 +77,4 @@ function parseMaxAllocation (ACL, multi, offer, phase, allocationLeft) {
     }
 }
 
-module.exports = { parsePhase, parseMaxAllocation }
+module.exports = { phases, parseMaxAllocation }

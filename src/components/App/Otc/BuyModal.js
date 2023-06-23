@@ -15,7 +15,8 @@ import TransactStep from "@/components/App/Transactions/TransactStep";
 
 export default function BuyModal({model, setter, props}) {
     const {currentMarket, buyOffer, refetchVault, refetchOffers, source, otcFee, currencies} = props
-    const {data: session} = useSession()
+        // const {data: session} = useSession()
+    const session = {} //todo: sesja
     const {ACL, id} = session.user
 
     const buyOfferAmount_parsed = buyOffer?.amount?.toLocaleString()

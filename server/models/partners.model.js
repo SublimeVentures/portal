@@ -38,6 +38,16 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
+        isMetadata: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        metadataProp: {
+            type: DataTypes.STRING,
+        },
+        metadataVal: {
+            type: DataTypes.JSON,
+        },
         multiplier: {
             type: DataTypes.INTEGER,
             defaultValue: 5

@@ -1,4 +1,4 @@
-const {models} = require("../services/db");
+const {models} = require("../services/db/db.init");
 const Sentry = require("@sentry/nextjs");
 
 async function getPayableCurrencies(isDev) {

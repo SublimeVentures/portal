@@ -4,7 +4,7 @@ import {useEffect, useRef} from "react";
 import PAGE from "@/routes";
 import Link from "next/link";
 import Image from "next/image";
-import {parsePhase} from "@/lib/parsePhase";
+import {phases} from "@/lib/phases";
 
 export const OfferStatus = {
     PENDING: "pending",
@@ -49,7 +49,7 @@ export default function OfferItem({offer, ACL, cdn}) {
         VanillaTilt.init(imageTilt.current, {scale: 1.02, speed: 1000, max: 5});
     }, []);
 
-    const {active, phase, isLast} = parsePhase(ACL, offer, 0)
+    const {active, phase, isLast} = phases(ACL, offer, 0)
     const state = phase[active]?.step
 
     const status = getStatus(active, isLast)

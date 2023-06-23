@@ -1,20 +1,18 @@
 import {RoundButton, ButtonIconSize} from '@/components/Button/RoundButton';
-import PlayIcon from "@/assets/svg/Play.svg";
-import { useSession } from "next-auth/react"
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 import PAGE from "@/routes";
+import PlayIcon from "@/assets/svg/Play.svg";
 
-export default function Hero() {
-    const { status } = useSession()
+export default function Hero({account}) {
     const router = useRouter()
-
     const login = () => {
-        if(status === "authenticated") {
+        if (!!account) {
             router.push(PAGE.App)
         } else {
             router.push(PAGE.Login)
         }
     }
+
 
     return (
         <div className="min-h-screen bg flex flex-col justify-center">
@@ -28,7 +26,9 @@ export default function Hero() {
 
                 <div
                     className="flex mx-auto mt-10 md:mt-0 md:items-center md:p-10 md:left-0 md:right-0 md:absolute md:bottom-20 md:mx-auto md:justify-center">
-                    <RoundButton text={'invest'} is3d={true} isPrimary={false} isWider={true} zoom={1.1} size={'text-2xl lg'} handler={login} icon={<PlayIcon className={ButtonIconSize.hero}/>}/>
+                    <RoundButton text={'invest'} is3d={true} isPrimary={false} isWider={true} zoom={1.1}
+                                 size={'text-2xl lg'} handler={login}
+                                 icon={<PlayIcon className={ButtonIconSize.hero}/>}/>
                 </div>
             </div>
 

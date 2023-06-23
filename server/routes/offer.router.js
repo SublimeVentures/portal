@@ -1,28 +1,28 @@
 const express = require('express')
 const router = express.Router();
-const {getAccessToken} = require("../services/auth");
 const {getParamOfferDetails, getOfferAllocation} = require("../controllers/offerDetails");
 const {getParamOfferList} = require("../controllers/offerList");
+const {verifyID} = require("../../src/lib/authHelpers");
 
 router.get('/', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
 
-    return res.status(200).json(await getParamOfferList(session, req))
+    return res.status(200).json(await getParamOfferList(user))
 });
 
 router.get('/:slug', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
 
-    res.status(200).json(await getParamOfferDetails(session, req))
+    res.status(200).json(await getParamOfferDetails(user, req))
 });
 
 router.get('/:id/allocation', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
 
-    res.status(200).json(await getOfferAllocation(session, req))
+    res.status(200).json(await getOfferAllocation(user, req))
 });
 
 

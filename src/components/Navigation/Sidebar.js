@@ -3,8 +3,6 @@ import {Fragment} from "react";
 import {Transition} from '@headlessui/react'
 import {useState} from "react";
 import { useRouter } from "next/router";
-import {signOut} from "next-auth/react";
-import IconDashboard from "@/assets/svg/Dashboard.svg";
 import IconVault from "@/assets/svg/Vault.svg";
 import IconLight from "@/assets/svg/Light.svg";
 import IconExchange from "@/assets/svg/Exchange.svg";
@@ -16,14 +14,15 @@ import IconSetting from "@/assets/svg/Setting.svg";
 
 import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
+import {logOut} from "@/fetchers/auth.fetcher";
+import routes from "@/routes";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 
 
-export default function Sidebar() {
+export default function Sidebar({account}) {
     let [isMobileOpen, setIsMobileOpen] = useState(false)
     const router = useRouter();
-
     const toggleMobile = (e) => {
         e?.preventDefault();
         if(e) {
@@ -45,9 +44,10 @@ export default function Sidebar() {
         setIsMobileOpen(false)
     }
 
-    const logout = () => {
+    const logout = async () => {
         setIsMobileOpen(false)
-        signOut({callbackUrl: "/"})
+        await logOut()
+        router.push(routes.Landing)
     }
 
     const menu = {
@@ -90,7 +90,7 @@ export default function Sidebar() {
                         </div>
                     </Link>
                     <ChangeNetwork/>
-                    <ChangeAddress/>
+                    <ChangeAddress account={account}/>
 
                 </div>
                 <nav className="flex flex-col pt-10 flex-1 font-accent text-md font-medium">

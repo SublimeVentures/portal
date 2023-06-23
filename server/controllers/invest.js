@@ -1,8 +1,7 @@
 const moment = require('moment');
 const {checkAcl} = require("./acl");
-const crypto = require("crypto");
 const {getOfferReservedData} = require("../queries/offers.query");
-const {getEnv} = require("../services/db/utils");
+const {getEnv} = require("../services/db");
 const {bookAllocation, expireAllocation} = require("../queries/invest.query");
 const {createHash} = require("./helpers");
 

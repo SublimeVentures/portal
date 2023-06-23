@@ -1,17 +1,17 @@
 const moment = require("moment");
 const {checkAcl} = require("./acl");
 const {getOfferDetails} = require("../queries/offers.query");
-const {getEnv} = require("../services/db/utils");
+const {getEnv} = require("../services/db/");
 const {getOfferRaise} = require("../queries/invest.query");
-const {ACL: ACLs} = require("../../src/lib/acl");
+const {ACLs} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
 
-async function getParamOfferDetails(session, req) {
-    const {ACL, ADDRESS} = checkAcl(session, req)
+async function getParamOfferDetails(user, req) {
+    const {ACL, address} = user
 
     const offer = await getOfferDetails(req.params.slug);
-    if (!offer) return {}
+    if (!offer) return {notExist: true}
     let template = {
         id: offer.id,
         alloMin: offer.alloMin,
@@ -54,7 +54,7 @@ async function getParamOfferDetails(session, req) {
             break;
         }
         case ACLs.PartnerInjected: {
-            response.offer = await fillInjectedPartnerData(offer, template, ADDRESS)
+            response.offer = await fillInjectedPartnerData(offer, template, address)
             break;
         }
         default: {
@@ -99,8 +99,8 @@ function fillPartnerData(offer, template) {
     return template;
 }
 
-async function getOfferAllocation(session, req) {
-    const {ACL} = checkAcl(session, req)
+async function getOfferAllocation(user, req) {
+    const {ACL} = user
     const data = await getOfferRaise(Number(req.params.id))
     const allocation = data.get({plain: true})
     if(allocation.offer.alloTotalPartner > 0 && ACL !== 0) {

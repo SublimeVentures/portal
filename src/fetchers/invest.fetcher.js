@@ -1,10 +1,11 @@
-import axios from "axios";
+
 import * as Sentry from '@sentry/nextjs'
+import {axiosPrivate} from "@/lib/axios/axiosPrivate";
 
 export const fetchHash = async (id, amount, currency, chain) => {
     const url = `/api/invest?id=${id}&amount=${amount}&currency=${currency}&chain=${chain}`
     try {
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
         Sentry.captureException({location: "fetchHash", e, url});
@@ -15,7 +16,7 @@ export const fetchHash = async (id, amount, currency, chain) => {
 export const expireHash = async (id, hash) => {
     const url = `/api/invest/hash?id=${id}&hash=${hash}`
     try {
-        const {data} = await axios.get(url)
+        const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
         Sentry.captureException({location: "expireHash", e,url});

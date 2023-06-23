@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router();
 const {getAccessToken} = require("../services/auth");
 const {getPayableCurrencies} = require("../queries/currencies.query");
-const {getEnv} = require("../services/db/utils");
+const {getEnv} = require("../services/db");
 
 router.get('/currencies', async (req, res) => {
     const session = await getAccessToken(req)

@@ -1,31 +1,27 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
 import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
 import dynamic from "next/dynamic";
-import {queryClient} from "@/lib/queryCache";
-import {ACL as ACLs} from "@/lib/acl";
+import {ACLs, verifyID} from "@/lib/authHelpers";
 import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
-import {dehydrate, useQuery} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
 const OfferDetailsDetails = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
-import {getToken} from "next-auth/jwt"
-import {useSession} from "next-auth/react";
 import {fetchUserInvestment} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import {NextSeo} from "next-seo";
 import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
-import {parsePhase} from "@/lib/parsePhase";
+import {phases} from "@/lib/phases";
 import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
+import routes from "@/routes";
 
 
-export const AppOfferDetails = () => {
-    const {data: session, status} = useSession()
+export const AppOfferDetails = ({account}) => {
     const router = useRouter()
     const {slug} = router.query
-    const ACL = session?.user?.ACL
-    const address = session?.user?.address
+    const {ACL, address} = account
     const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
     let [activePhase, setActivePhase] = useState(0)
     let [isLastPhase, setIsLastPhase] = useState(false)
@@ -35,12 +31,11 @@ export const AppOfferDetails = () => {
 
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
             queryKey: ["offerDetails", {slug, aclCache}],
-            queryFn: () => fetchOfferDetails(slug, ACL, address),
+            queryFn: () => fetchOfferDetails(slug),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 30 * 60 * 1000,
             staleTime: 15 * 60 * 1000,
-            enabled: ACL >= 0
         }
     );
 
@@ -68,7 +63,7 @@ export const AppOfferDetails = () => {
 
     const feedPhases = () => {
         if(!offerData?.offer) return
-        const {active, isLast, currentPhase, nextPhase, isClosed} = parsePhase(session.user.ACL, offerData.offer)
+        const {active, isLast, currentPhase, nextPhase, isClosed} = phases(ACL, offerData.offer)
         setActivePhase(active)
         setIsLastPhase(isLast)
         setCurrentPhase(currentPhase)
@@ -80,6 +75,7 @@ export const AppOfferDetails = () => {
         offer: offerData?.offer,
         currentPhase,
         nextPhase,
+        isLastPhase,
         refreshInvestmentPhase: feedPhases,
     }
 
@@ -93,7 +89,7 @@ export const AppOfferDetails = () => {
         currentPhase,
         activePhase,
         isLastPhase,
-        session,
+        account,
         isClosed,
     }
 
@@ -104,8 +100,9 @@ export const AppOfferDetails = () => {
         isLastPhase
     }
 
+    console.log("loading",offerDetailsState, nextPhase, offerData)
     const renderPage = () => {
-        if (status !== "authenticated" || !offerDetailsState || !nextPhase) return <Loader/>
+        if (!offerDetailsState || !nextPhase) return <Loader/>
         if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
@@ -126,6 +123,9 @@ export const AppOfferDetails = () => {
     }
 
     useEffect(() => {
+        if(offerData?.notExist) {
+            router.push(routes.Opportunities)
+        }
         feedPhases()
     }, [offerData])
 
@@ -138,28 +138,31 @@ export const AppOfferDetails = () => {
 }
 
 
-export const getServerSideProps = async ({params, req}) => {
-    const {slug} = params
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        encryption: true
-    })
-    const ACL = token?.user?.ACL
-    const address = token?.user?.address
+export const getServerSideProps = async ({res}) => {
+    const account = await verifyID(res.req)
+    const redirect = res.req.originalUrl
 
-    const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
+    if(account.exists){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/app/auth?callbackUrl=${redirect}`
+            }
+        }
+    }
 
-    await queryClient.prefetchQuery({
-        queryKey: ["offerDetails", {slug, aclCache}],
-        queryFn: () => fetchOfferDetails(slug, ACL, address),
-        cacheTime: 30 * 60 * 1000,
-        staleTime: 15 * 60 * 1000,
-    })
+    if(!account.auth){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/login?callbackUrl=${redirect}`
+            }
+        }
+    }
 
     return {
         props: {
-            dehydratedState: dehydrate(queryClient)
+            account: account.user
         }
     }
 }

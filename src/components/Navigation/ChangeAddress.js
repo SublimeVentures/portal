@@ -1,21 +1,26 @@
 import {useAccount} from "wagmi";
 import GenericModal from "@/components/Modal/GenericModal";
-import {signOut, useSession} from "next-auth/react";
 import {useEffect} from "react";
-import Link from "next/link";
-import PAGE from "@/routes";
 import {RoundButton} from "@/components/Button/RoundButton";
+import {logOut} from "@/fetchers/auth.fetcher";
+import routes from "@/routes";
+import {useRouter} from "next/router";
 
-export default function ChangeAddress() {
+export default function ChangeAddress({account}) {
+    const router = useRouter();
     const {isConnected, address} = useAccount()
-    const {data: session} = useSession()
-    const userAddress = session?.user?.address
+    const userAddress = account?.address
     const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
 
 
+    const signOut = () => {
+        logOut()
+        router.push(routes.Landing)
+    }
+
     useEffect(() => {
         if (!isConnected) {
-            signOut({callbackUrl: "/"})
+            signOut()
         }
     }, [isConnected]);
 
@@ -42,7 +47,7 @@ export default function ChangeAddress() {
                 <div className="mt-auto w-full">
                     <div className={" w-full fullWidth"}>
                         <RoundButton text={'Logout'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => {
-                            signOut({callbackUrl: "/"})
+                            signOut()
                         }}/>
                     </div>
                 </div>

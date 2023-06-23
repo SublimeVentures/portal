@@ -40,7 +40,7 @@ export default function AppOtc() {
 
     const {isSuccess: vaultIsSuccess, data: vault, refetch: refetchVault} = useQuery({
             queryKey: ["userVault", {ACL, address}],
-            queryFn: () => fetchVault(ACL, address),
+            queryFn: fetchVault,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 5 * 60 * 1000,
