@@ -7,6 +7,7 @@ export const seoConfig = (page) => {
                 return generateSeo(
                     "3VC - invest ground floor",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
+                    template_3VC,
                     page
                 )
             }
@@ -14,6 +15,7 @@ export const seoConfig = (page) => {
                 return generateSeo(
                     "3VC - login",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
+                    template_3VC,
                     page
                 )
             }
@@ -21,6 +23,35 @@ export const seoConfig = (page) => {
                 return generateSeo(
                     "3VC - our investments",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
+                    template_3VC,
+                    page
+                )
+            }
+        }
+    }
+    else {
+        switch(page) {
+            case PAGE.Landing: {
+                return generateSeo(
+                    "Citizen Capital - invest with Citadel",
+                    "Official investment arm of Neo Tokyo! Invest with Citadel. ",
+                    template_CitCap,
+                    page
+                )
+            }
+            case PAGE.Login: {
+                return generateSeo(
+                    "Citizen Capital - login",
+                    "Official investment arm of Neo Tokyo! Invest with Citadel. ",
+                    template_CitCap,
+                    page
+                )
+            }
+            case PAGE.Investments: {
+                return generateSeo(
+                    "Citizen Capital - our investments",
+                    "Official investment arm of Neo Tokyo! Invest with Citadel. ",
+                    template_CitCap,
                     page
                 )
             }
@@ -29,8 +60,8 @@ export const seoConfig = (page) => {
 }
 
 
-const generateSeo = (title, description, extraUrl) =>{
-    let template = {...template_3VC}
+const generateSeo = (title, description, source, extraUrl) =>{
+    let template = {...source}
 
     template.title = title
     template.description = description
@@ -43,7 +74,7 @@ const generateSeo = (title, description, extraUrl) =>{
 }
 
 const template_3VC = {
-        url: "https://www.3vc.fund",
+        url: "https://3vc.fund",
         og: {
             type: 'website',
             url: '',
@@ -63,6 +94,31 @@ const template_3VC = {
         twitter: {
             handle: '@3VCfund',
             site: '@3VCfund',
+            cardType: 'summary_large_image',
+        }
+}
+
+const template_CitCap = {
+        url: "https://citizencapital.fund",
+        og: {
+            type: 'website',
+            url: '',
+            title: '3',
+            description: '',
+            images: [
+                {
+                    url: 'https://cdn.3vc.fund/webapp/og.jpg',
+                    width: 800,
+                    height: 600,
+                    alt: 'Join Citizen Capital',
+                    type: 'image/jpeg',
+                },
+            ],
+            siteName: '3VC',
+        },
+        twitter: {
+            handle: '@CitCapFund',
+            site: '@CitCapFund',
             cardType: 'summary_large_image',
         }
 }

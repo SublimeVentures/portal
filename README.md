@@ -58,6 +58,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button
+- point investing wallet
 - connect discord to app
 - notifications
 
@@ -70,6 +71,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
+
 
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
