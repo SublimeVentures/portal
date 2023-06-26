@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import dynamic from "next/dynamic";
-import HeroBg from "@/components/Home/HeroBg";
+import HeroBg from "@/components/Home3VC/HeroBg";
 import Link from "next/link";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PartnerSlide from "@/components/SignupFlow/PartnerSlide";

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&family=Work+Sans:wght@300;400;500&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bg {
+  background-image: url('https://cdn.3vc.fund/webapp/bg.jpg');
+}
+
+.aboutBg {
+  background-image:    url('https://cdn.3vc.fund/webapp/aboutBG.jpg');
+}

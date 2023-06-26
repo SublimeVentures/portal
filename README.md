@@ -30,6 +30,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 - extract style to 3vc / citcap
+-- favicon
+-- fonts
 
 - =============
 - make offer button

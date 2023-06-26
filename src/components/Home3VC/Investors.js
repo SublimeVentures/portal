@@ -8,6 +8,7 @@ import A16z from '@/assets/svg/logo/A16z.svg?component'
 import Animoca from '@/assets/svg/logo/Animoca.svg?component'
 import Qcp from '@/assets/svg/logo/Qcp.svg?component'
 import Sequoia from '@/assets/svg/logo/Sequoia.svg?component'
+import {is3VC} from "@/lib/seoConfig";
 
 export default function Investors() {
 
@@ -40,7 +41,7 @@ export default function Investors() {
         <div className="investorGradient flex flex-col justify-center text-white pt-10 uppercase pb-10">
             <div className="px-10 py-25 flex flex-col gap-10 flex-1">
                 <div className="flex flex-col text-white font-medium  text-center pb-10">
-                    <div className="f-work text-xs ml-1">WHO WE WORK with</div>
+                    <div className="font-accent text-xs ml-1">WHO WE WORK with</div>
                     <div className="leading-snug text-3xl">
                         Co-Investors
                     </div>
@@ -58,8 +59,9 @@ export default function Investors() {
                             className="!w-[280px] max-h-[220px]"/></div>
                     </div>
                     <div>
-                        <div className="customSlide justify-center flex min-h-[250px]"><CitCap
-                            className="!w-[280px] max-h-[220px]"/></div>
+                         <div className="customSlide justify-center flex min-h-[250px]">
+                             {is3VC ?<CitCap className="!w-[280px] max-h-[220px]"/> : <img src={"/img/logo.png"} className="!w-[280px] max-h-[220px]" alt={"3vc"}/>}
+                         </div>
                     </div>
                     <div>
                         <div className="customSlide justify-center flex min-h-[250px]"><CryptoCom

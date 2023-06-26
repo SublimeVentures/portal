@@ -15,7 +15,7 @@ export default function FourOhFour() {
     }, []);
 
 
-    return <>
+    return <div className={"max-h-screen overflow-hidden"}>
         <NextSeo
             title={seo.title}
             description={seo.description}
@@ -26,15 +26,15 @@ export default function FourOhFour() {
         <lottie-player
             autoplay
             loop
-            style={{width:'100%', margin:'30px auto'}}
+            style={{width:'100%', margin:'5px auto'}}
             mode="normal"
             src="/static/lottie/404v3.json"
         />
 
-        <Link href={PAGE.Landing} className="absolute bottom-10">
-            <RoundButton text={'Go back'} is3d={true} isPrimary={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDashboard className={ButtonIconSize.hero}/>}/>
+        <Link href={PAGE.Landing} className="absolute top-10 left-0 right-0">
+            <RoundButton text={'HOME'} is3d={true} isPrimary={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDashboard className={ButtonIconSize.hero}/>}/>
         </Link>
-    </>
+    </div>
 }
 
 FourOhFour.getLayout = function (page) {

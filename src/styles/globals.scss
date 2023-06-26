@@ -10,6 +10,7 @@
 @import 'components/hamburger';
 @import 'components/navbar';
 @import 'components/button';
+@import 'components/buttonScramble';
 @import 'components/carousel';
 @import 'components/modal';
 @import 'components/chroma';
@@ -40,12 +41,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-font-kerning: normal;
   -webkit-text-size-adjust: 100%;
-  font-family: 'Montserrat', sans-serif;
-
 }
 
 .bg {
-  background-image:    url('https://cdn.3vc.fund/webapp/bg.jpg');
   background-size:     cover;                      /* <------ */
   background-repeat:   no-repeat;
   background-position: center center;              /* optional, center the image */

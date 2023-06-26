@@ -31,9 +31,12 @@ export const ExternalLinks = {
     HOW_TO_ACCESS: "https://3vcfund.notion.site/How-to-access-3VC-f40a1142d93f4b0ba38e13114189a877",
     DELEGATED_ACCESS: "https://3vcfund.notion.site/Delegated-access-dc60abd8a5654641a7bd77d537256aa7",
     VAULT: "https://3vcfund.notion.site/Investor-Vault-2f8097958f69467aaa03bbfda0ecd89e",
-    WIKI: "https://3vcfund.notion.site/3VC-7ff7dd407db54311bc5dde8d26651e88",
+    WIKI: "https://info.3vc.fund",
+    WIKI_CITCAP: "https://info.citizencapital.fund",
     DISCORD: "https://discord.gg/3SaqVVdzUH",
-    TWITTER:"https://twitter.com/3vcfund"
+    DISCORD_CITCAP: "https://discord.gg/CX7ChfhYbf",
+    TWITTER:"https://twitter.com/3vcfund",
+    TWITTER_CITCAP:"https://twitter.com/CitCapFund",
 }
 
 export default PAGE;

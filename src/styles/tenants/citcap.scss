@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '../components/hero';
+@import '../components/buttonNeon';
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;300;400;500;600;700&family=Roboto:wght@100;300;400;500;600;700&display=swap');
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.bg {
+  background-image: linear-gradient(
+                  rgba(0, 0, 0, 0.7),
+                  rgba(0, 0, 0, 0.7)
+  ),  url('https://cdn.3vc.fund/webapp/bgCitCap.jpg');
+}
+
+
+
+.blurredBG {
+  backdrop-filter: blur(10px)!important;
+  color: white;
+  background: rgba(0, 0, 0, 0.65) !important;
+}
+
+.highlightGradient, .investorGradient, .aboutGradient, .calloutGradient, .bg-footer {
+  background: black!important;
+}
+
+.customSlide {
+  background: #0e0e0e !important;
+}
+
+
+.aboutBg {
+  background-image:    url('https://cdn.3vc.fund/webapp/aboutBG2.png');
+}
+
+

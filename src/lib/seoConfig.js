@@ -1,7 +1,22 @@
 import PAGE from "@/routes";
 
+export const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC" ? 1 : 0
+
+const copy = {
+    1: {
+        NAME: "3VC",
+    },
+    0: {
+        NAME: "Citizen Capital",
+    }
+}
+
+export const getCopy = (name) => {
+    return copy[is3VC][name]
+}
+
 export const seoConfig = (page) => {
-    if(process.env.NEXT_PUBLIC_SITE==="3VC") {
+    if(is3VC) {
         switch(page) {
             case PAGE.Landing: {
                 return generateSeo(

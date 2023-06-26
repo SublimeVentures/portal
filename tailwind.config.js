@@ -76,15 +76,11 @@ module.exports = {
         '14': 'repeat(14, minmax(0, 1fr))',
       },
       fontFamily: {
-        'body': ['Montserrat', 'sans-serif'],
-        'accent': ['Work Sans', 'sans-serif'],
+        'body': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Montserrat', 'sans-serif'] : ['Roboto', 'sans-serif'],
+        'accent': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Work Sans', 'sans-serif'] :  ['Roboto Mono', 'sans-serif'],
       },
       fontSize: {
-        'hero': ['48px', {
-          lineHeight: '1.375',
-          // letterSpacing: '-0.01em',
-          // fontWeight: '500',
-        }],
+        'hero': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['48px', {lineHeight: '1.375'}] : ['55px', {lineHeight: '1.1'}]
       },
       fontWeight: {
         // extrabold: '800',

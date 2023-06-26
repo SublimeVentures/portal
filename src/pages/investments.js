@@ -1,4 +1,4 @@
-import HeroBg from "@/components/Home/HeroBg";
+import HeroBg from "@/components/Home3VC/HeroBg";
 import {
     useQuery,
     dehydrate

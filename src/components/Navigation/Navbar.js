@@ -1,13 +1,16 @@
 import {useEffect, useState} from "react";
 import Link from 'next/link';
 import useScrollPosition from "@/lib/hooks/useScrollPosition";
+import {is3VC} from "@/lib/seoConfig";
+import {ExternalLinks} from "@/routes";
+import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
 
 export default function Navbar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false)
     const [isOnTop, setIsOnTop] = useState(false)
     const scrollPosition = useScrollPosition();
     const menu = [
-        {name: 'DOCS', link: 'https://3vcfund.notion.site/3VC-7ff7dd407db54311bc5dde8d26651e88', isExternal: true},
+        {name: 'DOCS', link: is3VC ? ExternalLinks.WIKI : ExternalLinks.WIKI_CITCAP, isExternal: true},
         {name: 'INVESTMENTS', link: 'investments'},
     ]
 
@@ -18,29 +21,46 @@ export default function Navbar() {
 
     const disableMobile = () => setIsMobileOpen(false)
 
+
+    const buildLinks = (el,i) =>{
+        if(is3VC) {
+            if (!el.isExternal) return <Link href={el.link} key={i}
+                                             className="mx-5 cursor-pointer underlineHover">{el.name}</Link>
+            else return <a href={el.link} key={i} target="_blank"
+                           className="mx-5 cursor-pointer underlineHover">{el.name}</a>
+        } else {
+            if (!el.isExternal) return <Link href={el.link} key={i}
+                                             className="mx-3 cursor-pointer ">
+                <CitCapGlitchButton text={`_${el.name}`} />
+            </Link>
+            else return <a href={el.link} key={i} target="_blank"
+                           className="mx-3 cursor-pointer ">
+                <CitCapGlitchButton text={`_${el.name}`} />
+            </a>
+        }
+
+    }
+
     useEffect(() => {
         setIsOnTop(scrollPosition < 50);
     }, [scrollPosition])
 
     return (
-        <div className="fixed w-full z-10 text-uppercase tracking-widest">
+        <div className="fixed w-full z-20 text-uppercase tracking-widest">
             <div
-                className={`flex flex-row items-center w-full py-7 px-10 navShadow hamburger ${!isOnTop || isMobileOpen ? 'blurredBG' : ''}`}>
+                className={`flex flex-row items-center w-full py-7 px-10 navShadow  ${!isOnTop || isMobileOpen ? 'blurredBG' : ''}`}>
                 <Link href="/" onClick={disableMobile}>
                     <div className="flex">
-                        <img className="w-15 " src="/img/logo.png"/>
+                        <img className={is3VC ? "w-15" : `w-17 absolute top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"}/>
                     </div>
                 </Link>
-                <div className="text-end  flex flex-1 justify-end hidden md:flex md:text-end">
+                <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>
                     {menu.map((el, i) => {
-                        if (!el.isExternal) return <Link href={el.link} key={i}
-                                                         className="mx-5 cursor-pointer underlineHover">{el.name}</Link>
-                        else return <a href={el.link} key={i} target="_blank"
-                                       className="mx-5 cursor-pointer underlineHover">{el.name}</a>
+                        return buildLinks(el,i)
                     })}
                 </div>
 
-                <div className="md:hidden flex flex-1 justify-end">
+                <div className="md:hidden flex flex-1 justify-end hamburger">
                     <div onClick={toggleMobile}>
                         <div className={` burger ${isMobileOpen && 'opened'}`}>
                             <div></div>
@@ -55,7 +75,7 @@ export default function Navbar() {
                 </div>
 
             </div>
-            {isMobileOpen && <div className="absolute blurred2 flex flex-col w-full left-0 text-center py-5">
+            {isMobileOpen && <div className={`absolute ${is3VC ? "blurred2" : "blurredBgColor"} flex flex-col w-full left-0 text-center py-5`}>
                 {menu.map((el, i) => {
                     if (!el.isExternal) return <Link href={el.link} key={i}
                                                      className="py-5 cursor-pointer"
