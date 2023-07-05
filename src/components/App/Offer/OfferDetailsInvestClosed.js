@@ -1,5 +1,6 @@
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
+import {is3VC} from "@/lib/seoConfig";
 
 export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
     const { account, isClosed, offer } = paramsInvestClosed
@@ -15,7 +16,7 @@ export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
 
     return (
         <div className="flex flex-col flex-1 justify-center items-center relative backdrop-blur-md rounded-xl" >
-                    <div className="relative text-app-white uppercase text-2xl p-8 text-center rounded-xl">{generateText()}</div>
+            <div className={`${is3VC ? "text-app-white" : "font-accent text-app-error glowRed font-light"} relative  uppercase text-2xl p-8 text-center rounded-xl`}>{generateText()}</div>
         </div>
 
 

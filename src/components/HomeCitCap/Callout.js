@@ -3,6 +3,7 @@ import PlusIcon from "@/assets/svg/Plus.svg";
 import DiscordIcon from "@/assets/svg/Discord.svg";
 import TwitterIcon from "@/assets/svg/Twitter.svg";
 import {ExternalLinks} from "@/routes";
+import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
 
 export default function Investors() {
   return (

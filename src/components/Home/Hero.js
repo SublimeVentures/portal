@@ -28,7 +28,7 @@ export default function Hero({account}) {
                     className="flex mx-auto mt-10 md:mt-0 md:items-center md:p-10 md:left-0 md:right-0 md:absolute md:bottom-20 md:mx-auto md:justify-center">
                      <RoundButton text={'invest'} is3d={true} isPrimary={false} isWider={true} zoom={1.1}
                                  size={'text-2xl lg'} handler={login}
-                                 icon={<PlayIcon className={ButtonIconSize.hero}/>}/> :
+                                 icon={<PlayIcon className={ButtonIconSize.hero}/>}/>
                 </div>
             </div>
 

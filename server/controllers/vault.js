@@ -1,4 +1,3 @@
-const {checkAcl} = require("./acl");
 const {getUserVault, getUserInvestment} = require("../queries/vaults.query");
 const {getEnv} = require("../services/db");
 
@@ -16,6 +15,7 @@ async function userVault(user) {
     const {ACL, address, id} = user
     const owner = ACL === 0 ? `${id}` : address
     const vault = await getUserVault(owner)
+    console.log("vault", vault)
     return {elements: vault, cdn: getEnv().cdn}
 }
 

@@ -1,12 +1,12 @@
 import PAGE from "@/routes";
 
-export const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC" ? 1 : 0
+export const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
 
 const copy = {
-    1: {
+    true: {
         NAME: "3VC",
     },
-    0: {
+    false: {
         NAME: "Citizen Capital",
     }
 }

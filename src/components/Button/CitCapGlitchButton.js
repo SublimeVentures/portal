@@ -7,7 +7,9 @@ export const CitCaGlitchButtonState = {
     hero: "hero",
 }
 
-export function CitCapGlitchButton({text, isLarge, state, handler}) {
+
+
+export function CitCapGlitchButton({text, state, handler, isLoading, isDisabled, icon}) {
     const [isExecuting, setExecuting] = useState(false)
 
     const click = async () => {
@@ -24,9 +26,12 @@ export function CitCapGlitchButton({text, isLarge, state, handler}) {
 
     return (
         <div text={text} className={`
-            ${isLarge ? "large": ""}
             ${state}
-            shakeBtn font-accent before:content-[attr(text)] after:content-[attr(text)]
-            `} data-text={text} onClick={() => click()}>{ text }</div>
+            ${isDisabled ? "disabled" : ""}
+            shakeBtn font-accent before:content-[attr(text)] after:content-[attr(text)]  
+            `}
+             data-text={text} onClick={() => click()}>
+            <span className={"flex flex-row justify-center items-center"}>{isLoading ? <>Loading...</> : <>{icon}{text}</>}</span>
+        </div>
     )
 }

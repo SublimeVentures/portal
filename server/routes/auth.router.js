@@ -14,8 +14,8 @@ router.get('/login', async (req, res) => {
 //LOGIN USER
 router.post('/login', async (req, res) => {
     if (!req.body?.message || !req.body?.signature) return res.status(400).json({});
-
     const result = await logIn(req)
+
     if (!result) return res.status(401).json({});
 
     res.setHeader("Set-Cookie", result.cookie);

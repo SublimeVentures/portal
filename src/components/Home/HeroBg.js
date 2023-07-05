@@ -2,7 +2,7 @@ import {is3VC} from "@/lib/seoConfig";
 
 export default function HeroBg({subtitle, title, content, extraClass}) {
     return (
-        <div className={`min-h-screen ${is3VC ? "bg-navy2" : "bg-black"}`}>
+        <div className={`min-h-screen bg-app-bg`}>
             <div className="bg min-h-screen"></div>
             <div className="text-white " style={{ marginTop: 'calc(-100vh)'}}>
                 <div className="flex flex-col w-full md:max-w-[80%] md:mx-auto xl:max-w-[1200px] pt-28 uppercase">

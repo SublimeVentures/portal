@@ -11,11 +11,14 @@ import IconDiscord from "@/assets/svg/Discord.svg";
 import IconWiki from "@/assets/svg/Wiki.svg";
 import IconLogout from "@/assets/svg/Logout.svg";
 import IconSetting from "@/assets/svg/Setting.svg";
+import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
+
 
 import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
 import {logOut} from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
+import {is3VC} from "@/lib/seoConfig";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 
@@ -33,14 +36,14 @@ export default function Sidebar({account}) {
     }
 
     const openDiscord = (e) => {
-        e.preventDefault();
-        window.open(ExternalLinks.DISCORD, '_blank');
+        e?.preventDefault();
+        window.open(is3VC ? ExternalLinks.DISCORD : ExternalLinks.DISCORD_CITCAP, '_blank');
         setIsMobileOpen(false)
     }
 
     const openNotion = (e) => {
-        e.preventDefault();
-        window.open(ExternalLinks.WIKI, '_blank');
+        e?.preventDefault();
+        window.open(is3VC ? ExternalLinks.WIKI : ExternalLinks.WIKI_CITCAP, '_blank');
         setIsMobileOpen(false)
     }
 
@@ -56,8 +59,8 @@ export default function Sidebar({account}) {
             {name: 'Vault', link: PAGE.App, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'OTC', link: PAGE.OTC, disabled: true, icon: <IconExchange className="w-8 mr-3"/>},
+            {name: 'Lootbox', link: PAGE.Notifs, disabled: true, icon: <IconMysteryBox className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
-            {name: 'Lootbox', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
         groupHelp: [
             {name: 'Community', icon: <IconDiscord className="w-6 ml-1 mr-3"/>, action: true, handler: openDiscord},
@@ -70,14 +73,15 @@ export default function Sidebar({account}) {
     }
 
     const generateLink = (group) => {
-        return group.map(el => {
-            if (el.action) return <div key={el.name}
-                                       className={`flex cursor-pointer items-center px-5 py-2 rounded-xl sidebar-item select-none ${el.disabled ? 'disabled' : ''}`}
-                                       onClick={el.handler}>{el.icon}{el.name}</div>
-            else return <Link href={el.link} key={el.name} onClick={() => {toggleMobile()}}
-                              className={`flex items-center px-5 py-2 rounded-xl sidebar-item select-none ${el.disabled ? 'disabled' : ''} ${router.asPath === el.link ? "arl" : ""}`}>{el.icon}{el.name}</Link>
+            return group.map(el => {
+                if (el.action) return <div key={el.name}
+                                           className={`flex cursor-pointer items-center px-5 py-2 ${is3VC ? "rounded-xl" : ""} sidebar-item select-none ${el.disabled ? 'disabled' : ''}`}
+                                           onClick={el.handler}>{el.icon}{el.name}</div>
+                else return <Link href={el.link} key={el.name} onClick={() => {toggleMobile()}}
+                                  className={`flex items-center px-5 py-2  ${is3VC ? "rounded-xl" : ""}  sidebar-item select-none ${el.disabled ? 'disabled' : ''} ${router.asPath === el.link ? "arl" : ""}`}>{el.icon}{el.name}</Link>
+            })
 
-        })
+
     }
 
     return (
@@ -86,8 +90,9 @@ export default function Sidebar({account}) {
                 className="p-7 flex flex-col border-r border-app-bg-split  boxshadow text-app-white max-h-screen sticky top-0 hidden collap:flex">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
-                        <div className="flex">
-                            <img className="w-15 " src="/img/logo.png"/>
+                        <div className="flex items-center">
+                            <img className={is3VC ? "w-15" : `w-17 top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
+                            {!is3VC && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
                         </div>
                     </Link>
                     <ChangeNetwork/>

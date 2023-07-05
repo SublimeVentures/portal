@@ -2,7 +2,7 @@ import { NextSeo } from 'next-seo';
 import {is3VC, seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import {verifyID} from "@/lib/authHelpers";
-import Home3VC from "@/components/Home3VC";
+import Home3VC from "@/components/Home";
 import HomeCitCap from "@/components/HomeCitCap";
 
 export default function Home({account}) {

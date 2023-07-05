@@ -1,14 +1,12 @@
-import {useEffect} from "react";
 import IconMoney from "@/assets/svg/Money.svg";
-import VanillaTilt from "vanilla-tilt";
-import {useRef} from "react";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
 import IconClock from "@/assets/svg/Clock.svg";
 import RoundSpacer from "@/components/App/RoundSpacer";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import ReadIcon from "@/assets/svg/Read.svg";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 
 function amount(item){
     return item.invested;
@@ -45,13 +43,13 @@ export default function UserSummary({vault, account}) {
                 </div>
                 <div className="col-span-12 flex flex-col gap-10 custom:col-span-8 justify-center">
 
-                    <div className={"w-full flex gap-5 flex-col md:flex-row"}>
+                    <div className={"w-full flex gap-5 flex-col md:flex-row "}>
                         <Stat color={"gold"} title={"Projects Invested"} value={vault ? vault.length : 0}  icon={<IconStars className={"w-9"}/>}/>
                         <Stat color={"teal"} title={"Nearest Unlock"} value={'TBA'} icon={<IconClock className={"w-7"}/>}/>
                         <Stat color={"blue"} title={"Portfolio Size"} value={`$${portfolio}`} icon={<IconMoney className={"w-7"}/>}/>
                     </div>
                     <RoundSpacer title={'Vault'} subtitle={'All your investments in one place.'}
-                                 action={<RoundButton text={'Learn more'} isWide={true}
+                                 action={<UniButton type={ButtonTypes.BASE} text={'Learn more'} isWide={true}
                                                       size={'text-sm sm'}
                                                       handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}
                                                       icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}

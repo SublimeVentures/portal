@@ -224,8 +224,11 @@ async function feedNfts(address) {
 }
 
 async function checkUser(address) {
+    console.log("GANG :: checkUser START")
+
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type
+
     if (is3VC) {
         type = await isWhale(userNfts)
         if (!type) type = await isPartner(userNfts, enabledCollections)

@@ -1,4 +1,3 @@
-import {is3VC} from "@/lib/seoConfig";
 
 export default function About() {
   return (

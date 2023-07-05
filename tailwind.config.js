@@ -21,11 +21,11 @@ module.exports = {
         'slides': '#101d2d',
         'footer': '#090b0f',
         'navy': '#12151e',
-        'navy2': '#0e1118',//background
-        'navy-accent': '#161b26',
+        'app-bg': process.env.NEXT_PUBLIC_SITE === "3VC" ? '#0e1118' : "#000000",
+        'navy-accent': process.env.NEXT_PUBLIC_SITE === "3VC" ? '#161b26' : "rgba(0,0,0,0.2)",
         'app-bg-split': '#273031',
-        'app-success': '#b1e365',
-        'app-error': '#b92551',
+        'app-success':  process.env.NEXT_PUBLIC_SITE === "3VC" ? '#b1e365' : '#00c853',
+        'app-error': process.env.NEXT_PUBLIC_SITE === "3VC" ? '#b92551' :'#D31C5B',
         'app-success-dark': '#6ca21a',
         'app-success2': '#ace160',
         'app-accent': '#383a9b',
@@ -76,7 +76,7 @@ module.exports = {
         '14': 'repeat(14, minmax(0, 1fr))',
       },
       fontFamily: {
-        'body': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Montserrat', 'sans-serif'] : ['Roboto', 'sans-serif'],
+        'body': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Montserrat', 'sans-serif'] : ['Inter', 'sans-serif'],
         'accent': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Work Sans', 'sans-serif'] :  ['Roboto Mono', 'sans-serif'],
       },
       fontSize: {

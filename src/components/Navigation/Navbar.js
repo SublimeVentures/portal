@@ -48,10 +48,13 @@ export default function Navbar() {
     return (
         <div className="fixed w-full z-20 text-uppercase tracking-widest">
             <div
-                className={`flex flex-row items-center w-full py-7 px-10 navShadow  ${!isOnTop || isMobileOpen ? 'blurredBG' : ''}`}>
+                className={`
+                ${is3VC ? "py-7" : "py-2"} 
+                ${!isOnTop || isMobileOpen ? 'blurredBG' : ''} 
+                flex flex-row items-center w-full  px-10 navShadow`}>
                 <Link href="/" onClick={disableMobile}>
                     <div className="flex">
-                        <img className={is3VC ? "w-15" : `w-17 absolute top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"}/>
+                        <img className={is3VC ? "w-15" : `w-17 top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
                     </div>
                 </Link>
                 <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>
@@ -75,13 +78,9 @@ export default function Navbar() {
                 </div>
 
             </div>
-            {isMobileOpen && <div className={`absolute ${is3VC ? "blurred2" : "blurredBgColor"} flex flex-col w-full left-0 text-center py-5`}>
+            {isMobileOpen && <div className={`absolute ${is3VC ? "blurred2" : "blurredBgColor gap-5"} flex flex-col w-full left-0 text-center py-5`}>
                 {menu.map((el, i) => {
-                    if (!el.isExternal) return <Link href={el.link} key={i}
-                                                     className="py-5 cursor-pointer"
-                                                     onClick={disableMobile}>{el.name}</Link>
-                    else return <a href={el.link} key={i} target="_blank"
-                                   className="my-5 cursor-pointer underlineHover">{el.name}</a>
+                    return buildLinks(el,i)
                 })}
             </div>
             }

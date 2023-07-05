@@ -1,6 +1,7 @@
 import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
+import {is3VC} from "@/lib/seoConfig";
 
 
 export default function OfferDetailsTopBar({paramsBar}) {
@@ -15,7 +16,7 @@ export default function OfferDetailsTopBar({paramsBar}) {
                 </div>
                 <div>
                     <div className="text-4xl font-bold flex flex-1 glow">{name}</div>
-                    <div className="text-xl flex flex-1 mt-1 text-outline">#{genre}</div>
+                    <div className={`text-xl flex flex-1 mt-1 ${is3VC ? "text-outline" : "font-accent"}`}>#{genre}</div>
                 </div>
             </div>
 

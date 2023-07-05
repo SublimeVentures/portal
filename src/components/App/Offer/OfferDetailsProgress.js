@@ -1,11 +1,12 @@
 import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
+import {is3VC} from "@/lib/seoConfig";
 
 export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequired, isSoldOut}) {
     const tilt = useRef(null);
 
     useEffect(() => {
-        VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: 5});
+        VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: is3VC ? 5 : 0.2});
     }, []);
 
 
@@ -22,7 +23,7 @@ export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequire
                 </div>
                 {filled >= required ?
                     <div className="absolute right-1 ">
-                        <div className="">Filled {Number(filled).toFixed(2)}%</div>
+                        <div className="mr-1">Filled {Number(filled).toFixed(0)}%</div>
                     </div>
                     :
                     <div className="absolute w-full flex  ">

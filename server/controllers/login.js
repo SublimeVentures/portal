@@ -24,10 +24,14 @@ const validateLogin = async (message, signature) => {
         if (!validDomain) return false;
 
         const userSession = await checkUser(recoveredAddress)
-        // const userSession = await checkUser("0x2ddD0Ec103B7048ED0bc2537Ac6263B7FDec8Ed9")
         if (!userSession) return false;
-
         return {...{address: recoveredAddress}, ...userSession}
+        //
+        // const fakeAddress="0x34A66192320Db9e0e91e2E238eA956249dA1bF71"
+        // const userSession = await checkUser(fakeAddress)
+        // console.log("userSession",userSession)
+        // if (!userSession) return false;
+        // return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
         console.log("validateLogin", e)
         return null
