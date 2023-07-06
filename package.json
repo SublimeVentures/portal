@@ -39,6 +39,7 @@
     "os": "0.1.2",
     "pg": "8.10.0",
     "pg-hstore": "2.3.4",
+    "powerglitch": "2.3.2",
     "react": "18.2.0",
     "react-cookie": "4.1.1",
     "react-dom": "18.2.0",

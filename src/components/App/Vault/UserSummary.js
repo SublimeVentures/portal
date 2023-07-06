@@ -7,6 +7,8 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {is3VC} from "@/lib/seoConfig";
+import { PowerGlitch } from 'powerglitch'
 
 function amount(item){
     return item.invested;
@@ -18,6 +20,29 @@ function sum(prev, next){
 
 export default function UserSummary({vault, account}) {
     const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
+    if(!is3VC) {
+        PowerGlitch.glitch('.glitch', {
+            "playMode": "always",
+            "createContainers": true,
+            "hideOverflow": false,
+            "timing": {
+                "duration": 6000
+            },
+            "glitchTimeSpan": {
+                "start": 0.5,
+                "end": 0.7
+            },
+            "shake": false,
+            "slice": {
+                "count": 6,
+                "velocity": 15,
+                "minHeight": 0.02,
+                "maxHeight": 0.15,
+                "hueRotate": true
+            },
+            "pulse": false
+        })
+    }
 
     return (
         <>
@@ -26,18 +51,25 @@ export default function UserSummary({vault, account}) {
                     <div
                         className="flex flex-1 flex-col justify-center items-center">
                         <div className="relative  px-10 sm:-ml-10 custom:ml-0" >
-                            <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
-                                <lottie-player
-                                    autoplay
-                                    loop
-                                    style={{width: '400px'}}
-                                    mode="normal"
-                                    src="/static/lottie/avatar.json"
-                                />
-                            </div>
+                            {is3VC ? <>
+                                    <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
+                                        <lottie-player
+                                            autoplay
+                                            loop
+                                            style={{width: '400px'}}
+                                            mode="normal"
+                                            src="/static/lottie/avatar.json"
+                                        />
+                                    </div>
+                                    <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
+                                        <img className="flex rounded-full my-auto" src={account.img}/>
+                                    </div>
+                                </> : <>
                                 <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                    <img className="flex rounded-full my-auto" src={account.img}/>
+                                    <img className="flex rounded-full my-auto glitch" src={account.img}/>
                                 </div>
+                                </>}
+
                         </div>
                     </div>
                 </div>

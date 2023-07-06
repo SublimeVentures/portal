@@ -29,10 +29,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- extract style to 3vc / citcap
--- favicon
--- loading
--- animation color
+- favicon
+- fetch staking state
+- transcendance
+- old investments
+- citcapx
+- invest
 
 - =============
 - make offer button
@@ -54,14 +56,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - lootbox
 - promo codes
 
-- migrate citcap
-- -- transcendance
-- -- old investments
-- -- citcapx
+
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button
-- point investing wallet
 - connect discord to app
 - notifications
 

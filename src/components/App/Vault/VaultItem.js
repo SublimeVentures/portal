@@ -30,12 +30,11 @@ export default function VaultItem({item, cdn}) {
             </div>
             <div className="pt-1 text-xs text-gray text-left">Participated {participated}</div>
 
-            <div className="text-md pt-2 w-full flex ">Invested <span
-                className="ml-auto text-white">${normalized_invested}</span></div>
-            <div className={`${is3VC ? "" : "font-accent"} `}>
-                <div className="text-md w-full flex ">TGE profit <span className={`ml-auto ${tge !== 'TBA' ? 'text-app-success' : ' text-white'}`}>{tge}</span></div>
-                <div className="text-md w-full flex ">Vested <span className="ml-auto text-white">{vested}%</span></div>
-                <div className="text-md w-full flex ">Next unlock <span className="ml-auto text-white">{nextUnlock>0 ? nextUnlock : "TBA"}</span></div>
+            <div className={`${is3VC ? "" : "font-accent"} text-md pt-2`}>
+                <div className={"detailRow "}><p>Invested</p><hr className={"spacer"}/><p>${normalized_invested}</p></div>
+                <div className={"detailRow "}><p>TGE profit</p><hr className={"spacer"}/><p><span className={`${tge !== 'TBA' ? 'text-app-success' : ' text-white'}`}>{tge}</span></p></div>
+                <div className={"detailRow "}><p>Vested</p><hr className={"spacer"}/><p>{vested}%</p></div>
+                <div className={"detailRow "}><p>Next unlock</p><hr className={"spacer"}/><p>{nextUnlock>0 ? nextUnlock : "TBA"}</p></div>
             </div>
 
             <div
