@@ -75,7 +75,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         ownTranscendence = true
     }
 
-    const {isStaked, stakeSize} = await checkStaking(address)
+    const {isStaked, stakeSize, stakeDate} = await checkStaking(address)
     return {
         name: nftUsed.name,
         symbol: nftUsed.symbol,
@@ -86,7 +86,8 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         transcendence: ownTranscendence,
         stakeReq: S1_owned.length > 0 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2),
         isStaked,
-        stakeSize
+        stakeSize,
+        stakeDate
     }
 }
 
@@ -265,8 +266,9 @@ async function checkStaking (address) {
     });
 
     return {
-        isStaked: Number(jsonResponse[1])>0,
-        stakeSize: Number(getWeb3().utils.fromWei(jsonResponse[1]))
+        isStaked: Number(jsonResponse[0])>0,
+        stakeSize: Number(getWeb3().utils.fromWei(jsonResponse[0])),
+        stakeDate: Number(jsonResponse[1])
     }
 }
 

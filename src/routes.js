@@ -1,5 +1,3 @@
-import {updateSession_CitCapStaking} from "../server/controllers/login";
-
 const PAGE = {
     Landing: "/",
     Join: "/join",

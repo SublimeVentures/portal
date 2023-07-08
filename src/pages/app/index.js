@@ -5,7 +5,6 @@ import {fetchVault} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
 import Head from "next/head";
-// import UserSummary from "@/components/App/Vault/UserSummary";
 import {verifyID} from "@/lib/authHelpers";
 import routes from "@/routes";
 import dynamic from "next/dynamic";

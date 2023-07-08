@@ -4,7 +4,7 @@ import AllowanceStep from "@/components/App/BlockchainSteps/AllowanceStep";
 import {useState , useEffect} from "react";
 import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
 import TransactionStep, {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
-import {getButtonStep, getCitCapStakingFunction, getInvestFunction} from "@/components/App/BlockchainSteps/config";
+import {getButtonStep, getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const {stakeReq, account, refreshSession} = stakingModalProps
     const [accept, setAccept] = useState(false)
@@ -135,7 +135,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
     const content = () => {
         if(transaction) {
-            //todo: propmt data
+            refreshSession()
             return contentSuccess()
         } else {
             return contentStake()

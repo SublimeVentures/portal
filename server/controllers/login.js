@@ -46,7 +46,7 @@ const refreshAuth = async (userData, updatedSession) => {
 
     REFRESH_TOKENS[finalData[userIdentification]] = {
         refreshToken,
-        finalData,
+        userData: finalData,
     }
 
     return {
@@ -62,19 +62,19 @@ const logIn = async (req) => {
     return await refreshAuth(userData)
 }
 
-// const updateSession_CitCapStaking = async (user) => {
-//     try {
-//         const session = REFRESH_TOKENS[user]
-//         delete REFRESH_TOKENS[user];
-//         if (user !== session.userData[userIdentification]) {
-//             throw new Error("data not match")
-//         }
-//         const {isStaked, stakeSize} = await checkStaking(user)
-//         return await refreshAuth(session.userData, {isStaked, stakeSize})
-//     } catch (e) {
-//         return null
-//     }
-// }
+const updateSession_CitCapStaking = async (user) => {
+    try {
+        const session = REFRESH_TOKENS[user]
+        delete REFRESH_TOKENS[user];
+        if (user !== session.userData[userIdentification]) {
+            throw new Error("data not match")
+        }
+        const {isStaked, stakeSize, stakeDate} = await checkStaking(user)
+        return await refreshAuth(session.userData, {isStaked, stakeSize, stakeDate})
+    } catch (e) {
+        return null
+    }
+}
 
 const refreshToken = async (user) => {
     try {
@@ -99,4 +99,5 @@ module.exports = {
     logOut,
     refreshToken,
     logIn,
+    updateSession_CitCapStaking
 }

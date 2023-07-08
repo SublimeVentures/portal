@@ -6,17 +6,46 @@ import {IconButton} from "@/components/Button/IconButton";
 import {is3VC} from "@/lib/seoConfig";
 import dynamic from "next/dynamic";
 
-// import {updateSession_CitCapStaking} from "@/fetchers/auth.fetcher";
+import {updateSession_CitCapStaking} from "@/fetchers/auth.fetcher";
 const CitCapStakingModal = dynamic(() => import('@/components/App/Settings/CitCapStakingModal'), {ssr: false})
+
+
+function timeUntilNextUnstakeWindow(stakedAt) {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const SECONDS_IN_A_DAY = 24 * 60 * 60;
+    const PERIOD_LENGTH = 90 * SECONDS_IN_A_DAY; // 90 days in seconds
+    const UNSTAKING_WINDOW_LENGTH = 3 * SECONDS_IN_A_DAY; // 3 days in seconds
+
+
+    let timeSinceStaked = currentTimestamp - stakedAt;
+    let periodPosition = timeSinceStaked % PERIOD_LENGTH;
+
+    if (periodPosition >= (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH)) {
+        let timeUntilNextRestake = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
+        return {unstake:true, nextDate: timeUntilNextRestake}
+    } else {
+        let timeUntilUnstakeWindow = (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
+        return {unstake:false, nextDate: timeUntilUnstakeWindow.toFixed(0)}
+
+    }
+}
 
 export default function CitCapAccount({account}) {
     const [staked, setStaked] = useState(false);
+    const [stakeReq, setStakeReq] = useState(0);
+    const [stakeDate, setStakeDate] = useState(0);
     const [stakingModal, setStakingModal] = useState(false);
     const isTranscended = account.transcendence
-    //
-    // const refreshSession = async () => {
-    //     await updateSession_CitCapStaking()
-    // }
+
+    const unstakeDate = account?.stakeDate ? account.stakeDate : stakeDate
+    const {unstake, nextDate} = timeUntilNextUnstakeWindow(unstakeDate)
+
+    const refreshSession = async () => {
+        const {updatedSession} = await updateSession_CitCapStaking()
+        if(updatedSession.isStaked) setStaked(true)
+        if(updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize)
+        if(updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate)
+    }
 
     const stakingModalProps = {
         stakeReq: account.stakeReq,
@@ -49,17 +78,18 @@ export default function CitCapAccount({account}) {
                 <div className={`detailRow ${staked ? "text-app-success" :"text-app-error"}`}>
                     <p>Staked</p>
                     <hr className={"spacer"}/>
-                    {staked ? <p>({account.stakeSize} BYTES) TRUE</p> : <p>({account.stakeReq} BYTES) NO</p>}
+                    {staked ? <p>({account.stakeSize ? account.stakeSize : stakeReq} BYTES) TRUE</p> : <p>({account.stakeReq} BYTES) NO</p>}
                 </div>
-                {staked && <div className={"detailRow text-app-success"}><p>Next restake</p><hr className={"spacer"}/><p>27.02.2023</p></div>}
+                {staked && <div className={"detailRow text-app-success"}><p>Next restake</p><hr className={"spacer"}/>
+                     <p>in {nextDate} days</p>
+                </div>}
 
-                {!staked && <div className={" flex flex-1 justify-between mt-5"}>
+                {!staked || unstake && <div className={" flex flex-1 justify-between mt-5"}>
                     <UniButton type={ButtonTypes.BASE} text={'GET BYTES'}
                                handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}/>
-                    <UniButton type={ButtonTypes.BASE} text={'Stake'} state={"danger"}
+                    <UniButton type={ButtonTypes.BASE} text={unstake ? "Unstake" : 'Stake'} state={unstake ? "": "danger"}
                                handler={()=> {setStakingModal(true)}}/>
                 </div> }
-
             </div>
             <CitCapStakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={() => {setStakingModal(false)}}/>
 
