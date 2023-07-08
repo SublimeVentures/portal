@@ -44,4 +44,17 @@ router.delete('/login', async (req, res) => {
     return res.status(200).json({logout: true});
 });
 
+
+//UPDATE CITCAP SESSION
+// router.get('/login/stake', async (req, res) => {
+//     const {auth, user} = await verifyID(req, true)
+//     if (!auth) return res.status(401).json({});
+//
+//     const result = await updateSession_CitCapStaking(user)
+//     if (!result) return res.status(403).json({});
+//
+//     res.setHeader("Set-Cookie", result.cookie);
+//     return res.status(200).json(result.data);
+// });
+
 module.exports = {router}

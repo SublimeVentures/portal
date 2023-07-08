@@ -29,12 +29,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- favicon
 - fetch staking state
-- transcendance
+- lootbox list 
+- invest
 - old investments
 - citcapx
-- invest
+- check 3vc
+- zmniejszyć liczbę communities
+- upload stakers
+- change total staked + wyciagnij swoje
 
 - =============
 - make offer button
@@ -55,8 +58,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - lootbox
 - promo codes
-
-
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button

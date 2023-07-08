@@ -23,7 +23,6 @@ export function CitCapGlitchButton({text, state, handler, isLoading, isDisabled,
         return true
     }
 
-
     return (
         <div text={text} className={`
             ${state}

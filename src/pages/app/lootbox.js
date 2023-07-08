@@ -181,7 +181,7 @@ export const getServerSideProps = async({res}) => {
         return {
             redirect: {
                 permanent: true,
-                destination: `/app/auth?callbackUrl=${routes.App}`
+                destination: `/app/auth?callbackUrl=${routes.Lootbox}`
             }
         }
     }
@@ -190,7 +190,7 @@ export const getServerSideProps = async({res}) => {
         return {
             redirect: {
                 permanent: true,
-                destination: `/login?callbackUrl=${routes.App}`
+                destination: `/login?callbackUrl=${routes.Lootbox}`
             }
         }
     }

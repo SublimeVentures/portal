@@ -25,7 +25,7 @@ export default function App({Component, pageProps: {...pageProps}}) {
             {renderWithLayout(
                     <QueryClientProvider client={queryClient}>
                         <Hydrate state={pageProps.dehydratedState}>
-                            <Component  {...pageProps} />
+                            {/*<Component  {...pageProps} />*/}
                         </Hydrate>
                     </QueryClientProvider>
             )}

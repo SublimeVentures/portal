@@ -9,7 +9,7 @@ const {
     userIdentification
 } = require("../../src/lib/authHelpers");
 const {authTokenName} = require("../../src/lib/authHelpers");
-const {checkUser} = require("./loginProcess");
+const {checkUser, checkStaking} = require("./loginProcess");
 
 let REFRESH_TOKENS = {}
 
@@ -38,18 +38,19 @@ const validateLogin = async (message, signature) => {
     }
 }
 
-const refreshAuth = async (userData) => {
-    const accessToken = await generateToken(userData, '15m', JWT_ACCESS_SECRET_encode)
-    const refreshToken = await generateToken(userData.address, '12h', JWT_REFRESH_SECRET_encode)
+const refreshAuth = async (userData, updatedSession) => {
+    const finalData = {...userData, ...updatedSession}
+    const accessToken = await generateToken(finalData, '15m', JWT_ACCESS_SECRET_encode)
+    const refreshToken = await generateToken(finalData.address, '12h', JWT_REFRESH_SECRET_encode)
     const accessCookie = buildCookie(authTokenName, accessToken, 15 * 60 * 1000)
 
-    REFRESH_TOKENS[userData[userIdentification]] = {
+    REFRESH_TOKENS[finalData[userIdentification]] = {
         refreshToken,
-        userData,
+        finalData,
     }
 
     return {
-        data: {refreshToken},
+        data: {refreshToken, updatedSession},
         cookie: accessCookie
     }
 
@@ -60,6 +61,20 @@ const logIn = async (req) => {
     if(!userData)  return null;
     return await refreshAuth(userData)
 }
+
+// const updateSession_CitCapStaking = async (user) => {
+//     try {
+//         const session = REFRESH_TOKENS[user]
+//         delete REFRESH_TOKENS[user];
+//         if (user !== session.userData[userIdentification]) {
+//             throw new Error("data not match")
+//         }
+//         const {isStaked, stakeSize} = await checkStaking(user)
+//         return await refreshAuth(session.userData, {isStaked, stakeSize})
+//     } catch (e) {
+//         return null
+//     }
+// }
 
 const refreshToken = async (user) => {
     try {
@@ -83,5 +98,5 @@ const logOut = async (user) => {
 module.exports = {
     logOut,
     refreshToken,
-    logIn
+    logIn,
 }

@@ -1,0 +1,103 @@
+[
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "currencyId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "mint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "id_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "size_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "pledge",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "id_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "offerId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "unlockPledge",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "id_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currencyId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "unstake",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "identityStake",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "available",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "unlock",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

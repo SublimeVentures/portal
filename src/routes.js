@@ -1,3 +1,5 @@
+import {updateSession_CitCapStaking} from "../server/controllers/login";
+
 const PAGE = {
     Landing: "/",
     Join: "/join",
@@ -19,6 +21,7 @@ export const API = {
     offerList: "/api/offer",
     offerDetails: "/api/offer/",
     auth: "/api/auth/login",
+    updateSession_CitCapStaking: "/api/auth/login/stake",
     publicPartners: "/api/public/partners",
 }
 
