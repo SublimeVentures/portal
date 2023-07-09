@@ -1396,3 +1396,20 @@ body {
 
 
 }
+
+
+.select-menu {
+  --background: #000000;
+  --text: #fff;
+  --icon: #fff;
+  --icon-active: #3F4656;
+  --list: rgba(0,0,0,0.9);
+  --list-text: rgba(255,255,255,0.8);
+  --list-text-hover: #00c853;
+
+  &.blended {
+    --background: #101d2d;
+    --list: #1c2b3b;
+  }
+}
+

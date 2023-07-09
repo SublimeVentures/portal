@@ -1,5 +1,4 @@
 const Sentry = require("@sentry/nextjs");
-
 const {models} = require('../services/db/db.init');
 
 async function getUserInvestment(owner, offerId) {

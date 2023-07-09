@@ -48,7 +48,6 @@ export const updateSession_CitCapStaking = async () => {
                 }
             })
         saveToken(refreshTokenName, data.refreshToken)
-        console.log("updateSession_CitCapStaking",data)
         return data
     } catch (e) {
     }

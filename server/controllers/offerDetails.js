@@ -1,5 +1,4 @@
 const moment = require("moment");
-const {checkAcl} = require("./acl");
 const {getOfferDetails} = require("../queries/offers.query");
 const {getEnv} = require("../services/db/");
 const {getOfferRaise} = require("../queries/invest.query");

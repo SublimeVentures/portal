@@ -15,7 +15,6 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const isSoldOut = allocation?.alloFilled >= alloTotal || isLastPhase
 
     return (
-
         <>
             <div className={`offerWrap ${is3VC ? "rounded-xl" : "font-accent"}`}>
                 <div className="flex flex-col rounded-xl bg-navy-accent p-6 justify-start flex-1">

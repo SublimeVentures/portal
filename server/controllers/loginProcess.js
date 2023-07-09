@@ -61,7 +61,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     let nftUsed;
     let ownTranscendence = false
     if (isElite.length > 0) {
-        multi = isElite.length * S1_config.multiplier + 2 + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
+        multi = isElite.length * (S1_config.multiplier + 2) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
         nftUsed = S1.find(el => el.normalized_metadata.name === `Citizen #${isElite[0].id}`)
     } else {
         multi = S1.length * S1_config.multiplier + S2.length * S2_config.multiplier

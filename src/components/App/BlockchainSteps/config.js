@@ -2,12 +2,12 @@ import IconWait from "@/assets/svg/Wait.svg";
 import IconLoading from "@/assets/svg/LoadingCustom.svg";
 import IconSuccess from "@/assets/svg/Success.svg";
 import IconError from "@/assets/svg/Error.svg";
-import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
+import IdFacet from "../../../../abi/ThreeVCID.json";
 import CitCapStakingAbi from "../../../../abi/citcapStaking.abi.json";
-// import {ACLs}  from "@/lib/authHelpers";
 import {erc20ABI} from "wagmi";
 import { BigNumber } from 'ethers';
 import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
+import {ACLs} from "@/lib/authHelpers";
 
 
 export const Transaction = {
@@ -16,8 +16,6 @@ export const Transaction = {
     Executed: 2,
     Failed: 3,
 }
-
-
 
 export const getIcon = (status) => {
     switch (status) {

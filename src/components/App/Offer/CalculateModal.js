@@ -5,7 +5,7 @@ import {IconButton} from "@/components/Button/IconButton";
 import IconMinus from "@/assets/svg/MinusZ.svg";
 import IconPlus from "@/assets/svg/PlusZ.svg";
 import {ExternalLinks} from "@/routes";
-import Linker from "@/components/link"; "@/components/link";
+import Linker from "@/components/link";
 
 export default function CalculateModal({model, setter, calculateModalProps}) {
     const { maxAllocation, offer } = calculateModalProps
@@ -14,9 +14,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
     const [price, setPrice] = useState(0)
     const [multiplier, setMultiplier] = useState(20)
 
-
     const [statusAmount, setStatusAmount] = useState(false)
-
     const multiplierParsed = multiplier.toFixed(2)
 
 

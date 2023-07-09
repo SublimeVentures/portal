@@ -1,7 +1,5 @@
 import {usePrepareContractWrite, useContractWrite, useWaitForTransaction, usePrepareSendTransaction} from 'wagmi'
 import {useEffect} from "react";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 
 export const TransactionState = {
     Init: 0,
@@ -15,7 +13,6 @@ export default function TransactionStep({stepProps}) {
     const {
         config: configPrep,
         isSuccess: successPrep,
-        error:errorPrep,
         isError: isErrorPrep
     } = usePrepareContractWrite({
         address: transactionData.address,
@@ -49,24 +46,24 @@ export default function TransactionStep({stepProps}) {
         confirmations: 2,
         hash: txId?.hash,
     })
-
-
-    console.log("======" )
-    console.log("STATE :: isReady " , isReady)
-    console.log("STATE :: successPrep " , successPrep)
-    console.log("STATE :: isErrorPrep " , isErrorPrep)
-    console.log("STATE :: txId " , txId)
-    console.log("STATE :: isErrorWrite " , isErrorWrite)
-    console.log("STATE :: errorWrite " , errorWrite)
-    console.log("STATE :: isSuccessWrite " , isSuccessWrite)
-    console.log("STATE :: isLoadingWrite " , isLoadingWrite)
-    console.log("STATE :: transferConfirmed " , transferConfirmed)
-    console.log("STATE :: isErrorConfirmed " , isErrorConfirmed)
-    console.log("STATE :: errorConfirmed " , errorConfirmed)
-    console.log("STATE :: isSuccessConfirmed " , isSuccessConfirmed)
-    console.log("STATE :: isLoadingConfirmed " , isLoadingConfirmed)
-    console.log("STATE :: isFetchingConfirmed " , isFetchingConfirmed)
-    console.log("======" )
+    //
+    //
+    // console.log("======" )
+    // console.log("STATE :: isReady " , isReady)
+    // console.log("STATE :: successPrep " , successPrep)
+    // console.log("STATE :: isErrorPrep " , isErrorPrep)
+    // console.log("STATE :: txId " , txId)
+    // console.log("STATE :: isErrorWrite " , isErrorWrite)
+    // console.log("STATE :: errorWrite " , errorWrite)
+    // console.log("STATE :: isSuccessWrite " , isSuccessWrite)
+    // console.log("STATE :: isLoadingWrite " , isLoadingWrite)
+    // console.log("STATE :: transferConfirmed " , transferConfirmed)
+    // console.log("STATE :: isErrorConfirmed " , isErrorConfirmed)
+    // console.log("STATE :: errorConfirmed " , errorConfirmed)
+    // console.log("STATE :: isSuccessConfirmed " , isSuccessConfirmed)
+    // console.log("STATE :: isLoadingConfirmed " , isLoadingConfirmed)
+    // console.log("STATE :: isFetchingConfirmed " , isFetchingConfirmed)
+    // console.log("======" )
 
 
     const disabledButton = !isReady || isLoadingWrite || isLoadingConfirmed || isFetchingConfirmed

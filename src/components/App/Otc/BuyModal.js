@@ -61,7 +61,7 @@ export default function BuyModal({model, setter, props}) {
     }
 
     useEffect(()=> {
-        console.log("ERROR: jest")
+        // console.log("ERROR: jest")
         if(errors) {
             setProcessing(false)
         }
@@ -104,7 +104,7 @@ export default function BuyModal({model, setter, props}) {
 
     const isTransactionPrevStep = allowancePrevStep && stepAllowance
     const isTransactionReady = isAllowanceReady && stepAllowance
-    console.log("RECHANGE - isTransactionReady", isTransactionReady)
+    // console.log("RECHANGE - isTransactionReady", isTransactionReady)
 
     const stepTransactProps = {
         prevStep: isTransactionPrevStep,

@@ -84,7 +84,6 @@ const verifyTokenRefresh = async (req) =>{
             return {user:session?.user, auth: true}
         } catch (e) {
             if(e.code === "ERR_JWT_EXPIRED ") return {auth: false, exists: !!token}
-            console.log("AH :: verifyTokenRefresh - FAILED" )
         }
     }
     return {auth: false}

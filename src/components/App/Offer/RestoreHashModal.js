@@ -1,7 +1,8 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {RoundButton} from "@/components/Button/RoundButton";
 import moment from "moment";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {is3VC} from "@/lib/seoConfig";
 
 export default function RestoreHashModal({model, setter, restoreModalProps}) {
     const { expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps
@@ -34,11 +35,11 @@ export default function RestoreHashModal({model, setter, restoreModalProps}) {
                     />
                 </div>
 
-               <div className={"flex flex-col gap-5 flex-1 mt-10  fullWidth"}>
-                   <RoundButton text={'Restore'} isWide={true} isPrimary={true} zoom={1.1} size={'text-sm sm'}
-                                handler={bookingRestore}/>
-                   <RoundButton text={'New Booking'} isWide={true} zoom={1.1} size={'text-sm sm'}
-                               handler={bookingCreateNew}/>
+               <div className={`flex ${is3VC ? "" : "items-center"} flex-col gap-5 flex-1 mt-10  fullWidth`}>
+                   <UniButton type={ButtonTypes.BASE} text={'Restore'} state={"danger"} isWide={true} isPrimary={true} zoom={1.1} size={'text-sm sm'}
+                              handler={bookingRestore}/>
+                   <UniButton type={ButtonTypes.BASE} text={'New Booking'} state={""} isWide={true} zoom={1.1} size={'text-sm sm'}
+                              handler={bookingCreateNew}/>
                </div>
             </div>
         )

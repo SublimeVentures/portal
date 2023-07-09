@@ -21,6 +21,7 @@ import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import Image from "next/image";
+import {is3VC} from "@/lib/seoConfig";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -58,19 +59,17 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
     const [showInputInfo, setShowInputInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
-    let [isError, setIsError] = useState({})
-
+    const [isError, setIsError] = useState({})
 
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const {ACL, multi} = account
     const {id, alloTotal, isPaused} = offer
 
-
-
-
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
+
+    const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
 
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
@@ -232,7 +231,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setIsAllocationOk(true)
             return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
         } else {
-            if(investmentAmount % 100 > 0) {
+            if(investmentAmount % 1 > 0) {//todo: hubert change % 100
                 setIsAllocationOk(true)
                 return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
             }
@@ -269,9 +268,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className="flex flex-1 flex-col items-center justify-center ">
-
-
+        <div className={`flex flex-1 flex-col items-center justify-center ${is3VC ? "" : "font-accent"}`}>
             <div className="mt-15 lg:mt-auto">
                 <div className="currency-input-group relative">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
@@ -330,9 +327,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
                     <UniButton
                         type={ButtonTypes.BASE}
-                        text={isFilled ? 'Processing...' : currentPhase.action}
+                        text={buttonText}
                         isPrimary={true}
-                        state={"inverted secondary"}
+                        state={"success"}
                         showParticles={true}
                         isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
                         handler={makeInvestment}

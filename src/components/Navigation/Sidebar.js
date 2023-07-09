@@ -13,6 +13,7 @@ import IconLogout from "@/assets/svg/Logout.svg";
 import IconSetting from "@/assets/svg/Setting.svg";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import IconNT from "@/assets/svg/NT.svg";
+import IconGrowth from "@/assets/svg/Seed.svg";
 import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
 import {logOut} from "@/fetchers/auth.fetcher";
@@ -56,6 +57,7 @@ export default function Sidebar({account}) {
         groupUser: [
             {name: 'Vault', link: PAGE.App, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
+            {name: 'Accelerator', link: PAGE.Accelerator, icon: is3VC ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
             {name: 'OTC', link: PAGE.OTC, disabled:true, icon: <IconExchange className="w-8 mr-3"/>},
             {name: 'Lootbox', link: PAGE.Lootbox, icon: <IconMysteryBox className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
@@ -70,9 +72,6 @@ export default function Sidebar({account}) {
         ]
     }
 
-    if(!is3VC) {
-        menu.groupUser.splice(2, 0,{name: 'Accelerator', link: PAGE.Accelerator, icon: <IconNT className="w-8 mr-3"/>})
-    }
 
     const generateLink = (group) => {
             return group.map(el => {

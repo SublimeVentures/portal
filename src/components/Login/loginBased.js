@@ -68,7 +68,6 @@ export default function LoginBased({}) {
             }
 
         } catch (error) {
-            console.log("loginErr", error, error.message)
             setMessageSigned(false)
             setErrorMsg(error.message)
             setIsLoginLoading(false)

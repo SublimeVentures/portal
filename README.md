@@ -27,15 +27,19 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-
+https://blockeater.herokuapp.com/v3rify
 ## ToDo
-- invest flow
+- citcap limit per person
+- linker wszedzie
+- sentry do blockeatera
+- check 3vc
 - old investments
 - lootbox list
-- check 3vc
 - zmniejszyć liczbę communities
 - upload stakers
 - change total staked + wyciagnij swoje
+- RR unmount
+- media rearrange
 
 - =============
 - make offer button
@@ -55,7 +59,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - reassign allocation
 - lootbox
 - promo codes
-- ułożenie media slota + fullscreen
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button

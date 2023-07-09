@@ -31,7 +31,7 @@ export default function MakeOfferInteract({props}) {
 
 
     const checkAllowanceEnabled = isBuyer && !hash && processing
-    console.log("=============== BEGINNING ")
+    // console.log("=============== BEGINNING ")
     const {
         isLoading: isLoadingAllowance,
         isFetching: isFetchingAllowance,

@@ -51,7 +51,6 @@ export default function LoginCitCap({}) {
             }
 
         } catch (error) {
-            console.log("loginErr", error, error.message)
             setMessageSigned(false)
             setErrorMsg(error.message)
             setIsLoginLoading(false)

@@ -9,7 +9,7 @@ export const CitCaGlitchButtonState = {
 
 
 
-export function CitCapGlitchButton({text, state, handler, isLoading, isDisabled, icon}) {
+export function CitCapGlitchButton({text, state, handler, isLoading, isDisabled, icon, isFullwidth}) {
     const [isExecuting, setExecuting] = useState(false)
 
     const click = async () => {

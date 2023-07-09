@@ -5,6 +5,7 @@ import {useState , useEffect} from "react";
 import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
 import TransactionStep, {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 import {getButtonStep, getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
+import {sleeper} from "@/lib/utils";
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const {stakeReq, account, refreshSession} = stakingModalProps
     const [accept, setAccept] = useState(false)
@@ -65,11 +66,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         }
     }, [transferReady])
 
-    function sleeper(ms) {
-        return function(x) {
-            return new Promise(resolve => setTimeout(() => resolve(x), ms));
-        };
-    }
+
 
     const run = async () => {
         setAccept(false);
@@ -77,22 +74,21 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         await sleeper(500)
         setAccept(true);
         setTrigger(true)
-
     }
 
 
     const title = () => {
         return (
-            <div className={"font-accent font-light"}>
+            <>
                 Stake <span className="text-app-error">BYTES</span>
-            </div>
+            </>
         )
     }
 
 
     const contentStake = () => {
         return (
-            <div className={"font-accent min-w-[300px]"}>
+            <div className={"min-w-[300px]"}>
                    <div>
                        To partake in Citadel's investments, every Citizen must stake BYTES.
                    </div>
@@ -118,7 +114,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
     const contentSuccess = () => {
         return (
-            <div className={"font-accent min-w-[300px]"}>
+            <div className={"min-w-[300px]"}>
                    <div className={"text-app-success"}>
                        BYTES staked successfully.
                    </div>

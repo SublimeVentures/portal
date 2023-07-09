@@ -57,7 +57,6 @@ export default function CitCapAccount({account}) {
         setStaked(account.isStaked)
     }, [])
 
-    console.log("account",account)
     return (
         <div className={`relative offerWrap flex flex-1 max-w-[600px]`}>
             <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>

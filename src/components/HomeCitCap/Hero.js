@@ -47,7 +47,6 @@ export default function Hero({account}) {
             }
 
         } catch (error) {
-            console.log("ee", error, error.message)
             setMessageSigned(false)
             setErrorMsg(error.message)
             setIsLoginLoading(false)

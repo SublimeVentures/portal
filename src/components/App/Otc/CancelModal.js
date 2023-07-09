@@ -49,7 +49,7 @@ export default function CancelModal({model, setter, props}) {
         }
         setter()
         setTimeout(() => {
-            console.log("USTAWIAM :: success", false)
+            // console.log("USTAWIAM :: success", false)
             setSuccess(false)
             setProcessing(false)
         }, 1000);
@@ -63,7 +63,7 @@ export default function CancelModal({model, setter, props}) {
 
     useEffect(()=> {
         if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) {
-            console.log("USTAWIAM :: success", true)
+            // console.log("USTAWIAM :: success", true)
             setSuccess(true)
             setProcessing(false)
         }

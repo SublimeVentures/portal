@@ -66,7 +66,6 @@ export default function AllowanceStep({stepProps}) {
     }
 
     useEffect(()=>{
-        console.log("isReady", isReady)
         if(isSuccessConfig && !isFinished && isReady) {
                     if(!isEnoughAllowance) {
                         setAllowance(Transaction.Failed)
@@ -75,7 +74,6 @@ export default function AllowanceStep({stepProps}) {
     }, [isSuccessConfig, allowance, isReady])
 
     useEffect(()=>{
-        console.log("ERROR THROW ", isErrorWrite || isErrorPending || !isEnoughAllowance)
         setFinished(isEnoughAllowance)
     }, [isErrorWrite, isErrorPending, isEnoughAllowance])
 
