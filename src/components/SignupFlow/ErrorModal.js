@@ -34,7 +34,7 @@ export default function ErrorModal({model, setter}) {
                         <div className={"text-app-error"}>Neo Tokyo Citizen NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS_CITCAP}/>
+                        <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
                     </div>
                 </>
         )

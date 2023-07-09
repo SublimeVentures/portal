@@ -98,7 +98,7 @@ export default function Sidebar({account}) {
                     <ChangeAddress account={account}/>
 
                 </div>
-                <nav className="flex flex-col pt-10 flex-1 font-accent text-md font-medium">
+                <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${is3VC ? "font-medium" : ""}`}>
                     <div className="flex flex-col gap-2">
                         {generateLink(menu.groupUser)}
                     </div>
@@ -114,8 +114,10 @@ export default function Sidebar({account}) {
                 className={`p-5 flex blurredBgColor flex flex-1 -mt-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? '!bg-navy-accent' : ''}`}>
                 <div className="mt-1 flex flex-row flex-1">
                     <Link href={PAGE.App}>
-                        <div className="flex">
-                            <img className="w-15 " src="/img/logo.png"/>
+
+                        <div className={`flex items-center ${is3VC ? "" : "absolute top-2"}`}>
+                            <img className={is3VC ? "w-15" : `w-17 top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
+                            {!is3VC && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
                         </div>
                     </Link>
                     <div className="flex flex-1 justify-end hamburger">
@@ -146,7 +148,7 @@ export default function Sidebar({account}) {
                     leaveTo="opacity-0"
                 >
                     <div
-                        className="blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest">
+                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${is3VC ? "font-medium" : ""}`}>
                         <div className="flex flex-col gap-2">
                             {generateLink(menu.groupUser)}
 

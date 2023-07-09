@@ -37,7 +37,7 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
 
     const content = () => {
         return (<> <div className="pb-10 font-accent">
-            Don't want to connect your cold wallet? You can delegate access! <Linker url={is3VC ? ExternalLinks.DELEGATED_ACCESS : ExternalLinks.DELEGATED_ACCESS_CITCAP} />
+            Don't want to connect your cold wallet? You can delegate access! <Linker url={ExternalLinks.DELEGATED_ACCESS} />
         </div>
             <div className="flex flex-col gap-5 fullWidth">
                 {connectors.map((connector) => (

@@ -37,14 +37,14 @@ export default function VaultItem({item, cdn}) {
                 <div className={"detailRow "}><p>Next unlock</p><hr className={"spacer"}/><p>{nextUnlock>0 ? nextUnlock : "TBA"}</p></div>
             </div>
 
-            <div
-                className="moreVault opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">
-                <div className="flex items-center justify-center moreVaultIcon">
-                    <div className="icon z-10 w-15 h-15 cursor-pointer">
-                        <IconMore className="w-8"/>
-                    </div>
-                </div>
-            </div>
+            {/*<div*/}
+            {/*    className="moreVault opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">*/}
+            {/*    <div className="flex items-center justify-center moreVaultIcon">*/}
+            {/*        <div className="icon z-10 w-15 h-15 cursor-pointer">*/}
+            {/*            <IconMore className="w-8"/>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </div>
 
         <div className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex ${is3VC ? "" : "border-l border-app-bg-split"} `}  ref={tilt}>

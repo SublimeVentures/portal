@@ -29,17 +29,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 https://blockeater.herokuapp.com/v3rify
 ## ToDo
-- citcap limit per person
-- linker wszedzie
-- sentry do blockeatera
 - check 3vc
+- zmniejszyć liczbę communities
 - old investments
 - lootbox list
-- zmniejszyć liczbę communities
 - upload stakers
 - change total staked + wyciagnij swoje
-- RR unmount
+
 - media rearrange
+- RR unmount
+- investment calendar google
+- 100 usd back
 
 - =============
 - make offer button
@@ -65,22 +65,20 @@ https://blockeater.herokuapp.com/v3rify
 - connect discord to app
 - notifications
 
-- new investment update for api
-- gtag
-- whale deposit/ withdraw features in settings
-- whale page
 - invest from stake
 - update data / refeed cach on url call
 - w vault osobna kategoria z aktywnymi i nowymi updetami
 - lazy loading na ofertach i vault
 - onboarding whales
 
-
 - find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
 - -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
 - delegated -> invest to vault or hot
 - referral system
 
+- new investment update for api
+- whale deposit/ withdraw features in settings
+- whale page
 
 # 1. Add env variables
 - whaleId

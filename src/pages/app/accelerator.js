@@ -6,15 +6,10 @@ import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import Head from "next/head";
 import Stat from "@/components/Stat";
-import IconNetwork from "@/assets/svg/Network.svg";
 import IconStars from "@/assets/svg/Stars.svg";
-import IconMoney from "@/assets/svg/Money.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
-import routes, {ExternalLinks} from "@/routes";
+import routes from "@/routes";
 import {getCopy, is3VC} from "@/lib/seoConfig";
-import {IconButton} from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
-import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 
 export default function AppAccelerator({account}) {
     const ACL = account.ACL
@@ -57,7 +52,7 @@ export default function AppAccelerator({account}) {
         <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
             <div className={"flex flex-col justify-center"}>
                 <div className={`glow font-extrabold text-3xl ${is3VC ? "" : "font-accent uppercase font-light"}`}>Accelerator</div>
-                <div className={"text-outline text-md mt-2 white min-w-[250px]"}>Hyper-promising projects that are outside of Citizen Capital investment thesis.</div>
+                <div className={"text-outline text-md mt-2 white min-w-[250px]"}>Hyper-promising projects that are outside of {getCopy("NAME")} investment thesis.</div>
             </div>
             <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
                 <div className={"w-full flex gap-5 flex-col md:flex-row xl:max-w-[300px] xl:ml-auto"}>
@@ -72,7 +67,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>Our involvement</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        <span class="font-bold text-app-error">Citizen Capital</span> will provide leading projects strategic advisory, a compliant investment structure and a trusted platform to grow and seek investment. Projects will be responsible for providing information, promotion, AMAs, pitch decks and answering questions.
+                        <span className="font-bold text-app-error">{getCopy("NAME")}</span> will provide leading projects strategic advisory, a compliant investment structure and a trusted platform to grow and seek investment. Projects will be responsible for providing information, promotion, AMAs, pitch decks and answering questions.
                     </div>
                 </div>
 
@@ -83,7 +78,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>Due Diligence</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        As <span class="text-app-error font-bold">CitCapX</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span class="text-app-error font-bold">Citizen Capital cannot make any representations regarding the suitability of projects that are part of the CitCapX accelerator</span>. As always, Citizens must DYOR.
+                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span class="text-app-error font-bold">Citizen Capital cannot make any representations regarding the suitability of projects that are part of the {getCopy("ACCELERATOR")} accelerator</span>. As always, Citizens must DYOR.
 
                     </div>
                 </div>
@@ -92,10 +87,10 @@ export default function AppAccelerator({account}) {
             <div className={`relative offerWrap flex flex-1`}>
                 <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
                     <div className={"flex flex-row items-center pb-5 justify-between "}>
-                        <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>CitCapX</div>
+                        <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>{getCopy("ACCELERATOR")}</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        Citizen Capital’s mission is to <span className="text-app-error font-bold">empower the builders of NeoTokyo</span>. We are constantly innovating and are launching CitCapX to support top-tier Citizen-led projects and provide citizens a trusted, compliant way to invest in the <span class="text-app-error font-bold">best NeoTokyo Projects</span>.
+                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {is3VC ? "web3" : "NeoTokyo"}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span class="text-app-error font-bold">best {is3VC ? "projects" :"NeoTokyo Projects"}</span>.
 
                     </div>
                 </div>

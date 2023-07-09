@@ -169,7 +169,7 @@ export default function AppLootbox({account}) {
                     <UniButton type={ButtonTypes.BASE} text={'BUY'} isDisabled={true}
                                handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}/>
                 </div>
-                <div className={"absolute bottom-5"}><Linker url={is3VC ? ExternalLinks.LOOTBOX : ExternalLinks.LOOTBOX_CITCAP } text={"Learn more"}/></div>
+                <div className={"absolute bottom-5"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 
 
             </div>

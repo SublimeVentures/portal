@@ -12,7 +12,6 @@ export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequire
 
     const filled = isSoldOut ? (alloFilled >90 ? 100 : alloFilled) : (alloFilled ? 100*alloFilled/alloTotal : 0)
     const required = alloRequired ? 100*alloRequired/alloTotal :0
-
     return (
         <>
             <div className="rounded-2xl h-[50px]  w-full flex flex-row items-center relative select-none" ref={tilt}>

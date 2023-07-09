@@ -180,7 +180,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                     <UniButton type={ButtonTypes.BASE} text={buttonText} state={"danger"} isDisabled={!liquidity || isTransactionLoading !== TransactionState.Init}
                                handler={()=> { run() }}/>
                 </div>
-                <div>Booked allocation will be released when the timer runs to zero. <Linker url={is3VC ? ExternalLinks.BOOKING_SYSTEM : ExternalLinks.BOOKING_SYSTEM}/>
+                <div>Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>
             </div>
         )

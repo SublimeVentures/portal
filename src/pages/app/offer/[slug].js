@@ -51,7 +51,7 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
-    const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
+    const {data: userAllocation, refetch: refetchUserAllocation, isSuccess: isSuccessUserAllocation} = useQuery({
             queryKey: ["userAllocation", offerData?.offer?.id, address],
             queryFn: () => fetchUserInvestment(offerData?.offer?.id),
             refetchOnMount: false,
@@ -85,6 +85,7 @@ export const AppOfferDetails = ({account}) => {
         currencies: offerData?.currencies,
         refetchUserAllocation,
         refetchAllocation,
+        userAllocation,
         allocation,
         nextPhase,
         currentPhase,

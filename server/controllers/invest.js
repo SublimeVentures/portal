@@ -19,7 +19,6 @@ async function reserveExpire(user, req) {
     }
 }
 
-
 async function reserveSpot(user, req) {
     const {ACL, address, id} = user
     const offerId = Number(req.query.id)

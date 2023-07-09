@@ -85,7 +85,6 @@ export default function LiquidityStep({stepProps}) {
             </div>
         </div>
     }
-
     if (isFinished && isEnoughLiquidity) return prepareRow(Transaction.Executed)
     if (!isReady) return prepareRow(Transaction.Waiting)
     if (balanceFed && !isEnoughLiquidity) return prepareRow(Transaction.Failed)

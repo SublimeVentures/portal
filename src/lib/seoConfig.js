@@ -5,9 +5,12 @@ export const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
 const copy = {
     true: {
         NAME: "3VC",
+        ACCELERATOR: "Accelerator",
     },
     false: {
         NAME: "Citizen Capital",
+        ACCELERATOR: "CitCapX",
+
     }
 }
 

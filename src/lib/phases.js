@@ -1,8 +1,9 @@
 const moment = require( 'moment' );
+const {ACLs} = require("@/lib/authHelpers");
 
 function phases (ACL, offer) {
     let state
-    if(ACL===0) {
+    if(ACL===ACLs.Whale) {
         state=  parseWhale(offer)
     } else if(!offer.isPhased) {
         state= parseRegular(offer)
@@ -63,7 +64,7 @@ function parseRegular(offer) {
 }
 
 function parseMaxAllocation (ACL, multi, offer, phase, allocationLeft) {
-    if(ACL === 0) {
+    if(ACL === ACLs.Whale) {
         return offer.alloMax < allocationLeft ? offer.alloMax : allocationLeft
     } else {
         const partnerAllocation = offer.alloMin * multi
@@ -77,4 +78,13 @@ function parseMaxAllocation (ACL, multi, offer, phase, allocationLeft) {
     }
 }
 
-module.exports = { phases, parseMaxAllocation }
+function checkAllocationLeft (ACL, userAllocation, userMaxAllocation, offer) {
+    if(ACL === ACLs.Whale) return {status:false, amount:0}
+    if(userAllocation !== undefined) {
+        if(userAllocation >= userMaxAllocation * (100-offer.tax)/100) return {status: true, amount:0}
+        else return {status:false, amount: (userMaxAllocation * (100-offer.tax)/100 - userAllocation) / ((100-offer.tax)/100)}
+    } else {
+        return {status:false, amount: userAllocation}
+    }
+}
+module.exports = { phases, parseMaxAllocation, checkAllocationLeft }

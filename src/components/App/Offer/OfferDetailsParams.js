@@ -11,7 +11,6 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_my = Number(userAllocation)?.toLocaleString()
 
-
     const isSoldOut = allocation?.alloFilled >= alloTotal || isLastPhase
 
     return (

@@ -48,9 +48,10 @@ export default function AppOffer({account}) {
         )
     }
 
+    const title = `Opportunities - ${getCopy("NAME")}`
     return <>
         <Head>
-            <title>Opportunities - {getCopy("NAME")}</title>
+            <title>{title}</title>
         </Head>
         <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
             <div className={"flex flex-col justify-center"}>
