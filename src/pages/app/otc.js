@@ -16,6 +16,7 @@ import OtcMarkets from "@/components/App/Otc/Markets";
 import OtcOffers from "@/components/App/Otc/Offers";
 import {ACLs, verifyID} from "@/lib/authHelpers";
 import routes from "@/routes";
+import {getCopy} from "@/lib/seoConfig";
 
 
 export default function AppOtc({account}) {
@@ -108,7 +109,7 @@ export default function AppOtc({account}) {
     return (
         <>
             <Head>
-                <title>OTC Market - 3VC</title>
+                <title>OTC Market - {getCopy("NAME")}</title>
             </Head>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex">

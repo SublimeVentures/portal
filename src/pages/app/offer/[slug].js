@@ -16,7 +16,7 @@ import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import routes from "@/routes";
-import {is3VC} from "@/lib/seoConfig";
+import {getCopy, is3VC} from "@/lib/seoConfig";
 
 
 export const AppOfferDetails = ({account}) => {
@@ -40,6 +40,7 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
+
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],
             queryFn: () => fetchOfferAllocation(offerData?.offer?.id),
@@ -60,7 +61,6 @@ export const AppOfferDetails = ({account}) => {
     );
 
 
-    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - 3VC`
 
     const feedPhases = () => {
         if(!offerData?.offer) return
@@ -129,6 +129,7 @@ export const AppOfferDetails = ({account}) => {
         feedPhases()
     }, [offerData])
 
+    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - ${getCopy("NAME")}`
     return (
         <>
             <NextSeo title={pageTitle}/>

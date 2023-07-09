@@ -32,7 +32,17 @@
 .shakeBtn.inverted {
     background: white;
     color: #000;
+}
+.shakeBtn.inverted.primary {
+    background: #D31C5B;
+    border: 1px solid #D31C5B;
+    color: white;
+}
+.shakeBtn.inverted.secondary {
+    background: #00c853;
+    border: 1px solid #00c853;
 
+    color: white;
 }
 
 .shakeBtn.large {

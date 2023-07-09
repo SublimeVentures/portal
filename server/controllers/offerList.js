@@ -1,9 +1,14 @@
 const moment = require('moment');
-const {checkAcl} = require("./acl");
 const {getEnv} = require("../services/db");
 const {getOfferList} = require("../queries/offers.query");
 const { ACLs} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
+
+const OfferAccess = {
+    Whales: 0,
+    Everyone: 1,
+    NeoTokyo: 2,
+}
 
 async function getParamOfferList(user) {
     const {ACL, address} = user
@@ -18,6 +23,10 @@ async function getParamOfferList(user) {
     switch (ACL) {
         case ACLs.Whale: {
             response.offers = getOfferListWhale(offers)
+            break;
+        }
+        case ACLs.NeoTokyo: {
+            response.offers = offerListNeoTokyo(offers);
             break;
         }
         case ACLs.PartnerInjected: {
@@ -51,11 +60,24 @@ async function offerListInjectedPartner(offers, address) {
     }
 
     return offerListPartner(allowedOffers)
-
-
 }
 
 function offerListPartner(data) {
+    let offerList = []
+    data.forEach(el => {
+        if(el.access !== OfferAccess.NeoTokyo) {
+            if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
+            else {
+                if (el.accessPartnerDate < moment.utc()) {
+                    offerList.push(fillPartnerData(el))
+                }
+            }
+        }
+    })
+    return offerList
+}
+
+function offerListNeoTokyo(data) {
     let offerList = []
     data.forEach(el => {
         if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
@@ -76,6 +98,7 @@ function fillPartnerData(offer) {
         genre: offer.genre,
         slug: offer.slug,
         ticker: offer.ticker,
+        accelerator: offer.isCitCapX,
         d_open: offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay),
         d_close: offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
 
@@ -89,9 +112,10 @@ function fillWhaleData(offer) {
         genre: offer.genre,
         slug: offer.slug,
         ticker: offer.ticker,
+        accelerator: offer.isCitCapX,
         d_open: offer.d_open,
         d_close: offer.d_close,
     }
 }
 
-module.exports = {getParamOfferList}
+module.exports = {getParamOfferList, OfferAccess}

@@ -19,6 +19,8 @@ import {Transition} from "@headlessui/react";
 import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import Image from "next/image";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -320,22 +322,54 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
             <div className="flex flex-row flex-wrap justify-center gap-2 py-10 px-2">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
-                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.action} isPrimary={true}
-                                 showParticles={true}
-                                 isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
-                                 handler={makeInvestment}
-                                 size={'text-sm sm'} icon={getInvestmentButtonIcon()}/>
+                    {/*<RoundButton text={isFilled ? 'Processing...' : currentPhase.action} isPrimary={true}*/}
+                    {/*             showParticles={true}*/}
+                    {/*             isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}*/}
+                    {/*             handler={makeInvestment}*/}
+                    {/*             size={'text-sm sm'} icon={getInvestmentButtonIcon()}/>*/}
+
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={isFilled ? 'Processing...' : currentPhase.action}
+                        isPrimary={true}
+                        state={"inverted secondary"}
+                        showParticles={true}
+                        isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
+                        handler={makeInvestment}
+                        size={'text-sm sm'} icon={getInvestmentButtonIcon()}
+                    />
+
+
                 </div>
                 <div className="hidden sinvest:flex">
-                    <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}
-                                 handler={() => setCalculateModal(true)}
-                                 icon={<IconCalculator className={ButtonIconSize.hero}/>}/>
+                    {/*<RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}*/}
+                    {/*             handler={() => setCalculateModal(true)}*/}
+                    {/*             icon={<IconCalculator className={ButtonIconSize.hero}/>}/>*/}
+
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={'Calculate'}
+                        isWide={true}
+                        zoom={1.1}
+                        size={'text-sm sm'}
+                        handler={() => setCalculateModal(true)}
+                        icon={<IconCalculator className={ButtonIconSize.hero}/>}
+                    />
 
                 </div>
                 <div className="flex sinvest:hidden">
-                    <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                 handler={() => setCalculateModal(true)}
-                                 icon={<IconCalculator className={ButtonIconSize.small}/>}/>
+                    {/*<RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}*/}
+                    {/*             handler={() => setCalculateModal(true)}*/}
+                    {/*             icon={<IconCalculator className={ButtonIconSize.small}/>}/>*/}
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={'Calculate'}
+                        isWide={true}
+                        zoom={1.1}
+                        size={'text-sm icon'}
+                        handler={() => setCalculateModal(true)}
+                        icon={<IconCalculator className={ButtonIconSize.small}/>}
+                    />
                 </div>
             </div>
 

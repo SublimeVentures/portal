@@ -6,6 +6,7 @@ const PAGE = {
     App: "/app",
     // Vault: "/app/vault",
     Opportunities: "/app/offer",
+    Accelerator: "/app/accelerator",
     OTC: "/app/otc",
     Notifs: "/app/latest",
     Lootbox: "/app/lootbox",

@@ -5,6 +5,7 @@ const {getEnv} = require("../services/db/");
 const {getOfferRaise} = require("../queries/invest.query");
 const {ACLs} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
+const {OfferAccess} = require("./offerList");
 
 
 async function getParamOfferDetails(user, req) {
@@ -13,6 +14,8 @@ async function getParamOfferDetails(user, req) {
     const offer = await getOfferDetails(req.params.slug);
     if (!offer) return {notExist: true}
     let template = {
+        whale: getEnv().whaleId,
+        cdn: getEnv().cdn,
         id: offer.id,
         alloMin: offer.alloMin,
         isPaused: offer.isPaused,
@@ -35,8 +38,7 @@ async function getParamOfferDetails(user, req) {
         slug: offer.slug,
         vault: offer.vault,
         media: offer.media,
-        whale: getEnv().whaleId,
-        cdn: getEnv().cdn,
+        isCitCapX: offer.isCitCapX,
         d_open: null,
         d_close: null,
         alloTotal: null,
@@ -55,6 +57,10 @@ async function getParamOfferDetails(user, req) {
         }
         case ACLs.PartnerInjected: {
             response.offer = await fillInjectedPartnerData(offer, template, address)
+            break;
+        }
+        case ACLs.NeoTokyo: {
+            response.offer = fillNeoTokyoData(offer, template)
             break;
         }
         default: {
@@ -88,6 +94,11 @@ async function fillInjectedPartnerData(offer, template, address) {
 }
 
 function fillPartnerData(offer, template) {
+    if(offer.access === OfferAccess.NeoTokyo) return false;
+    return fillNeoTokyoData(offer, template);
+}
+
+function fillNeoTokyoData(offer, template) {
     if (offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
         return false
     }

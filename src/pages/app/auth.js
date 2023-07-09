@@ -6,6 +6,7 @@ import {useEffect} from "react";
 import {refresh} from "@/fetchers/auth.fetcher";
 import {useRouter} from "next/router";
 import {authTokenName} from "@/lib/authHelpers";
+import {getCopy} from "@/lib/seoConfig";
 export default function AuthRefresh() {
     const router = useRouter();
     const callbackUrl = router.query.callbackUrl;
@@ -20,9 +21,10 @@ export default function AuthRefresh() {
     }, [])
 
 
+    const title = `Loading - ${getCopy("NAME")}`
     return <>
         <Head>
-            <title>Loading - 3VC</title>
+            <title>{title}</title>
         </Head>
         <div className={"flex flex-col h-full"}>
             <Loader/>

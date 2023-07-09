@@ -11,11 +11,11 @@ import IconStars from "@/assets/svg/Stars.svg";
 import IconMoney from "@/assets/svg/Money.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
-import {is3VC} from "@/lib/seoConfig";
+import {getCopy, is3VC} from "@/lib/seoConfig";
 
 export default function AppOffer({account}) {
     const ACL = account.ACL
-    const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : account.address
+    const ADDRESS = ACL !==ACLs.PartnerInjected ? ACL : account.address
 
     const { isLoading, data: response, isError } = useQuery({
             queryKey: ["offerList", {ACL, ADDRESS}],
@@ -29,6 +29,7 @@ export default function AppOffer({account}) {
 
 
     const offerList = response?.offers
+    const offerListRender = offerList ? offerList.filter(el=> !el.accelerator) : []
     const stats = response?.stats
     const investments = stats ? stats.investments : 0;
     const partners = stats ? stats.partners : 0;
@@ -40,7 +41,7 @@ export default function AppOffer({account}) {
 
         return (
                 <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
-                    {!!offerList && offerList.map(el =>
+                    {!!offerList && offerListRender.map(el =>
                         <OfferItem offer={el} key={el.slug} ACL={ACL} cdn={response?.cdn}/>
                     )}
                 </div>
@@ -49,7 +50,7 @@ export default function AppOffer({account}) {
 
     return <>
         <Head>
-            <title>Opportunities - 3VC</title>
+            <title>Opportunities - {getCopy("NAME")}</title>
         </Head>
         <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
             <div className={"flex flex-col justify-center"}>

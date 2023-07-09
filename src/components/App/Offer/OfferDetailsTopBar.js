@@ -22,8 +22,8 @@ export default function OfferDetailsTopBar({paramsBar}) {
 
             { !isLastPhase && <div
                 className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row">
-                <div className="text-lg custom:-mt-5">
-                    <span className="text-gold glow uppercase font-[500]">{currentPhase.step}</span> ends in
+                <div className={`text-lg custom:-mt-5 ${is3VC ? "" : "font-accent"}`}>
+                    <span className={` uppercase font-[500] ${is3VC ? "text-gold glow" : "text-app-error glowRed font-light"}`}>{currentPhase.step}</span> ends in
                 </div>
                 <div>
                     <FlipClockCountdown

@@ -29,9 +29,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- invest
+- invest flow
 - old investments
-- citcapx
 - lootbox list
 - check 3vc
 - zmniejszyć liczbę communities
@@ -51,12 +50,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - -- expire otcPending after 5 minutes
 
 - clean old otcPending - every month after backup
-
+- 500, 1000, user max button under investment size
 - timeline for user activities for each investment in vault tab
 - reassign allocation
-
 - lootbox
 - promo codes
+- ułożenie media slota + fullscreen
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button
@@ -102,3 +101,9 @@ For each chainId
 //Musthafa
 0x15980B1D93CC56a3da52d9908aB372D46Ee242a4
 0x0FfD214b8bD957ec23986c3e342c4d9065742A98
+
+
+///access
+only whales - 0
+everyone - 1
+nt - 2 
