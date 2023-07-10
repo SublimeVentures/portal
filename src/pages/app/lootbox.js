@@ -17,7 +17,7 @@ export default function AppLootbox({account}) {
     const imageTilt = useRef(null);
 
     useEffect(() => {
-        VanillaTilt.init(imageTilt.current, {scale: 1.1, speed: 1000, max: is3VC ? 5 : 0.2});
+        VanillaTilt.init(imageTilt.current, {scale: 1.1, speed: 1000, max: 0.2});
     }, []);
 
 //     // loads the lottie animation
@@ -165,8 +165,15 @@ export default function AppLootbox({account}) {
 
                 <div className={"flex gap-5 mt-10 sm:mt-0"}>
                     <UniButton type={ButtonTypes.BASE} text={'OPEN'} state={"success"} isDisabled={availableLoot === 0}
+                               isPrimary={true}
+                               isWide={true}
+                               zoom={1.05}
+                               size={'text-sm sm'}
                                handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}/>
                     <UniButton type={ButtonTypes.BASE} text={'BUY'} isDisabled={true}
+                               isWide={true}
+                               zoom={1.05}
+                               size={'text-sm sm'}
                                handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}/>
                 </div>
                 <div className={"absolute bottom-5"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>

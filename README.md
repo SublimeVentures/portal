@@ -29,17 +29,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 https://blockeater.herokuapp.com/v3rify
 ## ToDo
-- check 3vc
-- zmniejszyć liczbę communities
 - old investments
-- lootbox list
+- --- logo, icon, bg
+- zmniejszyć liczbę communities/ check investments
+- lootbox list + db
 - upload stakers
 - change total staked + wyciagnij swoje
 
 - media rearrange
 - RR unmount
 - investment calendar google
-- 100 usd back
+- UniButton -> GenericButton
 
 - =============
 - make offer button

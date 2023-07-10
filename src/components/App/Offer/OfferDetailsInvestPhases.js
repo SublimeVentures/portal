@@ -1,6 +1,6 @@
 import moment from 'moment'
 import {useEffect, useState} from "react";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconWait from "@/assets/svg/Wait.svg";
 import IconPantheon from "@/assets/svg/Pantheon.svg";
 import IconWhale from "@/assets/svg/Whale.svg";
@@ -20,7 +20,6 @@ import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import Image from "next/image";
 import {is3VC} from "@/lib/seoConfig";
 import {ACLs} from "@/lib/authHelpers";
 
@@ -65,12 +64,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const [cookies, setCookie, removeCookie] = useCookies();
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
-    const {ACL, multi} = account
+    const {ACL, multi, isStaked} = account
     const {id, alloTotal, isPaused} = offer
 
+    const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
     const userAllocationLeft = checkAllocationLeft(ACL, userAllocation, maxAllocation, offer)
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
-    const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing
+    const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
     const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
 
 
@@ -146,6 +146,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const openInvestmentModal = (hash, expires) => {
         setHash(hash)
         setExpires(Number(expires))
+
+        if(ntStakeGuard) {
+            return
+        }
         setInvestModal(true)
     }
 

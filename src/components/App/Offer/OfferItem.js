@@ -67,7 +67,7 @@ export default function OfferItem({offer, ACL, cdn}) {
         <div
             className={`
             ${is3VC ? "rounded-xl" : ""}
-            bg-navy-accent flex flex-col text-center cursor-pointer col-span-12
+            bg-navy-accent flex flex-col text-center !cursor-pointer col-span-12
             border-transparent border offerItem ${status} 
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
             ref={imageTilt}>

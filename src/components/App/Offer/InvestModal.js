@@ -7,7 +7,7 @@ import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
 import TransactionStep, {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 
 
-import {RoundButton} from "@/components/Button/RoundButton";
+import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import PAGE, {ExternalLinks} from "@/routes";
 import Link from "next/link";
 
@@ -17,6 +17,7 @@ import {is3VC} from "@/lib/seoConfig";
 import {getButtonStep, getInvestFunction} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {sleeper} from "@/lib/utils";
+import RocketIcon from "@/assets/svg/Rocket.svg";
 
 export const StakeSteps = {
     Select: 0,
@@ -176,9 +177,16 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <LiquidityStep stepProps={liquidityProps} />
                         <TransactionStep stepProps={transactionProps}/>
                 </div>
-                <div className={`flex flex-1 pb-5 ${is3VC ? "": "justify-center"}`}>
-                    <UniButton type={ButtonTypes.BASE} text={buttonText} state={"danger"} isDisabled={!liquidity || isTransactionLoading !== TransactionState.Init}
-                               handler={()=> { run() }}/>
+                <div className={` pb-5 ${is3VC ? "fullWidth": "flex flex-1 justify-center"}`}>
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        isWide={true}
+                        size={'text-sm sm'}
+                        text={buttonText}
+                        state={"danger"}
+                        icon={<RocketIcon className={ButtonIconSize.hero}/>}
+                        isDisabled={!liquidity || isTransactionLoading !== TransactionState.Init}
+                        handler={()=> { run() }}/>
                 </div>
                 <div>Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>

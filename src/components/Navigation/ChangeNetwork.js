@@ -6,6 +6,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 
 export default function ChangeNetwork() {
     const {chain, chains} = useNetwork()
@@ -40,10 +41,11 @@ export default function ChangeNetwork() {
             <div>
                 Currently our platform <span className="text-gold">supports {chains.length} chains</span>.<br/>
                 Please switch to one of these to continue.
-                <div className="flex flex-col my-10 gap-5 fullWidth">
+                <div className="flex flex-col my-10 gap-5 fullWidth items-center">
                     {chains.map((x, index) => (
-                        <RoundButton
+                        <UniButton
                             key={x.id}
+                            type={ButtonTypes.BASE}
                             handler={() => {
                                 if (!isLoading) switchNetwork?.(x.id)
                             }}
@@ -54,7 +56,6 @@ export default function ChangeNetwork() {
                             isDisabled={buttonDisabled(x)}
                             icon={getIcon(index)}
                         />
-
                     ))}
                 </div>
 

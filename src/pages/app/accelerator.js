@@ -78,7 +78,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>Due Diligence</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span class="text-app-error font-bold">Citizen Capital cannot make any representations regarding the suitability of projects that are part of the {getCopy("ACCELERATOR")} accelerator</span>. As always, Citizens must DYOR.
+                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span class="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, {is3VC ? "Investors" :"Citizens"} must DYOR.
 
                     </div>
                 </div>
@@ -120,14 +120,7 @@ export const getServerSideProps = async({res}) => {
             }
         }
     }
-    if(account.user.ACL !== ACLs.NeoTokyo){
-        return {
-            redirect: {
-                permanent: true,
-                destination: routes.Opportunities
-            }
-        }
-    }
+
     return {
         props: {
             account: account.user

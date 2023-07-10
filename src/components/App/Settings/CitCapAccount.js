@@ -39,7 +39,6 @@ export default function CitCapAccount({account}) {
 
     const unstakeDate = account?.stakeDate ? account.stakeDate : stakeDate
     const {unstake, nextDate} = timeUntilNextUnstakeWindow(unstakeDate)
-
     const refreshSession = async () => {
         const {updatedSession} = await updateSession_CitCapStaking()
         if(updatedSession.isStaked) setStaked(true)
