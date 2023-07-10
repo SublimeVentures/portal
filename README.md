@@ -28,21 +28,28 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
-- 
-- lootbox list + db
+- s2 image not displaying not staked
+- lottie-player
+
 - upload stakers
 - change total staked + wyciagnij swoje
-
-- notion & annoucements
 - send bytes
 
-- update costs - cloudflare 
 
+- notion & annoucements
+- wallet button align
+- add steady stacks as partner
+
+https://devcenter.heroku.com/articles/heroku-postgres-backups
+
+- update costs - cloudflare & heroku
+- check bings wallet 0x26e7f5f193354b22da271a57433acadab2c79480 across investments
 - media rearrange
-- lottie-player
+
 - RR unmount
 - investment calendar google
 - UniButton -> GenericButton
+- rasie funds on landing
 
 - =============
 - make offer button

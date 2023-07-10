@@ -34,6 +34,7 @@ const modelDefiners = [
     require('../../models/otcPending.model'),
     require('../../models/multichain.model'),
     require('../../models/ntElites.model'),
+    require('../../models/lootbox.model'),
 ];
 
 // We define all models according to their files.

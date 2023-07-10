@@ -1,5 +1,6 @@
 const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
+const {Op} = require("sequelize");
 
 async function getUserInvestment(owner, offerId) {
     try {
@@ -22,7 +23,10 @@ async function getUserVault(owner) {
     try {
         return models.vaults.findAll({
             where: {
-                owner
+                owner,
+                invested: {
+                    [Op.not]: 0
+                }
             },
             order: [
                 ['createdAt', 'DESC'],

@@ -17,6 +17,7 @@ const PAGE = {
 
 export const API = {
     fetchVault: "/api/vault/all",
+    fetchLootbox: "/api/lootbox",
     fetchVaultOfferDetails: "/api/vault?offer=",
     publicInvestments: "/api/public/investments",
     offerList: "/api/offer",

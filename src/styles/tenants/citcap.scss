@@ -96,7 +96,10 @@ body {
 
 
 .offerItem {
-
+  .offerBottom {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 
   &.pending {
     background: linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box, linear-gradient(rgb(42, 172, 198), rgba(42, 172, 198, 0.2)) border-box border-box;

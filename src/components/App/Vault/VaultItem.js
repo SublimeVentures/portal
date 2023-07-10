@@ -1,4 +1,4 @@
-import IconMore from "@/assets/svg/More.svg";
+// import IconMore from "@/assets/svg/More.svg";
 import VanillaTilt from "vanilla-tilt";
 import {useEffect, useRef} from "react";
 import moment from "moment";
@@ -49,7 +49,7 @@ export default function VaultItem({item, cdn}) {
 
         <div className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex ${is3VC ? "" : "border-l border-app-bg-split"} `}  ref={tilt}>
             <Link href={`${PAGE.Opportunities}/${item["offer.slug"]}`}>
-            <Image src={`${cdn}/research/${item["offer.slug"]}/icon.jpg`} fill className={`${is3VC ? "rounded-tr-xl rounded-br-xl" : ""} imageOfferList  bg-cover `} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
+            <Image src={`${cdn}/research/${item["offer.slug"]}/logo.jpg`} fill className={`${is3VC ? "rounded-tr-xl rounded-br-xl" : ""} imageOfferList  bg-cover `} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
             </Link>
         </div>
 

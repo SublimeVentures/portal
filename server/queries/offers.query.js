@@ -8,6 +8,9 @@ async function getOffersPublic() {
             where: {
                 displayPublic: true
             },
+            order: [
+                ['d_open', 'DESC'],
+            ],
             raw: true
         });
     } catch (e) {
