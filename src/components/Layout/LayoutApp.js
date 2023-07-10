@@ -1,13 +1,9 @@
 import Sidebar from "@/components/Navigation/Sidebar";
-import {useEffect} from "react";
 import {ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
 import Link from "next/link";
 
 export default function Layout({ children }) {
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
 
     const isNT = children.props.children.props.children.props.account?.ACL === ACLs.NeoTokyo
     const notStaked = !children.props.children.props.children.props.account?.isStaked

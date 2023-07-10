@@ -106,12 +106,12 @@ export default function CancelModal({model, setter, props}) {
         return (
             <div className=" flex flex-col flex-1">
                 <div>You have successfully cancelled OTC offer.</div>
-                <lottie-player
-                    autoplay
-                    style={{width: '320px', margin: '30px auto 0px'}}
-                    mode="normal"
-                    src="/static/lottie/success.json"
-                />
+                {/*<lottie-player*/}
+                {/*    autoplay*/}
+                {/*    style={{width: '320px', margin: '30px auto 0px'}}*/}
+                {/*    mode="normal"*/}
+                {/*    src="/static/lottie/success.json"*/}
+                {/*/>*/}
             </div>
         )
     }

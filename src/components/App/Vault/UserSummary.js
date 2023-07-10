@@ -2,6 +2,7 @@ import IconMoney from "@/assets/svg/Money.svg";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
 import IconClock from "@/assets/svg/Clock.svg";
+import IconNT from "@/assets/svg/NT.svg";
 import RoundSpacer from "@/components/App/RoundSpacer";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
@@ -9,6 +10,8 @@ import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {is3VC} from "@/lib/utils";
 import { PowerGlitch } from 'powerglitch'
+import Lottie from "lottie-react";
+import lottieAvatar from "@/assets/lottie/avatar.json";
 
 function amount(item){
     return item.invested;
@@ -53,21 +56,15 @@ export default function UserSummary({vault, account}) {
                         <div className="relative  px-10 sm:-ml-10 custom:ml-0" >
                             {is3VC ? <>
                                     <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
-                                        <lottie-player
-                                            autoplay
-                                            loop
-                                            style={{width: '400px'}}
-                                            mode="normal"
-                                            src="/static/lottie/avatar.json"
-                                        />
+                                        <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>;
                                     </div>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
                                         <img className="flex rounded-full my-auto" src={account.img}/>
                                     </div>
                                 </> : <>
-                                <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                    <img className="flex rounded-full my-auto glitch" src={account.img}/>
-                                </div>
+                                    <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
+                                        {account.img ? <img className="flex rounded-full my-auto glitch" src={account.img } alt={"avatar"}/> : <IconNT className={"glitch w-full max-w-[15rem]"}/>}
+                                    </div>
                                 </>}
 
                         </div>
