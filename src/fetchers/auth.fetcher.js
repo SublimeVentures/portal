@@ -39,3 +39,17 @@ export const refresh = async () => {
     }
     return false
 }
+
+export const updateSession_CitCapStaking = async () => {
+    try {
+        const {data} = await axiosPublic.get(API.updateSession_CitCapStaking, {
+                headers: {
+                    [refreshTokenName]: `${retrieveToken(refreshTokenName)}`,
+                }
+            })
+        saveToken(refreshTokenName, data.refreshToken)
+        return data
+    } catch (e) {
+    }
+    return false
+}

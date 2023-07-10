@@ -5,13 +5,14 @@ import IconTwitter from "@/assets/svg/Twitter.svg";
 import {IconButton} from "@/components/Button/IconButton";
 import Script from "next/script";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation, Thumbs, FreeMode} from 'swiper';
+import {  Navigation, Thumbs, FreeMode} from 'swiper';
 import 'swiper/css';
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {useState} from "react";
+import {is3VC} from "@/lib/utils";
 
 
 const MEDIA_TYPE = {
@@ -34,26 +35,26 @@ export default function OfferDetailsAbout({offer}) {
     return (
         <>
 
-            <div className="rounded-xl relative offerWrap overflow-hidden">
-                <div className={"rounded-xl bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between "}>
-                    <div className="flex mx-10 text-[1.7rem]  font-medium glowNormal midcol:mr-0">About</div>
+            <div className={`${is3VC ? "rounded-xl" : ""} relative offerWrap overflow-hidden`}>
+                <div className={`${is3VC ? "rounded-xl" : ""} bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between `}>
+                    <div className={`${is3VC ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl"} flex mx-10  glowNormal midcol:mr-0`}>About</div>
                     <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
 
 
                         {url_web && <a href={`${url_web}`} target="_blank">
-                            <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconWebsite />} />
+                            <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconWebsite />} noBorder={!is3VC} />
                         </a> }
 
                         {url_twitter && <a href={`${url_twitter}`} target="_blank">
-                            <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconTwitter />}/>
+                            <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconTwitter />} noBorder={!is3VC}/>
                         </a> }
 
                         {url_discord && <a href={`${url_discord}`} target="_blank">
-                            <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconDiscord />}/>
+                            <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconDiscord />} noBorder={!is3VC}/>
                         </a> }
 
-                        <a href={`${cdn}${slug}/ResearchReport.pdf`} target="_blank">
-                            <IconButton zoom={1.1} size={'w-17 p-3'} icon={<IconDownload />}/>
+                        <a href={`${cdn}/research/${slug}/ResearchReport.pdf`} target="_blank">
+                            <IconButton zoom={1.1} size={'w-17 p-3'} icon={<IconDownload />} noBorder={!is3VC}/>
                         </a>
 
                     </div>
@@ -78,7 +79,7 @@ export default function OfferDetailsAbout({offer}) {
                         return <SwiperSlide key={i}>
                             {
                                 el.type === MEDIA_TYPE.IMAGE ?
-                                    <img src={`${cdn}${slug}/slide/${el.url}`} alt={"img"}/> :
+                                    <img src={`${cdn}/research/${slug}/slide/${el.url}`} alt={"img"}/> :
                                     <iframe width="100%" height="500" className={"rounded-xl"} src={el.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                             }
                         </SwiperSlide>
@@ -98,7 +99,7 @@ export default function OfferDetailsAbout({offer}) {
                         return (
                             <SwiperSlide key={i}>
                                 <div className={"thumb rounded-xl"}>
-                                    <img src={`${cdn}${slug}/slide/${el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb}`} alt={"img"}/>
+                                    <img src={`${cdn}/research/${slug}/slide/${el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb}`} alt={"img"}/>
                                 </div>
                             </SwiperSlide>
                         )

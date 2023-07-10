@@ -1,15 +1,20 @@
 import {erc20ABI, useContractRead, usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
-import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
-import {useEffect, useState} from "react";
+import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
+import {useEffect} from "react";
+import {BigNumber} from "ethers";
+import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 
 export default function AllowanceStep({stepProps}) {
-    const {selectedCurrency, isReady, session, amount, isFinished, setFinished, otcContract} = stepProps
+    const {currencyAddress, currencyPrecision, currencySymbol, allowanceFor, isReady, account, amount, isFinished, setFinished, setIsTransactionLoading, isStablecoin} = stepProps
 
+    const power = BigNumber.from(10).pow(currencyPrecision)
+    const amount_bn = BigNumber.from(amount).mul(power)
+    const requiredAllowance = amount ? amount_bn : 0
     const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
-        address: selectedCurrency.address,
+        address: currencyAddress,
         abi: erc20ABI,
         functionName: 'approve',
-        args: [otcContract, amount * 10 ** selectedCurrency.precision],
+        args: [allowanceFor, requiredAllowance],
         enabled: isReady,
     })
 
@@ -21,10 +26,10 @@ export default function AllowanceStep({stepProps}) {
         data: allowance
     } = useContractRead(
         {
-            address: selectedCurrency.address,
+            address: currencyAddress,
             abi: erc20ABI,
             functionName: 'allowance',
-            args: [session.user.address, otcContract],
+            args: [account, allowanceFor],
             watch: isReady && !isFinished,
         }
     )
@@ -48,7 +53,8 @@ export default function AllowanceStep({stepProps}) {
     })
 
 
-    const allowanceHuman = (allowance ? allowance.toNumber() : 0) / 10 ** selectedCurrency.precision
+    const allowance_bn = BigNumber.from(allowance).div(power)
+    const allowanceHuman = (allowance ? allowance_bn.toNumber() : 0)
     const isEnoughAllowance = amount <= allowanceHuman
     const amountLocale = Number(amount).toLocaleString()
     const allowanceLocale = Number(allowanceHuman).toLocaleString()
@@ -68,7 +74,6 @@ export default function AllowanceStep({stepProps}) {
     }, [isSuccessConfig, allowance, isReady])
 
     useEffect(()=>{
-        console.log("ERROR THROW ", isErrorWrite || isErrorPending || !isEnoughAllowance)
         setFinished(isEnoughAllowance)
     }, [isErrorWrite, isErrorPending, isEnoughAllowance])
 
@@ -86,13 +91,13 @@ export default function AllowanceStep({stepProps}) {
                 return <>Check allowance</>
             }
             case Transaction.Processing: {
-                return <>Getting allowance for ${amountLocale}</>
+                return <>Getting allowance for {isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}</>
             }
             case Transaction.Executed: {
-                return <>Allowance for ${amountLocale} set successfully </>
+                return <>Allowance ({isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}) set successfully </>
             }
             case Transaction.Failed: {
-                return <span className="underline">Failed to set allowance for ${amountLocale}</span>
+                return <span className="underline">Failed to set allowance for {isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}</span>
             }
             default: {
                 return <>Check allowance</>
@@ -105,7 +110,7 @@ export default function AllowanceStep({stepProps}) {
             {getIcon(state)}
             <div>
                 {statuses(state)}
-                {state !== Transaction.Executed && <div className="text-xs -mt-1">current allowance: ${allowanceLocale}</div>}
+                {state !== Transaction.Executed && <div className="text-xs -mt-1">current allowance: {isStablecoin ? `$${allowanceLocale}`: `${allowanceLocale} ${currencySymbol}`}</div>}
             </div>
         </div>
     }
@@ -117,10 +122,21 @@ export default function AllowanceStep({stepProps}) {
     // console.log("STATE :: confirm " ,confirmationData, isErrorPending, isSuccessPending, isLoadingPending, isFetchingPending)
     // console.log("======" )
 
-    if (isFinished && isEnoughAllowance && isReady) return prepareRow(Transaction.Executed)
-    if (!isReady) return prepareRow(Transaction.Waiting)
-    if ((isErrorWrite || isErrorPending) && isReady) return prepareRow(Transaction.Failed)
-    else return prepareRow(Transaction.Processing)
+    if (isFinished && isEnoughAllowance && isReady) {
+        setIsTransactionLoading(TransactionState.Init)
+        return prepareRow(Transaction.Executed)
+    }
+    if (!isReady) {
+        return prepareRow(Transaction.Waiting)
+    }
+    if ((isErrorWrite || isErrorPending) && isReady) {
+        setIsTransactionLoading(TransactionState.Init)
+        return prepareRow(Transaction.Failed)
+    }
+    else {
+        setIsTransactionLoading(TransactionState.Processing)
+        return prepareRow(Transaction.Processing)
+    }
 
 
 

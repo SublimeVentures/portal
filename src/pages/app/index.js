@@ -5,9 +5,11 @@ import {fetchVault} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
 import Head from "next/head";
-import UserSummary from "@/components/App/Vault/UserSummary";
 import {verifyID} from "@/lib/authHelpers";
 import routes from "@/routes";
+import dynamic from "next/dynamic";
+import {getCopy} from "@/lib/seoConfig";
+const UserSummary = dynamic(() => import('@/components/App/Vault/UserSummary'), {ssr: false})
 
 export default function AppVault({account}) {
     const ACL = account.ACL
@@ -48,10 +50,11 @@ export default function AppVault({account}) {
         if(elements.length===0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
     }
 
+    const title = `Vault - ${getCopy("NAME")}`
     return (
         <>
             <Head>
-                <title>Vault - 3VC</title>
+                <title>{title}</title>
             </Head>
             <UserSummary vault={elements} account={account}/>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">

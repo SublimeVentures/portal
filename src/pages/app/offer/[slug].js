@@ -16,7 +16,8 @@ import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import routes from "@/routes";
-
+ import {getCopy} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export const AppOfferDetails = ({account}) => {
     const router = useRouter()
@@ -39,27 +40,27 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
+
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],
             queryFn: () => fetchOfferAllocation(offerData?.offer?.id),
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             enabled: !!offerData?.offer?.id,
-            refetchInterval: 15000
+            refetchInterval: isClosed ? false : 15000
         }
     );
 
-    const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
+    const {data: userAllocation, refetch: refetchUserAllocation, isSuccess: isSuccessUserAllocation} = useQuery({
             queryKey: ["userAllocation", offerData?.offer?.id, address],
             queryFn: () => fetchUserInvestment(offerData?.offer?.id),
             refetchOnMount: false,
-            refetchOnWindowFocus: true,
+            refetchOnWindowFocus: !isClosed,
             enabled: !!offerData?.offer?.id,
         }
     );
 
 
-    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - 3VC`
 
     const feedPhases = () => {
         if(!offerData?.offer) return
@@ -84,6 +85,7 @@ export const AppOfferDetails = ({account}) => {
         currencies: offerData?.currencies,
         refetchUserAllocation,
         refetchAllocation,
+        userAllocation,
         allocation,
         nextPhase,
         currentPhase,
@@ -106,7 +108,7 @@ export const AppOfferDetails = ({account}) => {
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar}/>
-                <div className="rounded-xl bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
+                <div className={`${is3VC ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}>
                     {!isClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
                 </div>
                 <div
@@ -128,6 +130,7 @@ export const AppOfferDetails = ({account}) => {
         feedPhases()
     }, [offerData])
 
+    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - ${getCopy("NAME")}`
     return (
         <>
             <NextSeo title={pageTitle}/>

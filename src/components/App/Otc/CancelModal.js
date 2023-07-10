@@ -49,7 +49,7 @@ export default function CancelModal({model, setter, props}) {
         }
         setter()
         setTimeout(() => {
-            console.log("USTAWIAM :: success", false)
+            // console.log("USTAWIAM :: success", false)
             setSuccess(false)
             setProcessing(false)
         }, 1000);
@@ -63,7 +63,7 @@ export default function CancelModal({model, setter, props}) {
 
     useEffect(()=> {
         if(!!confirmationData || isErrorWrite || Object.keys(isErrorConfirmation).length > 0) {
-            console.log("USTAWIAM :: success", true)
+            // console.log("USTAWIAM :: success", true)
             setSuccess(true)
             setProcessing(false)
         }
@@ -106,12 +106,12 @@ export default function CancelModal({model, setter, props}) {
         return (
             <div className=" flex flex-col flex-1">
                 <div>You have successfully cancelled OTC offer.</div>
-                <lottie-player
-                    autoplay
-                    style={{width: '320px', margin: '30px auto 0px'}}
-                    mode="normal"
-                    src="/static/lottie/success.json"
-                />
+                {/*<lottie-player*/}
+                {/*    autoplay*/}
+                {/*    style={{width: '320px', margin: '30px auto 0px'}}*/}
+                {/*    mode="normal"*/}
+                {/*    src="/static/lottie/success.json"*/}
+                {/*/>*/}
             </div>
         )
     }

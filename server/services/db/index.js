@@ -1,7 +1,7 @@
 const db = require('./db.init');
 const {getEnvironment} = require("../../queries/environment.query");
 const Sentry = require("@sentry/nextjs");
-const {insertData} = require("../../queries/tem_del_inject");
+// const {insertData} = require("../../queries/tem_del_inject");
 
 let env = {}
 

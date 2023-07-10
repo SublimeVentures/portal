@@ -1,12 +1,10 @@
-import Hero from "@/components/Home/Hero";
-import Highlights from "@/components/Home/Highlights";
-import Investors from "@/components/Home/Investors";
-import About from "@/components/Home/About";
-import Callout from "@/components/Home/Callout";
 import { NextSeo } from 'next-seo';
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import {verifyID} from "@/lib/authHelpers";
+import Home3VC from "@/components/Home";
+import HomeCitCap from "@/components/HomeCitCap";
+import {is3VC} from "@/lib/utils";
 
 export default function Home({account}) {
   const seo = seoConfig(PAGE.Landing)
@@ -19,11 +17,8 @@ export default function Home({account}) {
             openGraph={seo.og}
             twitter={seo.twitter}
         />
-        <Hero account={account}/>
-      <Highlights/>
-      <Investors/>
-      <About/>
-      <Callout/>
+
+        {is3VC ? <Home3VC account={account}/> : <HomeCitCap account={account}/>}
     </>
   )
 }

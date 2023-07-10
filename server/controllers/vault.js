@@ -1,4 +1,3 @@
-const {checkAcl} = require("./acl");
 const {getUserVault, getUserInvestment} = require("../queries/vaults.query");
 const {getEnv} = require("../services/db");
 

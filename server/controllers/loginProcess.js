@@ -4,10 +4,10 @@ const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getEnv} = require("../services/db");
 const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('../../abi/delegate.abi.json')
+const citcapStakingAbi = require('../../abi/citcapStaking.abi.json')
 const Sentry = require("@sentry/nextjs");
 const {checkElite} = require("../queries/ntElites.query");
-
-const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
+const {is3VC} = require("../../src/lib/utils");
 
 const getMoralisImage = (object) => {
     if (object?.media?.mimetype === 'image/gif') {
@@ -32,7 +32,7 @@ async function isWhale(ownedNfts) {
     }
 }
 
-async function isNeoTokyo(ownedNfts, enabledCollections) {
+async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     if (ownedNfts.length === 0) return false
 
     const S1_owned = ownedNfts.filter(el =>
@@ -58,21 +58,35 @@ async function isNeoTokyo(ownedNfts, enabledCollections) {
 
     let multi;
     let nftUsed;
+    let ownTranscendence = false
     if (isElite.length > 0) {
-        multi = isElite.length * S1_config.multiplier + 2 + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
+        multi = isElite.length * (S1_config.multiplier + 2) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
         nftUsed = S1.find(el => el.normalized_metadata.name === `Citizen #${isElite[0].id}`)
     } else {
         multi = S1.length * S1_config.multiplier + S2.length * S2_config.multiplier
         nftUsed = S1.length > 0 ? S1[0] : S2[0]
     }
 
+    const haveTranscendence = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
+    if(haveTranscendence) {
+        const transcendence_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
+        multi += transcendence_config.multiplier
+        ownTranscendence = true
+    }
+
+    const {isStaked, stakeSize, stakeDate} = await checkStaking(address)
     return {
         name: nftUsed.name,
         symbol: nftUsed.symbol,
         multi: multi,
         img: getMoralisImage(nftUsed),
         id: nftUsed.normalized_metadata.name,
-        ACL: 1
+        ACL: 1,
+        transcendence: ownTranscendence,
+        stakeReq: S1_owned.length > 0 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2),
+        isStaked,
+        stakeSize,
+        stakeDate
     }
 }
 
@@ -224,19 +238,37 @@ async function feedNfts(address) {
 }
 
 async function checkUser(address) {
+    console.log("GANG :: checkUser START")
+
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type
+
     if (is3VC) {
         type = await isWhale(userNfts)
         if (!type) type = await isPartner(userNfts, enabledCollections)
         if (!type) type = await isInjectedUser(address)
     } else {
-        type = await isNeoTokyo(userNfts, enabledCollections)
+        type = await isNeoTokyo(userNfts, enabledCollections, address)
     }
     if (!type) type = await isDelegated(address, enabledCollections)
 
     return type
 }
 
+async function checkStaking (address) {
+    const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
+        "chain": "0x1",
+        "functionName": "getStake",
+        "address": getEnv().diamondCitCap,
+        "abi": citcapStakingAbi,
+        "params": {wallet_: address}
+    });
 
-module.exports = {checkUser}
+    return {
+        isStaked: Number(jsonResponse[0])>0,
+        stakeSize: Number(getWeb3().utils.fromWei(jsonResponse[0])),
+        stakeDate: Number(jsonResponse[1])
+    }
+}
+
+module.exports = {checkUser, checkStaking}

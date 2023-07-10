@@ -9,7 +9,7 @@ const {
     userIdentification
 } = require("../../src/lib/authHelpers");
 const {authTokenName} = require("../../src/lib/authHelpers");
-const {checkUser} = require("./loginProcess");
+const {checkUser, checkStaking} = require("./loginProcess");
 
 let REFRESH_TOKENS = {}
 
@@ -24,28 +24,32 @@ const validateLogin = async (message, signature) => {
         if (!validDomain) return false;
 
         const userSession = await checkUser(recoveredAddress)
-        // const userSession = await checkUser("0x2ddD0Ec103B7048ED0bc2537Ac6263B7FDec8Ed9")
         if (!userSession) return false;
-
         return {...{address: recoveredAddress}, ...userSession}
+        // const fakeAddress="0x29b3669D117d067AF642923Bd715eFa54E9eeF0E"
+        // const userSession = await checkUser(fakeAddress)
+        // console.log("userSession",userSession)
+        // if (!userSession) return false;
+        // return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
         console.log("validateLogin", e)
         return null
     }
 }
 
-const refreshAuth = async (userData) => {
-    const accessToken = await generateToken(userData, '15m', JWT_ACCESS_SECRET_encode)
-    const refreshToken = await generateToken(userData.address, '12h', JWT_REFRESH_SECRET_encode)
+const refreshAuth = async (userData, updatedSession) => {
+    const finalData = {...userData, ...updatedSession}
+    const accessToken = await generateToken(finalData, '15m', JWT_ACCESS_SECRET_encode)
+    const refreshToken = await generateToken(finalData.address, '12h', JWT_REFRESH_SECRET_encode)
     const accessCookie = buildCookie(authTokenName, accessToken, 15 * 60 * 1000)
 
-    REFRESH_TOKENS[userData[userIdentification]] = {
+    REFRESH_TOKENS[finalData[userIdentification]] = {
         refreshToken,
-        userData,
+        userData: finalData,
     }
 
     return {
-        data: {refreshToken},
+        data: {refreshToken, updatedSession},
         cookie: accessCookie
     }
 
@@ -55,6 +59,20 @@ const logIn = async (req) => {
     const userData = await validateLogin(req.body.message, req.body.signature)
     if(!userData)  return null;
     return await refreshAuth(userData)
+}
+
+const updateSession_CitCapStaking = async (user) => {
+    try {
+        const session = REFRESH_TOKENS[user]
+        delete REFRESH_TOKENS[user];
+        if (user !== session.userData[userIdentification]) {
+            throw new Error("data not match")
+        }
+        const {isStaked, stakeSize, stakeDate} = await checkStaking(user)
+        return await refreshAuth(session.userData, {isStaked, stakeSize, stakeDate})
+    } catch (e) {
+        return null
+    }
 }
 
 const refreshToken = async (user) => {
@@ -79,5 +97,6 @@ const logOut = async (user) => {
 module.exports = {
     logOut,
     refreshToken,
-    logIn
+    logIn,
+    updateSession_CitCapStaking
 }

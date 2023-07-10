@@ -2,6 +2,7 @@ import {Fragment, useState} from "react";
 import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
+import {is3VC} from "@/lib/utils";
 export default function LoginModal({isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false)
 
@@ -41,12 +42,12 @@ export default function LoginModal({isOpen, closeModal, title, content, persiste
                               leaveFrom="opacity-100 scale-100"
                               leaveTo="opacity-0 scale-95"
                           >
-                              <Dialog.Panel className={`flex flex-col min-h-screen glareBg w-full sm:min-h-min sm:max-w-md transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-navy2 text-start transition-all ${isShake ? 'shake' : ''}`}>
+                              <Dialog.Panel className={`dialogWrap flex flex-col min-h-screen glareBg w-full sm:min-h-min sm:max-w-md transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-app-bg text-start transition-all ${isShake ? 'shake' : ''} ${is3VC ? "" : "font-accent"}`}>
                                   <Dialog.Title
                                       as="h3"
                                       className="text-3xl font-bold pb-5 pt-5"
                                   >
-                                      {title}
+                                      <span className={`${is3VC ? "" : "font-light"}`}>{title}</span>
                                       {!noClose && <div className={`absolute top-[20px] right-[0px] cursor-pointer`} onClick={closeModal}>
                                           <CancelIcon className={ButtonIconSize.hero}/>
                                       </div>}

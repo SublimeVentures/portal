@@ -1,7 +1,24 @@
 import PAGE from "@/routes";
+import {is3VC} from "@/lib/utils";
+
+const copy = {
+    true: {
+        NAME: "3VC",
+        ACCELERATOR: "Accelerator",
+    },
+    false: {
+        NAME: "Citizen Capital",
+        ACCELERATOR: "CitCapX",
+
+    }
+}
+
+export const getCopy = (name) => {
+    return copy[is3VC][name]
+}
 
 export const seoConfig = (page) => {
-    if(process.env.NEXT_PUBLIC_SITE==="3VC") {
+    if(is3VC) {
         switch(page) {
             case PAGE.Landing: {
                 return generateSeo(
@@ -107,14 +124,14 @@ const template_CitCap = {
             description: '',
             images: [
                 {
-                    url: 'https://cdn.3vc.fund/webapp/og.jpg',
+                    url: 'https://cdn.citizencapital.fund/webapp/og.jpg',
                     width: 800,
                     height: 600,
                     alt: 'Join Citizen Capital',
                     type: 'image/jpeg',
                 },
             ],
-            siteName: '3VC',
+            siteName: 'Citizen Capital',
         },
         twitter: {
             handle: '@CitCapFund',

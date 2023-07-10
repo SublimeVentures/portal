@@ -1,15 +1,15 @@
 const express = require('express')
 const router = express.Router();
-const {logIn, logOut, refreshToken} = require("../controllers/login");
+const {getLootbox} = require("../controllers/lootbox");
 const {verifyID} = require("../../src/lib/authHelpers");
 
-//GET USER DATA
-router.get('/route', async (req, res) => {
+router.get('/', async (req, res) => {
     const {auth, user} = await verifyID(req)
-    console.log("PROTECTED", auth, user)
     if(!auth)  return res.status(401).json({});
 
-    return res.status(200).json({...user});
+    return res.status(200).json(await getLootbox(user))
 });
+
+
 
 module.exports = {router}

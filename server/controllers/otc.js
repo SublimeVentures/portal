@@ -2,7 +2,6 @@ const {getEnv} = require("../services/db");
 const {getActiveOffers, getHistoryOffers, saveOtcHash, removeOtcHash} = require("../queries/otc.query");
 const {getParamOfferList} = require("./offerList");
 const moment = require("moment");
-const {checkAcl} = require("./acl");
 const {createHash} = require("./helpers");
 
 
@@ -27,7 +26,7 @@ async function getHistory(session, req) {
 }
 
 async function createOffer(session, req) {
-    const {ACL, ADDRESS, USER} = checkAcl(session, req)
+    const {ACL, ADDRESS, USER} = session
 
     try {
         const ID = Number(req.params.id)
@@ -48,7 +47,7 @@ async function createOffer(session, req) {
 }
 
 async function removeOffer(session, req) {
-    const {ACL, ADDRESS, USER} = checkAcl(session, req)
+    const {ACL, ADDRESS, USER} = session
 
     try {
         const ID = Number(req.params.id)

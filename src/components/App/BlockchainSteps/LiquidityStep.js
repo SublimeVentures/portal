@@ -1,32 +1,28 @@
 import {erc20ABI, useContractRead} from 'wagmi'
 import { BigNumber } from 'ethers';
-import {getIcon, getStatusColor, Transaction} from "@/components/App/Transactions/TransactionSteps";
+import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
 import {useEffect} from "react";
 
 export default function LiquidityStep({stepProps}) {
-    const {selectedCurrency, isReady, account, amount, isFinished, setFinished} = stepProps
+    const {currencyAddress, currencyPrecision, currencySymbol, isReady, account, amount, isFinished, setFinished} = stepProps
 
     const {
         isSuccess: balanceFed,
-        isIdle,
-        isLoading,
-        isFetching,
-        status,
         data: currentBalance
     } = useContractRead(
         {
-            address: selectedCurrency.address,
+            address: currencyAddress,
             abi: erc20ABI,
             functionName: 'balanceOf',
-            args: [account.address],
+            args: [account],
             watch: !isFinished,
-            enabled: isReady && selectedCurrency
+            enabled: isReady
         }
     )
 
-    const power = BigNumber.from(10).pow(selectedCurrency.precision)
+    const power = BigNumber.from(10).pow(currencyPrecision)
     const currentBalanceHuman = currentBalance ? currentBalance.div(power).toNumber() : 0
-    const isEnoughLiquidity = amount < currentBalanceHuman
+    const isEnoughLiquidity = amount <= currentBalanceHuman
 
     const currentBalanceLocale = Number(currentBalanceHuman).toLocaleString()
     const amountLocale = Number(amount).toLocaleString()
@@ -55,7 +51,7 @@ export default function LiquidityStep({stepProps}) {
         if(balanceFed && isReady) {
             setFinished(isEnoughLiquidity)
         }
-    }, [isReady, balanceFed, selectedCurrency.symbol])
+    }, [isReady, balanceFed, currencyAddress])
 
 
 
@@ -72,7 +68,7 @@ export default function LiquidityStep({stepProps}) {
                 return <>Availability of funds confirmed </>
             }
             case Transaction.Failed: {
-                return <span className="underline">Wallet doesn't hold {amountLocale} {selectedCurrency.symbol}</span>
+                return <span className="underline">Wallet doesn't hold {amountLocale} {currencySymbol}</span>
             }
             default: {
                 return <>Check allowance</>
@@ -85,11 +81,10 @@ export default function LiquidityStep({stepProps}) {
             {getIcon(state)}
             <div>
                 {statuses(state)}
-                {state !== Transaction.Executed && isReady && <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {selectedCurrency.symbol}</div>}
+                {state !== Transaction.Executed && isReady && <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {currencySymbol}</div>}
             </div>
         </div>
     }
-
     if (isFinished && isEnoughLiquidity) return prepareRow(Transaction.Executed)
     if (!isReady) return prepareRow(Transaction.Waiting)
     if (balanceFed && !isEnoughLiquidity) return prepareRow(Transaction.Failed)

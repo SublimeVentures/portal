@@ -12,6 +12,8 @@ import {useNetwork} from "wagmi";
 import SwitchGeneric from "@/components/Switch";
 import Dropdown from "@/components/App/Dropdown";
 import MakeOfferInteract from "@/components/App/Otc/MakeOfferInteract";
+import Lottie from "lottie-react";
+import lottieOtc from "@/assets/lottie/otc.json";
 
 
 
@@ -140,13 +142,8 @@ export default function MakeOfferModal({model, setter, props}) {
         return (
             <div className=" flex flex-col flex-1">
                 <div>Congratulations! You have successfully created OTC offer to <span className="text-app-success font-bold">{textCopy} ${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
-                <lottie-player
-                    autoplay
-                    loop
-                    style={{width: '320px', margin: '-40px auto 0px'}}
-                    mode="normal"
-                    src="/static/lottie/otc.json"
-                />
+                <Lottie animationData={lottieOtc} loop={true} autoplay={true} style={{width: '320px', margin: '-40px auto 0px'}}/>;
+
                 <div className="mt-auto fullWidth">
 
                     <div className="flex flex-1 justify-center items-center -mt-5 mb-5">

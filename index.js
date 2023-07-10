@@ -13,10 +13,10 @@ const {connectWeb3} = require("./server/services/web3");
 const {router: authRoute} = require("./server/routes/auth.router.js");
 const {router: publicRoute} = require("./server/routes/public.router.js");
 const {router: offerRoute} = require("./server/routes/offer.router.js");
-const {router: chainRoute} = require("./server/routes/payable.router.js");
 const {router: investRoute} = require("./server/routes/invest.router.js");
 const {router: vaultRoute} = require("./server/routes/vault.router.js");
 const {router: otcRoute} = require("./server/routes/otc.router.js");
+const {router: lootboxRoute} = require("./server/routes/lootbox.router.js");
 // const {router: protected} = require("./server/routes/protected.js");
 
 const port = process.env.PORT || 3000
@@ -38,10 +38,10 @@ nextApp.prepare().then(async () => {
     server.use('/api/auth', authRoute);
     server.use('/api/public', publicRoute);
     server.use('/api/offer', offerRoute);
-    server.use('/api/chain', chainRoute);
     server.use('/api/invest', investRoute);
     server.use('/api/vault', vaultRoute);
     server.use('/api/otc', otcRoute);
+    server.use('/api/lootbox', lootboxRoute);
 
     // Default catch-all renders Next app
     server.all('*', (req, res) => {

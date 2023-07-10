@@ -5,7 +5,7 @@
   }
 
   &.pending {
-    border-radius: 8px;
+    //border-radius: 8px;
     border: 1px solid transparent;
     overflow: hidden;
     box-shadow: rgba(42, 172, 198, 0.15) 0px 0px 40px;
@@ -25,7 +25,7 @@
   }
 
   &.inprogress {
-    border-radius: 8px;
+    //border-radius: 8px;
     border: 1px solid transparent;
     overflow: hidden;
     box-shadow: rgba(245, 164, 0, 0.15) 0px 0px 40px;

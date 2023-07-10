@@ -47,13 +47,20 @@
   color: white;
   background: rgba(18, 43, 66, 0.13);
 }
+.blurred2CitCap {
+  backdrop-filter: blur(20px);
+  color: white;
+  background: rgba(9, 9, 9, 0.13);
+}
 
 .blurredBg {
   backdrop-filter: blur(4px);
 }
+
 .blurredBgColor {
-  backdrop-filter: blur(7px);
-  background: rgba(22, 27, 38, 0.9);
+  backdrop-filter: blur(10px);
+  color:white!important;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 

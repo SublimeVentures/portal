@@ -1,10 +1,12 @@
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 import GenericModal from "@/components/Modal/GenericModal";
 import Image from "next/image";
 
 import {useAccount, useConnect} from 'wagmi'
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {is3VC} from "@/lib/utils";
 
 export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
@@ -29,19 +31,21 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
     }
 
     const title = () => {
-        return (<>Connect Wallet <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span></>)
+        return (<span className={!is3VC && `text-app-error`}>Connect Wallet {is3VC && <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span>}</span>)
     }
 
 
     const content = () => {
-        return (<> <div className="pb-10">
+        return (<> <div className="pb-10 font-accent">
             Don't want to connect your cold wallet? You can delegate access! <Linker url={ExternalLinks.DELEGATED_ACCESS} />
         </div>
             <div className="flex flex-col gap-5 fullWidth">
                 {connectors.map((connector) => (
-                    <RoundButton
+
+                    <UniButton
+                        type={ButtonTypes.BASE}
                         key={connector.id}
-                        handler={()=> {buttonHandler(connector)}}
+                        handler={async ()=> {buttonHandler(connector)}}
                         text={connector.name}
                         isWide={true}
                         zoom={1.05}

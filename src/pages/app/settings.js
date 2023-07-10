@@ -1,38 +1,60 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import RoundBanner from "@/components/App/RoundBanner";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import ReadIcon from "@/assets/svg/Read.svg";
-import VaultItem from "@/components/App/Vault/VaultItem";
-import {useState} from "react";
-import NotificationsSetting from "@/components/App/Settings/NotificationsSetting";
+import {verifyID} from "@/lib/authHelpers";
+import routes from "@/routes";
+import CitCapAccount from "@/components/App/Settings/CitCapAccount";
+ import {getCopy} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
+import Head from "next/head";
 
 
-export default function AppSettings() {
-    const [push, setPush] = useState(false)
-    const [sms, setSms] = useState(false)
-    const [email, setEmail] = useState(false)
-
-
+export default function AppSettings({account}) {
+    const title = `Settings - ${getCopy("NAME")}`
     return (
-        <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-            <div className="col-span-8 flex flex-col flex-1">
-                <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
-                             action={<RoundButton text={'Learn more'} isWide={true}
-                                                  size={'text-sm sm'}
-                                                  icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
-                />
+        <>
+            <Head>
+                <title>{title}</title>
+            </Head>
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                <div className="col-span-12 sm:col-span-8 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
+                    {!is3VC && <CitCapAccount account={account}/>}
+                </div>
             </div>
-            <div className="col-span-8 flex flex-row  gap-x-5 mobile:gap-10">
-                <NotificationsSetting/>
-            </div>
-        </div>
+        </>
+
 
 
     )
 }
 
 
+export const getServerSideProps = async({res}) => {
+    const account = await verifyID(res.req)
+
+    if(account.exists){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/app/auth?callbackUrl=${routes.Settings}`
+            }
+        }
+    }
+
+    if(!account.auth){
+        return {
+            redirect: {
+                permanent: true,
+                destination: `/login?callbackUrl=${routes.Settings}`
+            }
+        }
+    }
+
+    return {
+        props: {
+            account: account.user
+        }
+    }
+}
+
 AppSettings.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
-}
-;
+};

@@ -7,9 +7,9 @@ import {Tooltiper, TooltipType} from "@/components/Tooltip";
 import {Switch} from "@headlessui/react";
 import IconUsdc from "@/assets/svg/Usdc.svg";
 import IconUsdt from "@/assets/svg/Usdt.svg";
-import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
-import AllowanceStep from "@/components/App/Transactions/AllowanceStep";
-import TransactStep from "@/components/App/Transactions/TransactStep";
+// import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
+// import AllowanceStep from "@/components/App/Transactions/AllowanceStep";
+// import TransactStep from "@/components/App/Transactions/TransactStep";
 
 
 export default function BuyModal({model, setter, props}) {
@@ -61,7 +61,7 @@ export default function BuyModal({model, setter, props}) {
     }
 
     useEffect(()=> {
-        console.log("ERROR: jest")
+        // console.log("ERROR: jest")
         if(errors) {
             setProcessing(false)
         }
@@ -104,7 +104,7 @@ export default function BuyModal({model, setter, props}) {
 
     const isTransactionPrevStep = allowancePrevStep && stepAllowance
     const isTransactionReady = isAllowanceReady && stepAllowance
-    console.log("RECHANGE - isTransactionReady", isTransactionReady)
+    // console.log("RECHANGE - isTransactionReady", isTransactionReady)
 
     const stepTransactProps = {
         prevStep: isTransactionPrevStep,
@@ -166,9 +166,9 @@ export default function BuyModal({model, setter, props}) {
                 </div>
 
                 <div className="flex flex-col gap-2 pb-5 justify-content">
-                    <LiquidityStep stepProps={{...props, ...stepLiquidityProps}} />
-                    <AllowanceStep stepProps={{...props, ...stepAllowanceProps}} />
-                    <TransactStep stepProps={{...props, ...stepTransactProps}}/>
+                    {/*<LiquidityStep stepProps={{...props, ...stepLiquidityProps}} />*/}
+                    {/*<AllowanceStep stepProps={{...props, ...stepAllowanceProps}} />*/}
+                    {/*<TransactStep stepProps={{...props, ...stepTransactProps}}/>*/}
                 </div>
 
                 <div className="mt-auto fullWidth">
@@ -182,12 +182,12 @@ export default function BuyModal({model, setter, props}) {
         return (
             <div className=" flex flex-col flex-1">
                 <div>You have successfully purchased OTC offer.</div>
-                <lottie-player
-                    autoplay
-                    style={{width: '320px', margin: '30px auto 0px'}}
-                    mode="normal"
-                    src="/static/lottie/success.json"
-                />
+                {/*<lottie-player*/}
+                {/*    autoplay*/}
+                {/*    style={{width: '320px', margin: '30px auto 0px'}}*/}
+                {/*    mode="normal"*/}
+                {/*    src="/static/lottie/success.json"*/}
+                {/*/>*/}
             </div>
         )
     }

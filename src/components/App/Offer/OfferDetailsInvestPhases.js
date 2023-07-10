@@ -1,13 +1,13 @@
 import moment from 'moment'
 import {useEffect, useState} from "react";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconWait from "@/assets/svg/Wait.svg";
 import IconPantheon from "@/assets/svg/Pantheon.svg";
 import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {parseMaxAllocation} from "@/lib/phases";
+import {checkAllocationLeft, parseMaxAllocation} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
@@ -19,6 +19,9 @@ import {Transition} from "@headlessui/react";
 import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {is3VC} from "@/lib/utils";
+import {ACLs} from "@/lib/authHelpers";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -29,7 +32,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         currencies,
         refetchAllocation,
         refetchUserAllocation,
-        allocation
+        allocation,
+        userAllocation
     } = paramsInvestPhase;
 
     const {chain, chains} = useNetwork()
@@ -56,21 +60,19 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
     const [showInputInfo, setShowInputInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
-    let [isError, setIsError] = useState({})
-
+    const [isError, setIsError] = useState({})
 
     const [cookies, setCookie, removeCookie] = useCookies();
-
-    const {ACL, multi} = account
+    const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
+    const {ACL, multi, isStaked} = account
     const {id, alloTotal, isPaused} = offer
 
-
-
-
+    const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
+    const userAllocationLeft = checkAllocationLeft(ACL, userAllocation, maxAllocation, offer)
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
-    const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
+    const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
+    const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
 
-    const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
@@ -144,6 +146,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const openInvestmentModal = (hash, expires) => {
         setHash(hash)
         setExpires(Number(expires))
+
+        if(ntStakeGuard) {
+            return
+        }
         setInvestModal(true)
     }
 
@@ -223,22 +229,34 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }, []);
 
     useEffect(() => {
-        if (investmentAmount < offer.alloMin) {
-            setIsAllocationOk(true)
-            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-        } else if (investmentAmount > maxAllocation) {
-            setIsAllocationOk(true)
-            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
-        } else {
-            if(investmentAmount % 100 > 0) {
-                setIsAllocationOk(true)
-                return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
-            }
+        if (userAllocationLeft.status) {
             setIsAllocationOk(false)
-            return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+            return setIsError({state: true, msg: `Maximum allocation filled`})
+        } else if (!userAllocation && investmentAmount < offer.alloMin) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+        } else if (!userAllocation && investmentAmount > maxAllocation) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
+        } else if (ACL !== ACLs.Whale && investmentAmount > userAllocationLeft.amount) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
+        } else {
+            if(investmentAmount % (userAllocation > 0 ? 50 : 100) > 0) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Allocation has to be divisible by $${userAllocation > 0 ? 50 : 100}`})
+            }
+            if(!userAllocation) {
+                setIsAllocationOk(true)
+                return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+            } else {
+                setIsAllocationOk(true)
+                return setIsError({state: false, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
+            }
+
         }
 
-    }, [investmentAmount]);
+    }, [investmentAmount, userAllocation]);
 
     useEffect(() => {
         if (showInputInfo) {
@@ -267,9 +285,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className="flex flex-1 flex-col items-center justify-center ">
-
-
+        <div className={`flex flex-1 flex-col items-center justify-center ${is3VC ? "" : "font-accent"}`}>
             <div className="mt-15 lg:mt-auto">
                 <div className="currency-input-group relative">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
@@ -320,22 +336,40 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
             <div className="flex flex-row flex-wrap justify-center gap-2 py-10 px-2">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
-                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.action} isPrimary={true}
-                                 showParticles={true}
-                                 isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
-                                 handler={makeInvestment}
-                                 size={'text-sm sm'} icon={getInvestmentButtonIcon()}/>
-                </div>
-                <div className="hidden sinvest:flex">
-                    <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}
-                                 handler={() => setCalculateModal(true)}
-                                 icon={<IconCalculator className={ButtonIconSize.hero}/>}/>
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={buttonText}
+                        isPrimary={true}
+                        state={"success"}
+                        showParticles={true}
+                        isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
+                        handler={makeInvestment}
+                        size={'text-sm sm'} icon={getInvestmentButtonIcon()}
+                    />
+
 
                 </div>
+                <div className="hidden sinvest:flex">
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={'Calculate'}
+                        isWide={true}
+                        zoom={1.1}
+                        size={'text-sm sm'}
+                        handler={() => setCalculateModal(true)}
+                        icon={<IconCalculator className={ButtonIconSize.hero}/>}
+                    />
+                </div>
                 <div className="flex sinvest:hidden">
-                    <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                 handler={() => setCalculateModal(true)}
-                                 icon={<IconCalculator className={ButtonIconSize.small}/>}/>
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={'Calculate'}
+                        isWide={true}
+                        zoom={1.1}
+                        size={'text-sm icon'}
+                        handler={() => setCalculateModal(true)}
+                        icon={<IconCalculator className={ButtonIconSize.small}/>}
+                    />
                 </div>
             </div>
 

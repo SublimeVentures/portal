@@ -1,4 +1,6 @@
 const { models } = require('../services/db/db.init');
+const {is3VC} = require("../../src/lib/utils");
+
 
 async function getEnvironment() {
     const isDev = process.env.ENV !== 'production';
@@ -6,7 +8,6 @@ async function getEnvironment() {
     const multichain = await models.multichain.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
     const currencies = await models.currencies.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
     const projects = await models.offers.findAll({raw: true});
-    // const partners = await models.partners.count({where: {isEnabled: true}, raw: true});
     const partners = await models.partners.findAll({where: {isEnabled: true}, raw: true});
     let env = Object.assign({}, ...(envVars.map(item => ({ [item.name]: item.value }) )));
     let parsedCurrencies = {}
@@ -20,7 +21,7 @@ async function getEnvironment() {
     })
 
     const funded = projects.map(item => item.alloRaised).reduce((prev, next) => prev + next);
-
+    env.cdn = is3VC ? env.cdn3VC : env.cdnCitCap;
     env.currencies = parsedCurrencies
     env.multichain = parsedMultichain
     env.ntData = {
@@ -29,9 +30,9 @@ async function getEnvironment() {
         S1_old: partners.find(el => el.name === "Neo Tokyo Citizen S1 (old)")?.address,
         S2_old: partners.find(el => el.name === "Neo Tokyo Citizen S2 (old)")?.address,
         staked: partners.find(el => el.name === "Neo Tokyo Citizen (staked)")?.address,
+        transcendence: partners.find(el => el.name === "Citizen Capital Transcendence")?.address,
     }
     env.stats = {
-        investments: projects.length,
         partners: partners.filter(el=> el.level !== Number(env["ntLevel"])).length + 1,
         funded: funded + Number(env.investedInjected),
     }

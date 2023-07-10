@@ -53,6 +53,11 @@ module.exports = (sequelize) => {
             defaultValue: false,
             allowNull: false,
         },
+        isCitCapX: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
         name: {
             type: DataTypes.STRING,
         },

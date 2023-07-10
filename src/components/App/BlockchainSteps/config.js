@@ -2,10 +2,12 @@ import IconWait from "@/assets/svg/Wait.svg";
 import IconLoading from "@/assets/svg/LoadingCustom.svg";
 import IconSuccess from "@/assets/svg/Success.svg";
 import IconError from "@/assets/svg/Error.svg";
-import IdFacet from "@/components/App/Transactions/ThreeVCID.json";
-import {ACLs}  from "@/lib/authHelpers";
+import IdFacet from "../../../../abi/ThreeVCID.json";
+import CitCapStakingAbi from "../../../../abi/citcapStaking.abi.json";
 import {erc20ABI} from "wagmi";
 import { BigNumber } from 'ethers';
+import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
+import {ACLs} from "@/lib/authHelpers";
 
 
 export const Transaction = {
@@ -14,8 +16,6 @@ export const Transaction = {
     Executed: 2,
     Failed: 3,
 }
-
-
 
 export const getIcon = (status) => {
     switch (status) {
@@ -93,6 +93,29 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                 address: currency.address,
                 abi: erc20ABI
             }
+        }
+    }
+}
+
+export const getCitCapStakingFunction = (contractAddress) => {
+    return {
+        method:'stake',
+        args: [],
+        address: contractAddress,
+        abi: CitCapStakingAbi
+    }
+}
+
+export const getButtonStep = (state, defaultText) => {
+    switch(state) {
+        case TransactionState.Init: {
+            return defaultText
+        }
+        case TransactionState.Executing: {
+            return "Waiting..."
+        }
+        case TransactionState.Processing: {
+            return "Processing..."
         }
     }
 }

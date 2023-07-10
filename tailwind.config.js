@@ -20,17 +20,16 @@ module.exports = {
         'outline': '#729db0',
         'slides': '#101d2d',
         'footer': '#090b0f',
-        'navy': '#12151e',
-        'navy2': '#0e1118',//background
-        'navy-accent': '#161b26',
+        'app-bg': process.env.NEXT_PUBLIC_SITE === "3VC" ? '#0e1118' : "#000000",
+        'navy-accent': process.env.NEXT_PUBLIC_SITE === "3VC" ? '#161b26' : "rgba(0,0,0,0.2)",
         'app-bg-split': '#273031',
-        'app-success': '#b1e365',
-        'app-error': '#b92551',
-        'app-success-dark': '#6ca21a',
-        'app-success2': '#ace160',
+        'app-success':  process.env.NEXT_PUBLIC_SITE === "3VC" ? '#b1e365' : '#00c853',
+        'app-error': process.env.NEXT_PUBLIC_SITE === "3VC" ? '#b92551' :'#D31C5B',
         'app-accent': '#383a9b',
         'app-accent2': '#1b4d67',
         'app-white': '#f9fbfa',
+        'navy': '#12151e',
+        'bgalt': "rgb(211,28,91,.3)",
       },
       screens: {
         mobile: '520px',
@@ -76,15 +75,11 @@ module.exports = {
         '14': 'repeat(14, minmax(0, 1fr))',
       },
       fontFamily: {
-        'body': ['Montserrat', 'sans-serif'],
-        'accent': ['Work Sans', 'sans-serif'],
+        'body': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Montserrat', 'sans-serif'] : ['Inter', 'sans-serif'],
+        'accent': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['Work Sans', 'sans-serif'] :  ['Roboto Mono', 'sans-serif'],
       },
       fontSize: {
-        'hero': ['48px', {
-          lineHeight: '1.375',
-          // letterSpacing: '-0.01em',
-          // fontWeight: '500',
-        }],
+        'hero': process.env.NEXT_PUBLIC_SITE === "3VC" ? ['48px', {lineHeight: '1.375'}] : ['55px', {lineHeight: '1.1'}]
       },
       fontWeight: {
         // extrabold: '800',

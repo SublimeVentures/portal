@@ -1,5 +1,4 @@
 const moment = require('moment');
-const {checkAcl} = require("./acl");
 const {getOfferReservedData} = require("../queries/offers.query");
 const {getEnv} = require("../services/db");
 const {bookAllocation, expireAllocation} = require("../queries/invest.query");
@@ -7,12 +6,12 @@ const {createHash} = require("./helpers");
 
 let CACHE = {}
 
-async function reserveExpire(session, req) {
-    const {ADDRESS} = checkAcl(session, req)
+async function reserveExpire(user, req) {
+    const {address} = user
 
     const ID = Number(req.query.id)
     if(req.query.hash?.length < 8) {
-        await expireAllocation(ID, ADDRESS, req.query.hash)
+        await expireAllocation(ID, address, req.query.hash)
     }
 
     return {
@@ -20,9 +19,8 @@ async function reserveExpire(session, req) {
     }
 }
 
-
-async function reserveSpot(session, req) {
-    const {ACL, ADDRESS, USER} = checkAcl(session, req)
+async function reserveSpot(user, req) {
+    const {ACL, address, id} = user
     const offerId = Number(req.query.id)
     if (!CACHE[offerId]?.expire || CACHE[offerId].expire < moment().unix()) {
         const allocation = await getOfferReservedData(offerId)
@@ -43,8 +41,9 @@ async function reserveSpot(session, req) {
 
     const now = moment().unix()
     const expire = now + 15 * 60 //15min validity
-    const hash = createHash(`${ADDRESS}` + `${now}`)
-    const isBooked = await bookAllocation(offerId, isSeparatePool, TOTAL_ALLOCATION, ADDRESS, hash, AMOUNT, ACL, USER.id)
+    const hash = createHash(`${address}` + `${now}`)
+    const nftId = Number.isInteger(id) ? id : id.replace(/[^0-9]/g, '');
+    const isBooked = await bookAllocation(offerId, isSeparatePool, TOTAL_ALLOCATION, address, hash, AMOUNT, ACL, nftId)
 
     if (!isBooked) {
         return {

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const {logIn, logOut, refreshToken} = require("../controllers/login");
+const {logIn, logOut, refreshToken, updateSession_CitCapStaking} = require("../controllers/login");
 const {verifyID} = require("../../src/lib/authHelpers");
 
 //GET USER DATA
@@ -14,8 +14,8 @@ router.get('/login', async (req, res) => {
 //LOGIN USER
 router.post('/login', async (req, res) => {
     if (!req.body?.message || !req.body?.signature) return res.status(400).json({});
-
     const result = await logIn(req)
+
     if (!result) return res.status(401).json({});
 
     res.setHeader("Set-Cookie", result.cookie);
@@ -42,6 +42,19 @@ router.delete('/login', async (req, res) => {
     const cookie = await logOut(user)
     res.setHeader("Set-Cookie", cookie);
     return res.status(200).json({logout: true});
+});
+
+
+//UPDATE CITCAP SESSION
+router.get('/login/stake', async (req, res) => {
+    const {auth, user} = await verifyID(req, true)
+    if (!auth) return res.status(401).json({});
+
+    const result = await updateSession_CitCapStaking(user)
+    if (!result) return res.status(403).json({});
+
+    res.setHeader("Set-Cookie", result.cookie);
+    return res.status(200).json(result.data);
 });
 
 module.exports = {router}
