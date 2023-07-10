@@ -1,6 +1,6 @@
 import {Html, Head, Main, NextScript} from 'next/document'
 import Gtag from "@/components/gtag";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function Document() {
     return (

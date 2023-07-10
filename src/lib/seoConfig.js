@@ -1,6 +1,5 @@
 import PAGE from "@/routes";
-
-export const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
+import {is3VC} from "@/lib/utils";
 
 const copy = {
     true: {
@@ -125,14 +124,14 @@ const template_CitCap = {
             description: '',
             images: [
                 {
-                    url: 'https://cdn.3vc.fund/webapp/og.jpg',
+                    url: 'https://cdn.citizencapital.fund/webapp/og.jpg',
                     width: 800,
                     height: 600,
                     alt: 'Join Citizen Capital',
                     type: 'image/jpeg',
                 },
             ],
-            siteName: '3VC',
+            siteName: 'Citizen Capital',
         },
         twitter: {
             handle: '@CitCapFund',

@@ -2,7 +2,7 @@ import {Fragment, useState} from "react";
 import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 export default function LoginModal({isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false)
 

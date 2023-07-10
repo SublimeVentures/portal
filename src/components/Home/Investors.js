@@ -8,7 +8,7 @@ import A16z from '@/assets/svg/logo/A16z.svg?component'
 import Animoca from '@/assets/svg/logo/Animoca.svg?component'
 import Qcp from '@/assets/svg/logo/Qcp.svg?component'
 import Sequoia from '@/assets/svg/logo/Sequoia.svg?component'
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function Investors() {
 

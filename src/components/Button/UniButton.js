@@ -1,6 +1,6 @@
 import {RoundButton} from "@/components/Button/RoundButton";
 import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 
 export const ButtonTypes = {

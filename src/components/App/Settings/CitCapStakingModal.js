@@ -122,7 +122,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                        Welcome to Citizen Capital.
                    </div>
                     <div className={"my-5"}>
-                        <img src="https://cdn.3vc.fund/webapp/staked.gif" className={"rounded-md"}/>
+                        <img src="https://cdn.citizencapital.fund/webapp/staked.gif" className={"rounded-md"}/>
                      </div>
 
             </div>

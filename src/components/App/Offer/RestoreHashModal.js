@@ -2,7 +2,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import moment from "moment";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function RestoreHashModal({model, setter, restoreModalProps}) {
     const { expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps

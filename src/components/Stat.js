@@ -1,4 +1,4 @@
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 function Stat({color, title, value, icon}) {
     return (

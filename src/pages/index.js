@@ -1,9 +1,10 @@
 import { NextSeo } from 'next-seo';
-import {is3VC, seoConfig} from "@/lib/seoConfig";
+import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import {verifyID} from "@/lib/authHelpers";
 import Home3VC from "@/components/Home";
 import HomeCitCap from "@/components/HomeCitCap";
+import {is3VC} from "@/lib/utils";
 
 export default function Home({account}) {
   const seo = seoConfig(PAGE.Landing)

@@ -11,7 +11,8 @@ import IconStars from "@/assets/svg/Stars.svg";
 import IconMoney from "@/assets/svg/Money.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
-import {getCopy, is3VC} from "@/lib/seoConfig";
+ import {getCopy} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function AppOffer({account}) {
     const ACL = account.ACL
@@ -31,7 +32,6 @@ export default function AppOffer({account}) {
     const offerList = response?.offers
     const offerListRender = offerList ? offerList.filter(el=> !el.accelerator) : []
     const stats = response?.stats
-    const investments = stats ? stats.investments : 0;
     const partners = stats ? stats.partners : 0;
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
@@ -60,7 +60,7 @@ export default function AppOffer({account}) {
             </div>
             <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
                 <div className={"w-full flex gap-5 flex-col md:flex-row"}>
-                    <Stat color={"gold"} title={"Investments"} value={investments}  icon={<IconStars className={"w-9"}/>}/>
+                    <Stat color={"gold"} title={"Investments"} value={offerListRender.length}  icon={<IconStars className={"w-9"}/>}/>
                     {is3VC && <Stat color={"teal"} title={"Partners"} value={partners} icon={<IconNetwork className={"w-7"}/>}/>}
                     <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7"}/>}/>
                 </div>

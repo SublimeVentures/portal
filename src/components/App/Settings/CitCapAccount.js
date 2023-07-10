@@ -3,10 +3,11 @@ import {ExternalLinks} from "@/routes";
 import {useState, useEffect} from "react";
 import IconInfo from "@/assets/svg/Info.svg";
 import {IconButton} from "@/components/Button/IconButton";
-import {is3VC} from "@/lib/seoConfig";
+
 import dynamic from "next/dynamic";
 
 import {updateSession_CitCapStaking} from "@/fetchers/auth.fetcher";
+import {is3VC} from "@/lib/utils";
 const CitCapStakingModal = dynamic(() => import('@/components/App/Settings/CitCapStakingModal'), {ssr: false})
 
 
@@ -61,7 +62,7 @@ export default function CitCapAccount({account}) {
             <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
                 <div className={"flex flex-row items-center pb-5 justify-between "}>
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>IDENTITY</div>
-                    <a href={ExternalLinks.DISCORD_CITCAP} target={"_blank"}><IconButton zoom={1.1} size={'w-8'} icon={<IconInfo />} noBorder={!is3VC} /></a>
+                    <a href={ExternalLinks.DISCORD} target={"_blank"}><IconButton zoom={1.1} size={'w-8'} icon={<IconInfo />} noBorder={!is3VC} /></a>
 
                 </div>
                 <div className={"detailRow"}><p>Address</p><hr className={"spacer"}/><p>{`${account.address.slice(0,3)}...${account.address.slice(account.address.length-3,account.address.length)}`}</p></div>

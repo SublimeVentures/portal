@@ -7,9 +7,9 @@ import {Tooltiper, TooltipType} from "@/components/Tooltip";
 import {Switch} from "@headlessui/react";
 import IconUsdc from "@/assets/svg/Usdc.svg";
 import IconUsdt from "@/assets/svg/Usdt.svg";
-import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
-import AllowanceStep from "@/components/App/Transactions/AllowanceStep";
-import TransactStep from "@/components/App/Transactions/TransactStep";
+// import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
+// import AllowanceStep from "@/components/App/Transactions/AllowanceStep";
+// import TransactStep from "@/components/App/Transactions/TransactStep";
 
 
 export default function BuyModal({model, setter, props}) {
@@ -166,9 +166,9 @@ export default function BuyModal({model, setter, props}) {
                 </div>
 
                 <div className="flex flex-col gap-2 pb-5 justify-content">
-                    <LiquidityStep stepProps={{...props, ...stepLiquidityProps}} />
-                    <AllowanceStep stepProps={{...props, ...stepAllowanceProps}} />
-                    <TransactStep stepProps={{...props, ...stepTransactProps}}/>
+                    {/*<LiquidityStep stepProps={{...props, ...stepLiquidityProps}} />*/}
+                    {/*<AllowanceStep stepProps={{...props, ...stepAllowanceProps}} />*/}
+                    {/*<TransactStep stepProps={{...props, ...stepTransactProps}}/>*/}
                 </div>
 
                 <div className="mt-auto fullWidth">

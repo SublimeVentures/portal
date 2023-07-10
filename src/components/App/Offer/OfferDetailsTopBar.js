@@ -1,7 +1,8 @@
 import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
+
 
 
 export default function OfferDetailsTopBar({paramsBar}) {
@@ -12,7 +13,7 @@ export default function OfferDetailsTopBar({paramsBar}) {
         <div className={"col-span-12 flex flex-col gap-10 md:flex-row"}>
             <div className={"flex flex-row gap-5 flex-1 items-center"}>
                 <div className={"rounded-lg "}>
-                    <Image src={`${cdn}${slug}/icon.jpg`}  className={'p-1 rounded-full boxshadow'} alt={slug} width={100} height={100}/>
+                    <Image src={`${cdn}/research/${slug}/icon.jpg`}  className={'p-1 rounded-full boxshadow'} alt={slug} width={100} height={100}/>
                 </div>
                 <div>
                     <div className="text-4xl font-bold flex flex-1 glow">{name}</div>

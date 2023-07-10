@@ -29,6 +29,7 @@ module.exports = {
         'app-accent2': '#1b4d67',
         'app-white': '#f9fbfa',
         'navy': '#12151e',
+        'bgalt': "rgb(211,28,91,.3)",
       },
       screens: {
         mobile: '520px',

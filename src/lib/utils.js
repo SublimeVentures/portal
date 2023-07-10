@@ -4,6 +4,10 @@ function sleeper(ms) {
     };
 }
 
+const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
+
+
 module.exports = {
-    sleeper
+    sleeper,
+    is3VC
 }

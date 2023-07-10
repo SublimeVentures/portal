@@ -27,16 +27,19 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-https://blockeater.herokuapp.com/v3rify
 ## ToDo
-- old investments
-- --- logo, icon, bg
-- zmniejszyć liczbę communities/ check investments
+- 
 - lootbox list + db
 - upload stakers
 - change total staked + wyciagnij swoje
 
+- notion & annoucements
+- send bytes
+
+- update costs - cloudflare 
+
 - media rearrange
+- lottie-player
 - RR unmount
 - investment calendar google
 - UniButton -> GenericButton

@@ -3,13 +3,14 @@ import {fetchPartners} from "@/fetchers/public.fecher";
 import PAGE from "@/routes";
 import { queryClient } from '@/lib/queryCache'
 import {NextSeo} from "next-seo";
-import {is3VC, seoConfig} from "@/lib/seoConfig";
+import { seoConfig} from "@/lib/seoConfig";
 import {verifyID} from "@/lib/authHelpers";
 import LoginCitCap from "@/components/Login/loginCitCap";
 import LoginBased from "@/components/Login/loginBased";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import dynamic from "next/dynamic";
+import {is3VC} from "@/lib/utils";
 const ErrorModal = dynamic(() => import('@/components/SignupFlow/ErrorModal'), {ssr: false})
 
 export default function Login({}) {

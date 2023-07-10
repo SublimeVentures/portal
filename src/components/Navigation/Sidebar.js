@@ -18,7 +18,7 @@ import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
 import {logOut} from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 

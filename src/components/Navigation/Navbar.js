@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import Link from 'next/link';
 import useScrollPosition from "@/lib/hooks/useScrollPosition";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 import {ExternalLinks} from "@/routes";
 import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
 

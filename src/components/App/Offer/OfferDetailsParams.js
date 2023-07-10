@@ -1,5 +1,5 @@
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userAllocation, isLastPhase} = paramsParams
@@ -7,10 +7,9 @@ export const OfferDetailsParams = ({paramsParams}) => {
 
     const normalized_ppu = Number(ppu)?.toLocaleString()
     const normalized_tge = Number(tge)?.toLocaleString()
-    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString()
+    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_my = Number(userAllocation)?.toLocaleString()
-
     const isSoldOut = allocation?.alloFilled >= alloTotal || isLastPhase
 
     return (
@@ -27,7 +26,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                         {userAllocation > 0 && <div className={"detailRow text-app-success"}><p>My Allocation</p><hr className={"spacer"}/><p>${normalized_my}</p></div>}
                         <div className={"detailRow"}><p>Ticker</p><hr className={"spacer"}/><p>${ticker}</p></div>
                         <div className={"detailRow"}><p>Price</p><hr className={"spacer"}/><p>${normalized_ppu}</p></div>
-                        {tge && <div className={"detailRow"}><p>TGE</p><hr className={"spacer"}/><p>({normalized_tgeDiff}%) {normalized_tge}</p></div>}
+                        {tge && <div className={"detailRow text-app-success"}><p>TGE</p><hr className={"spacer"}/><p>({normalized_tgeDiff}%) ${normalized_tge}</p></div>}
                         <div className={"detailRow"}><p>Cliff</p><hr className={"spacer"}/><p>{t_cliff ? <>{t_cliff}</> : <>TBA</>}</p></div>
                         <div className={"detailRow"}><p>Vesting</p><hr className={"spacer"}/><p>{t_vesting ? <>{t_vesting}</> : <>TBA</>}</p></div>
 

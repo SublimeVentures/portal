@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function ErrorModal({model, setter}) {
 

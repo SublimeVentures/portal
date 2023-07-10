@@ -1,6 +1,6 @@
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
     const { account, isClosed, offer } = paramsInvestClosed

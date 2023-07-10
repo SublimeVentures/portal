@@ -9,7 +9,7 @@ import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
-import {getCopy, is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function AppAccelerator({account}) {
     const ACL = account.ACL
@@ -78,7 +78,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>Due Diligence</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span class="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, {is3VC ? "Investors" :"Citizens"} must DYOR.
+                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span className="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, {is3VC ? "Investors" :"Citizens"} must DYOR.
 
                     </div>
                 </div>
@@ -90,7 +90,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>{getCopy("ACCELERATOR")}</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {is3VC ? "web3" : "NeoTokyo"}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span class="text-app-error font-bold">best {is3VC ? "projects" :"NeoTokyo Projects"}</span>.
+                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {is3VC ? "web3" : "NeoTokyo"}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span className="text-app-error font-bold">best {is3VC ? "projects" :"NeoTokyo Projects"}</span>.
 
                     </div>
                 </div>

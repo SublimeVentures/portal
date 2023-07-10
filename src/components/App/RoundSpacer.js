@@ -1,4 +1,4 @@
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function RoundSpacer({title, subtitle, action}) {
     return (

@@ -1,4 +1,4 @@
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function Loader() {
     return (
@@ -12,7 +12,7 @@ export default function Loader() {
                 <div>O</div>
                 <div>L</div>
             </div> :
-                <img src={"https://cdn.3vc.fund/webapp/load.gif"} className={"max-w-[400px] max-h-[300px] mx-auto"} />
+                <img src={"https://cdn.citizencapital.fund/webapp/load.gif"} className={"max-w-[400px] max-h-[300px] mx-auto"} />
             }
         </div>
     )

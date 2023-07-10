@@ -16,8 +16,8 @@ import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import routes from "@/routes";
-import {getCopy, is3VC} from "@/lib/seoConfig";
-
+ import {getCopy} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export const AppOfferDetails = ({account}) => {
     const router = useRouter()
@@ -47,7 +47,7 @@ export const AppOfferDetails = ({account}) => {
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             enabled: !!offerData?.offer?.id,
-            refetchInterval: 15000
+            refetchInterval: isClosed ? false : 15000
         }
     );
 
@@ -55,7 +55,7 @@ export const AppOfferDetails = ({account}) => {
             queryKey: ["userAllocation", offerData?.offer?.id, address],
             queryFn: () => fetchUserInvestment(offerData?.offer?.id),
             refetchOnMount: false,
-            refetchOnWindowFocus: true,
+            refetchOnWindowFocus: !isClosed,
             enabled: !!offerData?.offer?.id,
         }
     );

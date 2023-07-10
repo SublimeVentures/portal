@@ -7,8 +7,7 @@ const delegateAbi = require('../../abi/delegate.abi.json')
 const citcapStakingAbi = require('../../abi/citcapStaking.abi.json')
 const Sentry = require("@sentry/nextjs");
 const {checkElite} = require("../queries/ntElites.query");
-
-const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
+const {is3VC} = require("../../src/lib/utils");
 
 const getMoralisImage = (object) => {
     if (object?.media?.mimetype === 'image/gif') {

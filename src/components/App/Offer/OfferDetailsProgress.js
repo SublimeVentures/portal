@@ -1,6 +1,6 @@
 import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequired, isSoldOut}) {
     const tilt = useRef(null);

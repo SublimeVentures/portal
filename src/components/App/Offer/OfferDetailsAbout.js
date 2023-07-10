@@ -12,7 +12,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {useState} from "react";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 
 const MEDIA_TYPE = {
@@ -53,7 +53,7 @@ export default function OfferDetailsAbout({offer}) {
                             <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconDiscord />} noBorder={!is3VC}/>
                         </a> }
 
-                        <a href={`${cdn}${slug}/ResearchReport.pdf`} target="_blank">
+                        <a href={`${cdn}/research/${slug}/ResearchReport.pdf`} target="_blank">
                             <IconButton zoom={1.1} size={'w-17 p-3'} icon={<IconDownload />} noBorder={!is3VC}/>
                         </a>
 
@@ -79,7 +79,7 @@ export default function OfferDetailsAbout({offer}) {
                         return <SwiperSlide key={i}>
                             {
                                 el.type === MEDIA_TYPE.IMAGE ?
-                                    <img src={`${cdn}${slug}/slide/${el.url}`} alt={"img"}/> :
+                                    <img src={`${cdn}/research/${slug}/slide/${el.url}`} alt={"img"}/> :
                                     <iframe width="100%" height="500" className={"rounded-xl"} src={el.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                             }
                         </SwiperSlide>
@@ -99,7 +99,7 @@ export default function OfferDetailsAbout({offer}) {
                         return (
                             <SwiperSlide key={i}>
                                 <div className={"thumb rounded-xl"}>
-                                    <img src={`${cdn}${slug}/slide/${el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb}`} alt={"img"}/>
+                                    <img src={`${cdn}/research/${slug}/slide/${el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb}`} alt={"img"}/>
                                 </div>
                             </SwiperSlide>
                         )

@@ -13,10 +13,9 @@ import Link from "next/link";
 
 import {ACLs}  from "@/lib/authHelpers";
 import Linker from "@/components/link";
-import {is3VC} from "@/lib/seoConfig";
 import {getButtonStep, getInvestFunction} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {sleeper} from "@/lib/utils";
+import {is3VC, sleeper} from "@/lib/utils";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 
 export const StakeSteps = {

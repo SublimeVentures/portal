@@ -1,4 +1,4 @@
-const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
+import {is3VC} from "@/lib/utils";
 
 
 const PAGE = {

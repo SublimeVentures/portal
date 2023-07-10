@@ -20,7 +20,7 @@ import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 import {ACLs} from "@/lib/authHelpers";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {

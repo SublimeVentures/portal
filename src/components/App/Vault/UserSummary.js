@@ -7,7 +7,7 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 import { PowerGlitch } from 'powerglitch'
 
 function amount(item){

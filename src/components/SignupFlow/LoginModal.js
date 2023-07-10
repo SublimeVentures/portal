@@ -6,7 +6,7 @@ import {useAccount, useConnect} from 'wagmi'
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 
 export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()

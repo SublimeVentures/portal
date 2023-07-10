@@ -2,7 +2,8 @@ import LayoutApp from '@/components/Layout/LayoutApp';
 import {verifyID} from "@/lib/authHelpers";
 import routes from "@/routes";
 import CitCapAccount from "@/components/App/Settings/CitCapAccount";
-import {getCopy, is3VC} from "@/lib/seoConfig";
+ import {getCopy} from "@/lib/seoConfig";
+import {is3VC} from "@/lib/utils";
 import Head from "next/head";
 
 
