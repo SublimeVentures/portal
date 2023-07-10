@@ -28,22 +28,21 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
-- upload stakers
-- change total staked + wyciagnij swoje
-- send bytes
 
+- deploy
 
 - notion & annoucements
 - wallet button align
 - wrong wallet logout button
 - add steady stacks as partner
-
+- change total staked + wyciagnij swoje
 https://devcenter.heroku.com/articles/heroku-postgres-backups
 - s2 image not displaying not staked
 - update costs - cloudflare & heroku
 - check bings wallet 0x26e7f5f193354b22da271a57433acadab2c79480 across investments
 - media rearrange
 - custom 404 page
+- withdraw my stake
 
 - RR unmount
 - investment calendar google

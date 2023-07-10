@@ -37,13 +37,13 @@ export default function Sidebar({account}) {
 
     const openDiscord = (e) => {
         e?.preventDefault();
-        window.open(is3VC ? ExternalLinks.DISCORD : ExternalLinks.DISCORD_CITCAP, '_blank');
+        window.open(ExternalLinks.DISCORD, '_blank');
         setIsMobileOpen(false)
     }
 
     const openNotion = (e) => {
         e?.preventDefault();
-        window.open(is3VC ? ExternalLinks.WIKI : ExternalLinks.WIKI_CITCAP, '_blank');
+        window.open(ExternalLinks.WIKI, '_blank');
         setIsMobileOpen(false)
     }
 

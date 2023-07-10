@@ -10,7 +10,7 @@ export default function Navbar() {
     const [isOnTop, setIsOnTop] = useState(false)
     const scrollPosition = useScrollPosition();
     const menu = [
-        {name: 'DOCS', link: is3VC ? ExternalLinks.WIKI : ExternalLinks.WIKI_CITCAP, isExternal: true},
+        {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
         {name: 'INVESTMENTS', link: 'investments'},
     ]
 
