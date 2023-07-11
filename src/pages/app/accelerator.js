@@ -10,6 +10,7 @@ import IconStars from "@/assets/svg/Stars.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
 import {is3VC} from "@/lib/utils";
+import {getCopy} from "@/lib/seoConfig";
 
 export default function AppAccelerator({account}) {
     const ACL = account.ACL
