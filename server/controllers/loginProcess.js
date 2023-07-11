@@ -39,13 +39,36 @@ async function isWhale(ownedNfts) {
     }
 }
 
-const parseAllWays = () => {
 
+const parseFromUri = async (uri) => {
+    const response = await fetch(uri);
+    const metadata = await response.json();
+    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
+    const isS1 = seasonAttr === "Season 1"
+    const image = metadata.image
+    const id = metadata.name.split("#").at(-1)
+    return {
+        isS1, image, id, name: "Staked Citizen", symbol: "CTZNC"
+    }
+}
+
+const parseFromMetaData = (object) => {
+    const metadata = JSON.parse(object.metadata)
+    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
+    const isS1 = seasonAttr === "Season 1"
+    const id = metadata.name.split("#").at(-1)
+    const image = false
+    return {
+        isS1, image, id, name: "Staked Citizen", symbol: "CTZNC"
+    }
 }
 
 
 async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     if (ownedNfts.length === 0) return false
+
+    const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
+    const S2_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
 
     const S1_owned = ownedNfts.filter(el =>
         el.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase() ||
@@ -59,59 +82,55 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
     )
 
-    console.log("S1_owned",S1_owned)
-    console.log("S2_owned",S2_owned)
-    console.log("S_staked",S_staked)
+    // console.log("S1_owned",S1_owned)
+    // console.log("S2_owned",S2_owned)
+    // console.log("S_staked",S_staked)
     let S1_staked = []
     let S2_staked = []
+    let result
     for(let i=0; i< S_staked.length; i++) {
-        if(!S_staked[i].metadata) {
-            const response = await fetch(S_staked[i].token_uri);
-            const metadata = await response.json();
-            const season = metadata.attributes[metadata.attributes.length-1].value
-            S_staked[i].image = metadata.image
-            if(season === "Season 1") {
-                S1_staked.push(S_staked[i])
-            } else {
-                S2_staked.push(S_staked[i])
+        const uri = S_staked[i].token_uri
+        const uriTest = uri.split("/").at(-1)
+        if(uri === uriTest) {
+            if(S_staked[i].metadata) {
+                result = parseFromMetaData(S_staked[i])
             }
         } else {
-            const season = S_staked[i].normalized_metadata.attributes[S_staked[i].normalized_metadata.attributes.length-1].value
-            if(season === "Season 1") {
-                S1_staked.push(S_staked[i])
-            } else {
-                S2_staked.push(S_staked[i])
-            }
+            result = await parseFromUri(uri)
+        }
+
+        if(result.isS1) {
+            S1_staked.push(result)
+        } else {
+            S2_staked.push(result)
         }
     }
 
-    const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
-    const S2_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
+    const S1 = [...S1_owned, ...S1_staked] //total
+    const S2 = [...S2_owned, ...S2_staked] //total
 
-    const S1 = [...S1_owned, ...S1_staked]
-    const S2 = [...S2_owned, ...S2_staked]
-    const S1_ids = S1.map(el => Number(el.token_uri.split("/").at(-1)))
-    console.log("S1_ids",S1_ids)
+    const S1_ids_normal = S1_owned.map(el => Number(el.token_uri.split("/").at(-1)))
+    const S1_ids_staked = S1_staked.map(el => Number(el.id))
+    const S1_ids = [...S1_ids_normal, ...S1_ids_staked]
+    // console.log("S1_ids",S1_ids)
     let isElite
     try {
         isElite = await checkElite(S1_ids)
-
     } catch (e) {
-        isElite=[]
+        isElite= []
     }
-    console.log("S1",S1)
-    console.log("S2",S2)
+    // console.log("S1",S1)
+    // console.log("S2",S2)
 
     let multi;
     let nftUsed;
     let ownTranscendence = false
     if (isElite.length > 0) {
         multi = isElite.length * (S1_config.multiplier + 4) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
-        nftUsed = S1.find(el => el.normalized_metadata.name === `Citizen #${isElite[0].id}`)
     } else {
         multi = S1.length * S1_config.multiplier + S2.length * S2_config.multiplier
-        nftUsed = S1.length > 0 ? S1[0] : S2[0]
     }
+    nftUsed = S1.length > 0 ? S1[0] : S2[0]
 
     const haveTranscendence = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
     if(haveTranscendence) {
@@ -126,7 +145,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         symbol: nftUsed.symbol,
         multi: multi,
         img: getMoralisImageNT(nftUsed),
-        id: Number(nftUsed.token_uri.split("/").at(-1)),
+        id: nftUsed?.id ? nftUsed.id : Number(nftUsed.token_uri.split("/").at(-1)),
         ACL: 1,
         transcendence: ownTranscendence,
         stakeReq: S1_owned.length > 0 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2),
@@ -135,6 +154,98 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         stakeDate
     }
 }
+//
+// async function isNeoTokyoOld(ownedNfts, enabledCollections, address) {
+//     if (ownedNfts.length === 0) return false
+//
+//     const S1_owned = ownedNfts.filter(el =>
+//         el.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase() ||
+//         el.token_address.toLowerCase() === getEnv().ntData.S1_old.toLowerCase()
+//     )
+//     const S2_owned = ownedNfts.filter(el =>
+//         el.token_address.toLowerCase() === getEnv().ntData.S2.toLowerCase() ||
+//         el.token_address.toLowerCase() === getEnv().ntData.S2_old.toLowerCase()
+//     )
+//     let S_staked = ownedNfts.filter(el =>
+//         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
+//     )
+//
+//     // console.log("S1_owned",S1_owned)
+//     // console.log("S2_owned",S2_owned)
+//     // console.log("S_staked",S_staked)
+//     let S1_staked = []
+//     let S2_staked = []
+//     for(let i=0; i< S_staked.length; i++) {
+//         if(!S_staked[i].metadata) {
+//             const response = await fetch(S_staked[i].token_uri);
+//             const metadata = await response.json();
+//             const season = metadata.attributes[metadata.attributes.length-1].value
+//             S_staked[i].image = metadata.image
+//             if(season === "Season 1") {
+//                 S1_staked.push(S_staked[i])
+//             } else {
+//                 S2_staked.push(S_staked[i])
+//             }
+//         } else {
+//             const season = S_staked[i].normalized_metadata.attributes[S_staked[i].normalized_metadata.attributes.length-1].value
+//             if(season === "Season 1") {
+//                 S1_staked.push(S_staked[i])
+//             } else {
+//                 S2_staked.push(S_staked[i])
+//             }
+//         }
+//     }
+//
+//     const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
+//     const S2_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
+//
+//     const S1 = [...S1_owned, ...S1_staked]
+//     const S2 = [...S2_owned, ...S2_staked]
+//     const S1_ids = S1.map(el => Number(el.token_uri.split("/").at(-1)))
+//     console.log("S1_ids",S1_ids)
+//     let isElite
+//     try {
+//         isElite = await checkElite(S1_ids)
+//
+//     } catch (e) {
+//         isElite=[]
+//     }
+//     console.log("S1",S1)
+//     console.log("S2",S2)
+//
+//     let multi;
+//     let nftUsed;
+//     let ownTranscendence = false
+//     if (isElite.length > 0) {
+//         multi = isElite.length * (S1_config.multiplier + 4) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
+//         nftUsed = S1.find(el => el.normalized_metadata.name === `Citizen #${isElite[0].id}`)
+//     } else {
+//         multi = S1.length * S1_config.multiplier + S2.length * S2_config.multiplier
+//         nftUsed = S1.length > 0 ? S1[0] : S2[0]
+//     }
+//
+//     const haveTranscendence = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
+//     if(haveTranscendence) {
+//         const transcendence_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
+//         multi += transcendence_config.multiplier
+//         ownTranscendence = true
+//     }
+//
+//     const {isStaked, stakeSize, stakeDate} = await checkStaking(address)
+//     return {
+//         name: nftUsed.name,
+//         symbol: nftUsed.symbol,
+//         multi: multi,
+//         img: getMoralisImageNT(nftUsed),
+//         id: Number(nftUsed.token_uri.split("/").at(-1)),
+//         ACL: 1,
+//         transcendence: ownTranscendence,
+//         stakeReq: S1_owned.length > 0 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2),
+//         isStaked,
+//         stakeSize,
+//         stakeDate
+//     }
+// }
 
 async function isPartner(ownedNfts, enabledCollections) {
     if (ownedNfts.length === 0) return false

@@ -26,7 +26,7 @@ const validateLogin = async (message, signature) => {
         const userSession = await checkUser(recoveredAddress)
         if (!userSession) return false;
         return {...{address: recoveredAddress}, ...userSession}
-        // const fakeAddress="0x83b3D21572A7A35548baeecAf336F70e81a7A442"
+        // const fakeAddress="0x4481507cc228FA19D203BD42110d679571f7912E"
         // const userSession = await checkUser(fakeAddress)
         // console.log("userSession",userSession)
         // if (!userSession) return false;
