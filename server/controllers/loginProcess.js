@@ -64,7 +64,6 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         if(!S_staked[i].metadata) {
             const response = await fetch(S_staked[i].token_uri);
             const metadata = await response.json();
-            console.log("metadata",metadata)
             const season = metadata.attributes[metadata.attributes.length-1].value
             S_staked[i].image = metadata.image
             if(season === "Season 1") {
@@ -95,7 +94,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     let nftUsed;
     let ownTranscendence = false
     if (isElite.length > 0) {
-        multi = isElite.length * (S1_config.multiplier + 2) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
+        multi = isElite.length * (S1_config.multiplier + 4) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
         nftUsed = S1.find(el => el.normalized_metadata.name === `Citizen #${isElite[0].id}`)
     } else {
         multi = S1.length * S1_config.multiplier + S2.length * S2_config.multiplier
