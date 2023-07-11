@@ -23,14 +23,14 @@ const validateLogin = async (message, signature) => {
         const validDomain = message.split('\n')[3].split('DOMAIN: ')[1] === domain.host
         if (!validDomain) return false;
 
-        // const userSession = await checkUser(recoveredAddress)
-        // if (!userSession) return false;
-        // return {...{address: recoveredAddress}, ...userSession}
-        const fakeAddress="0x26E7f5F193354b22DA271a57433ACADab2C79480"
-        const userSession = await checkUser(fakeAddress)
-        console.log("userSession",userSession)
+        const userSession = await checkUser(recoveredAddress)
         if (!userSession) return false;
-        return {...{address: fakeAddress}, ...userSession}
+        return {...{address: recoveredAddress}, ...userSession}
+        // const fakeAddress="0x26E7f5F193354b22DA271a57433ACADab2C79480"
+        // const userSession = await checkUser(fakeAddress)
+        // console.log("userSession",userSession)
+        // if (!userSession) return false;
+        // return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
         console.log("validateLogin", e)
         return null

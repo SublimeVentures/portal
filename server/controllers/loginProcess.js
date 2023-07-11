@@ -16,6 +16,13 @@ const getMoralisImage = (object) => {
         return object?.media?.media_collection?.high?.url ? object.media.media_collection.high.url : object?.media?.original_media_url
     }
 }
+const getMoralisImageNT = (object) => {
+    let image =  object?.media?.media_collection?.high?.url ? object.media.media_collection.high.url : object?.media?.original_media_url
+    if(!image) {
+        image = object.image
+    }
+    return image
+}
 
 async function isWhale(ownedNfts) {
     if (ownedNfts.length === 0) return false
@@ -32,6 +39,7 @@ async function isWhale(ownedNfts) {
     }
 }
 
+
 async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     if (ownedNfts.length === 0) return false
 
@@ -43,12 +51,38 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         el.token_address.toLowerCase() === getEnv().ntData.S2.toLowerCase() ||
         el.token_address.toLowerCase() === getEnv().ntData.S2_old.toLowerCase()
     )
-    const S_staked = ownedNfts.filter(el =>
+    let S_staked = ownedNfts.filter(el =>
         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
     )
 
-    const S1_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 1")
-    const S2_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 2")
+    // const S1_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 1")
+    // const S2_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 2")
+
+    let S1_staked = []
+    let S2_staked = []
+    for(let i=0; i< S_staked.length; i++) {
+        if(!S_staked[i].metadata) {
+            const response = await fetch(S_staked[i].token_uri);
+            const metadata = await response.json();
+            console.log("metadata",metadata)
+            const season = metadata.attributes[metadata.attributes.length-1].value
+            S_staked[i].image = metadata.image
+            if(season === "Season 1") {
+                S1_staked.push(S_staked[i])
+            } else {
+                S2_staked.push(S_staked[i])
+            }
+        } else {
+            const season = S_staked[i].normalized_metadata.attributes[S_staked[i].normalized_metadata.attributes.length-1].value
+            if(season === "Season 1") {
+                S1_staked.push(S_staked[i])
+            } else {
+                S2_staked.push(S_staked[i])
+            }
+        }
+
+    }
+
     const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
     const S2_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
 
@@ -80,7 +114,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         name: nftUsed.name,
         symbol: nftUsed.symbol,
         multi: multi,
-        img: getMoralisImage(nftUsed),
+        img: getMoralisImageNT(nftUsed),
         id: nftUsed.normalized_metadata.name,
         ACL: 1,
         transcendence: ownTranscendence,

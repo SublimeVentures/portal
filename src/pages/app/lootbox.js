@@ -62,7 +62,6 @@ export default function AppLootbox({account}) {
             </Head>
             <div className={`flex flex-1 flex-col select-none justify-center items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 loot ${is3VC ? "" : "font-accent"}`}>
                 {availableAmount  > 0 && <div className={`${is3VC ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[100px] text-center collap:top-[100px]"} flex glowNormal pb-5`}>You have {availableAmount} unclaimed Lootbox!</div>}
-                {!is3VC && <div className={`${is3VC ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[100px] text-center collap:top-[100px]"} flex glowNormal pb-5`}>You have 1 unclaimed Lootbox!</div>}
 
                 <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
                         <IconMysteryBox className="w-[250px] sm:w-[450px] text-white"/>
@@ -187,7 +186,7 @@ export default function AppLootbox({account}) {
                                size={'text-sm sm'}
                                handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}/>
                 </div>
-                <div>Available for OPEN and BUY on 07/10/2023</div>
+                <div>Available for OPEN and BUY on 07/20/2023</div>
                 <div className={"absolute bottom-5"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 
 

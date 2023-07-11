@@ -1,10 +1,10 @@
 import {useAccount} from "wagmi";
 import GenericModal from "@/components/Modal/GenericModal";
 import {useEffect} from "react";
-import {RoundButton} from "@/components/Button/RoundButton";
 import {logOut} from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 import {useRouter} from "next/router";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 
 export default function ChangeAddress({account}) {
     const router = useRouter();
@@ -46,9 +46,13 @@ export default function ChangeAddress({account}) {
 
                 <div className="mt-auto w-full">
                     <div className={" w-full fullWidth"}>
-                        <RoundButton text={'Logout'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => {
+
+                        <UniButton type={ButtonTypes.BASE}
+                                   state={"danger ml-auto"} text={'Logout'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => {
                             signOut()
-                        }}/>
+                        }} />
+
+
                     </div>
                 </div>
             </div>

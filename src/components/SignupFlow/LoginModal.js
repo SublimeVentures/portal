@@ -49,6 +49,7 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
                         text={connector.name}
                         isWide={true}
                         zoom={1.05}
+                        state={"min-w-[300px] mx-auto"}
                         size={'text-sm sm'}
                         isLoading={connector.id === pendingConnector?.id && !error && isLoginLoading  }
                         isLoadingWithIcon={true}
