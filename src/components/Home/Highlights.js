@@ -9,7 +9,7 @@ export default function Highlights() {
       </div>
       <div className="lg:max-w-[350px] flex flex-col">
         <div className="font-accent  text-3xl font-light mt-15 lg:mt-0">On-chain</div>
-        <div className={` mt-10 font-light flex flex-1`}>Invest on-chain and claim your vested tokens without KYC. Our smartcontracts are build in a way that allows you to transfer, reassign and even OTC sell your allocation before vesting starts.</div>
+        <div className={` mt-10 font-light flex flex-1`}>Invest on-chain and claim your vested tokens without KYC. Our smartcontracts are built in a way that allows you to transfer, reassign and even OTC sell your allocation before vesting starts.</div>
       </div>
       <div className="lg:max-w-[350px] flex flex-col">
         <div className="font-accent  text-3xl font-light mt-15 lg:mt-0">Smart money</div>

@@ -55,9 +55,9 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
     )
 
-    // const S1_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 1")
-    // const S2_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 2")
-
+    // console.log("S1_owned",S1_owned)
+    // console.log("S2_owned",S2_owned)
+    // console.log("S_staked",S_staked)
     let S1_staked = []
     let S2_staked = []
     for(let i=0; i< S_staked.length; i++) {
@@ -79,7 +79,6 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
                 S2_staked.push(S_staked[i])
             }
         }
-
     }
 
     const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
@@ -87,8 +86,10 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
 
     const S1 = [...S1_owned, ...S1_staked]
     const S2 = [...S2_owned, ...S2_staked]
-    const S1_ids = S1.map(el => Number(el.normalized_metadata.name.split("#")[1]))
+    const S1_ids = S1.map(el => Number(el.token_uri.split("/").at(-1)))
     const isElite = await checkElite(S1_ids)
+    // console.log("S1",S1)
+    // console.log("S2",S2)
 
     let multi;
     let nftUsed;
@@ -114,7 +115,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         symbol: nftUsed.symbol,
         multi: multi,
         img: getMoralisImageNT(nftUsed),
-        id: nftUsed.normalized_metadata.name,
+        id: Number(nftUsed.token_uri.split("/").at(-1)),
         ACL: 1,
         transcendence: ownTranscendence,
         stakeReq: S1_owned.length > 0 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2),
