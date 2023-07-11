@@ -124,7 +124,7 @@ const template_CitCap = {
             description: '',
             images: [
                 {
-                    url: 'https://cdn.citizencapital.fund/webapp/og.jpg',
+                    url: 'https://cdn.citizencapital.fund/webapp/og_citcap.jpg',
                     width: 800,
                     height: 600,
                     alt: 'Join Citizen Capital',

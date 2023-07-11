@@ -83,12 +83,13 @@ export default function CitCapAccount({account}) {
                      <p>in {nextDate} days</p>
                 </div>}
 
-                {!staked || unstake && <div className={" flex flex-1 justify-between mt-5"}>
+                {(!staked || unstake) && <div className={" flex flex-1 justify-between mt-5"}>
                     <UniButton type={ButtonTypes.BASE} text={'GET BYTES'}
                                handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}/>
                     <UniButton type={ButtonTypes.BASE} text={unstake ? "Unstake" : 'Stake'} state={unstake ? "": "danger"}
                                handler={()=> {setStakingModal(true)}}/>
-                </div> }
+                </div>
+                }
             </div>
             <CitCapStakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={() => {setStakingModal(false)}}/>
 

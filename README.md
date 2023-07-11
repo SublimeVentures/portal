@@ -28,6 +28,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
+- glitch cross page
 - https://discord.com/channels/@me/997001334328918017/1128115893784817765
 - double click on login
 - notion 

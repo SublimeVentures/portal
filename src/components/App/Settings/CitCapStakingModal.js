@@ -60,7 +60,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     }
 
     useEffect(()=>{
-        console.log("QQQ: wykonaj transakcje", transferReady)
+        // console.log("QQQ: wykonaj transakcje", transferReady)
         if(transferReady) {
             setTrigger(true)
         }
@@ -122,7 +122,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                        Welcome to Citizen Capital.
                    </div>
                     <div className={"my-5"}>
-                        <img src="https://cdn.citizencapital.fund/webapp/staked.gif" className={"rounded-md"}/>
+                        <img src="https://cdn.citizencapital.fund/webapp/staked.gif" className={"rounded-md"} alt={"staked"}/>
                      </div>
 
             </div>

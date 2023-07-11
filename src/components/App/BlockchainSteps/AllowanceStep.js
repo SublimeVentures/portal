@@ -53,7 +53,7 @@ export default function AllowanceStep({stepProps}) {
     })
 
 
-    const allowance_bn = BigNumber.from(allowance).div(power)
+    const allowance_bn = BigNumber.from(allowance ? allowance : 0).div(power)
     const allowanceHuman = (allowance ? allowance_bn.toNumber() : 0)
     const isEnoughAllowance = amount <= allowanceHuman
     const amountLocale = Number(amount).toLocaleString()
