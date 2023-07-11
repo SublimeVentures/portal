@@ -3,7 +3,7 @@ import { polygon, mainnet, sepolia, polygonMumbai, bscTestnet, bsc } from 'wagmi
 import { publicProvider } from 'wagmi/providers/public'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+// import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
 const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 
@@ -23,12 +23,12 @@ export const client = createClient({
         new LedgerConnector({
             chains: rightChains,
         }),
-        new WalletConnectConnector({
-            chains: rightChains,
-            options: {
-                projectId: '84f532239022c91f95d4bdc6368957fa',
-            },
-        })
+        // new WalletConnectConnector({
+        //     chains: rightChains,
+        //     options: {
+        //         projectId: '84f532239022c91f95d4bdc6368957fa',
+        //     },
+        // })
     ],
     provider,
 })
