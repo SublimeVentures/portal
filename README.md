@@ -30,6 +30,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## ToDo
 - annoucements
 
+- https://discord.com/channels/@me/997001334328918017/1128115893784817765
 - enable wallet connect
 - double click
 - notion 

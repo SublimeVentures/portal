@@ -46,8 +46,9 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     const S_staked = ownedNfts.filter(el =>
         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
     )
-    const S1_staked = S_staked.filter(el => el.normalized_metadata.attributes[el.normalized_metadata.attributes.length - 1].value === "Season 1")
-    const S2_staked = S_staked.filter(el => el.normalized_metadata.attributes[el.normalized_metadata.attributes.length - 1].value === "Season 2")
+
+    const S1_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 1")
+    const S2_staked = S_staked.filter(el => el.normalized_metadata?.attributes[el.normalized_metadata.attributes.length - 1]?.value === "Season 2")
     const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
     const S2_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
 
