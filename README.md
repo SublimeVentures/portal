@@ -28,6 +28,13 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
+remove legacy
+
+switch wallet
+https://discord.com/channels/884204406189490176/996185131989606410/1128359652753670245
+https://discord.com/channels/@me/1005251271483203687/1128152490211287050
+https://discord.com/channels/@me/1119267729011122326/1128085960060584036
+link page
 - glitch cross page
 - https://discord.com/channels/@me/997001334328918017/1128115893784817765
 - double click on login
@@ -88,6 +95,9 @@ https://devcenter.heroku.com/articles/heroku-postgres-backups
 - whale deposit/ withdraw features in settings
 - whale page
 
+
+Hey man the site looks really good and stoked to see it on mobile! One issue I did notice was a pretty consistent resizing of the browser when I was checking it out before I connected my wallet. After connecting my wallet the interface was smooth like butter. I was using MetaMask’s in app browser on an iPhone.
+
 # 1. Add env variables
 - whaleId
 - vault
@@ -103,16 +113,5 @@ For each chainId
 
 # 3. For every new investment add Offer, Raise and logs.SLUG
 
-//Bing
-0xBe6ccC396255c24D82D609522539a10C3B9e06FC
-0x3bd4bdcB7E9148FD14aaD842Bcdb80be869b9a57
-
-//Musthafa
-0x15980B1D93CC56a3da52d9908aB372D46Ee242a4
-0x0FfD214b8bD957ec23986c3e342c4d9065742A98
 
 
-
-https://discord.com/channels/884204406189490176/996185131989606410/1128359652753670245
-https://discord.com/channels/@me/1005251271483203687/1128152490211287050
-https://discord.com/channels/@me/1119267729011122326/1128085960060584036

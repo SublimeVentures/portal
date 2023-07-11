@@ -42,8 +42,7 @@ async function reserveSpot(user, req) {
     const now = moment().unix()
     const expire = now + 15 * 60 //15min validity
     const hash = createHash(`${address}` + `${now}`)
-    const nftId = Number.isInteger(id) ? id : id.replace(/[^0-9]/g, '');
-    const isBooked = await bookAllocation(offerId, isSeparatePool, TOTAL_ALLOCATION, address, hash, AMOUNT, ACL, nftId)
+    const isBooked = await bookAllocation(offerId, isSeparatePool, TOTAL_ALLOCATION, address, hash, AMOUNT, ACL, id)
 
     if (!isBooked) {
         return {
