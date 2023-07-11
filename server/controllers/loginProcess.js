@@ -4,6 +4,7 @@ const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getEnv} = require("../services/db");
 const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('../../abi/delegate.abi.json')
+const citcapSeasonAbi = require('../../abi/citcapS.abi.json')
 const citcapStakingAbi = require('../../abi/citcapStaking.abi.json')
 const Sentry = require("@sentry/nextjs");
 const {checkElite} = require("../queries/ntElites.query");
@@ -15,13 +16,6 @@ const getMoralisImage = (object) => {
     } else {
         return object?.media?.media_collection?.high?.url ? object.media.media_collection.high.url : object?.media?.original_media_url
     }
-}
-const getMoralisImageNT = (object) => {
-    let image =  object?.media?.media_collection?.high?.url ? object.media.media_collection.high.url : object?.media?.original_media_url
-    if(!image) {
-        image = object.image
-    }
-    return image
 }
 
 async function isWhale(ownedNfts) {
@@ -63,7 +57,6 @@ const parseFromMetaData = (object) => {
     }
 }
 
-
 async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     if (ownedNfts.length === 0) return false
 
@@ -76,14 +69,16 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
     )
 
+    // console.log("owned_citizens",owned_citizens)
+
     let S1 = []
     let S2 = []
     let result
-    for(let i=0; i< owned_citizens.length; i++) {
+    for (let i = 0; i < owned_citizens.length; i++) {
         const uri = owned_citizens[i].token_uri
-        const uriTest = uri.split("/").at(-1)
-        if(uri === uriTest) {
-            if(owned_citizens[i].metadata) {
+        const uriTest = uri ? uri.split("/").at(-1) : null
+        if (!uriTest || uri === uriTest) {
+            if (owned_citizens[i].metadata) {
                 result = parseFromMetaData(owned_citizens[i])
             } else {
                 Sentry.captureException({location: "isNeoTokyo", type: 'process', citizen: owned_citizens[i]});
@@ -92,7 +87,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         } else {
             result = await parseFromUri(uri)
         }
-        if(result.isS1) {
+        if (result.isS1) {
             S1.push(result)
         } else {
             S2.push(result)
@@ -104,7 +99,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     let nftUsed;
     let ownTranscendence = false
 
-    if(S1.length>0) {
+    if (S1.length > 0) {
         const S1_ids = S1.map(el => el.id)
         const isElite = await checkElite(S1_ids)
 
@@ -121,7 +116,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     }
 
     const haveTranscendence = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
-    if(haveTranscendence) {
+    if (haveTranscendence) {
         const transcendence_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
         multi += transcendence_config.multiplier
         ownTranscendence = true
@@ -308,7 +303,7 @@ async function checkUser(address) {
     return type
 }
 
-async function checkStaking (address) {
+async function checkStaking(address) {
     const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
         "chain": "0x1",
         "functionName": "getStake",
@@ -318,7 +313,7 @@ async function checkStaking (address) {
     });
 
     return {
-        isStaked: Number(jsonResponse[0])>0,
+        isStaked: Number(jsonResponse[0]) > 0,
         stakeSize: Number(getWeb3().utils.fromWei(jsonResponse[0])),
         stakeDate: Number(jsonResponse[1])
     }

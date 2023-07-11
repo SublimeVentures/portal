@@ -27,8 +27,6 @@ async function getEnvironment() {
     env.ntData = {
         S1: partners.find(el => el.name === "Neo Tokyo Citizen S1")?.address,
         S2: partners.find(el => el.name === "Neo Tokyo Citizen S2")?.address,
-        S1_old: partners.find(el => el.name === "Neo Tokyo Citizen S1 (old)")?.address,
-        S2_old: partners.find(el => el.name === "Neo Tokyo Citizen S2 (old)")?.address,
         staked: partners.find(el => el.name === "Neo Tokyo Citizen (staked)")?.address,
         transcendence: partners.find(el => el.name === "Citizen Capital Transcendence")?.address,
     }

@@ -74,12 +74,12 @@ export default function TransactionStep({stepProps}) {
 
     const transfer = () => {
         if(isReady && successPrep) {
-            console.log("QQQ :: send transaction")
+            // console.log("QQQ :: send transaction")
             sendTransaction()
         }
     }
     useEffect(()=>{
-        console.log("QQQ :: trigger", trigger, successPrep, isReady)
+        // console.log("QQQ :: trigger", trigger, successPrep, isReady)
         if(trigger) {
             transfer()
         }
@@ -101,7 +101,7 @@ export default function TransactionStep({stepProps}) {
         setIsTransactionLoading(TransactionState.Init)
     }
 
-    console.log("errorWrite",errorWrite)
+    // console.log("errorWrite",errorWrite)
     return (
         <div className={'fullWidth min-h-[25px]'}>
             {!!errorConfirmed || !!errorWrite && <div className={"text-app-error text-center"}>{errorConfirmed}{errorWrite?.message ? errorWrite.message : errorWrite?.cause?.reason.toUpperCase()}</div>}

@@ -24,7 +24,7 @@ const showDate = (status, start, ends ) => {
         case OfferStatus.PENDING: {
             return (<>
                 <div>Starts</div>
-                <div>{moment.unix(ends).utc().local().format("LLL")}</div>
+                <div>{moment.unix(start).utc().local().format("LLL")}</div>
             </>)
         }
         case OfferStatus.IN_PROGRESS: {

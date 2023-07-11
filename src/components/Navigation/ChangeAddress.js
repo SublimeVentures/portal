@@ -10,8 +10,8 @@ export default function ChangeAddress({account}) {
     const router = useRouter();
     const {isConnected, address} = useAccount()
     const userAddress = account?.address
-    // const isAddressNotSupported = false
-    const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
+    const isAddressNotSupported = false
+    // const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
 
 
     const signOut = () => {

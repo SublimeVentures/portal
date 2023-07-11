@@ -23,16 +23,30 @@ const parseFromMetaData = (object) => {
     }
 }
 
+const getFromTokenUri = async (tokenAddress) => {
+    const metadata = JSON.parse(tokenAddress.metadata)
+    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
+    const isS1 = seasonAttr === "Season 1"
+    const id = metadata.name.split("#").at(-1)
+    const image = false
+    return {
+        isS1, image, id
+    }
+}
 const parse = async () => {
     const array = testData
 
     for(let i=0; i< array.length; i++) {
         const uri = array[i].token_uri
-        const uriTest = uri.split("/").at(-1)
+        console.log("uri", uri)
+        const uriTest = uri ? uri.split("/").at(-1) : null
         let result
-        if(uri === uriTest) {
+        if(!uriTest || uri === uriTest) {
+            console.log("test")
             if(array[i].metadata) {
                 result = parseFromMetaData(array[i])
+            } else {
+                result = await getFromTokenUri(array[i].token_address)
             }
         } else {
             result = await parseFromUri(uri)
