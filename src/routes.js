@@ -53,6 +53,7 @@ const ExternalLinksCitCap = {
     HOW_TO_ACCESS: "#",
     DELEGATED_ACCESS: "#",
     VAULT: "#",
+    GETBYTES: "https://app.uniswap.org/#/swap?outputCurrency=0xa19f5264f7d7be11c451c093d8f92592820bea86",
 
     WIKI: "https://info.citizencapital.fund",
     DISCORD: "https://discord.gg/CX7ChfhYbf",
