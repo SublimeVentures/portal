@@ -39,6 +39,10 @@ async function isWhale(ownedNfts) {
     }
 }
 
+const parseAllWays = () => {
+
+}
+
 
 async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     if (ownedNfts.length === 0) return false
@@ -55,9 +59,9 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
     )
 
-    // console.log("S1_owned",S1_owned)
-    // console.log("S2_owned",S2_owned)
-    // console.log("S_staked",S_staked)
+    console.log("S1_owned",S1_owned)
+    console.log("S2_owned",S2_owned)
+    console.log("S_staked",S_staked)
     let S1_staked = []
     let S2_staked = []
     for(let i=0; i< S_staked.length; i++) {
@@ -87,9 +91,16 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     const S1 = [...S1_owned, ...S1_staked]
     const S2 = [...S2_owned, ...S2_staked]
     const S1_ids = S1.map(el => Number(el.token_uri.split("/").at(-1)))
-    const isElite = await checkElite(S1_ids)
-    // console.log("S1",S1)
-    // console.log("S2",S2)
+    console.log("S1_ids",S1_ids)
+    let isElite
+    try {
+        isElite = await checkElite(S1_ids)
+
+    } catch (e) {
+        isElite=[]
+    }
+    console.log("S1",S1)
+    console.log("S2",S2)
 
     let multi;
     let nftUsed;
