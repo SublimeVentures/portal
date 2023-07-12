@@ -1,6 +1,14 @@
 const moment = require( 'moment' );
 const {ACLs} = require("@/lib/authHelpers");
 
+const PHASES = {
+    Pending: 0,
+    Open: 1,
+    Closed: 2,
+    FCFS: 3,
+    Unlimited: 4,
+}
+
 function phases (ACL, offer) {
     let state
     if(ACL===ACLs.Whale) {
@@ -21,9 +29,9 @@ function phases (ACL, offer) {
 
 function parseWhale(offer) {
     const phase = [
-        {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
-        {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
+        {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0, phase: PHASES.Pending},
+        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open, phase: PHASES.Open},
+        {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close, phase: PHASES.Closed},
     ]
     const now = moment().unix()
     let active
@@ -36,10 +44,10 @@ function parseWhale(offer) {
 
 function parsePhased(offer) {
     const phase = [
-        {step: 'Pending', action: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'FCFS', action: "Invest", icon: "invest", start: offer.d_open},
-        {step: 'Unlimited', action: "Invest", icon: "invest", start: offer.d_open + 86400},//24h
-        {step: 'Closed', action: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
+        {step: 'Pending', action: "Open Soon", icon: "wait", isDisabled: true, start: 0, phase: PHASES.Pending},
+        {step: 'FCFS', action: "Invest", icon: "invest", start: offer.d_open, phase: PHASES.FCFS},
+        {step: 'Unlimited', action: "Invest", icon: "invest", start: offer.d_open + 86400, phase: PHASES.Unlimited},//24h
+        {step: 'Closed', action: "Closed", icon: "closed", isDisabled: true, start: offer.d_close, phase: PHASES.Closed},
     ]
     const now = moment().unix()
     let active
@@ -51,9 +59,9 @@ function parsePhased(offer) {
 
 function parseRegular(offer) {
     const phase = [
-        {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
-        {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
+        {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0, phase: PHASES.Pending},
+        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open, phase: PHASES.Open},
+        {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close, phase: PHASES.Closed},
     ]
     const now = moment().unix()
     let active
@@ -87,4 +95,4 @@ function checkAllocationLeft (ACL, userAllocation, userMaxAllocation, offer) {
         return {status:false, amount: userAllocation}
     }
 }
-module.exports = { phases, parseMaxAllocation, checkAllocationLeft }
+module.exports = { phases, parseMaxAllocation, checkAllocationLeft, PHASES}

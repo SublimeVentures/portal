@@ -7,7 +7,7 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {checkAllocationLeft, parseMaxAllocation} from "@/lib/phases";
+import {checkAllocationLeft, parseMaxAllocation, PHASES} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
@@ -235,12 +235,12 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         } else if (!userAllocation && investmentAmount < offer.alloMin) {
             setIsAllocationOk(false)
             return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-        } else if (!userAllocation && investmentAmount > maxAllocation) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
-        } else if (ACL !== ACLs.Whale && investmentAmount > userAllocationLeft.amount) {
+        } else if (currentPhase.phase === PHASES.FCFS && investmentAmount > userAllocationLeft.amount) {
             setIsAllocationOk(false)
             return setIsError({state: true, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
+        } else if ((currentPhase.phase === PHASES.Unlimited || currentPhase.phase === PHASES.Open) && investmentAmount > maxAllocation) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
         } else {
             if(investmentAmount % (userAllocation > 0 ? 50 : 100) > 0) {
                 setIsAllocationOk(false)

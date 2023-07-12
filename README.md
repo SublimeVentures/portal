@@ -28,8 +28,9 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
-- wgraj inwesycje
 - unlimited check
+- - wgraj inwesycje
+- https://discord.com/channels/@me/992144933412675624/1128740746401435678
 - https://discord.com/channels/@me/1128606167862628412/1128608666954772572
 
 switch wallet

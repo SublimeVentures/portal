@@ -11,7 +11,7 @@ import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import {NextSeo} from "next-seo";
 import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
-import {phases} from "@/lib/phases";
+import {PHASES, phases} from "@/lib/phases";
 import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
@@ -65,6 +65,7 @@ export const AppOfferDetails = ({account}) => {
     const feedPhases = () => {
         if(!offerData?.offer) return
         const {active, isLast, currentPhase, nextPhase, isClosed} = phases(ACL, offerData.offer)
+        console.log("phases", currentPhase)
         setActivePhase(active)
         setIsLastPhase(isLast)
         setCurrentPhase(currentPhase)
