@@ -28,8 +28,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
-- wgraj inwesycje
-- unlimited check
+- wgraj inwesycje ludzi z boku
+- https://discord.com/channels/@me/992144933412675624/1128740746401435678
 - https://discord.com/channels/@me/1128606167862628412/1128608666954772572
 
 switch wallet
@@ -41,13 +41,14 @@ https://discord.com/channels/@me/1036534419349065748/1127401800908165301
 - https://discord.com/channels/@me/997001334328918017/1128633059588198410
 - https://discord.com/channels/@me/1125889573369688094/1128671406650036294
   https://discord.com/channels/@me/1036534419349065748/1127401800908165301
-- zmień adresy walletow 
+- zmień adresy walletow
 - add steady stacks as partner
 
 - maile
 - wiatraczek
+- - domyplus
 - mr blank note
-- domyplus
+
 - Short memeland tribe screenshot
 
 - custom 404 page
@@ -55,7 +56,7 @@ https://discord.com/channels/@me/1036534419349065748/1127401800908165301
 - double click on login
 - notion
 - change total staked + wyciagnij swoje
-https://devcenter.heroku.com/articles/heroku-postgres-backups
+  https://devcenter.heroku.com/articles/heroku-postgres-backups
 - update costs - cloudflare & heroku
 - check bings wallet 0x26e7f5f193354b22da271a57433acadab2c79480 across investments
 - media rearrange
@@ -68,9 +69,9 @@ https://devcenter.heroku.com/articles/heroku-postgres-backups
 
 - =============
 - make offer button
-- -- (buy) check liquidity 
-- -- (buy) check allowance 
-- -- (buy) check send transaction 
+- -- (buy) check liquidity
+- -- (buy) check allowance
+- -- (buy) check send transaction
 
 - processor
 - -- receive webhook
@@ -118,7 +119,7 @@ Hey man the site looks really good and stoked to see it on mobile! One issue I d
 - partnerDelay
 - partnerDefaultMulti
 
-# 2. Add currencies 
+# 2. Add currencies
 For each chainId
 
 # 3. For every new investment add Offer, Raise and logs.SLUG

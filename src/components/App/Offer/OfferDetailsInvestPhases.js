@@ -72,7 +72,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
     const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
-
+    const userAlreadyInvested = userAllocation > 0
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
@@ -242,7 +242,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setIsAllocationOk(false)
             return setIsError({state: true, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
         } else {
-            if(investmentAmount % (userAllocation > 0 ? 50 : 100) > 0) {
+            if(!investmentAmount || investmentAmount % (userAllocation > 0 ? 50 : 100) > 0) {
                 setIsAllocationOk(false)
                 return setIsError({state: true, msg: `Allocation has to be divisible by $${userAllocation > 0 ? 50 : 100}`})
             }
@@ -250,8 +250,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 setIsAllocationOk(true)
                 return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
             } else {
-                setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
+                    setIsAllocationOk(true)
+                    return setIsError({state: false, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
             }
 
         }
