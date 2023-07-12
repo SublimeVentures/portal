@@ -28,23 +28,32 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
-remove legacy
+- wgraj inwesycje
+- unlimited check
+- https://discord.com/channels/@me/1128606167862628412/1128608666954772572
 
 switch wallet
 https://discord.com/channels/884204406189490176/996185131989606410/1128359652753670245
 https://discord.com/channels/@me/1005251271483203687/1128152490211287050
 https://discord.com/channels/@me/1119267729011122326/1128085960060584036
 https://discord.com/channels/@me/1036534419349065748/1127401800908165301
-link page
-- glitch cross page
 - https://discord.com/channels/@me/997001334328918017/1128115893784817765
-- double click on login
-- notion 
+- https://discord.com/channels/@me/997001334328918017/1128633059588198410
+- https://discord.com/channels/@me/1125889573369688094/1128671406650036294
+  https://discord.com/channels/@me/1036534419349065748/1127401800908165301
+- zmień adresy walletow 
 - add steady stacks as partner
-- fcfs check
+
+- maile
+- wiatraczek
+- mr blank note
+- domyplus
+- Short memeland tribe screenshot
+
 - custom 404 page
-
-
+- link page
+- double click on login
+- notion
 - change total staked + wyciagnij swoje
 https://devcenter.heroku.com/articles/heroku-postgres-backups
 - update costs - cloudflare & heroku
@@ -116,3 +125,6 @@ For each chainId
 
 
 
+
+code
+https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833

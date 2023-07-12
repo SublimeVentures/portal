@@ -57,6 +57,28 @@ const parseFromMetaData = (object) => {
     }
 }
 
+const getFromBlockchain = async (tokenAddress, tokenID) => {
+    const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
+        "chain": "0x1",
+        "functionName": "tokenURI",
+        "address": tokenAddress,
+        "abi": citcapSeasonAbi,
+        "params": {tokenId: tokenID}
+    });
+    const base64Url = jsonResponse.replace(/^data:application\/json;base64,/, '');
+    const decodedData = atob(base64Url).replace(': ""',':"');
+    let metadata = JSON.parse(decodedData.replace( /(\"description\":\s?\")(.+)?(\",)/g, ''));
+
+    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
+    const isS1 = seasonAttr === "Season 1"
+    const id = metadata.name.split("#").at(-1)
+    const image = false
+    return {
+        isS1, image, id
+    }
+}
+
+
 async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     if (ownedNfts.length === 0) return false
 
@@ -75,19 +97,26 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
     let S2 = []
     let result
     for (let i = 0; i < owned_citizens.length; i++) {
+        const isStaked = owned_citizens[i].token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
         const uri = owned_citizens[i].token_uri
         const uriTest = uri ? uri.split("/").at(-1) : null
         if (!uriTest || uri === uriTest) {
             if (owned_citizens[i].metadata) {
                 result = parseFromMetaData(owned_citizens[i])
             } else {
-                Sentry.captureException({location: "isNeoTokyo", type: 'process', citizen: owned_citizens[i]});
-                return null
+                result = await getFromBlockchain(owned_citizens[i].token_address, owned_citizens[i].token_id)
             }
         } else {
             result = await parseFromUri(uri)
         }
-        if (result.isS1) {
+
+        if(!result) {
+            Sentry.captureException({location: "isNeoTokyo", type: 'process', citizen: owned_citizens[i]});
+            return null
+        } else {
+            result.isStaked = isStaked
+        }
+        if (result?.isS1) {
             S1.push(result)
         } else {
             S2.push(result)
@@ -131,7 +160,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         id: Number(nftUsed.id),
         ACL: 1,
         transcendence: ownTranscendence,
-        stakeReq: nftUsed.isS1 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2),
+        stakeReq: nftUsed.isStaked ? Number(getEnv().citcapStakeS2) : (nftUsed.isS1 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2)),
         isStaked,
         stakeSize,
         stakeDate

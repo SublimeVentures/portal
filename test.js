@@ -1,4 +1,6 @@
 const {testData} = require("./json");
+const citcapSeasonAbi = require("./abi/citcapS.abi.json");
+const {connectWeb3, getWeb3} = require("./server/services/web3_test");
 
 const parseFromUri = async (uri) => {
     const response = await fetch(uri);
@@ -23,8 +25,19 @@ const parseFromMetaData = (object) => {
     }
 }
 
-const getFromTokenUri = async (tokenAddress) => {
-    const metadata = JSON.parse(tokenAddress.metadata)
+
+const getFromBlockchain = async (tokenAddress, tokenID) => {
+    const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
+        "chain": "0x1",
+        "functionName": "tokenURI",
+        "address": tokenAddress,
+        "abi": citcapSeasonAbi,
+        "params": {tokenId: tokenID}
+    });
+    const base64Url = jsonResponse.replace(/^data:application\/json;base64,/, '');
+    const decodedData = atob(base64Url).replace(': ""',':"');
+    let metadata = JSON.parse(decodedData.replace( /(\"description\":\s?\")(.+)?(\",)/g, ''));
+
     const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
     const isS1 = seasonAttr === "Season 1"
     const id = metadata.name.split("#").at(-1)
@@ -33,9 +46,10 @@ const getFromTokenUri = async (tokenAddress) => {
         isS1, image, id
     }
 }
+
 const parse = async () => {
     const array = testData
-
+    await connectWeb3()
     for(let i=0; i< array.length; i++) {
         const uri = array[i].token_uri
         console.log("uri", uri)
@@ -46,7 +60,7 @@ const parse = async () => {
             if(array[i].metadata) {
                 result = parseFromMetaData(array[i])
             } else {
-                result = await getFromTokenUri(array[i].token_address)
+                result = await getFromBlockchain(array[i].token_address, array[i].token_id)
             }
         } else {
             result = await parseFromUri(uri)

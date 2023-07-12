@@ -9,9 +9,9 @@ import {ExternalLinks} from "@/routes";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {is3VC} from "@/lib/utils";
-import { PowerGlitch } from 'powerglitch'
 import Lottie from "lottie-react";
 import lottieAvatar from "@/assets/lottie/avatar.json";
+import { useGlitch } from 'react-powerglitch'
 
 function amount(item){
     return item.invested;
@@ -23,8 +23,9 @@ function sum(prev, next){
 
 export default function UserSummary({vault, account}) {
     const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
+    let glitch
     if(!is3VC) {
-        PowerGlitch.glitch('.glitch', {
+        glitch = useGlitch({
             "playMode": "always",
             "createContainers": true,
             "hideOverflow": false,
@@ -44,7 +45,7 @@ export default function UserSummary({vault, account}) {
                 "hueRotate": true
             },
             "pulse": false
-        })
+        });
     }
 
     return (
@@ -63,7 +64,7 @@ export default function UserSummary({vault, account}) {
                                     </div>
                                 </> : <>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                        {account.img ? <img className="flex rounded-full my-auto glitch" src={account.img } alt={"avatar"}/> : <IconNT className={"glitch w-full max-w-[15rem]"}/>}
+                                        {account.img ? <img className="flex rounded-full my-auto glitch" src={account.img } alt={"avatar"} ref={glitch.ref}/> : <IconNT className={"glitch w-full max-w-[15rem]"} ref={glitch.ref}/>}
                                     </div>
                                 </>}
 
