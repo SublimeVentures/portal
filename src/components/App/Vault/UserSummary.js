@@ -64,7 +64,7 @@ export default function UserSummary({vault, account}) {
                                     </div>
                                 </> : <>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                        {account.img ? <img className="flex rounded-full my-auto glitch" src={account.img } alt={"avatar"} ref={glitch.ref}/> : <IconNT className={"glitch w-full max-w-[15rem]"} ref={glitch.ref}/>}
+                                        {account.img ? <img className="flex rounded-full my-auto glitch" src={account.img } alt={"avatar"} ref={glitch.ref}/> : <div ref={glitch.ref}><IconNT className={"glitch w-full max-w-[15rem]"} /></div>}
                                     </div>
                                 </>}
 

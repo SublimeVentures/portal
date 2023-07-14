@@ -21,7 +21,6 @@ export const logOut = async () => {
         const {data} = await axiosPublic.delete(API.auth)
         return data
     } catch (e) {
-        Sentry.captureException({location: "logOut", e});
     }
     return false
 }

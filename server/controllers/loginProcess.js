@@ -33,31 +33,40 @@ async function isWhale(ownedNfts) {
     }
 }
 
+const getNTimage = (isS1, isStaked, id) => {
+    if(isStaked) {
+        return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/metadata/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/metadata/${id}.png`
+    } else {
+       return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/s1Citizen/pngs/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/s2Citizen/pngs/${id}.png`
+    }
+}
 
-const parseFromUri = async (uri) => {
+
+const parseFromUri = async (uri, isStaked) => {
     const response = await fetch(uri);
     const metadata = await response.json();
     const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
     const isS1 = seasonAttr === "Season 1"
-    const image = metadata.image
     const id = metadata.name.split("#").at(-1)
+    const image = getNTimage(isS1, isStaked, id)
     return {
         isS1, image, id
     }
 }
 
-const parseFromMetaData = (object) => {
+const parseFromMetaData = (object, isStaked) => {
     const metadata = JSON.parse(object.metadata)
     const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
-    const isS1 = seasonAttr === "Season 1"
+    const isS1 = seasonAttr === "Season 1" || object.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase()
+    // console.log("isS1", isS1)
     const id = metadata.name.split("#").at(-1)
-    const image = false
+    const image = getNTimage(isS1, isStaked, id)
     return {
         isS1, image, id
     }
 }
 
-const getFromBlockchain = async (tokenAddress, tokenID) => {
+const getFromBlockchain = async (tokenAddress, tokenID, isStaked) => {
     const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
         "chain": "0x1",
         "functionName": "tokenURI",
@@ -72,7 +81,7 @@ const getFromBlockchain = async (tokenAddress, tokenID) => {
     const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
     const isS1 = seasonAttr === "Season 1"
     const id = metadata.name.split("#").at(-1)
-    const image = false
+    const image = getNTimage(isS1, isStaked, id)
     return {
         isS1, image, id
     }
@@ -102,12 +111,15 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         const uriTest = uri ? uri.split("/").at(-1) : null
         if (!uriTest || uri === uriTest) {
             if (owned_citizens[i].metadata) {
-                result = parseFromMetaData(owned_citizens[i])
+                // console.log("1", owned_citizens[i].token_id)
+                result = parseFromMetaData(owned_citizens[i], isStaked)
             } else {
-                result = await getFromBlockchain(owned_citizens[i].token_address, owned_citizens[i].token_id)
+                // console.log("2", owned_citizens[i].token_id)
+                result = await getFromBlockchain(owned_citizens[i].token_address, owned_citizens[i].token_id, isStaked)
             }
         } else {
-            result = await parseFromUri(uri)
+            // console.log("3", owned_citizens[i].token_id)
+            result = await parseFromUri(uri, isStaked)
         }
 
         if(!result) {
@@ -123,6 +135,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         }
     }
 
+    // console.log("S1", S1)
 
     let multi;
     let nftUsed;

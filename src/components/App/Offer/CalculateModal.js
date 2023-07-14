@@ -23,7 +23,13 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
         if(amt) calcPrice(multiplier, amt)
     }
 
-    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * (100 - offer.tax)/100  * multi - amt ).toFixed(2)))}
+    const calcPrice = (multi, amt) => {
+        setPrice(
+            Number(
+                Number((amt * (100 - offer.tax)/100  * multi - amt) * 95/100 ).toFixed(2)
+            )
+        )
+    }
 
 
     const setMultiplierHandler = (add) => {

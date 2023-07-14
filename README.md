@@ -28,44 +28,25 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## ToDo
-- wgraj inwesycje ludzi z boku
-- https://discord.com/channels/@me/992144933412675624/1128740746401435678
-- https://discord.com/channels/@me/1128606167862628412/1128608666954772572
-
-switch wallet
-https://discord.com/channels/884204406189490176/996185131989606410/1128359652753670245
-https://discord.com/channels/@me/1005251271483203687/1128152490211287050
-https://discord.com/channels/@me/1119267729011122326/1128085960060584036
-https://discord.com/channels/@me/1036534419349065748/1127401800908165301
-- https://discord.com/channels/@me/997001334328918017/1128115893784817765
-- https://discord.com/channels/@me/997001334328918017/1128633059588198410
-- https://discord.com/channels/@me/1125889573369688094/1128671406650036294
-  https://discord.com/channels/@me/1036534419349065748/1127401800908165301
+- sentry error
 - zmień adresy walletow
-- add steady stacks as partner
 
-- maile
-- wiatraczek
-- - domyplus
-- mr blank note
+- staking
+  - delegate
+  - change total staked 
+  - wyciagnij swoje
 
-- Short memeland tribe screenshot
+https://devcenter.heroku.com/articles/heroku-postgres-backups**
 
 - custom 404 page
 - link page
-- double click on login
-- notion
-- change total staked + wyciagnij swoje
-  https://devcenter.heroku.com/articles/heroku-postgres-backups
-- update costs - cloudflare & heroku
-- check bings wallet 0x26e7f5f193354b22da271a57433acadab2c79480 across investments
 - media rearrange
-- withdraw my stake
-
 - RR unmount
 - investment calendar google
 - UniButton -> GenericButton
-- rasie funds on landing
+- rasied funds on landing
+
+- Short memeland tribe screenshot
 
 - =============
 - make offer button
@@ -129,3 +110,4 @@ For each chainId
 
 code
 https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
+
