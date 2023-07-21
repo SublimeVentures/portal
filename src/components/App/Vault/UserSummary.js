@@ -57,7 +57,7 @@ export default function UserSummary({vault, account}) {
                         <div className="relative  px-10 sm:-ml-10 custom:ml-0" >
                             {is3VC ? <>
                                     <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
-                                        <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>;
+                                        <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>
                                     </div>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
                                         <img className="flex rounded-full my-auto" src={account.img}/>

@@ -29,7 +29,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## ToDo
 - sentry error
-- zmień adresy walletow
 
 - staking
   - delegate
@@ -110,4 +109,4 @@ For each chainId
 
 code
 https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
-
+0xb27EE3cDDA91dAe0e68c3fb59C15fff0FADf362f

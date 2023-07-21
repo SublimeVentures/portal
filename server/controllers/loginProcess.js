@@ -35,7 +35,7 @@ async function isWhale(ownedNfts) {
 
 const getNTimage = (isS1, isStaked, id) => {
     if(isStaked) {
-        return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/metadata/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/metadata/${id}.png`
+        return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/pngs/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/pngs/${id}.png`
     } else {
        return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/s1Citizen/pngs/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/s2Citizen/pngs/${id}.png`
     }
@@ -156,6 +156,7 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         multi = S2.length * S2_config.multiplier
         nftUsed = S2[0]
     }
+    // console.log("nftUsed", nftUsed)
 
     const haveTranscendence = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
     if (haveTranscendence) {
