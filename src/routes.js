@@ -12,12 +12,14 @@ const PAGE = {
     OTC: "/app/otc",
     Notifs: "/app/latest",
     Lootbox: "/app/lootbox",
+    Upgrades: "/app/upgrades",
     Settings: "/app/settings",
 }
 
 export const API = {
     fetchVault: "/api/vault/all",
     fetchLootbox: "/api/lootbox",
+    fetchStore: "/api/store",
     fetchVaultOfferDetails: "/api/vault?offer=",
     publicInvestments: "/api/public/investments",
     offerList: "/api/offer",

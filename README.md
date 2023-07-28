@@ -27,10 +27,26 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+
+
 ## ToDo
+- staking change to feed data
+- remove multichain from blockchain
+- contract: premium - enable/disable/owner for whales
+
+- create lootboxPackages
+- create new vault item type for lootboxPackages
+-- allocations => link to the offer
+-- transcendance => 
+-- for lootbox NFTs enable claim 
+-- for Codes, just use 
+
+- force use eth for store / lootbox for citcap
+- lootbox contract - add watcher for lootbox enabled
+- deploy on all chains
 - sentry error
 
-- staking
+- staking (force eth)
   - delegate
   - change total staked 
   - wyciagnij swoje

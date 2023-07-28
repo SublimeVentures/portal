@@ -5,6 +5,7 @@ import CitCapAccount from "@/components/App/Settings/CitCapAccount";
  import {getCopy} from "@/lib/seoConfig";
 import {is3VC} from "@/lib/utils";
 import Head from "next/head";
+import PremiumSummary from "@/components/App/Settings/PremiumSummary";
 
 
 export default function AppSettings({account}) {
@@ -17,6 +18,10 @@ export default function AppSettings({account}) {
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 sm:col-span-8 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
                     {!is3VC && <CitCapAccount account={account}/>}
+                </div>
+                <div className={"flex col-span-12 sm:col-span-4 xl:col-span-4"}>
+                    <PremiumSummary account={account}/>
+
                 </div>
             </div>
         </>

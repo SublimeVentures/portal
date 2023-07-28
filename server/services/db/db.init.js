@@ -1,4 +1,3 @@
-
 const {Sequelize} = require("sequelize");
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
@@ -32,9 +31,11 @@ const modelDefiners = [
     require('../../models/vaults.model'),
     require('../../models/otcDeals.model'),
     require('../../models/otcPending.model'),
-    require('../../models/multichain.model'),
+    require('../../models/diamonds.model'),
     require('../../models/ntElites.model'),
     require('../../models/lootbox.model'),
+    require('../../models/store.model'),
+    require('../../models/storeUser.model'),
 ];
 
 // We define all models according to their files.
@@ -43,7 +44,7 @@ for (const modelDefiner of modelDefiners) {
 }
 
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, otcPending, multichain } = sequelize.models;
+    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, otcPending, diamonds, store, storeUser } = sequelize.models;
 
     networks.hasMany(partners)
     partners.belongsTo(networks);
@@ -72,8 +73,11 @@ function applyExtraSetup(sequelize) {
     networks.hasMany(otcPending)
     otcPending.belongsTo(networks);
 
-    networks.hasMany(multichain)
-    multichain.belongsTo(networks);
+    networks.hasMany(diamonds)
+    diamonds.belongsTo(networks);
+
+    store.hasMany(storeUser)
+    storeUser.belongsTo(store);
 
 }
 // We execute any extra setup after the models are defined, such as adding associations.
