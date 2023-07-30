@@ -5,7 +5,7 @@ const {is3VC} = require("../../src/lib/utils");
 async function getEnvironment() {
     const isDev = process.env.ENV !== 'production';
     const envVars = await models.environment.findAll({raw: true});
-    const currencies = await models.currencies.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
+    const currencies = await models.currencies.findAll({ where: {isSettlement: true},include: {model: models.networks, where: {isDev}}, raw: true});
     const projects = await models.offers.findAll({raw: true});
     const partners = await models.partners.findAll({where: {isEnabled: true}, raw: true});
     let env = Object.assign({}, ...(envVars.map(item => ({ [item.name]: item.value }) )));

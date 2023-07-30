@@ -37,6 +37,7 @@ export default function OfferDetailsAbout({offer}) {
 
             <div className={`${is3VC ? "rounded-xl" : ""} relative offerWrap overflow-hidden`}>
                 <div className={`${is3VC ? "rounded-xl" : ""} bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between `}>
+
                     <div className={`${is3VC ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl"} flex mx-10  glowNormal midcol:mr-0`}>About</div>
                     <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
 
@@ -58,7 +59,7 @@ export default function OfferDetailsAbout({offer}) {
                         </a>
 
                     </div>
-                    {description && <div className="my-5 mx-10" dangerouslySetInnerHTML={createMarkup()} />}
+                    {description && <div className="my-5 mx-10 w-full" dangerouslySetInnerHTML={createMarkup()} />}
                 </div>
 
             </div>
