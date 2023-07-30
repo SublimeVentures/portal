@@ -72,7 +72,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
     const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
-    const userAlreadyInvested = userAllocation > 0
+    // const userAlreadyInvested = userAllocation > 0
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
