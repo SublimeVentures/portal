@@ -15,17 +15,20 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
 import {useNetwork} from "wagmi";
+import {PremiumItemsENUM} from "@/components/App/Settings/PremiumSummary";
 const StoreNetwork = dynamic(() => import('@/components/Navigation/StoreNetwork'), {ssr: false,})
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false,})
 
 
-export default function AppPremium({account}) {
+export default function AppUpgrades({account}) {
     const [isBuyModal, setBuyModal] = useState(false)
     const [order, setOrder] = useState(null)
     const [networkOk, setNetworkOk] = useState(true)
+    const [currency, setCurrency] = useState({})
+
     const {chain} = useNetwork()
 
-    const {isSuccess: storeIsLoaded, isLoading, data: response} = useQuery({
+    const {isLoading, data: response} = useQuery({
             queryKey: ["store"],
             queryFn: fetchStore,
             refetchOnMount: false,
@@ -34,17 +37,14 @@ export default function AppPremium({account}) {
         }
     );
 
-    const storeData = response?.store
+    const storeData = response?.store?.filter(el => el.id !== PremiumItemsENUM.MysteryBox)
     const storeEnvironment = response?.env
     const supportedNetworks = storeEnvironment?.currency ? Object.keys(storeEnvironment?.currency) : []
 
 
     const chainId = chain?.id
-    const availableContract = storeEnvironment?.contract[chainId]
+    const diamondContract = storeEnvironment?.contract[chainId]
     const availableCurrencies = storeEnvironment?.currency[chainId]
-
-    console.log("availableContract",availableContract)
-    console.log("availableCurrencies",availableCurrencies)
 
     const renderPage = () => {
         if(isLoading) return <Loader/>
@@ -67,7 +67,11 @@ export default function AppPremium({account}) {
 
     useEffect(() => {
         if (!!availableCurrencies) {
-            setBuyModal(true)
+            const address = Object.keys(availableCurrencies)[0]
+            setCurrency({
+                address: address,
+                ...availableCurrencies[address]
+            })
         }
     }, [availableCurrencies]);
 
@@ -75,11 +79,10 @@ export default function AppPremium({account}) {
         account,
         order: !!order ? order : {},
         setOrder,
-        contract: storeEnvironment?.contract,
-        currency: storeEnvironment?.currency,
+        currency,
+        contract: diamondContract,
     }
 
-    console.log("isBuyModal",isBuyModal, storeEnvironment?.currency)
 
     const title = `Upgrades - ${getCopy("NAME")}`
     return (
@@ -105,7 +108,6 @@ export default function AppPremium({account}) {
             <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${is3VC ? "" : "font-accent"}`}>
                 {renderPage()}
             </div>
-        {/*    //todo: modal with buy // force currency*/}
             <BuyStoreItemModal model={isBuyModal} setter={() => {setBuyModal(false)}} buyModalProps={buyModalProps} networkOk={networkOk}/>
             <StoreNetwork supportedNetworks={supportedNetworks} isPurchase={isBuyModal} setNetworkOk={setNetworkOk}/>
         </>
@@ -143,6 +145,6 @@ export const getServerSideProps = async({res}) => {
     }
 }
 
-AppPremium.getLayout = function (page) {
+AppUpgrades.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
 };

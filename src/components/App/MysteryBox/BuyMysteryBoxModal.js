@@ -17,7 +17,7 @@ import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 
-export default function BuyStoreItemModal({model, setter, buyModalProps, networkOk}) {
+export default function BuyMysteryBoxModal({model, setter, buyModalProps, networkOk}) {
     if(!model || !networkOk) return;
     const {account, order, setOrder, contract, currency} = buyModalProps
     const router = useRouter()
@@ -113,7 +113,7 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
             <>
                 {transaction ?
                     <>Transaction <span className="text-app-success">successful</span></> :
-                    <><span className="text-app-success">Buy</span> Upgrade</>
+                    <><span className="text-app-success">Buy</span> MysteryBox</>
                 }
             </>
         )

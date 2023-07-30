@@ -6,9 +6,23 @@ import CitCapAccount from "@/components/App/Settings/CitCapAccount";
 import {is3VC} from "@/lib/utils";
 import Head from "next/head";
 import PremiumSummary from "@/components/App/Settings/PremiumSummary";
+import {useQuery} from "@tanstack/react-query";
+import {fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
 
 
 export default function AppSettings({account}) {
+    const address = account.address
+    const {isSuccess: premiumIsSuccess, data: premiumData} = useQuery({
+            queryKey: ["premiumOwned", {address}],
+            queryFn: fetchStoreItemsOwned,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            cacheTime: 15 * 1000,
+        }
+    );
+    console.log("premiumData",premiumData)
+
+
     const title = `Settings - ${getCopy("NAME")}`
     return (
         <>
@@ -20,8 +34,7 @@ export default function AppSettings({account}) {
                     {!is3VC && <CitCapAccount account={account}/>}
                 </div>
                 <div className={"flex col-span-12 sm:col-span-4 xl:col-span-4"}>
-                    <PremiumSummary account={account}/>
-
+                    <PremiumSummary data={premiumData}/>
                 </div>
             </div>
         </>

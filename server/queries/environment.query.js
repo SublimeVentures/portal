@@ -10,7 +10,6 @@ async function getEnvironment() {
     const projects = await models.offers.findAll({raw: true});
     const partners = await models.partners.findAll({where: {isEnabled: true}, raw: true});
 
-    console.log("currenciesStore",currenciesStore)
     let env = Object.assign({}, ...(envVars.map(item => ({ [item.name]: item.value }) )));
     let parsedCurrencies = {}
     let parsedCurrenciesStore = {}

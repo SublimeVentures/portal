@@ -4,7 +4,7 @@ const {models} = require('../services/db/db.init');
 async function getStore() {
     try {
         return models.store.findAll({
-            attributes: ['id', 'name', 'description', 'price', 'enabled', 'availability'],
+            attributes: ['id', 'name', 'description', 'price', 'priceBytes', 'enabled', 'availability'],
             order: [
                 ['id', 'ASC'],
             ],

@@ -11,7 +11,7 @@ const PAGE = {
     Accelerator: "/app/accelerator",
     OTC: "/app/otc",
     Notifs: "/app/latest",
-    Lootbox: "/app/lootbox",
+    Mysterybox: "/app/mysterybox",
     Upgrades: "/app/upgrades",
     Settings: "/app/settings",
 }
@@ -20,6 +20,7 @@ export const API = {
     fetchVault: "/api/vault/all",
     fetchLootbox: "/api/lootbox",
     fetchStore: "/api/store",
+    fetchStoreItemsOwned: "/api/store/owned",
     fetchVaultOfferDetails: "/api/vault?offer=",
     publicInvestments: "/api/public/investments",
     offerList: "/api/offer",

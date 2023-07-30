@@ -7,6 +7,7 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {useEffect} from "react";
 
 export default function StoreNetwork({supportedNetworks, isPurchase, setNetworkOk}) {
     const {chain, chains} = useNetwork()
@@ -65,8 +66,14 @@ export default function StoreNetwork({supportedNetworks, isPurchase, setNetworkO
         )
     }
 
+    useEffect(() => {
+        if(isPurchase) {
+            setNetworkOk(isNetworkSupported)
+        }
+    }, [isPurchase]);
+
+
     if(!isPurchase) return
-    setNetworkOk(isNetworkSupported)
     return (
         <GenericModal isOpen={!isNetworkSupported && isConnected} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>
     )

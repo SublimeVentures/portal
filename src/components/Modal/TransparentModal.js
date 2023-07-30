@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
 import {is3VC} from "@/lib/utils";
-export default function GenericModal({isOpen, closeModal, title, content, persistent, noClose }) {
+export default function TransparentModal({isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false)
 
     const closeModalOnBg = () => {
@@ -32,7 +32,7 @@ export default function GenericModal({isOpen, closeModal, title, content, persis
                   </Transition.Child>
 
                   <div className="fixed inset-0 overflow-y-auto">
-                      <div className="flex min-h-full items-center justify-center sm:p-4 text-center ">
+                      <div className="flex min-h-full items-center justify-center  text-center ">
                           <Transition.Child
                               as={Fragment}
                               enter="ease-out duration-300"
@@ -42,7 +42,7 @@ export default function GenericModal({isOpen, closeModal, title, content, persis
                               leaveFrom="opacity-100 scale-100"
                               leaveTo="opacity-0 scale-95"
                           >
-                              <Dialog.Panel className={`dialogWrap flex flex-col min-h-screen glareBg w-full sm:min-h-min sm:max-w-md transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-app-bg text-start transition-all ${isShake ? 'shake' : ''} ${is3VC ? "" : "font-accent"}`}>
+                              <Dialog.Panel className={`dialogWrap flex flex-col min-h-screen glareBg w-full transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-app-bg text-start transition-all ${isShake ? 'shake' : ''} ${is3VC ? "" : "font-accent"}`}>
                                   <Dialog.Title
                                       as="h3"
                                       className="text-3xl font-bold pb-5 pt-5"

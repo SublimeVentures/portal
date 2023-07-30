@@ -77,6 +77,18 @@ export default function AllowanceStep({stepProps}) {
         setFinished(isEnoughAllowance)
     }, [isErrorWrite, isErrorPending, isEnoughAllowance])
 
+    useEffect(()=>{
+            if (isFinished && isEnoughAllowance && isReady) {
+                setIsTransactionLoading(TransactionState.Init)
+            }
+            if ((isErrorWrite || isErrorPending) && isReady) {
+                setIsTransactionLoading(TransactionState.Init)
+            }
+            else {
+                setIsTransactionLoading(TransactionState.Processing)
+            }
+    }, [isFinished, isEnoughAllowance, isReady])
+
     // console.log("TT :: READ - isSuccessConfig", isSuccessConfig)
     // console.log("TT :: READ - allowance", allowance?.toNumber())
     // console.log("TT :: READ - isReady", isReady)
@@ -94,7 +106,7 @@ export default function AllowanceStep({stepProps}) {
                 return <>Getting allowance for {isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}</>
             }
             case Transaction.Executed: {
-                return <>Allowance ({isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}) set successfully </>
+                return <>Allowance confirmed ({isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}) </>
             }
             case Transaction.Failed: {
                 return <span className="underline">Failed to set allowance for {isStablecoin ? `$${amountLocale}`: `${amountLocale} ${currencySymbol}`}</span>
@@ -123,18 +135,18 @@ export default function AllowanceStep({stepProps}) {
     // console.log("======" )
 
     if (isFinished && isEnoughAllowance && isReady) {
-        setIsTransactionLoading(TransactionState.Init)
+        // setIsTransactionLoading(TransactionState.Init)
         return prepareRow(Transaction.Executed)
     }
     if (!isReady) {
         return prepareRow(Transaction.Waiting)
     }
     if ((isErrorWrite || isErrorPending) && isReady) {
-        setIsTransactionLoading(TransactionState.Init)
+        // setIsTransactionLoading(TransactionState.Init)
         return prepareRow(Transaction.Failed)
     }
     else {
-        setIsTransactionLoading(TransactionState.Processing)
+        // setIsTransactionLoading(TransactionState.Processing)
         return prepareRow(Transaction.Processing)
     }
 

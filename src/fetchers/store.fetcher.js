@@ -14,3 +14,16 @@ export const fetchStore = async () => {
     return []
 }
 
+
+export const fetchStoreItemsOwned = async () => {
+    try {
+        const {data} = await axiosPrivate.get(API.fetchStoreItemsOwned)
+        return data
+    } catch(e) {
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchStoreItemsOwned", e});
+        }
+    }
+    return []
+}
+
