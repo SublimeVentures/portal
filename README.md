@@ -27,7 +27,9 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-
+image for citcap metadata
+icConfiremd - aktualizuj tylko jeden!
+https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
 ## ToDo
 - claim logic
 - test lootbox buy
