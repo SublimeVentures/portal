@@ -8,7 +8,7 @@ export default function OfferDetailsInvestClosed({paramsInvestClosed}) {
     const generateText = () => {
         if(isClosed) return "Investment closed"
         if(account.ACL !== 0 && offer.access === 0) {
-            return <>Investment reserved only for <Linker url={ExternalLinks.WHALE_CLUB} text={"3VC Whales"}/></>
+            return <>Investment reserved only for <Linker url={ExternalLinks.WHALE_CLUB} text={"basedVC Whales"}/></>
         } else {
             return "Investment closed."
         }

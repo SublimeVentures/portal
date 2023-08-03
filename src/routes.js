@@ -27,7 +27,7 @@ export const API = {
     publicPartners: "/api/public/partners",
 }
 
-const ExternalLinks3VC = {
+const ExternalLinksBased = {
     INVESTMENT_RETURN: "https://info.3vc.fund/Return-from-the-investment-0656411b2d4c44078c675d3f87e8b136",
     BOOKING_SYSTEM: "https://info.3vc.fund/Allocation-Booking-System-2f93893f882c49d0ab305159aa7099c4",
     OFFER_PHASES: "https://info.3vc.fund/Offer-phases-cf284a30c16f4586a8f2fa6b49df1e8d",
@@ -60,6 +60,6 @@ const ExternalLinksCitCap = {
     TWITTER:"https://twitter.com/CitCapFund",
 }
 
-export const ExternalLinks = isBased ? ExternalLinks3VC : ExternalLinksCitCap
+export const ExternalLinks = isBased ? ExternalLinksBased : ExternalLinksCitCap
 
 export default PAGE;

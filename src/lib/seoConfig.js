@@ -22,25 +22,25 @@ export const seoConfig = (page) => {
         switch(page) {
             case PAGE.Landing: {
                 return generateSeo(
-                    "3VC - invest ground floor",
+                    "basedVC - invest ground floor",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
-                    template_3VC,
+                    template_based,
                     page
                 )
             }
             case PAGE.Login: {
                 return generateSeo(
-                    "3VC - login",
+                    "basedVC - login",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
-                    template_3VC,
+                    template_based,
                     page
                 )
             }
             case PAGE.Investments: {
                 return generateSeo(
-                    "3VC - our investments",
+                    "basedVC - our investments",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
-                    template_3VC,
+                    template_based,
                     page
                 )
             }
@@ -90,7 +90,7 @@ const generateSeo = (title, description, source, extraUrl) =>{
     return template
 }
 
-const template_3VC = {
+const template_based = {
         url: "https://3vc.fund",
         og: {
             type: 'website',

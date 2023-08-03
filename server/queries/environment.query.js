@@ -17,7 +17,7 @@ async function getEnvironment() {
 
 
     const funded = projects.map(item => item.alloRaised).reduce((prev, next) => prev + next);
-    env.cdn = isBased ? env.cdn3VC : env.cdnCitCap;
+    env.cdn = isBased ? env.cdnBased : env.cdnCitCap;
     env.currencies = parsedCurrencies
     env.ntData = {
         S1: partners.find(el => el.name === "Neo Tokyo Citizen S1")?.address,

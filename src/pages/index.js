@@ -2,7 +2,7 @@ import { NextSeo } from 'next-seo';
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import {verifyID} from "@/lib/authHelpers";
-import Home3VC from "@/components/Home";
+import HomeBased from "@/components/Home";
 import HomeCitCap from "@/components/HomeCitCap";
 import {isBased} from "@/lib/utils";
 
@@ -18,7 +18,7 @@ export default function Home({account}) {
             twitter={seo.twitter}
         />
 
-        {isBased ? <Home3VC account={account}/> : <HomeCitCap account={account}/>}
+        {isBased ? <HomeBased account={account}/> : <HomeCitCap account={account}/>}
     </>
   )
 }
