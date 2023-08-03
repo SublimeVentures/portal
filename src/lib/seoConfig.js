@@ -1,9 +1,9 @@
 import PAGE from "@/routes";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 const copy = {
     true: {
-        NAME: "3VC",
+        NAME: "basedVC",
         ACCELERATOR: "Accelerator",
     },
     false: {
@@ -14,11 +14,11 @@ const copy = {
 }
 
 export const getCopy = (name) => {
-    return copy[is3VC][name]
+    return copy[isBased][name]
 }
 
 export const seoConfig = (page) => {
-    if(is3VC) {
+    if(isBased) {
         switch(page) {
             case PAGE.Landing: {
                 return generateSeo(

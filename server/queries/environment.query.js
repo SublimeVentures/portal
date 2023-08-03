@@ -1,5 +1,5 @@
 const { models } = require('../services/db/db.init');
-const {is3VC} = require("../../src/lib/utils");
+const {isBased} = require("../../src/lib/utils");
 
 
 async function getEnvironment() {
@@ -17,7 +17,7 @@ async function getEnvironment() {
 
 
     const funded = projects.map(item => item.alloRaised).reduce((prev, next) => prev + next);
-    env.cdn = is3VC ? env.cdn3VC : env.cdnCitCap;
+    env.cdn = isBased ? env.cdn3VC : env.cdnCitCap;
     env.currencies = parsedCurrencies
     env.ntData = {
         S1: partners.find(el => el.name === "Neo Tokyo Citizen S1")?.address,

@@ -1,6 +1,6 @@
 import {RoundButton} from "@/components/Button/RoundButton";
 import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 
 export const ButtonTypes = {
@@ -25,7 +25,7 @@ export function UniButton({
     const parse = () => {
             switch(type) {
                 case ButtonTypes.BASE: {
-                    if(is3VC) {
+                    if(isBased) {
                         return <RoundButton text={text} is3d={is3d} isPrimary={isPrimary} icon={icon} handler={handler} isWider={isWider} zoom={zoom} size={size} isWide={isWide} isLoading={isLoading} isLoadingWithIcon={isLoadingWithIcon} isDisabled={isDisabled} showParticles={showParticles}/>
                     } else {
                         return <CitCapGlitchButton text={`_${text}`} isLarge={isLarge} isDisabled={isDisabled} isLoading={isLoading} state={state} handler={handler} isActive={isActive}/>

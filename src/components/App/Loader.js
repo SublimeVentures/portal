@@ -1,9 +1,9 @@
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function Loader() {
     return (
         <div className="flex -ml-10 flex-1 relative">
-            {is3VC ?  <div id="load">
+            {isBased ?  <div id="load">
                 <div>G</div>
                 <div>N</div>
                 <div>I</div>

@@ -9,7 +9,7 @@ import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import {getCopy} from "@/lib/seoConfig";
 
 export default function AppAccelerator({account}) {
@@ -52,7 +52,7 @@ export default function AppAccelerator({account}) {
         </Head>
         <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
             <div className={"flex flex-col justify-center"}>
-                <div className={`glow font-extrabold text-3xl ${is3VC ? "" : "font-accent uppercase font-light"}`}>Accelerator</div>
+                <div className={`glow font-extrabold text-3xl ${isBased ? "" : "font-accent uppercase font-light"}`}>Accelerator</div>
                 <div className={"text-outline text-md mt-2 white min-w-[250px]"}>Hyper-promising projects that are outside of {getCopy("NAME")} investment thesis.</div>
             </div>
             <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
@@ -79,7 +79,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>Due Diligence</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span className="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, {is3VC ? "Investors" :"Citizens"} must DYOR.
+                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span className="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, {isBased ? "Investors" :"Citizens"} must DYOR.
 
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default function AppAccelerator({account}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>{getCopy("ACCELERATOR")}</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {is3VC ? "web3" : "NeoTokyo"}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span className="text-app-error font-bold">best {is3VC ? "projects" :"NeoTokyo Projects"}</span>.
+                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {isBased ? "web3" : "NeoTokyo"}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span className="text-app-error font-bold">best {isBased ? "projects" :"NeoTokyo Projects"}</span>.
 
                     </div>
                 </div>

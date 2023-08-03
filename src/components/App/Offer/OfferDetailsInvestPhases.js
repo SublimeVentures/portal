@@ -20,7 +20,7 @@ import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import {ACLs} from "@/lib/authHelpers";
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
@@ -285,7 +285,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className={`flex flex-1 flex-col items-center justify-center ${is3VC ? "" : "font-accent"}`}>
+        <div className={`flex flex-1 flex-col items-center justify-center ${isBased ? "" : "font-accent"}`}>
             <div className="mt-15 lg:mt-auto">
                 <div className="currency-input-group relative">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>

@@ -4,10 +4,10 @@ function sleeper(ms) {
     };
 }
 
-const is3VC = process.env.NEXT_PUBLIC_SITE === "3VC"
+const isBased = process.env.NEXT_PUBLIC_SITE === "based"
 
 
 module.exports = {
     sleeper,
-    is3VC
+    isBased
 }

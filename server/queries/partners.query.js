@@ -17,8 +17,8 @@ async function getPublicPartners() {
     return []
 }
 
-async function getPartners(isDev, is3VC) {
-    let filter = is3VC ? {level: 10} : {level: 15}
+async function getPartners(isDev, isBased) {
+    let filter = isBased ? {level: 10} : {level: 15}
 
     try {
         return await models.partners.findAll({

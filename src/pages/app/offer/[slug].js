@@ -17,7 +17,7 @@ import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestP
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import routes from "@/routes";
  import {getCopy} from "@/lib/seoConfig";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export const AppOfferDetails = ({account}) => {
     const router = useRouter()
@@ -108,7 +108,7 @@ export const AppOfferDetails = ({account}) => {
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar}/>
-                <div className={`${is3VC ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}>
+                <div className={`${isBased ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}>
                     {!isClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
                 </div>
                 <div

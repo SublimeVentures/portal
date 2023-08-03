@@ -1,12 +1,12 @@
 import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function OfferDetailsProgress({alloTotal, alloFilled, alloRequired, isSoldOut}) {
     const tilt = useRef(null);
 
     useEffect(() => {
-        VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: is3VC ? 5 : 0.2});
+        VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: isBased ? 5 : 0.2});
     }, []);
 
 

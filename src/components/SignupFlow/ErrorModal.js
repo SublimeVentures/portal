@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function ErrorModal({model, setter}) {
 
@@ -41,7 +41,7 @@ export default function ErrorModal({model, setter}) {
     }
 
     const content = () => {
-        return is3VC ? contentBased() : contentCitCap()
+        return isBased ? contentBased() : contentCitCap()
     }
 
   return (<GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />)

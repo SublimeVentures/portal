@@ -15,7 +15,7 @@ import {ACLs}  from "@/lib/authHelpers";
 import Linker from "@/components/link";
 import {getButtonStep, getInvestFunction} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC, sleeper} from "@/lib/utils";
+import {isBased, sleeper} from "@/lib/utils";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
@@ -139,7 +139,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                 <Lottie animationData={lottieSuccess} loop={true} autoplay={true} style={{width: '320px', margin: '30px auto 0px'}}/>;
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <Link href={PAGE.App} className={` w-full fullWidth ${is3VC ? "" : "flex flex-1 justify-center"}`}>
+                    <Link href={PAGE.App} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>
                         <UniButton type={ButtonTypes.BASE} text={'Check Vault'} state={"danger"} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
                     </Link>
                 </div>
@@ -173,7 +173,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                         <LiquidityStep stepProps={liquidityProps} />
                         <TransactionStep stepProps={transactionProps}/>
                 </div>
-                <div className={` pb-5 ${is3VC ? "fullWidth": "flex flex-1 justify-center"}`}>
+                <div className={` pb-5 ${isBased ? "fullWidth": "flex flex-1 justify-center"}`}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         isWide={true}

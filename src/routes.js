@@ -1,4 +1,4 @@
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 
 const PAGE = {
@@ -60,6 +60,6 @@ const ExternalLinksCitCap = {
     TWITTER:"https://twitter.com/CitCapFund",
 }
 
-export const ExternalLinks = is3VC ? ExternalLinks3VC : ExternalLinksCitCap
+export const ExternalLinks = isBased ? ExternalLinks3VC : ExternalLinksCitCap
 
 export default PAGE;
