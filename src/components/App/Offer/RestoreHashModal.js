@@ -2,7 +2,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import moment from "moment";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function RestoreHashModal({model, setter, restoreModalProps}) {
     const { expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps
@@ -35,7 +35,7 @@ export default function RestoreHashModal({model, setter, restoreModalProps}) {
                     />
                 </div>
 
-               <div className={`flex ${is3VC ? "" : "items-center"} flex-col gap-5 flex-1 mt-10  fullWidth`}>
+               <div className={`flex ${isBased ? "" : "items-center"} flex-col gap-5 flex-1 mt-10  fullWidth`}>
                    <UniButton type={ButtonTypes.BASE} text={'Restore'} state={"danger"} isWide={true} isPrimary={true} zoom={1.1} size={'text-sm sm'}
                               handler={bookingRestore}/>
                    <UniButton type={ButtonTypes.BASE} text={'New Booking'} state={""} isWide={true} zoom={1.1} size={'text-sm sm'}

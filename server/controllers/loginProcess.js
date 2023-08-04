@@ -8,7 +8,7 @@ const citcapSeasonAbi = require('../../abi/citcapS.abi.json')
 const citcapStakingAbi = require('../../abi/citcapStaking.abi.json')
 const Sentry = require("@sentry/nextjs");
 const {checkElite} = require("../queries/ntElites.query");
-const {is3VC} = require("../../src/lib/utils");
+const {isBased} = require("../../src/lib/utils");
 
 const getMoralisImage = (object) => {
     if (object?.media?.mimetype === 'image/gif') {
@@ -307,7 +307,7 @@ async function isDelegated(address, enabledCollections) {
 }
 
 async function feedNfts(address) {
-    const enabledCollections = await getPartners(getEnv().isDev, is3VC)
+    const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
     for (const chain of getWeb3().chains) {
         const searchFor = enabledCollections.filter(el => el.networkChainId === chain._chainlistData.chainId)
@@ -334,7 +334,7 @@ async function checkUser(address) {
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type
 
-    if (is3VC) {
+    if (isBased) {
         type = await isWhale(userNfts)
         if (!type) type = await isPartner(userNfts, enabledCollections)
         if (!type) type = await isInjectedUser(address)

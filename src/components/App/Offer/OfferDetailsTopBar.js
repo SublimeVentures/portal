@@ -1,7 +1,7 @@
 import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 
 
@@ -17,14 +17,14 @@ export default function OfferDetailsTopBar({paramsBar}) {
                 </div>
                 <div>
                     <div className="text-4xl font-bold flex flex-1 glow">{name}</div>
-                    <div className={`text-xl flex flex-1 mt-1 ${is3VC ? "text-outline" : "font-accent"}`}>#{genre}</div>
+                    <div className={`text-xl flex flex-1 mt-1 ${isBased ? "text-outline" : "font-accent"}`}>#{genre}</div>
                 </div>
             </div>
 
             { !isLastPhase && <div
-                className={`flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row ${is3VC ? "" : "font-accent"}`}>
+                className={`flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row ${isBased ? "" : "font-accent"}`}>
                 <div className={`text-lg custom:-mt-5 `}>
-                    <span className={` uppercase font-[500] ${is3VC ? "text-gold glow" : "text-app-error glowRed "}`}>{currentPhase.step}</span> ends in
+                    <span className={` uppercase font-[500] ${isBased ? "text-gold glow" : "text-app-error glowRed "}`}>{currentPhase.step}</span> ends in
                 </div>
                 <div>
                     <FlipClockCountdown

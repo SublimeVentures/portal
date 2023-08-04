@@ -12,7 +12,7 @@ import IconMoney from "@/assets/svg/Money.svg";
 import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
  import {getCopy} from "@/lib/seoConfig";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function AppOffer({account}) {
     const ACL = account.ACL
@@ -55,13 +55,13 @@ export default function AppOffer({account}) {
         </Head>
         <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
             <div className={"flex flex-col justify-center"}>
-                <div className={`glow font-extrabold text-3xl ${is3VC ? "" : "font-accent uppercase font-light"}`}>Funded Projects</div>
+                <div className={`glow font-extrabold text-3xl ${isBased ? "" : "font-accent uppercase font-light"}`}>Funded Projects</div>
                 <div className={"text-outline text-md mt-2 white min-w-[250px]"}>We bring new industry giants to our community</div>
             </div>
             <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
                 <div className={"w-full flex gap-5 flex-col md:flex-row"}>
                     <Stat color={"gold"} title={"Investments"} value={offerListRender.length}  icon={<IconStars className={"w-9"}/>}/>
-                    {is3VC && <Stat color={"teal"} title={"Partners"} value={partners} icon={<IconNetwork className={"w-7"}/>}/>}
+                    {isBased && <Stat color={"teal"} title={"Partners"} value={partners} icon={<IconNetwork className={"w-7"}/>}/>}
                     <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7"}/>}/>
                 </div>
             </div>

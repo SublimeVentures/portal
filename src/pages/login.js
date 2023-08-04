@@ -10,7 +10,7 @@ import LoginBased from "@/components/Login/loginBased";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import dynamic from "next/dynamic";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 const ErrorModal = dynamic(() => import('@/components/SignupFlow/ErrorModal'), {ssr: false})
 
 export default function Login({}) {
@@ -33,7 +33,7 @@ export default function Login({}) {
                 openGraph={seo.og}
                 twitter={seo.twitter}
             />
-            {is3VC ? <LoginBased/> : <LoginCitCap/> }
+            {isBased ? <LoginBased/> : <LoginCitCap/> }
             <ErrorModal model={errorModal} setter={() => {setErrorModal(false)}}/>
         </>
     )

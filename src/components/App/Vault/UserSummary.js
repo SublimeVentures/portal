@@ -8,7 +8,7 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import Lottie from "lottie-react";
 import lottieAvatar from "@/assets/lottie/avatar.json";
 import { useGlitch } from 'react-powerglitch'
@@ -24,7 +24,7 @@ function sum(prev, next){
 export default function UserSummary({vault, account}) {
     const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
     let glitch
-    if(!is3VC) {
+    if(!isBased) {
         glitch = useGlitch({
             "playMode": "always",
             "createContainers": true,
@@ -55,7 +55,7 @@ export default function UserSummary({vault, account}) {
                     <div
                         className="flex flex-1 flex-col justify-center items-center">
                         <div className="relative  px-10 sm:-ml-10 custom:ml-0" >
-                            {is3VC ? <>
+                            {isBased ? <>
                                     <div className="absolute avatarAnim" style={{transform: 'translate(-50%, -50%)'}}>
                                         <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>
                                     </div>

@@ -3,7 +3,7 @@ import {verifyID} from "@/lib/authHelpers";
 import routes from "@/routes";
 import CitCapAccount from "@/components/App/Settings/CitCapAccount";
  import {getCopy} from "@/lib/seoConfig";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import Head from "next/head";
 
 
@@ -16,7 +16,7 @@ export default function AppSettings({account}) {
             </Head>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 sm:col-span-8 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
-                    {!is3VC && <CitCapAccount account={account}/>}
+                    {!isBased && <CitCapAccount account={account}/>}
                 </div>
             </div>
         </>

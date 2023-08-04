@@ -18,7 +18,7 @@ import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
 import {logOut} from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
 
@@ -57,7 +57,7 @@ export default function Sidebar({account}) {
         groupUser: [
             {name: 'Vault', link: PAGE.App, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
-            {name: 'Accelerator', link: PAGE.Accelerator, icon: is3VC ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
+            {name: 'Accelerator', link: PAGE.Accelerator, icon: isBased ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
             {name: 'OTC', link: PAGE.OTC, disabled:true, icon: <IconExchange className="w-8 mr-3"/>},
             {name: 'Lootbox', link: PAGE.Lootbox, icon: <IconMysteryBox className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
@@ -67,7 +67,7 @@ export default function Sidebar({account}) {
             {name: 'Wiki', icon: <IconWiki className="w-6 ml-1 mr-3"/>, action: true, handler: openNotion},
         ],
         groupProfile: [
-            {name: 'Settings', link: PAGE.Settings, disabled: is3VC, icon: <IconSetting className="w-8 mr-3"/>},
+            {name: 'Settings', link: PAGE.Settings, disabled: isBased, icon: <IconSetting className="w-8 mr-3"/>},
             {name: 'Log out', icon: <IconLogout className="w-8 mr-3"/>, action: true, handler: logout},
         ]
     }
@@ -76,10 +76,10 @@ export default function Sidebar({account}) {
     const generateLink = (group) => {
             return group.map(el => {
                 if (el.action) return <div key={el.name}
-                                           className={`flex cursor-pointer items-center px-5 py-2 ${is3VC ? "rounded-xl" : ""} sidebar-item select-none ${el.disabled ? 'disabled' : ''}`}
+                                           className={`flex cursor-pointer items-center px-5 py-2 ${isBased ? "rounded-xl" : ""} sidebar-item select-none ${el.disabled ? 'disabled' : ''}`}
                                            onClick={el.handler}>{el.icon}{el.name}</div>
                 else return <Link href={el.link} key={el.name} onClick={() => {toggleMobile()}}
-                                  className={`flex items-center px-5 py-2  ${is3VC ? "rounded-xl" : ""}  sidebar-item select-none ${el.disabled ? 'disabled' : ''} ${router.asPath === el.link ? "arl" : ""}`}>{el.icon}{el.name}</Link>
+                                  className={`flex items-center px-5 py-2  ${isBased ? "rounded-xl" : ""}  sidebar-item select-none ${el.disabled ? 'disabled' : ''} ${router.asPath === el.link ? "arl" : ""}`}>{el.icon}{el.name}</Link>
             })
     }
 
@@ -90,15 +90,15 @@ export default function Sidebar({account}) {
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">
-                            <img className={is3VC ? "w-15" : `w-17 top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
-                            {!is3VC && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
+                            <img className={isBased ? "w-[150px]" : `w-17 top-2 `} src={ isBased ? "/img/logo_based.svg" : "/img/logo.svg"} alt={"logo"}/>
+                            {!isBased && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
                         </div>
                     </Link>
                     <ChangeNetwork/>
                     <ChangeAddress account={account}/>
 
                 </div>
-                <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${is3VC ? "font-medium" : ""}`}>
+                <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}>
                     <div className="flex flex-col gap-2">
                         {generateLink(menu.groupUser)}
                     </div>
@@ -115,9 +115,9 @@ export default function Sidebar({account}) {
                 <div className="mt-1 flex flex-row flex-1">
                     <Link href={PAGE.App}>
 
-                        <div className={`flex items-center ${is3VC ? "" : "absolute top-2"}`}>
-                            <img className={is3VC ? "w-15" : `w-17 top-2 `} src={ is3VC ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
-                            {!is3VC && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
+                        <div className={`flex items-center ${isBased ? "" : "absolute top-2"}`}>
+                            <img className={isBased ? "w-15" : `w-17 top-2 `} src={ isBased ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
+                            {!isBased && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
                         </div>
                     </Link>
                     <div className="flex flex-1 justify-end hamburger">
@@ -148,7 +148,7 @@ export default function Sidebar({account}) {
                     leaveTo="opacity-0"
                 >
                     <div
-                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${is3VC ? "font-medium" : ""}`}>
+                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${isBased ? "font-medium" : ""}`}>
                         <div className="flex flex-col gap-2">
                             {generateLink(menu.groupUser)}
 

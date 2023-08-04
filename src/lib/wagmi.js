@@ -5,7 +5,7 @@ import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 
@@ -34,7 +34,7 @@ export const client = createClient({
         new CoinbaseWalletConnector({
             chains: rightChains,
             options: {
-                appName: is3VC ? "3VC" : "Citizen Capital",
+                appName: isBased ? "basedVC" : "Citizen Capital",
                 jsonRpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/ca5Ej0RH2MKn3Y6eGDN4Di6GEWao0aWL',
             },
         })

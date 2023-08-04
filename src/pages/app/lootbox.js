@@ -5,7 +5,7 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import Linker from "@/components/link";
  import {getCopy} from "@/lib/seoConfig";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
 import Head from "next/head";
@@ -60,8 +60,8 @@ export default function AppLootbox({account}) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className={`flex flex-1 flex-col select-none justify-center items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 loot ${is3VC ? "" : "font-accent"}`}>
-                {availableAmount  > 0 && <div className={`${is3VC ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[100px] text-center collap:top-[100px]"} flex glowNormal pb-5`}>You have {availableAmount} unclaimed Lootbox!</div>}
+            <div className={`flex flex-1 flex-col select-none justify-center items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 loot ${isBased ? "" : "font-accent"}`}>
+                {availableAmount  > 0 && <div className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[100px] text-center collap:top-[100px]"} flex glowNormal pb-5`}>You have {availableAmount} unclaimed Lootbox!</div>}
 
                 <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
                         <IconMysteryBox className="w-[250px] sm:w-[450px] text-white"/>

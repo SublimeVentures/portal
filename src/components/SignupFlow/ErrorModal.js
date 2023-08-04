@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function ErrorModal({model, setter}) {
 
@@ -15,8 +15,8 @@ export default function ErrorModal({model, setter}) {
                 <div className="mb-5">
                     Connected account does not hold any:
                     <ul className={"list-disc ml-5"}>
-                        <li className={"text-app-success font-bold"}>3VC Whale ID</li>
-                        <li className={"text-app-success"}>3VC Partner's NFT</li>
+                        <li className={"text-app-success font-bold"}>basedVC Whale ID</li>
+                        <li className={"text-app-success"}>basedVC Partner's NFT</li>
                     </ul>
                 </div>
                 <div>
@@ -41,7 +41,7 @@ export default function ErrorModal({model, setter}) {
     }
 
     const content = () => {
-        return is3VC ? contentBased() : contentCitCap()
+        return isBased ? contentBased() : contentCitCap()
     }
 
   return (<GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />)

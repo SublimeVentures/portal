@@ -6,7 +6,7 @@ import {useAccount, useConnect} from 'wagmi'
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
@@ -31,7 +31,7 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
     }
 
     const title = () => {
-        return (<span className={!is3VC && `text-app-error`}>Connect Wallet {is3VC && <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span>}</span>)
+        return (<span className={!isBased && `text-app-error`}>Connect Wallet {isBased && <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span>}</span>)
     }
 
 

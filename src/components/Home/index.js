@@ -5,7 +5,7 @@ import About from "@/components/Home/About";
 import Callout from "@/components/Home/Callout";
 
 
-export default function Home3VC({account}) {
+export default function HomeBased({account}) {
     return (
         <>
             <Hero account={account}/>

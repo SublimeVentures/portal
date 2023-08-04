@@ -1,9 +1,9 @@
 import PAGE from "@/routes";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 const copy = {
     true: {
-        NAME: "3VC",
+        NAME: "basedVC",
         ACCELERATOR: "Accelerator",
     },
     false: {
@@ -14,33 +14,33 @@ const copy = {
 }
 
 export const getCopy = (name) => {
-    return copy[is3VC][name]
+    return copy[isBased][name]
 }
 
 export const seoConfig = (page) => {
-    if(is3VC) {
+    if(isBased) {
         switch(page) {
             case PAGE.Landing: {
                 return generateSeo(
-                    "3VC - invest ground floor",
+                    "basedVC - invest ground floor",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
-                    template_3VC,
+                    template_based,
                     page
                 )
             }
             case PAGE.Login: {
                 return generateSeo(
-                    "3VC - login",
+                    "basedVC - login",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
-                    template_3VC,
+                    template_based,
                     page
                 )
             }
             case PAGE.Investments: {
                 return generateSeo(
-                    "3VC - our investments",
+                    "basedVC - our investments",
                     "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
-                    template_3VC,
+                    template_based,
                     page
                 )
             }
@@ -90,8 +90,8 @@ const generateSeo = (title, description, source, extraUrl) =>{
     return template
 }
 
-const template_3VC = {
-        url: "https://3vc.fund",
+const template_based = {
+        url: "https://basedvc.fund",
         og: {
             type: 'website',
             url: '',
@@ -99,14 +99,14 @@ const template_3VC = {
             description: '',
             images: [
                 {
-                    url: 'https://cdn.3vc.fund/webapp/og.jpg',
+                    url: 'https://cdn.basedvc.fund/webapp/og.jpg',
                     width: 800,
                     height: 600,
-                    alt: 'Join 3VC',
+                    alt: 'Join basedVC',
                     type: 'image/jpeg',
                 },
             ],
-            siteName: '3VC',
+            siteName: 'basedVC',
         },
         twitter: {
             handle: '@3VCfund',

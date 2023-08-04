@@ -1,4 +1,4 @@
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 
 export default function HeroBg({subtitle, title, content, extraClass}) {
     return (
