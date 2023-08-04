@@ -10,15 +10,11 @@ import {useEffect, useRef, useState} from "react";
 import VanillaTilt from "vanilla-tilt";
 import Head from "next/head";
 import {useQuery} from "@tanstack/react-query";
-import {fetchLootbox} from "@/fetchers/lootbox.fetcher";
 import {fetchStore, fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
 import {PremiumItemsENUM} from "@/components/App/Settings/PremiumSummary";
-import BuyStoreItemModal from "@/components/App/Store/BuyStoreItemModal";
 import StoreNetwork from "@/components/Navigation/StoreNetwork";
 import {useNetwork} from "wagmi";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
-import Lottie from "lottie-react";
-import lootboxLottie from "@/assets/lottie/lootbox.json";
 import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxModal";
 
 
@@ -71,6 +67,12 @@ export default function AppLootbox({account}) {
     const availableCurrencies = storeEnvironment?.currency[chainId]
 
 
+    const openMysteryBox = async () => {
+
+
+        //finalize
+        setClaimModal(true)
+    }
 
     useEffect(() => {
         VanillaTilt.init(imageTilt.current, {scale: 1.1, speed: 1000, max: 0.2});
@@ -123,7 +125,7 @@ export default function AppLootbox({account}) {
                                isWide={true}
                                zoom={1.05}
                                size={'text-sm sm'}
-                               handler={()=> { setClaimModal(true)}}
+                               handler={()=> { openMysteryBox() }}
                     />
                     <UniButton type={ButtonTypes.BASE}
                                text={`BUY`}

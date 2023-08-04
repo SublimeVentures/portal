@@ -30,29 +30,26 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 image for citcap metadata
 icConfiremd - aktualizuj tylko jeden!
 https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
+unlock button for failed set allowance
+
 ## ToDo
-- claim logic
-- test lootbox buy
-- fix error on blockchain parsing
+- claim transaction
+- refetch premium
+- on buy - reduce available
+- upgrades - on buy - reduce available
 - sub availability from store
 
-
+- fix error on blockchain parsing
 - staking change to feed data
 - remove multichain from blockchain
 - contract: premium - enable/disable/owner for whales
 - reset modal settings on close
 
-- create lootboxPackages
-- create new vault item type for lootboxPackages
--- allocations => link to the offer
--- transcendance => 
--- for lootbox NFTs enable claim 
--- for Codes, just use 
 
 - lootbox contract - add watcher for lootbox enabled
 - deploy on all chains
+- lootobx graphics basedVC
 - sentry error
-- lootobx graphics
 
 - staking (force eth)
   - delegate
@@ -87,8 +84,6 @@ https://devcenter.heroku.com/articles/heroku-postgres-backups**
 - 500, 1000, user max button under investment size
 - timeline for user activities for each investment in vault tab
 - reassign allocation
-- lootbox
-- promo codes
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button

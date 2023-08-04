@@ -1,7 +1,7 @@
 const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 
-async function getUserLootbox(owner, isClaimed) {
+async function openMysterybox(owner, isClaimed) {
     try {
         return models.lootbox.findAll({
             attributes: ['id', 'claimed'],
@@ -21,4 +21,4 @@ async function getUserLootbox(owner, isClaimed) {
 }
 
 
-module.exports = {getUserLootbox}
+module.exports = {openMysterybox}
