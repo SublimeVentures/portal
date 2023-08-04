@@ -9,7 +9,7 @@ export default function Document() {
                 <link rel="stylesheet" href={`/browser/index-5d6202c2.css`}/>
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
-                <link rel="icon" href={isBased ? "/img/favicon.png" : "/favicon.png"} sizes="any" />
+                <link rel="icon" href={isBased ? "/img/favicon.jpg" : "/favicon.png"} sizes="any" />
             </Head>
             <body>
             <Gtag/>

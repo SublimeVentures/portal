@@ -91,7 +91,7 @@ const generateSeo = (title, description, source, extraUrl) =>{
 }
 
 const template_based = {
-        url: "https://3vc.fund",
+        url: "https://basedvc.fund",
         og: {
             type: 'website',
             url: '',
@@ -99,14 +99,14 @@ const template_based = {
             description: '',
             images: [
                 {
-                    url: 'https://cdn.3vc.fund/webapp/og.jpg',
+                    url: 'https://cdn.basedvc.fund/webapp/og.jpg',
                     width: 800,
                     height: 600,
-                    alt: 'Join 3VC',
+                    alt: 'Join basedVC',
                     type: 'image/jpeg',
                 },
             ],
-            siteName: '3VC',
+            siteName: 'basedVC',
         },
         twitter: {
             handle: '@3VCfund',

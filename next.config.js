@@ -16,7 +16,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'cdn.3vc.fund',
+                hostname: 'cdn.basedvc.fund',
                 port: '',
                 pathname: '/**'
             },
