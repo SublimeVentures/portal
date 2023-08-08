@@ -4,6 +4,11 @@ import useScrollPosition from "@/lib/hooks/useScrollPosition";
 import {isBased} from "@/lib/utils";
 import {ExternalLinks} from "@/routes";
 import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
+import Logo from "@/assets/svg/logo.svg";
+import dynamic from "next/dynamic";
+const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
+
+
 
 export default function Navbar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -51,10 +56,10 @@ export default function Navbar() {
                 className={`
                 ${isBased ? "py-7" : "py-2"} 
                 ${!isOnTop || isMobileOpen ? 'blurredBG' : ''} 
-                flex flex-row items-center w-full  px-10 navShadow`}>
+                flex flex-row items-center w-full  px-10 navShadow `}>
                 <Link href="/" onClick={disableMobile}>
-                    <div className="flex">
-                        <img className={isBased ? "w-[150px]" : `w-17 top-2 `} src={ isBased ? "/img/logo_based.svg" : "/img/logo.svg"} alt={"logo"}/>
+                    <div className="flex ">
+                        {isBased ? <Logo  className={"w-17 text-white"}/> : <LogoCitCap className={"w-17 top-2 "}/>}
                     </div>
                 </Link>
                 <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>

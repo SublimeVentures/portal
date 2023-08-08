@@ -1,0 +1,25 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000.000000 3000.000000" preserveAspectRatio="xMidYMid meet">
+
+    <!-- Filter for neon halo/blur effect - Blue -->
+    <filter id="neonHaloBlue" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="0" stdDeviation="1500" flood-color="#C2AD77" />
+    </filter>
+
+    <!-- Filter for neon halo/blur effect - Red -->
+    <filter id="neonHaloRed" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="0" stdDeviation="1500" flood-color="#86090A" />
+    </filter>
+
+    <!-- Filter for neon halo/blur effect - Green -->
+    <filter id="neonHaloGreen" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="0" stdDeviation="1500" flood-color="#86090A" />
+    </filter>
+
+    <g transform="translate(0.000000,3000.000000) scale(0.100000,-0.100000)" fill="#ffffff" stroke="none">
+
+        <!-- Apply neon halo/blur filter to each path -->
+        <path id="1" fill="#C2AD77" filter="url(#neonHaloBlue)" d="M15518 24508 c-496 -2150 -3136 -13603 -3769 -16348 -352 -1526 -643 -2790 -646 -2808 l-6 -32 1960 0 1959 0 2334 10123 c1283 5567 2335 10134 2338 10150 l4 27 -1959 0 -1959 0 -256 -1112z" />
+        <path id="2" fill="#86090A" filter="url(#neonHaloRed)" d="M11051 22548 c-6 -29 -757 -3284 -1667 -7233 -910 -3949 -1657 -7188 -1660 -7197 -5 -17 66 -18 1395 -18 1324 0 1400 1 1405 18 2 9 75 321 160 692 85 371 835 3624 1665 7227 831 3604 1511 6555 1511 6558 0 3 -629 5 -1398 5 l-1399 0 -12 -52z" />
+        <path id="3" fill="#86090A" filter="url(#neonHaloGreen)" d="M18627 15492 c-901 -3909 -1653 -7171 -1671 -7250 l-33 -142 1400 2 1400 3 308 1335 c169 734 920 3991 1668 7237 749 3247 1361 5907 1361 5913 0 7 -462 10 -1397 10 l-1398 0 -1638 -7108z" />
+    </g>
+</svg>

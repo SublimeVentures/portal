@@ -19,8 +19,10 @@ import dynamic from "next/dynamic";
 import {logOut} from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 import {isBased} from "@/lib/utils";
+import Logo from "@/assets/svg/logo.svg";
 const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
 const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
+const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
 
 
 export default function Sidebar({account}) {
@@ -90,8 +92,7 @@ export default function Sidebar({account}) {
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">
-                            <img className={isBased ? "w-[150px]" : `w-17 top-2 `} src={ isBased ? "/img/logo_based.svg" : "/img/logo.svg"} alt={"logo"}/>
-                            {!isBased && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
+                            {isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 top-2 "}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}
                         </div>
                     </Link>
                     <ChangeNetwork/>
