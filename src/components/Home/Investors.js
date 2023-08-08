@@ -9,6 +9,7 @@ import Animoca from '@/assets/svg/logo/Animoca.svg?component'
 import Qcp from '@/assets/svg/logo/Qcp.svg?component'
 import Sequoia from '@/assets/svg/logo/Sequoia.svg?component'
 import {isBased} from "@/lib/utils";
+import Logo from "@/assets/svg/logo.svg";
 
 export default function Investors() {
 
@@ -60,7 +61,7 @@ export default function Investors() {
                     </div>
                     <div>
                          <div className="customSlide justify-center flex min-h-[250px]">
-                             {isBased ?<CitCap className="!w-[280px] max-h-[220px]"/> : <img src={"/img/logo.png"} className="!w-[280px] max-h-[220px]" alt={"based"}/>}
+                             {isBased ?<CitCap className="!w-[280px] max-h-[220px]"/> : <Logo className="!w-[280px] max-h-[220px]"/>}
                          </div>
                     </div>
                     <div>
