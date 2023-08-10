@@ -126,7 +126,7 @@ export const getUpgradesFunction = (contract, currency, id, price, amount) => {
     // const power = BigNumber.from(10).pow(currency.precision)
     // const _amount = BigNumber.from(amount).mul(power)
     return {
-        method: 'buyPremium',
+        method: 'buyUpgrade',
         args: [
             amount,
             id,

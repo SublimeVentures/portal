@@ -42,7 +42,7 @@ export default function ClaimMysteryBoxModal({model, setter, claimData}) {
                     <span className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
                 </div>
             }
-            case MYSTERY_TYPES.Upgrades: {
+            case MYSTERY_TYPES.Upgrade: {
                 return <div>
                     The Upgrade was assigned to your vault.<br/>
                     Read more how it works <Linker text={"here."}/>

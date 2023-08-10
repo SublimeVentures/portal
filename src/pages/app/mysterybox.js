@@ -36,7 +36,7 @@ export default function AppLootbox({account}) {
 
     const {chain} = useNetwork()
 
-    const {data: storeData} = useQuery({
+    const {data: storeData, refetch: refetchStoreState} = useQuery({
             queryKey: ["store"],
             queryFn: fetchStore,
             refetchOnMount: false,
@@ -69,16 +69,11 @@ export default function AppLootbox({account}) {
     const diamondContract = storeEnvironment?.contract[chainId]
     const availableCurrencies = storeEnvironment?.currency[chainId]
 
-    const {isSuccess: claimedIsSuccess, data: claimedData} = useQuery({
-            queryKey: ["claimed", {address}],
-            queryFn: fetchStoreItemsOwned,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 0,
-            enabled: mysteryBoxOwnedAmount > 0
-        }
-    );
-
+    const closeBuy = () => {
+        refetchStoreItems()
+        refetchStoreState()
+        setBuyModal(false)
+    }
 
     const openMysteryBox = async () => {
         if(claimProcessing) return;
@@ -92,6 +87,7 @@ export default function AppLootbox({account}) {
             setClaimError(true)
         }
         await refetchStoreItems()
+        await refetchStoreState()
         setTimeout(() => {
             setClaimProcessing(false)
         }, 2000);
@@ -170,7 +166,7 @@ export default function AppLootbox({account}) {
                 <div className={"absolute bottom-5"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 
             </div>
-            <BuyMysteryBoxModal model={isBuyModal} setter={() => {setBuyModal(false)}} buyModalProps={buyModalProps} networkOk={networkOk}/>
+            <BuyMysteryBoxModal model={isBuyModal} setter={() => {closeBuy()}} buyModalProps={buyModalProps} networkOk={networkOk}/>
             <ClaimMysteryBoxModal model={claimModal} setter={() => {setClaimModal(false)}} claimData={claimData} />
             <StoreNetwork supportedNetworks={supportedNetworks} isPurchase={isBuyModal} setNetworkOk={setNetworkOk}/>
             <ErrorModal model={isClaimError}  setter={() => {setClaimError(false)}} errorMessage={errorMessage}/>

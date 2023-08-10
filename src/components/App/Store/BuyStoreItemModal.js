@@ -39,6 +39,15 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
 
     const buttonText = getButtonStep(isTransactionLoading, "Buy")
 
+    console.log("======================")
+    console.log("======================")
+    console.log("liquidity",liquidity)
+    console.log("allowance",allowance)
+    console.log("transaction",transaction)
+    console.log("accept",accept)
+    console.log("trigger",trigger)
+    console.log("isTransactionLoading",isTransactionLoading)
+
     const closeModal = () => {
         setter()
         setTimeout(() => {

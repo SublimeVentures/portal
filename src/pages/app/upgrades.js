@@ -16,8 +16,8 @@ import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
 import {useNetwork} from "wagmi";
 import {PremiumItemsENUM} from "@/components/App/Settings/PremiumSummary";
-const StoreNetwork = dynamic(() => import('@/components/Navigation/StoreNetwork'), {ssr: false,})
-const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false,})
+const StoreNetwork = dynamic(() => import('@/components/Navigation/StoreNetwork'), {ssr: false})
+const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 
 
 export default function AppUpgrades({account}) {
@@ -28,7 +28,7 @@ export default function AppUpgrades({account}) {
 
     const {chain} = useNetwork()
 
-    const {isLoading, data: response} = useQuery({
+    const {isLoading, data: response, refetch} = useQuery({
             queryKey: ["store"],
             queryFn: fetchStore,
             refetchOnMount: false,
@@ -75,6 +75,11 @@ export default function AppUpgrades({account}) {
         }
     }, [availableCurrencies]);
 
+    const closeBuy = () => {
+        setBuyModal(false);
+        refetch()
+    }
+
     const buyModalProps = {
         account,
         order: !!order ? order : {},
@@ -108,7 +113,7 @@ export default function AppUpgrades({account}) {
             <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${is3VC ? "" : "font-accent"}`}>
                 {renderPage()}
             </div>
-            <BuyStoreItemModal model={isBuyModal} setter={() => {setBuyModal(false)}} buyModalProps={buyModalProps} networkOk={networkOk}/>
+            <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps} networkOk={networkOk}/>
             <StoreNetwork supportedNetworks={supportedNetworks} isPurchase={isBuyModal} setNetworkOk={setNetworkOk}/>
         </>
 

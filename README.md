@@ -33,15 +33,14 @@ https://discord.com/channels/884204406189490176/996185131989606410/1135253613892
 unlock button for failed set allowance
 
 ## ToDo
-- on buy - reduce available
-- upgrades - on buy - reduce available
-- sub availability from store
-- change bytes price to final
+- write article
+- based
+- -- prepare upgrade graphics
+- -- deploy contracts
+
+
+
 - image for citcap metadata
-
-
-
-
 
 - fix error on blockchain parsing
 - staking change to feed data
@@ -133,3 +132,108 @@ For each chainId
 code
 https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
 0xb27EE3cDDA91dAe0e68c3fb59C15fff0FADf362f
+
+mam! {
+confirmed: true,
+chainId: '0x1',
+abi: [],
+streamId: 'c52c783f-6a20-4652-8069-c9cedc90cac6',
+tag: 'diamonds - eth',
+retries: 0,
+block: {
+number: '17885728',
+hash: '0xc525cf8287944dc3c376d693a26da13f069f5a7069616aedfeed2f727ae81c44',
+timestamp: '1691685479'
+},
+logs: [
+{
+logIndex: '190',
+transactionHash: '0xeee4227ab04ae51fd60d43655fa2259aa7ffc01128dbef0914b2fff86e1c5a5f',
+address: '0xa19f5264f7d7be11c451c093d8f92592820bea86',
+data: '0x0000000000000000000000000000000000000000000000055de6a779bbac0000',
+topic0: '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+topic1: '0x0000000000000000000000003c02eb9ea7e0ef7c80d13d4d83856c83b033ed6a',
+topic2: '0x0000000000000000000000001feefad7c874a93056afa904010f9982c0722dfc',
+topic3: null
+},
+{
+logIndex: '192',
+transactionHash: '0xeee4227ab04ae51fd60d43655fa2259aa7ffc01128dbef0914b2fff86e1c5a5f',
+address: '0x1feefad7c874a93056afa904010f9982c0722dfc',
+data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002',
+topic0: '0x829dd61d12701b6f152ab17b667e7c377f5f5a5482fd06f82455a2cb6fc81fab',
+topic1: '0x0000000000000000000000003c02eb9ea7e0ef7c80d13d4d83856c83b033ed6a',
+topic2: null,
+topic3: null
+},
+{
+logIndex: '191',
+transactionHash: '0xeee4227ab04ae51fd60d43655fa2259aa7ffc01128dbef0914b2fff86e1c5a5f',
+address: '0xa19f5264f7d7be11c451c093d8f92592820bea86',
+data: '0x0000000000000000000000000000000000000000000000000de0b6b3a7640000',
+topic0: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+topic1: '0x0000000000000000000000003c02eb9ea7e0ef7c80d13d4d83856c83b033ed6a',
+topic2: '0x00000000000000000000000023c352755fa90fdc578cc525ea9e1f7953ba85aa',
+topic3: null
+}
+],
+txs: [
+{
+hash: '0xeee4227ab04ae51fd60d43655fa2259aa7ffc01128dbef0914b2fff86e1c5a5f',
+gas: '61735',
+gasPrice: '27112579440',
+nonce: '837',
+input: '0xcc74b41200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002',
+transactionIndex: '93',
+fromAddress: '0x3c02eb9ea7e0ef7c80d13d4d83856c83b033ed6a',
+toAddress: '0x1feefad7c874a93056afa904010f9982c0722dfc',
+value: '0',
+type: '2',
+v: '1',
+r: '89412894724308549486732774221450721018018614324946192870400102087234506423997',
+s: '48842568179611816592175266704466606912091750586076194380828335542751982390415',
+receiptCumulativeGasUsed: '6815978',
+receiptGasUsed: '61219',
+receiptContractAddress: null,
+receiptRoot: null,
+receiptStatus: '1'
+}
+],
+txsInternal: [],
+erc20Transfers: [
+{
+transactionHash: '0xeee4227ab04ae51fd60d43655fa2259aa7ffc01128dbef0914b2fff86e1c5a5f',
+logIndex: '191',
+contract: '0xa19f5264f7d7be11c451c093d8f92592820bea86',
+from: '0x3c02eb9ea7e0ef7c80d13d4d83856c83b033ed6a',
+to: '0x23c352755fa90fdc578cc525ea9e1f7953ba85aa',
+value: '1000000000000000000',
+tokenName: 'BYTES',
+tokenSymbol: 'BYTES',
+tokenDecimals: '18',
+valueWithDecimals: '1',
+possibleSpam: true
+}
+],
+erc20Approvals: [
+{
+transactionHash: '0xeee4227ab04ae51fd60d43655fa2259aa7ffc01128dbef0914b2fff86e1c5a5f',
+logIndex: '190',
+contract: '0xa19f5264f7d7be11c451c093d8f92592820bea86',
+owner: '0x3c02eb9ea7e0ef7c80d13d4d83856c83b033ed6a',
+spender: '0x1feefad7c874a93056afa904010f9982c0722dfc',
+value: '99000000000000000000',
+tokenName: 'BYTES',
+tokenSymbol: 'BYTES',
+tokenDecimals: '18',
+valueWithDecimals: '99',
+possibleSpam: true
+}
+],
+nftTokenApprovals: [],
+nftApprovals: { ERC721: [], ERC1155: [] },
+nftTransfers: [],
+nativeBalances: []
+}
+processPremiumBuy 2 1 0x3C02Eb9Ea7e0Ef7C80d13D4d83856c83b033ED6a
+

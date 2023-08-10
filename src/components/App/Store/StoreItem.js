@@ -53,7 +53,7 @@ export default function StoreItem({item, env, setOrder}) {
 
                     <div
                         className={`color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto  ${is3VC ? "border-b-xl" : ""}`}>
-                        {isAvailable ? "Available" : "Sold out"}
+                        {isAvailable ? `Available (${availability})` : "Sold out"}
                     </div>
                 </div>
             </div>
