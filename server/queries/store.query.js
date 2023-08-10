@@ -1,6 +1,7 @@
 const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 
+
 async function getStore() {
     try {
         return models.store.findAll({

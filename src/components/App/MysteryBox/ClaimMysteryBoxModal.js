@@ -5,16 +5,13 @@ import {useEffect} from "react";
 import TransparentModal from "@/components/Modal/TransparentModal";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import Linker from "@/components/link";
+import {MYSTERY_TYPES} from "@/lib/store";
 
-const MysteryBoxENUM = {
-    Allocation: 'allocation',
-    Upgrades: 'upgrade',
-    Discount: 'discount',
-    NFT: 'NFT',
-}
 
-export default function ClaimMysteryBoxModal({model, setter}) {
+
+export default function ClaimMysteryBoxModal({model, setter, claimData}) {
     if(!model) return;
+
     const lottieRef = useRef(null);
 
     useEffect(() => {
@@ -25,14 +22,11 @@ export default function ClaimMysteryBoxModal({model, setter}) {
 
     const closeModal = () => {
         setter()
-        setTimeout(() => {
-            // setOrder(null)
-        }, 1000);
     }
 
     const rewardType = (type, item) => {
         switch(type){
-            case MysteryBoxENUM.NFT: {
+            case MYSTERY_TYPES.NFT: {
                 return <div>
                     To redeem your NFT, all you need to do is head over to <br/>our Discord and <Linker text={"create a ticket."}/><br/>
                     <span className={"text-app-error"}>Make sure to include your redeem code in the ticket message!</span><br/>
@@ -40,7 +34,7 @@ export default function ClaimMysteryBoxModal({model, setter}) {
                     <span className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
                 </div>
             }
-            case MysteryBoxENUM.Discount: {
+            case MYSTERY_TYPES.Discount: {
                 return <div>
                     To redeem your discount, all you need to do is head over to <br/>our Discord and <Linker text={"create a ticket."}/><br/>
                     <span className={"text-app-error"}>Make sure to include your redeem code in the ticket message!</span><br/>
@@ -48,13 +42,13 @@ export default function ClaimMysteryBoxModal({model, setter}) {
                     <span className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
                 </div>
             }
-            case MysteryBoxENUM.Upgrades: {
+            case MYSTERY_TYPES.Upgrades: {
                 return <div>
                     The Upgrade was assigned to your vault.<br/>
                     Read more how it works <Linker text={"here."}/>
                 </div>
             }
-            case MysteryBoxENUM.Allocation: {
+            case MYSTERY_TYPES.Allocation: {
                 return <div>
                     The allocation was assigned to your vault.
                 </div>
@@ -62,20 +56,7 @@ export default function ClaimMysteryBoxModal({model, setter}) {
         }
     }
 
-    const redeem = {
-        type:MysteryBoxENUM.NFT,
-        // name: "Mavia Common Land",
-        // name: "$100 in Heroes of Mavia",
-        // item:'Heroes of Mavia',
-        // name: "Increased Allocation",
-        // item:'Increased Allocation',
-        // name: "50% discount on Transcendence NFT",
-        name:'Transcendence NFT',
-        item:'Transcendence NFT',
-        relatedInvestment: '',
-        discount: 50,
-        code: "93A83NK"
-    }
+
 
     const content = () => {
         return (     <div className={"loot"}>
@@ -90,7 +71,7 @@ export default function ClaimMysteryBoxModal({model, setter}) {
 
                                 <div className="card">
                                     <div className="card-content p-10 flex flex-col items-center">
-                                        <div className={`spinningasset  ${redeem.type}`}>
+                                        <div className={`spinningasset  ${claimData.type}`}>
                                             <div>
                                                 <div></div>
                                                 <i></i>
@@ -111,9 +92,9 @@ export default function ClaimMysteryBoxModal({model, setter}) {
                                         </div>
 
                                         <div className="reward-text mt-10 flex flex-col">
-                                            <div className={"text-xl text-app-success uppercase"}>{redeem.type}</div>
-                                            <div>{redeem.name}</div>
-                                            {redeem?.code && <div className={"text-app-success font-bold"}>REDEEM CODE: #{redeem.code}</div>}
+                                            <div className={"text-xl text-app-success uppercase"}>{claimData.type}</div>
+                                            <div>{claimData.name}</div>
+                                            {claimData?.code && <div className={"text-app-success font-bold"}>REDEEM CODE: #{claimData.code}</div>}
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +103,7 @@ export default function ClaimMysteryBoxModal({model, setter}) {
                             <div className="reward-comments p-5">
                                 <div className={`text-3xl font-accent tracking-widest font-md colorText pb-5`}>Congratulations</div>
                                 <div className={"text-app-white text-sm"}>
-                                    {rewardType(redeem.type, redeem)}
+                                    {rewardType(claimData.type, claimData)}
                                 {/*    telated investment*/}
                                 </div>
                                 <div className="flex flex-1 absolute  bottom-10 justify-center mx-auto left-0 right-0">

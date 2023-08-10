@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const {claim} = require("../controllers/lootbox");
+const {claim} = require("../controllers/mysterybox");
 const {verifyID} = require("../../src/lib/authHelpers");
 
 router.get('/claim', async (req, res) => {

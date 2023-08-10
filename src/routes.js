@@ -18,7 +18,7 @@ const PAGE = {
 
 export const API = {
     fetchVault: "/api/vault/all",
-    fetchLootbox: "/api/lootbox",
+    claimMysterybox: "/api/mysterybox/claim",
     fetchStore: "/api/store",
     fetchStoreItemsOwned: "/api/store/owned",
     fetchVaultOfferDetails: "/api/vault?offer=",

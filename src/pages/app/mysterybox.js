@@ -16,21 +16,27 @@ import StoreNetwork from "@/components/Navigation/StoreNetwork";
 import {useNetwork} from "wagmi";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
 import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxModal";
+import {claimMysterybox} from "@/fetchers/mysterbox.fetcher";
+import dynamic from "next/dynamic";
+const ErrorModal = dynamic(() => import('@/components/App/MysteryBox/ClaimErrorModal'), {ssr: false})
 
 
 export default function AppLootbox({account}) {
-    const {ACL, address} = account
+    const {address} = account
     const imageTilt = useRef(null);
     const [isBuyModal, setBuyModal] = useState(false)
+    const [isClaimError, setClaimError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [claimData, setClaimData] = useState({})
     const [claimModal, setClaimModal] = useState(false)
+    const [claimProcessing, setClaimProcessing] = useState(false)
     const [order, setOrder] = useState(null)
-    const [networkOk, setNetworkOk] = useState(true)
+    const [networkOk, setNetworkOk] = useState(false)
     const [currency, setCurrency] = useState({})
 
     const {chain} = useNetwork()
 
-
-    const {isLoading, data: storeData} = useQuery({
+    const {data: storeData} = useQuery({
             queryKey: ["store"],
             queryFn: fetchStore,
             refetchOnMount: false,
@@ -39,7 +45,7 @@ export default function AppLootbox({account}) {
         }
     );
 
-    const {isSuccess: premiumIsSuccess, data: premiumData} = useQuery({
+    const {data: premiumData, refetch: refetchStoreItems} = useQuery({
             queryKey: ["premiumOwned", {address}],
             queryFn: fetchStoreItemsOwned,
             refetchOnMount: false,
@@ -55,9 +61,6 @@ export default function AppLootbox({account}) {
     const mysteryBoxOwned = premiumData?.find(el => el.storeId === PremiumItemsENUM.MysteryBox)
     const mysteryBoxOwnedAmount = mysteryBoxOwned ? mysteryBoxOwned.amount : 0
 
-    console.log("mysteryBoxOwned",mysteryBoxOwned)
-    console.log("mysteryBoxOwnedAmount",mysteryBoxOwnedAmount)
-
     const storeEnvironment = storeData?.env
     const supportedNetworks = storeEnvironment?.currency ? Object.keys(storeEnvironment?.currency) : []
 
@@ -66,12 +69,33 @@ export default function AppLootbox({account}) {
     const diamondContract = storeEnvironment?.contract[chainId]
     const availableCurrencies = storeEnvironment?.currency[chainId]
 
+    const {isSuccess: claimedIsSuccess, data: claimedData} = useQuery({
+            queryKey: ["claimed", {address}],
+            queryFn: fetchStoreItemsOwned,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            cacheTime: 0,
+            enabled: mysteryBoxOwnedAmount > 0
+        }
+    );
+
 
     const openMysteryBox = async () => {
+        if(claimProcessing) return;
+        setClaimProcessing(true)
+        const data = await claimMysterybox()
+        if(data.ok) {
+            setClaimData(data)
+            setClaimModal(true)
+        } else {
+            setErrorMessage(data.error)
+            setClaimError(true)
+        }
+        await refetchStoreItems()
+        setTimeout(() => {
+            setClaimProcessing(false)
+        }, 2000);
 
-
-        //finalize
-        setClaimModal(true)
     }
 
     useEffect(() => {
@@ -120,7 +144,7 @@ export default function AppLootbox({account}) {
                     <UniButton type={ButtonTypes.BASE}
                                text={'OPEN'}
                                state={"success"}
-                               isDisabled={mysteryBoxOwnedAmount<1}
+                               isDisabled={mysteryBoxOwnedAmount<1 || claimProcessing}
                                isPrimary={true}
                                isWide={true}
                                zoom={1.05}
@@ -147,9 +171,9 @@ export default function AppLootbox({account}) {
 
             </div>
             <BuyMysteryBoxModal model={isBuyModal} setter={() => {setBuyModal(false)}} buyModalProps={buyModalProps} networkOk={networkOk}/>
-            <ClaimMysteryBoxModal model={claimModal} setter={() => {setClaimModal(false)}} />
+            <ClaimMysteryBoxModal model={claimModal} setter={() => {setClaimModal(false)}} claimData={claimData} />
             <StoreNetwork supportedNetworks={supportedNetworks} isPurchase={isBuyModal} setNetworkOk={setNetworkOk}/>
-
+            <ErrorModal model={isClaimError}  setter={() => {setClaimError(false)}} errorMessage={errorMessage}/>
         </>
 
 
