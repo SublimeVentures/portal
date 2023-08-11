@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {ExternalLinks} from "@/routes";
 import ReadIcon from "@/assets/svg/Read.svg";
@@ -12,27 +12,27 @@ export default function StoreItem({item, env, setOrder}) {
 
     const isAvailable = (availability === 0 || !enabled) ? 0 : 1
     const status = !isAvailable ? "closed disabled" : "inprogress"
-    const imageId = is3VC ? `${id}.gif` : `Code_${id}.gif`
+    const imageId = isBased ? `${id}.gif` : `Code_${id}.gif`
 
     return (
         <div
             className={`
-            ${is3VC ? "rounded-xl" : ""}
+            ${isBased ? "rounded-xl" : ""}
             bg-navy-accent flex flex-col text-center col-span-12
             border-transparent border offerItem ${status}
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
             >
-            <div className={`flex flex-1 flex-col bg-navy-accent ${is3VC ? "rounded-xl" : ""}`}>
+            <div className={`flex flex-1 flex-col bg-navy-accent ${isBased ? "rounded-xl" : ""}`}>
                 <div className="bg-center relative min-h-[300px]">
                     <div className={'image-container min-h-[300px]'}>
-                        <Image src={`${cdn}/webapp/store/${imageId}`} fill className={`imageOfferList ${is3VC ? "rounded-tl-xl rounded-tr-xl" : ""}  `} alt={name} sizes="(max-width: 768px) 100vw"/>
+                        <Image src={`${cdn}/webapp/store/${imageId}`} fill className={`imageOfferList ${isBased ? "rounded-tl-xl rounded-tr-xl" : ""}  `} alt={name} sizes="(max-width: 768px) 100vw"/>
                     </div>
                 </div>
                 <div className={"flex flex-row z-10 "}>
                     <div className={"flex flex-1 items-end text-sm pb-5 "}>
                         <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color"}>
                             <div>{id === 1 ? "Non-stackable" : "Stackable"}</div>
-                            <div>Price: {price} {is3VC ? "USD" : "BYTES"}</div>
+                            <div>Price: {price} {isBased ? "USD" : "BYTES"}</div>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@ export default function StoreItem({item, env, setOrder}) {
                     </div>
 
                     <div
-                        className={`color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto  ${is3VC ? "border-b-xl" : ""}`}>
+                        className={`color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto  ${isBased ? "border-b-xl" : ""}`}>
                         {isAvailable ? `Available (${availability})` : "Sold out"}
                     </div>
                 </div>

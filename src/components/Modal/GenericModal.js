@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
 import {isBased} from "@/lib/utils";
+
 export default function GenericModal({isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false)
 

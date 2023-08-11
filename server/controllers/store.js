@@ -1,11 +1,11 @@
 const {getStore} = require("../queries/store.query");
 const {getEnv} = require("../services/db");
-const {is3VC} = require("../../src/lib/utils");
+const {isBased} = require("../../src/lib/utils");
 
 async function getStoreData() {
-    const storeItems =  await getStore(is3VC)
+    const storeItems =  await getStore(isBased)
 
-    if(is3VC) {
+    if(isBased) {
         storeItems.forEach(function(v){ delete v.priceBytes });
     } else {
         storeItems.forEach(function(v){

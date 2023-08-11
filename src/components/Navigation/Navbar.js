@@ -57,7 +57,7 @@ export default function Navbar() {
                 ${isBased ? "py-7" : "py-2"} 
                 ${!isOnTop || isMobileOpen ? 'blurredBG' : ''} 
                 flex flex-row items-center w-full  px-10 navShadow `}>
-                <Link href="/" onClick={disableMobile}>
+                <Link href="/" onClick={disableMobile} className={"absolute"}>
                     <div className="flex ">
                         {isBased ? <Logo  className={"w-17 text-white"}/> : <LogoCitCap className={"w-17 top-2 "}/>}
                     </div>

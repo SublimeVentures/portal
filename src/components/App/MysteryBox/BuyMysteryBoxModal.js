@@ -11,7 +11,7 @@ import {
     getUpgradesFunction
 } from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {is3VC, sleeper} from "@/lib/utils";
+import {isBased, sleeper} from "@/lib/utils";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
@@ -126,8 +126,8 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
                 <Lottie animationData={lottieSuccess} loop={true} autoplay={true} style={{width: '320px', margin: '30px auto 0px'}}/>
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    {/*<Link href={PAGE.Settings} className={` w-full fullWidth ${is3VC ? "" : "flex flex-1 justify-center"}`}>*/}
-                    <div className={` w-full fullWidth ${is3VC ? "" : "flex flex-1 justify-center"}`}>
+                    {/*<Link href={PAGE.Settings} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>*/}
+                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>
                         <UniButton type={ButtonTypes.BASE} text={'Check PROFILE'} state={"danger"} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'}  handler={()=> redirect()}/>
                     </div>
                 </div>
@@ -138,16 +138,16 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
     const contentSteps = () => {
         return (
             <div className={`flex flex-1 flex-col`}>
-                <div className={`flex flex-col gap-2 mt-5 ${is3VC ? "" : "font-accent"}`}>
+                <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
                     <div className={"detailRow"}><p>Item</p><hr className={"spacer"}/><p>{order.name}</p></div>
-                    <div className={"detailRow"}><p>Total Cost</p><hr className={"spacer"}/><p className="font-bold text-gold ">{order.price}  {is3VC ? "USD" : "BYTES"}</p></div>
+                    <div className={"detailRow"}><p>Total Cost</p><hr className={"spacer"}/><p className="font-bold text-gold ">{order.price}  {isBased ? "USD" : "BYTES"}</p></div>
                 </div>
                 <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content">
                         <LiquidityStep stepProps={liquidityProps} />
                         <AllowanceStep stepProps={allowanceProps}/>
                         <TransactionStep stepProps={transactionProps}/>
                 </div>
-                <div className={` pb-5 ${is3VC ? "fullWidth": "flex flex-1 justify-center"}`}>
+                <div className={` pb-5 ${isBased ? "fullWidth": "flex flex-1 justify-center"}`}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         isWide={true}

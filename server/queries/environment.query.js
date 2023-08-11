@@ -6,7 +6,7 @@ async function getEnvironment() {
     const envVars = await models.environment.findAll({raw: true});
     const diamonds = await models.diamonds.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
     const currencies = await models.currencies.findAll({where: {isSettlement: true}, include: {model: models.networks, where: {isDev}}, raw: true});
-    const currenciesStore = is3VC ? currencies : await models.currencies.findAll({where: {isSettlement: false}, include: {model: models.networks, where: {isDev}}, raw: true});
+    const currenciesStore = isBased ? currencies : await models.currencies.findAll({where: {isSettlement: false}, include: {model: models.networks, where: {isDev}}, raw: true});
     const projects = await models.offers.findAll({raw: true});
     const partners = await models.partners.findAll({where: {isEnabled: true}, raw: true});
 
@@ -35,7 +35,7 @@ async function getEnvironment() {
     env.cdn = isBased ? env.cdnBased : env.cdnCitCap;
     env.currencies = parsedCurrencies
     env.currenciesStore = parsedCurrenciesStore
-    env.diamond = is3VC ? parsedDiamonds.basedVC : parsedDiamonds.CitCap
+    env.diamond = isBased ? parsedDiamonds.basedVC : parsedDiamonds.CitCap
     env.ntData = {
         S1: partners.find(el => el.name === "Neo Tokyo Citizen S1")?.address,
         S2: partners.find(el => el.name === "Neo Tokyo Citizen S2")?.address,

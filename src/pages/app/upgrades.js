@@ -3,7 +3,7 @@ import {verifyID} from "@/lib/authHelpers";
 import routes, {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
  import {getCopy} from "@/lib/seoConfig";
-import {is3VC} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import Head from "next/head";
 import {useQuery} from "@tanstack/react-query";
 import Loader from "@/components/App/Loader";
@@ -97,7 +97,7 @@ export default function AppUpgrades({account}) {
             </Head>
             <div className={"flex flex-col justify-between gap-7 sm:flex-row"}>
                 <div className={"flex flex-col justify-center"}>
-                    <div className={`glow font-extrabold text-3xl ${is3VC ? "" : "font-accent uppercase font-light"}`}>UPGRADES</div>
+                    <div className={`glow font-extrabold text-3xl ${isBased ? "" : "font-accent uppercase font-light"}`}>UPGRADES</div>
                     <div className={"text-outline text-md mt-2 white min-w-[250px]"}>Supercharge your investments.</div>
                 </div>
                 <div className={"mx-auto flex items-center sm:ml-auto sm:mr-0"}>
@@ -110,7 +110,7 @@ export default function AppUpgrades({account}) {
 
                 </div>
             </div>
-            <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${is3VC ? "" : "font-accent"}`}>
+            <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${isBased ? "" : "font-accent"}`}>
                 {renderPage()}
             </div>
             <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps} networkOk={networkOk}/>
