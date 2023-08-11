@@ -4,7 +4,7 @@ const {getInjectedUser} = require("../queries/injectedUser.query");
 const {getEnv} = require("../services/db");
 const {upsertDelegation} = require("../queries/delegate.query");
 const delegateAbi = require('../../abi/delegate.abi.json')
-const citcapSeasonAbi = require('../../abi/citcapS.abi.json')
+const citcapCitizenAbi = require('../../abi/citcapCitizen.abi.json')
 const citcapStakingAbi = require('../../abi/citcapStaking.abi.json')
 const Sentry = require("@sentry/nextjs");
 const {checkElite} = require("../queries/ntElites.query");
@@ -71,7 +71,7 @@ const getFromBlockchain = async (tokenAddress, tokenID, isStaked) => {
         "chain": "0x1",
         "functionName": "tokenURI",
         "address": tokenAddress,
-        "abi": citcapSeasonAbi,
+        "abi": citcapCitizenAbi,
         "params": {tokenId: tokenID}
     });
     const base64Url = jsonResponse.replace(/^data:application\/json;base64,/, '');

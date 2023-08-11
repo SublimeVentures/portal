@@ -92,14 +92,16 @@ export default function TransactionStep({stepProps}) {
         }
     }, [transferConfirmed, isSuccessConfirmed])
 
+    useEffect(()=>{
+        if(isLoadingWrite || isLoadingConfirmed) {
+            setIsTransactionLoading(TransactionState.Processing)
+        }
 
-    if(isLoadingWrite || isLoadingConfirmed) {
-        setIsTransactionLoading(TransactionState.Processing)
-    }
+        if(!!errorConfirmed || !!errorWrite) {
+            setIsTransactionLoading(TransactionState.Init)
+        }
+    }, [isLoadingWrite, isLoadingConfirmed, errorConfirmed, errorWrite])
 
-    if(!!errorConfirmed || !!errorWrite) {
-        setIsTransactionLoading(TransactionState.Init)
-    }
 
     // console.log("errorWrite",errorWrite)
     return (

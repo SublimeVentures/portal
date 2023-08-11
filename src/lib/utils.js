@@ -6,7 +6,6 @@ function sleeper(ms) {
 
 const isBased = process.env.NEXT_PUBLIC_SITE === "based"
 
-
 module.exports = {
     sleeper,
     isBased

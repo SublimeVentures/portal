@@ -28,12 +28,33 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-TODO: based - na cdn i env variables
+icConfiremd - aktualizuj tylko jeden!
+https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
+unlock button for failed set allowance
 
 ## ToDo
+- write article
+- based
+- -- prepare upgrade graphics
+- -- deploy contracts
+
+
+
+- image for citcap metadata
+
+- fix error on blockchain parsing
+- staking change to feed data
+- remove multichain from blockchain
+- contract: premium - enable/disable/owner for whales
+- reset modal settings on close
+
+
+- lootbox contract - add watcher for lootbox enabled
+- deploy on all chains
+- lootobx graphics basedVC
 - sentry error
 
-- staking
+- staking (force eth)
   - delegate
   - change total staked 
   - wyciagnij swoje
@@ -66,8 +87,6 @@ https://devcenter.heroku.com/articles/heroku-postgres-backups**
 - 500, 1000, user max button under investment size
 - timeline for user activities for each investment in vault tab
 - reassign allocation
-- lootbox
-- promo codes
 
 - transakcje nie działają na rollbacku
 - enable for reservation even on blocked reservation button

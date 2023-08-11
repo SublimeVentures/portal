@@ -8,7 +8,9 @@ export const fetchOfferList = async () => {
         const {data} = await axiosPrivate.get(API.offerList)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferList"});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchOfferList"});
+        }
     }
     return {}
 }
@@ -19,7 +21,9 @@ export const fetchOfferDetails = async (slug) => {
         const {data} = await axiosPrivate.get(`${API.offerDetails}${slug}`)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferDetails",slug});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchOfferDetails", slug});
+        }
     }
     return null
 }
@@ -31,7 +35,9 @@ export const fetchOfferAllocation = async (id) => {
         const {data} = await axiosPrivate.get(`${API.offerList}/${id}/allocation`)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOfferAllocation", e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchOfferAllocation", e});
+        }
     }
     return {}
 }

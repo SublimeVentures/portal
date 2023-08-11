@@ -7,7 +7,9 @@ export const fetchUserInvestment = async (offerId) => {
         const {data} = await axiosPrivate.get(`${API.fetchVaultOfferDetails}${offerId}`)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchUserInvestment", e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchUserInvestment", e});
+        }
     }
     return 0
 }
@@ -17,7 +19,9 @@ export const fetchVault = async () => {
         const {data} = await axiosPrivate.get(API.fetchVault)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchVault", e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchVault", e});
+        }
     }
     return []
 }

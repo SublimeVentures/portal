@@ -11,13 +11,16 @@ const PAGE = {
     Accelerator: "/app/accelerator",
     OTC: "/app/otc",
     Notifs: "/app/latest",
-    Lootbox: "/app/lootbox",
+    Mysterybox: "/app/mysterybox",
+    Upgrades: "/app/upgrades",
     Settings: "/app/settings",
 }
 
 export const API = {
     fetchVault: "/api/vault/all",
-    fetchLootbox: "/api/lootbox",
+    claimMysterybox: "/api/mysterybox/claim",
+    fetchStore: "/api/store",
+    fetchStoreItemsOwned: "/api/store/owned",
     fetchVaultOfferDetails: "/api/vault?offer=",
     publicInvestments: "/api/public/investments",
     offerList: "/api/offer",

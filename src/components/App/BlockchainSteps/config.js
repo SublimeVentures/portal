@@ -4,8 +4,9 @@ import IconSuccess from "@/assets/svg/Success.svg";
 import IconError from "@/assets/svg/Error.svg";
 import IdFacet from "../../../../abi/ThreeVCID.json";
 import CitCapStakingAbi from "../../../../abi/citcapStaking.abi.json";
+import storeAbi from "../../../../abi/store.abi.json";
 import {erc20ABI} from "wagmi";
-import { BigNumber } from 'ethers';
+import {BigNumber} from 'ethers';
 import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 import {ACLs} from "@/lib/authHelpers";
 
@@ -54,15 +55,29 @@ export const getStatusColor = (status) => {
     }
 }
 
+export const getButtonStep = (state, defaultText) => {
+    switch (state) {
+        case TransactionState.Init: {
+            return defaultText
+        }
+        case TransactionState.Executing: {
+            return "Waiting..."
+        }
+        case TransactionState.Processing: {
+            return "Processing..."
+        }
+    }
+}
+
 export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, hash, nftId) => {
     const power = BigNumber.from(10).pow(isFromStake ? 6 : currency.precision)
     const _amount = BigNumber.from(amount).mul(power)
     switch (ACL) {
         case ACLs.Whale: {
-            console.log("invest function - isFromStake",isFromStake)
-            if(isFromStake) {
+            console.log("invest function - isFromStake", isFromStake)
+            if (isFromStake) {
                 return {
-                    method:'pledge',
+                    method: 'pledge',
                     args: [
                         nftId,
                         _amount,
@@ -73,7 +88,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                 }
             } else {
                 return {
-                    method:'transfer',
+                    method: 'transfer',
                     args: [
                         offer.vault,
                         _amount,
@@ -85,7 +100,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
         }
         default: {
             return {
-                method:'transfer',
+                method: 'transfer',
                 args: [
                     offer.vault,
                     _amount,
@@ -99,23 +114,25 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
 
 export const getCitCapStakingFunction = (contractAddress) => {
     return {
-        method:'stake',
+        method: 'stake',
         args: [],
         address: contractAddress,
         abi: CitCapStakingAbi
     }
 }
 
-export const getButtonStep = (state, defaultText) => {
-    switch(state) {
-        case TransactionState.Init: {
-            return defaultText
-        }
-        case TransactionState.Executing: {
-            return "Waiting..."
-        }
-        case TransactionState.Processing: {
-            return "Processing..."
-        }
+
+export const getUpgradesFunction = (contract, currency, id, price, amount) => {
+    // const power = BigNumber.from(10).pow(currency.precision)
+    // const _amount = BigNumber.from(amount).mul(power)
+    return {
+        method: 'buyUpgrade',
+        args: [
+            amount,
+            id,
+        ],
+        address: contract,
+        abi: storeAbi
     }
 }
+
