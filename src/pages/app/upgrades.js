@@ -104,7 +104,7 @@ export default function AppUpgrades({account}) {
                     <div>
                         <UniButton type={ButtonTypes.BASE} text={'Learn more'} isWide={true}
                                    size={'text-sm sm'}
-                                   handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}
+                                   handler={()=> {window.open(ExternalLinks.UPGRADES, '_blank');}}
                                    icon={<ReadIcon className={ButtonIconSize.hero}/>}/>
                     </div>
 

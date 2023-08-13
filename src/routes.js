@@ -47,17 +47,17 @@ const ExternalLinksBased = {
 }
 
 const ExternalLinksCitCap = {
-    INVESTMENT_RETURN: "#",
-    BOOKING_SYSTEM: "#",
-    OFFER_PHASES: "#",
-    AFTER_INVESTMENT: "#",
-    SUPPORTED_NETWORKS: "#",
-    LOOTBOX: "#",
-    HOW_TO_ACCESS: "#",
-    DELEGATED_ACCESS: "#",
-    VAULT: "#",
+    INVESTMENT_RETURN: "https://info.citizencapital.fund/Return-from-the-investment-a5ac399e0cf947b384fe23fd142238aa",
+    BOOKING_SYSTEM: "https://info.citizencapital.fund/Allocation-Booking-System-1dd017205dfd45d1843e7c661f97e9bf",
+    OFFER_PHASES: "https://info.citizencapital.fund/",//todo
+    AFTER_INVESTMENT: "https://info.citizencapital.fund/",//todo
+    SUPPORTED_NETWORKS: "https://info.citizencapital.fund/Supported-networks-Save-gas-d80b4f7dbe3b4818a47a3963a62d551c",
+    UPGRADES: "https://info.citizencapital.fund/Upgrades-cfb0a54cb75a412582dc75d8dcdbb28d",
+    LOOTBOX: "https://info.citizencapital.fund/MysteryBox-ed2b7a87e0d94c4d80208afd387c7dbd",
+    HOW_TO_ACCESS: "https://info.citizencapital.fund/How-to-join-Citizen-Capital-32ad4feeec484dad9a7158aa0cfb3a5c",
+    DELEGATED_ACCESS: "https://info.citizencapital.fund/Delegated-access-e8aca471a9634fe681542e7f500b70df",
     GETBYTES: "https://app.uniswap.org/#/swap?outputCurrency=0xa19f5264f7d7be11c451c093d8f92592820bea86",
-
+    VAULT: "https://info.citizencapital.fund/",//todo:
     WIKI: "https://info.citizencapital.fund",
     DISCORD: "https://discord.gg/CX7ChfhYbf",
     TWITTER:"https://twitter.com/CitCapFund",

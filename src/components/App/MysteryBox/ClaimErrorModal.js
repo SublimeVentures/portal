@@ -15,7 +15,7 @@ export default function ClaimErrorModal({model, setter, errorMessage}) {
                     {errorMessage}.
                 </div>
                 <div>
-                    <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
+                    <Linker url={ExternalLinks.LOOTBOX}/>
                 </div>
                 </>
         )

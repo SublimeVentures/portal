@@ -131,7 +131,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
                         <UniButton type={ButtonTypes.BASE} text={'Check PROFILE'} state={"danger"} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'}  handler={()=> redirect()}/>
                     </div>
                 </div>
-                <div className="mt-auto">What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT} /></div>
+                <div className="mt-auto">What's next? <Linker url={ExternalLinks.LOOTBOX} /></div>
             </div>
         )
     }
