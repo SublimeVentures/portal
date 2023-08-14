@@ -6,7 +6,6 @@ import {IconButton} from "@/components/Button/IconButton";
 import {isBased} from "@/lib/utils";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import {useRouter} from "next/router";
 import Link from "next/link";
 
 

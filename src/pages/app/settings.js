@@ -17,10 +17,9 @@ export default function AppSettings({account}) {
             queryFn: fetchStoreItemsOwned,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
-            cacheTime: 15 * 1000,
+            cacheTime: 5 * 1000,
         }
     );
-    console.log("premiumData",premiumData)
 
 
     const title = `Settings - ${getCopy("NAME")}`
