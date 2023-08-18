@@ -4,7 +4,7 @@ const {isBased} = require("../../src/lib/utils");
 async function getEnvironment() {
     const isDev = process.env.ENV !== 'production';
     const envVars = await models.environment.findAll({raw: true});
-    const diamonds = await models.diamonds.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
+    const diamonds = await models.diamonds.findAll({include: {model: models.networks}, raw: true});
     const currencies = await models.currencies.findAll({where: {isSettlement: true}, include: {model: models.networks, where: {isDev}}, raw: true});
     const currenciesStore = isBased ? currencies : await models.currencies.findAll({where: {isSettlement: false}, include: {model: models.networks, where: {isDev}}, raw: true});
     const projects = await models.offers.findAll({raw: true});

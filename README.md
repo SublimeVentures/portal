@@ -32,8 +32,6 @@ https://discord.com/channels/884204406189490176/996185131989606410/1135253613892
 unlock button for failed set allowance
 
 ## ToDo
-lootbox / transcendacne / upgrades notion - trascendance early access
-transcendence 200 pre-book
 
 - based
 - -- prepare upgrade graphics
