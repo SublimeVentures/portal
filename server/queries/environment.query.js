@@ -2,7 +2,8 @@ const { models } = require('../services/db/db.init');
 const {isBased} = require("../../src/lib/utils");
 
 async function getEnvironment() {
-    const isDev = process.env.ENV !== 'production';
+    const isDev = process.env.ENV !== 'production' && process.env.isForceDev !== 'true';
+    console.lo
     const envVars = await models.environment.findAll({raw: true});
     const diamonds = await models.diamonds.findAll({include: {model: models.networks}, raw: true});
     const currencies = await models.currencies.findAll({where: {isSettlement: true}, include: {model: models.networks, where: {isDev}}, raw: true});

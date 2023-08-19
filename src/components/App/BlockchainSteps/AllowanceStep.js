@@ -10,12 +10,12 @@ export default function AllowanceStep({stepProps}) {
     const power = BigNumber.from(10).pow(currencyPrecision)
     const amount_bn = BigNumber.from(amount).mul(power)
     const requiredAllowance = amount ? amount_bn : 0
-    const {config, isSuccess: isSuccessConfig} = usePrepareContractWrite({
+    const {config, isSuccess: isSuccessConfig, isError} = usePrepareContractWrite({
         address: currencyAddress,
         abi: erc20ABI,
         functionName: 'approve',
         args: [allowanceFor, requiredAllowance],
-        enabled: isReady,
+        enabled: isReady && !isFinished,
     })
 
     const {

@@ -24,7 +24,7 @@ export default function AppUpgrades({account}) {
     const [isBuyModal, setBuyModal] = useState(false)
     const [order, setOrder] = useState(null)
     const [networkOk, setNetworkOk] = useState(true)
-    const [currency, setCurrency] = useState({})
+    const [currency, setCurrency] = useState(0)
 
     const {chain} = useNetwork()
 
@@ -46,6 +46,15 @@ export default function AppUpgrades({account}) {
     const diamondContract = storeEnvironment?.contract[chainId]
     const availableCurrencies = storeEnvironment?.currency[chainId]
 
+    const currencyList = availableCurrencies ? Object.keys(availableCurrencies).map(el => {
+        let currency = availableCurrencies[el]
+        currency.address = el
+        return currency
+    }) : [{}]
+
+    const currencyNames = currencyList.map(el => el.symbol)
+    const selectedCurrency = currencyList[currency]
+
     const renderPage = () => {
         if(isLoading) return <Loader/>
         if(!storeData || storeData.length === 0) return  <Empty/>
@@ -66,14 +75,8 @@ export default function AppUpgrades({account}) {
     }, [order]);
 
     useEffect(() => {
-        if (!!availableCurrencies) {
-            const address = Object.keys(availableCurrencies)[0]
-            setCurrency({
-                address: address,
-                ...availableCurrencies[address]
-            })
-        }
-    }, [availableCurrencies]);
+        setCurrency(0)
+    }, [chain])
 
     const closeBuy = () => {
         setBuyModal(false);
@@ -85,6 +88,9 @@ export default function AppUpgrades({account}) {
         order: !!order ? order : {},
         setOrder,
         currency,
+        selectedCurrency,
+        setCurrency,
+        currencyNames,
         contract: diamondContract,
     }
 

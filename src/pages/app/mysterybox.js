@@ -32,7 +32,7 @@ export default function AppLootbox({account}) {
     const [claimProcessing, setClaimProcessing] = useState(false)
     const [order, setOrder] = useState(null)
     const [networkOk, setNetworkOk] = useState(false)
-    const [currency, setCurrency] = useState({})
+    const [currency, setCurrency] = useState(0)
 
     const {chain} = useNetwork()
 
@@ -68,6 +68,15 @@ export default function AppLootbox({account}) {
     const chainId = chain?.id
     const diamondContract = storeEnvironment?.contract[chainId]
     const availableCurrencies = storeEnvironment?.currency[chainId]
+
+    const currencyList = availableCurrencies ? Object.keys(availableCurrencies).map(el => {
+        let currency = availableCurrencies[el]
+        currency.address = el
+        return currency
+    }) : [{}]
+
+    const currencyNames = currencyList.map(el => el.symbol)
+    const selectedCurrency = currencyList[currency]
 
     const closeBuy = () => {
         refetchStoreItems()
@@ -105,21 +114,19 @@ export default function AppLootbox({account}) {
     }, [order]);
 
     useEffect(() => {
-        if (!!availableCurrencies) {
-            const address = Object.keys(availableCurrencies)[0]
-            setCurrency({
-                address: address,
-                ...availableCurrencies[address]
-            })
-        }
-    }, [availableCurrencies]);
+        setCurrency(0)
+    }, [chain])
 
     const buyModalProps = {
         account,
         order: !!order ? order : {},
         setOrder,
         currency,
+        selectedCurrency,
+        setCurrency,
+        currencyNames,
         contract: diamondContract,
+
     }
 
 
@@ -144,7 +151,7 @@ export default function AppLootbox({account}) {
                                isPrimary={true}
                                isWide={true}
                                zoom={1.05}
-                               size={'text-sm sm'}
+                               size={'text-sm xs'}
                                handler={()=> { openMysteryBox() }}
                     />
                     <UniButton type={ButtonTypes.BASE}
@@ -152,16 +159,12 @@ export default function AppLootbox({account}) {
                                isDisabled={storeAvailable<=0}
                                isWide={true}
                                zoom={1.05}
-                               size={'text-sm sm'}
+                               size={'text-sm xs'}
                                handler={()=> { setOrder(mysteryBox) }}
 
                     />
-                    {/*<button className="button is-glowing w-full mt-4 modal_open" onClick={()=> {setClaimModal(true)}}>*/}
-                    {/*    <span>Claim prize</span>*/}
-                    {/*    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>*/}
-                    {/*</button>*/}
                 </div>
-                <div className={"-mt-5"}>Left to buy: {storeAvailable}</div>
+                <div className={"-mt-5"}>Available: {storeAvailable}</div>
 
                 <div className={"absolute bottom-5"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 

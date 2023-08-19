@@ -62,8 +62,8 @@ export default function Sidebar({account}) {
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'Accelerator', link: PAGE.Accelerator, icon: isBased ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
             {name: 'OTC', link: PAGE.OTC, disabled:true, icon: <IconExchange className="w-8 mr-3"/>},
-            {name: 'MysteryBox', link: PAGE.Mysterybox,  disabled:isBased, icon: <IconMysteryBox className="w-8 mr-3"/>},
-            {name: 'Upgrades', link: PAGE.Upgrades, disabled:isBased, icon: <IconPremium className="w-8 mr-3"/>},
+            {name: 'MysteryBox', link: PAGE.Mysterybox, icon: <IconMysteryBox className="w-8 mr-3"/>},
+            {name: 'Upgrades', link: PAGE.Upgrades, icon: <IconPremium className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
         groupHelp: [
@@ -117,10 +117,8 @@ export default function Sidebar({account}) {
                 className={`p-5 flex blurredBgColor flex flex-1 -mt-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? '!bg-navy-accent' : ''}`}>
                 <div className="mt-1 flex flex-row flex-1">
                     <Link href={PAGE.App}>
-
-                        <div className={`flex items-center ${isBased ? "" : "absolute top-2"}`}>
-                            <img className={isBased ? "w-15" : `w-17 top-2 `} src={ isBased ? "/img/logo.png" : "/img/logo.svg"} alt={"logo"}/>
-                            {!isBased && <div className={"font-accent text-sm ml-3"}>Citizen Capital</div>}
+                        <div className="flex items-center">
+                            {isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 top-2 "}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}
                         </div>
                     </Link>
                     <div className="flex flex-1 justify-end hamburger">

@@ -2,7 +2,7 @@ import {useRef, useState} from "react";
 import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 import {useEffect} from "react";
 
-export default function Dropdown({options, classes, propSelected, position}) {
+export default function Dropdown({options, classes, propSelected, position, isSmall}) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(0)
     const [direction, setDirection] = useState(0)
@@ -10,7 +10,7 @@ export default function Dropdown({options, classes, propSelected, position}) {
     const ref = useRef();
 
     const changeOption = (index) => {
-        setMoved(index * -62)
+        setMoved(index * (isSmall ? -35 : -62))
         let _selected = selected
         setSelected(index)
         propSelected(index)
@@ -29,7 +29,7 @@ export default function Dropdown({options, classes, propSelected, position}) {
 
     return (
         <div
-            className={`select-menu text-xl ${isOpen ? 'open' : ''} ${direction === -1 ? 'tilt-down' : ''} ${direction === 1 ? 'tilt-up' : ''} ${classes ? classes : ''}`}
+            className={`select-menu text-xl ${isOpen ? 'open' : ''} ${direction === -1 ? 'tilt-down' : ''} ${direction === 1 ? 'tilt-up' : ''} ${classes ? classes : ''} ${isSmall ? "small" : ""}`}
             onClick={() => {
                 setIsOpen(true)
             }}

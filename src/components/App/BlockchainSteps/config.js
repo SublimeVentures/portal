@@ -4,11 +4,15 @@ import IconSuccess from "@/assets/svg/Success.svg";
 import IconError from "@/assets/svg/Error.svg";
 import IdFacet from "../../../../abi/ThreeVCID.json";
 import CitCapStakingAbi from "../../../../abi/citcapStaking.abi.json";
-import storeAbi from "../../../../abi/store.abi.json";
+import upgradeAbi_based from "../../../../abi/upgradeBased.abi.json";
+import upgradeAbi_citcap from "../../../../abi/upgradeCitCap.abi.json";
+import mysteryBoxAbi_based from "../../../../abi/mysteryboxBased.abi.json";
+import mysteryBoxAbi_citcap from "../../../../abi/mysteryboxCitCap.abi.json";
 import {erc20ABI} from "wagmi";
 import {BigNumber} from 'ethers';
 import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 import {ACLs} from "@/lib/authHelpers";
+import {isBased} from "@/lib/utils";
 
 
 export const Transaction = {
@@ -122,17 +126,33 @@ export const getCitCapStakingFunction = (contractAddress) => {
 }
 
 
-export const getUpgradesFunction = (contract, currency, id, price, amount) => {
-    // const power = BigNumber.from(10).pow(currency.precision)
-    // const _amount = BigNumber.from(amount).mul(power)
+export const getUpgradesFunction = (contract, currency, amount, itemID) => {
     return {
         method: 'buyUpgrade',
-        args: [
+        args: isBased ? [
             amount,
-            id,
+            itemID,
+            currency
+        ] : [
+            amount,
+            itemID
         ],
         address: contract,
-        abi: storeAbi
+        abi: isBased ? upgradeAbi_based : upgradeAbi_citcap
     }
+}
+
+export const getMysteryBoxFunction = (contract, currency, amount) => {
+        return {
+            method: 'buyMysteryBox',
+            args: isBased ? [
+                amount,
+                currency
+            ] : [
+                amount
+            ],
+            address: contract,
+            abi: isBased ? mysteryBoxAbi_based : mysteryBoxAbi_citcap
+        }
 }
 

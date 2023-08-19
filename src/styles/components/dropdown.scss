@@ -20,12 +20,44 @@
     //font-size: 18px!important;
   }
 
+  &.small {
+    font-size: inherit!important;
+    font-weight: inherit!important;
+
+    .button {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      color:inherit!important;
+
+      em {
+        margin-top: 11px;
+
+      }
+    }
+    ul {
+      li {
+        height: 35px;
+      }
+    }
+    & > ul {
+      li {
+        height: 35px;
+      }
+    }
+
+
+
+    select {
+      padding: 4px 32px 4px 10px;
+
+    }
+  }
+
   &.blended {
     --background: #101d2d;
     --list: #1c2b3b;
 
     font-size: 16px!important;
-
   }
 
 

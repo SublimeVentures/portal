@@ -7,8 +7,7 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {
-    getButtonStep,
-    getUpgradesFunction
+    getButtonStep, getMysteryBoxFunction
 } from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased, sleeper} from "@/lib/utils";
@@ -16,16 +15,12 @@ import RocketIcon from "@/assets/svg/Rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
+import Dropdown from "@/components/App/Dropdown";
 
 export default function BuyMysteryBoxModal({model, setter, buyModalProps, networkOk}) {
     if(!model || !networkOk) return;
-    const {account, order, setOrder, contract, currency} = buyModalProps
+    const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
-
-    // const {chain} = useNetwork()
-    // const chainId = chain?.id
-    // const contractAddress = contract[chainId]
-    // const currencyDetails = currency[chainId]
 
     const [liquidity, setLiquidity] = useState(false)
     const [allowance, setAllowance] = useState(false)
@@ -35,7 +30,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
     const [trigger, setTrigger] = useState(false)
     const [isTransactionLoading, setIsTransactionLoading] = useState(TransactionState.Init)
 
-    const purchaseData = getUpgradesFunction(contract, currency, order.id, order.price, 1)
+    const purchaseData = getMysteryBoxFunction(contract, selectedCurrency.address, 1)
 
     const buttonText = getButtonStep(isTransactionLoading, "Buy")
 
@@ -70,9 +65,9 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
 
 
     const liquidityProps = {
-        currencyAddress: currency.address,
-        currencyPrecision: currency.precision,
-        currencySymbol: currency.symbol,
+        currencyAddress: selectedCurrency.address,
+        currencyPrecision: selectedCurrency.precision,
+        currencySymbol: selectedCurrency.symbol,
         isReady: model,
         account: account.address,
         amount: order.price,
@@ -82,9 +77,9 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
 
     const allowanceReady = liquidity && accept
     const allowanceProps = {
-        currencyAddress: currency.address,
-        currencyPrecision: currency.precision,
-        currencySymbol: currency.symbol,
+        currencyAddress: selectedCurrency.address,
+        currencyPrecision: selectedCurrency.precision,
+        currencySymbol: selectedCurrency.symbol,
         allowanceFor: contract,
         isReady: allowanceReady,
         account: account.address,
@@ -140,7 +135,14 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
             <div className={`flex flex-1 flex-col`}>
                 <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
                     <div className={"detailRow"}><p>Item</p><hr className={"spacer"}/><p>{order.name}</p></div>
-                    <div className={"detailRow"}><p>Total Cost</p><hr className={"spacer"}/><p className="font-bold text-gold ">{order.price}  {isBased ? "USD" : "BYTES"}</p></div>
+                    <div className={"detailRow"}>
+                        <p>Total Cost</p>
+                        <hr className={"spacer"}/>
+                        <div className="font-bold text-gold flex items-center">
+                            <span className={"mr-2"}>{order.price}</span>
+                            {isBased ? <Dropdown options={currencyNames} propSelected={setCurrency} position={currency} isSmall={true}/> : <>BYTES</>}
+                        </div>
+                    </div>
                 </div>
                 <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content">
                         <LiquidityStep stepProps={liquidityProps} />

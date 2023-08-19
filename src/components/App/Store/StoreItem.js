@@ -12,7 +12,7 @@ export default function StoreItem({item, env, setOrder}) {
 
     const isAvailable = (availability === 0 || !enabled) ? 0 : 1
     const status = !isAvailable ? "closed disabled" : "inprogress"
-    const imageId = isBased ? `${id}.gif` : `Code_${id}.gif`
+    const imageId = isBased ? `${id}.jpg` : `Code_${id}.gif`
 
     return (
         <div
@@ -38,14 +38,15 @@ export default function StoreItem({item, env, setOrder}) {
                 </div>
                 <div className="flex flex-1 flex-col text-left ">
                     <div className={"px-10 flex flex-1 flex-col "}>
-                        <div className="text-xl font-bold flex flex-1 glow pt-2">{name}</div>
-                        <div className="text-sm flex flex-1 mt-2 pb-5 color">{description}</div>
+                        <div className="text-xl font-bold flex  glow pt-2">{name}</div>
+                        <div className="text-sm flex flex-1 mt-2 pb-5 color ">{description}</div>
                         <div className={"pb-5 flex items-center justify-center"}>
                             <div>
                                 <UniButton type={ButtonTypes.BASE} text={'BUY'} isWide={true}
-                                           size={'text-sm sm'}
+                                           isLarge={false}
+                                           size={'text-sm xs'}
                                            handler={()=> { setOrder(item) }}
-                                           icon={<ReadIcon className={ButtonIconSize.hero}/>}/>
+                                />
                             </div>
 
                         </div>

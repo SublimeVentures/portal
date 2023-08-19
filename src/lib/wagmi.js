@@ -7,7 +7,8 @@ import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import {isBased} from "@/lib/utils";
 
-const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
+// const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
+const rightChains = [mainnet, polygon, bsc]
 
 
 const { chains, provider } = configureChains(
@@ -28,7 +29,7 @@ export const client = createClient({
         new WalletConnectConnector({
             chains: rightChains,
             options: {
-                projectId: 'a4088d35288a7c0dcdb3d588657922ee',
+                projectId: 'fd985de17a4eed15096ed191f885cbcb',
             },
         }),
         new CoinbaseWalletConnector({
