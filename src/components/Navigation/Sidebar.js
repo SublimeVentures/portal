@@ -114,14 +114,14 @@ export default function Sidebar({account}) {
                 </nav>
             </div>
             <div
-                className={`p-5 flex blurredBgColor flex flex-1 -mt-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? '!bg-navy-accent' : ''}`}>
-                <div className="mt-1 flex flex-row flex-1">
-                    <Link href={PAGE.App}>
+                className={`p-5 flex blurredBgColor flex flex-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? '!bg-app-bg' : ''}`}>
+                <div className=" flex flex-row flex-1">
+                    <Link href={PAGE.App}  className={`absolute top-[4px]`}>
                         <div className="flex items-center">
-                            {isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 top-2 "}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}
+                            {isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 text-white"}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}
                         </div>
                     </Link>
-                    <div className="flex flex-1 justify-end hamburger">
+                    <div className="flex flex-1 justify-end hamburger items-center">
                         <div onClick={toggleMobile}>
                             <div className={` burger ${isMobileOpen && 'opened'}`}>
                                 <div></div>
@@ -149,7 +149,7 @@ export default function Sidebar({account}) {
                     leaveTo="opacity-0"
                 >
                     <div
-                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-navy-accent flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${isBased ? "font-medium" : ""}`}>
+                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-app-bg flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${isBased ? "font-medium" : ""}`}>
                         <div className="flex flex-col gap-2">
                             {generateLink(menu.groupUser)}
 

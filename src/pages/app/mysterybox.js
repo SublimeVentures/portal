@@ -137,13 +137,21 @@ export default function AppLootbox({account}) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className={`flex flex-1 flex-col select-none justify-center items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  relative ${isBased ? "" : "font-accent"}`}>
+            <div className={`mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative ${isBased ? "" : "font-accent"}`}>
                 {mysteryBoxOwnedAmount > 0 && <div className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[50px] text-center collap:top-[50px]"} flex glowNormal pb-5`}>You have {mysteryBoxOwnedAmount} unopened MysteryBox!</div>}
 
-                <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
-                        <IconMysteryBox className="w-[250px] sm:w-[450px] text-white"/>
-                 </div>
-                <div className={"flex gap-5 mt-10 sm:mt-0"}>
+                {isBased ? <div className={"video-wrapper"}>
+                        <video loop autoPlay muted playsInline className="">
+                            <source src="https://cdn.basedvc.fund/webapp/1.mp4" type="video/mp4"/>
+                        </video>
+                        </div> :
+                        <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
+                                <IconMysteryBox className="w-[250px] sm:w-[450px] text-white"/>
+                        </div>
+                }
+
+
+                <div className={`flex gap-5 mt-5 z-10 ${isBased ? "absolute bottom-10": ""}`}>
                     <UniButton type={ButtonTypes.BASE}
                                text={'OPEN'}
                                state={"success"}
@@ -155,7 +163,7 @@ export default function AppLootbox({account}) {
                                handler={()=> { openMysteryBox() }}
                     />
                     <UniButton type={ButtonTypes.BASE}
-                               text={`BUY`}
+                               text={`BUY (${storeAvailable})`}
                                isDisabled={storeAvailable<=0}
                                isWide={true}
                                zoom={1.05}
@@ -164,9 +172,8 @@ export default function AppLootbox({account}) {
 
                     />
                 </div>
-                <div className={"-mt-5"}>Available: {storeAvailable}</div>
 
-                <div className={"absolute bottom-5"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
+                <div className={"absolute bottom-0 z-10"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 
             </div>
             <BuyMysteryBoxModal model={isBuyModal} setter={() => {closeBuy()}} buyModalProps={buyModalProps} networkOk={networkOk}/>

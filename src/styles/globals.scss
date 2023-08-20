@@ -214,3 +214,35 @@ body {
 .boxshadow {
   box-shadow: rgba(88, 104, 233, 0.15) 0px 0px 40px;
 }
+
+
+.mystery {
+
+  .video-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .video-wrapper::before, .video-wrapper::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+            radial-gradient(circle at center, transparent 0%, transparent 60%,#0e1118 70%, #0e1118 100%),
+            linear-gradient(transparent, transparent);
+    z-index: 1;
+  }
+
+  .video-wrapper video {
+    //display: block;
+    width: 100%;
+    max-height: min(calc(100vh - 100px), 1024px);
+    object-fit: cover;
+  }
+
+
+}
