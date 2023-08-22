@@ -2,7 +2,7 @@ const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 const db = require("../services/db/db.init");
 const {Op, Sequelize, QueryTypes} = require("sequelize");
-const {STORE_TYPES, MYSTERY_TYPES} = require("../../src/lib/store");
+const {PremiumItemsENUM, MYSTERY_TYPES} = require("../../src/lib/premiumHelper");
 
 const CLAIM_ERRORS = {
     Unexpected: "Unexpected error",
@@ -82,7 +82,7 @@ async function claimMysterybox(owner) {
         const isUserOwnMysterybox = await models.storeUser.findOne({
             where: {
                 owner,
-                storeId: STORE_TYPES.Mysterybox,
+                storeId: PremiumItemsENUM.Mysterybox,
                 amount: {
                     [Op.gt]: 0
                 }
@@ -141,7 +141,7 @@ async function claimMysterybox(owner) {
         }
 
 
-        const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: STORE_TYPES.Mysterybox }, raw:true }, { transaction })
+        const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: PremiumItemsENUM.Mysterybox }, raw:true }, { transaction })
         if(deduct[0][1] !== 1) {
             await transaction.rollback();
             Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});

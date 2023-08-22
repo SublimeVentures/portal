@@ -10,6 +10,7 @@ import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import {checkAllocationLeft, parseMaxAllocation} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
+import UpgradesModal from "@/components/App/Offer/UpgradesModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
 import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
@@ -22,6 +23,9 @@ import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
 import {ACLs} from "@/lib/authHelpers";
+import {IconButton} from "@/components/Button/IconButton";
+import IconPremium from "@/assets/svg/Premium.svg";
+
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -38,6 +42,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const {chain, chains} = useNetwork()
 
+    const [isUpgradeModal, setUpgradeModal] = useState(false)
     const [isErrorModal, setErrorModal] = useState(false)
     const [errorMsg, setErrorMsg] = useState("")
 
@@ -69,6 +74,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
     const userAllocationLeft = checkAllocationLeft(ACL, userAllocation, maxAllocation, offer)
+
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
     const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
     const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
@@ -272,6 +278,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
+    const upgradesModalProps = {account, userAllocationLeft, currentPhase, offerId: offer.id}
     const calculateModalProps = {investmentAmount, maxAllocation, offer}
     const investModalProps = {
         expires,
@@ -285,7 +292,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className={`flex flex-1 flex-col items-center justify-center ${isBased ? "" : "font-accent"}`}>
+        <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
+            <div className={"absolute right-5 top-5"} onClick={()=> {setUpgradeModal(true)}}>
+                <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
+            </div>
             <div className="mt-15 lg:mt-auto">
                 <div className="currency-input-group relative">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
@@ -378,6 +388,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             }}/>
             <CalculateModal calculateModalProps={calculateModalProps} model={isCalculateModal} setter={() => {
                 setCalculateModal(false)
+            }}/>
+            <UpgradesModal upgradesModalProps={upgradesModalProps} model={isUpgradeModal} setter={() => {
+                setUpgradeModal(false)
             }}/>
             <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {
                 setErrorModal(false)

@@ -15,7 +15,8 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
 import {useNetwork} from "wagmi";
-import {PremiumItemsENUM} from "@/components/App/Settings/PremiumSummary";
+import {PremiumItemsENUM} from "@/lib/premiumHelper";
+
 const StoreNetwork = dynamic(() => import('@/components/Navigation/StoreNetwork'), {ssr: false})
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 

@@ -49,7 +49,7 @@ function parsePhased(offer) {
     return {phase: phase, active: active, isLast: phase.length-1 === active}
 }
 
-function parseRegular(offer) {
+function parseRegular(offer) { //todo: update
     const phase = [
         {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
         {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
