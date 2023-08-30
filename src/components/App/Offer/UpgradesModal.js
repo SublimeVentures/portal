@@ -14,10 +14,11 @@ import {useUpgrade} from "@/fetchers/offer.fetcher";
 
 export default function UpgradesModal({model, setter, upgradesModalProps}) {
     console.log("upgradesModalProps",upgradesModalProps)
-    const {account, userAllocationLeft, offerId, currentPhase} = upgradesModalProps
-    const {ACL, address, id, multi} = account
+    const {account, userAllocationLeft, offerId, currentPhase, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse} = upgradesModalProps
+    const {address} = account
     const {amount} = userAllocationLeft
     let [selected, setSelected] = useState(0)
+    let [isProcessing, setIsProcessing] = useState(false)
 
     const {isSuccess: premiumIsSuccess, data: premiumData} = useQuery({
             queryKey: ["premiumOwned", {address}],
@@ -29,11 +30,12 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         }
     );
 
-
+    const guaranteedUsed = upgradesUse?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount;
+    const increasedUsed = upgradesUse?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
     const guaranteed = premiumData?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount;
     const increased = premiumData?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
     const isGuaranteedEnabled = currentPhase?.step === "Pending"
-    const isIncreasedEnabled = currentPhase?.step === "FCFS"
+    const isIncreasedEnabled = currentPhase?.step === "FCFS" || currentPhase?.step === "Pending"
     const maximumGuaranteedBooking = amount > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : amount
 
     const imageId = (id) => isBased ? `${id}.jpg` : `Code_${id}.gif`
@@ -50,7 +52,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         return (<>Books <span className={"text-gold glow"}>${maximumGuaranteedBooking}</span> allocation for first 24h of the investment.</>)
     }
     const descriptionIncreased = () => {
-        return (<>Increases maximum allocation by <span className={"text-gold glow"}>$2000</span>.</>)
+        return (<>Increases maximum allocation by <span className={"text-gold glow"}>${PremiumItemsParamENUM.Increased.toLocaleString()}</span>.</>)
     }
 
     const close = () => {
@@ -59,10 +61,15 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
     }
 
     const upgrade = async () => {
+        setIsProcessing(true)
         if(selected>0) {
-            await useUpgrade(offerId, selected)
-
+            const result = await useUpgrade(offerId, selected)
+            //todo: show error
+            if(result?.ok) {
+                await upgradesUsedRefetch()
+            }
         }
+        setIsProcessing(false)
     }
 
     const title = () => {
@@ -75,37 +82,40 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
 
     const content = () => {
         return (
-            <div className={"flex flex-1 flex-col gap-5 pt-5"}>
-                <UpgradesModalItem
-                    itemType={PremiumItemsENUM.Guaranteed}
-                    name={"Guaranteed Allocation"}
-                    description={descriptionGuaranteed()}
-                    selected={selected}
-                    setSelectedUpgrade={setSelectedUpgrade}
-                    owned={guaranteed}
-                    used={2}
-                    image={imageId}
-                    isRightPhase={isGuaranteedEnabled}
-                   />
-                <UpgradesModalItem
-                    itemType={PremiumItemsENUM.Increased}
-                    name={"Increased Allocation"}
-                    description={descriptionIncreased()}
-                    selected={selected}
-                    setSelectedUpgrade={setSelectedUpgrade}
-                    owned={increased}
-                    used={0}
-                    image={imageId}
-                    isRightPhase={isIncreasedEnabled}
-                   />
+            <div className={`flex flex-1 flex-col gap-5 pt-5 ${upgradesUsedSuccess ? "" : "disabled"}`}>
+                <div>
+                    <UpgradesModalItem
+                        itemType={PremiumItemsENUM.Guaranteed}
+                        name={"Guaranteed Allocation"}
+                        description={descriptionGuaranteed()}
+                        selected={selected}
+                        setSelectedUpgrade={setSelectedUpgrade}
+                        owned={guaranteed}
+                        used={guaranteedUsed}
+                        image={imageId}
+                        isRightPhase={isGuaranteedEnabled}
+                    />
+                    <UpgradesModalItem
+                        itemType={PremiumItemsENUM.Increased}
+                        name={"Increased Allocation"}
+                        description={descriptionIncreased()}
+                        selected={selected}
+                        setSelectedUpgrade={setSelectedUpgrade}
+                        owned={increased}
+                        used={increasedUsed}
+                        image={imageId}
+                        isRightPhase={isIncreasedEnabled}
+                    />
+                </div>
+
                 <div className={"pt-5 pb-2 mt-auto"}>
                     <UniButton
                         type={ButtonTypes.BASE}
-                        text={'Upgrade'}
+                        text={isProcessing ? 'Processing...' : 'Upgrade'}
                         isWide={true}
                         zoom={1.1}
                         size={'text-sm sm'}
-                        isDisabled={selected === 0}
+                        isDisabled={selected === 0 || isProcessing}
                         handler={upgrade}
                         icon={<IconPremium className={ButtonIconSize.hero}/>}
                     />

@@ -37,7 +37,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         refetchAllocation,
         refetchUserAllocation,
         allocation,
-        userAllocation
+        userAllocation,
+        upgradesUsedRefetch,
+        upgradesUsedSuccess,
+        upgradesUse,
     } = paramsInvestPhase;
 
     const {chain, chains} = useNetwork()
@@ -278,7 +281,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const upgradesModalProps = {account, userAllocationLeft, currentPhase, offerId: offer.id}
+    const upgradesModalProps = {account, userAllocationLeft, currentPhase, offerId: offer.id, upgradesUsedRefetch,
+        upgradesUsedSuccess,
+        upgradesUse:upgradesUse?.data}
     const calculateModalProps = {investmentAmount, maxAllocation, offer}
     const investModalProps = {
         expires,
@@ -293,11 +298,18 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     return (
         <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
-            <div className={"absolute right-5 top-5"} onClick={()=> {setUpgradeModal(true)}}>
-                <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
+            <div className={"absolute right-5 top-5"} >
+                <div className={"flex flex-row items-center text-gold"}>
+                    <div className={"mr-3 font-bold glow select-none"}>GUARANTEED</div>
+                    <div onClick={()=> {setUpgradeModal(true)}}>
+                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
+
+                    </div>
+
+                </div>
             </div>
-            <div className="mt-15 lg:mt-auto">
-                <div className="currency-input-group relative">
+            <div className="lg:mt-auto">
+                <div className="currency-input-group relative mt-20 ">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
                         <label className="absolute text-accent block">Investment size</label>
                         <input tabIndex="0"

@@ -45,11 +45,25 @@ export const fetchOfferAllocation = async (id) => {
 export const useUpgrade = async (offerId, upgradeId) => {
     if(!offerId || !upgradeId) return {}
     try {
-        const {data} = await axiosPrivate.get(`${API.offerList}/upgrade/${offerId}/${upgradeId}`)
+        const {data} = await axiosPrivate.get(`${API.offerList}/${offerId}/upgrade/${upgradeId}`)
         return data
     } catch(e) {
         if(e?.status && e.status !== 401) {
             Sentry.captureException({location: "useUpgrade", e});
+        }
+    }
+    return {}
+}
+
+
+export const getUpgrades = async (offerId) => {
+    if(!offerId) return {}
+    try {
+        const {data} = await axiosPrivate.get(`${API.offerList}/${offerId}/upgrade`)
+        return data
+    } catch(e) {
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "getUpgrades", e});
         }
     }
     return {}

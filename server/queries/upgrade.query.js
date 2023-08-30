@@ -71,7 +71,6 @@ async function processUseUpgrade(owner, offerId, upgradeId) {
                 raw: true
             }, { transaction })
 
-            console.log("how many", isGuaranteedUsed)
 
             if(isGuaranteedUsed) {
                 await transaction.rollback();
@@ -82,7 +81,7 @@ async function processUseUpgrade(owner, offerId, upgradeId) {
             }
         }
 
-        const save = await saveUpgrade()
+        const save = await saveUpgrade(transaction, upgradeId, offerId, owner)
         if(!save.ok) {
             return save
         }
@@ -116,4 +115,19 @@ async function processUseUpgrade(owner, offerId, upgradeId) {
 }
 
 
-module.exports = {processUseUpgrade}
+async function fetchUpgrade (owner, offerId) {
+    return await models.upgrade.findAll({
+        attributes: ['amount', 'storeId'],
+        where: {
+            owner,
+            offerId: offerId,
+            amount: {
+                [Op.gt]: 0
+            }
+        },
+        raw: true
+    })
+}
+
+
+module.exports = {processUseUpgrade, fetchUpgrade}

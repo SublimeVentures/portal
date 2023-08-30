@@ -2,7 +2,7 @@ import LayoutApp from '@/components/Layout/LayoutApp';
 import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
 import dynamic from "next/dynamic";
 import {ACLs, verifyID} from "@/lib/authHelpers";
-import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
+import {fetchOfferAllocation, fetchOfferDetails, getUpgrades} from "@/fetchers/offer.fetcher";
 import {useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
 const OfferDetailsDetails = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
@@ -60,6 +60,16 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
+    const {isSuccess: upgradesUsedSuccess, data: upgradesUse, refetch: upgradesUsedRefetch} = useQuery({
+            queryKey: ["upgradesUsed", offerData?.offer?.id, aclCache],
+            queryFn: () => getUpgrades(offerData?.offer?.id),
+            enabled: !!offerData?.offer?.id,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+        }
+    );
+
+    console.log("upgradesUse",upgradesUse)
 
 
     const feedPhases = () => {
@@ -93,6 +103,9 @@ export const AppOfferDetails = ({account}) => {
         isLastPhase,
         account,
         isClosed,
+        upgradesUsedRefetch,
+        upgradesUsedSuccess,
+        upgradesUse,
     }
 
     const paramsParams = {

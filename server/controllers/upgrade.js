@@ -1,5 +1,5 @@
 const {ACLs} = require("../../src/lib/authHelpers");
-const {processUseUpgrade} = require("../queries/upgrade.query");
+const {processUseUpgrade, fetchUpgrade} = require("../queries/upgrade.query");
 const {PremiumItemsENUM} = require("../../src/lib/premiumHelper");
 
 async function useUpgrade(user, req) {
@@ -9,18 +9,20 @@ async function useUpgrade(user, req) {
         offerId = Number(req.params.id)
         upgradeId = Number(req.params.upgrade)
 
-        if(offerId !== PremiumItemsENUM.Guaranteed && offerId !== PremiumItemsENUM.Increased) {
+        if(upgradeId !== PremiumItemsENUM.Guaranteed && upgradeId !== PremiumItemsENUM.Increased) {
             throw new Error("Wrong Upgrade")
         }
 
     } catch(e) {
+        console.log("erro",e)
         return {
             ok:false
         }
     }
 
     const {ACL, address ,id} = user
-    const owner = ACL === ACLs.Whale ? id : address
+    const owner = address
+    // const owner = ACL === ACLs.Whale ? id : address
 
     const data = await processUseUpgrade(owner, offerId, upgradeId)
     console.log("Data",data)
@@ -29,5 +31,25 @@ async function useUpgrade(user, req) {
     return data
 }
 
+async function getUpgrades(user, req) {
+    let offerId
+    try {
+        offerId = Number(req.params.id)
 
-module.exports = {useUpgrade}
+    } catch(e) {
+        console.log("erro",e)
+        return {
+            ok:false,
+            usedUpgrades: {}
+        }
+    }
+
+    const {ACL, address ,id} = user
+    const owner = address
+    // const owner = ACL === ACLs.Whale ? id : address
+    return {ok: true, data: await fetchUpgrade(owner, offerId)}
+
+}
+
+
+module.exports = {useUpgrade, getUpgrades}
