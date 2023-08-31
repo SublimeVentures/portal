@@ -24,11 +24,16 @@ export const AppOfferDetails = ({account}) => {
     const {slug} = router.query
     const {ACL, address} = account
     const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
-    let [activePhase, setActivePhase] = useState(0)
-    let [isLastPhase, setIsLastPhase] = useState(false)
-    let [currentPhase, setCurrentPhase] = useState(false)
-    let [nextPhase, setNextPhase] = useState(false)
-    let [isClosed, setIsClosed] = useState(false)
+
+    let [phaseIsClosed, setPhaseIsClosed] = useState(false)
+    let [phaseCurrent, setPhaseCurrent] = useState(false)
+    let [phaseNext, setPhaseNext] = useState(false)
+
+    // let [activePhase, setActivePhase] = useState(0)
+    // let [isLastPhase, setIsLastPhase] = useState(false)
+    // let [currentPhase, setCurrentPhase] = useState(false)
+    // let [nextPhase, setNextPhase] = useState(false)
+    // let [isClosed, setIsClosed] = useState(false)
 
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
             queryKey: ["offerDetails", {slug, aclCache}],
@@ -46,7 +51,7 @@ export const AppOfferDetails = ({account}) => {
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             enabled: !!offerData?.offer?.id,
-            refetchInterval: isClosed ? false : 15000
+            refetchInterval: phaseIsClosed ? false : 15000
         }
     );
 
@@ -54,7 +59,7 @@ export const AppOfferDetails = ({account}) => {
             queryKey: ["userAllocation", offerData?.offer?.id, address],
             queryFn: () => fetchUserInvestment(offerData?.offer?.id),
             refetchOnMount: false,
-            refetchOnWindowFocus: !isClosed,
+            refetchOnWindowFocus: !phaseIsClosed,
             enabled: !!offerData?.offer?.id,
         }
     );
@@ -73,19 +78,18 @@ export const AppOfferDetails = ({account}) => {
 
     const feedPhases = () => {
         if(!offerData?.offer) return
-        const {active, isLast, currentPhase, nextPhase, isClosed} = phases(ACL, offerData.offer)
-        setActivePhase(active)
-        setIsLastPhase(isLast)
-        setCurrentPhase(currentPhase)
-        setNextPhase(nextPhase)
-        setIsClosed(isClosed)
+        const {isClosed, phaseCurrent, phaseNext} = phases(ACL, offerData.offer)
+        setPhaseIsClosed(isClosed)
+        setPhaseCurrent(phaseCurrent)
+        setPhaseNext(phaseNext)
+        console.log("data", isClosed, phaseCurrent, phaseNext)
     }
 
     const paramsBar = {
         offer: offerData?.offer,
-        currentPhase,
-        nextPhase,
-        isLastPhase,
+        phaseCurrent,
+        phaseNext,
+        phaseIsClosed,
         refreshInvestmentPhase: feedPhases,
     }
 
@@ -96,32 +100,31 @@ export const AppOfferDetails = ({account}) => {
         refetchAllocation,
         userAllocation,
         allocation,
-        nextPhase,
-        currentPhase,
-        activePhase,
-        isLastPhase,
         account,
-        isClosed,
         upgradesUsedRefetch,
         upgradesUsedSuccess,
         upgradesUse,
+        phaseCurrent,
+
+        // currentPhase,
+        // activePhase,
     }
 
     const paramsParams = {
         offer: offerData?.offer,
         allocation,
         userAllocation,
-        isLastPhase
+        phaseIsClosed
     }
 
     const renderPage = () => {
-        if (!offerDetailsState || !nextPhase) return <Loader/>
+        if (!offerDetailsState || !phaseNext) return <Loader/>
         if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar}/>
                 <div className={`${isBased ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}>
-                    {!isClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
+                    {!phaseIsClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
                 </div>
                 <div
                     className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">

@@ -4,7 +4,7 @@ import {useEffect, useRef} from "react";
 import PAGE from "@/routes";
 import Link from "next/link";
 import Image from "next/image";
-import {phases} from "@/lib/phases";
+import {PhaseId, phases} from "@/lib/phases";
 import {isBased} from "@/lib/utils";
 
 export const OfferStatus = {
@@ -13,9 +13,9 @@ export const OfferStatus = {
     CLOSED: "closed",
 }
 
-const getStatus = (active, isLast) => {
-    if(isLast) return OfferStatus.CLOSED
-    else if(active === 0) return OfferStatus.PENDING
+const getStatus = (phaseCurrent) => {
+    if(phaseCurrent.phase === PhaseId.Closed) return OfferStatus.CLOSED
+    else if(phaseCurrent.phase === PhaseId.Pending) return OfferStatus.PENDING
     else return OfferStatus.IN_PROGRESS
 }
 
@@ -50,10 +50,10 @@ export default function OfferItem({offer, ACL, cdn}) {
         VanillaTilt.init(imageTilt.current, {scale: 1.02, speed: 1000, max: isBased ? 5 : 0.2});
     }, []);
 
-    const {active, phase, isLast} = phases(ACL, offer, 0)
-    const state = phase[active]?.step
+    const {phaseCurrent} = phases(ACL, offer)
+    const state = phaseCurrent?.phaseName
 
-    const status = getStatus(active, isLast)
+    const status = getStatus(phaseCurrent)
     // console.log("====================")
     // console.log("offer",offer)
     // console.log("active",active)

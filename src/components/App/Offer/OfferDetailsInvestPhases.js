@@ -7,7 +7,7 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {checkAllocationLeft, parseMaxAllocation} from "@/lib/phases";
+import {checkAllocationLeft, parseMaxAllocation, PhaseId} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import UpgradesModal from "@/components/App/Offer/UpgradesModal";
@@ -30,8 +30,7 @@ import IconPremium from "@/assets/svg/Premium.svg";
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
         offer,
-        activePhase,
-        currentPhase,
+        phaseCurrent,
         account,
         currencies,
         refetchAllocation,
@@ -79,8 +78,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const userAllocationLeft = checkAllocationLeft(ACL, userAllocation, maxAllocation, offer)
 
     const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
-    const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
-    const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
+    const investButtonDisabled = phaseCurrent?.controlsDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
+    const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : phaseCurrent.button)
     // const userAlreadyInvested = userAllocation > 0
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
@@ -122,17 +121,17 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const getInvestmentButtonIcon = () => {
-        switch (currentPhase.icon) {
-            case "wait": {
+        switch (phaseCurrent.phase) {
+            case PhaseId.Pending: {
                 return <IconWait className={ButtonIconSize.invest}/>
             }
-            case "vote": {
+            case PhaseId.Vote: {
                 return <IconPantheon className={ButtonIconSize.invest}/>
             }
-            case "invest": {
+            case PhaseId.Open || PhaseId.FCFS || PhaseId.Unlimited: {
                 return <IconWhale className={ButtonIconSize.invest}/>
             }
-            case "closed": {
+            case PhaseId.Closed: {
                 return <IconLock className={ButtonIconSize.invest}/>
             }
         }
@@ -225,7 +224,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setFilled(false)
         }
         const allocationLeft = alloTotal - allocation?.alloFilled - allocation?.alloRes
-        const calcMaxAllo = parseMaxAllocation(ACL, multi, offer, activePhase, allocationLeft)
+        const calcMaxAllo = parseMaxAllocation(ACL, multi, offer, phaseCurrent, allocationLeft) //todo:
         setMaxAllocation(calcMaxAllo)
     }, [allocation?.alloFilled, allocation?.alloRes])
 
@@ -281,9 +280,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const upgradesModalProps = {account, userAllocationLeft, currentPhase, offerId: offer.id, upgradesUsedRefetch,
-        upgradesUsedSuccess,
-        upgradesUse:upgradesUse?.data}
+    const upgradesModalProps = {account, userAllocationLeft, phaseCurrent, offerId: offer.id, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse:upgradesUse?.data} //todo:
     const calculateModalProps = {investmentAmount, maxAllocation, offer}
     const investModalProps = {
         expires,

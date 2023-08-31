@@ -31,15 +31,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- check investent is closed on pending
-
-
+- upgrades phases
+- tally https://tally.so/r/mK5Pvk
+- update supra details
 
 - in app vote
 - upgrades phases
-- https://tally.so/r/mK5Pvk
 
-
+https://discord.com/channels/959614664386424884/1146645323570221106/1146645494458753054
 - https://discord.com/channels/884204406189490176/996185131989606410/1143585372052394107
 https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
 unlock button for failed set allowance

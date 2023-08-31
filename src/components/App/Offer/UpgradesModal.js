@@ -11,10 +11,11 @@ import IconPremium from "@/assets/svg/Premium.svg";
 import UpgradesModalItem from "@/components/App/Offer/UpgradesModalItem";
 import {PremiumItemsENUM, PremiumItemsParamENUM} from "@/lib/premiumHelper";
 import {useUpgrade} from "@/fetchers/offer.fetcher";
+import {PhaseId} from "@/lib/phases";
 
 export default function UpgradesModal({model, setter, upgradesModalProps}) {
     console.log("upgradesModalProps",upgradesModalProps)
-    const {account, userAllocationLeft, offerId, currentPhase, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse} = upgradesModalProps
+    const {account, userAllocationLeft, offerId, phaseCurrent, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse} = upgradesModalProps
     const {address} = account
     const {amount} = userAllocationLeft
     let [selected, setSelected] = useState(0)
@@ -34,8 +35,8 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
     const increasedUsed = upgradesUse?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
     const guaranteed = premiumData?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount;
     const increased = premiumData?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
-    const isGuaranteedEnabled = currentPhase?.step === "Pending"
-    const isIncreasedEnabled = currentPhase?.step === "FCFS" || currentPhase?.step === "Pending"
+    const isGuaranteedEnabled = phaseCurrent?.phase === PhaseId.Pending
+    const isIncreasedEnabled = phaseCurrent?.phase === PhaseId.FCFS || phaseCurrent?.phase === PhaseId.Pending
     const maximumGuaranteedBooking = amount > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : amount
 
     const imageId = (id) => isBased ? `${id}.jpg` : `Code_${id}.gif`

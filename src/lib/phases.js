@@ -1,67 +1,100 @@
 const moment = require( 'moment' );
 const {ACLs} = require("@/lib/authHelpers");
 
+const PhaseId = {
+    Vote: -1,
+    Pending: 0,
+    Open: 1,
+    FCFS: 2,
+    Unlimited: 3,
+    Closed: 4,
+}
+
+const Phases = {
+    Pending: {
+        phase: PhaseId.Pending,
+        phaseName: "Pending",
+        button: "Open Soon",
+        controlsDisabled: true,
+        startDate: 0
+    },
+    Open: {
+        phase: PhaseId.Open,
+        phaseName: "Open",
+        button: "Invest",
+        controlsDisabled: false,
+        startDate: -1
+    },
+    FCFS: {
+        phase: PhaseId.FCFS,
+        phaseName: "FCFS",
+        button: "Invest",
+        controlsDisabled: false,
+        startDate: -1
+    },
+    Unlimited: {
+        phase: PhaseId.Unlimited,
+        phaseName: "Unlimited",
+        button: "Invest",
+        controlsDisabled: false,
+        startDate: -1
+    },
+    Closed: {
+        phase: PhaseId.Closed,
+        phaseName: "Closed",
+        button: "Closed",
+        controlsDisabled: true,
+        startDate: -1
+    },
+}
+
+function updatePhaseDate(phase, timestamp) {
+    phase.startDate = timestamp
+    return phase
+}
+
+function processPhases(phases) {
+    const now = moment().unix()
+    let activeId
+
+    for(let i=0; i<phases.length; i++) {
+        if(now > phases[i].startDate) activeId = i
+    }
+
+
+    return {
+        phases,
+        activeId,
+        isLast: phases.length-1 === activeId
+    }
+}
+
+
 function phases (ACL, offer) {
-    let state
-    if(ACL===ACLs.Whale) {
-        state=  parseWhale(offer)
-    } else if(!offer.isPhased) {
-        state= parseRegular(offer)
+    let data
+    if(ACL===ACLs.Whale || !offer.isPhased) {
+        data = processPhases([
+            Phases.Pending,
+            updatePhaseDate(Phases.Open, offer.d_open),
+            updatePhaseDate(Phases.Closed, offer.d_close),
+        ])
     } else {
-        state= parsePhased(offer)
+        data = processPhases([
+            Phases.Pending,
+            updatePhaseDate(Phases.FCFS, offer.d_open),
+            updatePhaseDate(Phases.Unlimited, offer.d_open + 86400), // start 24h after FCFS
+            updatePhaseDate(Phases.Closed, offer.d_close),
+        ])
     }
 
     return {
-        ...state,
-        currentPhase: state.phase[state.active],
-        nextPhase: state.isLast ? state.phase[state.active] : state.phase[state.active + 1],
-        isClosed: !!state.phase && state.phase.length-1 === state.active || offer.isSettled
+        isClosed: !!data.phases && data.isLast || offer.isSettled,
+        phaseCurrent: data.phases[data.activeId],
+        phaseNext: data.isLast ? data.phases[data.activeId] : data.phases[data.activeId + 1],
     }
 }
 
-function parseWhale(offer) {
-    const phase = [
-        {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
-        {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
-    ]
-    const now = moment().unix()
-    let active
-    for(let i=0; i<phase.length; i++) {
-        if(now > phase[i].start) active = i
-    }
 
-    return {phase: phase, active: active, isLast: phase.length-1 === active}
-}
-
-function parsePhased(offer) {
-    const phase = [
-        {step: 'Pending', action: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'FCFS', action: "Invest", icon: "invest", start: offer.d_open},
-        {step: 'Unlimited', action: "Invest", icon: "invest", start: offer.d_open + 86400},//24h
-        {step: 'Closed', action: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
-    ]
-    const now = moment().unix()
-    let active
-    for(let i=0; i<phase.length; i++) {
-        if(now > phase[i].start) active = i
-    }
-    return {phase: phase, active: active, isLast: phase.length-1 === active}
-}
-
-function parseRegular(offer) { //todo: update
-    const phase = [
-        {step: 'Pending', copy: "Open Soon", icon: "wait", isDisabled: true, start: 0},
-        {step: 'Open', copy: "Invest", icon: "invest", start: offer.d_open},
-        {step: 'Closed', copy: "Closed", icon: "closed", isDisabled: true, start: offer.d_close},
-    ]
-    const now = moment().unix()
-    let active
-    for(let i=0; i<phase.length; i++) {
-        if(now > phase[i].start) active = i
-    }
-    return {phase: phase, active: active, isLast: phase.length-1 === active}
-}
 
 function parseMaxAllocation (ACL, multi, offer, phase, allocationLeft) {
     if(ACL === ACLs.Whale) {
@@ -87,4 +120,5 @@ function checkAllocationLeft (ACL, userAllocation, userMaxAllocation, offer) {
         return {status:false, amount: userAllocation}
     }
 }
-module.exports = { phases, parseMaxAllocation, checkAllocationLeft }
+
+module.exports = { phases, PhaseId, parseMaxAllocation, checkAllocationLeft }

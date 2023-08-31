@@ -2,7 +2,7 @@ import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 import {isBased} from "@/lib/utils";
 
 export const OfferDetailsParams = ({paramsParams}) => {
-    const {offer, allocation, userAllocation, isLastPhase} = paramsParams
+    const {offer, allocation, userAllocation, phaseIsClosed} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
     const normalized_ppu = Number(ppu)?.toLocaleString()
@@ -10,7 +10,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_my = Number(userAllocation)?.toLocaleString()
-    const isSoldOut = allocation?.alloFilled >= alloTotal || isLastPhase
+    const isSoldOut = allocation?.alloFilled >= alloTotal || phaseIsClosed
 
     return (
         <>
