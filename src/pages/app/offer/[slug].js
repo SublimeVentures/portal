@@ -16,7 +16,7 @@ import {useState, useEffect} from "react";
 import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import routes from "@/routes";
- import {getCopy} from "@/lib/seoConfig";
+import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
 
 export const AppOfferDetails = ({account}) => {
@@ -39,7 +39,6 @@ export const AppOfferDetails = ({account}) => {
             staleTime: 15 * 60 * 1000,
         }
     );
-
 
     const {data: allocation, refetch: refetchAllocation} = useQuery({
             queryKey: ["offerAllocation", offerData?.offer?.id],

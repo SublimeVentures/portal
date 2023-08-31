@@ -31,6 +31,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
+- check investent is closed on pending
+
+
+
 - in app vote
 - upgrades phases
 - https://tally.so/r/mK5Pvk
