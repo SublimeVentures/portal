@@ -18,6 +18,7 @@ import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestC
 import routes from "@/routes";
 import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
+import {PremiumItemsENUM} from "@/lib/premiumHelper";
 
 export const AppOfferDetails = ({account}) => {
     const router = useRouter()
@@ -73,7 +74,6 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
-    console.log("upgradesUse",upgradesUse)
 
 
     const feedPhases = () => {
@@ -82,7 +82,6 @@ export const AppOfferDetails = ({account}) => {
         setPhaseIsClosed(isClosed)
         setPhaseCurrent(phaseCurrent)
         setPhaseNext(phaseNext)
-        console.log("data", isClosed, phaseCurrent, phaseNext)
     }
 
     const paramsBar = {
@@ -92,6 +91,9 @@ export const AppOfferDetails = ({account}) => {
         phaseIsClosed,
         refreshInvestmentPhase: feedPhases,
     }
+
+    const guaranteedUsed = upgradesUse?.data?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
+    const increasedUsed = upgradesUse?.data?.find(el=>el.storeId === PremiumItemsENUM.Increased)
 
     const paramsInvest = {
         offer: offerData?.offer,
@@ -103,11 +105,8 @@ export const AppOfferDetails = ({account}) => {
         account,
         upgradesUsedRefetch,
         upgradesUsedSuccess,
-        upgradesUse,
-        phaseCurrent,
-
-        // currentPhase,
-        // activePhase,
+        upgradesUse: {guaranteedUsed, increasedUsed},
+        phaseCurrent
     }
 
     const paramsParams = {

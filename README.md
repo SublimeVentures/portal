@@ -31,17 +31,27 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
+- test usdt abi on diff blockchains
+- upgrade unmatch after filling everything
+- sprawdź czy jest widać booking size w requescie http
+- fix panding stae/css class to show closed after isSettled
+- hide counter if isSettled
+- ensure access show only right scope
 - upgrades phases
 - tally https://tally.so/r/mK5Pvk
+
+- add SS integration
 - update supra details
 
 - in app vote
 - upgrades phases
-
+  https://discord.com/channels/903535408846077952/1136657187981230121/1146763089866391562
 https://discord.com/channels/959614664386424884/1146645323570221106/1146645494458753054
 - https://discord.com/channels/884204406189490176/996185131989606410/1143585372052394107
 https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
-unlock button for failed set allowance
+  https://discord.com/channels/@me/915237510928556052/1146847768921522186
+
+- unlock button for failed set allowance
 - reset modal settings on close
 - sentry error
 

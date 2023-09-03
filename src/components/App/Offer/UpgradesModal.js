@@ -14,14 +14,13 @@ import {useUpgrade} from "@/fetchers/offer.fetcher";
 import {PhaseId} from "@/lib/phases";
 
 export default function UpgradesModal({model, setter, upgradesModalProps}) {
-    console.log("upgradesModalProps",upgradesModalProps)
-    const {account, userAllocationLeft, offerId, phaseCurrent, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse} = upgradesModalProps
+    const {account, allocationUserLeft, offerId, phaseCurrent, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse} = upgradesModalProps
     const {address} = account
-    const {amount} = userAllocationLeft
+
     let [selected, setSelected] = useState(0)
     let [isProcessing, setIsProcessing] = useState(false)
 
-    const {isSuccess: premiumIsSuccess, data: premiumData} = useQuery({
+    const {data: premiumData, refetch} = useQuery({
             queryKey: ["premiumOwned", {address}],
             queryFn: fetchStoreItemsOwned,
             enabled: model,
@@ -31,13 +30,13 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         }
     );
 
-    const guaranteedUsed = upgradesUse?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount;
-    const increasedUsed = upgradesUse?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
+    const guaranteedUsed = upgradesUse?.guaranteedUsed?.amount;
+    const increasedUsed = upgradesUse?.increasedUsed?.amount;
     const guaranteed = premiumData?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount;
     const increased = premiumData?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
     const isGuaranteedEnabled = phaseCurrent?.phase === PhaseId.Pending
     const isIncreasedEnabled = phaseCurrent?.phase === PhaseId.FCFS || phaseCurrent?.phase === PhaseId.Pending
-    const maximumGuaranteedBooking = amount > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : amount
+    const maximumGuaranteedBooking = allocationUserLeft > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : allocationUserLeft
 
     const imageId = (id) => isBased ? `${id}.jpg` : `Code_${id}.gif`
 
@@ -64,8 +63,9 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
     const upgrade = async () => {
         setIsProcessing(true)
         if(selected>0) {
+            const test = await refetch();
+            console.log("test",test)
             const result = await useUpgrade(offerId, selected)
-            //todo: show error
             if(result?.ok) {
                 await upgradesUsedRefetch()
             }

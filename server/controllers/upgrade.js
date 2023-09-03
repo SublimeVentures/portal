@@ -47,7 +47,10 @@ async function getUpgrades(user, req) {
     const {ACL, address ,id} = user
     const owner = address
     // const owner = ACL === ACLs.Whale ? id : address
-    return {ok: true, data: await fetchUpgrade(owner, offerId)}
+    const check = await fetchUpgrade(owner, offerId);
+    console.log("upgrade", check)
+    return {ok: true, data: check}
+    // return {ok: true, data: await fetchUpgrade(owner, offerId)}
 
 }
 

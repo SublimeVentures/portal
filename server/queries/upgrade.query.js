@@ -106,6 +106,7 @@ async function processUseUpgrade(owner, offerId, upgradeId) {
            await transaction.rollback();
         }
         Sentry.captureException({location: "processUseUpgrade", type: 'catch error', owner, e});
+        console.log("e",e)
         return {
             ok: false,
             error: UPGRADE_ERRORS.Unexpected

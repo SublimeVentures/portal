@@ -102,11 +102,12 @@ export default function TransactionStep({stepProps}) {
         }
     }, [isLoadingWrite, isLoadingConfirmed, errorConfirmed, errorWrite])
 
-
+    // console.log("errorConfirmed",errorConfirmed)
+    // console.log("errorWrite",errorWrite ? Object.keys(errorWrite) : 0, errorWrite?.shortMessage, errorWrite?.metaMessages, errorWrite?.message, errorWrite?.cause)
     // console.log("errorWrite",errorWrite)
     return (
         <div className={'fullWidth min-h-[25px]'}>
-            {!!errorConfirmed || !!errorWrite && <div className={"text-app-error text-center"}>{errorConfirmed}{errorWrite?.message ? errorWrite.message : errorWrite?.cause?.reason.toUpperCase()}</div>}
+            {!!errorConfirmed || !!errorWrite && <div className={"text-app-error text-center"}>{errorConfirmed}{errorWrite?.shortMessage ? errorWrite.shortMessage : errorWrite?.cause?.reason.toUpperCase()}</div>}
         </div>
     )
 }

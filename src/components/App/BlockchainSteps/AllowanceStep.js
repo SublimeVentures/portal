@@ -1,14 +1,14 @@
 import {erc20ABI, useContractRead, usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
 import {useEffect} from "react";
-import {BigNumber} from "ethers";
+import {BigNumber} from "bignumber.js";
 import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 
 export default function AllowanceStep({stepProps}) {
     const {currencyAddress, currencyPrecision, currencySymbol, allowanceFor, isReady, account, amount, isFinished, setFinished, setIsTransactionLoading, isStablecoin} = stepProps
 
-    const power = BigNumber.from(10).pow(currencyPrecision)
-    const amount_bn = BigNumber.from(amount).mul(power)
+    const power = BigNumber(10).pow(currencyPrecision)
+    const amount_bn = BigNumber(amount).multipliedBy(power)
     const requiredAllowance = amount ? amount_bn : 0
     const {config, isSuccess: isSuccessConfig, isError} = usePrepareContractWrite({
         address: currencyAddress,
@@ -53,7 +53,7 @@ export default function AllowanceStep({stepProps}) {
     })
 
 
-    const allowance_bn = BigNumber.from(allowance ? allowance : 0).div(power)
+    const allowance_bn = BigNumber(allowance ? allowance : 0).div(power)
     const allowanceHuman = (allowance ? allowance_bn.toNumber() : 0)
     const isEnoughAllowance = amount <= allowanceHuman
     const amountLocale = Number(amount).toLocaleString()

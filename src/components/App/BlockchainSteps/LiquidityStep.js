@@ -1,5 +1,5 @@
 import {erc20ABI, useContractRead} from 'wagmi'
-import { BigNumber } from 'ethers';
+import {BigNumber} from "bignumber.js";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
 import {useEffect} from "react";
 
@@ -20,8 +20,11 @@ export default function LiquidityStep({stepProps}) {
         }
     )
 
-    const power = BigNumber.from(10).pow(currencyPrecision)
-    const currentBalanceHuman = currentBalance ? currentBalance.div(power).toNumber() : 0
+    console.log("currentBalance",currentBalance)
+
+    const power = BigNumber(10).pow(currencyPrecision)
+    const currentBalanceBN = BigNumber(currentBalance)
+    const currentBalanceHuman = currentBalance ? currentBalanceBN.dividedBy(power).toNumber() : 0
     const isEnoughLiquidity = amount <= currentBalanceHuman
 
     const currentBalanceLocale = Number(currentBalanceHuman).toLocaleString()
