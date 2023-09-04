@@ -49,7 +49,7 @@ export default function MakeOfferInteract({props}) {
         }
     )
 
-    console.log("MOI --- allowance - isLoading?",checkAllowanceEnabled, allowance.toNumber())
+    // console.log("MOI --- allowance - isLoading?",checkAllowanceEnabled, allowance.toNumber())
 
 
     const allowanceHuman = (allowance ? allowance.toNumber() : 0) / 10 ** selectedCurrency.precision

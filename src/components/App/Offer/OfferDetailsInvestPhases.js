@@ -7,9 +7,10 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {checkAllocationLeft, parseMaxAllocation} from "@/lib/phases";
+import { PhaseId, processAllocations} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
+import UpgradesModal from "@/components/App/Offer/UpgradesModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
 import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
@@ -22,22 +23,36 @@ import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
 import {ACLs} from "@/lib/authHelpers";
+import {IconButton} from "@/components/Button/IconButton";
+import IconPremium from "@/assets/svg/Premium.svg";
+
+
+const setButtonText = (isPaused, isSettled, offerIsProcessing, offerIsSettled, defaultText, investmentAmount) => {
+    if(isPaused) return "Investment Paused"
+    else if (isSettled || offerIsSettled) return "Filled"
+    else if (offerIsProcessing) return "Processing..."
+    else return defaultText
+}
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
         offer,
-        activePhase,
-        currentPhase,
+        phaseCurrent,
         account,
         currencies,
         refetchAllocation,
         refetchUserAllocation,
         allocation,
-        userAllocation
+        userAllocation,
+        upgradesUsedRefetch,
+        upgradesUsedSuccess,
+        upgradesUse,
     } = paramsInvestPhase;
+
 
     const {chain, chains} = useNetwork()
 
+    const [isUpgradeModal, setUpgradeModal] = useState(false)
     const [isErrorModal, setErrorModal] = useState(false)
     const [errorMsg, setErrorMsg] = useState("")
 
@@ -50,10 +65,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [expires, setExpires] = useState(0)
     const [isAllocationOk, setIsAllocationOk] = useState(true)
     const [isButtonLoading, setButtonLoading] = useState(false)
-    const [isFilled, setFilled] = useState(false)
 
     const [investmentCurrency, setInvestmentCurrency] = useState(0)
-    const [maxAllocation, setMaxAllocation] = useState(0)
     const [hash, setHash] = useState(0)
 
     const [investmentAmount, setInvestmentAmount] = useState(0)
@@ -62,17 +75,26 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [showClean, setShowClean] = useState(false)
     const [isError, setIsError] = useState({})
 
+    const [allocationData, setAllocationData] = useState({
+        allocationUserMax: 0,
+        allocationUserLeft: 0,
+        allocationPoolLeft:0,
+        canInvestMore: false,
+        offerIsProcessing: false,
+        offerIsSettled: false,
+    })
+
+
     const [cookies, setCookie, removeCookie] = useCookies();
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
-    const {ACL, multi, isStaked} = account
-    const {id, alloTotal, isPaused} = offer
+    const {ACL, isStaked} = account
+    const {id, isSettled, isPaused} = offer
 
     const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
-    const userAllocationLeft = checkAllocationLeft(ACL, userAllocation, maxAllocation, offer)
-    const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
-    const investButtonDisabled = currentPhase?.isDisabled || !isAllocationOk || isFilled || isPaused || isProcessing || ntStakeGuard
-    const buttonText = isPaused ? "Investment Paused" : (isFilled ? 'Processing...' : currentPhase.action)
-    // const userAlreadyInvested = userAllocation > 0
+
+
+    const investButtonDisabled = phaseCurrent?.controlsDisabled || !isAllocationOk || isPaused || allocationData.offerIsProcessing || ntStakeGuard || !investmentAmount
+    const buttonText = setButtonText(isPaused, isSettled, allocationData.offerIsProcessing, allocationData.offerIsSettled, phaseCurrent.button, investmentAmount)
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
@@ -113,17 +135,19 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const getInvestmentButtonIcon = () => {
-        switch (currentPhase.icon) {
-            case "wait": {
+        switch (phaseCurrent.phase) {
+            case PhaseId.Pending: {
                 return <IconWait className={ButtonIconSize.invest}/>
             }
-            case "vote": {
+            case PhaseId.Vote: {
                 return <IconPantheon className={ButtonIconSize.invest}/>
             }
-            case "invest": {
+            case PhaseId.Open:
+            case PhaseId.FCFS:
+            case PhaseId.Unlimited: {
                 return <IconWhale className={ButtonIconSize.invest}/>
             }
-            case "closed": {
+            case PhaseId.Closed: {
                 return <IconLock className={ButtonIconSize.invest}/>
             }
         }
@@ -210,53 +234,12 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     useEffect(() => {
-        if (alloTotal <= allocation?.alloFilled + allocation?.alloRes) {
-            setFilled(true)
-        } else {
-            setFilled(false)
-        }
-        const allocationLeft = alloTotal - allocation?.alloFilled - allocation?.alloRes
-        const calcMaxAllo = parseMaxAllocation(ACL, multi, offer, activePhase, allocationLeft)
-        setMaxAllocation(calcMaxAllo)
-    }, [allocation?.alloFilled, allocation?.alloRes])
-
-    useEffect(() => {
         setInvestmentCurrency(0)
     }, [chain])
 
     useEffect(() => {
-          setValue(offer.alloMin)
+        setValue(offer.alloMin)
     }, []);
-
-    useEffect(() => {
-        if (userAllocationLeft.status) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Maximum allocation filled`})
-        } else if (!userAllocation && investmentAmount < offer.alloMin) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-        } else if (!userAllocation && investmentAmount > maxAllocation) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
-        } else if (ACL !== ACLs.Whale && investmentAmount > userAllocationLeft.amount) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
-        } else {
-            if(!investmentAmount || investmentAmount % (userAllocation > 0 ? 50 : 100) > 0) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Allocation has to be divisible by $${userAllocation > 0 ? 50 : 100}`})
-            }
-            if(!userAllocation) {
-                setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-            } else {
-                    setIsAllocationOk(true)
-                    return setIsError({state: false, msg: `Maximum investment: $${userAllocationLeft.amount.toLocaleString()}`})
-            }
-
-        }
-
-    }, [investmentAmount, userAllocation]);
 
     useEffect(() => {
         if (showInputInfo) {
@@ -268,11 +251,43 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         }
     }, [showInputInfo]);
 
+    useEffect(() => {
+        if(!offer) return
+        const allocations = processAllocations(account, phaseCurrent, upgradesUse, userAllocation, offer, allocation)
+        setAllocationData(allocations)
+    }, [allocation?.alloFilled, allocation?.alloRes, upgradesUse?.increasedUsed?.amount, userAllocation])
+
+    useEffect(() => {
+        if (allocationData.allocationUserLeft === 0) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Maximum allocation filled`})
+        } else if (investmentAmount > allocationData.allocationUserLeft) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
+        } else if (!allocationData.allocationUserCurrent && investmentAmount < offer.alloMin) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+        } else if(investmentAmount % (allocationData.allocationUserCurrent > 0 ? 50 : 100) > 0) {
+            setIsAllocationOk(false)
+            return setIsError({state: true, msg: `Allocation has to be divisible by $${allocationData.allocationUserCurrent > 0 ? 50 : 100}`})
+        } else {
+            if(!allocationData.allocationUserCurrent) {
+                setIsAllocationOk(true)
+                return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+            } else {
+                setIsAllocationOk(true)
+                return setIsError({state: false, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
+            }
+        }
+    }, [investmentAmount, allocationData.allocationUserCurrent, allocationData.allocationUserLeft, upgradesUse?.increasedUsed?.amount]);
+
+
 
 
     const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const calculateModalProps = {investmentAmount, maxAllocation, offer}
+    const upgradesModalProps = {account,  phaseCurrent, offerId: offer.id, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse, allocationUserLeft: allocationData.allocationUserLeft}
+    const calculateModalProps = {investmentAmount, maxAllocation: allocationData.allocationUserMax, offer}
     const investModalProps = {
         expires,
         investmentAmount,
@@ -285,9 +300,17 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     return (
-        <div className={`flex flex-1 flex-col items-center justify-center ${isBased ? "" : "font-accent"}`}>
-            <div className="mt-15 lg:mt-auto">
-                <div className="currency-input-group relative">
+        <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
+            <div className={"absolute right-5 top-5"} >
+                <div className={"flex flex-row items-center text-gold"}>
+                    {!!upgradesUse.guaranteedUsed && <div className={"mr-3 font-bold glow select-none"}>GUARANTEED</div>}
+                    <div onClick={()=> {setUpgradeModal(true)}}>
+                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
+                    </div>
+                </div>
+            </div>
+            <div className="lg:mt-auto">
+                <div className="currency-input-group relative mt-20 ">
                     <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
                         <label className="absolute text-accent block">Investment size</label>
                         <input tabIndex="0"
@@ -296,7 +319,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                                onKeyDown={checkIfNumber}
                                onFocus={() => setShowInputInfo(true)}
                                onBlur={() => setShowInputInfo(false)}
-                               className={`h-17 text-xl px-4 ${isInputActive ? 'highlight' : ''} ${investmentAmount >= offer.alloMin && investmentAmount <= maxAllocation ? 'valid' : ''} ${investmentAmount < offer.alloMin || investmentAmount > maxAllocation ? 'invalid' : ''}`}
+                               className={`h-17 text-xl px-4 ${isInputActive ? 'highlight' : ''} ${investmentAmount >= offer.alloMin && investmentAmount <= allocationData.allocationUserMax ? 'valid' : ''} ${investmentAmount < offer.alloMin || investmentAmount > allocationData.allocationUserMax ? 'invalid' : ''}`}
                         />
 
                         <Transition appear show={showClean} as={Fragment}>
@@ -378,6 +401,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             }}/>
             <CalculateModal calculateModalProps={calculateModalProps} model={isCalculateModal} setter={() => {
                 setCalculateModal(false)
+            }}/>
+            <UpgradesModal upgradesModalProps={upgradesModalProps} model={isUpgradeModal} setter={() => {
+                setUpgradeModal(false)
             }}/>
             <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {
                 setErrorModal(false)

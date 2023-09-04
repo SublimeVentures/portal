@@ -1,45 +1,41 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('raises', {
-        alloRes: {
+    sequelize.define('upgrade', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+            unique: true
+        },
+        owner: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        amount: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        alloFilled: {
+        alloMax: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        alloSide: {
+        alloUsed: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        alloGuaranteed: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
+        isExpired: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
             allowNull: false,
-        },
-        alloResPartner: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        alloFilledPartner: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        alloSidePartner: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-
+        }
     }, {
-        indexes: [{unique: true, fields: ['offerId']}],
+        indexes: [
+            {unique: true, fields: ['owner', 'storeId', 'offerId']},
+        ],
         freezeTableName: true,
         timestamps: true
     });

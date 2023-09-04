@@ -28,26 +28,42 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
-unlock button for failed set allowance
-
 ## ToDo
+- enable button for guaranteed even if allocation is processing
+- test expiry
+- test unlimited
 
-- based
-- -- prepare upgrade graphics
-- -- deploy contracts
+- remove partner delay - only manula - if not filled = dont show
+- test usdt abi on diff blockchains
+- fix panding stae/css class to show closed after isSettled
+- hide counter if isSettled
+- ensure access show only right scope
+- tally https://tally.so/r/mK5Pvk
+- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0 
 
-- image for citcap metadata
-- fix error on blockchain parsing
-- staking change to feed data
-- remove multichain from blockchain
-- contract: premium - enable/disable/owner for whales
+- zero alloGuaranteed after 24h
+- add SS integration
+- update supra details
+==========
+- found bug that allowed small overallocation - fixed
+- updated investment phases
+- optimized currency input
+- upgrades notion
+- allocation size rewritten
+- increased security 
+- allocation watcher
+========
+
+- in app vote
+- upgrades phases
+  https://discord.com/channels/903535408846077952/1136657187981230121/1146763089866391562
+https://discord.com/channels/959614664386424884/1146645323570221106/1146645494458753054
+- https://discord.com/channels/884204406189490176/996185131989606410/1143585372052394107
+https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
+  https://discord.com/channels/@me/915237510928556052/1146847768921522186
+
+- unlock button for failed set allowance
 - reset modal settings on close
-
-
-- lootbox contract - add watcher for lootbox enabled
-- deploy on all chains
-- lootobx graphics basedVC
 - sentry error
 
 - staking (force eth)

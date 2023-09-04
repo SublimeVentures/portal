@@ -6,7 +6,7 @@ import {isBased} from "@/lib/utils";
 
 
 export default function OfferDetailsTopBar({paramsBar}) {
-    let {offer, currentPhase, nextPhase, refreshInvestmentPhase, isLastPhase} = paramsBar
+    let {offer, phaseCurrent, phaseNext, refreshInvestmentPhase, phaseIsClosed} = paramsBar
     let {name, genre, slug, cdn} = offer
 
     return (
@@ -21,16 +21,16 @@ export default function OfferDetailsTopBar({paramsBar}) {
                 </div>
             </div>
 
-            { !isLastPhase && <div
+            {!phaseIsClosed && <div
                 className={`flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row ${isBased ? "" : "font-accent"}`}>
                 <div className={`text-lg custom:-mt-5 `}>
-                    <span className={` uppercase font-[500] ${isBased ? "text-gold glow" : "text-app-error glowRed "}`}>{currentPhase.step}</span> ends in
+                    <span className={` uppercase font-[500] ${isBased ? "text-gold glow" : "text-app-error glowRed "}`}>{phaseCurrent.phaseName}</span> ends in
                 </div>
                 <div>
                     <FlipClockCountdown
                         className="flip-clock"
                         onComplete={() => refreshInvestmentPhase()}
-                        to={moment.unix(nextPhase.start)}
+                        to={moment.unix(phaseNext.startDate)}
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                     />
                 </div>

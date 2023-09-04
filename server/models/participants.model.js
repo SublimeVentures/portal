@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('participants_28', {
+    sequelize.define('participants_32', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -41,6 +41,10 @@ module.exports = (sequelize) => {
             defaultValue: false
         },
         isExpired: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isGuaranteed: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },

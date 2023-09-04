@@ -3,6 +3,7 @@ const router = express.Router();
 const {getParamOfferDetails, getOfferAllocation} = require("../controllers/offerDetails");
 const {getParamOfferList} = require("../controllers/offerList");
 const {verifyID} = require("../../src/lib/authHelpers");
+const {useUpgrade, getUpgrades} = require("../controllers/upgrade");
 
 router.get('/', async (req, res) => {
     const {auth, user} = await verifyID(req)
@@ -24,6 +25,21 @@ router.get('/:id/allocation', async (req, res) => {
 
     res.status(200).json(await getOfferAllocation(user, req))
 });
+
+router.get('/:id/upgrade/:upgrade', async (req, res) => {
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
+
+    return res.status(200).json(await useUpgrade(user, req))
+});
+
+router.get('/:id/upgrade', async (req, res) => {
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
+
+    return res.status(200).json(await getUpgrades(user, req))
+});
+
 
 
 module.exports = {router}

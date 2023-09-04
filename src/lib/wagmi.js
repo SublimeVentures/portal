@@ -1,4 +1,4 @@
-import {  createClient, configureChains } from 'wagmi'
+import {  createConfig, configureChains } from 'wagmi'
 import { polygon, mainnet, sepolia, polygonMumbai, bscTestnet, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
@@ -11,13 +11,13 @@ import {isBased} from "@/lib/utils";
 const rightChains = [mainnet, polygon, bsc]
 
 
-const { chains, provider } = configureChains(
+const { chains,  publicClient, webSocketPublicClient } = configureChains(
     rightChains,
     [publicProvider()],
     { stallTimeout: 5000 },
 )
 
-export const client = createClient({
+const config = createConfig({
     autoConnect: true,
     connectors: [
         new MetaMaskConnector({
@@ -29,7 +29,7 @@ export const client = createClient({
         new WalletConnectConnector({
             chains: rightChains,
             options: {
-                projectId: 'fd985de17a4eed15096ed191f885cbcb',
+                projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
             },
         }),
         new CoinbaseWalletConnector({
@@ -40,7 +40,8 @@ export const client = createClient({
             },
         })
     ],
-    provider,
+    publicClient,
+    webSocketPublicClient,
 })
 
-export { chains }
+export { chains, config }

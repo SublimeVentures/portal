@@ -1,6 +1,6 @@
 import {WagmiConfig} from 'wagmi'
 import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
-import {client} from '@/lib/wagmi'
+import {config} from '@/lib/wagmi'
 import {queryClient} from '@/lib/queryCache'
 import Layout from '@/components/Layout/Layout';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -21,7 +21,7 @@ export default function App({Component, pageProps: {...pageProps}}) {
         };
 
     return (
-        <WagmiConfig client={client}>
+        <WagmiConfig config={config}>
             {renderWithLayout(
                     <QueryClientProvider client={queryClient}>
                         <Hydrate state={pageProps.dehydratedState}>

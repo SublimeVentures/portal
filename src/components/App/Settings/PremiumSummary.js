@@ -2,18 +2,11 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import routes, {ExternalLinks} from "@/routes";
 import IconInfo from "@/assets/svg/Info.svg";
 import {IconButton} from "@/components/Button/IconButton";
-
 import {isBased} from "@/lib/utils";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import Link from "next/link";
-
-
-export const PremiumItemsENUM = {
-    MysteryBox: 0,
-    Guaranteed: 1,
-    Increased: 2,
-}
+import {PremiumItemsENUM} from "@/lib/premiumHelper";
 
 export default function PremiumSummary({data}) {
     const guaranteed = data?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)

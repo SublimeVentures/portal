@@ -11,13 +11,14 @@ import VanillaTilt from "vanilla-tilt";
 import Head from "next/head";
 import {useQuery} from "@tanstack/react-query";
 import {fetchStore, fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
-import {PremiumItemsENUM} from "@/components/App/Settings/PremiumSummary";
+
 import StoreNetwork from "@/components/Navigation/StoreNetwork";
 import {useNetwork} from "wagmi";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
 import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxModal";
 import {claimMysterybox} from "@/fetchers/mysterbox.fetcher";
 import dynamic from "next/dynamic";
+import {PremiumItemsENUM} from "@/lib/premiumHelper";
 const ErrorModal = dynamic(() => import('@/components/App/MysteryBox/ClaimErrorModal'), {ssr: false})
 
 

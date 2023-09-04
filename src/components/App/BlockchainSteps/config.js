@@ -8,8 +8,9 @@ import upgradeAbi_based from "../../../../abi/upgradeBased.abi.json";
 import upgradeAbi_citcap from "../../../../abi/upgradeCitCap.abi.json";
 import mysteryBoxAbi_based from "../../../../abi/mysteryboxBased.abi.json";
 import mysteryBoxAbi_citcap from "../../../../abi/mysteryboxCitCap.abi.json";
+import usdtAbi from "../../../../abi/usdt.abi.json";
 import {erc20ABI} from "wagmi";
-import {BigNumber} from 'ethers';
+import {BigNumber} from "bignumber.js";
 import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 import {ACLs} from "@/lib/authHelpers";
 import {isBased} from "@/lib/utils";
@@ -74,11 +75,11 @@ export const getButtonStep = (state, defaultText) => {
 }
 
 export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, hash, nftId) => {
-    const power = BigNumber.from(10).pow(isFromStake ? 6 : currency.precision)
-    const _amount = BigNumber.from(amount).mul(power)
+    const power = BigNumber(10).pow(isFromStake ? 6 : currency.precision)
+    const _amount = BigNumber(amount).multipliedBy(power)
     switch (ACL) {
         case ACLs.Whale: {
-            console.log("invest function - isFromStake", isFromStake)
+            // console.log("invest function - isFromStake", isFromStake)
             if (isFromStake) {
                 return {
                     method: 'pledge',
@@ -98,7 +99,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                         _amount,
                     ],
                     address: currency.address,
-                    abi: erc20ABI
+                    abi: currency.symbol === 'USDT' ? usdtAbi : erc20ABI
                 }
             }
         }
@@ -110,7 +111,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
                     _amount,
                 ],
                 address: currency.address,
-                abi: erc20ABI
+                abi: currency.symbol === 'USDT' ? usdtAbi : erc20ABI
             }
         }
     }
