@@ -78,7 +78,7 @@ export default function AllowanceStep({stepProps}) {
     }, [isErrorWrite, isErrorPending, isEnoughAllowance])
 
     useEffect(()=>{
-        console.log("allowance", isFinished, isEnoughAllowance, isReady)
+        // console.log("allowance", isFinished, isEnoughAllowance, isReady)
             // if (isFinished && isEnoughAllowance && isReady) { //todo: test - this is old version
             if (isFinished && isEnoughAllowance) {
                 setIsTransactionLoading(TransactionState.Init)

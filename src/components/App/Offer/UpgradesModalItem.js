@@ -3,7 +3,6 @@ import {isBased} from "@/lib/utils";
 import {PremiumItemsENUM} from "@/lib/premiumHelper";
 
 export default function UpgradesModalItem({itemType, selected, setSelectedUpgrade, isRightPhase, owned, used, image, name, description}) {
-
     return (
         <div className={"relative"}>
             <div className={`flex flex-row upgrade ${isBased ? "rounded-xl" : ""} ${selected === itemType ? 'active' : ''} ${!isRightPhase || isRightPhase && itemType === PremiumItemsENUM.Guaranteed && used>0 ? 'blur disabled' :'cursor-pointer'} ${!owned ? 'disabled' :''}`} onClick={()=> { if(isRightPhase && owned>0) setSelectedUpgrade(itemType) }}>

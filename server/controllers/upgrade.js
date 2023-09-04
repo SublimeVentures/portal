@@ -20,13 +20,10 @@ async function useUpgrade(user, req) {
         }
     }
 
-    const {ACL, address ,id} = user
-    const owner = address
-    // const owner = ACL === ACLs.Whale ? id : address
-
-    const data = await processUseUpgrade(owner, offerId, upgradeId)
+    const {ACL, address ,id, multi} = user
+    const owner = ACL === ACLs.Whale ? id : address
+    const data = await processUseUpgrade(owner, offerId, upgradeId, id, ACL, multi)
     console.log("Data",data)
-    //todo: impact investment
 
     return data
 }
@@ -47,10 +44,7 @@ async function getUpgrades(user, req) {
     const {ACL, address ,id} = user
     const owner = address
     // const owner = ACL === ACLs.Whale ? id : address
-    const check = await fetchUpgrade(owner, offerId);
-    console.log("upgrade", check)
-    return {ok: true, data: check}
-    // return {ok: true, data: await fetchUpgrade(owner, offerId)}
+    return {ok: true, data: await fetchUpgrade(owner, offerId)}
 
 }
 

@@ -52,21 +52,17 @@ async function getOfferDetails(slug) {
     return {}
 }
 
-async function getOfferReservedData(id) {
+async function getOfferById(id) {
     try {
         return models.offers.findOne({
             where: {id},
             raw: true
         })
     } catch (e) {
-        Sentry.captureException({location: "getOfferReservedData", type: 'query', e});
+        Sentry.captureException({location: "getOfferById", type: 'query', e});
     }
     return {}
 }
 
-// async function getOffersWithOpenOtc() {
-//     return Offer.find({b_otc: {$ne : 0}}, {name:1, ticker:1, b_ppu:1, slug:1, b_otc:1, id:1, _id:0 })
-// }
 
-
-module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferReservedData}
+module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferById}

@@ -158,6 +158,14 @@ module.exports = (sequelize) => {
         media: {
             type: DataTypes.ARRAY(DataTypes.JSON)
         },
+        isExpiredWhale: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isExpiredPartner: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
     }, {
         indexes: [
             {unique: true, fields: ['slug']},

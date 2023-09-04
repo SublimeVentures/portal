@@ -29,7 +29,7 @@ const config = createConfig({
         new WalletConnectConnector({
             chains: rightChains,
             options: {
-                projectId: 'fd985de17a4eed15096ed191f885cbcb',
+                projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
             },
         }),
         new CoinbaseWalletConnector({

@@ -1,6 +1,6 @@
 const moment = require('moment');
 const {ACLs} = require("@/lib/authHelpers");
-const {PremiumItemsENUM, PremiumItemsParamENUM} = require("@/lib/premiumHelper");
+const {PremiumItemsParamENUM} = require("@/lib/premiumHelper");
 
 const PhaseId = {
     Vote: -1,
@@ -129,7 +129,7 @@ function investWithNoLimits(offer, allocationPoolLeft, allocationUserCurrent, up
     if (offer.alloMax && offer.alloMax < allocationPoolLeft) { //there is hard cap per user
         const allocationUserMaxAfterIncreasedUpgrade = offer.alloMax + (!!upgradesUse.increasedUsed ? upgradesUse.increasedUsed.amount * PremiumItemsParamENUM.Increased : 0)
         const allocationUserLeft = allocationUserMaxAfterIncreasedUpgrade - allocationUserCurrent
-        const allocationUserLeftFinal = allocationPoolLeft < allocationUserLeft ? allocationPoolLeft : allocationUserLeft
+        const allocationUserLeftFinal = allocationPoolLeft < allocationUserLeft ? allocationPoolLeft / (100 - offer.tax) * 100 : allocationUserLeft
         return {
             allocationUserMax: allocationUserMaxAfterIncreasedUpgrade,
             allocationUserLeft: allocationUserLeftFinal,
@@ -150,7 +150,7 @@ function investWithFCFS(offer, allocationPoolLeft, allocationUserCurrent, upgrad
         const allocationUserMax = userMulti < offer.alloMax ? userMulti : offer.alloMax;
         const allocationUserMaxAfterIncreasedUpgrade = allocationUserMax + (!!upgradesUse.increasedUsed ? upgradesUse.increasedUsed.amount * PremiumItemsParamENUM.Increased : 0)
         const allocationUserLeft = allocationUserMaxAfterIncreasedUpgrade - allocationUserCurrent
-        const allocationUserLeftFinal = allocationPoolLeft < allocationUserLeft ? allocationPoolLeft : allocationUserLeft
+        const allocationUserLeftFinal = allocationPoolLeft < allocationUserLeft ? allocationPoolLeft / (100 - offer.tax) * 100 : allocationUserLeft
 
         return {
             allocationUserMax: allocationUserMaxAfterIncreasedUpgrade,
@@ -161,13 +161,9 @@ function investWithFCFS(offer, allocationPoolLeft, allocationUserCurrent, upgrad
         const allocationUserMax = offer.alloMin * multi
         const allocationUserMaxAfterIncreasedUpgrade = allocationUserMax + (!!upgradesUse.increasedUsed ? upgradesUse.increasedUsed.amount * PremiumItemsParamENUM.Increased : 0)
         const allocationUserLeft = allocationUserMaxAfterIncreasedUpgrade - allocationUserCurrent
-        const allocationUserLeftFinal = allocationPoolLeft < allocationUserLeft ? allocationPoolLeft : allocationUserLeft
+        const allocationUserLeftFinal = allocationPoolLeft < allocationUserLeft ? allocationPoolLeft / (100 - offer.tax) * 100 : allocationUserLeft
 
-        console.log("jestem dwa ",{
-            allocationUserMax: allocationUserMaxAfterIncreasedUpgrade,
-            allocationUserLeft: allocationUserLeftFinal,
-            canInvestMore: allocationUserLeftFinal > 0,
-    })
+
         return {
             allocationUserMax: allocationUserMaxAfterIncreasedUpgrade,
             allocationUserLeft: allocationUserLeftFinal,
@@ -192,10 +188,11 @@ function buildUserAllocations(account, phaseCurrent, upgradesUse, userAllocation
 }
 
 function processAllocations(account, phaseCurrent, upgradesUse, userAllocation, offer, offerAllocationState) {
-    console.log("account", account, userAllocation)
-
+    userAllocation = userAllocation / (100 - offer.tax) * 100
     const allocationLeftInPool = offer.alloTotal - offerAllocationState?.alloFilled - offerAllocationState?.alloRes
     const allocationUser = buildUserAllocations(account, phaseCurrent, upgradesUse, userAllocation, offer, allocationLeftInPool)
+    const divisibleBy = userAllocation > 0 ? 50 : 100
+    allocationUser.allocationUserLeft = Math.floor(allocationUser.allocationUserLeft / divisibleBy) * divisibleBy;
     return {
         ...allocationUser,
         allocationUserCurrent: userAllocation,

@@ -1,24 +1,18 @@
 const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 const db = require("../services/db/db.init");
-const {Op, Sequelize, QueryTypes} = require("sequelize");
-const { MYSTERY_TYPES} = require("../../src/lib/premiumHelper");
-const {PremiumItemsENUM} = require("../../src/lib/premiumHelper");
+const {Op, QueryTypes} = require("sequelize");
+const {PremiumItemsENUM, PremiumItemsParamENUM} = require("../../src/lib/premiumHelper");
+const {bookAllocationGuaranteed} = require("./invest.query");
+const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 
-const UPGRADE_ERRORS = {
-    NoUpgrade: "Upgrade not detected",
-    Deduction:"Deduction error",
-    Unexpected: "Unexpected error",
-    GuaranteedUsed: "This upgrade can be used only once!",
-    ErrorSavingUse: "Couldn't save Upgrade",
 
-}
 
-async function saveUpgrade(transaction, upgradeId, offerId, owner){
+async function saveUpgrade(transaction, upgradeId, offerId, owner, alloMax){
 
     const query = `
-        INSERT INTO public."upgrade" ("owner", "amount", "createdAt", "updatedAt", "storeId", "offerId")
-        VALUES ('${owner}', 1, now(), now(), ${upgradeId}, ${offerId}) on conflict("owner", "storeId", "offerId") do
+        INSERT INTO public."upgrade" ("owner", "amount", "createdAt", "updatedAt", "storeId", "offerId", "alloMax")
+        VALUES ('${owner}', 1, now(), now(), ${upgradeId}, ${offerId}, ${alloMax ? alloMax : 0}) on conflict("owner", "storeId", "offerId") do
         update set "amount"=(SELECT amount from public."upgrade" WHERE "owner" = EXCLUDED.owner AND "storeId" = EXCLUDED."storeId" AND "offerId" = EXCLUDED."offerId") + EXCLUDED.amount, "updatedAt"=now();
     `
 
@@ -33,10 +27,13 @@ async function saveUpgrade(transaction, upgradeId, offerId, owner){
             error: UPGRADE_ERRORS.ErrorSavingUse
         }
     }
+
 }
 
-async function processUseUpgrade(owner, offerId, upgradeId) {
-    let transaction;
+
+async function processUseUpgrade(owner, offerId, upgradeId, userTokenId, userACL, userMulti) {
+
+    let transaction, alloMax;
     try {
         transaction = await db.transaction();
         const isUserOwnsUpgrade = await models.storeUser.findOne({
@@ -59,33 +56,37 @@ async function processUseUpgrade(owner, offerId, upgradeId) {
         }
 
         if(upgradeId === PremiumItemsENUM.Guaranteed) {
-            const isGuaranteedUsed = await models.upgrade.findOne({
+            const upgrades = await models.upgrade.findAll({
                 where: {
                     owner,
-                    storeId: upgradeId,
-                    offerId: offerId,
-                    amount: {
-                        [Op.gt]: 0
-                    }
+                    offerId: offerId
                 },
                 raw: true
             }, { transaction })
 
+            const upgradeGuaranteed = upgrades.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)?.amount
+            const upgradeIncreased = upgrades.find(el=>el.storeId === PremiumItemsENUM.Increased)?.amount
 
-            if(isGuaranteedUsed) {
+            if(upgradeGuaranteed) {
                 await transaction.rollback();
                 return {
                     ok: false,
                     error: UPGRADE_ERRORS.GuaranteedUsed
                 }
             }
+
+            const bookAllocation = await bookAllocationGuaranteed(transaction, offerId, owner, userTokenId, userACL, userMulti, upgradeIncreased)
+            if(!bookAllocation.ok) {
+                await transaction.rollback();
+                return bookAllocation
+            }
+            alloMax = bookAllocation.alloMax
         }
 
-        const save = await saveUpgrade(transaction, upgradeId, offerId, owner)
+        const save = await saveUpgrade(transaction, upgradeId, offerId, owner, alloMax)
         if(!save.ok) {
             return save
         }
-
 
         const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: upgradeId }, raw:true }, { transaction })
         if(deduct[0][1] !== 1) {
@@ -118,7 +119,7 @@ async function processUseUpgrade(owner, offerId, upgradeId) {
 
 async function fetchUpgrade (owner, offerId) {
     return await models.upgrade.findAll({
-        attributes: ['amount', 'storeId'],
+        attributes: ['amount', 'storeId', 'alloUsed', 'alloMax', 'isExpired'],
         where: {
             owner,
             offerId: offerId,

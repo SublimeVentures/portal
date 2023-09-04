@@ -28,20 +28,31 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-
-
 ## ToDo
+- enable button for guaranteed even if allocation is processing
+- test expiry
+- test unlimited
+
+- remove partner delay - only manula - if not filled = dont show
 - test usdt abi on diff blockchains
-- upgrade unmatch after filling everything
-- sprawdź czy jest widać booking size w requescie http
 - fix panding stae/css class to show closed after isSettled
 - hide counter if isSettled
 - ensure access show only right scope
-- upgrades phases
 - tally https://tally.so/r/mK5Pvk
+- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0 
 
+- zero alloGuaranteed after 24h
 - add SS integration
 - update supra details
+==========
+- found bug that allowed small overallocation - fixed
+- updated investment phases
+- optimized currency input
+- upgrades notion
+- allocation size rewritten
+- increased security 
+- allocation watcher
+========
 
 - in app vote
 - upgrades phases

@@ -8,6 +8,7 @@ const PremiumItemsParamENUM = {
     Guaranteed: 5000,
     Increased: 2000,
 }
+
 const MYSTERY_TYPES = {
     Allocation: 'allocation',
     Upgrade: 'upgrade',

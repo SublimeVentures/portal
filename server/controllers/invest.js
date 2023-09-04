@@ -1,10 +1,23 @@
 const moment = require('moment');
-const {getOfferReservedData} = require("../queries/offers.query");
+const {getOfferById} = require("../queries/offers.query");
 const {getEnv} = require("../services/db");
 const {bookAllocation, expireAllocation} = require("../queries/invest.query");
 const {createHash} = require("./helpers");
+const {ACLs} = require("../../src/lib/authHelpers");
+const {fetchUpgrade} = require("../queries/upgrade.query");
+const {PremiumItemsENUM, PremiumItemsParamENUM} = require("../../src/lib/premiumHelper");
 
 let CACHE = {}
+
+const BookingErrorsENUM = {
+    VerificationFailed: "VERIFICATION_FAILED",
+    BadCurrency: "BAD_CURRENCY",
+    Overallocated: "OVERALLOCATED",
+    IsPaused: "IS_PAUSED",
+    NotOpen: "NOT_OPEN",
+    AllocationTooHigh: "ALLOCATION_TOO_HIGH",
+    Open: "OPEN"
+}
 
 async function reserveExpire(user, req) {
     const {address} = user
@@ -20,34 +33,60 @@ async function reserveExpire(user, req) {
 }
 
 async function reserveSpot(user, req) {
-    const {ACL, address, id} = user
-    const offerId = Number(req.query.id)
-    if (!CACHE[offerId]?.expire || CACHE[offerId].expire < moment().unix()) {
-        const allocation = await getOfferReservedData(offerId)
-        CACHE[offerId] = {...allocation, ...{expire: moment().unix() + 3 * 60}}
+    const {ACL, address, id, multi} = user
+    let _offerId, _amount, _currency, _chain;
+
+    try {
+        _offerId = Number(req.query.id)
+        _amount = Number(req.query.amount)
+        _currency = req.query.currency
+        _chain = req.query.chain
+    } catch (e) {
+        return {
+            ok: false,
+            code: BookingErrorsENUM.VerificationFailed, //todo: implement on frontend
+        }
     }
 
-    const isSeparatePool = CACHE[offerId].alloTotalPartner > 0 && ACL !== 0;
-    const TOTAL_ALLOCATION = isSeparatePool ? CACHE[offerId].alloTotalPartner : CACHE[offerId].alloTotal;
-    const AMOUNT = Number(req.query.amount) * (100 - CACHE[offerId].tax) / 100
-    const CURRENCY = getEnv().currencies[req.query.chain][req.query.currency]
-    const checkIsReadyForStart = isReadyForInvestment(ACL, isSeparatePool, CACHE[offerId])
+    //cache allocation data
+    if (!CACHE[_offerId]?.expire || CACHE[_offerId].expire < moment().unix()) {
+        const allocation = await getOfferById(_offerId)
+        CACHE[_offerId] = {...allocation, ...{expire: moment().unix() + 3 * 60}}
+    }
+
+    const isSeparatePool = CACHE[_offerId].alloTotalPartner > 0 && ACL !== ACLs.Whale;
+    const currency = getEnv().currencies[_chain][_currency]
+
+    //test if offer's ready
+    const checkIsReadyForStart = checkInvestmentConditions(ACL, isSeparatePool, CACHE[_offerId], currency)
     if(!checkIsReadyForStart.ok) return checkIsReadyForStart;
-
-    if (!CURRENCY || !CURRENCY.isSettlement) return {
+    if (!currency || !currency.isSettlement) return {
         ok: false,
-        code: "BAD_CURRENCY"
+        code: BookingErrorsENUM.BadCurrency
     }
 
+    //generate hash
     const now = moment().unix()
     const expire = now + 15 * 60 //15min validity
     const hash = createHash(`${address}` + `${now}`)
-    const isBooked = await bookAllocation(offerId, isSeparatePool, TOTAL_ALLOCATION, address, hash, AMOUNT, ACL, id)
+
+    //check allocation size
+    const upgrades = await fetchUpgrade(address, _offerId)
+    const guaranteed = upgrades.find(el => el.storeId === PremiumItemsENUM.Guaranteed)
+    const increased = upgrades.find(el => el.storeId === PremiumItemsENUM.Increased)
+
+    const totalAllocation = isSeparatePool ? CACHE[_offerId].alloTotalPartner : CACHE[_offerId].alloTotal;
+    const amount = _amount * (100 - CACHE[_offerId].tax) / 100
+
+    const checkAllocationSize = checkAllocationConditions(_amount, ACL, multi, guaranteed, increased, CACHE[_offerId], isSeparatePool)
+    if(!checkAllocationSize.ok) return checkAllocationSize;
+
+    const isBooked = await bookAllocation(_offerId, isSeparatePool, totalAllocation, address, hash, amount, ACL, id, guaranteed)
 
     if (!isBooked) {
         return {
             ok: false,
-            code: "OVERALLOCATED",
+            code: BookingErrorsENUM.Overallocated,
         }
     }
 
@@ -58,10 +97,10 @@ async function reserveSpot(user, req) {
     }
 }
 
-function isReadyForInvestment(ACL, isSeparatePool, offer) {
+function checkInvestmentConditions(ACL, isSeparatePool, offer) {
     if(offer.isPaused) return {
         ok: false,
-        code: "IS_PAUSED"
+        code: BookingErrorsENUM.IsPaused
     }
 
     const now = moment().unix()
@@ -69,28 +108,44 @@ function isReadyForInvestment(ACL, isSeparatePool, offer) {
         if(ACL === 0) {
             if(now < offer.d_open) return {
                 ok: false,
-                code: "NOT_OPEN"
+                code: BookingErrorsENUM.NotOpen
             }
         } else {
             if(now < offer.d_openPartner) return {
                 ok: false,
-                code: "NOT_OPEN"
+                code: BookingErrorsENUM.NotOpen
             }
         }
     } else {
         if(now < offer.d_open) return {
             ok: false,
-            code: "NOT_OPEN"
+            code: BookingErrorsENUM.NotOpen
         }
     }
 
     return {
         ok: true,
-        code: "OPEN"
+        code: BookingErrorsENUM.Open
     }
 }
 
+function checkAllocationConditions(amountRequested, acl, multi, guaranteed, increased, offer) {
+    let amountMax
+    if(acl === ACLs.Whale) {
+        amountMax = offer.alloTotal
+    } else {
+        amountMax = multi * offer.alloMin + ((increased ? increased.amount : 0) * PremiumItemsParamENUM.Increased)
+    }
 
+    if(amountRequested <= amountMax) {
+        return {
+            ok: true
+        }
+    } else return {
+        ok: false,
+        code: BookingErrorsENUM.AllocationTooHigh
+    }
+}
 
 
 module.exports = {reserveSpot, reserveExpire}

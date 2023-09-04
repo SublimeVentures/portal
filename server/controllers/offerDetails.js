@@ -116,12 +116,12 @@ async function getOfferAllocation(user, req) {
     if(allocation.offer.alloTotalPartner > 0 && ACL !== 0) {
         return {
             alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
-            alloRes: allocation.alloResPartner
+            alloRes: allocation.alloResPartner + allocation.alloGuaranteed
         }
     } else {
         return {
             alloFilled: allocation.alloFilled + allocation.alloSide,
-            alloRes: allocation.alloRes
+            alloRes: allocation.alloRes + allocation.alloGuaranteed
         }
     }
 }

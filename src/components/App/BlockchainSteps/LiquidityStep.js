@@ -20,7 +20,7 @@ export default function LiquidityStep({stepProps}) {
         }
     )
 
-    console.log("currentBalance",currentBalance)
+    // console.log("currentBalance",currentBalance)
 
     const power = BigNumber(10).pow(currencyPrecision)
     const currentBalanceBN = BigNumber(currentBalance)

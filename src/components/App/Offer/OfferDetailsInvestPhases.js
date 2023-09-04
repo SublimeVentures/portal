@@ -257,10 +257,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setAllocationData(allocations)
     }, [allocation?.alloFilled, allocation?.alloRes, upgradesUse?.increasedUsed?.amount, userAllocation])
 
-
-
     useEffect(() => {
-        console.log("investmentAmount",investmentAmount)
         if (allocationData.allocationUserLeft === 0) {
             setIsAllocationOk(false)
             return setIsError({state: true, msg: `Maximum allocation filled`})

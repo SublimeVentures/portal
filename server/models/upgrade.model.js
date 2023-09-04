@@ -16,6 +16,21 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
+        },
+        alloMax: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
+        alloUsed: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
+        isExpired: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
         }
     }, {
         indexes: [

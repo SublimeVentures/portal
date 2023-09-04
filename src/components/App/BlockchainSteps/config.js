@@ -79,7 +79,7 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
     const _amount = BigNumber(amount).multipliedBy(power)
     switch (ACL) {
         case ACLs.Whale: {
-            console.log("invest function - isFromStake", isFromStake)
+            // console.log("invest function - isFromStake", isFromStake)
             if (isFromStake) {
                 return {
                     method: 'pledge',

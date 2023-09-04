@@ -74,8 +74,6 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
-
-
     const feedPhases = () => {
         if(!offerData?.offer) return
         const {isClosed, phaseCurrent, phaseNext} = phases(ACL, offerData.offer)

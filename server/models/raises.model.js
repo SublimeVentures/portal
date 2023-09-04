@@ -17,6 +17,11 @@ module.exports = (sequelize) => {
             defaultValue: 0,
             allowNull: false,
         },
+        alloGuaranteed: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
         alloResPartner: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
