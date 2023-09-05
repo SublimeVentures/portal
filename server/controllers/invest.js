@@ -133,7 +133,7 @@ function checkAllocationConditions(amountRequested, acl, multi, guaranteed, incr
     let amountMax
     if(
         acl === ACLs.Whale ||
-        offer.d_openPartner + 86400 < moment.utc()
+        offer.d_openPartner && offer.d_openPartner + 86400 < moment.utc()
     ) {
         amountMax = offer.alloTotal
     } else {
