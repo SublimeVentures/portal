@@ -29,10 +29,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo5
+- https://discord.com/channels/@me/997001334328918017/1148679180280660009
+- elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
+- wallet connect 2 with ledger - check
+- odbierz $450 0x22a0ee6a256875a6a0235cc23a293bdfe85ab035cd26acd35b463beebbc808f9
 - tally https://tally.so/r/mK5Pvk
 - test usdt abi on diff blockchains
 - add SS integration
-
+- https://discord.com/channels/884204406189490176/996994675070205972/1148621347837186048
 
 - fix panding stae/css class to show closed after isSettled
 - hide counter if isSettled
