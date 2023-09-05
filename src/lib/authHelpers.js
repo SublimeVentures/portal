@@ -3,11 +3,52 @@ const {jwtVerify, SignJWT} = require("jose")
 
 const ACLs = {
     Whale: 0,
-    NeoTokyo: 1,
-    Partner: 2,
-    PartnerInjected: 3,
-    Delegated: 4,
+    Member: 1,
+    NeoTokyo: 2,
+    Partner: 3,
+    PartnerInjected: 4,
+    Delegated: 5,
+    Admin: 6
 }
+
+const OfferAccess = {
+    Whales: 0, //only for whales
+    BasedVC: 1, //for whales and basedVC exclusive
+    NeoTokyo: 3,
+    Everyone: 4,
+    EveryoneWithoutNT: 5,
+    OnlyDev: 6
+}
+
+const OfferAccessACL = {
+    [ACLs.Admin]: {
+        [OfferAccess.Whales]: true,
+        [OfferAccess.BasedVC]: true,
+        [OfferAccess.Everyone]: true,
+        [OfferAccess.EveryoneWithoutNT]: true,
+        [OfferAccess.OnlyDev]: true,
+    },
+    [ACLs.Whale]: {
+        [OfferAccess.Whales]: true,
+        [OfferAccess.BasedVC]: true,
+        [OfferAccess.Everyone]: true,
+        [OfferAccess.EveryoneWithoutNT]: true,
+    },
+    [ACLs.Member]: {
+        [OfferAccess.BasedVC]: true,
+        [OfferAccess.Everyone]: true,
+        [OfferAccess.EveryoneWithoutNT]: true,
+    },
+    [ACLs.NeoTokyo]: {
+        [OfferAccess.NeoTokyo]: true,
+        [OfferAccess.Everyone]: true,
+    },
+    [ACLs.Partner]: {
+        [OfferAccess.Everyone]: true,
+        [OfferAccess.EveryoneWithoutNT]: true,
+    }
+}
+
 
 const domain = new URL(process.env.DOMAIN)
 const userIdentification = 'address'
@@ -99,6 +140,8 @@ const verifyID = async (req, isRefresh) => {
 
 module.exports = {
     ACLs,
+    OfferAccess,
+    OfferAccessACL,
     domain,
     userIdentification,
     JWT_REFRESH_SECRET_encode,

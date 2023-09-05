@@ -101,8 +101,8 @@ function fillNeoTokyoData(offer, template) {
     if (offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
         return false
     }
-    template.d_open = offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay)
-    template.d_close = offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
+    template.d_open = offer.d_openPartner
+    template.d_close = offer.d_closePartner
     template.alloTotal = offer.alloTotalPartner ? offer.alloTotalPartner : offer.alloTotal;
     template.alloRequired = offer?.alloRequiredPartner >= 0 ? offer.alloRequiredPartner : offer.alloTotal;
     template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : 0;

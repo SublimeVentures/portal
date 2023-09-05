@@ -29,20 +29,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo
-- enable button for guaranteed even if allocation is processing
-- test expiry
 - test unlimited
+- test expiry
+- enable button for guaranteed even if allocation is processing
+- tally https://tally.so/r/mK5Pvk
+- add SS integration
 
 - remove partner delay - only manula - if not filled = dont show
 - test usdt abi on diff blockchains
 - fix panding stae/css class to show closed after isSettled
 - hide counter if isSettled
 - ensure access show only right scope
-- tally https://tally.so/r/mK5Pvk
-- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0 
-
+- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
 - zero alloGuaranteed after 24h
-- add SS integration
 - update supra details
 ==========
 - found bug that allowed small overallocation - fixed
@@ -52,6 +51,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - allocation size rewritten
 - increased security 
 - allocation watcher
+- support - 3h
+- wallet connect 
+- - partnerDelay - 345600
+- - offer exclusive to me
 ========
 
 - in app vote

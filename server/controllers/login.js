@@ -9,7 +9,8 @@ const {
     userIdentification
 } = require("../../src/lib/authHelpers");
 const {authTokenName} = require("../../src/lib/authHelpers");
-const {checkUser, checkStaking} = require("./loginProcess");
+const {checkUser} = require("./loginProcess");
+const {checkStaking} = require("./loginNeoTokyo");
 
 let REFRESH_TOKENS = {}
 

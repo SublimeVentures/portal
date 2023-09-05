@@ -1,14 +1,9 @@
 const moment = require('moment');
 const {getEnv} = require("../services/db");
 const {getOfferList} = require("../queries/offers.query");
-const { ACLs} = require("../../src/lib/authHelpers");
+const {OfferAccess, ACLs, OfferAccessACL} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
-const OfferAccess = {
-    Whales: 0,
-    Everyone: 1,
-    NeoTokyo: 2,
-}
 
 async function getParamOfferList(user) {
     const {ACL, address} = user
@@ -20,21 +15,30 @@ async function getParamOfferList(user) {
         offers: []
     }
 
+
     switch (ACL) {
         case ACLs.Whale: {
-            response.offers = getOfferListWhale(offers)
+            response.offers = getOfferListWhale(offers, ACL)
+            break;
+        }
+        case ACLs.Member: {
+            response.offers = getOfferListMember(offers, ACL)
             break;
         }
         case ACLs.NeoTokyo: {
-            response.offers = offerListNeoTokyo(offers);
+            response.offers = offerListNeoTokyo(offers, ACL);
             break;
         }
         case ACLs.PartnerInjected: {
             response.offers = await offerListInjectedPartner(offers, address);
             break;
         }
+        case ACLs.Admin: {
+            response.offers = offerListAdmin(offers, ACL);
+            break;
+        }
         default: {
-            response.offers =  offerListPartner(offers)
+            response.offers =  offerListPartner(offers, ACL)
             break;
         }
     }
@@ -42,30 +46,21 @@ async function getParamOfferList(user) {
     return response
 }
 
-function getOfferListWhale(offers) {
+function getOfferListWhale(offers, acl) {
     let offerList = []
+
     offers.forEach(el => {
-        offerList.push(fillWhaleData(el))
+        if(OfferAccessACL[acl][el.access]) {
+            offerList.push(fillWhaleData(el))
+        }
     })
     return offerList
 }
 
-async function offerListInjectedPartner(offers, address) {
-    const user = await getInjectedUserAccess(address)
-    if (!user || user.access.length===0) return false
-    let allowedOffers = []
-    for (let i = 0; i < user.access.length; i++) {
-        const approved = offers.find(el => el.id === user.access[i])
-        if (approved) allowedOffers.push(approved)
-    }
-
-    return offerListPartner(allowedOffers)
-}
-
-function offerListPartner(data) {
+function getOfferListMember(offers, acl) {
     let offerList = []
-    data.forEach(el => {
-        if(el.access !== OfferAccess.NeoTokyo) {
+    offers.forEach(el => {
+        if(OfferAccessACL[acl][el.access]) {
             if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
             else {
                 if (el.accessPartnerDate < moment.utc()) {
@@ -77,18 +72,74 @@ function offerListPartner(data) {
     return offerList
 }
 
-function offerListNeoTokyo(data) {
+function offerListNeoTokyo(offers, acl) {
     let offerList = []
-    data.forEach(el => {
-        if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
-        else {
-            if (el.accessPartnerDate < moment.utc()) {
-                offerList.push(fillPartnerData(el))
+    offers.forEach(el => {
+        if(OfferAccessACL[acl][el.access]) {
+            if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
+            else {
+                if (el.accessPartnerDate < moment.utc()) {
+                    offerList.push(fillPartnerData(el))
+                }
             }
         }
     })
     return offerList
 }
+
+
+
+
+async function offerListInjectedPartner(offers, address) {
+    const user = await getInjectedUserAccess(address)
+    if (!user || user.access.length===0) return false
+    let allowedOffers = []
+    for (let i = 0; i < user.access.length; i++) {
+        const approved = offers.find(el => el.id === user.access[i])
+        if (approved) allowedOffers.push(approved)
+    }
+
+    return offerListInjectedProcess(allowedOffers)
+}
+
+function offerListInjectedProcess(data) {
+    let offerList = []
+    data.forEach(el => {
+            if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
+            else {
+                if (el.accessPartnerDate < moment.utc()) {
+                    offerList.push(fillPartnerData(el))
+                }
+            }
+    })
+    return offerList
+}
+
+function offerListPartner(data, acl) {
+    let offerList = []
+    data.forEach(el => {
+        if(OfferAccessACL[acl][el.access]) {
+            if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
+            else {
+                if (el.accessPartnerDate < moment.utc()) {
+                    offerList.push(fillPartnerData(el))
+                }
+            }
+        }
+    })
+    return offerList
+}
+
+function offerListAdmin(data, acl) {
+    let offerList = []
+    data.forEach(el => {
+        if(OfferAccessACL[acl][el.access]) {
+            offerList.push(fillPartnerData(el))
+        }
+    })
+    return offerList
+}
+
 
 
 function fillPartnerData(offer) {
@@ -99,9 +150,8 @@ function fillPartnerData(offer) {
         slug: offer.slug,
         ticker: offer.ticker,
         accelerator: offer.isCitCapX,
-        d_open: offer.d_openPartner ? offer.d_openPartner : offer.d_open + Number(getEnv().partnerDelay),
-        d_close: offer.d_closePartner ? offer.d_closePartner : offer.d_close + Number(getEnv().partnerDelay)
-
+        d_open: offer.d_openPartner,
+        d_close: offer.d_closePartner
     }
 }
 
