@@ -27,6 +27,7 @@ const OfferAccessACL = {
         [OfferAccess.Everyone]: true,
         [OfferAccess.EveryoneWithoutNT]: true,
         [OfferAccess.OnlyDev]: true,
+        [OfferAccess.NeoTokyo]: true,
     },
     [ACLs.Whale]: {
         [OfferAccess.Whales]: true,

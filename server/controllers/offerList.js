@@ -15,7 +15,6 @@ async function getParamOfferList(user) {
         offers: []
     }
 
-
     switch (ACL) {
         case ACLs.Whale: {
             response.offers = getOfferListWhale(offers, ACL)

@@ -2,9 +2,8 @@ const moment = require("moment");
 const {getOfferDetails} = require("../queries/offers.query");
 const {getEnv} = require("../services/db/");
 const {getOfferRaise} = require("../queries/invest.query");
-const {ACLs} = require("../../src/lib/authHelpers");
+const {ACLs, OfferAccessACL} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
-const {OfferAccess} = require("./offerList");
 
 
 async function getParamOfferDetails(user, req) {
@@ -51,19 +50,38 @@ async function getParamOfferDetails(user, req) {
 
     switch (ACL) {
         case ACLs.Whale: {
-            response.offer = getOfferDetailsWhale(offer, template)
+            if(OfferAccessACL[ACL][offer.access]) {
+                response.offer = getOfferDetailsWhale(offer, template)
+            }
             break;
         }
+        case ACLs.Member: {
+            if(OfferAccessACL[ACL][offer.access]) {
+                response.offer = getOfferDetailsPartner(offer, template)
+            }
+            break;
+        }
+        case ACLs.NeoTokyo: {
+            if(OfferAccessACL[ACL][offer.access]) {
+                response.offer = getOfferDetailsPartner(offer, template)
+            }
+            break;
+        }
+
         case ACLs.PartnerInjected: {
             response.offer = await fillInjectedPartnerData(offer, template, address)
             break;
         }
-        case ACLs.NeoTokyo: {
-            response.offer = fillNeoTokyoData(offer, template)
+        case ACLs.Admin: {
+            if(OfferAccessACL[ACL][offer.access]) {
+                response.offer = getOfferDetailsWhale(offer, template)
+            }
             break;
         }
         default: {
-            response.offer =  fillPartnerData(offer, template)
+            if(OfferAccessACL[ACL][offer.access]) {
+                response.offer = getOfferDetailsPartner(offer, template)
+            }
             break;
         }
     }
@@ -82,22 +100,7 @@ function getOfferDetailsWhale(offer, template) {
     return template;
 }
 
-async function fillInjectedPartnerData(offer, template, address) {
-    const user = await getInjectedUserAccess(address)
-    if(!user) return false
-
-    const haveAccess = user.access.find(el => el === offer.id)
-    if(!haveAccess) return false
-
-    return fillPartnerData(offer, template);
-}
-
-function fillPartnerData(offer, template) {
-    if(offer.access === OfferAccess.NeoTokyo) return false;
-    return fillNeoTokyoData(offer, template);
-}
-
-function fillNeoTokyoData(offer, template) {
+function getOfferDetailsPartner(offer, template) {
     if (offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
         return false
     }
@@ -108,6 +111,17 @@ function fillNeoTokyoData(offer, template) {
     template.alloMax = offer.alloMaxPartner ? offer.alloMaxPartner : 0;
     return template;
 }
+
+async function fillInjectedPartnerData(offer, template, address) {
+    const user = await getInjectedUserAccess(address)
+    if(!user) return false
+
+    const haveAccess = user.access.find(el => el === offer.id)
+    if(!haveAccess) return false
+
+    return getOfferDetailsPartner(offer, template);
+}
+
 
 async function getOfferAllocation(user, req) {
     const {ACL} = user
