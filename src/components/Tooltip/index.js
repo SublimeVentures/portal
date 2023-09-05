@@ -3,6 +3,7 @@ import {useState} from "react";
 
 export const TooltipType = {
     Success: 'app-success',
+    Primary: 'app-gold',
     Error: 'app-error',
     Accent: 'app-accent2',
 }

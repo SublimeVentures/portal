@@ -71,7 +71,7 @@ async function reserveSpot(user, req) {
     const hash = createHash(`${address}` + `${now}`)
 
     //check allocation size
-    const upgrades = await fetchUpgrade(address, _offerId)
+    const upgrades = await fetchUpgrade(address, _offerId) //todo: possible race condition
     const guaranteed = upgrades.find(el => el.storeId === PremiumItemsENUM.Guaranteed)
     const increased = upgrades.find(el => el.storeId === PremiumItemsENUM.Increased)
 
@@ -131,7 +131,10 @@ function checkInvestmentConditions(ACL, isSeparatePool, offer) {
 
 function checkAllocationConditions(amountRequested, acl, multi, guaranteed, increased, offer) {
     let amountMax
-    if(acl === ACLs.Whale) {
+    if(
+        acl === ACLs.Whale ||
+        offer.d_openPartner && offer.d_openPartner + 86400 < moment.utc()
+    ) {
         amountMax = offer.alloTotal
     } else {
         amountMax = multi * offer.alloMin + ((increased ? increased.amount : 0) * PremiumItemsParamENUM.Increased)
