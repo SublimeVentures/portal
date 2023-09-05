@@ -145,8 +145,8 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         multi: multi,
         img: nftUsed.image,
         id: Number(nftUsed.id),
-        ACL: ACLs.Admin,
-        // ACL: ACLs.NeoTokyo,//todo:
+        // ACL: ACLs.Admin,
+        ACL: ACLs.NeoTokyo,//todo:
         transcendence: ownTranscendence,
         stakeReq: nftUsed.isStaked ? Number(getEnv().citcapStakeS2) : (nftUsed.isS1 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2)),
         isStaked,
