@@ -96,7 +96,7 @@ function getOfferDetailsWhale(offer, template) {
     template.d_close = offer.d_close;
     template.alloTotal = offer.alloTotal;
     template.alloRequired = offer.alloRequired;
-    template.alloMax = offer.alloMax ? offer.alloMax : offer.alloTotal;
+    template.alloMax = offer.alloMax ? offer.alloMax : 0
     return template;
 }
 

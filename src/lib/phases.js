@@ -138,7 +138,7 @@ function investWithNoLimits(offer, allocationPoolLeft, allocationUserCurrent, up
     } else { //investment without hard cap
         return {
             allocationUserMax: offer.alloTotal,
-            allocationUserLeft: allocationPoolLeft,
+            allocationUserLeft: allocationPoolLeft / (100 - offer.tax) * 100,
             canInvestMore: allocationPoolLeft > 0,
         }
     }
@@ -193,8 +193,10 @@ function processAllocations(account, phaseCurrent, upgradesUse, userAllocation, 
     const allocationUser = buildUserAllocations(account, phaseCurrent, upgradesUse, userAllocation, offer, allocationLeftInPool)
     const divisibleBy = userAllocation > 0 ? 50 : 100
     allocationUser.allocationUserLeft = Math.floor(allocationUser.allocationUserLeft / divisibleBy) * divisibleBy;
+    allocationUser.allocationUserLeft = allocationUser.allocationUserLeft < 0 ? 0 : allocationUser.allocationUserLeft
     return {
         ...allocationUser,
+        allocationUserGuaranteed: (upgradesUse?.guaranteedUsed && !upgradesUse?.guaranteedUsed?.isExpired ? upgradesUse.guaranteedUsed.alloMax - upgradesUse.guaranteedUsed.alloUsed : 0) / (100 - offer.tax) * 100 ,
         allocationUserCurrent: userAllocation,
         allocationPoolLeft: allocationLeftInPool,
         offerIsProcessing: allocationLeftInPool <= 0 && (offer.alloTotal - offerAllocationState?.alloFilled - 100 > 0),

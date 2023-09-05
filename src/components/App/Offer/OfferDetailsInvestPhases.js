@@ -25,11 +25,13 @@ import {isBased} from "@/lib/utils";
 import {ACLs} from "@/lib/authHelpers";
 import {IconButton} from "@/components/Button/IconButton";
 import IconPremium from "@/assets/svg/Premium.svg";
+import {Tooltiper, TooltipType} from "@/components/Tooltip";
 
-
-const setButtonText = (isPaused, isSettled, offerIsProcessing, offerIsSettled, defaultText, investmentAmount) => {
+const setButtonText = (isPaused, isSettled, offerIsProcessing, offerIsSettled, allocationUserGuaranteed, defaultText, investmentAmount) => {
     if(isPaused) return "Investment Paused"
-    else if (isSettled || offerIsSettled) return "Filled"
+    else if (isSettled) return "Filled"
+    else if (allocationUserGuaranteed>0) return defaultText
+    else if (offerIsSettled) return "Filled"
     else if (offerIsProcessing) return "Processing..."
     else return defaultText
 }
@@ -92,9 +94,26 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
 
+    const investButtonDisabled =
+        isPaused ||
+        phaseCurrent?.controlsDisabled ||
+        ntStakeGuard ||
+        !investmentAmount ||
+        !isAllocationOk ||
+        (
+            allocationData.allocationUserGuaranteed ?
+            (
+                allocationData.offerIsProcessing && allocationData.allocationUserGuaranteed === 0 ||
+                allocationData.offerIsSettled && allocationData.allocationUserGuaranteed === 0
+            )
+            : (
+                allocationData.offerIsProcessing ||
+                allocationData.offerIsSettled
+                )
+        )
 
-    const investButtonDisabled = phaseCurrent?.controlsDisabled || !isAllocationOk || isPaused || allocationData.offerIsProcessing || ntStakeGuard || !investmentAmount
-    const buttonText = setButtonText(isPaused, isSettled, allocationData.offerIsProcessing, allocationData.offerIsSettled, phaseCurrent.button, investmentAmount)
+
+    const buttonText = setButtonText(isPaused, isSettled, allocationData.offerIsProcessing, allocationData.offerIsSettled, allocationData.allocationUserGuaranteed, phaseCurrent.button, investmentAmount)
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
@@ -258,28 +277,58 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }, [allocation?.alloFilled, allocation?.alloRes, upgradesUse?.increasedUsed?.amount, userAllocation])
 
     useEffect(() => {
-        if (allocationData.allocationUserLeft === 0) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Maximum allocation filled`})
-        } else if (investmentAmount > allocationData.allocationUserLeft) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
-        } else if (!allocationData.allocationUserCurrent && investmentAmount < offer.alloMin) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-        } else if(investmentAmount % (allocationData.allocationUserCurrent > 0 ? 50 : 100) > 0) {
-            setIsAllocationOk(false)
-            return setIsError({state: true, msg: `Allocation has to be divisible by $${allocationData.allocationUserCurrent > 0 ? 50 : 100}`})
-        } else {
-            if(!allocationData.allocationUserCurrent) {
+        console.log("allo test", allocationData.allocationUserLeft,  allocationData.allocationUserGuaranteed)
+
+        if(allocationData.allocationUserGuaranteed > 0) {
+
+            if (investmentAmount > allocationData.allocationUserLeft + allocationData.allocationUserGuaranteed) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Maximum investment: $${(allocationData.allocationUserLeft > allocationData.allocationUserGuaranteed ? allocationData.allocationUserLeft : allocationData.allocationUserGuaranteed).toLocaleString()}`})
+            }
+            else if (!allocationData.allocationUserCurrent && investmentAmount < offer.alloMin) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+            }
+            else if(investmentAmount % (allocationData.allocationUserCurrent > 0 ? 50 : 100) > 0 || investmentAmount <= 0) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Allocation has to be divisible by $${allocationData.allocationUserCurrent > 0 ? 50 : 100}`})
+            }
+            else if (investmentAmount <= allocationData.allocationUserLeft + allocationData.allocationUserGuaranteed) {
                 setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-            } else {
+                return setIsError({state: false, msg: `Maximum investment: $${(allocationData.allocationUserLeft > allocationData.allocationUserGuaranteed ? allocationData.allocationUserLeft : allocationData.allocationUserGuaranteed).toLocaleString()}`})
+            }
+            else {
+                setIsAllocationOk(true)
+                return setIsError({state: false, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
+            }
+        } else {
+            if (allocationData.allocationUserLeft === 0) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Maximum allocation filled`})
+            }
+            else if (!allocationData.allocationUserCurrent && investmentAmount < offer.alloMin) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
+            }
+            else if(investmentAmount % (allocationData.allocationUserCurrent > 0 ? 50 : 100) > 0 || investmentAmount <= 0) {
+                setIsAllocationOk(false)
+                return setIsError({state: true, msg: `Allocation has to be divisible by $${allocationData.allocationUserCurrent > 0 ? 50 : 100}`})
+            }
+            else if (investmentAmount > allocationData.allocationUserLeft) {
+                    setIsAllocationOk(false)
+                    return setIsError({state: true, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
+            }
+            else if (investmentAmount <= allocationData.allocationUserLeft) {
+                setIsAllocationOk(true)
+                return setIsError({state: false, msg: `Maximum investment: $${(allocationData.allocationUserLeft).toLocaleString()}`})
+            }
+            else {
                 setIsAllocationOk(true)
                 return setIsError({state: false, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
             }
         }
-    }, [investmentAmount, allocationData.allocationUserCurrent, allocationData.allocationUserLeft, upgradesUse?.increasedUsed?.amount]);
+
+    }, [investmentAmount, allocationData.allocationUserCurrent, allocationData.allocationUserLeft, allocationData.allocationUserGuaranteed, upgradesUse?.increasedUsed?.amount]);
 
 
 
@@ -303,7 +352,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
             <div className={"absolute right-5 top-5"} >
                 <div className={"flex flex-row items-center text-gold"}>
-                    {!!upgradesUse.guaranteedUsed && <div className={"mr-3 font-bold glow select-none"}>GUARANTEED</div>}
+                    {!!upgradesUse.guaranteedUsed && <div className={"mr-3 font-bold glow select-none"}> <Tooltiper wrapper={`GUARANTEED`} text={`$${allocationData.allocationUserGuaranteed} left`} type={TooltipType.Primary}/> </div>}
                     <div onClick={()=> {setUpgradeModal(true)}}>
                         <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
                     </div>

@@ -28,21 +28,17 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-## ToDo
-- test unlimited
-- test expiry
-- enable button for guaranteed even if allocation is processing
+## ToDo5
 - tally https://tally.so/r/mK5Pvk
+- test usdt abi on diff blockchains
 - add SS integration
 
-- remove partner delay - only manula - if not filled = dont show
-- test usdt abi on diff blockchains
+
 - fix panding stae/css class to show closed after isSettled
 - hide counter if isSettled
-- ensure access show only right scope
 - set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
-- zero alloGuaranteed after 24h
 - update supra details
+- 
 ==========
 - found bug that allowed small overallocation - fixed
 - updated investment phases
@@ -55,6 +51,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - wallet connect 
 - - partnerDelay - 345600
 - - offer exclusive to me
+- - enable button for guaranteed even if allocation is processing
+- display max investment when min filled
+- remove partner delay - only manula - if not filled = dont show
+- ensure access show only right scope
+- - zero alloGuaranteed after 24h
+- - display guaranteed left
+- extract neotokyo login to separate module
 ========
 
 - in app vote
