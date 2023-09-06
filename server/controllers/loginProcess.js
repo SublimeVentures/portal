@@ -181,7 +181,7 @@ async function feedNfts(address) {
 }
 
 async function checkUser(address) {
-    console.log("GANG :: checkUser START")
+    // console.log("GANG :: checkUser START")
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type
 

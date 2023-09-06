@@ -29,6 +29,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 
 ## ToDo5
+https://discord.com/channels/@me/1148633370545369169/1148633487289618432
+https://discord.com/channels/@me/1118902405220814928/1148583769058590791
+https://discord.com/channels/@me/1148585495429914685/1148585589076140113
+
+- https://discord.com/channels/@me/1146018065113415721/1148693295527112756
+- https://discord.com/channels/@me/1143172761964007466/1148691348661219358
+- cant invest on bnb
 - https://discord.com/channels/@me/997001334328918017/1148679180280660009
 - elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
 - wallet connect 2 with ledger - check

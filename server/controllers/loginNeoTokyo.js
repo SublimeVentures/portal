@@ -47,6 +47,10 @@ const getFromBlockchain = async (tokenAddress, tokenID, isStaked) => {
         "abi": citcapCitizenAbi,
         "params": {tokenId: tokenID}
     });
+    // console.log("jsonResponse",jsonResponse, jsonResponse.startsWith("https"))
+    if(jsonResponse.startsWith("https")) {
+        return await parseFromUri(jsonResponse, isStaked)
+    }
     const base64Url = jsonResponse.replace(/^data:application\/json;base64,/, '');
     const decodedData = atob(base64Url).replace(': ""',':"');
     let metadata = JSON.parse(decodedData.replace( /(\"description\":\s?\")(.+)?(\",)/g, ''));
@@ -82,20 +86,22 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
         const isStaked = owned_citizens[i].token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
         const uri = owned_citizens[i].token_uri
         const uriTest = uri ? uri.split("/").at(-1) : null
+        // console.log("uri",uri, uriTest, owned_citizens[i])
         if (!uriTest || uri === uriTest) {
             if (owned_citizens[i].metadata) {
                 // console.log("1", owned_citizens[i].token_id)
                 result = parseFromMetaData(owned_citizens[i], isStaked)
             } else {
-                // console.log("2", owned_citizens[i].token_id)
+                // console.log("2", owned_citizens[i].token_id),
                 result = await getFromBlockchain(owned_citizens[i].token_address, owned_citizens[i].token_id, isStaked)
             }
         } else {
-            // console.log("3", owned_citizens[i].token_id)
+            // console.log("3", owned_citizens[i].token_id, uri)
             result = await parseFromUri(uri, isStaked)
         }
 
         if(!result) {
+            // console.log("result", result)
             Sentry.captureException({location: "isNeoTokyo", type: 'process', citizen: owned_citizens[i]});
             return null
         } else {
