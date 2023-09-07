@@ -24,13 +24,13 @@ const showDate = (status, start, ends ) => {
         case OfferStatus.PENDING: {
             return (<>
                 <div>Starts</div>
-                <div>{moment.unix(start).utc().local().format("LLL")}</div>
+                <div>{moment.unix(start).utc().local().format("lll")}</div>
             </>)
         }
         case OfferStatus.IN_PROGRESS: {
             return (<>
                 <div>Ends on</div>
-                <div>{moment.unix(ends).utc().local().format('LLL')}</div>
+                <div>{moment.unix(ends).utc().local().format('lll')}</div>
             </>)
         }
         case OfferStatus.CLOSED: {
@@ -49,6 +49,7 @@ export default function OfferItem({offer, ACL, cdn}) {
     useEffect(() => {
         VanillaTilt.init(imageTilt.current, {scale: 1.02, speed: 1000, max: isBased ? 5 : 0.2});
     }, []);
+
 
     const {phaseCurrent} = phases(ACL, offer)
     const state = phaseCurrent?.phaseName
@@ -82,7 +83,7 @@ export default function OfferItem({offer, ACL, cdn}) {
                         <Image src={`${cdn}/research/${slug}/icon.jpg`}  className={`p-1 ${isBased ? "rounded-lg" : "bg-slides"} `} alt={slug} width={90} height={90}/>
                     </div>
                     <div className={"flex flex-1 items-end text-sm pb-5 "}>
-                        <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color"}>{showDate(status,starts,ends)}</div>
+                        <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color pt-[2px]"}>{showDate(status,starts,ends)}</div>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col text-left ">

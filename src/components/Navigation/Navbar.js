@@ -15,6 +15,7 @@ export default function Navbar() {
     const [isOnTop, setIsOnTop] = useState(false)
     const scrollPosition = useScrollPosition();
     const menu = [
+        {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
         {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
         {name: 'INVESTMENTS', link: 'investments'},
     ]
@@ -57,7 +58,7 @@ export default function Navbar() {
                 ${isBased ? "py-7" : "py-2"} 
                 ${!isOnTop || isMobileOpen ? 'blurredBG' : ''} 
                 flex flex-row items-center w-full  px-10 navShadow `}>
-                <Link href="/" onClick={disableMobile} className={`${isBased ? "absolute" : ""}`}>
+                <Link href="/" onClick={disableMobile} className={`${isBased ? "absolute" : ""} z-20`}>
                     <div className={`flex`}>
                         {isBased ? <Logo  className={"w-17 text-white "}/> : <LogoCitCap className={"w-17"}/>}
                     </div>

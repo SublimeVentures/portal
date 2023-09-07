@@ -48,34 +48,15 @@ https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
 
 
 ## ToDo
-- wallet connect 2 with ledger - check
-- tally https://tally.so/r/mK5Pvk
-- test usdt abi on diff blockchains
-- fix panding stae/css class to show closed after isSettled + shorten date
-- hide counter if isSettled
-- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
-- https://discord.com/channels/@me/997001334328918017/1148679180280660009
-
-- cant invest on bnb
-- elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
 - add SS integration
 - update supra details
 - staking relog
+- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
+- resolution issues: - https://discord.com/channels/@me/915237510928556052/1146846153917333544
 
-- resolution issues:
--- https://discord.com/channels/@me/915237510928556052/1146846153917333544
-
-modal issues
-- https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
+modal issues - https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974 // - cant invest on bnb
 
 ==========
-- found bug that allowed small overallocation - fixed
-- updated investment phases
-- optimized currency input
-- upgrades notion
-- allocation size rewritten
-- increased security 
-- allocation watcher
 - support - 3h
 - wallet connect 
 - - partnerDelay - 345600
@@ -101,6 +82,11 @@ modal issues
 - issues with lack of hash on confirmation - added new provider - alchemy
 - ypgraded ledger connector to wallet connect 2
 - upgraded wallet connect to wallet connect 2 
+- update ABI for USDT as it changed for ETH viem new version
+- navbar logo home redirect fixed
+- - fix panding stae/css class to show closed after isSettled + shorten date
+- elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
+
 =================
 
 - in app vote

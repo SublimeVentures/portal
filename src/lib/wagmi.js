@@ -1,5 +1,5 @@
 import {  createConfig, configureChains } from 'wagmi'
-import { polygon, mainnet, sepolia, polygonMumbai, bscTestnet, bsc } from 'wagmi/chains'
+import { polygon, mainnet, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
@@ -10,11 +10,13 @@ import {isBased} from "@/lib/utils";
 
 // const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 const rightChains = [mainnet, polygon, bsc]
+const walletConnectProjectId = isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2'
+const alchemyKey = 'A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku'
 
 
 const { chains,  publicClient, webSocketPublicClient } = configureChains(
     rightChains,
-    [alchemyProvider({ apiKey: 'A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku' }), publicProvider()],
+    [alchemyProvider({ apiKey: alchemyKey }), publicProvider()],
     { stallTimeout: 5000 },
 )
 
@@ -27,21 +29,21 @@ const config = createConfig({
         new LedgerConnector({
             chains: rightChains,
             options: {
-                projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
+                projectId: walletConnectProjectId,
             },
-            projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
+            projectId: walletConnectProjectId,
         }),
         new WalletConnectConnector({
             chains: rightChains,
             options: {
-                projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
+                projectId: walletConnectProjectId,
             },
         }),
         new CoinbaseWalletConnector({
             chains: rightChains,
             options: {
                 appName: isBased ? "basedVC" : "Citizen Capital",
-                jsonRpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku',
+                jsonRpcUrl: `https://eth-mainnet.g.alchemy.com/v2/${alchemyKey}`,
             },
         })
     ],

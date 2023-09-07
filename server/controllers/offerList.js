@@ -149,6 +149,7 @@ function fillPartnerData(offer) {
         slug: offer.slug,
         ticker: offer.ticker,
         accelerator: offer.isCitCapX,
+        isSettled: offer.isSettled,
         d_open: offer.d_openPartner,
         d_close: offer.d_closePartner
     }

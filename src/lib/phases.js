@@ -54,14 +54,17 @@ function updatePhaseDate(phase, timestamp) {
     return phase
 }
 
-function processPhases(phases) {
+function processPhases(phases, isSettled) {
     const now = moment().unix()
     let activeId
 
-    for (let i = 0; i < phases.length; i++) {
-        if (now > phases[i].startDate) activeId = i
+    if(isSettled) {
+        activeId = phases.length-1
+    } else {
+        for (let i = 0; i < phases.length; i++) {
+            if (now > phases[i].startDate) activeId = i
+        }
     }
-
 
     return {
         phases,
@@ -78,14 +81,14 @@ function phases(ACL, offer) {
             Phases.Pending,
             updatePhaseDate(Phases.Open, offer.d_open),
             updatePhaseDate(Phases.Closed, offer.d_close),
-        ])
+        ], offer.isSettled)
     } else {
         data = processPhases([
             Phases.Pending,
             updatePhaseDate(Phases.FCFS, offer.d_open),
             updatePhaseDate(Phases.Unlimited, offer.d_open + 86400), // start 24h after FCFS
             updatePhaseDate(Phases.Closed, offer.d_close),
-        ])
+        ],  offer.isSettled)
     }
 
     return {
@@ -94,36 +97,6 @@ function phases(ACL, offer) {
         phaseNext: data.isLast ? data.phases[data.activeId] : data.phases[data.activeId + 1],
     }
 }
-
-
-function _parseMaxAllocation(ACL, multi, offer, phaseCurrent, allocationLeft) {
-    if (ACL === ACLs.Whale) {
-        return offer.alloMax < allocationLeft ? offer.alloMax : allocationLeft
-    } else {
-        const partnerAllocation = offer.alloMin * multi
-        const limits = offer.alloMax && offer.alloMax < partnerAllocation ? offer.alloMax : partnerAllocation
-        if (offer.isPhased) {
-            if (phaseCurrent < 2) return limits
-            else return allocationLeft
-        } else {
-            return limits
-        }
-    }
-}
-
-function _checkAllocationLeft(ACL, userAllocation, userMaxAllocation, offer) {
-    if (ACL === ACLs.Whale) return {status: false, amount: 0}
-    if (userAllocation !== undefined) {
-        if (userAllocation >= userMaxAllocation * (100 - offer.tax) / 100) return {status: true, amount: 0}
-        else return {
-            status: false,
-            amount: (userMaxAllocation * (100 - offer.tax) / 100 - userAllocation) / ((100 - offer.tax) / 100)
-        }
-    } else {
-        return {status: false, amount: userAllocation}
-    }
-}
-
 
 function investWithNoLimits(offer, allocationPoolLeft, allocationUserCurrent, upgradesUse) {
     if (offer.alloMax && offer.alloMax < allocationPoolLeft) { //there is hard cap per user

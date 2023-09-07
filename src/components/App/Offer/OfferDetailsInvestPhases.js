@@ -277,8 +277,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }, [allocation?.alloFilled, allocation?.alloRes, upgradesUse?.increasedUsed?.amount, userAllocation])
 
     useEffect(() => {
-        console.log("allo test", allocationData.allocationUserLeft,  allocationData.allocationUserGuaranteed)
-
         if(allocationData.allocationUserGuaranteed > 0) {
 
             if (investmentAmount > allocationData.allocationUserLeft + allocationData.allocationUserGuaranteed) {

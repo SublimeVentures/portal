@@ -44,6 +44,7 @@ const ExternalLinksBased = {
     WIKI: "https://info.basedvc.fund",
     DISCORD: "https://discord.gg/3SaqVVdzUH",
     TWITTER:"https://twitter.com/3vcfund",
+    APPLY:"https://tally.so/r/mK5Pvk",
 }
 
 const ExternalLinksCitCap = {
