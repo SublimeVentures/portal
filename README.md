@@ -28,28 +28,46 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-## ToDo5
-https://discord.com/channels/@me/1148633370545369169/1148633487289618432
-https://discord.com/channels/@me/1118902405220814928/1148583769058590791
-https://discord.com/channels/@me/1148585495429914685/1148585589076140113
+## Support in progress
+https://discord.com/channels/903535408846077952/1136657187981230121/1148980490108407818
 
-- https://discord.com/channels/@me/1146018065113415721/1148693295527112756
-- https://discord.com/channels/@me/1143172761964007466/1148691348661219358
-- cant invest on bnb
-- https://discord.com/channels/@me/997001334328918017/1148679180280660009
-- elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
+
+# tasks
+simulation tokenomics
+check what we want to deliver
+then what are the features of our ecosystem + distribution mechnism
+tokenomics high level
+tokenomics split
+What we raise for
+wyceny https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=88558860
+update diagram
+update tiers
+https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
+https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=1339721247
+https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
+
+
+## ToDo
 - wallet connect 2 with ledger - check
-- odbierz $450 0x22a0ee6a256875a6a0235cc23a293bdfe85ab035cd26acd35b463beebbc808f9
 - tally https://tally.so/r/mK5Pvk
 - test usdt abi on diff blockchains
-- add SS integration
-- https://discord.com/channels/884204406189490176/996994675070205972/1148621347837186048
-
-- fix panding stae/css class to show closed after isSettled
+- fix panding stae/css class to show closed after isSettled + shorten date
 - hide counter if isSettled
 - set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
+- https://discord.com/channels/@me/997001334328918017/1148679180280660009
+
+- cant invest on bnb
+- elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
+- add SS integration
 - update supra details
-- 
+- staking relog
+
+- resolution issues:
+-- https://discord.com/channels/@me/915237510928556052/1146846153917333544
+
+modal issues
+- https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
+
 ==========
 - found bug that allowed small overallocation - fixed
 - updated investment phases
@@ -69,16 +87,20 @@ https://discord.com/channels/@me/1148585495429914685/1148585589076140113
 - - zero alloGuaranteed after 24h
 - - display guaranteed left
 - extract neotokyo login to separate module
-========
+- swimmon - workardound fro another nft fuckup
+- reasignign old Ovverrdies into upgrades - 60min
+- giveaway fo GA for last time users
+- reassignments for MS
+- https://discord.com/channels/903535408846077952/1136657187981230121 - lack of allo
+- https://discord.com/channels/@me/1148286174285266954/1148584582388650086
+- https://discord.com/channels/959614664386424884/1148575116494647446/1148736457469595789
+- https://discord.com/channels/959614664386424884/1148595819231055872/1148642156819533854
+- https://discord.com/channels/959614664386424884/1148682864477601903
+- - https://discord.com/channels/@me/1146018065113415721/1148693295527112756
+- https://discord.com/channels/@me/1143172761964007466/1148691348661219358
+=================
 
 - in app vote
-- upgrades phases
-  https://discord.com/channels/903535408846077952/1136657187981230121/1146763089866391562
-https://discord.com/channels/959614664386424884/1146645323570221106/1146645494458753054
-- https://discord.com/channels/884204406189490176/996185131989606410/1143585372052394107
-https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974
-  https://discord.com/channels/@me/915237510928556052/1146847768921522186
-
 - unlock button for failed set allowance
 - reset modal settings on close
 - sentry error

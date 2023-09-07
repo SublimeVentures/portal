@@ -1,6 +1,7 @@
 import {  createConfig, configureChains } from 'wagmi'
 import { polygon, mainnet, sepolia, polygonMumbai, bscTestnet, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
@@ -13,7 +14,7 @@ const rightChains = [mainnet, polygon, bsc]
 
 const { chains,  publicClient, webSocketPublicClient } = configureChains(
     rightChains,
-    [publicProvider()],
+    [alchemyProvider({ apiKey: 'A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku' }), publicProvider()],
     { stallTimeout: 5000 },
 )
 
@@ -25,6 +26,7 @@ const config = createConfig({
         }),
         new LedgerConnector({
             chains: rightChains,
+            projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
         }),
         new WalletConnectConnector({
             chains: rightChains,

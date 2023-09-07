@@ -93,7 +93,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                        To partake in Citadel's investments, every Citizen must stake BYTES.
                    </div>
                     <div className={"my-5"}>
-                        <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>{stakeReq == 200 ? "Season 1" : "Season 2"}</p></div>
+                        <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>YES</p></div>
                         <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{stakeReq} BYTES</p></div>
                     </div>
 
