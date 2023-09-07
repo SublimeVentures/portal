@@ -26,6 +26,9 @@ const config = createConfig({
         }),
         new LedgerConnector({
             chains: rightChains,
+            options: {
+                projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
+            },
             projectId: isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2',
         }),
         new WalletConnectConnector({
@@ -38,7 +41,7 @@ const config = createConfig({
             chains: rightChains,
             options: {
                 appName: isBased ? "basedVC" : "Citizen Capital",
-                jsonRpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/ca5Ej0RH2MKn3Y6eGDN4Di6GEWao0aWL',
+                jsonRpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku',
             },
         })
     ],

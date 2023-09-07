@@ -98,6 +98,9 @@ modal issues
 - https://discord.com/channels/959614664386424884/1148682864477601903
 - - https://discord.com/channels/@me/1146018065113415721/1148693295527112756
 - https://discord.com/channels/@me/1143172761964007466/1148691348661219358
+- issues with lack of hash on confirmation - added new provider - alchemy
+- ypgraded ledger connector to wallet connect 2
+- upgraded wallet connect to wallet connect 2 
 =================
 
 - in app vote
