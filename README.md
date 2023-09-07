@@ -57,34 +57,24 @@ https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
 modal issues - https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974 // - cant invest on bnb
 
 ==========
-- support - 3h
-- wallet connect 
-- - partnerDelay - 345600
-- - offer exclusive to me
-- - enable button for guaranteed even if allocation is processing
-- display max investment when min filled
-- remove partner delay - only manula - if not filled = dont show
-- ensure access show only right scope
-- - zero alloGuaranteed after 24h
-- - display guaranteed left
+- support - 3h [during/after fundraise]
+- display guaranteed left
 - extract neotokyo login to separate module
 - swimmon - workardound fro another nft fuckup
 - reasignign old Ovverrdies into upgrades - 60min
-- giveaway fo GA for last time users
+- giveaway for GA for last time users
 - reassignments for MS
 - https://discord.com/channels/903535408846077952/1136657187981230121 - lack of allo
 - https://discord.com/channels/@me/1148286174285266954/1148584582388650086
 - https://discord.com/channels/959614664386424884/1148575116494647446/1148736457469595789
 - https://discord.com/channels/959614664386424884/1148595819231055872/1148642156819533854
 - https://discord.com/channels/959614664386424884/1148682864477601903
-- - https://discord.com/channels/@me/1146018065113415721/1148693295527112756
+- https://discord.com/channels/@me/1146018065113415721/1148693295527112756
 - https://discord.com/channels/@me/1143172761964007466/1148691348661219358
 - issues with lack of hash on confirmation - added new provider - alchemy
-- ypgraded ledger connector to wallet connect 2
-- upgraded wallet connect to wallet connect 2 
 - update ABI for USDT as it changed for ETH viem new version
 - navbar logo home redirect fixed
-- - fix panding stae/css class to show closed after isSettled + shorten date
+- fix panding stae/css class to show closed after isSettled + shorten date
 - elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
 
 =================
