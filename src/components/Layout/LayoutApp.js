@@ -7,7 +7,6 @@ export default function Layout({ children }) {
 
     const isNT = children.props.children.props.children.props.account?.ACL === ACLs.NeoTokyo
     const notStaked = !children.props.children.props.children.props.account?.isStaked
-    console.log("status stake",children.props.children.props.children.props.account)
     return (
         <>
             {isNT && notStaked && <div className={"sticky top-0 bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 py-2"}>

@@ -31,8 +31,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ============
 - add SS integration image
 - colliseum onboarding
-- neotokyo new flow
+- based login new flow
 - fixed staking refresh
+- display partner logo if metadata fetch failed
 - migrating ss eq investment
 =============
 

@@ -30,7 +30,6 @@ const getPartnerAvatar = async (tokenId, collectionDetails) => {
 
         const metadata_req = await fetch(metadata_url);
         const matadata = await metadata_req.json();
-        // console.log("matadata",matadata)
         if(matadata.image.startsWith("http")) { //centralized hosting
             URL = matadata.image
         } else { //ipfs hosting
@@ -71,7 +70,6 @@ async function isPartner(ownedNfts, enabledCollections) {
         multiplier = collectionDetails.multiplier
     }
 
-    console.log("nft", nftUsed)
     const tokenId = nftUsed.token_id ? Number(nftUsed.token_id) : Number(nftUsed.tokenId)
     const image = await getPartnerAvatar(tokenId, collectionDetails)
     return {
@@ -86,7 +84,7 @@ async function isPartner(ownedNfts, enabledCollections) {
 }
 
 async function isInjectedUser(address) {
-    console.log("AUTH :: Checking if Injected User")
+    // console.log("AUTH :: Checking if Injected User")
     const user = await getInjectedUser(address)
     if (!user) return false
 

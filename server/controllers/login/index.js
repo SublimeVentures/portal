@@ -14,6 +14,7 @@ const {loginNeoTokyo} = require("./neotokyo");
 const {getPartners} = require("../../queries/partners.query");
 const {loginBased} = require("./based");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
+const Sentry = require("@sentry/nextjs");
 
 
 const validateLogin = async (message, signature) => {
@@ -35,7 +36,7 @@ const validateLogin = async (message, signature) => {
         // if (!userSession) return false;
         // return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
-        console.log("validateLogin", e)
+        Sentry.captureException({location: "validateLogin", e});
         return null
     }
 }
