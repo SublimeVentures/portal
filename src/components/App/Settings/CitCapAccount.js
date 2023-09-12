@@ -3,6 +3,7 @@ import {ExternalLinks} from "@/routes";
 import {useState, useEffect} from "react";
 import IconInfo from "@/assets/svg/Info.svg";
 import {IconButton} from "@/components/Button/IconButton";
+import { useRouter } from 'next/router';
 
 import dynamic from "next/dynamic";
 
@@ -32,6 +33,8 @@ function timeUntilNextUnstakeWindow(stakedAt) {
 }
 
 export default function CitCapAccount({account}) {
+    const router = useRouter();
+
     const [staked, setStaked] = useState(false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
@@ -42,14 +45,19 @@ export default function CitCapAccount({account}) {
     const {unstake, nextDate} = timeUntilNextUnstakeWindow(unstakeDate)
     const refreshSession = async () => {
         const {updatedSession} = await updateSession_CitCapStaking()
+        if(!updatedSession) return
         if(updatedSession.isStaked) setStaked(true)
         if(updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize)
         if(updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate)
+        if(updatedSession.isStaked) {
+            router.reload();
+        }
     }
 
     const stakingModalProps = {
         stakeReq: account.stakeReq,
         account: account.address,
+        isS1: account.isS1,
         refreshSession
     }
 
@@ -91,7 +99,10 @@ export default function CitCapAccount({account}) {
                 </div>
                 }
             </div>
-            <CitCapStakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={() => {setStakingModal(false)}}/>
+            <CitCapStakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={async () => {
+                setStakingModal(false)
+                await refreshSession()
+            }}/>
 
         </div>
     )

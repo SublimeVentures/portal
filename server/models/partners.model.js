@@ -52,6 +52,24 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             defaultValue: 5
         },
+        isDynamicImage: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: true,
+        },
+        isDynamicMetadata: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: true,
+        },
+        tokenUri: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        imageUri: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     }, {
         indexes: [
             {unique: true, fields: ['address']},

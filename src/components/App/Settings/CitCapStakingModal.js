@@ -7,7 +7,7 @@ import TransactionStep, {TransactionState} from "@/components/App/BlockchainStep
 import {getButtonStep, getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
 import {sleeper} from "@/lib/utils";
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
-    const {stakeReq, account, refreshSession} = stakingModalProps
+    const {stakeReq, account, isS1} = stakingModalProps
     const [accept, setAccept] = useState(false)
 
 
@@ -93,7 +93,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                        To partake in Citadel's investments, every Citizen must stake BYTES.
                    </div>
                     <div className={"my-5"}>
-                        <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>YES</p></div>
+                        <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>{isS1 ? "S1" : "S2"}</p></div>
                         <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{stakeReq} BYTES</p></div>
                     </div>
 
@@ -131,7 +131,6 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
     const content = () => {
         if(transaction) {
-            refreshSession()
             return contentSuccess()
         } else {
             return contentStake()

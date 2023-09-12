@@ -12,6 +12,7 @@ import {isBased} from "@/lib/utils";
 import Lottie from "lottie-react";
 import lottieAvatar from "@/assets/lottie/avatar.json";
 import { useGlitch } from 'react-powerglitch'
+import FallbackImage from "@/components/App/Vault/FallbackImage";
 
 function amount(item){
     return item.invested;
@@ -60,7 +61,8 @@ export default function UserSummary({vault, account}) {
                                         <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>
                                     </div>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                        <img className="flex rounded-full my-auto" src={account.img}/>
+                                        {/*<img className="flex rounded-full my-auto" src={account.img}/>*/}
+                                        <FallbackImage src={account.img} fallbackSrc={account.img_fallback} alt="Profile" />
                                     </div>
                                 </> : <>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>

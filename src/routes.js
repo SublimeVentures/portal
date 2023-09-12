@@ -43,7 +43,7 @@ const ExternalLinksBased = {
     VAULT: "https://info.basedvc.fund/Investor-Vault-2f8097958f69467aaa03bbfda0ecd89e",
     WIKI: "https://info.basedvc.fund",
     DISCORD: "https://discord.gg/3SaqVVdzUH",
-    TWITTER:"https://twitter.com/3vcfund",
+    TWITTER:"https://twitter.com/basedVCfund",
     APPLY:"https://tally.so/r/mK5Pvk",
 }
 

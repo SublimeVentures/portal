@@ -28,9 +28,13 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-## Support in progress
-https://discord.com/channels/903535408846077952/1136657187981230121/1148980490108407818
-
+============
+- add SS integration image
+- colliseum onboarding
+- neotokyo new flow
+- fixed staking refresh
+- migrating ss eq investment
+=============
 
 # tasks
 simulation tokenomics
@@ -45,63 +49,13 @@ update tiers
 https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
 https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=1339721247
 https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
-
+elite ann.
 
 ## ToDo
-- add SS integration
-- update supra details
-- staking relog
-- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
-- resolution issues: - https://discord.com/channels/@me/915237510928556052/1146846153917333544
-
-modal issues - https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974 // - cant invest on bnb
-
-==========
-- support - 3h [during/after fundraise]
-- display guaranteed left
-- extract neotokyo login to separate module
-- swimmon - workardound fro another nft fuckup
-- reasignign old Ovverrdies into upgrades - 60min
-- giveaway for GA for last time users
-- reassignments for MS
-- https://discord.com/channels/903535408846077952/1136657187981230121 - lack of allo
-- https://discord.com/channels/@me/1148286174285266954/1148584582388650086
-- https://discord.com/channels/959614664386424884/1148575116494647446/1148736457469595789
-- https://discord.com/channels/959614664386424884/1148595819231055872/1148642156819533854
-- https://discord.com/channels/959614664386424884/1148682864477601903
-- https://discord.com/channels/@me/1146018065113415721/1148693295527112756
-- https://discord.com/channels/@me/1143172761964007466/1148691348661219358
-- issues with lack of hash on confirmation - added new provider - alchemy
-- update ABI for USDT as it changed for ETH viem new version
-- navbar logo home redirect fixed
-- fix panding stae/css class to show closed after isSettled + shorten date
-- elite login check https://discord.com/channels/@me/1148286174285266954/1148584582388650086
-
 =================
-
-- in app vote
-- unlock button for failed set allowance
-- reset modal settings on close
-- sentry error
-
-- staking (force eth)
-  - delegate
-  - change total staked 
-  - wyciagnij swoje
-
-https://devcenter.heroku.com/articles/heroku-postgres-backups**
-
-- custom 404 page
-- link page
-- media rearrange
-- RR unmount
-- investment calendar google
-- UniButton -> GenericButton
-- rasied funds on landing
-
-- Short memeland tribe screenshot
-
+- nft mock
 - =============
+- SS staked - 0xe1d6e2aa30b32ac6ae2bae3b76cd69225f76f8c4
 - make offer button
 - -- (buy) check liquidity
 - -- (buy) check allowance
@@ -112,14 +66,39 @@ https://devcenter.heroku.com/articles/heroku-postgres-backups**
 - -- match hash with settlement
 - -- build otcDeal
 - -- expire otcPending after 5 minutes
-
 - clean old otcPending - every month after backup
+- =============
+- delegate cash fix
+- reset modal settings on close
+
+- SS :: https://docs.google.com/document/d/13ZLpE_CvAzMiB7O22gnWeWMpjzGFT02n0KI2LHmYBhs/edit
+- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
+- resolution issues: - https://discord.com/channels/@me/915237510928556052/1146846153917333544
+- modal issues - https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974 // - cant invest on bnb
+
+- staking (force eth)
+  - delegate
+  - change total staked 
+  - wyciagnij swoje
+
+- in app vote
+- unlock button for failed set allowance
+- sentry error
+
+https://devcenter.heroku.com/articles/heroku-postgres-backups**
+
+- custom 404 page
+- media rearrange
+- RR unmount
+- investment calendar google
+- UniButton -> GenericButton
+- rasied funds on landing
+
+
 - 500, 1000, user max button under investment size
 - timeline for user activities for each investment in vault tab
 - reassign allocation
 
-- transakcje nie działają na rollbacku
-- enable for reservation even on blocked reservation button
 - connect discord to app
 - notifications
 
