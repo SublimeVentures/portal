@@ -54,7 +54,8 @@ elite ann.
 
 ## ToDo
 =================
-- nft mock
+- obliczenie kasy
+- nft merge
 - =============
 - SS staked - 0xe1d6e2aa30b32ac6ae2bae3b76cd69225f76f8c4
 - make offer button

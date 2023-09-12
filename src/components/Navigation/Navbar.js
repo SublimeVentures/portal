@@ -14,8 +14,11 @@ export default function Navbar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false)
     const [isOnTop, setIsOnTop] = useState(false)
     const scrollPosition = useScrollPosition();
-    const menu = [
+    const menu = isBased ? [
         {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
+        {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
+        {name: 'INVESTMENTS', link: 'investments'},
+    ] : [
         {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
         {name: 'INVESTMENTS', link: 'investments'},
     ]
