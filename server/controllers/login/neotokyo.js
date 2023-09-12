@@ -1,10 +1,12 @@
-const {getWeb3} = require("../services/web3");
-const {getEnv} = require("../services/db");
-const citcapCitizenAbi = require('../../abi/citcapCitizen.abi.json')
-const citcapStakingAbi = require('../../abi/citcapStaking.abi.json')
+const {getWeb3} = require("../../services/web3");
+const {getEnv} = require("../../services/db");
+const citcapCitizenAbi = require('../../../abi/citcapCitizen.abi.json')
+const citcapStakingAbi = require('../../../abi/citcapStaking.abi.json')
 const Sentry = require("@sentry/nextjs");
-const {checkElite} = require("../queries/ntElites.query");
-const {ACLs} = require("../../src/lib/authHelpers");
+const {checkElite} = require("../../queries/ntElites.query");
+const {ACLs, userIdentification} = require("../../../src/lib/authHelpers");
+const {isDelegated} = require("./delegated");
+const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 
 const getNTimage = (isS1, isStaked, id) => {
     if(isStaked) {
@@ -146,8 +148,8 @@ async function isNeoTokyo(ownedNfts, enabledCollections, address) {
 
     const {isStaked, stakeSize, stakeDate} = await checkStaking(address)
     return {
-        name: nftUsed.isS1 ? "Neo Tokyo Citizen" : "Neo Tokyo Outer Citizen",
         symbol: nftUsed.isS1 ? "NTCTZN" : "NTOCTZN",
+        isS1: nftUsed.isS1,
         multi: multi,
         img: nftUsed.image,
         id: Number(nftUsed.id),
@@ -165,7 +167,7 @@ async function checkStaking(address) {
     const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
         "chain": "0x1",
         "functionName": "getStake",
-        "address": getEnv().diamondCitCap,
+        "address": getEnv().diamond['1'],
         "abi": citcapStakingAbi,
         "params": {wallet_: address}
     });
@@ -177,4 +179,27 @@ async function checkStaking(address) {
     }
 }
 
-module.exports = {isNeoTokyo, checkStaking}
+const updateSessionStaking = async (user) => {
+    try {
+        const session = getRefreshToken(user)
+        deleteRefreshToken(user)
+        if (user !== session.userData[userIdentification]) {
+            throw new Error("data not match")
+        }
+        const {isStaked, stakeSize, stakeDate} = await checkStaking(user)
+        return await refreshAuth(session.userData, {isStaked, stakeSize, stakeDate})
+    } catch (e) {
+        return null
+    }
+}
+
+async function loginNeoTokyo(userNfts, enabledCollections, address) {
+    let type = await isNeoTokyo(userNfts, enabledCollections, address)
+    if (!type) type = await isDelegated(address, enabledCollections)
+
+    return type
+}
+
+
+
+module.exports = {loginNeoTokyo, updateSessionStaking}

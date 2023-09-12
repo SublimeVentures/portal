@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router();
-const {logIn, logOut, refreshToken, updateSession_CitCapStaking} = require("../controllers/login");
+const {logIn, logOut, refreshToken} = require("../controllers/login/index");
 const {verifyID} = require("../../src/lib/authHelpers");
+const {updateSessionStaking} = require("../controllers/login/neotokyo");
 
 //GET USER DATA
 router.get('/login', async (req, res) => {
@@ -50,7 +51,7 @@ router.get('/login/stake', async (req, res) => {
     const {auth, user} = await verifyID(req, true)
     if (!auth) return res.status(401).json({});
 
-    const result = await updateSession_CitCapStaking(user)
+    const result = await updateSessionStaking(user)
     if (!result) return res.status(403).json({});
 
     res.setHeader("Set-Cookie", result.cookie);
