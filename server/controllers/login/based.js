@@ -38,7 +38,6 @@ const getPartnerAvatar = async (tokenId, collectionDetails) => {
         }
         URL = matadata.image
     }
-    console.log("URL", URL)
 
    return URL
 
