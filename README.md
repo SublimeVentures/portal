@@ -35,43 +35,51 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - fixed staking refresh
 - display partner logo if metadata fetch failed
 - migrating ss eq investment
+- nft merge
+
 =============
 
-# tasks
-simulation tokenomics
-check what we want to deliver
-then what are the features of our ecosystem + distribution mechnism
-tokenomics high level
-tokenomics split
-What we raise for
-wyceny https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=88558860
-update diagram
-update tiers
-https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
-https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=1339721247
-https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
-elite ann.
 
 ## ToDo
 =================
-- obliczenie kasy
-- nft merge
+- email metagravity
+- piniata basedVC
+- simulation tokenomics
+  check what we want to deliver
+  then what are the features of our ecosystem + distribution mechnism
+  tokenomics high level
+  tokenomics split
+  What we raise for
+  wyceny https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=88558860
+  update diagram
+  update tiers
+  https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
+  https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=1339721247
+  https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
+  elite ann.
+- send back the citizen nft
+- info links on settings for citcap
+- basedVC info links
 - =============
+- sentry errors
+- reset modal settings on close
+- ben's hours https://app.clickup.com/t/86ay8d3v9
 - SS staked - 0xe1d6e2aa30b32ac6ae2bae3b76cd69225f76f8c4
-- make offer button
-- -- (buy) check liquidity
-- -- (buy) check allowance
-- -- (buy) check send transaction
+- OTC
+    - make offer button
+    - -- (buy) check liquidity
+    - -- (buy) check allowance
+    - -- (buy) check send transaction
 
-- processor
-- -- receive webhook
-- -- match hash with settlement
-- -- build otcDeal
-- -- expire otcPending after 5 minutes
-- clean old otcPending - every month after backup
+    - processor
+    - -- receive webhook
+    - -- match hash with settlement
+    - -- build otcDeal
+    - -- expire otcPending after 5 minutes
+    - clean old otcPending - every month after backup
 - =============
 - delegate cash fix
-- reset modal settings on close
+
 
 - SS :: https://docs.google.com/document/d/13ZLpE_CvAzMiB7O22gnWeWMpjzGFT02n0KI2LHmYBhs/edit
 - set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
@@ -143,3 +151,7 @@ For each chainId
 code
 https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
 0xb27EE3cDDA91dAe0e68c3fb59C15fff0FADf362f
+
+
+
+https://orange-possible-landfowl-557.mypinata.cloud/ipfs/QmafDJvxELznCxwgcEY27k1u9M6gYLwn7AM2pyoNMsbQne'

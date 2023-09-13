@@ -14,6 +14,7 @@ export default function FallbackImage({src, fallbackSrc, alt}) {
             alt={alt}
             onError={handleError}
             key={currentSrc}
+            crossorigin='anonymous'
         />
     );
 }
