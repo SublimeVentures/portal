@@ -4,37 +4,19 @@ import IconWebsite from "@/assets/svg/Website.svg";
 import IconTwitter from "@/assets/svg/Twitter.svg";
 import {IconButton} from "@/components/Button/IconButton";
 import Script from "next/script";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import {  Navigation, Thumbs, FreeMode} from 'swiper';
-import 'swiper/css';
-import "swiper/css/pagination";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import {useState} from "react";
 import {isBased} from "@/lib/utils";
+import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
 
-
-const MEDIA_TYPE = {
-    IMAGE: 0,
-    YOUTUBE: 1,
-}
 
 export default function OfferDetailsAbout({offer}) {
-    const {url_web, url_twitter, url_discord, cdn, slug, description, media} = offer;
-    const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const {url_web, url_twitter, url_discord, cdn, slug, description} = offer;
 
     function createMarkup() {
         return {__html: description};
     }
 
-
-    const haveMedia = media ? media?.length>0 : false
-    const slides = haveMedia ? media : []
-
     return (
         <>
-
             <div className={`${isBased ? "rounded-xl" : ""} relative offerWrap overflow-hidden`}>
                 <div className={`${isBased ? "rounded-xl" : ""} bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between `}>
 
@@ -63,51 +45,7 @@ export default function OfferDetailsAbout({offer}) {
                 </div>
 
             </div>
-            {haveMedia && <div className={"flex flex-col"}>
-                <Swiper
-                    style={{
-                        "--swiper-navigation-color": "#fff",
-                        "--swiper-pagination-color": "#fff",
-                    }}
-                    loop={true}
-                    spaceBetween={10}
-                    navigation={true}
-                    thumbs={{ swiper: thumbsSwiper }}
-                    modules={[FreeMode, Navigation, Thumbs]}
-                    className="mt-5"
-                >
-                    {slides.map((el,i)=> {
-                        return <SwiperSlide key={i}>
-                            {
-                                el.type === MEDIA_TYPE.IMAGE ?
-                                    <img src={`${cdn}/research/${slug}/slide/${el.url}`} alt={"img"}/> :
-                                    <iframe width="100%" height="500" className={"rounded-xl"} src={el.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-                            }
-                        </SwiperSlide>
-                    })}
-                </Swiper>
-                <Swiper
-                    onSwiper={setThumbsSwiper}
-                    loop={true}
-                    spaceBetween={10}
-                    slidesPerView={4}
-                    freeMode={true}
-                    watchSlidesProgress={true}
-                    modules={[FreeMode, Navigation, Thumbs]}
-                    className="mt-5"
-                >
-                    {slides.map((el,i)=> {
-                        return (
-                            <SwiperSlide key={i}>
-                                <div className={"thumb rounded-xl"}>
-                                    <img src={`${cdn}/research/${slug}/slide/${el.type === MEDIA_TYPE.IMAGE  ? el.url : el.thumb}`} alt={"img"}/>
-                                </div>
-                            </SwiperSlide>
-                        )
-                    })}
-                </Swiper>
-            </div> }
-
+            <OfferDetailsMediaSlider offer={offer}/>
 
             <div className="my-10">
                 <Script src="/browser/index-d5086682.js"/>
