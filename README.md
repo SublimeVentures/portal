@@ -28,43 +28,32 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
-============
+============ Add to clickup
 - add SS integration image
+- add SS staked API
 - colliseum onboarding
 - based login new flow
-- fixed staking refresh
+- fixed staking (refresh, season)
 - display partner logo if metadata fetch failed
 - migrating ss eq investment
 - nft merge
-
+- sentry errors [fixing blockeater processTransactionLog error - foreign key issue on db; fetch metadata from IPFS using pinata and add API KEY auth on backend;]
+- piniata basedVC
+- tokenomics proposal v2 - 2h - https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
+- info links on settings for citcap 
+- linked in - job post + job offer- https://docs.google.com/document/d/1PD2DjRvDTg5xEXO7rV3Y8YQfCXv78meWSVSgyWndhQc/edit?usp=sharing
+- basedVC info links in app & notion -2h [vault, lootbox, upgrades, bookin system, investment cap, bookin system]
 =============
 
 
 ## ToDo
 =================
-- email metagravity
-- piniata basedVC
-- simulation tokenomics
-  check what we want to deliver
-  then what are the features of our ecosystem + distribution mechnism
-  tokenomics high level
-  tokenomics split
-  What we raise for
-  wyceny https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=88558860
-  update diagram
-  update tiers
-  https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
-  https://docs.google.com/spreadsheets/d/1aU1vWb2f_RbZhc6bbtkPu4B36CRxW3aGPs5Sf9RmYIU/edit#gid=1339721247
-  https://drive.google.com/file/d/1OZKQgrunAebY8rXRd05p7coeMKGTqLr0/view
-  elite ann.
-- send back the citizen nft
-- info links on settings for citcap
-- basedVC info links
-- =============
-- sentry errors
-- reset modal settings on close
+- basedVC costs estimation
 - ben's hours https://app.clickup.com/t/86ay8d3v9
-- SS staked - 0xe1d6e2aa30b32ac6ae2bae3b76cd69225f76f8c4
+
+
+- notion in routes
+- reset modal settings on close
 - OTC
     - make offer button
     - -- (buy) check liquidity
@@ -79,7 +68,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - clean old otcPending - every month after backup
 - =============
 - delegate cash fix
-
 
 - SS :: https://docs.google.com/document/d/13ZLpE_CvAzMiB7O22gnWeWMpjzGFT02n0KI2LHmYBhs/edit
 - set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
@@ -151,7 +139,3 @@ For each chainId
 code
 https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
 0xb27EE3cDDA91dAe0e68c3fb59C15fff0FADf362f
-
-
-
-https://orange-possible-landfowl-557.mypinata.cloud/ipfs/QmafDJvxELznCxwgcEY27k1u9M6gYLwn7AM2pyoNMsbQne'
