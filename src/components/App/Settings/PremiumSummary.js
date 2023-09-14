@@ -18,7 +18,7 @@ export default function PremiumSummary({data}) {
             <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
                 <div className={"flex flex-row items-center pb-5 justify-between "}>
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>Premium</div>
-                    <a href={ExternalLinks.DISCORD} target={"_blank"}><IconButton zoom={1.1} size={'w-8'} icon={<IconInfo />} noBorder={!isBased} /></a>
+                    <a href={ExternalLinks.UPGRADES} target={"_blank"}><IconButton zoom={1.1} size={'w-8'} icon={<IconInfo />} noBorder={!isBased} /></a>
 
                 </div>
                 <div>

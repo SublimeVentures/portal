@@ -2,12 +2,13 @@ const {getInjectedUser} = require("../../queries/injectedUser.query");
 const {getEnv} = require("../../services/db");
 const {ACLs} = require("../../../src/lib/authHelpers");
 const {isDelegated} = require("./delegated");
+const {isSteadyStack} = require("./steadystack");
 
 const buildUrl = (path) => {
     if(path.startsWith("http")) { //centralized hosting
         return path
     } else { //ipfs hosting
-        return "https://orange-possible-landfowl-557.mypinata.cloud/" + path
+        return getEnv().piniataGateway + path
     }
 }
 
@@ -23,10 +24,10 @@ const getPartnerAvatar = async (tokenId, collectionDetails) => {
 
     } else { //feed avatar from metadata
         let metadata_url = buildUrl(collectionDetails.tokenUri)
-
         if(collectionDetails.isDynamicImage) { //fetch with id
             metadata_url = metadata_url.replace("[ID]", tokenId)
         }
+        metadata_url += `?pinataGatewayToken=${getEnv().piniataKey}`
 
         const metadata_req = await fetch(metadata_url);
         const matadata = await metadata_req.json();
@@ -34,7 +35,7 @@ const getPartnerAvatar = async (tokenId, collectionDetails) => {
             URL = matadata.image
         } else { //ipfs hosting
             const uriSplit = matadata.image.split("ipfs://")
-            URL = "https://orange-possible-landfowl-557.mypinata.cloud/" + "ipfs/" + uriSplit[1]
+            URL = getEnv().piniataGateway + "ipfs/" + uriSplit[1]
         }
         URL = matadata.image
     }
@@ -104,6 +105,7 @@ async function loginBased(userNfts, enabledCollections, address) {
     if (!type) type = await isPartner(userNfts, enabledCollections)
     if (!type) type = await isInjectedUser(address)
     if (!type) type = await isDelegated(address, enabledCollections)
+    if (!type) type = await isSteadyStack(address, enabledCollections)
     return type
 }
 
