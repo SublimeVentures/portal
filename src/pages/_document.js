@@ -1,5 +1,4 @@
 import {Html, Head, Main, NextScript} from 'next/document'
-import Gtag from "@/components/gtag";
 import {isBased} from "@/lib/utils";
 
 export default function Document() {
@@ -12,7 +11,6 @@ export default function Document() {
                 <link rel="icon" href={isBased ? "/favicon.svg" : "/img/favicon.png"} sizes="any" />
             </Head>
             <body>
-            <Gtag/>
             <Main/>
             <NextScript/>
             </body>

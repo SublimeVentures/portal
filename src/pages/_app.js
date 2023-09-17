@@ -6,6 +6,7 @@ import Layout from '@/components/Layout/Layout';
 import 'react-tooltip/dist/react-tooltip.css';
 import '@/styles/globals.scss'
 import {isBased} from "@/lib/utils";
+import Gtag from "@/components/gtag";
 
 if (isBased){
     import('@/styles/tenants/basedVC.scss')
@@ -14,6 +15,7 @@ if (isBased){
 }
 
 export default function App({Component, pageProps: {...pageProps}}) {
+
     const renderWithLayout =
         Component.getLayout ||
         function (page) {
@@ -26,6 +28,7 @@ export default function App({Component, pageProps: {...pageProps}}) {
                     <QueryClientProvider client={queryClient}>
                         <Hydrate state={pageProps.dehydratedState}>
                             <Component  {...pageProps} />
+                            <Gtag/>
                         </Hydrate>
                     </QueryClientProvider>
             )}

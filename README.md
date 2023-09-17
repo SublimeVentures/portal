@@ -1,4 +1,3 @@
-
 ## Getting Started
 
 First, run the development server:
@@ -21,38 +20,11 @@ To learn more about Next.js, take a look at the following resources:
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Add to clickup
-- add SS integration image
-- add SS staked API
-- colliseum onboarding
-- based login new flow
-- fixed staking (refresh, season)
-- display partner logo if metadata fetch failed
-- migrating ss eq investment
-- nft merge
-- sentry errors [fixing blockeater processTransactionLog error - foreign key issue on db; fetch metadata from IPFS using pinata and add API KEY auth on backend;]
-- piniata basedVC
-- tokenomics proposal v2 - 2h - https://docs.google.com/spreadsheets/d/1z4vh7m4YsqrGJDzWoQH8QD_OVzMxFAglK_gC89Ph-qs/edit#gid=0
-- info links on settings for citcap
-- linked in - job post + job offer- https://docs.google.com/document/d/1PD2DjRvDTg5xEXO7rV3Y8YQfCXv78meWSVSgyWndhQc/edit?usp=sharing
-- basedVC info links in app & notion -2h [vault, lootbox, upgrades, bookin system, investment cap, bookin system]
-- db auto-backup -2h
-- media rearrange
-- find external providers of RPC (currently we are using public ones and that's why confirming transaction takes more time)
-- -- - providers for bsc, matic, eth ---- https://www.ankr.com/ // https://dashboard.quicknode.com/quick-alerts // https://irwingtello.hashnode.dev/create-your-first-multi-chain-project-with-quicknode-and-wagmish
+- gtag
 
 ## ToDo
 =================
-- clickup
 
-- basedVC costs estimation
-- ben's hours https://app.clickup.com/t/86ay8d3v9
-- timeline for user activities for each investment in vault tab
-- reassign allocation
-- w vault osobna kategoria z aktywnymi i nowymi updetami
-- lazy loading na ofertach i vault
-
-
-- notion in routes
 - OTC
   - make offer button
   - -- (buy) check liquidity
@@ -66,12 +38,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
   - -- expire otcPending after 5 minutes
   - clean old otcPending - every month after backup
 - =============
+
+
+
+- ben's hours https://app.clickup.com/t/86ay8d3v9
+- twitter
+- notion in routes
+- timeline for user activities for each investment in vault tab
+- reassign allocation
+- lazy loading na ofertach i vault
+
 - reset modal settings on close
 - modal issues - https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974 // - cant invest on bnb
 - unlock button for failed set allowance
 
 - UniButton -> GenericButton
-
+- w vault osobna kategoria z aktywnymi i nowymi updetami
 - in app vote
 - SS :: https://docs.google.com/document/d/13ZLpE_CvAzMiB7O22gnWeWMpjzGFT02n0KI2LHmYBhs/edit
 - set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
