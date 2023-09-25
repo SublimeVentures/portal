@@ -60,8 +60,21 @@ async function isWhale(ownedNfts) {
 
 async function isPartner(ownedNfts, enabledCollections) {
     if (ownedNfts.length === 0) return false
-    const nftUsed = ownedNfts[0]
-    const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nftUsed.token_address.toLowerCase())
+
+    let nftUsed;
+    let collectionDetails;
+    for(let i=0; i<enabledCollections.length-1; i++) {
+        nftUsed = ownedNfts.find(el => el.token_address.toLowerCase() === enabledCollections[i].address.toLowerCase())
+        if(nftUsed) {
+            collectionDetails = enabledCollections[i]
+            break;
+        }
+    }
+    // const nftUsed = ownedNfts[0]
+    // const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nftUsed.token_address.toLowerCase())
+
+
+
     let multiplier
 
     if (collectionDetails.isMetadata) {
