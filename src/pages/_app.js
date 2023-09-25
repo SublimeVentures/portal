@@ -23,16 +23,20 @@ export default function App({Component, pageProps: {...pageProps}}) {
         };
 
     return (
-        <WagmiConfig config={config}>
-            {renderWithLayout(
+        <>
+            <WagmiConfig config={config}>
+                {renderWithLayout(
                     <QueryClientProvider client={queryClient}>
                         <Hydrate state={pageProps.dehydratedState}>
                             <Component  {...pageProps} />
-                            <Gtag/>
                         </Hydrate>
                     </QueryClientProvider>
-            )}
-        </WagmiConfig>
-    );
+                )}
+            </WagmiConfig>
+            <Gtag/>
+        </>
+
+
+);
 
 }

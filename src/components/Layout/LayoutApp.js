@@ -4,8 +4,8 @@ import routes from "@/routes";
 import Link from "next/link";
 
 export default function LayoutApp({ children }) {
-    const isNT =       children.props.children.props?.children[0]?.props?.account?.ACL === ACLs.NeoTokyo
-    const notStaked = !children.props.children.props?.children[0]?.props?.account?.isStaked
+    const isNT =       children.props.children.props.children.props?.account?.ACL === ACLs.NeoTokyo
+    const notStaked = !children.props.children.props.children.props?.account?.isStaked
 
     return (
         <>
