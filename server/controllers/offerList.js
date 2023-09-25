@@ -7,7 +7,9 @@ const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
 async function getParamOfferList(user) {
     const {ACL, address} = user
-    const offers = await getOfferList()
+    const acl = Object.keys(OfferAccessACL[ACL])
+
+    const offers = await getOfferList(acl)
 
     let response = {
         cdn: getEnv().cdn,
@@ -115,6 +117,8 @@ function offerListInjectedProcess(data) {
 }
 
 function offerListPartner(data, acl) {
+    console.log("OfferAccessACL",OfferAccessACL)
+    console.log("acl",acl)
     let offerList = []
     data.forEach(el => {
         if(OfferAccessACL[acl][el.access]) {

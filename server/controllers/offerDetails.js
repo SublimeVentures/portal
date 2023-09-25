@@ -8,8 +8,9 @@ const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
 async function getParamOfferDetails(user, req) {
     const {ACL, address} = user
+    const acl = Object.keys(OfferAccessACL[ACL])
 
-    const offer = await getOfferDetails(req.params.slug);
+    const offer = await getOfferDetails(req.params.slug, acl);
     if (!offer) return {notExist: true}
     let template = {
         whale: getEnv().whaleId,
