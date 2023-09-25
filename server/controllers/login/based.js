@@ -63,6 +63,16 @@ async function isPartner(ownedNfts, enabledCollections) {
 
     let nftUsed;
     let collectionDetails;
+    // for(let i=0; i<enabledCollections.length-1; i++) {
+    //     nftUsed = ownedNfts.find(el => el.token_address.toLowerCase() === enabledCollections[i].address.toLowerCase())
+    //     if(nftUsed) {
+    //         collectionDetails = enabledCollections[i]
+    //         break;
+    //     }
+    // }
+    // console.log("ownedNfts",ownedNfts,enabledCollections)
+    // const nftUsed = ownedNfts[0]
+    // const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nftUsed.token_address.toLowerCase())
     for(let i=0; i<enabledCollections.length-1; i++) {
         nftUsed = ownedNfts.find(el => el.token_address.toLowerCase() === enabledCollections[i].address.toLowerCase())
         if(nftUsed) {
@@ -70,18 +80,18 @@ async function isPartner(ownedNfts, enabledCollections) {
             break;
         }
     }
-    // const nftUsed = ownedNfts[0]
-    // const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nftUsed.token_address.toLowerCase())
 
 
+    let multiplier = 0
+    for(let i=0; i<enabledCollections.length-1; i++) {
+        const nftUsed = ownedNfts.find(el => el.token_address.toLowerCase() === enabledCollections[i].address.toLowerCase())
 
-    let multiplier
-
-    if (collectionDetails.isMetadata) {
-        const attributeVal = nftUsed.normalized_metadata.attributes.find(el => el.trait_type === collectionDetails.metadataProp)?.value
-        multiplier = collectionDetails.metadataVal[attributeVal]
-    } else {
-        multiplier = collectionDetails.multiplier
+        if (collectionDetails.isMetadata) {
+            const attributeVal = nftUsed.normalized_metadata.attributes.find(el => el.trait_type === collectionDetails.metadataProp)?.value
+            multiplier += collectionDetails.metadataVal[attributeVal]
+        } else {
+            multiplier += collectionDetails.multiplier
+        }
     }
 
     const tokenId = nftUsed.token_id ? Number(nftUsed.token_id) : Number(nftUsed.tokenId)
