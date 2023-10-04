@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import {updateSession_CitCapStaking} from "@/fetchers/auth.fetcher";
 import {isBased} from "@/lib/utils";
 const CitCapStakingModal = dynamic(() => import('@/components/App/Settings/CitCapStakingModal'), {ssr: false})
+const CitCapUnStakingModal = dynamic(() => import('@/components/App/Settings/CitCapUnStakingModal'), {ssr: false})
 
 
 function timeUntilNextUnstakeWindow(stakedAt) {
@@ -39,8 +40,8 @@ export default function CitCapAccount({account}) {
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
     const [stakingModal, setStakingModal] = useState(false);
+    const [unstakingModal, setUnStakingModal] = useState(false);
     const isTranscended = account.transcendence
-
     const unstakeDate = account?.stakeDate ? account.stakeDate : stakeDate
     const {unstake, nextDate} = timeUntilNextUnstakeWindow(unstakeDate)
     const refreshSession = async () => {
@@ -56,6 +57,7 @@ export default function CitCapAccount({account}) {
 
     const stakingModalProps = {
         stakeReq: account.stakeReq,
+        stakeSze: account.stakeSize,
         account: account.address,
         isS1: account.isS1,
         refreshSession
@@ -95,7 +97,13 @@ export default function CitCapAccount({account}) {
                     <UniButton type={ButtonTypes.BASE} text={'GET BYTES'}
                                handler={()=> {window.open(ExternalLinks.GETBYTES, '_blank');}}/>
                     <UniButton type={ButtonTypes.BASE} text={unstake ? "Unstake" : 'Stake'} state={unstake ? "": "danger"}
-                               handler={()=> {setStakingModal(true)}}/>
+                               handler={()=> {
+                                   if(unstake) {
+                                       setUnStakingModal(true)
+                                   } else {
+                                       setStakingModal(true)
+                                   }
+                               }}/>
                 </div>
                 }
             </div>
@@ -103,6 +111,10 @@ export default function CitCapAccount({account}) {
                 setStakingModal(false)
                 await refreshSession()
             }}/>
+            {unstake && <CitCapUnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
+                setUnStakingModal(false)
+                await refreshSession()
+            }}/> }
 
         </div>
     )
