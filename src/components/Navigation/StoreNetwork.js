@@ -9,6 +9,12 @@ import {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {useEffect} from "react";
 
+export const getChainIcon = (id, size = ButtonIconSize.hero) => {
+    if (id == 1) return <IconEth className={size}/>
+    else if (id == 137) return <IconMatic className={size}/>
+    else if (id == 57) return <IconBsc className={size}/>
+}
+
 export default function StoreNetwork({supportedNetworks, isPurchase, setNetworkOk}) {
     const {chain, chains} = useNetwork()
     const {error, isLoading, pendingChainId, switchNetwork} = useSwitchNetwork()
@@ -31,11 +37,7 @@ export default function StoreNetwork({supportedNetworks, isPurchase, setNetworkO
         )
     }
 
-    const getIcon = (id) => {
-        if (id == 1) return <IconEth className={ButtonIconSize.hero}/>
-        else if (id == 137) return <IconMatic className={ButtonIconSize.hero}/>
-        else if (id == 57) return <IconBsc className={ButtonIconSize.hero}/>
-    }
+
 
     const content = () => {
         return (
@@ -54,7 +56,7 @@ export default function StoreNetwork({supportedNetworks, isPurchase, setNetworkO
                             zoom={1.05}
                             size={'text-sm sm'}
                             isDisabled={buttonDisabled(x)}
-                            icon={getIcon(x)}
+                            icon={getChainIcon(x)}
                         />
                     ))}
                 </div>

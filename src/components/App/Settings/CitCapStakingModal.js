@@ -1,81 +1,54 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import AllowanceStep from "@/components/App/BlockchainSteps/AllowanceStep";
-import {useState , useEffect} from "react";
-import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
-import TransactionStep, {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
-import {getButtonStep, getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
-import {sleeper} from "@/lib/utils";
+import {useState , useRef} from "react";
+import { getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
+import BlockchainSteps from "@/components/App/BlockchainSteps";
+import RocketIcon from "@/assets/svg/Rocket.svg";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const {stakeReq, account, isS1} = stakingModalProps
-    const [accept, setAccept] = useState(false)
 
+    const [blockchainData, setBlockchainData] = useState(false)
 
-    const [liquidity, setLiquidity] = useState(false)
-    const [allowance, setAllowance] = useState(false)
-    const [transaction, setTransaction] = useState(false)
+    const {transactionData} = blockchainData
+    const blockchainRef = useRef();
 
-    const [trigger, setTrigger] = useState(false)
-    const [isTransactionLoading, setIsTransactionLoading] = useState(TransactionState.Init)
+    const stakingFunction = getCitCapStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
 
-    const stakeData = getCitCapStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
-
-    const buttonText = getButtonStep(isTransactionLoading, "stake")
-
-    const liquidityProps = {
-        currencyAddress: "0xa19f5264F7D7Be11c451C093D8f92592820Bea86",
-        currencyPrecision: 18,
-        currencySymbol: "BYTES",
-        isReady: model,
-        account,
-        amount: stakeReq,
-        isFinished: liquidity,
-        setFinished: setLiquidity,
+    const closeModal = () => {
+        setter()
+        setTimeout(() => {
+            setBlockchainData(false)
+        }, 400);
     }
 
-    const allowanceReady = liquidity && accept
-    const allowanceProps = {
-        currencyAddress: "0xa19f5264F7D7Be11c451C093D8f92592820Bea86",
-        currencyPrecision: 18,
-        currencySymbol: "BYTES",
-        allowanceFor: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
-        isReady: allowanceReady,
-        account,
-        amount: stakeReq,
-        isFinished: allowance,
-        setFinished: setAllowance,
-        setIsTransactionLoading,
-
+    const selectedCurrency = {
+        address: "0xa19f5264F7D7Be11c451C093D8f92592820Bea86",
+        precision: 18,
+        symbol: "BYTES",
+        isSettlement: false
     }
 
-    const transferReady = allowanceReady && allowance
-    const transactionProps = {
-        transactionData: stakeData,
-        account,
-        isReady: transferReady,
-        isFinished: transaction,
-        setFinished: setTransaction,
-        setIsTransactionLoading,
-        trigger: trigger,
+    const blockchainProps = {
+        processingData: {
+            amount: stakeReq,
+            amountAllowance: stakeReq,
+            userWallet: account.address,
+            currency: selectedCurrency,
+            diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
+            transactionData: stakingFunction
+        },
+        buttonData: {
+            // buttonFn,
+            icon: <RocketIcon className={ButtonIconSize.hero}/>,
+            text: "Stake",
+        },
+        checkLiquidity: true,
+        checkAllowance: true,
+        checkTransaction: true,
+        showButton: true,
+        saveData: true,
+        saveDataFn: setBlockchainData,
     }
-
-    useEffect(()=>{
-        // console.log("QQQ: wykonaj transakcje", transferReady)
-        if(transferReady) {
-            setTrigger(true)
-        }
-    }, [transferReady])
-
-
-
-    const run = async () => {
-        setAccept(false);
-        setTrigger(false)
-        await sleeper(500)
-        setAccept(true);
-        setTrigger(true)
-    }
-
 
     const title = () => {
         return (
@@ -96,18 +69,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                         <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>{isS1 ? "S1" : "S2"}</p></div>
                         <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{stakeReq} BYTES</p></div>
                     </div>
-
-                    <div className={"mb-5 text-sm gap-3 flex flex-col"}>
-                        <LiquidityStep stepProps={liquidityProps}/>
-                        <AllowanceStep stepProps={allowanceProps}/>
-                        <TransactionStep stepProps={transactionProps}/>
-                    </div>
-
-
-                    <div className={"flex flex-1 justify-end"}>
-                        <UniButton type={ButtonTypes.BASE} text={buttonText} state={"danger"} isDisabled={!liquidity || isTransactionLoading !== TransactionState.Init}
-                                   handler={()=> { run() }}/>
-                    </div>
+                    <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
             </div>
         )
     }
@@ -130,7 +92,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     }
 
     const content = () => {
-        if(transaction) {
+        if(transactionData?.transferConfirmed) {
             return contentSuccess()
         } else {
             return contentStake()
@@ -138,6 +100,6 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         }
     }
 
-    return (<GenericModal isOpen={model} closeModal={setter} title={title()} content={content()}/>)
+    return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()}/>)
 }
 

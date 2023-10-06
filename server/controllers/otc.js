@@ -1,44 +1,46 @@
 const {getEnv} = require("../services/db");
-const {getActiveOffers, getHistoryOffers, saveOtcHash, removeOtcHash} = require("../queries/otc.query");
-const {getParamOfferList} = require("./offerList");
+const {getActiveOffers, getHistoryOffers, saveOtcHash, signOtcTransaction} = require("../queries/otc.query");
+const {getPermittedOfferList} = require("./offerList");
 const moment = require("moment");
 const {createHash} = require("./helpers");
+const {signData} = require("../../src/lib/authHelpers");
 
+const OtcState = {
+    DISABLED: 0
+}
 
-async function getMarkets(session, req) {
-    const offers = await getParamOfferList(session, req)
+async function getMarkets(session) {
+    const offers = await getPermittedOfferList(session)
     return {
-        open: offers.filter(el => el.otc !== 0),
-        otcFee: getEnv().feeOtc,
+        markets: offers.filter(el => el.market !== OtcState.DISABLED),
+        otcFee: Number(getEnv().feeOtc),
         currencies: getEnv().currencies,
-        multichain: getEnv().multichain
+        diamond: getEnv().diamondBased
     }
 }
 
-async function getOffers(session, req) {
-    const ID = Number(req.params.id)
-    return await getActiveOffers(ID)
+async function getOffers(req) {
+    const otcId = Number(req.params.id)
+    return await getActiveOffers(otcId)
 }
 
-async function getHistory(session, req) {
+async function getHistory(req) {
     const ID = Number(req.params.id)
     return await getHistoryOffers(ID)
 }
 
-async function createOffer(session, req) {
-    const {ACL, ADDRESS, USER} = session
+async function createOffer(user, req) {
+    const {address} = user
 
     try {
-        const ID = Number(req.params.id)
+        const offerId = Number(req.params.id)
         const isBuy = Boolean(req.body.isBuyer)
         const amount = Number(req.body.amount)
         const price = Number(req.body.price)
         const networkChainId = Number(req.body.networkChainId)
         const now = moment().unix()
-        const hash = createHash(`${ADDRESS}` + `${now}`)
-
-        return await saveOtcHash(networkChainId, false, hash, ADDRESS, USER.id, ACL, isBuy, ID, amount, price)
-
+        const hash = createHash(`${address}` + `${now}`)
+        return await saveOtcHash(address, networkChainId, offerId, hash, price, amount, isBuy)
     } catch (e) {
         return {
             ok: false,
@@ -46,26 +48,38 @@ async function createOffer(session, req) {
     }
 }
 
-async function removeOffer(session, req) {
-    const {ACL, ADDRESS, USER} = session
+async function signOffer(user, req) {
+    const {address} = user
+
 
     try {
-        const ID = Number(req.params.id)
+        const offerId = Number(req.params.id)
         const networkChainId = Number(req.body.networkChainId)
-        const hash = req.body.hash?.length < 8
-        if(!hash) throw new Error("NO_PENDING_UPDATE");
-        const result = await removeOtcHash(ID, networkChainId, req.body.hash, ADDRESS, USER.id, ACL)
-        return {
-            ok: result,
+        const otcId = Number(req.body.otcId)
+        const dealId = Number(req.body.dealId)
+        const expireDate =  moment.utc().unix() + 3 * 60
+        const dbCheck = await signOtcTransaction(address, offerId, networkChainId, otcId, dealId, expireDate)
+        const signature = await signData(address, otcId, dealId, dbCheck.nonce, expireDate)
+        if(!signature.ok){
+            throw new Error("Invalid signature")
         }
-    } catch(e) {
+
+        return {
+            ok: true,
+            data: {
+                nonce: dbCheck.nonce,
+                expiry: expireDate,
+                hash: signature.data
+            }
+        }
+    } catch (e) {
+        console.log("signOffer e",e)
         return {
             ok: false,
         }
     }
-
-
-
 }
 
-module.exports = {getMarkets, getOffers, getHistory, createOffer, removeOffer}
+
+
+module.exports = {getMarkets, getOffers, getHistory, createOffer, signOffer}

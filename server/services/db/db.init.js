@@ -30,7 +30,6 @@ const modelDefiners = [
     require('../../models/participants.model'),
     require('../../models/vaults.model'),
     require('../../models/otcDeals.model'),
-    require('../../models/otcPending.model'),
     require('../../models/diamonds.model'),
     require('../../models/ntElites.model'),
     require('../../models/lootbox.model'),
@@ -38,6 +37,8 @@ const modelDefiners = [
     require('../../models/storeUser.model'),
     require('../../models/storeMysterybox.model'),
     require('../../models/upgrade.model'),
+    require('../../models/notifications.model'),
+    require('../../models/otcLocks.model'),
 ];
 
 // We define all models according to their files.
@@ -46,7 +47,7 @@ for (const modelDefiner of modelDefiners) {
 }
 
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, otcPending, diamonds, store, storeUser, storeMysterybox, upgrade } = sequelize.models;
+    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, diamonds, store, storeUser, storeMysterybox, upgrade, notifications, otcLocks } = sequelize.models;
 
     networks.hasMany(partners)
     partners.belongsTo(networks);
@@ -66,14 +67,14 @@ function applyExtraSetup(sequelize) {
     offers.hasMany(otcDeals);
     otcDeals.belongsTo(offers);
 
-    offers.hasMany(otcPending);
-    otcPending.belongsTo(offers);
-
     networks.hasMany(otcDeals)
     otcDeals.belongsTo(networks);
 
-    networks.hasMany(otcPending)
-    otcPending.belongsTo(networks);
+    otcDeals.hasMany(notifications, { foreignKey: 'otcDealId' });
+    notifications.belongsTo(otcDeals, { foreignKey: 'otcDealId' });
+
+    otcDeals.hasMany(otcLocks);
+    otcLocks.belongsTo(otcDeals);
 
     networks.hasMany(diamonds)
     diamonds.belongsTo(networks);

@@ -89,7 +89,11 @@ export default function Input({type, placeholder, max, min, setStatus, input, se
                     return setIsError({state: true, msg: `Amount has to be divisible by $10`})
                 }
                 setStatus(false)
-                return setIsError({state: false})
+                if(max) {
+                    return setIsError({state: false, msg: `Maximum amount: $${max.toLocaleString()}`})
+                } else
+                    return setIsError({state: false})
+
             }
         }
 

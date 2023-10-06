@@ -1,93 +1,86 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useEffect, useState} from "react";
+import {useRef, useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import PAGE from "@/routes";
-import Link from "next/link";
+import {ExternalLinks} from "@/routes";
 import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
 import IconPlus from "@/assets/svg/PlusZ.svg";
 import IconMinus from "@/assets/svg/MinusZ.svg";
 import IconDiscord from "@/assets/svg/Discord.svg";
-import {useNetwork} from "wagmi";
 import SwitchGeneric from "@/components/Switch";
 import Dropdown from "@/components/App/Dropdown";
-import MakeOfferInteract from "@/components/App/Otc/MakeOfferInteract";
 import Lottie from "lottie-react";
 import lottieOtc from "@/assets/lottie/otc.json";
-
+import useGetChainEnvironment from "@/lib/hooks/useGetChainEnvironment";
+import Linker from "@/components/link";
+import {getOtcMakeFunction} from "@/components/App/Otc/OtcSteps";
+import RocketIcon from "@/assets/svg/Rocket.svg";
+import {saveTransaction} from "@/fetchers/otc.fetcher";
+import BlockchainSteps from "@/components/App/BlockchainSteps";
 
 
 export default function MakeOfferModal({model, setter, props}) {
-    const {currentMarket, multichain, allocation, refetchVault, refetchOffers, source, currencies} = props
-        // const {data: session} = useSession()
-    const session = {} //todo: sesja
-    const {chain} = useNetwork()
+    const {currentMarket, diamonds, allocation, refetchVault, refetchOffers, currencies, account} = props
 
-    const [isBuyer, setIsBuyer] = useState(false)
+    const allocationMax = allocation ? (allocation.invested - allocation.locked) : 0
+
+    const [isBuyer, setIsBuyer] = useState(allocationMax === 0)
     const [dealCurrency, setDealCurrency] = useState(0)
-    const [isSuccess, setIsSuccess] = useState(false)
-
-    const [processing, setProcessing] = useState(false)
+    const [blockchainData, setBlockchainData] = useState(false)
 
 
+    const [waitingForHash, setWaitingForHash] = useState(false)
+
+    const [hash, setHash] = useState("")
     const [amount, setAmount] = useState(0)
     const [statusAmount, setStatusAmount] = useState(false)
 
     const [price, setPrice] = useState(0)
     const [statusPrice, setStatusPrice] = useState(false)
-
-
     const [multiplier, setMultiplier] = useState(1)
 
-
     const multiplierParsed = multiplier.toFixed(2)
-
-    const allocationMax = allocation.invested - allocation.locked
     const allocationMin = 50
     const priceMin = allocationMin
     const statusCheck = statusAmount || statusPrice
 
     const titleCopy = isBuyer ? 'Buying' : 'Selling';
     const textCopy = isBuyer ? 'buy' : 'sell';
-    const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
-    const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
-        let currency = currencies[selectedChain][el]
-        currency.address = el
-        return currency
-    }) : [{}]
 
-    const currencyNames = currencyList.map(el => el.symbol)
+    const blockchainRef = useRef();
+
+    const {selectedChain, currencyList, currencyNames, diamond} = useGetChainEnvironment(currencies, diamonds)
+    const {transactionData} = blockchainData
+
+    if(!selectedChain || !currentMarket) return;
     const selectedCurrency = currencyList[dealCurrency]
+    const otcSellFunction = getOtcMakeFunction(hash, currentMarket.market, price, selectedCurrency, !isBuyer, diamond)
 
     const closeModal = async () => {
         refetchVault()
         refetchOffers()
         setter()
-        setProcessing(false)
+        setWaitingForHash(false)
 
         setTimeout(() => {
             setAmount(allocationMin)
             setMultiplier(1)
-            // setError(null)
-            // setHash("")
-        }, 1000);
+            setHash("")
+            setBlockchainData(false)
+        }, 400);
 
     }
 
-
     const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi).toFixed(2)))}
     const calcMulti = (price_) => {setMultiplier(Number(Number(price_) / Number(amount).toFixed(2)))}
-
     const setAmountHandler = (amt) => {
         setAmount(amt)
         if(amt) calcPrice(multiplier, amt)
     }
-
     const setPriceHandler = (amt) => {
         setPrice(amt)
         if(amt && amount) calcMulti(amt)
     }
-
     const setMultiplierHandler = (add) => {
         if(add) {
             setMultiplier((current) => {
@@ -106,30 +99,52 @@ export default function MakeOfferModal({model, setter, props}) {
         }
     }
 
-    const interactionProps = {
-        amount,
-        statusAmount,
-        statusPrice,
-        price,
-        dealCurrency,
-        isBuyer,
-        session,
-        allocationMax,
-        currentMarket,
-        selectedCurrency,
-        setIsSuccess,
-        statusCheck,
-        processing,
-        setProcessing,
-        chain,
-        refetchVault,
-        diamond: multichain[selectedChain],
+    const buttonFn = async () => {
+        setWaitingForHash(true)
+        const transaction = await saveTransaction(currentMarket.id, selectedChain, price, amount, isBuyer)
+        if (transaction.ok) {
+            setHash(transaction.hash)
+            setWaitingForHash(false)
+            blockchainRef.current.runProcess();
+        } else {
+            setWaitingForHash(false)
+            //todo: error handling
+        }
     }
+
+    const blockchainProps = {
+        processingData: {
+            amount: price,
+            amountAllowance: price,
+            userWallet: account.address,
+            currency: selectedCurrency,
+            diamond: diamond,
+            transactionData: otcSellFunction
+        },
+        buttonData: {
+            buttonFn,
+            icon: <RocketIcon className={ButtonIconSize.hero}/>,
+            text: "Make Offer",
+            customLock: true,
+            customLockParams: [
+                {check: statusCheck, error: "Bad parameters"},
+                {check: waitingForHash, error: "Generating hash"},
+                // {check: waitingForHash},
+            ],
+        },
+        checkLiquidity: isBuyer,
+        checkAllowance: isBuyer,
+        checkTransaction: true,
+        showButton: true,
+        saveData: true,
+        saveDataFn: setBlockchainData,
+    }
+
 
     const title = () => {
         return (
             <>
-                {!!isSuccess ?
+                {!!transactionData?.transferConfirmed ?
                     <>OTC offer <span className="text-app-success">created</span></>
                     :
                     <><span className="text-app-success">Create</span> OTC offer</>
@@ -142,29 +157,24 @@ export default function MakeOfferModal({model, setter, props}) {
         return (
             <div className=" flex flex-col flex-1">
                 <div>Congratulations! You have successfully created OTC offer to <span className="text-app-success font-bold">{textCopy} ${amount}</span> allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.</div>
-                <Lottie animationData={lottieOtc} loop={true} autoplay={true} style={{width: '320px', margin: '-40px auto 0px'}}/>;
-
+                <Lottie animationData={lottieOtc} loop={true} autoplay={true} style={{width: '320px', margin: '-40px auto 0px'}}/>
                 <div className="mt-auto fullWidth">
-
-                    <div className="flex flex-1 justify-center items-center -mt-5 mb-5">
-                        <Link href={PAGE.App} className={"w-full"}>
+                    <div className="flex flex-1 justify-center items-center -mt-5">
+                        <a href={ExternalLinks.OTC_ANNOUNCE} target={"_blank"} className={"w-full"}>
                             <RoundButton text={'Announce'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} icon={<IconDiscord className={ButtonIconSize.hero}/> } />
-                        </Link>
+                        </a>
                     </div>
-                <div className="mt-auto">What's next? <a href="#" target="_blank">Read more</a></div>
                 </div>
             </div>
         )
     }
-
-
 
     const contentForm = () => {
         return (
             <div className=" flex flex-1 flex-col">
                 <div className={'pt-5 flex flex-row gap-5 justify-center items-center font-bold text-xl'}>
                     <div className={"text-app-success"}>BUY</div>
-                    <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer} isDisabled={processing}/>
+                    <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer} isDisabled={waitingForHash || allocationMax === 0}/>
                     <div className={"text-app-error"}>SELL</div>
 
                 </div>
@@ -187,7 +197,7 @@ export default function MakeOfferModal({model, setter, props}) {
                     <div className={`px-6 font-bold tabular-nums transition-colors duration-300 text-2xl ${multiplier>1 ? ' text-app-success' : ' text-app-error'}`}>x<span className={"text-5xl"}>{multiplierParsed}</span></div>
                     <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconPlus className={"w-8"}/>} handler={() => setMultiplierHandler(true)}/>
                 </div>
-                <div className={"flex flex-row flex-1"}>
+                <div className={"flex flex-row w-full"}>
                     <Input type={'number'}
                            placeholder={`For price`}
                            min={priceMin}
@@ -199,19 +209,16 @@ export default function MakeOfferModal({model, setter, props}) {
                            customCss={"flex-1"}
                     />
                     <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setDealCurrency} position={dealCurrency}/>
-
                 </div>
+                <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
+                <div className="mt-auto text-center"> <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span></div>
 
-                <MakeOfferInteract props={interactionProps}/>
-
-                <div className="">Before creating an offer, please <a
-                    href="#" target="_blank" className="text-app-success">read more</a></div>
             </div>
         )
     }
 
     const content = () => {
-       return isSuccess ? contentSuccess() : contentForm()
+       return transactionData?.transferConfirmed ? contentSuccess() : contentForm()
     }
 
     return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)

@@ -5,46 +5,38 @@ const {OfferAccess, ACLs, OfferAccessACL} = require("../../src/lib/authHelpers")
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
 
 
-async function getParamOfferList(user) {
+async function getPermittedOfferList(user) {
     const {ACL, address} = user
-    const acl = Object.keys(OfferAccessACL[ACL])
-
-    const offers = await getOfferList(acl)
-
-    let response = {
-        cdn: getEnv().cdn,
-        stats: getEnv().stats,
-        offers: []
-    }
+    const offers = await getOfferList()
 
     switch (ACL) {
         case ACLs.Whale: {
-            response.offers = getOfferListWhale(offers, ACL)
-            break;
+            return getOfferListWhale(offers, ACL)
         }
         case ACLs.Member: {
-            response.offers = getOfferListMember(offers, ACL)
-            break;
+            return getOfferListMember(offers, ACL)
         }
         case ACLs.NeoTokyo: {
-            response.offers = offerListNeoTokyo(offers, ACL);
-            break;
+            return offerListNeoTokyo(offers, ACL);
         }
         case ACLs.PartnerInjected: {
-            response.offers = await offerListInjectedPartner(offers, address);
-            break;
+            return await offerListInjectedPartner(offers, address);
         }
         case ACLs.Admin: {
-            response.offers = offerListAdmin(offers, ACL);
-            break;
+            return offerListAdmin(offers, ACL);
         }
         default: {
-            response.offers =  offerListPartner(offers, ACL)
-            break;
+            return  offerListPartner(offers, ACL)
         }
     }
 
-    return response
+}
+async function getParamOfferList(user) {
+    return {
+        cdn: getEnv().cdn,
+        stats: getEnv().stats,
+        offers: await getPermittedOfferList(user)
+    }
 }
 
 function getOfferListWhale(offers, acl) {
@@ -117,8 +109,6 @@ function offerListInjectedProcess(data) {
 }
 
 function offerListPartner(data, acl) {
-    console.log("OfferAccessACL",OfferAccessACL)
-    console.log("acl",acl)
     let offerList = []
     data.forEach(el => {
         if(OfferAccessACL[acl][el.access]) {
@@ -148,6 +138,7 @@ function offerListAdmin(data, acl) {
 function fillPartnerData(offer) {
     return {
         id: offer.id,
+        market: offer.otc,
         name: offer.name,
         genre: offer.genre,
         slug: offer.slug,
@@ -162,6 +153,7 @@ function fillPartnerData(offer) {
 function fillWhaleData(offer) {
     return {
         id: offer.id,
+        market: offer.otc,
         name: offer.name,
         genre: offer.genre,
         slug: offer.slug,
@@ -172,4 +164,4 @@ function fillWhaleData(offer) {
     }
 }
 
-module.exports = {getParamOfferList, OfferAccess}
+module.exports = {getParamOfferList, getPermittedOfferList, OfferAccess}

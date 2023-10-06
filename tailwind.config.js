@@ -22,6 +22,7 @@ module.exports = {
         'footer': '#090b0f',
         'app-bg': process.env.NEXT_PUBLIC_SITE === "based" ? '#0e1118' : "#000000",
         'navy-accent': process.env.NEXT_PUBLIC_SITE === "based" ? '#161b26' : "rgba(0,0,0,0.2)",
+        'navy-2': process.env.NEXT_PUBLIC_SITE === "based" ? '#0e1018' : "rgba(0,0,0,0.2)",
         'app-bg-split': '#273031',
         'app-success':  process.env.NEXT_PUBLIC_SITE === "based" ? '#b1e365' : '#00c853',
         'app-error': process.env.NEXT_PUBLIC_SITE === "based" ? '#b92551' :'#D31C5B',

@@ -1,52 +1,39 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import { useState} from "react";
-import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
-import AllowanceStep from "@/components/App/BlockchainSteps/AllowanceStep";
-import TransactionStep, {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {
-    getButtonStep,
     getUpgradesFunction
 } from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {isBased, sleeper} from "@/lib/utils";
+import {isBased} from "@/lib/utils";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 import Dropdown from "@/components/App/Dropdown";
+import BlockchainSteps from "@/components/App/BlockchainSteps";
+import {useRef} from "react";
 
 export default function BuyStoreItemModal({model, setter, buyModalProps, networkOk}) {
-    if(!model || !networkOk) return;
     const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
 
-    const [liquidity, setLiquidity] = useState(false)
-    const [allowance, setAllowance] = useState(false)
-    const [transaction, setTransaction] = useState(false)
+    const [blockchainData, setBlockchainData] = useState(false)
 
-    const [accept, setAccept] = useState(false)
-    const [trigger, setTrigger] = useState(false)
-    const [isTransactionLoading, setIsTransactionLoading] = useState(TransactionState.Init)
+    const {transactionData} = blockchainData
+    const blockchainRef = useRef();
 
-    const purchaseData = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
-
-    const buttonText = getButtonStep(isTransactionLoading, "Buy")
-
+    if(!networkOk) return
+    const purchaseUpgradesFunction = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
             setOrder(null)
-            setTransaction(false)
-            setAllowance(false)
-            setLiquidity(false)
-            setTrigger(false)
-            setAccept(false)
-            setIsTransactionLoading(TransactionState.Init)
-        }, 1000);
+            setBlockchainData(false)
+        }, 400);
     }
 
     const redirect = () => {
@@ -55,52 +42,26 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
         })
     }
 
-    const run = async () => {
-        setAccept(false);
-        setTrigger(false)
-        await sleeper(500)
-        setAccept(true);
-        setTrigger(true)
-    }
-
-
-
-
-    const liquidityProps = {
-        currencyAddress: selectedCurrency.address,
-        currencyPrecision: selectedCurrency.precision,
-        currencySymbol: selectedCurrency.symbol,
-        isReady: model,
-        account: account.address,
-        amount: order.price,
-        isFinished: liquidity,
-        setFinished: setLiquidity,
-    }
-
-    const allowanceReady = liquidity && accept
-    const allowanceProps = {
-        currencyAddress: selectedCurrency.address,
-        currencyPrecision: selectedCurrency.precision,
-        currencySymbol: selectedCurrency.symbol,
-        allowanceFor: contract,
-        isReady: allowanceReady,
-        account: account.address,
-        amount: order.price,
-        isFinished: allowance,
-        setFinished: setAllowance,
-        setIsTransactionLoading,
-    }
-
-
-    const transferReady = allowanceReady && allowance
-    const transactionProps = {
-        transactionData: purchaseData,
-        account: account.address,
-        isReady: transferReady,
-        isFinished: transaction,
-        setFinished: setTransaction,
-        setIsTransactionLoading,
-        trigger: trigger,
+    const blockchainProps = {
+        processingData: {
+            amount: order.price,
+            amountAllowance: order.price,
+            userWallet: account.address,
+            currency: selectedCurrency,
+            diamond: contract,
+            transactionData: purchaseUpgradesFunction
+        },
+        buttonData: {
+            // buttonFn,
+            icon: <RocketIcon className={ButtonIconSize.hero}/>,
+            text: "Buy",
+        },
+        checkLiquidity: true,
+        checkAllowance: true,
+        checkTransaction: true,
+        showButton: true,
+        saveData: true,
+        saveDataFn: setBlockchainData,
     }
 
 
@@ -108,7 +69,7 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
     const title = () => {
         return (
             <>
-                {transaction ?
+                {transactionData?.transferConfirmed ?
                     <>Transaction <span className="text-app-success">successful</span></> :
                     <><span className="text-app-success">Buy</span> Upgrade</>
                 }
@@ -146,29 +107,14 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content">
-                        <LiquidityStep stepProps={liquidityProps} />
-                        <AllowanceStep stepProps={allowanceProps}/>
-                        <TransactionStep stepProps={transactionProps}/>
-                </div>
-                <div className={` pb-5 ${isBased ? "fullWidth": "flex flex-1 justify-center"}`}>
-                    <UniButton
-                        type={ButtonTypes.BASE}
-                        isWide={true}
-                        size={'text-sm sm'}
-                        text={buttonText}
-                        state={"danger"}
-                        icon={<RocketIcon className={ButtonIconSize.hero}/>}
-                        isDisabled={!liquidity || isTransactionLoading !== TransactionState.Init}
-                        handler={()=> { run() }}/>
-                </div>
+                <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
             </div>
         )
     }
 
 
     const content = () => {
-       return transaction ? contentSuccess() : contentSteps()
+       return transactionData?.transferConfirmed ? contentSuccess() : contentSteps()
     }
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)

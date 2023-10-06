@@ -74,8 +74,9 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
                 [Op.and]: [
                     db.literal(sumFilter)
                 ]
-            }
-        }, {transaction});
+            },
+            transaction
+        });
 
 
         if (!increaseBooking[0][1]) {
@@ -89,8 +90,9 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
                    offerId:offerId,
                    storeId: PremiumItemsENUM.Guaranteed,
                    owner: address,
-                }
-            }, {transaction});
+                },
+                transaction
+            });
         }
 
         await db.query(participantsQuery, {
@@ -105,7 +107,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
         if (transaction) {
             await transaction.rollback();
         }
-        console.log("bookAllocation", error)
+        console.log("bookAllocation", e)
         Sentry.captureException({
             location: "bookAllocation",
             error,
@@ -136,8 +138,8 @@ async function bookAllocationGuaranteed(transaction, offerId, address, tokenId, 
                 [Op.and]: [
                     db.literal(sumFilter)
                 ]
-            }
-        }, {transaction});
+            },transaction
+        });
 
         if (!booked[0][1]) {
             return {

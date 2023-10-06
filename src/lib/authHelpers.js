@@ -1,5 +1,13 @@
 const {serialize} = require("cookie");
 const {jwtVerify, SignJWT} = require("jose")
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
+const {ethers} = require("ethers");
+
+const aws_secrets = new SecretsManagerClient({ region: process.env.SECRET_REGION });
+const aws_secrets_input = { // GetSecretValueRequest
+    SecretId: process.env.SECRET_NAME,
+};
+
 
 const ACLs = {
     Whale: 0,
@@ -139,6 +147,47 @@ const verifyID = async (req, isRefresh) => {
     }
 }
 
+const getPrivateKeyFromAWSSecretManager = async () => {
+    try {
+        const response = await aws_secrets.send(
+            new GetSecretValueCommand({
+                SecretId: process.env.SECRET_NAME,
+                VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+            })
+        );
+        return response.SecretString
+    } catch (err) {
+        console.log(`AWS SecretsManager Read Error: ${err}`);
+        throw err;
+    }
+}
+
+const signData = async (wallet, otcId, dealId, nonce, expire) => {
+    try {
+        if (!Number.isInteger(otcId) || !Number.isInteger(dealId)) throw new Error("Invalid IDs");
+
+        const privateKeyHex = await getPrivateKeyFromAWSSecretManager();
+
+        const signer = new ethers.Wallet(privateKeyHex);
+        const combinedMessage = ethers.utils.solidityPack(["uint256", "uint256", "uint256",  "uint256", "address"], [otcId, dealId, nonce, expire, wallet]);
+
+        const payloadHash = ethers.utils.keccak256(combinedMessage);
+
+        return {
+            ok: true,
+            data: await signer.signMessage(ethers.utils.arrayify(payloadHash))
+        };
+    } catch (e) {
+        console.log("signature error" ,e)
+
+        return {
+            ok: false,
+            error: e
+        }
+    }
+}
+
+
 module.exports = {
     ACLs,
     OfferAccess,
@@ -156,4 +205,5 @@ module.exports = {
     buildCookie,
     verifyToken,
     verifyID,
+    signData
 }

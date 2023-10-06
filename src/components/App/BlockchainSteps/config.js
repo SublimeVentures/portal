@@ -11,12 +11,11 @@ import mysteryBoxAbi_citcap from "../../../../abi/mysteryboxCitCap.abi.json";
 import usdtAbi from "../../../../abi/usdt.abi.json";
 import {erc20ABI} from "wagmi";
 import {BigNumber} from "bignumber.js";
-import {TransactionState} from "@/components/App/BlockchainSteps/TransactionStep";
 import {ACLs} from "@/lib/authHelpers";
 import {isBased} from "@/lib/utils";
 
-
 export const Transaction = {
+    PrecheckFailed: -1,
     Waiting: 0,
     Processing: 1,
     Executed: 2,
@@ -34,6 +33,7 @@ export const getIcon = (status) => {
         case Transaction.Executed: {
             return <IconSuccess className="w-7 text-app-success mr-2"/>
         }
+        case Transaction.PrecheckFailed:
         case Transaction.Failed: {
             return <IconError className="w-7 text-app-error mr-2"/>
         }
@@ -51,25 +51,12 @@ export const getStatusColor = (status) => {
         case Transaction.Executed: {
             return 'text-app-success'
         }
+        case Transaction.PrecheckFailed:
         case Transaction.Failed: {
             return 'text-app-error cursor-pointer'
         }
         default: {
             return ''
-        }
-    }
-}
-
-export const getButtonStep = (state, defaultText) => {
-    switch (state) {
-        case TransactionState.Init: {
-            return defaultText
-        }
-        case TransactionState.Executing: {
-            return "Waiting..."
-        }
-        case TransactionState.Processing: {
-            return "Processing..."
         }
     }
 }
@@ -120,15 +107,6 @@ export const getInvestFunction = (ACL, isFromStake, amount, offer, currency, has
 export const getCitCapStakingFunction = (contractAddress) => {
     return {
         method: 'stake',
-        args: [],
-        address: contractAddress,
-        abi: CitCapStakingAbi
-    }
-}
-
-export const getCitCapUnStakingFunction = (contractAddress) => {
-    return {
-        method: 'unstake',
         args: [],
         address: contractAddress,
         abi: CitCapStakingAbi

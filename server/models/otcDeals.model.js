@@ -1,6 +1,5 @@
 const {DataTypes} = require("sequelize");
 
-
 module.exports = (sequelize) => {
     sequelize.define('otcDeals', {
         id: {
@@ -9,47 +8,63 @@ module.exports = (sequelize) => {
             primaryKey: true,
             unique: true
         },
-        hashCreate: {
-            type: DataTypes.STRING,
+        otcId: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
             allowNull: false,
-        },
-        hashSettle: {
-            type: DataTypes.STRING,
         },
         dealId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        buyer: {
-            type: DataTypes.STRING,
-        },
-        seller: {
-            type: DataTypes.STRING,
-        },
-        amount: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
         price: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             defaultValue: 0,
             allowNull: false,
         },
-        currency: {
+        amount: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+            allowNull: false,
+        },
+        maker: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        state: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,  //0- added, 1- filled, 3- removed
+        taker: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
-
+        currency: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        isSell: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isCancelled: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isFilled: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isOnChainConfirmed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        hash: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     }, {
         indexes: [
-            {unique: true, fields: ['offerId', 'dealId']},
-            {unique: false, fields: ['offerId']},
+            {unique: false, fields: ['offerId', 'dealId', 'networkChainId']},
+            {unique: false, fields: ['maker']},
+            {unique: false, fields: ['taker']},
         ],
         freezeTableName: true,
         timestamps: true

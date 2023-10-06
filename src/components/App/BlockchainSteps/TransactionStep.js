@@ -1,29 +1,46 @@
-import {usePrepareContractWrite, useContractWrite, useWaitForTransaction, usePrepareSendTransaction} from 'wagmi'
+import {usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {useEffect} from "react";
 
-export const TransactionState = {
-    Init: 0,
-    Executing: 1,
-    Processing: 2,
-}
 
 export default function TransactionStep({stepProps}) {
-    const {transactionData, account, isReady, setFinished, setIsTransactionLoading, trigger} = stepProps
+    // console.log("STATE :: T -================")
+
+    const {
+        processingData,
+        isReady,
+        setIsReady,
+        isFinished,
+        setFinished,
+        saveData
+    } = stepProps
+
+    const {
+        amount,
+        amountAllowance,
+        userWallet,
+        currency,
+        diamond,
+        transactionData
+    } = processingData
+
 
     const {
         config: configPrep,
         isSuccess: successPrep,
-        isError: isErrorPrep
+        isError: isErrorPrep,
+        error: errorPrep,
     } = usePrepareContractWrite({
         address: transactionData.address,
         abi: transactionData.abi,
         functionName: transactionData.method,
         args: transactionData.args,
         overrides: {
-            from: account,
+            from: userWallet,
         },
         enabled: isReady
     })
+
+    // console.log("STATE :: T - usePrepareContractWrite", {successPrep, isErrorPrep})
 
     const {
         data: txId,
@@ -34,80 +51,87 @@ export default function TransactionStep({stepProps}) {
         isLoading: isLoadingWrite
     } = useContractWrite(configPrep)
 
+    // console.log("STATE :: T - useContractWrite", {txId, isErrorWrite, errorWrite, isSuccessWrite, isLoadingWrite})
 
     const {
         data: transferConfirmed,
         isError: isErrorConfirmed,
         error: errorConfirmed,
-        isSuccess:isSuccessConfirmed,
+        isSuccess: isSuccessConfirmed,
         isLoading: isLoadingConfirmed,
         isFetching: isFetchingConfirmed
     } = useWaitForTransaction({
         confirmations: 2,
         hash: txId?.hash,
     })
-    //
-    //
-    // console.log("======" )
-    // console.log("STATE :: isReady " , isReady)
-    // console.log("STATE :: successPrep " , successPrep)
-    // console.log("STATE :: isErrorPrep " , isErrorPrep)
-    // console.log("STATE :: txId " , txId)
-    // console.log("STATE :: isErrorWrite " , isErrorWrite)
-    // console.log("STATE :: errorWrite " , errorWrite)
-    // console.log("STATE :: isSuccessWrite " , isSuccessWrite)
-    // console.log("STATE :: isLoadingWrite " , isLoadingWrite)
-    // console.log("STATE :: transferConfirmed " , transferConfirmed)
-    // console.log("STATE :: isErrorConfirmed " , isErrorConfirmed)
-    // console.log("STATE :: errorConfirmed " , errorConfirmed)
-    // console.log("STATE :: isSuccessConfirmed " , isSuccessConfirmed)
-    // console.log("STATE :: isLoadingConfirmed " , isLoadingConfirmed)
-    // console.log("STATE :: isFetchingConfirmed " , isFetchingConfirmed)
-    // console.log("======" )
+
+    // console.log("STATE :: T - useWaitForTransaction", {
+    //     transferConfirmed,
+    //     isErrorConfirmed,
+    //     errorConfirmed,
+    //     isSuccessConfirmed,
+    //     isLoadingConfirmed,
+    //     isFetchingConfirmed
+    // })
 
 
     const disabledButton = !isReady || isLoadingWrite || isLoadingConfirmed || isFetchingConfirmed
-
-    useEffect(()=>{
-        setIsTransactionLoading(disabledButton && isReady ? (successPrep ? TransactionState.Executing : TransactionState.Processing ) : TransactionState.Init)
-    }, [disabledButton, isReady, successPrep])
-
     const transfer = () => {
-        if(isReady && successPrep) {
-            // console.log("QQQ :: send transaction")
+        if (isReady && successPrep) {
             sendTransaction()
         }
     }
-    useEffect(()=>{
-        // console.log("QQQ :: trigger", trigger, successPrep, isReady)
-        if(trigger) {
-            transfer()
-        }
-    }, [trigger, successPrep])
 
-    useEffect(()=>{
-        if(!!transferConfirmed && isSuccessConfirmed) {
+    useEffect(() => {
+        // console.log("STATE :: T - setIsTransactionLoading?", {disabledButton, isReady, successPrep})
+        // setIsTransactionLoading(disabledButton && isReady ? (successPrep ? TransactionState.Executing : TransactionState.Processing) : TransactionState.Init)
+    }, [disabledButton, isReady, successPrep])
+
+
+    useEffect(() => {
+        // console.log("QQQ :: trigger", trigger, successPrep, isReady)
+        // if (trigger) {
+            transfer()
+        // }
+    // }, [trigger, successPrep])
+    }, [successPrep, isReady])
+
+    useEffect(() => {
+        if (!!transferConfirmed && isSuccessConfirmed) {
             setFinished(true)
-            setIsTransactionLoading(TransactionState.Init)
+            saveData({
+                transferConfirmed,
+                txId
+            })
+            // setIsTransactionLoading(TransactionState.Init)
         }
     }, [transferConfirmed, isSuccessConfirmed])
 
-    useEffect(()=>{
-        if(isLoadingWrite || isLoadingConfirmed) {
-            setIsTransactionLoading(TransactionState.Processing)
-        }
+    useEffect(() => {
+        // if (isLoadingWrite || isLoadingConfirmed) {
+        //     setIsTransactionLoading(TransactionState.Processing)
+        // }
+        // console.log("ERRORS", errorConfirmed, errorWrite, errorPrep, errorPrep?.cause)
 
-        if(!!errorConfirmed || !!errorWrite) {
-            setIsTransactionLoading(TransactionState.Init)
+        if (!!errorConfirmed || !!errorWrite || !!errorPrep) {
+            setFinished(false)
+            setIsReady(false)
+            // setIsTransactionLoading(TransactionState.Init)
         }
-    }, [isLoadingWrite, isLoadingConfirmed, errorConfirmed, errorWrite])
+    // }, [isLoadingWrite, isLoadingConfirmed, errorConfirmed, errorWrite])
+    }, [errorConfirmed, errorWrite, errorPrep])
 
-    // console.log("errorConfirmed",errorConfirmed)
-    // console.log("errorWrite",errorWrite ? Object.keys(errorWrite) : 0, errorWrite?.shortMessage, errorWrite?.metaMessages, errorWrite?.message, errorWrite?.cause)
-    // console.log("errorWrite",errorWrite)
+    // console.log("STATE :: T - errorConfirmed",errorConfirmed)
+    // console.log("STATE :: T - errorWrite",errorWrite ? Object.keys(errorWrite) : 0, errorWrite?.shortMessage, errorWrite?.metaMessages, errorWrite?.message, errorWrite?.cause)
+    // console.log("STATE :: T - errorWrite",errorWrite)
     return (
         <div className={'fullWidth min-h-[25px]'}>
-            {!!errorConfirmed || !!errorWrite && <div className={"text-app-error text-center"}>{errorConfirmed}{errorWrite?.shortMessage ? errorWrite.shortMessage : errorWrite?.cause?.reason.toUpperCase()}</div>}
+            {!!errorConfirmed || !!errorWrite || !!errorPrep && <div className={"text-app-error text-center"}>
+                {errorConfirmed}
+                {errorWrite?.shortMessage ? errorWrite.shortMessage : errorWrite?.cause?.reason.toUpperCase()}
+                {errorPrep?.shortMessage ? errorPrep.shortMessage : errorPrep?.cause?.reason.toUpperCase()}
+            </div>
+            }
         </div>
     )
 }

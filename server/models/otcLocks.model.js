@@ -1,42 +1,26 @@
 const {DataTypes} = require("sequelize");
 
-
 module.exports = (sequelize) => {
-    sequelize.define('otcPending', {
+    sequelize.define('otcLocks', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
         },
-        hash: {
+        owner: {
             type: DataTypes.STRING,
+            defaultValue: 0,
             allowNull: false,
         },
-        hashRelated: {
-            type: DataTypes.STRING,
-        },
-        address: {
-            type: DataTypes.STRING,
-        },
-        nftId: {
+        offerId: {
             type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
         },
-        acl: {
+        expiryDate: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        isBuyer: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-        },
-        isTaker: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-        },
-        isConfirmed: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+            defaultValue: 0,
             allowNull: false,
         },
         isExpired: {
@@ -44,14 +28,23 @@ module.exports = (sequelize) => {
             defaultValue: false,
             allowNull: false,
         },
-        data: {
-            type: DataTypes.JSON,
+        amount: {
+            type: DataTypes.DOUBLE,
+            allowNull: false,
         },
+        isSell: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
+
     }, {
         indexes: [
-            {unique: true, fields: ['offerId', 'hash']},
+            {unique: false, fields: ['owner']},
+            {unique: false, fields: ['isExpired']},
         ],
         freezeTableName: true,
         timestamps: true
     });
 };
+

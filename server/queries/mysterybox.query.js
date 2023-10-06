@@ -141,7 +141,7 @@ async function claimMysterybox(owner) {
         }
 
 
-        const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: PremiumItemsENUM.Mysterybox }, raw:true }, { transaction })
+        const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: PremiumItemsENUM.Mysterybox }, raw:true, transaction })
         if(deduct[0][1] !== 1) {
             await transaction.rollback();
             Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});

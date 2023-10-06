@@ -1,75 +1,47 @@
-import OtcFacet from "@/components/App/Otc/OtcFacet.json";
-import {ACLs}  from "@/lib/authHelpers";
+import otcAbi from "../../../../abi/otcFacet.abi.json";
+import {BigNumber} from "bignumber.js";
 
-export const getOtcTradeFunction = (isBuy, diamond, offerId, amount, price, currency, hash) => {
+export const getOtcMakeFunction = (hash, market, price, currency, isSell, diamond) => {
+    const power = BigNumber(10).pow(currency.precision)
+    const _price = BigNumber(price).multipliedBy(power)
     return {
-        method:'add',
+        method:'offerMake',
         args: [
-            offerId,
-            amount * 10 ** 6,
-            price * 10 ** 6,
+            hash,
+            market,
+            _price,
             currency.address,
-            isBuy,
+            isSell
+        ],
+        address: diamond,
+        abi: otcAbi
+    }
+}
+
+export const getOtcCancelFunction = (otcId, dealId, diamond) => {
+    return {
+        method:'offerCancel',
+        args: [
+            otcId,
+            dealId
+        ],
+        address: diamond,
+        abi: otcAbi
+    }
+}
+
+export const getOtcTakeFunction = (otcId, dealId, nonce, expire, hash, diamond) => {
+    return {
+        method:'offerTake',
+        args: [
+            otcId,
+            dealId,
+            nonce,
+            expire,
             hash
         ],
         address: diamond,
-        abi: OtcFacet
+        abi: otcAbi
     }
+}
 
-}
-export const getOtcCancelFunction = (source, offerId, dealId, ACL, address, nftId) => {
-    switch (ACL) {
-        case ACLs.Whale: {
-                return {
-                    method:'removeOffer',
-                    args: [
-                        dealId,
-                        nftId,
-                        offerId,
-                    ],
-                    address: source,
-                    abi: OtcFacet
-                }
-        }
-        default: {
-            return {
-                method:'removeOfferPartner',
-                args: [
-                    dealId,
-                    offerId
-                ],
-                address: source,
-                abi: OtcFacet
-            }
-        }
-    }
-}
-export const getOtcBuyFunction = (source, offerId, dealId, ACL, nftId, currency) => {
-    switch (ACL) {
-        case ACLs.Whale: {
-                return {
-                    method:'settleOffer',
-                    args: [
-                        dealId,
-                        nftId,
-                        offerId,
-                        currency
-                    ],
-                    address: source,
-                    abi: OtcFacet
-                }
-        }
-        default: {
-            return {
-                method:'settleOfferPartner',
-                args: [
-                    dealId,
-                    offerId,
-                    currency
-                ],
-                address: source,
-                abi: OtcFacet
-            }
-        }
-    }
-}

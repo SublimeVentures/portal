@@ -1,6 +1,5 @@
 const {models} = require('../services/db/db.init');
 const Sentry = require("@sentry/nextjs");
-const {Op} = require("sequelize");
 
 async function getOffersPublic() {
     try {
@@ -20,15 +19,12 @@ async function getOffersPublic() {
     return []
 }
 
-async function getOfferList(ACL) {
+async function getOfferList() {
     try {
 
         return models.offers.findAll({
             where: {
-                display: true,
-                access: {
-                    [Op.in]: ACL // Use Op.in to check if the 'access' value is in the array
-                }
+                display: true
             },
             order: [
                 ['d_open', 'DESC'],
@@ -41,15 +37,12 @@ async function getOfferList(ACL) {
     return []
 }
 
-async function getOfferDetails(slug, ACL) {
+async function getOfferDetails(slug) {
     try {
 
         return models.offers.findOne({
             where: {
-                display: true, slug,
-                access: {
-                    [Op.in]: ACL // Use Op.in to check if the 'access' value is in the array
-                }
+                display: true, slug
             },
             raw: true
         })
