@@ -43,7 +43,6 @@ export default function AppOtc({account}) {
             staleTime: 0,
         }
     );
-
     const currentMarket = otc?.markets?.find(el => el.slug === market)
 
     const {isSuccess: offersIsSuccess, data: offers, refetch: refetchOffers} = useQuery({
