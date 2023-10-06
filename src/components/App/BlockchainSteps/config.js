@@ -113,6 +113,14 @@ export const getCitCapStakingFunction = (contractAddress) => {
     }
 }
 
+export const getCitCapUnStakingFunction = (contractAddress) => {
+    return {
+        method: 'unstake',
+        args: [],
+        address: contractAddress,
+        abi: CitCapStakingAbi
+    }
+}
 
 export const getUpgradesFunction = (contract, currency, amount, itemID) => {
     return {
