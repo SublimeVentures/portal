@@ -1,0 +1,266 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "message",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "getEncodePacked",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "currency_",
+        "type": "address"
+      }
+    ],
+    "name": "getOtcFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOtcIterator",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOtcMarketEnabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "iterator_",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOtcOffer",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "maker",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "taker",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "isSell",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "hash",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct OtcOffer",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offerId_",
+        "type": "uint256"
+      }
+    ],
+    "name": "offerCancel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "hash_",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "currency_",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "isSell_",
+        "type": "bool"
+      }
+    ],
+    "name": "offerMake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offerId_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nonce_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expire_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature_",
+        "type": "bytes"
+      }
+    ],
+    "name": "offerTake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "state_",
+        "type": "bool"
+      }
+    ],
+    "name": "setMarketEnabled",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "currency_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fee_",
+        "type": "uint256"
+      }
+    ],
+    "name": "setOtcFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "address_",
+        "type": "address"
+      }
+    ],
+    "name": "setOtcSigner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

@@ -26,9 +26,6 @@ async function getPartners(isDev, isBased) {
                 isEnabled: true,
                 ...filter
             },
-            order: [
-                ["multiplier", "DESC"],
-            ],
             include: {model: models.networks, where: {isDev}},
             raw: true
         });

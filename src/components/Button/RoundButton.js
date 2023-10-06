@@ -4,7 +4,10 @@ import VanillaTilt from 'vanilla-tilt';
 
 export const ButtonIconSize = {
     hero: "w-8 mr-5",
+    hero5: "w-6 mr-5",
     hero2: "w-6 mr-5",
+    hero4: "w-6 mr-2",
+    hero3: "w-6",
     small: "w-8",
     vsmall: "w-6 -ml-2 -mr-2",
     clicks: "w-5",

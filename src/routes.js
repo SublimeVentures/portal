@@ -44,6 +44,8 @@ const ExternalLinksBased = {
     WIKI: "https://info.basedvc.fund",
     DISCORD: "https://discord.gg/3SaqVVdzUH",
     TWITTER:"https://twitter.com/basedVCfund",
+    OTC_ANNOUNCE: "https://discord.com/channels/1031176608729550849/1156911245602078832",
+    OTC: "https://info.basedvc.fund/OTC-fdad47130a0a49bbaa1a1e4c9fd95907",
 
     APPLY:"https://tally.so/r/mK5Pvk",
     WHALE_CLUB: "https://info.basedvc.fund/3VC-Whale-Club-5fea374623c1493d8af2b4b04914ab3e",
@@ -64,6 +66,8 @@ const ExternalLinksCitCap = {
     WIKI: "https://info.citizencapital.fund",
     DISCORD: "https://discord.gg/CX7ChfhYbf",
     TWITTER:"https://twitter.com/CitCapFund",
+    OTC: "https://info.citizencapital.fund/OTC-08ce38805290416eb073b139bd54e3f7",
+    OTC_ANNOUNCE: "https://discord.com/channels/959614664386424884/1038006855445774347",
 
     STAKING: "https://info.citizencapital.fund/BYTES-Staking-Requirement-f1621bfe909b41d797fd77ca784a8fa0",
     GETBYTES: "https://app.uniswap.org/#/swap?outputCurrency=0xa19f5264f7d7be11c451c093d8f92592820bea86",

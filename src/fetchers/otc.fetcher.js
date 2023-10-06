@@ -13,15 +13,16 @@ export const fetchMarkets = async () => {
 }
 
 
-export const fetchOffers = async (offerId) => {
+export const fetchOffers = async (otcId) => {
+    if(!otcId) return []
     try {
-        const url = `/api/otc/offers/${offerId}`
+        const url = `/api/otc/offers/${otcId}`
         const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
         Sentry.captureException({location: "fetchOffers", error: e});
     }
-    return {}
+    return []
 }
 
 export const fetchHistory = async (offerId) => {
@@ -35,17 +36,30 @@ export const fetchHistory = async (offerId) => {
     return {}
 }
 
-export const saveTransaction = async (offerId, networkChainId, isBuyer, amount, price) => {
+export const saveTransaction = async (offerId, networkChainId, price, amount, isBuyer) => {
     try {
         const {data} = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
-            isBuyer,
-            amount,
+            networkChainId,
             price,
-            networkChainId
+            amount,
+            isBuyer,
         })
         return data
     } catch(e) {
         Sentry.captureException({location: "saveTransaction", error: e});
+    }
+    return {}
+}
+export const getSignature = async (offerId, networkChainId, otcId, dealId) => {
+    try {
+        const {data} = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {
+            networkChainId,
+            otcId,
+            dealId
+        })
+        return data
+    } catch(e) {
+        Sentry.captureException({location: "getSignature", error: e});
     }
     return {}
 }

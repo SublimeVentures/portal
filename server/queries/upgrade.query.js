@@ -88,7 +88,7 @@ async function processUseUpgrade(owner, offerId, upgradeId, userTokenId, userACL
             return save
         }
 
-        const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: upgradeId }, raw:true }, { transaction })
+        const deduct = await models.storeUser.increment({amount: -1}, { where: { owner, storeId: upgradeId }, raw:true, transaction })
         if(deduct[0][1] !== 1) {
             await transaction.rollback();
             return {

@@ -19,45 +19,67 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Add to clickup
-- gtag
 
 ## ToDo
+NEW_RELIC_APP_NAME=blockeater NEW_RELIC_LICENSE_KEY=895620bbf0ba2b4fe28f612cadff95c6FFFFNRAL node -r newrelic YOUR_MAIN_FILENAME.js
 =================
+-- release, 
+-- otc notion page prep
+-- smartcontract -> clean old matic offers
 
-- OTC
-  - make offer button
-  - -- (buy) check liquidity
-  - -- (buy) check allowance
-  - -- (buy) check send transaction
-
-  - processor
-  - -- receive webhook
-  - -- match hash with settlement
-  - -- build otcDeal
-  - -- expire otcPending after 5 minutes
-  - clean old otcPending - every month after backup
+-- smartcontract -> set markets enabled
+-- dont send whole otc package for sell fill offers
+-- mpp oznaczyc transakcje i wyciagnac swoje
+-- withdraw 15 usdt from matic diamond
+-- bg in sidebar
 - =============
-
-
-
-- ben's hours https://app.clickup.com/t/86ay8d3v9
-- twitter
+- ujednolicić kontenery i nagłówki
+- new relic na webapp
+citcap modal —  force network
+- schedule everyday backups
+- clickup https://docs.google.com/document/d/18D9J0y72LnMaPURBzzcjfobcxc6WQdbDZw9tU6-h94M/edit
+- https://discord.com/channels/@me/997001334328918017/1159501455800152124
+- clean payload in owned allocation
+- finality on otc market - per blockchain
+- click pointer on side toolbars in slider
+- right-bar for larger modals & move modals
+- add max amount in otc input box
+- enable rpc usage only to domain and apps
+- redundancy on RPC provider - frontend/blockeater [quicknode / ankr]
+- server components force on everything not wagmi- related
+- connect discord to app
+- connect email to app
+- auth redirect fix
+- morlis remove
 - notion in routes
-- timeline for user activities for each investment in vault tab
-- reassign allocation
-- lazy loading na ofertach i vault
-
-- reset modal settings on close
-- modal issues - https://discord.com/channels/884204406189490176/996185131989606410/1135253613892091974 // - cant invest on bnb
-- unlock button for failed set allowance
-
-- UniButton -> GenericButton
+- ChatGPT - try more https://discord.com/channels/@me/997001334328918017/1155135672894636132
+- vault
+  - timeline for user activities for each investment in vault tab
+  - reassign allocation
+  - lazy loading
+  - table & tile view
 - w vault osobna kategoria z aktywnymi i nowymi updetami
+- UniButton -> GenericButton
 - in app vote
-- SS :: https://docs.google.com/document/d/13ZLpE_CvAzMiB7O22gnWeWMpjzGFT02n0KI2LHmYBhs/edit
 - set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
 - resolution issues: - https://discord.com/channels/@me/915237510928556052/1146846153917333544
+- custom 404 page
+- RR unmount
+- notifications
+
+- investment calendar google
+- rasied funds on landing
+- 500, 1000, user max button under investment size
+
+- whale NFT
+- whale page
+- invest from stake
+- whale deposit/ withdraw features in settings
+- onboarding whales
+- referral system
+- update data / refeed cach on url call
+
+
 
 - delegate cash fix
 - staking (force eth)
@@ -66,29 +88,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
   - wyciagnij swoje
 - delegated -> invest to vault or hot
 
-- custom 404 page
-- RR unmount
-- investment calendar google
-- rasied funds on landing
-
-- 500, 1000, user max button under investment size
-
-- connect discord to app
-- notifications
-
-- invest from stake
-- update data / refeed cach on url call
-
-- onboarding whales
-
-- referral system
-
-- new investment update for api
-- whale deposit/ withdraw features in settings
-- whale page
 
 
-Hey man the site looks really good and stoked to see it on mobile! One issue I did notice was a pretty consistent resizing of the browser when I was checking it out before I connected my wallet. After connecting my wallet the interface was smooth like butter. I was using MetaMask’s in app browser on an iPhone.
+
 
 
 

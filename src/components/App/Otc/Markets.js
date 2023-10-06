@@ -1,36 +1,30 @@
+import {isBased} from "@/lib/utils";
+import PAGE from "@/routes";
+import {IconButton} from "@/components/Button/IconButton";
+import IconInfo from "@/assets/svg/Info.svg";
+import Link from "next/link";
 
 
 export default function OtcMarkets({propMarkets}) {
-    let {markets, changeMarket, currentMarket} = propMarkets
+    let {otc, changeMarket, currentMarket} = propMarkets
 
     return (
-        <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
-            <div className="overflow-x-auto flex flex-col">
-                <div className="text-xl uppercase font-medium text-outline p-5">Markets</div>
+        <div className={`${isBased ? "rounded-xl" :""} offerWrap  flex flex-1 maxHeight`}>
+            <div className={`overflow-x-auto flex flex-col bg-navy-accent ${isBased ? " rounded-tl-xl rounded-tr-xl" : ""}`}>
+                <div className={`${isBased ? " font-medium text-[1.7rem] rounded-tl-xl rounded-tr-xl bg-navy" : "text-app-error font-accent glowRed uppercase font-light text-2xl bg-black"} flex p-5 glowNormal   header`}>Markets</div>
+
                 <table>
-                    <thead className="bg-navy ">
-                    <tr>
-                        {/*<th className="sm:w-[110px] font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">*/}
-                        {/*    <label>OFFERS</label></th>*/}
-                        {/*<th className="font-bold text-sm text-left sm:py-4 sm:px-2">*/}
-                        <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
-                            <label>PROJECT</label></th>
-                        <th className="font-bold text-sm text-right sm:py-4 sm:pl-2 sm:pr-5">
-                            <label>TICKER</label></th>
-                    </tr>
-                    </thead>
                     <tbody>
-                    {markets.open.map((el) => {
+                    {otc.markets.map((el) => {
                         return <tr key={el.id} onClick={()=> changeMarket(el.slug)}
-                                   className={`cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${el.slug === currentMarket.slug ? 'bg-app-success text-black' : ''}`}>
-                            {/*<td className="sm:w-[110px]  text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"*/}
-                            {/*    data-label="OFFERS">0*/}
-                            {/*</td>*/}
-                            {/*<td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2 "*/}
-                            <td className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
-                                data-label="MARKET">{el.name}</td>
-                            <td className="text-sm text-right px-5 py-1  sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
-                                data-label="TICKER">{el.ticker}</td>
+                                   className={`cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${el?.slug === currentMarket?.slug ? 'bg-app-success text-black' : ''}`}>
+                            <td className="group text-sm px-5 py-3 relative text-left sm:py-4">
+                                {el.name}
+                                <span className={"absolute right-2 -mt-[5px] opacity-0 group-hover:opacity-100 transition duration-300"}>
+                                       <Link href={`${PAGE.Opportunities}/${el.slug}`}><IconButton zoom={1.1} size={'w-8'} icon={<IconInfo />} noBorder={isBased} /></Link>
+                                </span>
+                            </td>
+
                         </tr>
                     })}
 

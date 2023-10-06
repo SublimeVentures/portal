@@ -37,6 +37,7 @@ async function getEnvironment() {
     env.currencies = parsedCurrencies
     env.currenciesStore = parsedCurrenciesStore
     env.diamond = isBased ? parsedDiamonds.basedVC : parsedDiamonds.CitCap
+    env.diamondBased = parsedDiamonds.basedVC
     env.ntData = {
         S1: partners.find(el => el.name === "Neo Tokyo Citizen S1")?.address,
         S2: partners.find(el => el.name === "Neo Tokyo Citizen S2")?.address,

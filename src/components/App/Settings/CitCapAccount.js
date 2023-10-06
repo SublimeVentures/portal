@@ -10,25 +10,26 @@ import dynamic from "next/dynamic";
 import {updateSession_CitCapStaking} from "@/fetchers/auth.fetcher";
 import {isBased} from "@/lib/utils";
 const CitCapStakingModal = dynamic(() => import('@/components/App/Settings/CitCapStakingModal'), {ssr: false})
-const CitCapUnStakingModal = dynamic(() => import('@/components/App/Settings/CitCapUnStakingModal'), {ssr: false})
 
 
 function timeUntilNextUnstakeWindow(stakedAt) {
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const SECONDS_IN_A_DAY = 24 * 60 * 60;
+    const SECONDS_IN_A_HOUR = 1 * 60 * 60;
     const PERIOD_LENGTH = 90 * SECONDS_IN_A_DAY; // 90 days in seconds
     const UNSTAKING_WINDOW_LENGTH = 3 * SECONDS_IN_A_DAY; // 3 days in seconds
 
 
     let timeSinceStaked = currentTimestamp - stakedAt;
     let periodPosition = timeSinceStaked % PERIOD_LENGTH;
-
     if (periodPosition >= (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH)) {
         let timeUntilNextRestake = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
-        return {unstake:true, nextDate: timeUntilNextRestake}
+        let timeUntilNextRestakeHours = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
+        return {unstake:true, nextDate: timeUntilNextRestake.toFixed(0), nextDateH: timeUntilNextRestakeHours.toFixed(0)}
     } else {
         let timeUntilUnstakeWindow = (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
-        return {unstake:false, nextDate: timeUntilUnstakeWindow.toFixed(0)}
+        let timeUntilUnstakeWindowHours = (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
+        return {unstake:false, nextDate: timeUntilUnstakeWindow.toFixed(0), nextDateH: timeUntilUnstakeWindowHours.toFixed(0)}
 
     }
 }
@@ -40,10 +41,10 @@ export default function CitCapAccount({account}) {
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
     const [stakingModal, setStakingModal] = useState(false);
-    const [unstakingModal, setUnStakingModal] = useState(false);
     const isTranscended = account.transcendence
+
     const unstakeDate = account?.stakeDate ? account.stakeDate : stakeDate
-    const {unstake, nextDate} = timeUntilNextUnstakeWindow(unstakeDate)
+    const {unstake, nextDate, nextDateH} = timeUntilNextUnstakeWindow(unstakeDate)
     const refreshSession = async () => {
         const {updatedSession} = await updateSession_CitCapStaking()
         if(!updatedSession) return
@@ -57,7 +58,6 @@ export default function CitCapAccount({account}) {
 
     const stakingModalProps = {
         stakeReq: account.stakeReq,
-        stakeSze: account.stakeSize,
         account: account.address,
         isS1: account.isS1,
         refreshSession
@@ -89,21 +89,15 @@ export default function CitCapAccount({account}) {
                     <hr className={"spacer"}/>
                     {staked ? <p>({account.stakeSize ? account.stakeSize : stakeReq} BYTES) TRUE</p> : <p>({account.stakeReq} BYTES) NO</p>}
                 </div>
-                {staked && <div className={"detailRow text-app-success"}><p>Next restake</p><hr className={"spacer"}/>
-                     <p>in {nextDate} days</p>
+                {staked && <div className={"detailRow text-app-success"}><p>Next {unstake ? "re":"un"}stake</p><hr className={"spacer"}/>
+                     <p>in {nextDate > 3 ? <>{nextDate} days</> : <>{nextDateH} hour{nextDateH>1 ? "s" : ""}</>} </p>
                 </div>}
 
                 {(!staked || unstake) && <div className={" flex flex-1 justify-between mt-5"}>
                     <UniButton type={ButtonTypes.BASE} text={'GET BYTES'}
                                handler={()=> {window.open(ExternalLinks.GETBYTES, '_blank');}}/>
                     <UniButton type={ButtonTypes.BASE} text={unstake ? "Unstake" : 'Stake'} state={unstake ? "": "danger"}
-                               handler={()=> {
-                                   if(unstake) {
-                                       setUnStakingModal(true)
-                                   } else {
-                                       setStakingModal(true)
-                                   }
-                               }}/>
+                               handler={()=> {setStakingModal(true)}}/>
                 </div>
                 }
             </div>
@@ -111,10 +105,6 @@ export default function CitCapAccount({account}) {
                 setStakingModal(false)
                 await refreshSession()
             }}/>
-            {unstake && <CitCapUnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
-                setUnStakingModal(false)
-                await refreshSession()
-            }}/> }
 
         </div>
     )

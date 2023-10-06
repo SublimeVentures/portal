@@ -4,25 +4,38 @@ import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainS
 import {useEffect} from "react";
 
 export default function LiquidityStep({stepProps}) {
-    const {currencyAddress, currencyPrecision, currencySymbol, isReady, account, amount, isFinished, setFinished} = stepProps
+    const {
+        processingData,
+        isReady,
+        setIsReady,
+        isFinished,
+        setFinished,
+        saveData
+    } = stepProps
+
+    const {
+        amount,
+        userWallet,
+        currency,
+    } = processingData
+
 
     const {
         isSuccess: balanceFed,
+        isLoading,
         data: currentBalance
     } = useContractRead(
         {
-            address: currencyAddress,
+            address: currency.address,
             abi: erc20ABI,
             functionName: 'balanceOf',
-            args: [account],
+            args: [userWallet],
             watch: !isFinished,
             enabled: isReady
         }
     )
 
-    // console.log("currentBalance",currentBalance)
-
-    const power = BigNumber(10).pow(currencyPrecision)
+    const power = BigNumber(10).pow(currency.precision)
     const currentBalanceBN = BigNumber(currentBalance)
     const currentBalanceHuman = currentBalance ? currentBalanceBN.dividedBy(power).toNumber() : 0
     const isEnoughLiquidity = amount <= currentBalanceHuman
@@ -31,32 +44,14 @@ export default function LiquidityStep({stepProps}) {
     const amountLocale = Number(amount).toLocaleString()
 
 
-
-    // console.log("RECHANGE ===============")
-    // console.log("RECHANGE - isEnoughLiquidity",  isEnoughLiquidity,)
-    // console.log("RECHANGE - balanceFed", balanceFed)
-    // console.log("RECHANGE - isLoading", isLoading)
-    // console.log("RECHANGE - isFetching", isFetching)
-    // console.log("RECHANGE ===============")
-
-    useEffect(()=>{
-        // console.log("RECHANGE EFFECT===============")
-        // console.log("RECHANGE EFFECT - isEnoughLiquidity",  isEnoughLiquidity)
-        // console.log("RECHANGE EFFECT - balanceFed", balanceFed)
-        // console.log("RECHANGE EFFECT - isLoading", isFinished)
-        // console.log("RECHANGE EFFECT - isFinished", isReady)
-        // console.log("RECHANGE EFFECT===============")
-        // console.log("RECHANGE - balanceFed",balanceFed)
-        // console.log("RECHANGE- isFinished",!isFinished)
-        // console.log("RECHANGE- isReady",isReady)
-        // console.log("RECHANGE-isEnoughLiquidity",isEnoughLiquidity)
-
-        if(balanceFed && isReady) {
+    useEffect(() => {
+        if (balanceFed && isReady) {
             setFinished(isEnoughLiquidity)
+            saveData({
+                liquidity: currentBalanceHuman
+            })
         }
-    }, [isReady, balanceFed, currencyAddress])
-
-
+    }, [isReady, balanceFed, currency?.address])
 
 
     const statuses = (state) => {
@@ -71,7 +66,7 @@ export default function LiquidityStep({stepProps}) {
                 return <>Availability of funds confirmed </>
             }
             case Transaction.Failed: {
-                return <span className="underline">Wallet doesn't hold {amountLocale} {currencySymbol}</span>
+                return <span className="underline">Wallet doesn't hold {amountLocale} {currency?.symbol}</span>
             }
             default: {
                 return <>Check allowance</>
@@ -84,7 +79,8 @@ export default function LiquidityStep({stepProps}) {
             {getIcon(state)}
             <div>
                 {statuses(state)}
-                {state !== Transaction.Executed && isReady && <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {currencySymbol}</div>}
+                {state !== Transaction.Executed && isReady &&
+                    <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {currency?.symbol}</div>}
             </div>
         </div>
     }

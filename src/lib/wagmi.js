@@ -11,7 +11,7 @@ import {isBased} from "@/lib/utils";
 // const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 const rightChains = [mainnet, polygon, bsc]
 const walletConnectProjectId = isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2'
-const alchemyKey = 'A9Z2dv55CjRNyQlhDMaVDY20sBqXgZku'
+const alchemyKey = 'hFR9b4iJDcH8CzddDlWJx40CaYaIcYSo'
 
 
 const { chains,  publicClient, webSocketPublicClient } = configureChains(

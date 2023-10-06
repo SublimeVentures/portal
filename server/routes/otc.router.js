@@ -1,45 +1,45 @@
 const express = require('express')
 const router = express.Router();
-const {getMarkets, getOffers, getHistory, createOffer, removeOffer} = require("../controllers/otc");
+const {getMarkets, getOffers, getHistory, createOffer, signOffer} = require("../controllers/otc");
+const {verifyID} = require("../../src/lib/authHelpers");
 
 router.get('/markets', async (req, res) => {
-    // const session = await getAccessToken(req)
-    // if (!session) return res.status(401).json({})
-    const session = {}
-    return res.status(200).json(await getMarkets(session, req))
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
+    return res.status(200).json(await getMarkets(user))
 });
 
 router.get('/offers/:id', async (req, res) => {
-    // const session = await getAccessToken(req)
-    // if (!session) return res.status(401).json({})
-    const session = {}
+    const {auth} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
 
-    return res.status(200).json(await getOffers(session, req))
-});
-
-router.post('/:id/create', async (req, res) => {
-    // const session = await getAccessToken(req)
-    // if (!session) return res.status(401).json({})
-    const session = {}
-
-    return res.status(200).json(await createOffer(session, req))
-});
-
-router.post('/:id/remove', async (req, res) => {
-    // const session = await getAccessToken(req)
-    // if (!session) return res.status(401).json({})
-    const session = {}
-
-    return res.status(200).json(await removeOffer(session, req))
+    return res.status(200).json(await getOffers(req))
 });
 
 router.get('/history/:id', async (req, res) => {
-    // const session = await getAccessToken(req)
-    // if (!session) return res.status(401).json({})
-    const session = {}
+    const {auth} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
 
-    return res.status(200).json(await getHistory(session, req))
+    return res.status(200).json(await getHistory(req))
 });
+
+router.post('/:id/create', async (req, res) => {
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
+
+    return res.status(200).json(await createOffer(user, req))
+});
+
+router.post('/:id/sign', async (req, res) => {
+    const {auth, user} = await verifyID(req)
+    if(!auth)  return res.status(401).json({});
+
+    return res.status(200).json(await signOffer(user, req))
+});
+
+
+
+
 
 
 module.exports = {router}
