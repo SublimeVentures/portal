@@ -23,11 +23,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## ToDo
 NEW_RELIC_APP_NAME=blockeater NEW_RELIC_LICENSE_KEY=895620bbf0ba2b4fe28f612cadff95c6FFFFNRAL node -r newrelic YOUR_MAIN_FILENAME.js
 =================
--- release, 
--- otc notion page prep
--- smartcontract -> clean old matic offers
+0x3C02Eb9Ea7e0Ef7C80d13D4d83856c83b033ED6a
 
--- smartcontract -> set markets enabled
+https://discord.com/channels/@me/997001334328918017/1159841572385460275
+
 -- dont send whole otc package for sell fill offers
 -- mpp oznaczyc transakcje i wyciagnac swoje
 -- withdraw 15 usdt from matic diamond
