@@ -129,7 +129,6 @@ export default function MakeOfferModal({model, setter, props}) {
             customLockParams: [
                 {check: statusCheck, error: "Bad parameters"},
                 {check: waitingForHash, error: "Generating hash"},
-                // {check: waitingForHash},
             ],
         },
         checkLiquidity: isBuyer,
