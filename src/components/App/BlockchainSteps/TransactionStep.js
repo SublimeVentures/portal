@@ -1,7 +1,6 @@
 import {usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {useEffect} from "react";
 
-
 export default function TransactionStep({stepProps}) {
     // console.log("STATE :: T -================")
 
@@ -111,7 +110,7 @@ export default function TransactionStep({stepProps}) {
         // if (isLoadingWrite || isLoadingConfirmed) {
         //     setIsTransactionLoading(TransactionState.Processing)
         // }
-        // console.log("ERRORS", errorConfirmed, errorWrite, errorPrep, errorPrep?.cause)
+        // console.log("ERRORS", !!errorWrite, !!errorPrep, !!errorConfirmed, JSON.stringify(errorWrite))
 
         if (!!errorConfirmed || !!errorWrite || !!errorPrep) {
             setFinished(false)
@@ -126,8 +125,8 @@ export default function TransactionStep({stepProps}) {
     // console.log("STATE :: T - errorWrite",errorWrite)
     return (
         <div className={'fullWidth min-h-[25px]'}>
-            {!!errorConfirmed || !!errorWrite || !!errorPrep && <div className={"text-app-error text-center"}>
-                {errorConfirmed}
+            {(!!errorConfirmed || !!errorWrite || !!errorPrep) && <div className={"text-app-error text-center"}>
+                {errorConfirmed?.shortMessage ? errorConfirmed.shortMessage : errorConfirmed?.cause?.reason.toUpperCase()}
                 {errorWrite?.shortMessage ? errorWrite.shortMessage : errorWrite?.cause?.reason.toUpperCase()}
                 {errorPrep?.shortMessage ? errorPrep.shortMessage : errorPrep?.cause?.reason.toUpperCase()}
             </div>

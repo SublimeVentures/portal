@@ -16,7 +16,7 @@ import Dropdown from "@/components/App/Dropdown";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useRef} from "react";
 
-export default function BuyStoreItemModal({model, setter, buyModalProps, networkOk}) {
+export default function BuyStoreItemModal({model, setter, buyModalProps}) {
     const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
 
@@ -25,7 +25,6 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
     const {transactionData} = blockchainData
     const blockchainRef = useRef();
 
-    if(!networkOk) return
     const purchaseUpgradesFunction = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
 
     const closeModal = () => {
@@ -44,6 +43,7 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
 
     const blockchainProps = {
         processingData: {
+            requiredNetwork: 1,
             amount: order.price,
             amountAllowance: order.price,
             userWallet: account.address,
@@ -56,6 +56,7 @@ export default function BuyStoreItemModal({model, setter, buyModalProps, network
             icon: <RocketIcon className={ButtonIconSize.hero}/>,
             text: "Buy",
         },
+        checkNetwork: !isBased,
         checkLiquidity: true,
         checkAllowance: true,
         checkTransaction: true,

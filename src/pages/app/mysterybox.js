@@ -11,8 +11,6 @@ import VanillaTilt from "vanilla-tilt";
 import Head from "next/head";
 import {useQuery} from "@tanstack/react-query";
 import {fetchStore, fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
-
-import StoreNetwork from "@/components/Navigation/StoreNetwork";
 import {useNetwork} from "wagmi";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
 import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxModal";
@@ -32,7 +30,6 @@ export default function AppLootbox({account}) {
     const [claimModal, setClaimModal] = useState(false)
     const [claimProcessing, setClaimProcessing] = useState(false)
     const [order, setOrder] = useState(null)
-    const [networkOk, setNetworkOk] = useState(false)
     const [currency, setCurrency] = useState(0)
 
     const {chain} = useNetwork()
@@ -63,7 +60,6 @@ export default function AppLootbox({account}) {
     const mysteryBoxOwnedAmount = mysteryBoxOwned ? mysteryBoxOwned.amount : 0
 
     const storeEnvironment = storeData?.env
-    const supportedNetworks = storeEnvironment?.currency ? Object.keys(storeEnvironment?.currency) : []
 
 
     const chainId = chain?.id
@@ -177,9 +173,8 @@ export default function AppLootbox({account}) {
                 <div className={"absolute bottom-0 z-10"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 
             </div>
-            <BuyMysteryBoxModal model={isBuyModal} setter={() => {closeBuy()}} buyModalProps={buyModalProps} networkOk={networkOk}/>
+            <BuyMysteryBoxModal model={isBuyModal} setter={() => {closeBuy()}} buyModalProps={buyModalProps} />
             <ClaimMysteryBoxModal model={claimModal} setter={() => {setClaimModal(false)}} claimData={claimData} />
-            <StoreNetwork supportedNetworks={supportedNetworks} isPurchase={isBuyModal} setNetworkOk={setNetworkOk}/>
             <ErrorModal model={isClaimError}  setter={() => {setClaimError(false)}} errorMessage={errorMessage}/>
         </>
 

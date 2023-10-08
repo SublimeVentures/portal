@@ -4,8 +4,9 @@ import { getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
+import {isBased} from "@/lib/utils";
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
-    const {stakeReq, account, isS1} = stakingModalProps
+    const { account, isS1} = stakingModalProps
 
     const [blockchainData, setBlockchainData] = useState(false)
 
@@ -30,18 +31,19 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
     const blockchainProps = {
         processingData: {
-            amount: stakeReq,
-            amountAllowance: stakeReq,
+            requiredNetwork: 1,
+            amount: account.stakeReq,
+            amountAllowance: account.stakeReq,
             userWallet: account.address,
             currency: selectedCurrency,
             diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
             transactionData: stakingFunction
         },
         buttonData: {
-            // buttonFn,
             icon: <RocketIcon className={ButtonIconSize.hero}/>,
             text: "Stake",
         },
+        checkNetwork: !isBased,
         checkLiquidity: true,
         checkAllowance: true,
         checkTransaction: true,
@@ -67,7 +69,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                    </div>
                     <div className={"my-5"}>
                         <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>{isS1 ? "S1" : "S2"}</p></div>
-                        <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{stakeReq} BYTES</p></div>
+                        <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{account.stakeSize} BYTES</p></div>
                     </div>
                     <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
             </div>
