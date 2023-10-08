@@ -24,8 +24,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## ToDo
 =================
-- sentry
-- aws budget alert
 - ujednolicić kontenery i nagłówki
 - bg in sidebar
 - click pointer on side toolbars in slider

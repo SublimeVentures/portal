@@ -32,11 +32,17 @@ async function getActiveOffers(otcId) {
 }
 
 async function getHistoryOffers(offerId) {
-    return models.otcDeals.findAll({
-        attributes: ['id', 'offerId', 'price', 'amount', 'isSell', 'networkChainId', 'updatedAt'],
-        where: {offerId, isFilled: true},
-        raw: true
-    })
+    try {
+        return models.otcDeals.findAll({
+            attributes: ['id', 'offerId', 'price', 'amount', 'isSell', 'networkChainId', 'updatedAt'],
+            where: {offerId, isFilled: true},
+            raw: true
+        })
+    } catch(e) {
+        Sentry.captureException("getHistoryOffers", {offerId, e});
+        return []
+    }
+
 }
 
 
