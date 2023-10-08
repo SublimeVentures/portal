@@ -1,10 +1,5 @@
 import {usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {useEffect} from "react";
-function walk(err, fn) {
-    if (fn?.(err)) return err
-    if ((err).cause) return walk((err).cause, fn)
-    return err
-}
 
 export default function TransactionStep({stepProps}) {
     // console.log("STATE :: T -================")

@@ -48,21 +48,18 @@ export default function CitCapAccount({account}) {
 
     const unstakeDate = account?.stakeDate ? account.stakeDate : stakeDate
     const {unstake, nextDate, nextDateH} = timeUntilNextUnstakeWindow(unstakeDate)
-    const refreshSession = async () => {
+    const refreshSession = async (force) => {
         const {updatedSession} = await updateSession_CitCapStaking()
         if(!updatedSession) return
         if(updatedSession.isStaked) setStaked(true)
         if(updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize)
         if(updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate)
-        if(updatedSession.isStaked) {
+        if(updatedSession.isStaked || force) {
             router.reload();
         }
     }
-
     const stakingModalProps = {
-        stakeReq: account.stakeReq,
-        stakeSze: account.stakeSize,
-        account: account.address,
+        account: account,
         isS1: account.isS1,
         refreshSession
     }
@@ -117,7 +114,7 @@ export default function CitCapAccount({account}) {
             }}/>
             {unstake && <CitCapUnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
                 setUnStakingModal(false)
-                await refreshSession()
+                await refreshSession(true)
             }}/> }
 
         </div>
