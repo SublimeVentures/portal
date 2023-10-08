@@ -7,7 +7,9 @@ export const fetchMarkets = async () => {
         const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchMarkets", error: e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchMarkets", e});
+        }
     }
     return {}
 }
@@ -20,7 +22,9 @@ export const fetchOffers = async (otcId) => {
         const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchOffers", error: e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchOffers", e});
+        }
     }
     return []
 }
@@ -31,7 +35,10 @@ export const fetchHistory = async (offerId) => {
         const {data} = await axiosPrivate.get(url)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchHistory", error: e});
+
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchHistory", e});
+        }
     }
     return {}
 }
@@ -46,7 +53,9 @@ export const saveTransaction = async (offerId, networkChainId, price, amount, is
         })
         return data
     } catch(e) {
-        Sentry.captureException({location: "saveTransaction", error: e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "saveTransaction", e});
+        }
     }
     return {}
 }
@@ -59,7 +68,9 @@ export const getSignature = async (offerId, networkChainId, otcId, dealId) => {
         })
         return data
     } catch(e) {
-        Sentry.captureException({location: "getSignature", error: e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "getSignature", e});
+        }
     }
     return {}
 }
@@ -71,7 +82,9 @@ export const removeTransaction = async (offerId, hash) => {
         })
         return data
     } catch(e) {
-        Sentry.captureException({location: "removeTransaction", error: e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "removeTransaction", e});
+        }
     }
     return {}
 }

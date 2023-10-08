@@ -7,7 +7,10 @@ export const fetchPublicInvestments = async () => {
         const {data} = await axiosPublic.get(API.publicInvestments)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchPublicInvestments", e});
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchPublicInvestments", e});
+
+        }
     }
     return []
 }
@@ -17,7 +20,10 @@ export const fetchPartners = async () => {
         const {data} = await axiosPublic.get(API.publicPartners)
         return data
     } catch(e) {
-        Sentry.captureException({location: "fetchPartners", e});
+
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchPartners", e});
+        }
     }
     return []
 
