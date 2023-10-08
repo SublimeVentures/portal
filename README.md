@@ -20,35 +20,33 @@ To learn more about Next.js, take a look at the following resources:
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 
+
+
 ## ToDo
-NEW_RELIC_APP_NAME=blockeater NEW_RELIC_LICENSE_KEY=895620bbf0ba2b4fe28f612cadff95c6FFFFNRAL node -r newrelic YOUR_MAIN_FILENAME.js
 =================
-0x3C02Eb9Ea7e0Ef7C80d13D4d83856c83b033ED6a
-
-https://discord.com/channels/@me/997001334328918017/1159841572385460275
-
--- dont send whole otc package for sell fill offers
--- mpp oznaczyc transakcje i wyciagnac swoje
--- withdraw 15 usdt from matic diamond
--- bg in sidebar
-- =============
+- sentry
+- aws budget alert
 - ujednolicić kontenery i nagłówki
-- new relic na webapp
-citcap modal —  force network
-- schedule everyday backups
-- clickup https://docs.google.com/document/d/18D9J0y72LnMaPURBzzcjfobcxc6WQdbDZw9tU6-h94M/edit
-- https://discord.com/channels/@me/997001334328918017/1159501455800152124
-- clean payload in owned allocation
-- finality on otc market - per blockchain
+- bg in sidebar
 - click pointer on side toolbars in slider
 - right-bar for larger modals & move modals
+- show network error if networ kchanges while on make offer modal
 - add max amount in otc input box
-- enable rpc usage only to domain and apps
-- redundancy on RPC provider - frontend/blockeater [quicknode / ankr]
 - server components force on everything not wagmi- related
+- new relic na webapp + logs aggregation
+
 - connect discord to app
 - connect email to app
 - auth redirect fix
+
+- dont send whole otc package for sell fill offers
+- withdraw 15 usdt from matic diamond
+- clean payload in owned allocation
+
+- finality on otc market - per blockchain
+- enable rpc usage only to domain and apps
+- redundancy on RPC provider - frontend/blockeater [quicknode / ankr]
+
 - morlis remove
 - notion in routes
 - ChatGPT - try more https://discord.com/channels/@me/997001334328918017/1155135672894636132
