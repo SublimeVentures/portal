@@ -55,6 +55,10 @@ const OfferAccessACL = {
     [ACLs.Partner]: {
         [OfferAccess.Everyone]: true,
         [OfferAccess.EveryoneWithoutNT]: true,
+    },
+    [ACLs.Delegated]: {
+        [OfferAccess.Everyone]: true,
+        [OfferAccess.EveryoneWithoutNT]: true,
     }
 }
 

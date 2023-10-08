@@ -24,46 +24,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## ToDo
 =================
-- ujednolicić kontenery i nagłówki
 - bg in sidebar
-- click pointer on side toolbars in slider
-- right-bar for larger modals & move modals
-- show network error if networ kchanges while on make offer modal
-- add max amount in otc input box
-- server components force on everything not wagmi- related
-- new relic na webapp + logs aggregation
-
-- connect discord to app
-- connect email to app
 - auth redirect fix
-
-- dont send whole otc package for sell fill offers
-- withdraw 15 usdt from matic diamond
 - clean payload in owned allocation
+- dont send whole otc package for sell fill offers
 
-- finality on otc market - per blockchain
-- enable rpc usage only to domain and apps
-- redundancy on RPC provider - frontend/blockeater [quicknode / ankr]
+- withdraw 15 usdt from matic diamond
 
-- morlis remove
 - notion in routes
 - ChatGPT - try more https://discord.com/channels/@me/997001334328918017/1155135672894636132
-- vault
-  - timeline for user activities for each investment in vault tab
-  - reassign allocation
-  - lazy loading
-  - table & tile view
-- w vault osobna kategoria z aktywnymi i nowymi updetami
-- UniButton -> GenericButton
-- in app vote
-- set isSettled, isPaused dla zakończonych jeśli raisses ma więce >0
-- resolution issues: - https://discord.com/channels/@me/915237510928556052/1146846153917333544
-- custom 404 page
-- RR unmount
-- notifications
 
-- investment calendar google
-- rasied funds on landing
+- in app vote
+- custom 404 page
 - 500, 1000, user max button under investment size
 
 - whale NFT
@@ -73,8 +45,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 - onboarding whales
 - referral system
 - update data / refeed cach on url call
-
-
 
 - delegate cash fix
 - staking (force eth)
