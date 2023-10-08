@@ -4,6 +4,7 @@ const {getPermittedOfferList} = require("./offerList");
 const moment = require("moment");
 const {createHash} = require("./helpers");
 const {signData} = require("../../src/lib/authHelpers");
+const Sentry = require("@sentry/nextjs");
 
 const OtcState = {
     DISABLED: 0
@@ -25,8 +26,14 @@ async function getOffers(req) {
 }
 
 async function getHistory(req) {
-    const ID = Number(req.params.id)
-    return await getHistoryOffers(ID)
+    try {
+        const ID = Number(req.params.id)
+        return await getHistoryOffers(ID)
+    } catch (e) {
+        Sentry.captureException("getHistoryOffers", {req, e});
+        return []
+    }
+
 }
 
 async function createOffer(user, req) {
