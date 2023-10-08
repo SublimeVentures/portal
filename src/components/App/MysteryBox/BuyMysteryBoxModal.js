@@ -16,7 +16,7 @@ import Dropdown from "@/components/App/Dropdown";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useRef} from "react";
 
-export default function BuyMysteryBoxModal({model, setter, buyModalProps, networkOk}) {
+export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
     const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
 
@@ -25,7 +25,6 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
     const {transactionData} = blockchainData
     const blockchainRef = useRef();
 
-    if (!networkOk) return;
 
     const purchaseMysteryBoxFunction = getMysteryBoxFunction(contract, selectedCurrency.address, 1)
 
@@ -45,6 +44,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
 
     const blockchainProps = {
         processingData: {
+            requiredNetwork: 1,
             amount: order.price,
             amountAllowance: order.price,
             userWallet: account.address,
@@ -57,6 +57,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps, networ
             icon: <RocketIcon className={ButtonIconSize.hero}/>,
             text: "Buy",
         },
+        checkNetwork: !isBased,
         checkLiquidity: true,
         checkAllowance: true,
         checkTransaction: true,

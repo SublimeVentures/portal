@@ -17,14 +17,12 @@ import dynamic from "next/dynamic";
 import {useNetwork} from "wagmi";
 import {PremiumItemsENUM} from "@/lib/premiumHelper";
 
-const StoreNetwork = dynamic(() => import('@/components/Navigation/StoreNetwork'), {ssr: false})
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 
 
 export default function AppUpgrades({account}) {
     const [isBuyModal, setBuyModal] = useState(false)
     const [order, setOrder] = useState(null)
-    const [networkOk, setNetworkOk] = useState(true)
     const [currency, setCurrency] = useState(0)
 
     const {chain} = useNetwork()
@@ -120,8 +118,7 @@ export default function AppUpgrades({account}) {
             <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${isBased ? "" : "font-accent"}`}>
                 {renderPage()}
             </div>
-            <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps} networkOk={networkOk}/>
-            <StoreNetwork supportedNetworks={supportedNetworks} isPurchase={isBuyModal} setNetworkOk={setNetworkOk}/>
+            <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps}/>
         </>
 
 

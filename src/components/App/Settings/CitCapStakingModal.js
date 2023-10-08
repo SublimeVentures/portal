@@ -4,6 +4,7 @@ import { getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
+import {isBased} from "@/lib/utils";
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const {stakeReq, account, isS1} = stakingModalProps
 
@@ -30,6 +31,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
     const blockchainProps = {
         processingData: {
+            requiredNetwork: 1,
             amount: stakeReq,
             amountAllowance: stakeReq,
             userWallet: account.address,
@@ -38,10 +40,10 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
             transactionData: stakingFunction
         },
         buttonData: {
-            // buttonFn,
             icon: <RocketIcon className={ButtonIconSize.hero}/>,
             text: "Stake",
         },
+        checkNetwork: !isBased,
         checkLiquidity: true,
         checkAllowance: true,
         checkTransaction: true,
