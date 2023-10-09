@@ -10,7 +10,7 @@ import {MYSTERY_TYPES} from "@/lib/premiumHelper";
 
 
 export default function ClaimMysteryBoxModal({model, setter, claimData}) {
-    if(claimData?.type) return;
+    if(!claimData?.type) return;
 
     const lottieRef = useRef(null);
 
