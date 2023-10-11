@@ -105,7 +105,7 @@ function offerListInjectedProcess(data) {
                 }
             }
     })
-    return offerList
+    return offerList.sort((a, b) => b.id - a.id);
 }
 
 function offerListPartner(data, acl) {
