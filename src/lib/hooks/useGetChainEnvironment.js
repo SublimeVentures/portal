@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {useNetwork} from "wagmi";
 
-
 const useGetChainEnvironment = (currencies, diamonds) => {
     const {chain} = useNetwork()
     const [environment, setEnvironment] = useState({});
@@ -16,7 +15,13 @@ const useGetChainEnvironment = (currencies, diamonds) => {
         }) : [{}]
         const currencyNames = currencyList.map(el => el.symbol)
         const diamond = diamonds[selectedChain]
-        setEnvironment({selectedChain, currencyList, currencyNames, diamond})
+        for(const chainId in currencies) {
+            for(const address in currencies[chainId]) {
+                currencies[chainId][address]["address"] = address;
+            }
+        }
+        const currencyListAll = currencies
+        setEnvironment({selectedChain, currencyList, currencyNames, diamond, currencyListAll})
 
         return () => setEnvironment({})
     }, [chain?.id, diamonds, currencies]);

@@ -18,7 +18,7 @@ export default function TakeOfferModal({model, setter, props}) {
     const [signature, setSignature] = useState(null)
 
     const [blockchainData, setBlockchainData] = useState(false)
-    const {diamond, currencyList} = useGetChainEnvironment(currencies, diamonds)
+    const {diamond, currencyListAll} = useGetChainEnvironment(currencies, diamonds)
 
     const {transactionData} = blockchainData
     const blockchainRef = useRef();
@@ -30,11 +30,10 @@ export default function TakeOfferModal({model, setter, props}) {
 
     }, [signature?.expiry])
 
-
     if(!currentMarket?.name || !offerDetails?.currency || !diamond) return
     const userAllocation = vault.find(el => el.offerId === currentMarket.id)
     const ownedAllocation = userAllocation ? userAllocation.invested - userAllocation.locked : 0
-    const selectedCurrency = currencyList.find(el=> el.address.toLowerCase() === offerDetails.currency.toLowerCase())
+    const selectedCurrency =  currencyListAll[offerDetails.networkChainId][offerDetails.currency]
     const chainDesired = chains.find(el => el.id === offerDetails?.networkChainId)
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
