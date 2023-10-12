@@ -53,23 +53,18 @@ async function getUserPendingOffers(owner) {
 ///////////
 ///events
 //////////
-async function saveOtcHash(address, networkChainId, offerId, hash, price, amount, isBuy) {
-    let transaction
+async function saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell) {
 
     try {
-        transaction = await db.transaction();
-
         await models.otcDeals.create({
             offerId,
             price,
             amount,
             hash,
             networkChainId,
-            isSell: !isBuy,
+            isSell,
             maker: address,
-        }, {transaction})
-
-        await transaction.commit();
+        })
 
         return {
             ok: true,
@@ -80,8 +75,7 @@ async function saveOtcHash(address, networkChainId, offerId, hash, price, amount
         return await errorHandle(
             "otcOfferTake",
             {address, networkChainId, hash},
-            error,
-            transaction
+            error
         )
     }
 }

@@ -43,13 +43,13 @@ export const fetchHistory = async (offerId) => {
     return {}
 }
 
-export const saveTransaction = async (offerId, networkChainId, price, amount, isBuyer) => {
+export const saveTransaction = async (offerId, networkChainId, price, amount, isSell) => {
     try {
         const {data} = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
             networkChainId,
             price,
             amount,
-            isBuyer,
+            isSell,
         })
         return data
     } catch(e) {

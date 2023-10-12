@@ -101,7 +101,7 @@ export default function MakeOfferModal({model, setter, props}) {
 
     const buttonFn = async () => {
         setWaitingForHash(true)
-        const transaction = await saveTransaction(currentMarket.id, selectedChain, price, amount, isBuyer)
+        const transaction = await saveTransaction(currentMarket.id, selectedChain, price, amount, !isBuyer)
         if (transaction.ok) {
             setHash(transaction.hash)
             setWaitingForHash(false)
@@ -139,7 +139,7 @@ export default function MakeOfferModal({model, setter, props}) {
         saveDataFn: setBlockchainData,
     }
 
-
+    const lockActivities = waitingForHash || blockchainData.lock
     const title = () => {
         return (
             <>
@@ -170,46 +170,49 @@ export default function MakeOfferModal({model, setter, props}) {
 
     const contentForm = () => {
         return (
-            <div className=" flex flex-1 flex-col">
-                <div className={'pt-5 flex flex-row gap-5 justify-center items-center font-bold text-xl'}>
-                    <div className={"text-app-success"}>BUY</div>
-                    <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer} isDisabled={waitingForHash || allocationMax === 0}/>
-                    <div className={"text-app-error"}>SELL</div>
+            <div className={`flex flex-1 flex-col`} >
+                <div className={`${lockActivities ? "disabled" : ""} flex flex-1 flex-col`} >
+                    <div className={'pt-5 flex flex-row gap-5 justify-center items-center font-bold text-xl'}>
+                        <div className={"text-app-success"}>BUY</div>
+                        <SwitchGeneric checked={!isBuyer} setChecked={setIsBuyer} isDisabled={allocationMax === 0}/>
+                        <div className={"text-app-error"}>SELL</div>
 
+                    </div>
+                    <div className={'pt-10'}>
+                        <Input type={'number'}
+                               placeholder={`${titleCopy} allocation`}
+                               max={allocationMax}
+                               min={allocationMin}
+                               setStatus={setStatusAmount}
+                               setInput={setAmountHandler}
+                               input={amount}
+                               light={true}
+                               full={true}
+                               dividable={10}
+                               after={"USD"}
+                        />
+                    </div>
+                    <div className={"py-10 flex flex-row justify-center items-center select-none"}>
+                        <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconMinus className={"w-8"}/>} handler={() => setMultiplierHandler(false)}/>
+                        <div className={`px-6 font-bold tabular-nums transition-colors duration-300 text-2xl ${multiplier>1 ? ' text-app-success' : ' text-app-error'}`}>x<span className={"text-5xl"}>{multiplierParsed}</span></div>
+                        <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconPlus className={"w-8"}/>} handler={() => setMultiplierHandler(true)}/>
+                    </div>
+                    <div className={"flex flex-row w-full"}>
+                        <Input type={'number'}
+                               placeholder={`For price`}
+                               min={priceMin}
+                               setStatus={setStatusPrice}
+                               setInput={setPriceHandler}
+                               input={price}
+                               light={true}
+                               full={true}
+                               customCss={"flex-1"}
+                        />
+                        <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setDealCurrency} position={dealCurrency}/>
+                    </div>
+                    <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
                 </div>
-                <div className={'pt-10'}>
-                    <Input type={'number'}
-                           placeholder={`${titleCopy} allocation`}
-                           max={allocationMax}
-                           min={allocationMin}
-                           setStatus={setStatusAmount}
-                           setInput={setAmountHandler}
-                           input={amount}
-                           light={true}
-                           full={true}
-                           dividable={10}
-                           after={"USD"}
-                    />
-                </div>
-                <div className={"py-10 flex flex-row justify-center items-center select-none"}>
-                    <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconMinus className={"w-8"}/>} handler={() => setMultiplierHandler(false)}/>
-                    <div className={`px-6 font-bold tabular-nums transition-colors duration-300 text-2xl ${multiplier>1 ? ' text-app-success' : ' text-app-error'}`}>x<span className={"text-5xl"}>{multiplierParsed}</span></div>
-                    <IconButton zoom={1.1} size={''} noBorder={true} icon={<IconPlus className={"w-8"}/>} handler={() => setMultiplierHandler(true)}/>
-                </div>
-                <div className={"flex flex-row w-full"}>
-                    <Input type={'number'}
-                           placeholder={`For price`}
-                           min={priceMin}
-                           setStatus={setStatusPrice}
-                           setInput={setPriceHandler}
-                           input={price}
-                           light={true}
-                           full={true}
-                           customCss={"flex-1"}
-                    />
-                    <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setDealCurrency} position={dealCurrency}/>
-                </div>
-                <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
+
                 <div className="mt-auto text-center"> <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span></div>
 
             </div>
@@ -220,6 +223,6 @@ export default function MakeOfferModal({model, setter, props}) {
        return transactionData?.transferConfirmed ? contentSuccess() : contentForm()
     }
 
-    return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)
+    return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} persistent={blockchainData.lock}/>)
 }
 

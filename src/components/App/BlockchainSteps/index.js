@@ -117,11 +117,12 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         saveData: setTransactionData,
     }
 
+
     const dataPack = {
         networkData,
         liquidityData,
         allowanceData,
-        transactionData
+        transactionData,
     }
 
 
@@ -216,7 +217,7 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
 
     useEffect(() => {
         if (saveData) {
-            saveDataFn(dataPack)
+            saveDataFn({...dataPack, ...{lock: buttonState().lock}})
         }
     }, [networkChecked, networkReady, liquidityChecked, liquidityReady, allowanceChecked, allowanceReady, transactionChecked, transactionReady])
 
