@@ -12,7 +12,7 @@ import {useEffect} from "react";
 export const getChainIcon = (id, size = ButtonIconSize.hero) => {
     if (id == 1) return <IconEth className={size}/>
     else if (id == 137) return <IconMatic className={size}/>
-    else if (id == 57) return <IconBsc className={size}/>
+    else if (id == 56) return <IconBsc className={size}/>
 }
 
 export default function StoreNetwork({supportedNetworks, isPurchase, setNetworkOk}) {
