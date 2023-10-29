@@ -10,9 +10,9 @@ const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 
 const getNTimage = (isS1, isStaked, id) => {
     if(isStaked) {
-        return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/pngs/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/pngs/${id}.png`
+        return isS1 ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/pngs/${id}.png` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/pngs/${id}.png`
     } else {
-       return isS1 ? `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/s1Citizen/pngs/${id}.png` : `https://neotokyo-v2.sfo3.cdn.digitaloceanspaces.com/s2Citizen/pngs/${id}.png`
+       return isS1 ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s1Citizen/pngs/${id}.png` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/pngs/${id}.png`
     }
 }
 
