@@ -30,12 +30,14 @@ const validateLogin = async (message, signature) => {
         const userSession = await buildSession(recoveredAddress)
         if (!userSession) return false;
         return {...{address: recoveredAddress}, ...userSession}
+
         // const fakeAddress="0xEdD26f2636BE63ee5656c871EF5D489BCE722Bbc"
         // const userSession = await buildSession(fakeAddress)
         // console.log("userSession",userSession)
         // if (!userSession) return false;
         // return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
+        console.log("validateLogin - error", e)
         Sentry.captureException({location: "validateLogin", e});
         return null
     }
@@ -92,7 +94,6 @@ async function feedNfts(address) {
 }
 
 async function buildSession(address) {
-    // console.log("GANG :: checkUser START")
     const [userNfts, enabledCollections] = await feedNfts(address)
     let type
     if (isBased) {

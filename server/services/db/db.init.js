@@ -39,6 +39,7 @@ const modelDefiners = [
     require('../../models/upgrade.model'),
     require('../../models/notifications.model'),
     require('../../models/otcLocks.model'),
+    require('../../models/onchain.model'),
 ];
 
 // We define all models according to their files.
@@ -47,7 +48,7 @@ for (const modelDefiner of modelDefiners) {
 }
 
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, diamonds, store, storeUser, storeMysterybox, upgrade, notifications, otcLocks } = sequelize.models;
+    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, diamonds, store, storeUser, storeMysterybox, upgrade, notifications, otcLocks, onchain } = sequelize.models;
 
     networks.hasMany(partners)
     partners.belongsTo(networks);
@@ -89,6 +90,9 @@ function applyExtraSetup(sequelize) {
     upgrade.belongsTo(offers);
     store.hasMany(upgrade);
     upgrade.belongsTo(store);
+
+    networks.hasMany(onchain)
+    onchain.belongsTo(networks);
 }
 // We execute any extra setup after the models are defined, such as adding associations.
 applyExtraSetup(sequelize);

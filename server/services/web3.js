@@ -12,7 +12,7 @@ function getWeb3 () {
 async function connectWeb3() {
     try {
         await Moralis.start({
-            apiKey: "Qs4I1cwoJD9uROTUX4ifIZQTdeldqjUPQM1UWhUQFwpYeYpqnlEhS8xLz5PIQqcq",
+            apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImZkMzQ0NTM4LTU2OWQtNDU5YS1iZDIzLTRiZDllNWM0OWE4MiIsIm9yZ0lkIjoiMTExNjI5IiwidXNlcklkIjoiMTExMjc1IiwidHlwZUlkIjoiMDA0M2NjYWYtOGVlMy00YTZmLTk4NmYtMjBlNTY3Y2VjZTUxIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2OTg5NDI0NzAsImV4cCI6NDg1NDcwMjQ3MH0.xf-8HxlKURtp4LeJ7yVDz66cF1ZELOFrhBTmfuksEJs",
         });
 
         const chains = getEnv().isDev ? [EvmChain.SEPOLIA, EvmChain.BSC_TESTNET, EvmChain.MUMBAI] : [EvmChain.ETHEREUM, EvmChain.BSC, EvmChain.POLYGON];
