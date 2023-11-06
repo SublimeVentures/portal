@@ -31,7 +31,7 @@ const validateLogin = async (message, signature) => {
         if (!userSession) return false;
         return {...{address: recoveredAddress}, ...userSession}
 
-        // const fakeAddress="0xEdD26f2636BE63ee5656c871EF5D489BCE722Bbc"
+        // const fakeAddress="0xF70eE904aB1B0eFf736F0a9487758700772E3327"
         // const userSession = await buildSession(fakeAddress)
         // console.log("userSession",userSession)
         // if (!userSession) return false;
@@ -71,7 +71,7 @@ const logOut = async (user) => {
 }
 
 
-async function feedNfts(address) {
+async function feedUserNfts(address) {
     const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
     for (const chain of getWeb3().chains) {
@@ -94,12 +94,12 @@ async function feedNfts(address) {
 }
 
 async function buildSession(address) {
-    const [userNfts, enabledCollections] = await feedNfts(address)
+    const [nfts, partners] = await feedUserNfts(address)
     let type
     if (isBased) {
-        type = await loginBased(userNfts, enabledCollections, address)
+        type = await loginBased(nfts, partners, address)
     } else {
-        type = await loginNeoTokyo(userNfts, enabledCollections, address)
+        type = await loginNeoTokyo(nfts, partners, address)
     }
     return type
 }
