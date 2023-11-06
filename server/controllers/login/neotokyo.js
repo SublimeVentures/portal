@@ -1,181 +1,136 @@
 const {getWeb3} = require("../../services/web3");
 const {getEnv} = require("../../services/db");
-const citcapCitizenAbi = require('../../../abi/citcapCitizen.abi.json')
-const citcapStakingAbi = require('../../../abi/citcapStaking.abi.json')
-const Sentry = require("@sentry/nextjs");
 const {checkElite} = require("../../queries/ntElites.query");
 const {ACLs, userIdentification} = require("../../../src/lib/authHelpers");
-const {isDelegated} = require("./delegated");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 
-const getNTimage = (isS1, isStaked, id) => {
-    if(isStaked) {
-        return isS1 ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/pngs/${id}.png` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/pngs/${id}.png`
-    } else {
-       return isS1 ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s1Citizen/pngs/${id}.png` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/pngs/${id}.png`
+const rewardRateMapping = {
+    1: 1,
+    2: 1.1,
+    3: 1.2,
+    4: 1.3,
+    5: 1.4,
+    6: 1.5,
+    7: 1.6,
+    8: 1.7,
+    9: 1.8,
+    10: 1.9,
+    11: 2,
+    12: 2.1,
+    13: 2.2,
+    14: 2.3,
+    15: 2.5
+};
+
+async function processS1(tokenIds, isStaked = false) {
+    const urls = tokenIds.map(tokenId =>
+        `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s1Citizen/metadata/${tokenId}.json`
+    );
+    try {
+        const requests = urls.map(url => fetch(url));
+        const responses = await Promise.all(requests);
+        const data = await Promise.all(responses.map(res => res.json()));
+
+        return data.map(item => {
+            const rewardRateAttribute = item.attributes.find(attr => attr.trait_type === 'Reward Rate');
+            const rewardRateValue = rewardRateAttribute ? Number(rewardRateAttribute.value) : 1;
+            const pointMultiplier = rewardRateMapping[rewardRateValue] || 1;
+
+            const tokenIdMatch = item.name.match(/\d+/);
+            const tokenId = tokenIdMatch ? Number(tokenIdMatch[0]) : 999999;
+
+            return {
+                tokenId: tokenId,
+                image: item.image,
+                rewardRate: pointMultiplier,
+                isS1: true,
+                isStaked
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching token data:', error);
+        return [];
     }
 }
 
+async function isS1(nfts){
+    const ownedS1 = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
+    if(ownedS1.length === 0) return [];
+    const tokenIds = ownedS1.map(nft => nft.token_id);
+    return await processS1(tokenIds)
+}
 
-const parseFromUri = async (uri, isStaked) => {
-    const response = await fetch(uri);
-    const metadata = await response.json();
-    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
-    const isS1 = seasonAttr === "Season 1"
-    const id = metadata.name.split("#").at(-1)
-    const image = getNTimage(isS1, isStaked, id)
+async function processS2(tokenIds, isStaked = false) {
+    const urls = tokenIds.map(tokenId =>
+        `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/metadata/${tokenId}.json`
+    );
+    try {
+        const requests = urls.map(url => fetch(url));
+        const responses = await Promise.all(requests);
+        const data = await Promise.all(responses.map(res => res.json()));
+
+        return data.map(item => {
+            const tokenIdMatch = item.name.match(/\d+/);
+            const tokenId = tokenIdMatch ? Number(tokenIdMatch[0]) : 888888;
+
+            return {
+                tokenId: tokenId,
+                image: item.image,
+                rewardRate: 0,
+                isS1: false,
+                isStaked
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching token data:', error);
+        return [];
+    }
+}
+
+async function isS2(nfts){
+    const ownedS2 = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
+    if(ownedS2.length === 0) return [];
+    const tokenIds = ownedS2.map(nft => nft.token_id);
+    return await processS2(tokenIds)
+}
+
+function decodeTokenID(id) {
+    const bigId = BigInt(id);
+    const address = bigId >> BigInt(96);
+    const tokenId = bigId & BigInt("0xFFFFFFFFFFFFFFFF"); // Mask to get the last 64 bits
     return {
-        isS1, image, id
-    }
+        address: address.toString(16), // Convert to hexadecimal
+        tokenId: tokenId.toString() // Convert to string to avoid precision issues with large numbers
+    };
 }
 
-const parseFromMetaData = (object, isStaked) => {
-    const metadata = JSON.parse(object.metadata)
-    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
-    const isS1 = seasonAttr === "Season 1" || object.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase()
-    // console.log("isS1", isS1)
-    const id = metadata.name.split("#").at(-1)
-    const image = getNTimage(isS1, isStaked, id)
-    return {
-        isS1, image, id
-    }
-}
+async function isStaked(nfts){
+    const ownedStaked = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase())
+    if(ownedStaked.length === 0) return [];
 
-const getFromBlockchain = async (tokenAddress, tokenID, isStaked) => {
-    const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
-        "chain": "0x1",
-        "functionName": "tokenURI",
-        "address": tokenAddress,
-        "abi": citcapCitizenAbi,
-        "params": {tokenId: tokenID}
-    });
-    // console.log("jsonResponse",jsonResponse, jsonResponse.startsWith("https"))
-    if(jsonResponse.startsWith("https")) {
-        return await parseFromUri(jsonResponse, isStaked)
-    }
-    const base64Url = jsonResponse.replace(/^data:application\/json;base64,/, '');
-    const decodedData = atob(base64Url).replace(': ""',':"');
-    let metadata = JSON.parse(decodedData.replace( /(\"description\":\s?\")(.+)?(\",)/g, ''));
-
-    const seasonAttr = metadata.attributes.find(el => el.trait_type === "Season")?.value
-    const isS1 = seasonAttr === "Season 1"
-    const id = metadata.name.split("#").at(-1)
-    const image = getNTimage(isS1, isStaked, id)
-    return {
-        isS1, image, id
-    }
-}
-
-
-async function isNeoTokyo(ownedNfts, enabledCollections, address) {
-    if (ownedNfts.length === 0) return false
-
-    const S1_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
-    const S2_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
-
-    const owned_citizens = ownedNfts.filter(el =>
-        el.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase() ||
-        el.token_address.toLowerCase() === getEnv().ntData.S2.toLowerCase() ||
-        el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
-    )
-
-    // console.log("owned_citizens",owned_citizens)
-
-    let S1 = []
-    let S2 = []
-    let result
-    for (let i = 0; i < owned_citizens.length; i++) {
-        const isStaked = owned_citizens[i].token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase()
-        const uri = owned_citizens[i].token_uri
-        const uriTest = uri ? uri.split("/").at(-1) : null
-        // console.log("uri",uri, uriTest, owned_citizens[i])
-        if (!uriTest || uri === uriTest) {
-            if (owned_citizens[i].metadata) {
-                // console.log("1", owned_citizens[i].token_id)
-                result = parseFromMetaData(owned_citizens[i], isStaked)
-            } else {
-                // console.log("2", owned_citizens[i].token_id),
-                result = await getFromBlockchain(owned_citizens[i].token_address, owned_citizens[i].token_id, isStaked)
-            }
-        } else {
-            // console.log("3", owned_citizens[i].token_id, uri)
-            result = await parseFromUri(uri, isStaked)
+    const stakedCitizens = ownedStaked.map(stakedNFT => {
+        const decoded = decodeTokenID(stakedNFT.token_id)
+        return {
+            tokenId: decoded.tokenId,
+            isS1: `0x${decoded.address}` == getEnv().ntData.S1.toLowerCase()
         }
-
-        if(!result) {
-            // console.log("result", result)
-            Sentry.captureException({location: "isNeoTokyo", type: 'process', citizen: owned_citizens[i]});
-            return null
-        } else {
-            result.isStaked = isStaked
-        }
-        if (result?.isS1) {
-            S1.push(result)
-        } else {
-            S2.push(result)
-        }
-    }
-
-    // console.log("S1", S1)
-
-    let multi;
-    let nftUsed;
-    let ownTranscendence = false
-
-    if (S1.length > 0) {
-        const S1_ids = S1.map(el => el.id)
-        const isElite = await checkElite(S1_ids)
-
-        if (isElite.length > 0) {
-            multi = isElite.length * (S1_config.multiplier + Number(getEnv().citCapEliteBoost)) + (S1.length - isElite.length) * S1_config.multiplier + S2.length * S2_config.multiplier
-            nftUsed = S1.find(el => el.id == isElite[0].id)
-        } else {
-            multi = S1.length * S1_config.multiplier + S2.length * S2_config.multiplier
-            nftUsed = S1[0]
-        }
-    } else {
-        multi = S2.length * S2_config.multiplier
-        nftUsed = S2[0]
-    }
-    // console.log("nftUsed", nftUsed)
-
-    const haveTranscendence = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
-    if (haveTranscendence) {
-        const transcendence_config = enabledCollections.find(el => el.address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
-        multi += transcendence_config.multiplier
-        ownTranscendence = true
-    }
-
-    const {isStaked, stakeSize, stakeDate} = await checkStaking(address)
-    return {
-        symbol: nftUsed.isS1 ? "NTCTZN" : "NTOCTZN",
-        isS1: nftUsed.isS1,
-        multi: multi,
-        img: nftUsed.image,
-        id: Number(nftUsed.id),
-        // ACL: ACLs.Admin,
-        ACL: ACLs.NeoTokyo,//todo:
-        transcendence: ownTranscendence,
-        stakeReq: nftUsed.isStaked ? Number(getEnv().citcapStakeS2) : (nftUsed.isS1 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2)),
-        isStaked,
-        stakeSize,
-        stakeDate
-    }
-}
-
-async function checkStaking(address) {
-    const {jsonResponse} = await getWeb3().query.EvmApi.utils.runContractFunction({
-        "chain": "0x1",
-        "functionName": "getStake",
-        "address": getEnv().diamond['1'],
-        "abi": citcapStakingAbi,
-        "params": {wallet_: address}
     });
 
+    const s1TokenIds = stakedCitizens.filter(item => item.isS1).map(item => item.tokenId);
+    const s2TokenIds = stakedCitizens.filter(item => !item.isS1).map(item => item.tokenId);
+
+    const S1_staked = s1TokenIds.length > 0 ? await processS1(s1TokenIds, true) : [];
+    const S2_staked = s2TokenIds.length > 0 ? await processS2(s2TokenIds, true) : [];
+
+    return [S1_staked, S2_staked];
+}
+
+async function checkStakingCitCap(address) {
+    const stakingDetails = await getWeb3().contracts.citcap.methods.getStake(address).call();
     return {
-        isStaked: Number(jsonResponse[0]) > 0,
-        stakeSize: Number(getWeb3().utils.fromWei(jsonResponse[0])),
-        stakeDate: Number(jsonResponse[1])
+        isStaked: Number(stakingDetails.size) > 0,
+        stakeSize: Number(getWeb3().utils.fromWei(`${stakingDetails.size}`)),
+        stakeDate: Number(stakingDetails.stakedAt)
     }
 }
 
@@ -186,18 +141,93 @@ const updateSessionStaking = async (user) => {
         if (user !== session.userData[userIdentification]) {
             throw new Error("data not match")
         }
-        const {isStaked, stakeSize, stakeDate} = await checkStaking(user)
+        const {isStaked, stakeSize, stakeDate} = await checkStakingCitCap(user)
         return await refreshAuth(session.userData, {isStaked, stakeSize, stakeDate})
     } catch (e) {
         return null
     }
 }
 
-async function loginNeoTokyo(userNfts, enabledCollections, address) {
-    let type = await isNeoTokyo(userNfts, enabledCollections, address)
-    if (!type) type = await isDelegated(address, enabledCollections)
+function updateEliteStatus(S1_all, haveElites) {
+    return S1_all.map(element => {
+        // Check if element's tokenId is in the isElite array
+        const isEliteFound = haveElites.find(elite => parseInt(elite.id) === parseInt(element.tokenId));
 
-    return type
+        // If found, update isElite property to true
+        if (isEliteFound) {
+            return { ...element, isElite: true };
+        }
+        return element;
+    });
+}
+
+async function loginNeoTokyo(nfts, partners, address) {
+    try {
+        const [S1_staked, S2_staked] = await isStaked(nfts)
+        const S1 = await isS1(nfts)
+        const S2 = await isS2(nfts)
+
+        let S1_all = [...S1_staked, ...S1]
+        const S2_all = [...S2_staked, ...S2]
+
+        if(S1_all.length === 0 && S2_all.length ===0) return false;
+
+        //ELITES DATA ENRICH
+        let haveElites
+        if(S1_all.length > 0) {
+            const S1_ids = S1_all.map(nft => nft.tokenId);
+            haveElites = await checkElite(S1_ids)
+            if(haveElites.length>0) {
+                S1_all = updateEliteStatus(S1_all, haveElites);
+            }
+        }
+
+
+        //CALCUALTE MULTIPLIER
+        //todo: sort for strongest
+        let multiplier = 0
+        let ownTranscendence = false
+        let nftUsed = S1_all.length > 0 ? S1_all[0] : S2_all[0]
+
+        //-transcendence
+        const haveTranscendence = nfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
+        if (haveTranscendence) {
+            const transcendence_config = partners.find(el => el.address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
+            multiplier += transcendence_config.multiplier
+            ownTranscendence = true
+        }
+
+        //-nft owned
+        const S1_setup = partners.find(el => el?.address?.toLowerCase() === getEnv().ntData.S1.toLowerCase())
+        const S2_setup = partners.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
+        multiplier += haveElites.length * (S1_setup.multiplier + Number(getEnv().citCapEliteBoost)) //add elite multi
+        multiplier += (S1_all.length - haveElites.length) * S1_setup.multiplier //add S1 non elite multi
+        multiplier += S2.length * S2_setup.multiplier //add S2 multi
+
+
+        //CHECK STAKE
+        const {isStaked: didUserStake, stakeSize, stakeDate} = await checkStakingCitCap(address)
+        const requiredStake = nftUsed.isStaked ? Number(getEnv().citcapStakeS2) : (nftUsed.isS1 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2))
+
+        return {
+            symbol: nftUsed.isS1 ? "NTCTZN" : "NTOCTZN",
+            isS1: nftUsed.isS1,
+            multi: multiplier,
+            img: nftUsed.image,
+            id: Number(nftUsed.tokenId),
+            // ACL: ACLs.Admin,
+            ACL: ACLs.NeoTokyo,
+            transcendence: ownTranscendence,
+            stakeReq: requiredStake,
+            isStaked: didUserStake,
+            stakeSize,
+            stakeDate
+        }
+    } catch(error) {
+        console.log("NeoTokyo login error", error)
+        return false
+    }
+
 }
 
 

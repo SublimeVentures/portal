@@ -1,22 +1,33 @@
 const {Sequelize} = require("sequelize");
+const logger = require('../logger');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+let connection = {
     dialect: "postgres",
-    // native: true,
-    ssl: true,
-    dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false
-        }
-    },
+    ssl: process.env.IS_LOCAL_DB === 'true',
     pool: {
         max: 20,
         min: 0,
         acquire: 30000,
         idle: 20000
     }
-})
+}
+
+if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
+    connection.dialectOptions = {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    }
+    connection.logging = false
+    // connection.logging = logger.info.bind(logger)
+} else {
+    connection.logging = false
+    // connection.logging = logger.info.bind(logger)
+}
+
+const URI = process.env.IS_LOCAL_DB === 'true' ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
+const sequelize = new Sequelize(URI, connection)
 
 const modelDefiners = [
     require('../../models/environment.model'),

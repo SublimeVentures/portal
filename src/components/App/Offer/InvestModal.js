@@ -80,7 +80,7 @@ export default function InvestModal({model, setter, investModalProps}) {
         return (
             <div className=" flex flex-col flex-1">
                 <div>Congratulations! You have successfully invested <span className="text-app-success font-bold">${amountLocale}</span> in <span className="font-bold text-app-success">{offer.name}</span>.</div>
-                <Lottie animationData={lottieSuccess} loop={true} autoplay={true} style={{width: '320px', margin: '30px auto 0px'}}/>;
+                <Lottie animationData={lottieSuccess} loop={true} autoplay={true} style={{width: '320px', margin: '30px auto 0px'}}/>
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
                     <Link href={PAGE.App} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>

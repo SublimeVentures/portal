@@ -44,24 +44,41 @@ const getPartnerAvatar = async (tokenId, collectionDetails) => {
 
 }
 
-async function isWhale(ownedNfts) {
-    if (ownedNfts.length === 0) return false
-    const whaleAddress = getEnv().whaleId
-    const exists = ownedNfts.find(el => el.token_address.toLowerCase() === whaleAddress.toLowerCase())
-    if (!exists) return false;
+function selectHighestMultiplier(ownedNfts, enabledCollections) {
 
-    return {
-        symbol: exists.symbol,
-        img: "",//todo:
-        id: Number(exists.token_id),
-        ACL: ACLs.Whale
+    let nftWithHighestMultiplier = null;
+    let highestMultiplier = 0;
+
+    for (const nft of ownedNfts) {
+        const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nft.token_address.toLowerCase());
+
+        if (!collectionDetails) continue; // Skip if the collection is not enabled
+
+        let multiplier;
+
+        if (collectionDetails.isMetadata) {
+            const attributeVal = nft.normalized_metadata.attributes.find(el => el.trait_type === collectionDetails.metadataProp)?.value;
+            multiplier = collectionDetails.metadataVal[attributeVal] || 0;
+        } else {
+            multiplier = collectionDetails.multiplier || 0;
+        }
+
+        if (multiplier > highestMultiplier) {
+            highestMultiplier = multiplier;
+            nftWithHighestMultiplier = nft;
+        }
     }
 }
 
 async function isPartner(ownedNfts, enabledCollections) {
     if (ownedNfts.length === 0) return false
+
+
+
+
     const nftUsed = ownedNfts[0]
     const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nftUsed.token_address.toLowerCase())
+
     let multiplier
 
     if (collectionDetails.isMetadata) {
@@ -85,7 +102,6 @@ async function isPartner(ownedNfts, enabledCollections) {
 }
 
 async function isInjectedUser(address) {
-    // console.log("AUTH :: Checking if Injected User")
     const user = await getInjectedUser(address)
     if (!user) return false
 
@@ -99,13 +115,28 @@ async function isInjectedUser(address) {
 }
 
 
+async function isWhale(ownedNfts) {
+    if (ownedNfts.length === 0) return false
+    const whaleAddress = getEnv().whaleId
+    const exists = ownedNfts.find(el => el.token_address.toLowerCase() === whaleAddress.toLowerCase())
+    if (!exists) return false;
 
-async function loginBased(userNfts, enabledCollections, address) {
-    let type = await isWhale(userNfts)
-    if (!type) type = await isPartner(userNfts, enabledCollections)
+    return {
+        symbol: exists.symbol,
+        img: "",//todo:
+        id: Number(exists.token_id),
+        ACL: ACLs.Whale
+    }
+}
+
+async function loginBased(nfts, partners, address) {
+    console.log("standard flow")
+
+    let type = await isWhale(nfts)
+    if (!type) type = await isPartner(nfts, partners)
     if (!type) type = await isInjectedUser(address)
-    if (!type) type = await isDelegated(address, enabledCollections)
-    if (!type) type = await isSteadyStack(address, enabledCollections)
+    if (!type) type = await isDelegated(address, partners)
+    if (!type) type = await isSteadyStack(address, partners)
     return type
 }
 

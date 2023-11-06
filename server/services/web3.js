@@ -3,6 +3,9 @@ const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const Web3Utils = require("web3-utils");
 const {getEnv} = require("./db");
 const Sentry = require("@sentry/nextjs");
+const { Web3, Contract } = require('web3');
+const citcapStakingAbi = require("../../abi/citcapStaking.abi.json");
+
 let web3 = {}
 
 function getWeb3 () {
@@ -17,10 +20,18 @@ async function connectWeb3() {
 
         const chains = getEnv().isDev ? [EvmChain.SEPOLIA, EvmChain.BSC_TESTNET, EvmChain.MUMBAI] : [EvmChain.ETHEREUM, EvmChain.BSC, EvmChain.POLYGON];
 
+        const web3_eth = new Web3("https://eth-mainnet.g.alchemy.com/v2/hFR9b4iJDcH8CzddDlWJx40CaYaIcYSo");
+        const contract_citcap = new Contract(citcapStakingAbi, getEnv().diamond['1'], web3_eth);
+
+
         web3 = {
             utils: Web3Utils,
             query: Moralis,
             chains,
+            onchain: web3_eth,
+            contracts: {
+                citcap: contract_citcap
+            }
         }
         console.log("|---- Web3: connected")
 
