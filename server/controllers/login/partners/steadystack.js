@@ -4,6 +4,8 @@ const {ACLs} = require("../../../../src/lib/authHelpers");
 
 async function loginSteadyStack(enabledCollections, address) {
     const partner = enabledCollections.find(el=> el.level === 13)
+    if(!partner) return false;
+
     const nftsOwned = await fetch(`${getEnv().steadyStackCheck}${address}`);
     const nfts = await nftsOwned.json();
     let selectedNft

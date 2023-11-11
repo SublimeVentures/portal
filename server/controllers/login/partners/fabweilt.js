@@ -19,6 +19,7 @@ async function haveBalance(address, partner) {
 
 async function loginFabwelt(partners, address) {
     const partnersFiltered = partners.filter(el => el.level === 12)
+    if(!partnersFiltered) return false;
 
     const partnerDetails = partnersFiltered[0]
     const amountRequired = partnerDetails.metadataVal[partnerDetails.metadataProp]

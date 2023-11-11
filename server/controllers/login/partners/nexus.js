@@ -1,4 +1,5 @@
 const {ACLs} = require("../../../../src/lib/authHelpers");
+const {getPartnerAvatar} = require("../helper");
 
 function getTierByAmount(tiers, amount) {
     let selectedTier = null;
@@ -27,7 +28,7 @@ async function loginNexus(nfts, partners) {
     return {
         symbol: partnerFiltered.symbol,
         multi: getTier[partnerFiltered.metadataProp],
-        img: partnerFiltered.imageUri,
+        img: await getPartnerAvatar(null, partnerFiltered),
         img_fallback: partnerFiltered.logo,
         id: getTier.tier,
         ACL: ACLs.Partner
