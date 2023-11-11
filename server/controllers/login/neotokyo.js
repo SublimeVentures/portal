@@ -177,7 +177,7 @@ async function loginNeoTokyo(nfts, partners, address) {
         if(S1_all.length === 0 && S2_all.length ===0) return false;
 
         //ELITES DATA ENRICH
-        let haveElites
+        let haveElites = []
         if(S1_all.length > 0) {
             const S1_ids = S1_all.map(nft => nft.tokenId);
             haveElites = await checkElite(S1_ids)
