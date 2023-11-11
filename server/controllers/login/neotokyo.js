@@ -27,8 +27,9 @@ const rewardRateMapping = { //extract to db table
 };
 
 async function processS1(tokenIds, isStaked = false) {
+
     const urls = tokenIds.map(tokenId =>
-        `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s1Citizen/metadata/${tokenId}.json`
+        isStaked ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s1Citizen/metadata/${tokenId}` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s1Citizen/metadata/${tokenId}.json`
     );
     try {
         const requests = urls.map(url => fetch(url));
@@ -65,9 +66,7 @@ async function isS1(nfts){
 }
 
 async function processS2(tokenIds, isStaked = false) { //todo: extract allocation triat
-    const urls = tokenIds.map(tokenId =>
-        `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/metadata/${tokenId}.json`
-    );
+    const urls = tokenIds.map(tokenId => isStaked ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/metadata/${tokenId}` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/metadata/${tokenId}.json`)
     try {
         const requests = urls.map(url => fetch(url));
         const responses = await Promise.all(requests);
@@ -86,7 +85,8 @@ async function processS2(tokenIds, isStaked = false) { //todo: extract allocatio
             };
         });
     } catch (error) {
-        console.error('Error fetching token data:', error);
+        console.error(`Error fetching token data S2, isStaked ${isStaked}`, error);
+
         return [];
     }
 }
