@@ -3,7 +3,6 @@ const {getEnv} = require("../../services/db");
 const {checkElite} = require("../../queries/ntElites.query");
 const {ACLs, userIdentification} = require("../../../src/lib/authHelpers");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
-const axios = require('axios');
 
 // todo: data
 // https://docs.google.com/spreadsheets/d/1VaX7jUfFNTP-JlB4nBXjCcAPLMiqtcfnjP66Ta8AKK4/edit#gid=1254059059
