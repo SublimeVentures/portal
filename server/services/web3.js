@@ -21,6 +21,8 @@ async function connectWeb3() {
         const chains = getEnv().isDev ? [EvmChain.SEPOLIA, EvmChain.BSC_TESTNET, EvmChain.MUMBAI] : [EvmChain.ETHEREUM, EvmChain.BSC, EvmChain.POLYGON];
 
         const web3_eth = new Web3("https://eth-mainnet.g.alchemy.com/v2/hFR9b4iJDcH8CzddDlWJx40CaYaIcYSo");
+        const web3_matic = new Web3("https://polygon-mainnet.g.alchemy.com/v2/LGFrOk_xVcd4h5UxcKbNTQgvYTMDONmz");
+        const web3_bsc = new Web3("https://light-evocative-ensemble.bsc.quiknode.pro/ece694054859b2a5bd2d2fc2fd577441977229fc/");
         const contract_citcap = new Contract(citcapStakingAbi, getEnv().diamond['1'], web3_eth);
 
 
@@ -28,7 +30,11 @@ async function connectWeb3() {
             utils: Web3Utils,
             query: Moralis,
             chains,
-            onchain: web3_eth,
+            onchain: {
+                eth: web3_eth,
+                matic: web3_matic,
+                bsc: web3_bsc
+            },
             contracts: {
                 citcap: contract_citcap
             }
