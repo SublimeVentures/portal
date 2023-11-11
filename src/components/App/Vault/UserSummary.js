@@ -61,7 +61,6 @@ export default function UserSummary({vault, account}) {
                                         <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>
                                     </div>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                        {/*<img className="flex rounded-full my-auto" src={account.img}/>*/}
                                         <FallbackImage src={account.img} fallbackSrc={account.img_fallback} alt="Profile" />
                                     </div>
                                 </> : <>

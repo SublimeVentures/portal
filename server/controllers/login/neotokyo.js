@@ -4,7 +4,11 @@ const {checkElite} = require("../../queries/ntElites.query");
 const {ACLs, userIdentification} = require("../../../src/lib/authHelpers");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 
-const rewardRateMapping = {
+// todo: data
+// https://docs.google.com/spreadsheets/d/1VaX7jUfFNTP-JlB4nBXjCcAPLMiqtcfnjP66Ta8AKK4/edit#gid=1254059059
+// https://docs.google.com/document/d/1ONP_IAGfCYSE17wk5fQvWlZK_Mq7WiM0NxAqly6ZcUM/edit
+
+const rewardRateMapping = { //extract to db table
     1: 1,
     2: 1.1,
     3: 1.2,
@@ -60,7 +64,7 @@ async function isS1(nfts){
     return await processS1(tokenIds)
 }
 
-async function processS2(tokenIds, isStaked = false) {
+async function processS2(tokenIds, isStaked = false) { //todo: extract allocation triat
     const urls = tokenIds.map(tokenId =>
         `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/metadata/${tokenId}.json`
     );
@@ -106,7 +110,7 @@ function decodeTokenID(id) {
 
 async function isStaked(nfts){
     const ownedStaked = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase())
-    if(ownedStaked.length === 0) return [];
+    if(ownedStaked.length === 0) return [[], []];
 
     const stakedCitizens = ownedStaked.map(stakedNFT => {
         const decoded = decodeTokenID(stakedNFT.token_id)
@@ -211,12 +215,14 @@ async function loginNeoTokyo(nfts, partners, address) {
 
         return {
             symbol: nftUsed.isS1 ? "NTCTZN" : "NTOCTZN",
-            isS1: nftUsed.isS1,
             multi: multiplier,
             img: nftUsed.image,
+            img_fallback: nftUsed.image, //todo: fallback to logo if img not found
             id: Number(nftUsed.tokenId),
-            // ACL: ACLs.Admin,
             ACL: ACLs.NeoTokyo,
+            // ACL: ACLs.Admin,
+            //CitCap specific params
+            isS1: nftUsed.isS1,
             transcendence: ownTranscendence,
             stakeReq: requiredStake,
             isStaked: didUserStake,

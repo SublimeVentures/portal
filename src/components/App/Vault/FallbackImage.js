@@ -5,6 +5,7 @@ export default function FallbackImage({src, fallbackSrc, alt}) {
     const [isIPFS, setIsIPFS] = useState(false);
 
     const handleError = () => {
+        setIsIPFS(false);
         setCurrentSrc(fallbackSrc);
     };
 

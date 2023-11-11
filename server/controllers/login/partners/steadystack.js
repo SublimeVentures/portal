@@ -1,9 +1,9 @@
-const {getEnv} = require("../../services/db");
-const {ACLs} = require("../../../src/lib/authHelpers");
+const {getEnv} = require("../../../services/db");
+const {ACLs} = require("../../../../src/lib/authHelpers");
 
 
-async function isSteadyStack(address, enabledCollections) {
-    const partner = enabledCollections.find(el=> el.symbol === 'SSTITN')
+async function loginSteadyStack(enabledCollections, address) {
+    const partner = enabledCollections.find(el=> el.level === 13)
     const nftsOwned = await fetch(`${getEnv().steadyStackCheck}${address}`);
     const nfts = await nftsOwned.json();
     let selectedNft
@@ -13,7 +13,7 @@ async function isSteadyStack(address, enabledCollections) {
     } else if (nfts?.staked?.length > 0) {
         selectedNft = nfts.staked[0]
     } else {
-        return null
+        return false
     }
 
 
@@ -28,4 +28,4 @@ async function isSteadyStack(address, enabledCollections) {
 }
 
 
-module.exports = {isSteadyStack}
+module.exports = {loginSteadyStack}
