@@ -31,9 +31,9 @@ const validateLogin = async (message, signature) => {
         if (!userSession) return false;
         return {...{address: recoveredAddress}, ...userSession}
 
-        // const fakeAddress="0x2ddE0abA5710d1d3c51a9FFb901496E92bE97271"
+        // const fakeAddress="0x28E0AB89B20CFCAA3344F6Ed340f6843b6e1AfC6"
         // const userSession = await buildSession(fakeAddress)
-        // console.log("userSession",userSession)
+        // console.log("userSession",userSession, fakeAddress)
         // if (!userSession) return false;
         // return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
@@ -75,7 +75,7 @@ async function feedUserNfts(address) {
     const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
     for (const chain of getWeb3().chains) {
-        const searchFor = enabledCollections.filter(el => el.networkChainId === chain._chainlistData.chainId)
+        const searchFor = enabledCollections.filter(el => el.networkChainId === chain._chainlistData.chainId && el.erc === 721)
         if (searchFor.length > 0) {
             const tokenAddresses = searchFor.map(el => el.address)
             const {jsonResponse} = await getWeb3().query.EvmApi.nft.getWalletNFTs({

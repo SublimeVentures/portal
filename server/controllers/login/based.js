@@ -7,7 +7,7 @@ const {getPartnerAvatar, filterNFTsByPartnersAndLevel, selectHighestMultiplier} 
 
 
 async function isPartner(nfts, partners) {
-    const regularPartners = partners.filter(el => el.level === 10 && el.erc === '721')
+    const regularPartners = partners.filter(el => el.level === 10)
     if (regularPartners.length === 0) return false
 
     const ownedNfts_basePartners = filterNFTsByPartnersAndLevel(nfts, regularPartners, 10)
