@@ -206,7 +206,7 @@ async function loginNeoTokyo(nfts, partners, address) {
         const S2_setup = partners.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
         multiplier += haveElites.length * (S1_setup.multiplier + Number(getEnv().citCapEliteBoost)) //add elite multi
         multiplier += (S1_all.length - haveElites.length) * S1_setup.multiplier //add S1 non elite multi
-        multiplier += S2.length * S2_setup.multiplier //add S2 multi
+        multiplier += S2_all.length * S2_setup.multiplier //add S2 multi
 
 
         //CHECK STAKE
