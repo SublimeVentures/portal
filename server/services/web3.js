@@ -5,6 +5,7 @@ const {getEnv} = require("./db");
 const Sentry = require("@sentry/nextjs");
 const { Web3, Contract } = require('web3');
 const citcapStakingAbi = require("../../abi/citcapStaking.abi.json");
+const currencyAbi = require("../../abi/usdt.abi.json");
 
 let web3 = {}
 
@@ -24,6 +25,7 @@ async function connectWeb3() {
         const web3_matic = new Web3("https://polygon-mainnet.g.alchemy.com/v2/LGFrOk_xVcd4h5UxcKbNTQgvYTMDONmz");
         const web3_bsc = new Web3("https://light-evocative-ensemble.bsc.quiknode.pro/ece694054859b2a5bd2d2fc2fd577441977229fc/");
         const contract_citcap = new Contract(citcapStakingAbi, getEnv().diamond['1'], web3_eth);
+        const contract_bytes = new Contract(currencyAbi, getEnv().bytes, web3_eth);
 
 
         web3 = {
@@ -36,7 +38,8 @@ async function connectWeb3() {
                 bsc: web3_bsc
             },
             contracts: {
-                citcap: contract_citcap
+                citcap: contract_citcap,
+                bytes: contract_bytes,
             }
         }
         console.log("|---- Web3: connected")

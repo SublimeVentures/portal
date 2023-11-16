@@ -28,7 +28,7 @@ async function getEnvironment() {
 
 
     //PARAM :: `diamond`
-    const diamonds = await models.diamonds.findAll({include: {model: models.networks}, raw: true});
+    const diamonds = await models.diamond.findAll({include: {model: models.network}, raw: true});
     let parsedDiamonds = {}
     diamonds.forEach(el => {
         if(parsedDiamonds[el.tenant]) {
@@ -46,7 +46,7 @@ async function getEnvironment() {
 
 
     //PARAM :: `currencies`
-    const currencies = await models.currencies.findAll({where: {isSettlement: true}, include: {model: models.networks, where: {isDev}}, raw: true});
+    const currencies = await models.currency.findAll({where: {isSettlement: true}, include: {model: models.network, where: {isDev}}, raw: true});
     let parsedCurrencies = {}
     currencies.forEach(el => {
         if(!parsedCurrencies[el.networkChainId]) parsedCurrencies[el.networkChainId] = {}
@@ -56,7 +56,7 @@ async function getEnvironment() {
 
 
     //PARAM :: `currenciesStore`
-    const currenciesStore = isBased ? currencies : await models.currencies.findAll({where: {isSettlement: false}, include: {model: models.networks, where: {isDev}}, raw: true});
+    const currenciesStore = isBased ? currencies : await models.currency.findAll({where: {isSettlement: false}, include: {model: models.network, where: {isDev}}, raw: true});
     let parsedCurrenciesStore = {}
 
     currenciesStore.forEach(el => {
@@ -69,12 +69,12 @@ async function getEnvironment() {
     //PARAM :: `stats`
     environment.stats = {}
     //-- PARAM :: `stats.partners`
-    const partners = await models.partners.findAll({where: {isEnabled: true}, raw: true});
+    const partners = await models.partner.findAll({where: {isEnabled: true}, raw: true});
     environment.stats.partners = partners.reduce((max, partner) => {
         return (partner.uniquePartner > max) ? partner.uniquePartner : max;
     }, 0);
     //-- PARAM :: `stats.funded`
-    const offers = await models.offers.findAll({raw: true});
+    const offers = await models.offer.findAll({raw: true});
     const funded = offers.map(item => item.alloRaised).reduce((prev, next) => prev + next);
     environment.stats.funded = funded + Number(environment.investedInjected)
 

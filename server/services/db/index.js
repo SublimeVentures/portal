@@ -16,7 +16,7 @@ async function connectDB() {
         // await db.sync({alter: true});
         await db.sync();
         console.log("|---- DB: connected")
-        // env = await getEnvironment()
+        env = await getEnvironment()
         // await insertData()
         console.log("|---- ENV: ", env)
     } catch (error) {
