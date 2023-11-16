@@ -1,7 +1,8 @@
 const {DataTypes} = require("sequelize");
 
-module.exports = (sequelize) => {
-    sequelize.define('participant_36', {
+function defineParticipantModel(sequelize, identifier) {
+    const modelName = `z_participant_${identifier}`;
+    sequelize.define(modelName, {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -55,9 +56,12 @@ module.exports = (sequelize) => {
             {unique: true, fields: ['onchainId']},
             {unique: false, fields: ['userId']},
         ],
-
+        tableName: modelName,
         freezeTableName: true,
         timestamps: true
     });
-};
+    return sequelize.models[modelName];
+}
 
+
+module.exports = { defineParticipantModel };

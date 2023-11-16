@@ -1,5 +1,6 @@
 const {Sequelize} = require("sequelize");
 const logger = require('../logger');
+const {defineParticipantModel} = require("../../models/participant.model");
 
 let connection = {
     dialect: "postgres",
@@ -26,7 +27,8 @@ if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
     // connection.logging = logger.info.bind(logger)
 }
 
-const URI = process.env.IS_LOCAL_DB === 'true' ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
+const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
+console.log("URI",process.env.IS_LOCAL_DB)
 const sequelize = new Sequelize(URI, connection)
 
 const modelDefiners = [
@@ -34,10 +36,13 @@ const modelDefiners = [
     require('../../models/delegate.model'),
     require('../../models/diamond.model'),
     require('../../models/environment.model'),
+    require('../../models/environment_based.model'),
+    require('../../models/environment_citcap.model'),
     require('../../models/injectedUser.model'),
     require('../../models/lootbox.model'),
     require('../../models/network.model'),
     require('../../models/notification.model'),
+    require('../../models/notificationType.model'),
     require('../../models/ntElite.model'),
     require('../../models/offer.model'),
     require('../../models/offerFundraise.model'),
@@ -45,7 +50,6 @@ const modelDefiners = [
     require('../../models/onchainType.model'),
     require('../../models/otcDeal.model'),
     require('../../models/otcLock.model'),
-    require('../../models/participant.model'),
     require('../../models/partner.model'),
     require('../../models/store.model'),
     require('../../models/storeMysterybox.model'),
@@ -60,8 +64,20 @@ for (const modelDefiner of modelDefiners) {
     modelDefiner(sequelize);
 }
 
+function setupAssociationsForParticipant(sequelize, participantModel) {
+    const { onchain, user } = sequelize.models;
+
+    //participants model
+    onchain.hasOne(participantModel, { foreignKey: 'onchainId' });
+    participantModel.belongsTo(onchain, { foreignKey: 'onchainId' });
+
+    user.hasMany(participantModel, { foreignKey: 'userId' });
+    participantModel.belongsTo(user, { foreignKey: 'userId' });
+}
+
+
+
 function applyExtraSetup(sequelize) {
-    // const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, diamonds, store, storeUser, storeMysterybox, upgrade, notifications, otcLocks, onchain } = sequelize.models;
 
     const {
         network,
@@ -79,7 +95,6 @@ function applyExtraSetup(sequelize) {
         onchainType,
         otcDeal,
         otcLock,
-        participant,
         storeMysterybox,
         storeUser,
         store,
@@ -87,7 +102,6 @@ function applyExtraSetup(sequelize) {
         diamond
     } = sequelize.models;
 
-    //todo: add env files
     //currency model
     network.hasMany(currency, { foreignKey: 'chainId' });
     currency.belongsTo(network, { foreignKey: 'chainId' });
@@ -136,13 +150,6 @@ function applyExtraSetup(sequelize) {
     otcDeal.hasMany(otcLock, { foreignKey: 'otcDealId' });
     otcLock.belongsTo(otcDeal, { foreignKey: 'otcDealId' });
 
-    //participants model
-    onchain.hasOne(participant, { foreignKey: 'onchainId' });
-    participant.belongsTo(onchain, { foreignKey: 'onchainId' });
-
-    user.hasMany(participant, { foreignKey: 'userId' });
-    participant.belongsTo(user, { foreignKey: 'userId' });
-
     //partner model
     network.hasMany(partner, { foreignKey: 'chainId' });
     partner.belongsTo(network, { foreignKey: 'chainId' });
@@ -181,6 +188,10 @@ function applyExtraSetup(sequelize) {
     offer.hasMany(vault, { foreignKey: 'offerId' });
     vault.belongsTo(offer, { foreignKey: 'offerId' });
 
+    for(let i=1; i<100; i++) {
+        const participantModel = defineParticipantModel(sequelize, i);
+        setupAssociationsForParticipant(sequelize, participantModel);
+    }
 
 }
 // We execute any extra setup after the models are defined, such as adding associations.
