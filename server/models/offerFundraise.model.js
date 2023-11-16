@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('raises', {
+    sequelize.define('offerFundraise', {
         alloRes: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
@@ -37,7 +37,15 @@ module.exports = (sequelize) => {
             defaultValue: 0,
             allowNull: false,
         },
-
+        offerId: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            allowNull: false,
+            references: {
+                model: 'offer', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
     }, {
         indexes: [{unique: true, fields: ['offerId']}],
         freezeTableName: true,

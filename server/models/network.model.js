@@ -1,34 +1,29 @@
 const {DataTypes} = require("sequelize");
 
-
 module.exports = (sequelize) => {
-    sequelize.define('notifications', {
-        id: {
+    sequelize.define('network', {
+        chainId: {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
+            allowNull: false,
             primaryKey: true,
-            unique: true
         },
-        owner: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        type: {
-            type: DataTypes.STRING,
-            defaultValue: 0,
+        isDev: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
-        },
-        data: {
-            type: DataTypes.JSON,
-            defaultValue: 0,
-            allowNull: false,
+            defaultValue: true
         },
     }, {
         indexes: [
-            {unique: false, fields: ['owner']},
+            {unique: false, fields: ['isDev']},
         ],
         freezeTableName: true,
         timestamps: true
     });
+
+
 };
 

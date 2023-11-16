@@ -1,34 +1,35 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('participants_34', {
+    sequelize.define('participant_36', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
         },
-        address: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        onchainId: {
+            type: DataTypes.INTEGER,
+            unique: false,
+            allowNull: true,
+            references: {
+                model: 'onchain', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
-        nftId: {
+        userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+                model: 'user', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
         amount: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
-        acl: {
-            type: DataTypes.INTEGER,
-            defaultValue: 10
-        },
         hash: {
-            type: DataTypes.STRING,
-            defaultValue: ""
-        },
-        tx: {
             type: DataTypes.STRING,
             defaultValue: ""
         },
@@ -47,12 +48,12 @@ module.exports = (sequelize) => {
         isGuaranteed: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
-        },
+        }
     }, {
         indexes: [
-            {unique: false, fields: ['nftId']},
             {unique: true, fields: ['hash']},
-            {unique: true, fields: ['address', 'hash']},
+            {unique: true, fields: ['onchainId']},
+            {unique: false, fields: ['userId']},
         ],
 
         freezeTableName: true,

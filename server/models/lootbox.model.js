@@ -8,9 +8,13 @@ module.exports = (sequelize) => {
             primaryKey: true,
             unique: true
         },
-        owner: {
-            type: DataTypes.STRING,
+        userId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+                model: 'user', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
         rewardType: {
             type: DataTypes.INTEGER,

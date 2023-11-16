@@ -18,8 +18,21 @@ module.exports = (sequelize) => {
         to: {
             type: DataTypes.STRING,
         },
-        type: {
-            type: DataTypes.STRING,
+        typeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'onchainType', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
+        chainId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'network', // This is a reference to another model
+                key: 'chainId',       // This is the column name of the referenced model
+            }
         },
         tenant: {
             type: DataTypes.STRING,
@@ -59,5 +72,4 @@ module.exports = (sequelize) => {
         freezeTableName: true,
         timestamps: true
     });
-    //blockchain networkId
 };

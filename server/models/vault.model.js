@@ -1,47 +1,52 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('otcLocks', {
+    sequelize.define('vault', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
         },
-        owner: {
-            type: DataTypes.STRING,
-            defaultValue: 0,
+        userId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+                model: 'user',
+                key: 'id',
+            }
         },
         offerId: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
             allowNull: false,
+            references: {
+                model: 'offer',
+                key: 'id',
+            }
         },
-        expiryDate: {
+        invested: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        isExpired: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+        refund: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
             allowNull: false,
         },
-        amount: {
-            type: DataTypes.DOUBLE,
+        refundState: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
             allowNull: false,
         },
-        isSell: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+        locked: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
             allowNull: false,
-        },
-
+        }
     }, {
         indexes: [
-            {unique: false, fields: ['owner']},
-            {unique: false, fields: ['isExpired']},
+            {unique: true, fields: ['userId', 'offerId']},
         ],
         freezeTableName: true,
         timestamps: true

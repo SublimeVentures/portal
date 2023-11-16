@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('offers', {
+    sequelize.define('offer', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
