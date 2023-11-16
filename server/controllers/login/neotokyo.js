@@ -37,9 +37,9 @@ async function processS1(tokenIds, isStaked = false) {
         const data = await Promise.all(responses.map(res => res.json()));
 
         return data.map(item => {
-            const rewardRateAttribute = item.attributes.find(attr => attr.trait_type === 'Reward Rate');
-            const rewardRateValue = rewardRateAttribute ? Number(rewardRateAttribute.value) : 1;
-            const pointMultiplier = rewardRateMapping[rewardRateValue] || 1;
+            const rewardRateTrait = item.attributes.find(attr => attr.trait_type === 'Reward Rate');
+            const rewardRateTraitValue = rewardRateTrait ? Number(rewardRateTrait.value) : 1;
+            const pointMultiplier = getEnv().rewardRate[rewardRateTraitValue] || 1;
 
             const tokenIdMatch = item.name.match(/\d+/);
             const tokenId = tokenIdMatch ? Number(tokenIdMatch[0]) : 999999;
@@ -65,7 +65,7 @@ async function isS1(nfts){
     return await processS1(tokenIds)
 }
 
-async function processS2(tokenIds, isStaked = false) { //todo: extract allocation triat
+async function processS2(tokenIds, isStaked = false) {
     const urls = tokenIds.map(tokenId => isStaked ? `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/stakedCitizen/s2Citizen/metadata/${tokenId}` : `https://neo-tokyo.nyc3.cdn.digitaloceanspaces.com/s2Citizen/metadata/${tokenId}.json`)
     try {
         const requests = urls.map(url => fetch(url));
@@ -73,13 +73,17 @@ async function processS2(tokenIds, isStaked = false) { //todo: extract allocatio
         const data = await Promise.all(responses.map(res => res.json()));
 
         return data.map(item => {
+            const allocationTrait = item.attributes.find(attr => attr.trait_type === 'Allocation');
+            const allocationTraitValue = allocationTrait ? allocationTrait.value : "Low";
+            const pointMultiplier = getEnv().allocationTrait[allocationTraitValue] || 1;
+
             const tokenIdMatch = item.name.match(/\d+/);
             const tokenId = tokenIdMatch ? Number(tokenIdMatch[0]) : 888888;
 
             return {
                 tokenId: tokenId,
                 image: item.image,
-                rewardRate: 0,
+                rewardRate: pointMultiplier,
                 isS1: false,
                 isStaked
             };
@@ -138,6 +142,20 @@ async function checkStakingCitCap(address) {
     }
 }
 
+async function checkStakingNT(address) {
+    const stakingDetails = await getWeb3().contracts.citcap.methods.getStake(address).call();
+    return {
+        isStaked: Number(stakingDetails.size) > 0,
+        stakeSize: Number(getWeb3().utils.fromWei(`${stakingDetails.size}`)),
+        stakeDate: Number(stakingDetails.stakedAt)
+    }
+}
+
+async function checkBytesOwned(address) {
+    const bytesOwned_raw = await getWeb3().contracts.bytes.methods.balanceOf(address).call();
+    return Math.floor(Number(getWeb3().utils.fromWei(`${bytesOwned_raw}`)))
+}
+
 const updateSessionStaking = async (user) => {
     try {
         const session = getRefreshToken(user)
@@ -165,6 +183,7 @@ function updateEliteStatus(S1_all, haveElites) {
     });
 }
 
+
 async function loginNeoTokyo(nfts, partners, address) {
     try {
         const [S1_staked, S2_staked] = await isStaked(nfts)
@@ -187,31 +206,36 @@ async function loginNeoTokyo(nfts, partners, address) {
         }
 
 
+        //FETCH BYTES OWNED
+
+        console.log("S1",S1_all)
+        console.log("S2",S2_all)
+
+        const extra_bytes = await checkBytesOwned(address)
+        console.log("extra_bytes",extra_bytes)
+
+        let base_allocation = 0
+
+
         //CALCUALTE MULTIPLIER
+        //todo: fetch bytes staked with nt
+        //todo: do staking lock
         //todo: sort for strongest
-        let multiplier = 0
-        let ownTranscendence = false
-        let nftUsed = S1_all.length > 0 ? S1_all[0] : S2_all[0]
-
-        //-transcendence
-        const haveTranscendence = nfts.find(el => el.token_address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
-        if (haveTranscendence) {
-            const transcendence_config = partners.find(el => el.address.toLowerCase() === getEnv().ntData.transcendence.toLowerCase())
-            multiplier += transcendence_config.multiplier
-            ownTranscendence = true
-        }
-
-        //-nft owned
-        const S1_setup = partners.find(el => el?.address?.toLowerCase() === getEnv().ntData.S1.toLowerCase())
-        const S2_setup = partners.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
-        multiplier += haveElites.length * (S1_setup.multiplier + Number(getEnv().citCapEliteBoost)) //add elite multi
-        multiplier += (S1_all.length - haveElites.length) * S1_setup.multiplier //add S1 non elite multi
-        multiplier += S2_all.length * S2_setup.multiplier //add S2 multi
-
+        // let multiplier = 0
+        // let ownTranscendence = false
+        // let nftUsed = S1_all.length > 0 ? S1_all[0] : S2_all[0]
+        //
+        //
+        // //-nft owned
+        // const S1_setup = partners.find(el => el?.address?.toLowerCase() === getEnv().ntData.S1.toLowerCase())
+        // const S2_setup = partners.find(el => el.address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
+        // multiplier += haveElites.length * (S1_setup.multiplier + Number(getEnv().citCapEliteBoost)) //add elite multi
+        // multiplier += (S1_all.length - haveElites.length) * S1_setup.multiplier //add S1 non elite multi
+        // multiplier += S2.length * S2_setup.multiplier //add S2 multi
+        //
 
         //CHECK STAKE
         const {isStaked: didUserStake, stakeSize, stakeDate} = await checkStakingCitCap(address)
-        const requiredStake = nftUsed.isStaked ? Number(getEnv().citcapStakeS2) : (nftUsed.isS1 ? Number(getEnv().citcapStakeS1) : Number(getEnv().citcapStakeS2))
 
         return {
             symbol: nftUsed.isS1 ? "NTCTZN" : "NTOCTZN",
@@ -222,9 +246,9 @@ async function loginNeoTokyo(nfts, partners, address) {
             ACL: ACLs.NeoTokyo,
             // ACL: ACLs.Admin,
             //CitCap specific params
+            isElite: haveElites.length>0,
             isS1: nftUsed.isS1,
-            transcendence: ownTranscendence,
-            stakeReq: requiredStake,
+            stakeReq: Number(getEnv().stake),
             isStaked: didUserStake,
             stakeSize,
             stakeDate

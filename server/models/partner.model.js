@@ -52,6 +52,9 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             defaultValue: 5
         },
+        uniquePartner: {
+            type: DataTypes.INTEGER,
+        },
         isDynamicImage: {
             type: DataTypes.BOOLEAN,
             allowNull: true,

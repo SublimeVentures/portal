@@ -27,15 +27,15 @@ const validateLogin = async (message, signature) => {
         const validDomain = message.split('\n')[3].split('DOMAIN: ')[1] === domain.host
         if (!validDomain) return false;
 
-        const userSession = await buildSession(recoveredAddress)
-        if (!userSession) return false;
-        return {...{address: recoveredAddress}, ...userSession}
-
-        // const fakeAddress="0xF858dbC4c8A0af70d0Cf4999310B2Af12377E1Ba"
-        // const userSession = await buildSession(fakeAddress)
-        // console.log("userSession",userSession, fakeAddress)
+        // const userSession = await buildSession(recoveredAddress)
         // if (!userSession) return false;
-        // return {...{address: fakeAddress}, ...userSession}
+        // return {...{address: recoveredAddress}, ...userSession}
+
+        const fakeAddress="0xF70eE904aB1B0eFf736F0a9487758700772E3327"
+        const userSession = await buildSession(fakeAddress)
+        console.log("userSession",userSession, fakeAddress)
+        if (!userSession) return false;
+        return {...{address: fakeAddress}, ...userSession}
     } catch (e) {
         console.log("validateLogin - error", e)
         Sentry.captureException({location: "validateLogin", e});
