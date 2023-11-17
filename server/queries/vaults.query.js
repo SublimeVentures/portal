@@ -1,29 +1,30 @@
-const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 const {Op} = require("sequelize");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
 
-async function getUserInvestment(owner, offerId) {
+async function getUserInvestment(userId, offerId) {
     try {
-        return models.vaults.findOne({
+        return models.vault.findOne({
             attributes: ['invested'],
             where: {
-                owner,
+                userId,
                 offerId
             },
             raw: true
         });
-    } catch (e) {
-        Sentry.captureException({location: "getUserInvestment", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getUserInvestment]', {error: serializeError(error)});
     }
     return {}
 
 }
 
-async function getUserVault(owner) {
+async function getUserVault(userId) {
     try {
-        return models.vaults.findAll({
+        return models.vault.findAll({
             where: {
-                owner,
+                userId,
                 invested: {
                     [Op.not]: 0
                 }
@@ -33,12 +34,12 @@ async function getUserVault(owner) {
             ],
             include: {
                 attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
-                model: models.offers
+                model: models.offer
             },
             raw: true
         })
-    } catch (e) {
-        Sentry.captureException({location: "getUserVault", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getUserVault]', {error: serializeError(error)});
     }
     return []
 

@@ -3,18 +3,16 @@ const {getEnv} = require("../services/db");
 
 
 async function userInvestment(user, req) {
-    const {ACL, address, id} = user
-    const owner = ACL === 0 ? `${id}` : address
+    const {userId} = user
 
     const offerId = Number(req.query.offer)
-    const result =  await getUserInvestment(owner, offerId)
+    const result =  await getUserInvestment(userId, offerId)
     return result?.invested ? result.invested : 0
 }
 
 async function userVault(user) {
-    const {ACL, address, id} = user
-    const owner = ACL === 0 ? `${id}` : address
-    const vault = await getUserVault(owner)
+    const {userId} = user
+    const vault = await getUserVault(userId)
     return {elements: vault, cdn: getEnv().cdn}
 }
 

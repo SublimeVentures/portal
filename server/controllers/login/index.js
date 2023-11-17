@@ -34,7 +34,7 @@ const validateLogin = async (message, signature) => {
         // if (!userSession) return false;
         // return {...{address: recoveredAddress}, ...userSession}
 
-        const fakeAddress="0x78d51df34514b0be1e207c11fad2965b69ec78c2" //todo:
+        const fakeAddress="0x53343FD9E770DC2BB3F42fb562164D78CB9AE935" //todo:
         const userSession = await buildSession(fakeAddress)
         console.log("userSession",userSession, fakeAddress)
         if (!userSession) return false;
@@ -97,13 +97,13 @@ async function feedUserNfts(address) {
 
 async function buildSession(address) {
     const [nfts, partners] = await feedUserNfts(address)
-    let type
-    if (isBased) {
-        type = await loginBased(nfts, partners, address)
-    } else {
-        type = await loginNeoTokyo(nfts, partners, address)
+    let type = isBased ? await loginBased(nfts, partners, address) : await loginNeoTokyo(nfts, partners, address)
+
+    if(!!type) {
+        const user = await userWalletUpsert(address, type.ACL)
+        type.userId = user.id
     }
-    await userWalletUpsert(address, type.ACL)
+
     return type
 }
 

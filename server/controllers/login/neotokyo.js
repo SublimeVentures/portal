@@ -130,7 +130,6 @@ async function updateStakingNT(S1, S2) {
     }));
 
     const stakeData = await checkBytesStake(mappedNFTs);
-    console.log("stake", stakeData);
 
     NFTs = NFTs.map(nft => {
         const stakeInfo = stakeData.find(stake => stake.tokenId === nft.tokenId && stake.season === (nft.isS1 ? 1 : 2));

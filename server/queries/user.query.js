@@ -4,19 +4,22 @@ const {serializeError} = require("serialize-error");
 
 async function userWalletUpsert(wallet, acl) {
     try {
-        await models.user.upsert({
-            web3Wallet: wallet,
-            acl
-        }, {
-            conflictFields: ['web3Wallet'],
-            updateOnConflict: ['updatedAt']
+        const [user, created] = await models.user.findOrCreate({
+            where: { web3Wallet: wallet },
+            defaults: { web3Wallet: wallet, acl: acl }
         });
 
+        if (!created && user.acl !== acl) {
+            await user.update({
+                acl: acl
+            });
+        }
+
+        return user.get({ plain: true });
     } catch (error) {
         logger.error('QUERY :: [userWalletUpsert]', {error: serializeError(error)});
     }
 
 }
-
 
 module.exports = {userWalletUpsert}
