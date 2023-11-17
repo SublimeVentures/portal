@@ -1,9 +1,10 @@
 const {models} = require('../services/db/db.init');
-const Sentry = require("@sentry/nextjs");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
 
 async function getOffersPublic() {
     try {
-        return models.offers.findAll({
+        return models.offer.findAll({
             attributes: ['name', 'genre', 'url_web', 'slug'],
             where: {
                 displayPublic: true
@@ -13,8 +14,8 @@ async function getOffersPublic() {
             ],
             raw: true
         });
-    } catch (e) {
-        Sentry.captureException({location: "getOffersPublic", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getOffersPublic]', {error: serializeError(error)});
     }
     return []
 }
@@ -22,7 +23,7 @@ async function getOffersPublic() {
 async function getOfferList() {
     try {
 
-        return models.offers.findAll({
+        return models.offer.findAll({
             where: {
                 display: true
             },
@@ -31,8 +32,8 @@ async function getOfferList() {
             ],
             raw: true
         })
-    } catch (e) {
-        Sentry.captureException({location: "getOfferList", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getOfferList]', {error: serializeError(error)});
     }
     return []
 }
@@ -40,26 +41,26 @@ async function getOfferList() {
 async function getOfferDetails(slug) {
     try {
 
-        return models.offers.findOne({
+        return models.offer.findOne({
             where: {
                 display: true, slug
             },
             raw: true
         })
-    } catch (e) {
-        Sentry.captureException({location: "getOfferDetails", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getOfferDetails]', {error: serializeError(error)});
     }
     return {}
 }
 
 async function getOfferById(id) {
     try {
-        return models.offers.findOne({
+        return models.offer.findOne({
             where: {id},
             raw: true
         })
-    } catch (e) {
-        Sentry.captureException({location: "getOfferById", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getOfferById]', {error: serializeError(error)});
     }
     return {}
 }

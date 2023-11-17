@@ -1,11 +1,14 @@
+require('newrelic');
 require('dotenv').config()
 require('dotenv').config({path: `.env.local`, override: true});
-const Sentry = require("@sentry/nextjs");
 const express = require('express');
 const next = require('next');
 const url = require('url');
 
 const cookieParser = require("cookie-parser");
+const {serializeError} = require("serialize-error");
+const logger = require("./server/services/logger");
+
 
 const {connectDB} = require("./server/services/db");
 const {connectWeb3} = require("./server/services/web3");
@@ -18,6 +21,7 @@ const {router: vaultRoute} = require("./server/routes/vault.router.js");
 const {router: otcRoute} = require("./server/routes/otc.router.js");
 const {router: mysteryboxRoute} = require("./server/routes/mysterybox.router");
 const {router: storeRoute} = require("./server/routes/store.router.js");
+
 // const {router: protected} = require("./server/routes/protected.js");
 
 const port = process.env.PORT || 3000
@@ -54,12 +58,13 @@ nextApp.prepare().then(async () => {
         nextHandler(req, res, parsedUrl);
     });
 
-    server.listen(port, (err) => {
-        if (err) {
-            Sentry.captureException({location: "ServerListen", err});
-            throw err;
+    server.listen(port, (error) => {
+        if (error) {
+            logger.error(`ERROR :: Server listener`, {error: serializeError(error)});
+            throw error;
         }
-        console.log(`Listening on PORT:${port}`);
+        logger.warn(`Listening on PORT:${port}`);
+
     });
 });
 

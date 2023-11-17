@@ -1,5 +1,4 @@
 const { createLogger, format, transports } = require('winston');
-const path = require('path')
 const util = require('util');
 
 function transform(info, opts) {

@@ -1,10 +1,10 @@
 const {models} = require('../services/db/db.init');
-const Sentry = require("@sentry/nextjs");
 const {Op} = require("sequelize");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
 
 async function getPublicPartners() {
     try {
-
         return await models.partner.findAll({
             attributes: ['logo', 'name'],
             where: {
@@ -12,8 +12,8 @@ async function getPublicPartners() {
             },
             raw: true
         });
-    } catch (e) {
-        Sentry.captureException({location: "getPublicPartners", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getPublicPartners]', {error: serializeError(error)});
     }
     return []
 }
@@ -30,9 +30,8 @@ async function getPartners(isDev, isBased) {
             include: {model: models.network, where: {isDev}},
             raw: true
         });
-    } catch (e) {
-        console.log("error",e)
-        Sentry.captureException({location: "getPartners", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getPartners]', {error: serializeError(error)});
     }
     return []
 

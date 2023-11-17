@@ -159,7 +159,7 @@ function selectPointMultiplier(days) {
 }
 
 
-// async function checkStakingNT(address) {
+// async function checkStakingNT(address) { //todo:
 //     const stakingDetails = await getWeb3().contracts.ntStake.methods.getStakerPositions(address).call();
 //     const S1 = {}
 //     const S2 = {}

@@ -1,6 +1,6 @@
-const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
-
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
 
 async function getStore() {
     try {
@@ -11,12 +11,10 @@ async function getStore() {
             ],
             raw: true
         })
-    } catch (e) {
-        Sentry.captureException({location: "getStore", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getStore]', {error: serializeError(error)});
     }
     return []
-
 }
-
 
 module.exports = {getStore}

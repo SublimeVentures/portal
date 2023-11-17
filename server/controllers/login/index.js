@@ -15,6 +15,9 @@ const {getPartners} = require("../../queries/partners.query");
 const {loginBased} = require("./based");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 const Sentry = require("@sentry/nextjs");
+const {userWalletUpsert} = require("../../queries/user.query");
+const logger = require("../../services/logger");
+const {serializeError} = require("serialize-error");
 
 
 const validateLogin = async (message, signature) => {
@@ -31,14 +34,13 @@ const validateLogin = async (message, signature) => {
         // if (!userSession) return false;
         // return {...{address: recoveredAddress}, ...userSession}
 
-        const fakeAddress="0x78d51df34514b0be1e207c11fad2965b69ec78c2"
+        const fakeAddress="0x78d51df34514b0be1e207c11fad2965b69ec78c2" //todo:
         const userSession = await buildSession(fakeAddress)
         console.log("userSession",userSession, fakeAddress)
         if (!userSession) return false;
         return {...{address: fakeAddress}, ...userSession}
-    } catch (e) {
-        console.log("validateLogin - error", e)
-        Sentry.captureException({location: "validateLogin", e});
+    } catch (error) {
+        logger.error(`ERROR :: Server listener`, {error: serializeError(error)});
         return null
     }
 }
@@ -95,7 +97,14 @@ async function feedUserNfts(address) {
 
 async function buildSession(address) {
     const [nfts, partners] = await feedUserNfts(address)
-    return isBased ? await loginBased(nfts, partners, address) : await loginNeoTokyo(nfts, partners, address)
+    let type
+    if (isBased) {
+        type = await loginBased(nfts, partners, address)
+    } else {
+        type = await loginNeoTokyo(nfts, partners, address)
+    }
+    await userWalletUpsert(address, type.ACL)
+    return type
 }
 
 

@@ -1,5 +1,6 @@
 const { models } = require('../services/db/db.init');
 const {isBased} = require("../../src/lib/utils");
+const logger = require("../services/logger");
 
 async function getEnvironment() {
     //initialize environment
@@ -89,6 +90,7 @@ async function getEnvironment() {
             transcendence: partners.find(el => el.symbol === "CITCAP")?.address,
         }
     }
+    logger.error(`ENVS - ${process.env.NEXT_PUBLIC_SITE}`, {environment});
 
     return environment
 }

@@ -1,6 +1,7 @@
 const {models} = require('../services/db/db.init');
-const Sentry = require("@sentry/nextjs");
 const {Op} = require("sequelize");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
 
 async function checkElite(array) {
     try {
@@ -12,11 +13,10 @@ async function checkElite(array) {
             },
             raw: true
         })
-    } catch (e) {
-        console.log("random", e)
-        Sentry.captureException({location: "checkElite", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [checkElite]', {error: serializeError(error)});
     }
-    return {}
+    return []
 }
 
 async function checkBytesStake(array) {
@@ -31,12 +31,10 @@ async function checkBytesStake(array) {
             },
             raw: true
         });
-    } catch (e) {
-        console.log("Error in checkBytesStake", e);
-        Sentry.captureException({location: "checkBytesStake", type: 'query', e});
-        return {}; // Consider returning null or an appropriate error response
+    } catch (error) {
+        logger.error('QUERY :: [checkBytesStake]', {error: serializeError(error)});
     }
-    return {}
+    return []
 }
 
 module.exports = {checkElite, checkBytesStake}

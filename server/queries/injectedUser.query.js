@@ -1,31 +1,32 @@
 const {models} = require('../services/db/db.init');
-const Sentry = require("@sentry/nextjs");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
 
 async function getInjectedUser(address) {
     try {
-        return models.injectedUsers.findOne({
+        return models.injectedUser.findOne({
             where: {
                 address
             },
             include: {model: models.partners},
             raw: true
         });
-    } catch (e) {
-        Sentry.captureException({location: "getInjectedUser", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getInjectedUser]', {error: serializeError(error), address});
     }
     return {}
 }
 
 async function getInjectedUserAccess(address) {
     try {
-        return models.injectedUsers.findOne({
+        return models.injectedUser.findOne({
             where: {
                 address
             },
             raw: true
         });
-    } catch (e) {
-        Sentry.captureException({location: "getInjectedUserAccess", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getInjectedUserAccess]', {error: serializeError(error), address});
     }
     return {}
 }

@@ -8,6 +8,9 @@ module.exports = (sequelize) => {
             primaryKey: true,
             unique: true
         },
+        acl: {
+            type: DataTypes.INTEGER,
+        },
         username: {
             type: DataTypes.STRING,
             unique: true
