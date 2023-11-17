@@ -1,5 +1,6 @@
 const {Sequelize} = require("sequelize");
 const logger = require('../logger');
+const {defineParticipantModel} = require("../../models/participant.model");
 
 let connection = {
     dialect: "postgres",
@@ -12,7 +13,7 @@ let connection = {
     }
 }
 
-if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
+if(!process.env.IS_LOCAL_DB) {
     connection.dialectOptions = {
         ssl: {
             require: true,
@@ -22,35 +23,42 @@ if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
     connection.logging = false
     // connection.logging = logger.info.bind(logger)
 } else {
-    connection.logging = false
-    // connection.logging = logger.info.bind(logger)
+    // connection.logging = false
+    // connection.logging = logger.info.bind(console.log)
 }
 
-const URI = process.env.IS_LOCAL_DB === 'true' ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
+const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
+console.log("URI",process.env.IS_LOCAL_DB)
 const sequelize = new Sequelize(URI, connection)
 
 const modelDefiners = [
+    require('../../models/currency.model'),
+    require('../../models/delegate.model'),
+    require('../../models/diamond.model'),
     require('../../models/environment.model'),
-    require('../../models/networks.model'),
-    require('../../models/currencies.model'),
-    require('../../models/partners.model'),
-    require('../../models/injectedUsers.model'),
-    require('../../models/delegates.model'),
-    require('../../models/offers.model'),
-    require('../../models/raises.model'),
-    require('../../models/participants.model'),
-    require('../../models/vaults.model'),
-    require('../../models/otcDeals.model'),
-    require('../../models/diamonds.model'),
-    require('../../models/ntElites.model'),
+    require('../../models/environment_based.model'),
+    require('../../models/environment_citcap.model'),
+    require('../../models/injectedUser.model'),
     require('../../models/lootbox.model'),
-    require('../../models/store.model'),
-    require('../../models/storeUser.model'),
-    require('../../models/storeMysterybox.model'),
-    require('../../models/upgrade.model'),
-    require('../../models/notifications.model'),
-    require('../../models/otcLocks.model'),
+    require('../../models/network.model'),
+    require('../../models/notification.model'),
+    require('../../models/notificationType.model'),
+    require('../../models/ntElite.model'),
+    require('../../models/ntStake.model'),
+    require('../../models/offer.model'),
+    require('../../models/offerDescription.model'),
+    require('../../models/offerFundraise.model'),
     require('../../models/onchain.model'),
+    require('../../models/onchainType.model'),
+    require('../../models/otcDeal.model'),
+    require('../../models/otcLock.model'),
+    require('../../models/partner.model'),
+    require('../../models/store.model'),
+    require('../../models/storeMysterybox.model'),
+    require('../../models/storeUser.model'),
+    require('../../models/upgrade.model'),
+    require('../../models/user.model'),
+    require('../../models/vault.model'),
 ];
 
 // We define all models according to their files.
@@ -58,52 +66,141 @@ for (const modelDefiner of modelDefiners) {
     modelDefiner(sequelize);
 }
 
+function setupAssociationsForParticipant(sequelize, participantModel) {
+    const { onchain, user } = sequelize.models;
+
+    //participants model
+    onchain.hasOne(participantModel, { foreignKey: 'onchainId' });
+    participantModel.belongsTo(onchain, { foreignKey: 'onchainId' });
+
+    user.hasMany(participantModel, { foreignKey: 'userId' });
+    participantModel.belongsTo(user, { foreignKey: 'userId' });
+}
+
+
+
 function applyExtraSetup(sequelize) {
-    const { networks, partners, currencies, injectedUsers, offers, raises, vaults, otcDeals, diamonds, store, storeUser, storeMysterybox, upgrade, notifications, otcLocks, onchain } = sequelize.models;
 
-    networks.hasMany(partners)
-    partners.belongsTo(networks);
+    const {
+        network,
+        partner,
+        currency,
+        injectedUser,
+        offer,
+        offerFundraise,
+        vault,
+        user,
+        lootbox,
+        notification,
+        notificationType,
+        onchain,
+        onchainType,
+        otcDeal,
+        otcLock,
+        storeMysterybox,
+        storeUser,
+        store,
+        upgrade,
+        diamond,
+        offerDescription,
+        ntStake
+    } = sequelize.models;
 
-    networks.hasMany(currencies)
-    currencies.belongsTo(networks);
+    //currency model
+    network.hasMany(currency, { foreignKey: 'chainId' });
+    currency.belongsTo(network, { foreignKey: 'chainId' });
 
-    partners.hasMany(injectedUsers);
-    injectedUsers.belongsTo(partners);
+    //diamond model
+    network.hasMany(diamond, { foreignKey: 'chainId' });
+    diamond.belongsTo(network, { foreignKey: 'chainId' });
 
-    offers.hasOne(raises);
-    raises.belongsTo(offers);
+    //inectedUser model
+    partner.hasMany(injectedUser, { foreignKey: 'partnerId' });
+    injectedUser.belongsTo(partner, { foreignKey: 'partnerId' });
 
-    offers.hasMany(vaults);
-    vaults.belongsTo(offers);
+    //lootbox model
+    user.hasMany(lootbox, { foreignKey: 'userId' });
+    lootbox.belongsTo(user, { foreignKey: 'userId' });
 
-    offers.hasMany(otcDeals);
-    otcDeals.belongsTo(offers);
+    //notification model
+    user.hasMany(notification, { foreignKey: 'userId' });
+    notification.belongsTo(user, { foreignKey: 'userId' });
 
-    networks.hasMany(otcDeals)
-    otcDeals.belongsTo(networks);
+    notificationType.hasMany(notification, { foreignKey: 'typeId' });
+    notificationType.belongsTo(notification, { foreignKey: 'typeId' });
 
-    otcDeals.hasMany(notifications, { foreignKey: 'otcDealId' });
-    notifications.belongsTo(otcDeals, { foreignKey: 'otcDealId' });
+    //offerDescription model
+    offer.hasOne(offerDescription, { foreignKey: 'descriptionId' });
+    offerDescription.belongsTo(offer, { foreignKey: 'descriptionId' });
 
-    otcDeals.hasMany(otcLocks);
-    otcLocks.belongsTo(otcDeals);
+    //offerFundraise model
+    offer.hasOne(offerFundraise, { foreignKey: 'offerId' });
+    offerFundraise.belongsTo(offer, { foreignKey: 'offerId' });
 
-    networks.hasMany(diamonds)
-    diamonds.belongsTo(networks);
+    //onchain model
+    onchainType.hasMany(onchain, { foreignKey: 'chainId' });
+    onchain.belongsTo(onchainType, { foreignKey: 'chainId' });
 
-    store.hasMany(storeUser)
-    storeUser.belongsTo(store);
+    network.hasMany(onchain, { foreignKey: 'typeId' });
+    onchain.belongsTo(network, { foreignKey: 'typeId' });
 
-    offers.hasMany(storeMysterybox);
-    storeMysterybox.belongsTo(offers);
+    //otcDeal model
+    otcDeal.hasOne(onchain, { foreignKey: 'onchainId' });
+    onchain.belongsTo(otcDeal, { foreignKey: 'onchainId' });
 
-    offers.hasMany(upgrade);
-    upgrade.belongsTo(offers);
-    store.hasMany(upgrade);
-    upgrade.belongsTo(store);
+    offer.hasMany(otcDeal, { foreignKey: 'offerId' });
+    otcDeal.belongsTo(offer, { foreignKey: 'offerId' });
 
-    networks.hasMany(onchain)
-    onchain.belongsTo(networks);
+    //otcLock model
+    offer.hasMany(otcLock, { foreignKey: 'offerId' });
+    otcLock.belongsTo(offer, { foreignKey: 'offerId' });
+
+    otcDeal.hasMany(otcLock, { foreignKey: 'otcDealId' });
+    otcLock.belongsTo(otcDeal, { foreignKey: 'otcDealId' });
+
+    //partner model
+    network.hasMany(partner, { foreignKey: 'chainId' });
+    partner.belongsTo(network, { foreignKey: 'chainId' });
+
+    //storeMysterybox model
+    user.hasMany(storeMysterybox, { foreignKey: 'userId' });
+    storeMysterybox.belongsTo(user, { foreignKey: 'userId' });
+
+    store.hasMany(storeMysterybox, { foreignKey: 'storeId' });
+    storeMysterybox.belongsTo(store, { foreignKey: 'storeId' });
+
+    offer.hasMany(storeMysterybox, { foreignKey: 'offerId' });
+    storeMysterybox.belongsTo(offer, { foreignKey: 'offerId' });
+
+    //storeUser model
+    user.hasMany(storeUser, { foreignKey: 'userId' });
+    storeUser.belongsTo(user, { foreignKey: 'userId' });
+
+    store.hasMany(storeUser, { foreignKey: 'storeId' });
+    storeUser.belongsTo(store, { foreignKey: 'storeId' });
+
+    //upgrade model
+    user.hasMany(upgrade, { foreignKey: 'userId' });
+    upgrade.belongsTo(user, { foreignKey: 'userId' });
+
+    store.hasMany(upgrade, { foreignKey: 'storeId' });
+    upgrade.belongsTo(store, { foreignKey: 'storeId' });
+
+    offer.hasMany(upgrade, { foreignKey: 'offerId' });
+    upgrade.belongsTo(offer, { foreignKey: 'offerId' });
+
+    //vault model
+    user.hasMany(vault, { foreignKey: 'userId' });
+    vault.belongsTo(user, { foreignKey: 'userId' });
+
+    offer.hasMany(vault, { foreignKey: 'offerId' });
+    vault.belongsTo(offer, { foreignKey: 'offerId' });
+
+    for(let i=1; i<100; i++) {
+        const participantModel = defineParticipantModel(sequelize, i);
+        setupAssociationsForParticipant(sequelize, participantModel);
+    }
+
 }
 // We execute any extra setup after the models are defined, such as adding associations.
 applyExtraSetup(sequelize);

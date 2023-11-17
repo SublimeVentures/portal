@@ -1,27 +1,22 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('delegates', {
-        address: {
+    sequelize.define('environment_based', {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
             primaryKey: true,
             unique: true
         },
-        vault: {
-            type: DataTypes.STRING,
-            primaryKey: true,
-        },
-        partner: {
+        value: {
             type: DataTypes.STRING,
         },
-        token: {
-            type: DataTypes.INTEGER,
+        valueJSON: {
+            type: DataTypes.JSON,
         },
-
     }, {
         freezeTableName: true,
-        timestamps: true,
+        timestamps: true
     });
 };
 

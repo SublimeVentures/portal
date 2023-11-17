@@ -64,10 +64,25 @@ new relic to webapp
 
 
 
+- allow for confirmation on onchain restart
+- for some reason it expires everything- fix it
+- logs around expires
+- confirm final 
 
-code
-https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
-0xb27EE3cDDA91dAe0e68c3fb59C15fff0FADf362f
+//tasks
+- raises -> offerNumbers
 
 
+- link participants with onchain
+-         tx: {
+            type: DataTypes.STRING,
+            defaultValue: ""
+        }, remove
+- add notfications for refunds 
+- add refund flow
+- onchain event - zapisuj tak czy inaczej 
+- better maching system
+- callback
 
+///REQUIREMENTS:
+- wallet cant be the same as last two investments

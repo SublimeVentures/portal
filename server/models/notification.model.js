@@ -1,7 +1,8 @@
 const {DataTypes} = require("sequelize");
 
+
 module.exports = (sequelize) => {
-    sequelize.define('storeUser', {
+    sequelize.define('notification', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -16,22 +17,22 @@ module.exports = (sequelize) => {
                 key: 'id',       // This is the column name of the referenced model
             }
         },
-        storeId: {
+        typeId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'store', // This is a reference to another model
+                model: 'notificationType', // This is a reference to another model
                 key: 'id',       // This is the column name of the referenced model
             }
         },
-        amount: {
-            type: DataTypes.INTEGER,
+        data: {
+            type: DataTypes.JSON,
             defaultValue: 0,
             allowNull: false,
-        }
+        },
     }, {
         indexes: [
-            {unique: true, fields: ['userId', 'storeId']},
+            {unique: false, fields: ['userId']},
         ],
         freezeTableName: true,
         timestamps: true

@@ -8,9 +8,13 @@ module.exports = (sequelize) => {
             primaryKey: true,
             unique: true
         },
-        claimedBy: {
-            type: DataTypes.STRING,
-            allowNull: true,
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'user', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
         name: {
             type: DataTypes.STRING,
@@ -24,10 +28,23 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        upgradeId: {
+        storeId: {
             type: DataTypes.INTEGER,
             allowNull: true,
+            references: {
+                model: 'store', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
+        offerId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'offer', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
+
         amount: {
             type: DataTypes.INTEGER,
             allowNull: true,
@@ -43,7 +60,7 @@ module.exports = (sequelize) => {
     }, {
         indexes: [
             {unique: true, fields: ['code']},
-            {unique: true, fields: ['claimedBy', 'code']},
+            {unique: true, fields: ['userId', 'code']},
         ],
         freezeTableName: true,
         timestamps: true

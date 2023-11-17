@@ -1,12 +1,11 @@
 const {models} = require('../services/db/db.init');
-const db = require('../services/db/db.init');
 const Sentry = require("@sentry/nextjs");
 const {Op} = require("sequelize");
 
 async function getPublicPartners() {
     try {
 
-        return await models.partners.findAll({
+        return await models.partner.findAll({
             attributes: ['logo', 'name'],
             where: {
                 isVisible: true
@@ -23,12 +22,12 @@ async function getPartners(isDev, isBased) {
     let filter = isBased ? {level: {[Op.gt]: 9}} : {level: {[Op.lt]: 10}}
 
     try {
-        return await models.partners.findAll({
+        return await models.partner.findAll({
             where: {
                 isEnabled: true,
                 ...filter
             },
-            include: {model: models.networks, where: {isDev}},
+            include: {model: models.network, where: {isDev}},
             raw: true
         });
     } catch (e) {

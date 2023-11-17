@@ -2,54 +2,95 @@ const { models } = require('../services/db/db.init');
 const {isBased} = require("../../src/lib/utils");
 
 async function getEnvironment() {
-    const isDev = process.env.ENV !== 'production' && process.env.isForceDev !== 'true';
-    console.lo
-    const envVars = await models.environment.findAll({raw: true});
-    const diamonds = await models.diamonds.findAll({include: {model: models.networks}, raw: true});
-    const currencies = await models.currencies.findAll({where: {isSettlement: true}, include: {model: models.networks, where: {isDev}}, raw: true});
-    const currenciesStore = isBased ? currencies : await models.currencies.findAll({where: {isSettlement: false}, include: {model: models.networks, where: {isDev}}, raw: true});
-    const projects = await models.offers.findAll({raw: true});
-    const partners = await models.partners.findAll({where: {isEnabled: true}, raw: true});
+    //initialize environment
+    let environment = {}
 
-    let env = Object.assign({}, ...(envVars.map(item => ({ [item.name]: item.value }) )));
-    let parsedCurrencies = {}
-    let parsedCurrenciesStore = {}
+    //PAARAMS :: fetch global `environment`
+    const envGlobal_raw = await models.environment.findAll({raw: true});
+    const envGlobal = Object.assign({}, ...(envGlobal_raw.map(item => ({ [item.name]: item.value }) )));
+    environment = {...envGlobal, ...environment}
+
+    //PARAMS :: fetch `environment_TENANT` table
+    let envTenant_raw
+    if(isBased) {
+        envTenant_raw = await models.environment_based.findAll({raw: true});
+    } else {
+        envTenant_raw = await models.environment_citcap.findAll({raw: true});
+    }
+    const envTenant = Object.assign({}, ...(envTenant_raw.map(item => ({ [item.name]: item.value ? item.value : item.valueJSON }) )));
+    environment = {...envTenant, ...environment}
+
+
+
+    //PRAM :: `isDev`
+    const isDev = process.env.ENV !== 'production' && process.env.isForceDev !== 'true';
+    environment.isDev = isDev;
+
+
+    //PARAM :: `diamond`
+    const diamonds = await models.diamond.findAll({include: {model: models.network}, raw: true});
+    console.log("diamonds",diamonds)
     let parsedDiamonds = {}
-    currencies.forEach(el => {
-        if(!parsedCurrencies[el.networkChainId]) parsedCurrencies[el.networkChainId] = {}
-        parsedCurrencies[el.networkChainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
-    })
-    currenciesStore.forEach(el => {
-        if(!parsedCurrenciesStore[el.networkChainId]) parsedCurrenciesStore[el.networkChainId] = {}
-        parsedCurrenciesStore[el.networkChainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
-    })
     diamonds.forEach(el => {
         if(parsedDiamonds[el.tenant]) {
-            parsedDiamonds[el.tenant][el.networkChainId] = el.address
+            parsedDiamonds[el.tenant][el.chainId] = el.address
         } else {
             parsedDiamonds[el.tenant] = {}
-            parsedDiamonds[el.tenant][el.networkChainId] = el.address
+            parsedDiamonds[el.tenant][el.chainId] = el.address
         }
     })
+    environment.diamond = isBased ? parsedDiamonds.basedVC : parsedDiamonds.CitCap
 
-    const funded = projects.map(item => item.alloRaised).reduce((prev, next) => prev + next);
-    env.cdn = isBased ? env.cdnBased : env.cdnCitCap;
-    env.currencies = parsedCurrencies
-    env.currenciesStore = parsedCurrenciesStore
-    env.diamond = isBased ? parsedDiamonds.basedVC : parsedDiamonds.CitCap
-    env.diamondBased = parsedDiamonds.basedVC
-    env.ntData = {
-        S1: partners.find(el => el.name === "Neo Tokyo Citizen S1")?.address,
-        S2: partners.find(el => el.name === "Neo Tokyo Citizen S2")?.address,
-        staked: partners.find(el => el.name === "Neo Tokyo Citizen (staked)")?.address,
-        transcendence: partners.find(el => el.name === "Citizen Capital Transcendence")?.address,
+
+    //PARAM :: `diamondBased`
+    environment.diamondBased = parsedDiamonds.basedVC
+
+
+    //PARAM :: `currencies`
+    const currencies = await models.currency.findAll({where: {isSettlement: true}, include: {model: models.network, where: {isDev}}, raw: true});
+    let parsedCurrencies = {}
+    currencies.forEach(el => {
+        if(!parsedCurrencies[el.chainId]) parsedCurrencies[el.chainId] = {}
+        parsedCurrencies[el.chainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
+    })
+    environment.currencies = parsedCurrencies
+
+
+    //PARAM :: `currenciesStore`
+    const currenciesStore = isBased ? currencies : await models.currency.findAll({where: {isSettlement: false}, include: {model: models.network, where: {isDev}}, raw: true});
+    let parsedCurrenciesStore = {}
+
+    currenciesStore.forEach(el => {
+        if(!parsedCurrenciesStore[el.chainId]) parsedCurrenciesStore[el.chainId] = {}
+        parsedCurrenciesStore[el.chainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
+    })
+    environment.currenciesStore = parsedCurrenciesStore
+
+
+    //PARAM :: `stats`
+    environment.stats = {}
+    //-- PARAM :: `stats.partners`
+    const partners = await models.partner.findAll({where: {isEnabled: true}, raw: true});
+    environment.stats.partners = partners.reduce((max, partner) => {
+        return (partner.uniquePartner > max) ? partner.uniquePartner : max;
+    }, 0);
+    //-- PARAM :: `stats.funded`
+    const offers = await models.offer.findAll({raw: true});
+    const funded = offers.map(item => item.alloRaised).reduce((prev, next) => prev + next);
+    environment.stats.funded = funded + Number(environment.investedInjected)
+
+
+    //-- PARAM :: `ntData`
+    if(!isBased) {
+        environment.ntData = {
+            S1: partners.find(el => el.symbol === "NTCTZN")?.address,
+            S2: partners.find(el => el.symbol === "NTOCTZN")?.address,
+            staked: partners.find(el => el.symbol === "CTZN")?.address,
+            transcendence: partners.find(el => el.symbol === "CITCAP")?.address,
+        }
     }
-    env.stats = {
-        partners: partners.filter(el=> el.level !== Number(env["ntLevel"])).length + 1,
-        funded: funded + Number(env.investedInjected),
-    }
-    env.isDev = isDev;
-    return env
+
+    return environment
 }
 
 module.exports = { getEnvironment }

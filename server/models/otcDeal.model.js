@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('otcDeals', {
+    sequelize.define('otcDeal', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -52,9 +52,23 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
-        isOnChainConfirmed: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
+        onchainId: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            allowNull: true,
+            references: {
+                model: 'onchain', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
+        offerId: {
+            type: DataTypes.INTEGER,
+            unique: false,
+            allowNull: false,
+            references: {
+                model: 'offer', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
         hash: {
             type: DataTypes.STRING,
@@ -62,7 +76,7 @@ module.exports = (sequelize) => {
         },
     }, {
         indexes: [
-            {unique: false, fields: ['offerId', 'dealId', 'networkChainId']},
+            {unique: false, fields: ['offerId', 'dealId']},
             {unique: false, fields: ['maker']},
             {unique: false, fields: ['taker']},
         ],

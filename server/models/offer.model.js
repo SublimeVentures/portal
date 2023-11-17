@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('offers', {
+    sequelize.define('offer', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -67,8 +67,14 @@ module.exports = (sequelize) => {
         genre: {
             type: DataTypes.STRING,
         },
-        description: {
-            type: DataTypes.STRING,
+        descriptionId: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            allowNull: true,
+            references: {
+                model: 'offerDescription', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
         ticker: {
             type: DataTypes.STRING,
