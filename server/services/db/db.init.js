@@ -13,7 +13,7 @@ let connection = {
     }
 }
 
-if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
+if(!process.env.IS_LOCAL_DB) {
     connection.dialectOptions = {
         ssl: {
             require: true,
@@ -23,8 +23,8 @@ if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
     connection.logging = false
     // connection.logging = logger.info.bind(logger)
 } else {
-    connection.logging = false
-    // connection.logging = logger.info.bind(logger)
+    // connection.logging = false
+    // connection.logging = logger.info.bind(console.log)
 }
 
 const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
@@ -44,7 +44,9 @@ const modelDefiners = [
     require('../../models/notification.model'),
     require('../../models/notificationType.model'),
     require('../../models/ntElite.model'),
+    require('../../models/ntStake.model'),
     require('../../models/offer.model'),
+    require('../../models/offerDescription.model'),
     require('../../models/offerFundraise.model'),
     require('../../models/onchain.model'),
     require('../../models/onchainType.model'),
@@ -99,7 +101,9 @@ function applyExtraSetup(sequelize) {
         storeUser,
         store,
         upgrade,
-        diamond
+        diamond,
+        offerDescription,
+        ntStake
     } = sequelize.models;
 
     //currency model
@@ -124,6 +128,10 @@ function applyExtraSetup(sequelize) {
 
     notificationType.hasMany(notification, { foreignKey: 'typeId' });
     notificationType.belongsTo(notification, { foreignKey: 'typeId' });
+
+    //offerDescription model
+    offer.hasOne(offerDescription, { foreignKey: 'descriptionId' });
+    offerDescription.belongsTo(offer, { foreignKey: 'descriptionId' });
 
     //offerFundraise model
     offer.hasOne(offerFundraise, { foreignKey: 'offerId' });

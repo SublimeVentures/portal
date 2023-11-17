@@ -4,8 +4,9 @@ const Web3Utils = require("web3-utils");
 const {getEnv} = require("./db");
 const Sentry = require("@sentry/nextjs");
 const { Web3, Contract } = require('web3');
-const citcapStakingAbi = require("../../abi/citcapStaking.abi.json");
-const currencyAbi = require("../../abi/usdt.abi.json");
+const abi_stake_CitCap = require("../../abi/citcapStaking.abi.json");
+const abi_currency = require("../../abi/usdt.abi.json");
+const abi_stake_NeoTokyo = require("../../abi/ntStake.abi.json");
 
 let web3 = {}
 
@@ -24,8 +25,9 @@ async function connectWeb3() {
         const web3_eth = new Web3("https://eth-mainnet.g.alchemy.com/v2/hFR9b4iJDcH8CzddDlWJx40CaYaIcYSo");
         const web3_matic = new Web3("https://polygon-mainnet.g.alchemy.com/v2/LGFrOk_xVcd4h5UxcKbNTQgvYTMDONmz");
         const web3_bsc = new Web3("https://light-evocative-ensemble.bsc.quiknode.pro/ece694054859b2a5bd2d2fc2fd577441977229fc/");
-        const contract_citcap = new Contract(citcapStakingAbi, getEnv().diamond['1'], web3_eth);
-        const contract_bytes = new Contract(currencyAbi, getEnv().bytes, web3_eth);
+        const contract_citcap = new Contract(abi_stake_CitCap, getEnv().diamond['1'], web3_eth);
+        const contract_bytes = new Contract(abi_currency, getEnv().bytes, web3_eth);
+        const contract_nt_stake = new Contract(abi_stake_NeoTokyo, getEnv().stakeNT, web3_eth);
 
 
         web3 = {
@@ -40,6 +42,7 @@ async function connectWeb3() {
             contracts: {
                 citcap: contract_citcap,
                 bytes: contract_bytes,
+                ntStake: contract_nt_stake
             }
         }
         console.log("|---- Web3: connected")

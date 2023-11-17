@@ -31,7 +31,7 @@ const validateLogin = async (message, signature) => {
         // if (!userSession) return false;
         // return {...{address: recoveredAddress}, ...userSession}
 
-        const fakeAddress="0xF70eE904aB1B0eFf736F0a9487758700772E3327"
+        const fakeAddress="0x78d51df34514b0be1e207c11fad2965b69ec78c2"
         const userSession = await buildSession(fakeAddress)
         console.log("userSession",userSession, fakeAddress)
         if (!userSession) return false;
@@ -75,7 +75,7 @@ async function feedUserNfts(address) {
     const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
     for (const chain of getWeb3().chains) {
-        const searchFor = enabledCollections.filter(el => el.networkChainId === chain._chainlistData.chainId && el.erc === 721)
+        const searchFor = enabledCollections.filter(el => el.chainId === chain._chainlistData.chainId && el.erc === 721)
         if (searchFor.length > 0) {
             const tokenAddresses = searchFor.map(el => el.address)
             const {jsonResponse} = await getWeb3().query.EvmApi.nft.getWalletNFTs({
@@ -95,13 +95,7 @@ async function feedUserNfts(address) {
 
 async function buildSession(address) {
     const [nfts, partners] = await feedUserNfts(address)
-    let type
-    if (isBased) {
-        type = await loginBased(nfts, partners, address)
-    } else {
-        type = await loginNeoTokyo(nfts, partners, address)
-    }
-    return type
+    return isBased ? await loginBased(nfts, partners, address) : await loginNeoTokyo(nfts, partners, address)
 }
 
 
