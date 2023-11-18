@@ -115,7 +115,7 @@ async function useUpgrade(user, req) {
         if (transaction) {
             await transaction.rollback();
         }
-        logger.error('QUERY :: [useUpgrade]', {error: serializeError(error), offerId, user, params: req.params});
+        logger.error('ERROR :: [useUpgrade]', {error: serializeError(error), offerId, user, params: req.params});
         return {
             ok: false,
             error: UPGRADE_ERRORS.Unexpected
@@ -131,7 +131,7 @@ async function getUpgrades(user, req) {
         return {ok: true, data: await fetchUpgrade(userId, offerId)}
 
     } catch (error) {
-        logger.error('QUERY :: [getUpgrades]', {error: serializeError(error), params: req.params, user});
+        logger.error('ERROR :: [getUpgrades]', {error: serializeError(error), params: req.params, user});
         return {
             ok: false,
             usedUpgrades: {}
