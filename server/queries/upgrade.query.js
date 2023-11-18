@@ -56,7 +56,7 @@ async function saveUpgradeUse(userId, offerId, storeId, amount, allocation, tran
 
     const query = `
         INSERT INTO public."upgrade" ("userId", "amount", "createdAt", "updatedAt", "storeId", "offerId", "alloMax")
-        VALUES ('${userId}', ${amount}, now(), now(), ${storeId}, ${offerId}, ${allocation ? allocation : 0}) on conflict("userId", "storeId", "offerId") do
+        VALUES (${userId}, ${amount}, now(), now(), ${storeId}, ${offerId}, ${allocation ? allocation : 0}) on conflict("userId", "storeId", "offerId") do
         update set "amount"=(SELECT amount from public."upgrade" WHERE "userId" = EXCLUDED."userId" AND "storeId" = EXCLUDED."storeId" AND "offerId" = EXCLUDED."offerId") + EXCLUDED.amount, "updatedAt"=now();
     `
 

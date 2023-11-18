@@ -53,7 +53,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
 
             participantsQuery = `
                 INSERT INTO public.z_participant_${offerId} ("userId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
-                VALUES ('${userId}', ${amount}, '${hash}', true, 'now()', 'now()') on conflict("userId", "hash") do
+                VALUES (${userId}, ${amount}, '${hash}', true, 'now()', 'now()') on conflict("userId", "hash") do
                 update set amount=EXCLUDED.amount, "updatedAt"=EXCLUDED."updatedAt";
             `
         } else {
@@ -61,7 +61,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
 
             participantsQuery = `
                 INSERT INTO public.z_participant_${offerId} ("userId", "amount", "hash", "createdAt", "updatedAt")
-                VALUES ('${userId}', ${amount}, '${hash}', 'now()', 'now()') on conflict("userId", "hash") do
+                VALUES (${userId}, ${amount}, '${hash}', 'now()', 'now()') on conflict("userId", "hash") do
                 update set amount=EXCLUDED.amount, "updatedAt"=EXCLUDED."updatedAt";
             `
         }
