@@ -2,11 +2,9 @@ const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 const db = require("../services/db/db.init");
 const {Op, QueryTypes} = require("sequelize");
-const {PremiumItemsENUM, PremiumItemsParamENUM} = require("../../src/lib/premiumHelper");
+const {PremiumItemsENUM, PremiumItemsParamENUM} = require("../../src/lib/enum/store");
 const {bookAllocationGuaranteed} = require("./invest.query");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
-
-
 
 async function saveUpgrade(transaction, upgradeId, offerId, owner, alloMax){
 
@@ -75,7 +73,14 @@ async function processUseUpgrade(owner, offerId, upgradeId, userTokenId, userACL
                 }
             }
 
-            const bookAllocation = await bookAllocationGuaranteed(transaction, offerId, owner, userTokenId, userACL, userMulti, upgradeIncreased)
+            const bookAllocation = await bookAllocationGuaranteed(
+                offerId,
+                owner,
+                userACL,
+                userMulti,
+                upgradeIncreased,
+                transaction
+        )
             if(!bookAllocation.ok) {
                 await transaction.rollback();
                 return bookAllocation
@@ -117,12 +122,12 @@ async function processUseUpgrade(owner, offerId, upgradeId, userTokenId, userACL
 }
 
 
-async function fetchUpgrade (owner, offerId) {
+async function fetchUpgrade (userId, offerId) {
     return await models.upgrade.findAll({
         attributes: ['amount', 'storeId', 'alloUsed', 'alloMax', 'isExpired'],
         where: {
-            owner,
-            offerId: offerId,
+            userId,
+            offerId,
             amount: {
                 [Op.gt]: 0
             }
@@ -131,5 +136,17 @@ async function fetchUpgrade (owner, offerId) {
     })
 }
 
+//todo: from invest.query
+async function increaseGuaranteedAllocationUsed(offerId, userId, amount, transaction) {
+    return await models.upgrade.increment({alloUsed: amount}, {
+        where: {
+            offerId,
+            storeId: PremiumItemsENUM.Guaranteed,
+            owner: address,
+        },
+        transaction
+    });
+}
 
-module.exports = {processUseUpgrade, fetchUpgrade}
+
+module.exports = {processUseUpgrade, fetchUpgrade, increaseGuaranteedAllocationUsed}

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {isBased} from "@/lib/utils";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 
 export default function UpgradesModalItem({itemType, selected, setSelectedUpgrade, isRightPhase, owned, used, image, name, description}) {
     return (

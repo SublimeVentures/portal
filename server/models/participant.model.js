@@ -11,7 +11,7 @@ function defineParticipantModel(sequelize, identifier) {
         },
         onchainId: {
             type: DataTypes.INTEGER,
-            unique: false,
+            unique: true,
             allowNull: true,
             references: {
                 model: 'onchain', // This is a reference to another model

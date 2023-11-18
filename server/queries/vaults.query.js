@@ -42,7 +42,6 @@ async function getUserVault(userId) {
         logger.error('QUERY :: [getUserVault]', {error: serializeError(error)});
     }
     return []
-
 }
 
 

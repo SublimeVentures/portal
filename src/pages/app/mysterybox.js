@@ -16,7 +16,7 @@ import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
 import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxModal";
 import {claimMysterybox} from "@/fetchers/mysterbox.fetcher";
 import dynamic from "next/dynamic";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 const ErrorModal = dynamic(() => import('@/components/App/MysteryBox/ClaimErrorModal'), {ssr: false})
 
 

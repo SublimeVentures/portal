@@ -70,9 +70,11 @@ new relic to webapp
 - confirm final 
 
 //tasks
-- raises -> offerNumbers
-
-
+- check guarnateed sub on transfer receive
+- check increaed llocation to expire
+- rester investment on timer zero
+- make sure guaranteed allow rebooking 
+- guaranteed allocation cant give more than 5k
 - link participants with onchain
 -         tx: {
             type: DataTypes.STRING,
@@ -83,6 +85,10 @@ new relic to webapp
 - onchain event - zapisuj tak czy inaczej 
 - better maching system
 - callback
+- filter incoming transaction through signed of wallets
+- if someone is whale, should always return the all available allo left (getOfferAllocation())
+- guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation() 
+- invest from UI - limits for nt
 
 ///REQUIREMENTS:
 - wallet cant be the same as last two investments

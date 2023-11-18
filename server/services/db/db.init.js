@@ -28,7 +28,7 @@ if(!process.env.IS_LOCAL_DB) {
 }
 
 const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
-console.log("URI",process.env.IS_LOCAL_DB)
+
 const sequelize = new Sequelize(URI, connection)
 
 const modelDefiners = [
@@ -38,6 +38,7 @@ const modelDefiners = [
     require('../../models/environment.model'),
     require('../../models/environment_based.model'),
     require('../../models/environment_citcap.model'),
+    require('../../models/filteredAddress.model'),
     require('../../models/injectedUser.model'),
     require('../../models/lootbox.model'),
     require('../../models/network.model'),

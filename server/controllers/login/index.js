@@ -14,7 +14,6 @@ const {loginNeoTokyo} = require("./neotokyo");
 const {getPartners} = require("../../queries/partners.query");
 const {loginBased} = require("./based");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
-const Sentry = require("@sentry/nextjs");
 const {userWalletUpsert} = require("../../queries/user.query");
 const logger = require("../../services/logger");
 const {serializeError} = require("serialize-error");
@@ -106,8 +105,6 @@ async function buildSession(address) {
 
     return type
 }
-
-
 
 module.exports = {
     logOut,

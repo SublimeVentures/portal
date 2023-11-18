@@ -2,17 +2,8 @@ const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
 const db = require("../services/db/db.init");
 const {Op, Sequelize, QueryTypes} = require("sequelize");
-const {PremiumItemsENUM, MYSTERY_TYPES} = require("../../src/lib/premiumHelper");
+const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES} = require("../../src/lib/enum/store");
 
-const CLAIM_ERRORS = {
-    Unexpected: "Unexpected error",
-    AllocationAssignment: "Allocation assignment error",
-    UpgradeAssignment: "Upgrade assignment error",
-    UserNoBoxes: "User don't own MysteryBoxes",
-    NotEnoughBoxes:"Not enough MysteryBoxes available",
-    AssignBox:"Couldn't assign MysteryBox",
-    Deduction:"Deduction error",
-}
 
 async function processMysterybox(transaction, claim, owner) {
     switch(claim.type) {
@@ -46,7 +37,7 @@ async function processAllocation(transaction, claim, owner){
         Sentry.captureException({location: "processAllocation", type: 'transaction', owner, claim});
         return {
             ok: false,
-            error: CLAIM_ERRORS.AllocationAssignment
+            error: MYSTERYBOX_CLAIM_ERRORS.AllocationAssignment
         }
     }
 
@@ -70,7 +61,7 @@ async function processUpgrade(transaction, claim, owner){
         Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});
         return {
             ok: false,
-            error: CLAIM_ERRORS.UpgradeAssignment
+            error: MYSTERYBOX_CLAIM_ERRORS.UpgradeAssignment
         }
     }
 }
@@ -95,7 +86,7 @@ async function claimMysterybox(owner) {
             Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});
             return {
                 ok: false,
-                error: CLAIM_ERRORS.UserNoBoxes
+                error: MYSTERYBOX_CLAIM_ERRORS.UserNoBoxes
             }
         }
 
@@ -116,7 +107,7 @@ async function claimMysterybox(owner) {
             Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});
             return {
                 ok: false,
-                error: CLAIM_ERRORS.NotEnoughBoxes
+                error: MYSTERYBOX_CLAIM_ERRORS.NotEnoughBoxes
             }
         }
 
@@ -136,7 +127,7 @@ async function claimMysterybox(owner) {
             Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});
             return {
                 ok: false,
-                error: CLAIM_ERRORS.AssignBox
+                error: MYSTERYBOX_CLAIM_ERRORS.AssignBox
             }
         }
 
@@ -147,7 +138,7 @@ async function claimMysterybox(owner) {
             Sentry.captureException({location: "claimMysterybox", type: 'transaction', owner});
             return {
                 ok: false,
-                error: CLAIM_ERRORS.Deduction
+                error: MYSTERYBOX_CLAIM_ERRORS.Deduction
             }
         }
 
@@ -175,7 +166,7 @@ async function claimMysterybox(owner) {
         Sentry.captureException({location: "claimMysterybox", type: 'catch error', owner, e});
         return {
             ok: false,
-            error: CLAIM_ERRORS.Unexpected
+            error: MYSTERYBOX_CLAIM_ERRORS.Unexpected
         }
     }
 

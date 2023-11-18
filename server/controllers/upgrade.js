@@ -1,6 +1,6 @@
 const {ACLs} = require("../../src/lib/authHelpers");
 const {processUseUpgrade, fetchUpgrade} = require("../queries/upgrade.query");
-const {PremiumItemsENUM} = require("../../src/lib/premiumHelper");
+const {PremiumItemsENUM} = require("../../src/lib/enum/store");
 
 async function useUpgrade(user, req) {
     let offerId, upgradeId;
@@ -41,10 +41,8 @@ async function getUpgrades(user, req) {
         }
     }
 
-    const {ACL, address ,id} = user
-    const owner = address
-    // const owner = ACL === ACLs.Whale ? id : address
-    return {ok: true, data: await fetchUpgrade(owner, offerId)}
+    const { userId} = user
+    return {ok: true, data: await fetchUpgrade(userId, offerId)}
 
 }
 

@@ -9,7 +9,7 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconPremium from "@/assets/svg/Premium.svg";
 import UpgradesModalItem from "@/components/App/Offer/UpgradesModalItem";
-import {PremiumItemsENUM, PremiumItemsParamENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM, PremiumItemsParamENUM} from "@/lib/enum/store";
 import {useUpgrade} from "@/fetchers/offer.fetcher";
 import {PhaseId} from "@/lib/phases";
 

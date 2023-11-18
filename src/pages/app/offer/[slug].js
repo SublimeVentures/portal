@@ -18,7 +18,7 @@ import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestC
 import routes from "@/routes";
 import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 
 export const AppOfferDetails = ({account}) => {
     const router = useRouter()

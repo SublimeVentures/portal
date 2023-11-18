@@ -3,6 +3,8 @@ const {getEnv} = require("../../services/db");
 const {checkElite, checkBytesTimelock, checkBytesStake} = require("../../queries/neoTokyo.query");
 const {ACLs, userIdentification} = require("../../../src/lib/authHelpers");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
+const logger = require("../../services/logger");
+const {serializeError} = require("serialize-error");
 
 
 async function processS1(tokenIds, isStaked = false) {
@@ -32,7 +34,7 @@ async function processS1(tokenIds, isStaked = false) {
             };
         });
     } catch (error) {
-        console.error('Error fetching token data:', error);
+        logger.error('LOGIN :: [processS1]', {error: serializeError(error)});
         return [];
     }
 }
@@ -68,8 +70,7 @@ async function processS2(tokenIds, isStaked = false) {
             };
         });
     } catch (error) {
-        console.error(`Error fetching token data S2, isStaked ${isStaked}`, error);
-
+        logger.error('LOGIN :: [processS2]', {error: serializeError(error), tokenIds, isStaked});
         return [];
     }
 }
@@ -234,8 +235,6 @@ function calcAllocationExtra(stakeCitCap, bytesOnWallet, NFTs) {
     })
 
     return Math.floor(totalBonusPoints)
-
-
 }
 
 const updateSessionStaking = async (user) => {
@@ -251,7 +250,6 @@ const updateSessionStaking = async (user) => {
         return null
     }
 }
-
 
 async function loginNeoTokyo(nfts, partners, address) {
     try {
@@ -308,7 +306,7 @@ async function loginNeoTokyo(nfts, partners, address) {
             stakeDate
         }
     } catch(error) {
-        console.log("NeoTokyo login error", error)
+        logger.error('LOGIN :: [loginNeoTokyo]', {error: serializeError(error)});
         return false
     }
 

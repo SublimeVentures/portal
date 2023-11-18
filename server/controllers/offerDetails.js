@@ -127,7 +127,7 @@ async function getOfferAllocation(user, req) {
     const {ACL} = user
     const data = await getOfferRaise(Number(req.params.id))
     const allocation = data.get({plain: true})
-    if(allocation.offer.alloTotalPartner > 0 && ACL !== 0) {
+    if(allocation.offer.alloTotalPartner > 0 && ACL !== ACLs.Whale) {
         return {
             alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
             alloRes: allocation.alloResPartner + allocation.alloGuaranteed

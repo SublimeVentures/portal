@@ -1,6 +1,6 @@
 const moment = require('moment');
 const {ACLs} = require("@/lib/authHelpers");
-const {PremiumItemsParamENUM} = require("@/lib/premiumHelper");
+const {PremiumItemsParamENUM} = require("@/lib/enum/store");
 
 const PhaseId = {
     Vote: -1,

@@ -5,16 +5,19 @@ const Sentry = require("@sentry/nextjs");
 const {ACLs} = require("../../src/lib/authHelpers");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 const {getOfferById} = require("./offers.query");
-const {PremiumItemsParamENUM, PremiumItemsENUM} = require("../../src/lib/premiumHelper");
+const {PremiumItemsParamENUM, PremiumItemsENUM} = require("../../src/lib/enum/store");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
+const {increaseGuaranteedAllocationUsed} = require("./upgrade.query");
 
 
 async function getOfferRaise(id) {
     try {
-        return models.raises.findOne({
+        return await models.offerFundraise.findOne({
             where: {offerId: id},
             include: {
                 attributes: ['id', 'alloTotalPartner'],
-                model: models.offers
+                model: models.offer
             }
         })
     } catch (e) {
@@ -23,10 +26,8 @@ async function getOfferRaise(id) {
     return {}
 }
 
-
-async function bookAllocation(offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId, upgradeGuaranteed) {
+async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, hash, amount, upgradeGuaranteed) {
     let transaction, sumFilter, variable, increaseBooking, participantsQuery, alloBase, alloGuaranteed;
-    const date = new Date().toISOString();
 
     if (isSeparatePool) {
         variable = "alloResPartner"
@@ -53,23 +54,21 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
             sumFilter += ` + ${alloBase} - ${alloGuaranteed} <= ${totalAllocation}`
 
             participantsQuery = `
-                INSERT INTO public.participants_${offerId} ("address", "nftId", "amount", "acl", "hash", "isGuaranteed", "createdAt", "updatedAt")
-                VALUES ('${address}', ${tokenId}, ${amount}, ${acl}, '${hash}', true, '${date}', '${date}
-                        ') on conflict("address", "hash") do
-                update set amount=EXCLUDED.amount, "acl"=EXCLUDED."acl", "nftId"=EXCLUDED."nftId", "updatedAt"=EXCLUDED."updatedAt";
+                INSERT INTO public.z_participant_${offerId} ("userId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
+                VALUES ('${userId}', ${amount}, '${hash}', true, 'now()', 'now()') on conflict("userId", "hash") do
+                update set amount=EXCLUDED.amount, "updatedAt"=EXCLUDED."updatedAt";
             `
         } else {
             sumFilter += ` + ${amount} <= ${totalAllocation}`
 
             participantsQuery = `
-                INSERT INTO public.participants_${offerId} ("address", "nftId", "amount", "acl", "hash", "createdAt", "updatedAt")
-                VALUES ('${address}', ${tokenId}, ${amount}, ${acl}, '${hash}', '${date}', '${date}
-                        ') on conflict("address", "hash") do
-                update set amount=EXCLUDED.amount, "acl"=EXCLUDED."acl", "nftId"=EXCLUDED."nftId", "updatedAt"=EXCLUDED."updatedAt";
+                INSERT INTO public.z_participant_${offerId} ("userId", "amount", "hash", "createdAt", "updatedAt")
+                VALUES ('${userId}', ${amount}, '${hash}', 'now()', 'now()') on conflict("userId", "hash") do
+                update set amount=EXCLUDED.amount, "updatedAt"=EXCLUDED."updatedAt";
             `
         }
 
-        increaseBooking = await models.raises.increment({[variable]: upgradeGuaranteed ? alloBase : amount}, {
+        increaseBooking = await models.offerFundraise.increment({[variable]: upgradeGuaranteed ? alloBase : amount}, {
             where: {
                 [Op.and]: [
                     db.literal(sumFilter)
@@ -81,44 +80,35 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, address,
 
         if (!increaseBooking[0][1]) {
             await transaction.rollback();
+            logger.info(`[bookAllocation] - reservation failed for Offer ${offerId} - overbooking`, {participantsQuery, sumFilter, increaseBooking, offerId, isSeparatePool, totalAllocation, userId, hash, amount,  upgradeGuaranteed});
             return false;
         }
 
         if (upgradeGuaranteed) {
-            await models.upgrade.increment({alloUsed: alloGuaranteed}, {
-                where: {
-                   offerId:offerId,
-                   storeId: PremiumItemsENUM.Guaranteed,
-                   owner: address,
-                },
-                transaction
-            });
+            await increaseGuaranteedAllocationUsed(offerId, userId, alloGuaranteed, transaction)
         }
 
         await db.query(participantsQuery, {
             type: QueryTypes.UPSERT,
-            model: models.participants,
-            transaction,
+            transaction
         });
 
         await transaction.commit();
         return true;
-    } catch (e) {
+    } catch (error) {
         if (transaction) {
             await transaction.rollback();
         }
-        console.log("bookAllocation", e)
-        Sentry.captureException({
-            location: "bookAllocation",
-            error,
-            data: {offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId}
+        logger.error(`ERROR :: [bookAllocation] for ${offerId} `, {
+            error: serializeError(error),
+            offerId, isSeparatePool, totalAllocation, userId, hash, amount,  upgradeGuaranteed,
+            variable, sumFilter
         });
         return false
     }
-
 }
 
-async function bookAllocationGuaranteed(transaction, offerId, address, tokenId, acl, multi, upgradeIncreased) {
+async function bookAllocationGuaranteed(transaction, offerId, userId, tokenId, acl, multi, upgradeIncreased) {
     const offer = await getOfferById(offerId)
     const increasedAllocations = upgradeIncreased * PremiumItemsParamENUM.Increased
     const isSeparatePool = offer.alloTotalPartner > 0 && acl !== ACLs.Whale;
@@ -170,21 +160,27 @@ async function bookAllocationGuaranteed(transaction, offerId, address, tokenId, 
     }
 }
 
-async function expireAllocation(offerId, address, hash) {
+async function expireAllocation(offerId, userId, hash) {
     try {
-        const participants = `
-            UPDATE public.participants_${offerId}
-            SET "isExpired"= true,
-                "updatedAt"='${new Date().toISOString()}'
-            WHERE "address" = '${address}'
-              AND "hash" = '${hash}';
-        `
+        const participantsQuery = `
+            UPDATE public.z_participant_${offerId}
+            SET "isExpired" = true,
+                "updatedAt" = now()
+            WHERE "userId" = :userId
+              AND "hash" = :hash;
+        `;
 
-        await db.query(participants, {
-            model: models.participants,
+        return await db.query(participantsQuery, {
+            replacements: {
+                userId,
+                hash
+            },
+            type: QueryTypes.UPDATE
         });
     } catch (e) {
-        Sentry.captureException({location: "expireAllocation", type: 'query', e});
+        logger.error(`ERROR :: [expireAllocation] for ${offerId} `, {
+            offerId, userId, hash
+        });
     }
     return true
 }
