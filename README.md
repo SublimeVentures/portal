@@ -63,34 +63,42 @@ new relic to webapp
 
 
 
-
-- allow for confirmation on onchain restart
-- for some reason it expires everything- fix it
-- logs around expires
-- confirm final 
-
 //tasks
-- check guarnateed sub on transfer receive
-- check increaed llocation to expire
-- rester investment on timer zero
-- make sure guaranteed allow rebooking 
-- guaranteed allocation cant give more than 5k
-- link participants with onchain
--         tx: {
-            type: DataTypes.STRING,
-            defaultValue: ""
-        }, remove
-- add notfications for refunds 
+
+- blockeater
+  - subscriber
+    - callback
+    - allow for confirmation on onchain restart
+    - for some reason it expires everything- fix it
+    - logs around expires
+    - onchain event - zapisuj tak czy inaczej
+    - filter incoming transaction through signed of wallets
+    - better maching system
+  - check guarnateed sub on transfer receive
+  - check increaed allocation to expire
+  - guaranteed allocation cant give more than 5k
+
+
+- webapp
+  - restart investment on timer zero
+  - auto-close investment after reaching success
+  - make sure guaranteed allow rebooking
+  - bytes burn
+  - calculator nt
+
+- nt
+  - max allo in UI
+
+- add notfications for refunds
+- test separate pools
+- test all app
+
+
 - add refund flow
-- onchain event - zapisuj tak czy inaczej 
-- better maching system
-- callback
-- filter incoming transaction through signed of wallets
 - if someone is whale, should always return the all available allo left (getOfferAllocation())
 - guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation()  && bookAllocationGuaranteed
-- invest from UI - limits for nt
-- calculator nt
-- test separate pools
-- saveUpgradeUse - check
+
+
+
 ///REQUIREMENTS:
 - wallet cant be the same as last two investments
