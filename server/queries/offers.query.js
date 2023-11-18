@@ -48,7 +48,7 @@ async function getOfferDetails(slug) {
             raw: true
         })
     } catch (error) {
-        logger.error('QUERY :: [getOfferDetails]', {error: serializeError(error)});
+        logger.error('QUERY :: [getOfferDetails]', {error: serializeError(error), slug, });
     }
     return {}
 }
@@ -60,7 +60,7 @@ async function getOfferById(id) {
             raw: true
         })
     } catch (error) {
-        logger.error('QUERY :: [getOfferById]', {error: serializeError(error)});
+        logger.error('QUERY :: [getOfferById]', {error: serializeError(error), id});
     }
     return {}
 }

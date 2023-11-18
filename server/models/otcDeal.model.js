@@ -52,6 +52,14 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
+        chainId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'network', // This is a reference to another model
+                key: 'chainId',       // This is the column name of the referenced model
+            }
+        },
         onchainId: {
             type: DataTypes.INTEGER,
             unique: true,

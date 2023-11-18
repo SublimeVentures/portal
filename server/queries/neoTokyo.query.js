@@ -14,7 +14,7 @@ async function checkElite(array) {
             raw: true
         })
     } catch (error) {
-        logger.error('QUERY :: [checkElite]', {error: serializeError(error)});
+        logger.error('QUERY :: [checkElite]', {error: serializeError(error), array});
     }
     return []
 }
@@ -32,7 +32,7 @@ async function checkBytesStake(array) {
             raw: true
         });
     } catch (error) {
-        logger.error('QUERY :: [checkBytesStake]', {error: serializeError(error)});
+        logger.error('QUERY :: [checkBytesStake]', {error: serializeError(error), array});
     }
     return []
 }

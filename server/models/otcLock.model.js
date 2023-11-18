@@ -8,10 +8,18 @@ module.exports = (sequelize) => {
             primaryKey: true,
             unique: true
         },
-        owner: {
+        wallet: {
             type: DataTypes.STRING,
             defaultValue: 0,
             allowNull: false,
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'user', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
         },
         offerId: {
             type: DataTypes.INTEGER,

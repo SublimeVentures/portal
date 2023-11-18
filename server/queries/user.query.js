@@ -17,7 +17,7 @@ async function userWalletUpsert(wallet, acl) {
 
         return user.get({ plain: true });
     } catch (error) {
-        logger.error('QUERY :: [userWalletUpsert]', {error: serializeError(error)});
+        logger.error('QUERY :: [userWalletUpsert]', {error: serializeError(error), wallet, acl});
     }
 
 }

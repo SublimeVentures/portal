@@ -1,43 +1,62 @@
 const {getEnv} = require("../services/db");
-const {getActiveOffers, getHistoryOffers, saveOtcHash, signOtcTransaction} = require("../queries/otc.query");
+const {getActiveOffers, getHistoryOffers, saveOtcHash, checkDealBeforeSigning, processSellOtcDeal,
+    saveOtcLock
+} = require("../queries/otc.query");
 const {getPermittedOfferList} = require("./offerList");
 const moment = require("moment");
 const {createHash} = require("./helpers");
 const {signData} = require("../../src/lib/authHelpers");
-const Sentry = require("@sentry/nextjs");
+const logger = require("../services/logger");
+const {serializeError} = require("serialize-error");
+const db = require("../services/db/db.init");
+const {OTC_STATE} = require("../../src/lib/enum/otc");
 
-const OtcState = {
-    DISABLED: 0
-}
 
 async function getMarkets(session) {
-    const offers = await getPermittedOfferList(session)
-    return {
-        markets: offers.filter(el => el.market !== OtcState.DISABLED),
-        otcFee: Number(getEnv().feeOtc),
-        currencies: getEnv().currencies,
-        diamond: getEnv().diamondBased
+    try {
+        const offers = await getPermittedOfferList(session)
+        return {
+            markets: offers.filter(el => el.market !== OTC_STATE.DISABLED),
+            otcFee: Number(getEnv().feeOtc),
+            currencies: getEnv().currencies,
+            diamond: getEnv().diamondBased
+        }
+    } catch(error) {
+        logger.error(`ERROR :: [getOffers] OTC`, {error: serializeError(error)});
+        return {
+            markets: [],
+            otcFee: Number(getEnv().feeOtc),
+            currencies: getEnv().currencies,
+            diamond: getEnv().diamondBased
+        }
     }
+
 }
 
 async function getOffers(req) {
-    const otcId = Number(req.params.id)
-    return await getActiveOffers(otcId)
+    try {
+        const otcId = Number(req.params.id)
+        return await getActiveOffers(otcId)
+    } catch(error) {
+        logger.error(`ERROR :: [getOffers] OTC`, {error: serializeError(error)});
+        return []
+    }
+
 }
 
 async function getHistory(req) {
     try {
         const ID = Number(req.params.id)
         return await getHistoryOffers(ID)
-    } catch (e) {
-        Sentry.captureException("getHistoryOffers", {req, e});
+    } catch (error) {
+        logger.error(`ERROR :: [getHistory] OTC`, {error: serializeError(error)});
         return []
     }
 
 }
 
 async function createOffer(user, req) {
-    const {address} = user
+    const {userId, address} = user
 
     try {
         const offerId = Number(req.params.id)
@@ -46,9 +65,17 @@ async function createOffer(user, req) {
         const price = Number(req.body.price)
         const networkChainId = Number(req.body.networkChainId)
         const now = moment().unix()
-        const hash = createHash(`${address}` + `${now}`)
-        return await saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell)
-    } catch (e) {
+        const hash = createHash(`${userId}` + `${now}`)
+        const saved =  await saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell)
+
+        if(!saved.ok) return saved
+
+        return {
+            ok: true,
+            hash: hash
+        }
+    } catch (error) {
+        logger.error(`ERROR :: [createOffer] OTC`, {error: serializeError(error), user, params: re.qparams, body: req.body});
         return {
             ok: false,
         }
@@ -56,8 +83,9 @@ async function createOffer(user, req) {
 }
 
 async function signOffer(user, req) {
-    const {address} = user
+    const {userId, address} = user
 
+    let transaction
 
     try {
         const offerId = Number(req.params.id)
@@ -65,28 +93,44 @@ async function signOffer(user, req) {
         const otcId = Number(req.body.otcId)
         const dealId = Number(req.body.dealId)
         const expireDate =  moment.utc().unix() + 3 * 60
-        const dbCheck = await signOtcTransaction(address, offerId, networkChainId, otcId, dealId, expireDate)
-        const signature = await signData(address, otcId, dealId, dbCheck.nonce, expireDate)
+
+        transaction = await db.transaction();
+
+        const deal = await checkDealBeforeSigning(offerId, networkChainId, otcId, dealId, transaction)
+        if(!deal.ok) return deal
+
+        if(!deal.data.isSell) {
+            const isBuyLockup = await processSellOtcDeal(userId, deal.data, transaction)
+            if(!isBuyLockup.ok) return isBuyLockup
+        }
+
+        await saveOtcLock(userId, address, deal.data, expireDate, transaction)
+
+        const signature = await signData(userId, otcId, dealId, deal.data.id, expireDate)
         if(!signature.ok){
             throw new Error("Invalid signature")
         }
 
+        await transaction.commit();
+
         return {
             ok: true,
             data: {
-                nonce: dbCheck.nonce,
+                nonce: deal.data.id,
                 expiry: expireDate,
                 hash: signature.data
             }
         }
-    } catch (e) {
-        console.log("signOffer e",e)
+    } catch (error) {
+        if (transaction) {
+            await transaction.rollback();
+        }
+        logger.error(`ERROR :: [signOffer] OTC`, {error: serializeError(error), user, body: req.body, params: req.params});
         return {
             ok: false,
+            code: error.message
         }
     }
 }
-
-
 
 module.exports = {getMarkets, getOffers, getHistory, createOffer, signOffer}

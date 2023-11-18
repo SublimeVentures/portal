@@ -2,6 +2,8 @@ const {serialize} = require("cookie");
 const {jwtVerify, SignJWT} = require("jose")
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 const {ethers} = require("ethers");
+const logger = require("../../server/services/logger");
+const {serializeError} = require("serialize-error");
 
 const aws_secrets = new SecretsManagerClient({ region: process.env.SECRET_REGION });
 const aws_secrets_input = { // GetSecretValueRequest
@@ -181,12 +183,10 @@ const signData = async (wallet, otcId, dealId, nonce, expire) => {
             ok: true,
             data: await signer.signMessage(ethers.utils.arrayify(payloadHash))
         };
-    } catch (e) {
-        console.log("signature error" ,e)
-
+    } catch (error) {
+        logger.error(`ERROR :: [signData]`, {error: serializeError(error), wallet, otcId, dealId, nonce, expire});
         return {
             ok: false,
-            error: e
         }
     }
 }

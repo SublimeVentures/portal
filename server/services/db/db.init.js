@@ -152,12 +152,18 @@ function applyExtraSetup(sequelize) {
     offer.hasMany(otcDeal, { foreignKey: 'offerId' });
     otcDeal.belongsTo(offer, { foreignKey: 'offerId' });
 
+    network.hasMany(otcDeal, { foreignKey: 'chainId' });
+    otcDeal.belongsTo(network, { foreignKey: 'chainId' });
+
     //otcLock model
     offer.hasMany(otcLock, { foreignKey: 'offerId' });
     otcLock.belongsTo(offer, { foreignKey: 'offerId' });
 
     otcDeal.hasMany(otcLock, { foreignKey: 'otcDealId' });
     otcLock.belongsTo(otcDeal, { foreignKey: 'otcDealId' });
+
+    user.hasMany(otcLock, { foreignKey: 'userId' });
+    otcLock.belongsTo(user, { foreignKey: 'userId' });
 
     //partner model
     network.hasMany(partner, { foreignKey: 'chainId' });

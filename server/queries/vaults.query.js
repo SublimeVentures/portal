@@ -14,7 +14,7 @@ async function getUserInvestment(userId, offerId) {
             raw: true
         });
     } catch (error) {
-        logger.error('QUERY :: [getUserInvestment]', {error: serializeError(error)});
+        logger.error('QUERY :: [getUserInvestment]', {error: serializeError(error), userId, offerId});
     }
     return {}
 
@@ -39,7 +39,7 @@ async function getUserVault(userId) {
             raw: true
         })
     } catch (error) {
-        logger.error('QUERY :: [getUserVault]', {error: serializeError(error)});
+        logger.error('QUERY :: [getUserVault]', {error: serializeError(error), userId});
     }
     return []
 }
