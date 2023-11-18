@@ -1,11 +1,7 @@
 const {models} = require('../services/db/db.init');
 const db = require('../services/db/db.init');
 const {Op, QueryTypes} = require("sequelize");
-const Sentry = require("@sentry/nextjs");
-const {ACLs} = require("../../src/lib/authHelpers");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
-const {getOfferById} = require("./offers.query");
-const {PremiumItemsParamENUM, PremiumItemsENUM} = require("../../src/lib/enum/store");
 const logger = require("../services/logger");
 const {serializeError} = require("serialize-error");
 const {increaseGuaranteedAllocationUsed} = require("./upgrade.query");
@@ -20,8 +16,10 @@ async function getOfferRaise(id) {
                 model: models.offer
             }
         })
-    } catch (e) {
-        Sentry.captureException({location: "getOfferRaise", type: 'query', e});
+    } catch (error) {
+        logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
+            error: serializeError(error),
+        });
     }
     return {}
 }
@@ -99,7 +97,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
         if (transaction) {
             await transaction.rollback();
         }
-        logger.error(`ERROR :: [bookAllocation] for ${offerId} `, {
+        logger.error(`QUERY :: [bookAllocation] for ${offerId} `, {
             error: serializeError(error),
             offerId, isSeparatePool, totalAllocation, userId, hash, amount,  upgradeGuaranteed,
             variable, sumFilter
@@ -108,13 +106,9 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
     }
 }
 
-async function bookAllocationGuaranteed(transaction, offerId, userId, tokenId, acl, multi, upgradeIncreased) {
-    const offer = await getOfferById(offerId)
-    const increasedAllocations = upgradeIncreased * PremiumItemsParamENUM.Increased
-    const isSeparatePool = offer.alloTotalPartner > 0 && acl !== ACLs.Whale;
-    const totalAllocation = isSeparatePool ? offer.alloTotalPartner : offer.alloTotal;
-    const partnerAllo = multi * offer.alloMin + (increasedAllocations ? increasedAllocations : 0);
-    const amount = acl === ACLs.Whale ? PremiumItemsParamENUM.Guaranteed : ((partnerAllo < PremiumItemsParamENUM.Guaranteed ? partnerAllo : PremiumItemsParamENUM.Guaranteed) * (100 - offer.tax) / 100)
+
+async function bookAllocationGuaranteed(offerId, amount, totalAllocation, isSeparatePool, transaction) {
+
     let sumFilter
     if (isSeparatePool) {
         sumFilter = `"offerId" = ${offerId} AND COALESCE("alloResPartner",0) + COALESCE("alloFilledPartner",0) + COALESCE("alloSidePartner",0) + COALESCE("alloGuaranteed",0) + ${amount} <= ${totalAllocation}`
@@ -122,16 +116,17 @@ async function bookAllocationGuaranteed(transaction, offerId, userId, tokenId, a
         sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloSide",0) + COALESCE("alloGuaranteed",0) + ${amount} <= ${totalAllocation}`
     }
 
-    try {
-        const booked = await models.raises.increment({alloGuaranteed: amount}, {
+        const booked = await models.offerFundraise.increment({alloGuaranteed: amount}, {
             where: {
                 [Op.and]: [
                     db.literal(sumFilter)
                 ]
-            },transaction
+            },
+            transaction
         });
 
         if (!booked[0][1]) {
+            await transaction.rollback();
             return {
                 ok: false,
                 error: UPGRADE_ERRORS.NotEnoughAllocation
@@ -140,24 +135,7 @@ async function bookAllocationGuaranteed(transaction, offerId, userId, tokenId, a
 
         return {
             ok: true,
-            alloMax: amount
         }
-
-    } catch (error) {
-        if (transaction) {
-            await transaction.rollback();
-        }
-        console.log("bookAllocationGuaranteed", error)
-        Sentry.captureException({
-            location: "bookAllocationGuaranteed",
-            error,
-            data: {offerId,}
-        });
-        return {
-            ok: false,
-            error: UPGRADE_ERRORS.UnexpectedGuaranteed
-        }
-    }
 }
 
 async function expireAllocation(offerId, userId, hash) {

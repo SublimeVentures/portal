@@ -87,8 +87,10 @@ new relic to webapp
 - callback
 - filter incoming transaction through signed of wallets
 - if someone is whale, should always return the all available allo left (getOfferAllocation())
-- guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation() 
+- guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation()  && bookAllocationGuaranteed
 - invest from UI - limits for nt
-
+- calculator nt
+- test separate pools
+- saveUpgradeUse - check
 ///REQUIREMENTS:
 - wallet cant be the same as last two investments

@@ -16,7 +16,7 @@ router.get('/owned', async (req, res) => {
     const {auth, user} = await verifyID(req)
     if(!auth)  return res.status(401).json({});
 
-    return res.status(200).json(await getStoreItemsOwned(user.address))
+    return res.status(200).json(await getStoreItemsOwned(user.userId))
 });
 
 

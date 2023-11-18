@@ -1,5 +1,6 @@
 const UPGRADE_ERRORS = {
     NoUpgrade: "Upgrade not detected",
+    NoAppliedUpgrade: "Applied Upgrades not detected",
     Deduction:"Deduction error",
     Unexpected: "Unexpected error",
     UnexpectedGuaranteed: "Unexpected error for Guaranteed",
