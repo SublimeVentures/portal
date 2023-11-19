@@ -23,7 +23,7 @@ if(!process.env.IS_LOCAL_DB) {
     connection.logging = false
     // connection.logging = logger.info.bind(logger)
 } else {
-    // connection.logging = false
+    connection.logging = false
     // connection.logging = logger.info.bind(console.log)
 }
 
@@ -127,8 +127,12 @@ function applyExtraSetup(sequelize) {
     user.hasMany(notification, { foreignKey: 'userId' });
     notification.belongsTo(user, { foreignKey: 'userId' });
 
-    notificationType.hasMany(notification, { foreignKey: 'typeId' });
-    notificationType.belongsTo(notification, { foreignKey: 'typeId' });
+    notificationType.hasMany(notification, { foreignKey: 'typeId', sourceKey: 'id' });
+    notification.belongsTo(notificationType, { foreignKey: 'typeId', sourceKey: 'id' });
+
+    notification.belongsTo(onchain, { foreignKey: 'onchainId', targetKey: 'id' });
+    onchain.hasOne(notification, { foreignKey: 'onchainId', sourceKey: 'id' });
+
 
     //offerDescription model
     offer.hasOne(offerDescription, { foreignKey: 'descriptionId' });
@@ -139,15 +143,15 @@ function applyExtraSetup(sequelize) {
     offerFundraise.belongsTo(offer, { foreignKey: 'offerId' });
 
     //onchain model
-    onchainType.hasMany(onchain, { foreignKey: 'chainId' });
-    onchain.belongsTo(onchainType, { foreignKey: 'chainId' });
+    onchainType.hasMany(onchain, { foreignKey: 'typeId' });
+    onchain.belongsTo(onchainType, { foreignKey: 'typeId' });
 
-    network.hasMany(onchain, { foreignKey: 'typeId' });
-    onchain.belongsTo(network, { foreignKey: 'typeId' });
+    network.hasMany(onchain, { foreignKey: 'chainId' });
+    onchain.belongsTo(network, { foreignKey: 'chainId' });
 
     //otcDeal model
-    otcDeal.hasOne(onchain, { foreignKey: 'onchainId' });
-    onchain.belongsTo(otcDeal, { foreignKey: 'onchainId' });
+    otcDeal.belongsTo(onchain, { foreignKey: 'onchainId', targetKey: 'id' });
+    onchain.hasOne(otcDeal, { foreignKey: 'onchainId', sourceKey: 'id' });
 
     offer.hasMany(otcDeal, { foreignKey: 'offerId' });
     otcDeal.belongsTo(offer, { foreignKey: 'offerId' });

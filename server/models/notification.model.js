@@ -25,6 +25,15 @@ module.exports = (sequelize) => {
                 key: 'id',       // This is the column name of the referenced model
             }
         },
+        onchainId: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            allowNull: true,
+            references: {
+                model: 'onchain', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
         data: {
             type: DataTypes.JSON,
             defaultValue: 0,

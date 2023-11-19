@@ -48,6 +48,10 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
+        isRegisteredExecuted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         isConfirmedExecuted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
@@ -67,7 +71,7 @@ module.exports = (sequelize) => {
         },
     }, {
         indexes: [
-            {unique: true, fields: ['txID']},
+            {unique: true, fields: ['txID', 'chainId']},
         ],
         freezeTableName: true,
         timestamps: true

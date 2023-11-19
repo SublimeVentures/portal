@@ -25,9 +25,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 Add click pointer on side toolbars in slider
 otc to sidebar
 otc bot
-fabweilt
-new relic to webapp
-
 
 - bg in sidebar
 - auth redirect fix
@@ -64,14 +61,11 @@ new relic to webapp
 
 
 //tasks
-
 - blockeater
   - subscriber
-    - callback
     - allow for confirmation on onchain restart
     - for some reason it expires everything- fix it
     - logs around expires
-    - onchain event - zapisuj tak czy inaczej
     - filter incoming transaction through signed of wallets
     - better maching system
   - check guarnateed sub on transfer receive
@@ -80,6 +74,7 @@ new relic to webapp
 
 
 - webapp
+  - fetch offerDescription
   - restart investment on timer zero
   - auto-close investment after reaching success
   - make sure guaranteed allow rebooking

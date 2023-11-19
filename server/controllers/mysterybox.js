@@ -1,6 +1,6 @@
 const { pickMysteryBox, assignMysteryBox,  processMBAllocation, processMBUpgrade} = require("../queries/mysterybox.query");
 const db = require("../services/db/db.init");
-const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES} = require("@/lib/enum/store");
+const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES} = require("../../src/lib/enum/store");
 const {getStoreItemsOwnedByUser, updateUserUpgradeAmount} = require("../queries/storeUser.query");
 const logger = require("../services/logger");
 const {serializeError} = require("serialize-error");

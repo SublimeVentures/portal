@@ -5,8 +5,8 @@ const {
 const {PremiumItemsENUM} = require("../../src/lib/enum/store");
 const logger = require("../services/logger");
 const {serializeError} = require("serialize-error");
-const {isBased} = require("@/lib/utils");
-const {PremiumItemsParamENUM} = require("@/lib/enum/store");
+const {isBased} = require("../../src/lib/utils");
+const {PremiumItemsParamENUM} = require("../../src/lib/enum/store");
 const db = require("../services/db/db.init");
 const {getStoreItemsOwnedByUser, updateUserUpgradeAmount} = require("../queries/storeUser.query");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");

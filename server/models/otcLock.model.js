@@ -61,7 +61,8 @@ module.exports = (sequelize) => {
 
     }, {
         indexes: [
-            {unique: false, fields: ['owner']},
+            {unique: false, fields: ['userId']},
+            {unique: false, fields: ['wallet']},
             {unique: false, fields: ['isExpired']},
         ],
         freezeTableName: true,
