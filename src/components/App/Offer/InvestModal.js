@@ -13,6 +13,7 @@ import RocketIcon from "@/assets/svg/Rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
+import {useRouter} from "next/router";
 
 export const StakeSteps = {
     Select: 0,
@@ -21,6 +22,7 @@ export const StakeSteps = {
 }
 
 export default function InvestModal({model, setter, investModalProps}) {
+    const router = useRouter()
     const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
 
 
@@ -42,6 +44,11 @@ export default function InvestModal({model, setter, investModalProps}) {
         setTimeout(() => {
             setBlockchainData(false)
         }, 400);
+    }
+
+    const redirectToVault = () => {
+        closeModal()
+        router.push(PAGE.App)
     }
 
 
@@ -84,9 +91,9 @@ export default function InvestModal({model, setter, investModalProps}) {
                 <Lottie animationData={lottieSuccess} loop={true} autoplay={true} style={{width: '320px', margin: '30px auto 0px'}}/>
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <Link href={PAGE.App} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>
+                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`} onClick={redirectToVault}>
                         <UniButton type={ButtonTypes.BASE} text={'Check Vault'} state={"danger"} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
-                    </Link>
+                    </div>
                 </div>
                 <div className="mt-auto">What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT} /></div>
             </div>

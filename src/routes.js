@@ -6,6 +6,7 @@ const PAGE = {
     Join: "/join",
     Login: "/login",
     Investments: "/investments",
+    Tokenomics: "/tokenomics",
     App: "/app",
     Opportunities: "/app/offer",
     Accelerator: "/app/accelerator",
@@ -71,6 +72,7 @@ const ExternalLinksCitCap = {
 
     STAKING: "https://info.citizencapital.fund/BYTES-Staking-Requirement-f1621bfe909b41d797fd77ca784a8fa0",
     GETBYTES: "https://app.uniswap.org/#/swap?outputCurrency=0xa19f5264f7d7be11c451c093d8f92592820bea86",
+    STAKE_NT: "https://neotokyo.codes/profile"
 }
 
 export const ExternalLinks = isBased ? ExternalLinksBased : ExternalLinksCitCap

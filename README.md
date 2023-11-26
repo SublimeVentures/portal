@@ -25,17 +25,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 //tasks
 - webapp
-  - test env
   - calculator nt
   - ops
+    - tasks
+    - 
 
-  - bytes burn
-  - migration
-  - returned fail login
+
   - fix withRetry to use my flow
-
-
-
+  - migration
+    - old data
+    - nt stake/withdraw
+    - generate
+    - graphic for login
+    - logo mobile
+  - returned fail log
+  - bytes burn
 - take money back for testing
 - wagmi - json rpc
 - auto-close investment after reaching success

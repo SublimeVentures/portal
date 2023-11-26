@@ -20,6 +20,7 @@ export default function Navbar() {
         {name: 'INVESTMENTS', link: 'investments'},
     ] : [
         {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
+        {name: 'TOKENOMICS', link: 'tokenomics'},
         {name: 'INVESTMENTS', link: 'investments'},
     ]
 

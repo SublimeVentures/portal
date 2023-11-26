@@ -17,9 +17,16 @@ const checkIfNumberKey = (event) => {
     }
 }
 
+const CITIZENS = {
+    Elite: 0,
+    S1: 0,
+    S2: 0,
+}
+
 module.exports = {
     sleeper,
     isBased,
     NETWORKS,
-    checkIfNumberKey
+    checkIfNumberKey,
+    CITIZENS
 }

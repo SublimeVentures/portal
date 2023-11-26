@@ -44,6 +44,14 @@ export const seoConfig = (page) => {
                     page
                 )
             }
+            case PAGE.Tokenomics: {
+                return generateSeo(
+                    "basedVC - our tokenomics",
+                    "DON’T BE EXIT LIQUIDITY. INVEST EARLY WITH THE WORLDS LEADING VC FUNDS.",
+                    template_based,
+                    page
+                )
+            }
         }
     }
     else {
@@ -67,6 +75,14 @@ export const seoConfig = (page) => {
             case PAGE.Investments: {
                 return generateSeo(
                     "Citizen Capital - our investments",
+                    "Official investment arm of Neo Tokyo! Invest with Citadel. ",
+                    template_CitCap,
+                    page
+                )
+            }
+            case PAGE.Tokenomics: {
+                return generateSeo(
+                    "Citizen Capital - tokenomics",
                     "Official investment arm of Neo Tokyo! Invest with Citadel. ",
                     template_CitCap,
                     page
