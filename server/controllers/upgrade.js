@@ -3,7 +3,8 @@ const {
     fetchUpgrade, fetchAppliedUpgradesInTransaction, saveUpgradeUse
 } = require("../queries/upgrade.query");
 const {PremiumItemsENUM} = require("../../src/lib/enum/store");
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
+
 const {serializeError} = require("serialize-error");
 const {isBased} = require("../../src/lib/utils");
 const {PremiumItemsParamENUM} = require("../../src/lib/enum/store");

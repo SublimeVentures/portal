@@ -7,12 +7,12 @@ const {ACLs} = require("../../src/lib/authHelpers");
 const {fetchUpgrade} = require("../queries/upgrade.query");
 const {PremiumItemsENUM, PremiumItemsParamENUM} = require("../../src/lib/enum/store");
 const {BookingErrorsENUM} = require("../../src/lib/enum/invest");
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
+
 const {serializeError} = require("serialize-error");
 const {isBased} = require("../../src/lib/utils");
 
 let CACHE = {}
-
 
 function checkReserveSpotQueryParams(req) {
     let _offerId, _amount, _currency, _chain;
@@ -23,7 +23,7 @@ function checkReserveSpotQueryParams(req) {
         _currency = req.query.currency
         _chain = req.query.chain
     } catch (error) {
-        logger.error('ERROR :: [checkReserveSpotQueryParams]', {error: serializeError(error), ACL, address, id, multi, params: req.query});
+        logger.error('ERROR :: [checkReserveSpotQueryParams]', {error: serializeError(error), _offerId, _amount, _currency, _chain, params: req.query});
         return {
             ok: false,
             code: BookingErrorsENUM.VerificationFailed,
@@ -54,12 +54,14 @@ async function processReservation(queryParams, user) {
         const currency = getEnv().currencies[_chain][_currency]
 
         //test if offer's ready
-        const checkIsReadyForStart = checkInvestmentConditions(ACL, CACHE[_offerId])
+        const checkIsReadyForStart = checkInvestmentStateConditions(ACL, CACHE[_offerId])
         if(!checkIsReadyForStart.ok) return checkIsReadyForStart;
         if (!currency || !currency.isSettlement) return {
             ok: false,
             code: BookingErrorsENUM.BadCurrency
         }
+
+        console.log("checks passed00")
 
         //generate hash
         const now = moment().unix()
@@ -73,6 +75,7 @@ async function processReservation(queryParams, user) {
 
         const totalAllocation = CACHE[_offerId][isSeparatePool ? 'alloTotalPartner' : 'alloTotal']; //todo: whale
         const amount = _amount * (100 - CACHE[_offerId].tax) / 100
+        console.log("checks passed0")
 
         const checkAllocationSize = checkAllocationConditions(
             CACHE[_offerId],
@@ -118,7 +121,7 @@ async function processReservation(queryParams, user) {
     }
 }
 
-function checkInvestmentConditions(ACL, offer) {
+function checkInvestmentStateConditions(ACL, offer) {
     if(offer.isPaused) return {
         ok: false,
         code: BookingErrorsENUM.IsPaused
@@ -139,6 +142,7 @@ function checkInvestmentConditions(ACL, offer) {
 }
 
 function checkAllocationConditions(offer, totalAllocation, amountRequested, increased, acl, multi, allocationBonus) {
+
     let amountMax
     if(
         acl === ACLs.Whale ||
@@ -164,17 +168,24 @@ function checkAllocationConditions(offer, totalAllocation, amountRequested, incr
 }
 
 async function reserveSpot(user, req) {
-    const queryParams = checkReserveSpotQueryParams(req)
-    if(!queryParams.ok) return queryParams
+    try {
+        const queryParams = checkReserveSpotQueryParams(req)
+        if(!queryParams.ok) return queryParams
 
-    const reservation = await processReservation(queryParams.data, user)
-    if(!reservation.ok) return reservation
+        const reservation = await processReservation(queryParams.data, user)
+        if(!reservation.ok) return reservation
 
-    return {
-        ok: true,
-        hash: reservation.data.hash,
-        expires: reservation.data.expire
+        return {
+            ok: true,
+            hash: reservation.data.hash,
+            expires: reservation.data.expires
+        }
+    } catch(error) {
+        logger.error(`ERROR :: [reserveSpot]`, {
+            reqQuery: req.query, user, error: serializeError(error)
+        });
     }
+
 }
 
 async function reserveExpire(user, req) {

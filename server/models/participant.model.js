@@ -54,6 +54,7 @@ function defineParticipantModel(sequelize, identifier) {
         indexes: [
             {unique: true, fields: ['hash']},
             {unique: true, fields: ['onchainId']},
+            {unique: true, fields: ['hash', 'userId']},
             {unique: false, fields: ['userId']},
         ],
         tableName: modelName,

@@ -2,7 +2,7 @@ const {models} = require('../services/db/db.init');
 const db = require('../services/db/db.init');
 const {Op, QueryTypes} = require("sequelize");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 const {increaseGuaranteedAllocationUsed} = require("./upgrade.query");
 
@@ -66,6 +66,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
             `
         }
 
+        console.log("booked")
         increaseBooking = await models.offerFundraise.increment({[variable]: upgradeGuaranteed ? alloBase : amount}, {
             where: {
                 [Op.and]: [

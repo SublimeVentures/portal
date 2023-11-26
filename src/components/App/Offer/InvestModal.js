@@ -62,6 +62,7 @@ export default function InvestModal({model, setter, investModalProps}) {
         showButton: true,
         saveData: true,
         saveDataFn: setBlockchainData,
+
     }
 
     const title = () => {

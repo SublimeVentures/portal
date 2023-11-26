@@ -22,21 +22,49 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## ToDo
 =================
-Add click pointer on side toolbars in slider
-otc to sidebar
-otc bot
+
+//tasks
+- webapp
+  - test env
+  - calculator nt
+  - ops
+
+  - bytes burn
+  - migration
+  - returned fail login
+  - fix withRetry to use my flow
+
+
+
+- take money back for testing
+- wagmi - json rpc
+- auto-close investment after reaching success
+- make sure guaranteed allow rebooking
+- reset hash on chain change on otc and investment size
+
+- refetch env + params.output.allocationUser_min
+- fliper to service worker to ensure it will refrehs correctly
+- check increaed allocation to expire
+- guaranteed allocation cant give more than 5k
+- add notfications for refunds
+- test separate pools
+- guaranteed - midify to be based on canInvestMore and ensure it will allows user to restart 
+- check guarnateed sub on transfer receive
+- guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation()  && bookAllocationGuaranteed
+- checkAllocationConditions - add support for offer.alloMax
+- user can have only three active bookings (expire old, inform on frontend, lock from new on frontend if more than 3)
+- add refund flow
+- if someone is whale, should always return the all available allo left (getOfferAllocation())
+  Add click pointer on side toolbars in slider
+  otc to sidebar
+  otc bot
 
 - bg in sidebar
 - auth redirect fix
 - clean payload in owned allocation
 - dont send whole otc package for sell fill offers
 - check prices on-chain
-
-
-- notion in routes
-- ChatGPT - try more https://discord.com/channels/@me/997001334328918017/1155135672894636132
-
-- in app vote
+- in app vote for whales
 - custom 404 page
 - 500, 1000, user max button under investment size
 
@@ -54,46 +82,6 @@ otc bot
   - change total staked
   - wyciagnij swoje
 - delegated -> invest to vault or hot
-
-
-
-
-
-
-//tasks
-- blockeater
-  - subscriber
-    - allow for confirmation on onchain restart
-    - for some reason it expires everything- fix it
-    - logs around expires
-    - filter incoming transaction through signed of wallets
-    - better maching system
-  - check guarnateed sub on transfer receive
-  - check increaed allocation to expire
-  - guaranteed allocation cant give more than 5k
-
-
-- webapp
-  - fetch offerDescription
-  - restart investment on timer zero
-  - auto-close investment after reaching success
-  - make sure guaranteed allow rebooking
-  - bytes burn
-  - calculator nt
-
-- nt
-  - max allo in UI
-
-- add notfications for refunds
-- test separate pools
-- test all app
-
-
-- add refund flow
-- if someone is whale, should always return the all available allo left (getOfferAllocation())
-- guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation()  && bookAllocationGuaranteed
-
-
 
 ///REQUIREMENTS:
 - wallet cant be the same as last two investments

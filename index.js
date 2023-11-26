@@ -1,4 +1,4 @@
-require('newrelic');
+// require('newrelic');
 require('dotenv').config()
 require('dotenv').config({path: `.env.local`, override: true});
 const express = require('express');
@@ -7,7 +7,7 @@ const url = require('url');
 
 const cookieParser = require("cookie-parser");
 const {serializeError} = require("serialize-error");
-const logger = require("./server/services/logger");
+const logger = require("./src/lib/logger");
 
 
 const {connectDB} = require("./server/services/db");

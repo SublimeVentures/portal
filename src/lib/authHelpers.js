@@ -2,14 +2,10 @@ const {serialize} = require("cookie");
 const {jwtVerify, SignJWT} = require("jose")
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 const {ethers} = require("ethers");
-const logger = require("../../server/services/logger");
+const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 
 const aws_secrets = new SecretsManagerClient({ region: process.env.SECRET_REGION });
-const aws_secrets_input = { // GetSecretValueRequest
-    SecretId: process.env.SECRET_NAME,
-};
-
 
 const ACLs = {
     Whale: 0,
@@ -162,9 +158,9 @@ const getPrivateKeyFromAWSSecretManager = async () => {
             })
         );
         return response.SecretString
-    } catch (err) {
-        console.log(`AWS SecretsManager Read Error: ${err}`);
-        throw err;
+    } catch (error) {
+        logger.error(`ERROR :: [signData]`, {error: serializeError(error)});
+        throw error;
     }
 }
 

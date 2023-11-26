@@ -4,6 +4,8 @@ const {getEnv} = require("../services/db/");
 const {getOfferRaise} = require("../queries/invest.query");
 const {ACLs, OfferAccessACL} = require("../../src/lib/authHelpers");
 const {getInjectedUserAccess} = require("../queries/injectedUser.query");
+const logger = require("../../src/lib/logger");
+const {serializeError} = require("serialize-error");
 
 
 async function getParamOfferDetails(user, req) {
@@ -22,7 +24,7 @@ async function getParamOfferDetails(user, req) {
         ppu: offer.ppu,
         tax: offer.tax,
         dealStructure: offer.dealStructure,
-        description: offer.description,
+        description: offer['offerDescription.description'],
         genre: offer.genre,
         name: offer.name,
         ticker: offer.ticker,
@@ -124,20 +126,30 @@ async function fillInjectedPartnerData(offer, template, address) {
 
 
 async function getOfferAllocation(user, req) {
-    const {ACL} = user
-    const data = await getOfferRaise(Number(req.params.id))
-    const allocation = data.get({plain: true})
-    if(allocation.offer.alloTotalPartner > 0 && ACL !== ACLs.Whale) {
-        return {
-            alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
-            alloRes: allocation.alloResPartner + allocation.alloGuaranteed
+    try {
+        const {ACL} = user
+        const data = await getOfferRaise(Number(req.params.id))
+        const allocation = data.get({plain: true})
+        if(allocation.offer.alloTotalPartner > 0 && ACL !== ACLs.Whale) {
+            return {
+                alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
+                alloRes: allocation.alloResPartner + allocation.alloGuaranteed
+            }
+        } else {
+            return {
+                alloFilled: allocation.alloFilled + allocation.alloSide,
+                alloRes: allocation.alloRes + allocation.alloGuaranteed
+            }
         }
-    } else {
+    } catch(error) {
+        logger.error(`Can't fetch offerFundraise`, {error: serializeError(error), user, params: req.params});
+
         return {
-            alloFilled: allocation.alloFilled + allocation.alloSide,
-            alloRes: allocation.alloRes + allocation.alloGuaranteed
+            alloFilled: 0,
+            alloRes: 0
         }
     }
+
 }
 
 

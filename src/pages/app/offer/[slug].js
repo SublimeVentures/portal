@@ -30,12 +30,6 @@ export const AppOfferDetails = ({account}) => {
     let [phaseCurrent, setPhaseCurrent] = useState(false)
     let [phaseNext, setPhaseNext] = useState(false)
 
-    // let [activePhase, setActivePhase] = useState(0)
-    // let [isLastPhase, setIsLastPhase] = useState(false)
-    // let [currentPhase, setCurrentPhase] = useState(false)
-    // let [nextPhase, setNextPhase] = useState(false)
-    // let [isClosed, setIsClosed] = useState(false)
-
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
             queryKey: ["offerDetails", {slug, aclCache}],
             queryFn: () => fetchOfferDetails(slug),

@@ -7,18 +7,20 @@ const {MYSTERYBOX_CLAIM_ERRORS} = require("../../src/lib/enum/store");
 async function processMBAllocation(transaction, claim, userId) {
     const query = `
         INSERT INTO public.vault ("userId", "invested", "offerId", "createdAt", "updatedAt")
-        VALUES (${userId}, ${claim.amount}, ${claim.offerId}, now(), now()) on conflict("userId", "offerId") do
-        update set "invested"=(SELECT invested from vault WHERE "userId" = EXCLUDED."userId" AND "offerId" = EXCLUDED."offerId") + EXCLUDED.invested, "updatedAt"=now();
+        VALUES (${userId}, ${claim.amount}, ${claim.offerId}, now(), now())
+            ON CONFLICT ("userId", "offerId") DO
+        UPDATE SET "invested" = vault."invested" + EXCLUDED.invested, "updatedAt" = now();
+
     `
 
     const upsert = await db.query(query, {type: QueryTypes.UPSERT, transaction})
+
     if (upsert[0] === undefined && upsert[1] === null) {
         return {
             ok: true,
             data: upsert
         }
     } else {
-        await transaction.rollback();
         return {
             ok: false,
             error: MYSTERYBOX_CLAIM_ERRORS.AllocationAssignment
@@ -30,8 +32,10 @@ async function processMBAllocation(transaction, claim, userId) {
 async function processMBUpgrade(transaction, claim, userId) {
     const query = `
         INSERT INTO public."storeUser" ("userId", "amount", "createdAt", "updatedAt", "storeId")
-        VALUES (${userId}, 1, now(), now(), ${claim.upgradeId}) on conflict("userId", "storeId") do
-        update set "amount"=(SELECT amount from public."storeUser" WHERE "userId" = EXCLUDED."userId" AND "storeId" = EXCLUDED."storeId") + EXCLUDED.amount, "updatedAt"=now();
+        VALUES (${userId}, 1, now(), now(), ${claim.storeId})
+            ON CONFLICT ("userId", "storeId") DO
+        UPDATE SET "amount" = "storeUser"."amount" + EXCLUDED.amount, "updatedAt" = now();
+
     `
 
     const upsert = await db.query(query, {type: QueryTypes.UPSERT, transaction})
@@ -41,7 +45,6 @@ async function processMBUpgrade(transaction, claim, userId) {
             data: upsert
         }
     } else {
-        await transaction.rollback();
         return {
             ok: false,
             error: MYSTERYBOX_CLAIM_ERRORS.UpgradeAssignment
@@ -53,7 +56,7 @@ async function processMBUpgrade(transaction, claim, userId) {
 async function pickMysteryBox(transaction) {
     const rolledMysterybox = await models.storeMysterybox.findOne({
         where: {
-            claimedBy: {
+            userId: {
                 [Op.eq]: null
             }
         },
@@ -64,10 +67,8 @@ async function pickMysteryBox(transaction) {
     }, {transaction});
 
     if (!rolledMysterybox) {
-        await transaction.rollback();
         return {
             ok: false,
-            error: MYSTERYBOX_CLAIM_ERRORS.NotEnoughBoxes
         }
     }
     return {
@@ -90,10 +91,8 @@ async function assignMysteryBox(userId, mbId, transaction) {
     )
 
     if (!assignClaim) {
-        await transaction.rollback();
         return {
             ok: false,
-            error: MYSTERYBOX_CLAIM_ERRORS.AssignBox
         }
     }
     return {

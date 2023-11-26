@@ -1,5 +1,5 @@
 const {models} = require('../services/db/db.init');
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 
 async function getOffersPublic() {
@@ -40,10 +40,14 @@ async function getOfferList() {
 
 async function getOfferDetails(slug) {
     try {
-
         return models.offer.findOne({
             where: {
-                display: true, slug
+                display: true,
+                slug
+            },
+            include: {
+                model: models.offerDescription,
+                attributes: ['description']
             },
             raw: true
         })

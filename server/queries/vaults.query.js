@@ -1,6 +1,6 @@
 const {models} = require('../services/db/db.init');
 const {Op} = require("sequelize");
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 
 async function getUserInvestment(userId, offerId) {

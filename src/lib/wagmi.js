@@ -4,7 +4,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+// import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import {isBased} from "@/lib/utils";
 
@@ -33,12 +33,12 @@ const config = createConfig({
             },
             projectId: walletConnectProjectId,
         }),
-        new WalletConnectConnector({
-            chains: rightChains,
-            options: {
-                projectId: walletConnectProjectId,
-            },
-        }),
+        // new WalletConnectConnector({ //todo: uncomment
+        //     chains: rightChains,
+        //     options: {
+        //         projectId: walletConnectProjectId,
+        //     },
+        // }),
         new CoinbaseWalletConnector({
             chains: rightChains,
             options: {

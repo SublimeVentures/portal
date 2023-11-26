@@ -27,7 +27,6 @@ module.exports = (sequelize) => {
         },
         onchainId: {
             type: DataTypes.INTEGER,
-            unique: true,
             allowNull: true,
             references: {
                 model: 'onchain', // This is a reference to another model
@@ -36,7 +35,6 @@ module.exports = (sequelize) => {
         },
         data: {
             type: DataTypes.JSON,
-            defaultValue: 0,
             allowNull: false,
         },
     }, {

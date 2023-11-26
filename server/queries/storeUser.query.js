@@ -1,5 +1,5 @@
 const {models} = require('../services/db/db.init');
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 const {Op} = require("sequelize");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
@@ -38,10 +38,8 @@ async function getStoreItemsOwnedByUser(userId, storeId, transaction) {
         }, { transaction })
 
         if(!result) {
-            await transaction.rollback();
             return {
                 ok: false,
-                error: UPGRADE_ERRORS.NoUpgrade
             }
         }
 
@@ -56,16 +54,10 @@ async function updateUserUpgradeAmount(userId, storeId, amount, transaction) {
         {amount},
         { where: { userId, storeId }, raw:true, transaction })
 
-    if(result[0][1] !== 1) {
-        await transaction.rollback();
-        return {
-            ok: false,
-            error: UPGRADE_ERRORS.Deduction
-        }
-    }
     return {
-        ok:true
+        ok: result[0][1] === 1
     }
+
 }
 
 

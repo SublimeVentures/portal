@@ -1,5 +1,5 @@
 const {Sequelize} = require("sequelize");
-const logger = require('../logger');
+const logger = require('../../../src/lib/logger');
 const {defineParticipantModel} = require("../../models/participant.model");
 
 let connection = {
@@ -133,10 +133,9 @@ function applyExtraSetup(sequelize) {
     notification.belongsTo(onchain, { foreignKey: 'onchainId', targetKey: 'id' });
     onchain.hasOne(notification, { foreignKey: 'onchainId', sourceKey: 'id' });
 
-
     //offerDescription model
-    offer.hasOne(offerDescription, { foreignKey: 'descriptionId' });
-    offerDescription.belongsTo(offer, { foreignKey: 'descriptionId' });
+    offerDescription.hasOne(offer, { foreignKey: 'descriptionId', sourceKey: 'id' });
+    offer.belongsTo(offerDescription, { foreignKey: 'descriptionId', sourceKey: 'id' });
 
     //offerFundraise model
     offer.hasOne(offerFundraise, { foreignKey: 'offerId' });

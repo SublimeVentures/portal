@@ -1,6 +1,6 @@
 const { models } = require('../services/db/db.init');
 const {isBased} = require("../../src/lib/utils");
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
 
 async function getEnvironment() {
     //initialize environment
@@ -40,11 +40,11 @@ async function getEnvironment() {
             parsedDiamonds[el.tenant][el.chainId] = el.address
         }
     })
-    environment.diamond = isBased ? parsedDiamonds.basedVC : parsedDiamonds.CitCap
+    environment.diamond = isBased ? parsedDiamonds.based : parsedDiamonds.citcap
 
 
     //PARAM :: `diamondBased`
-    environment.diamondBased = parsedDiamonds.basedVC
+    environment.diamondBased = parsedDiamonds.based
 
 
     //PARAM :: `currencies`

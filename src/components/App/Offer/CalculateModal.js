@@ -8,7 +8,7 @@ import {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 
 export default function CalculateModal({model, setter, calculateModalProps}) {
-    const { maxAllocation, offer } = calculateModalProps
+    const { allocationData, offer } = calculateModalProps
 
     const [amount, setAmount] = useState(0)
     const [price, setPrice] = useState(0)
@@ -65,8 +65,8 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 <div className={'pt-10'}>
                     <Input type={'number'}
                            placeholder={'Buying allocation'}
-                           max={maxAllocation}
-                           min={offer.alloMin}
+                           max={allocationData.allocationUser_max}
+                           min={allocationData.allocationUser_min}
                            setStatus={setStatusAmount}
                            setInput={setAmountHandler}
                            input={amount}

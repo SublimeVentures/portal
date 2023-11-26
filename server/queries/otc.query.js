@@ -18,9 +18,9 @@ async function getActiveOffers(otcId) {
             'currency',
             'isSell',
             'maker',
-            [db.literal('`onchain.chainId`'), 'chainId'] // Alias 'chainId' from onchain
+            [db.literal('"onchain"."chainId"'), 'chainId'] // Alias 'chainId' from onchain
         ],
-        where: {otcId, isFilled: false, isCancelled: false, isOnChainConfirmed: true},
+        where: {otcId, isFilled: false, isCancelled: false, onchainId: { [Op.ne]: null }},
         include: {
             model: models.onchain,
             attributes: [],
@@ -38,7 +38,7 @@ async function getHistoryOffers(offerId) {
             'price',
             'amount',
             'isSell',
-            [db.literal('`onchain.chainId`'), 'chainId'], // Alias 'chainId' from onchain
+            [db.literal('"onchain"."chainId"'), 'chainId'],
             'updatedAt'
         ],
         where: {offerId, isFilled: true},
@@ -66,22 +66,20 @@ async function getUserPendingOffers(wallet) {
 ///////////
 ///events
 //////////
-async function saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell) {
+async function saveOtcHash(address, chainId, offerId, hash, price, amount, isSell) {
     const newOtcDeal = await models.otcDeal.create({
         offerId,
         price,
         amount,
         hash,
         isSell,
-        chainId: networkChainId,
+        chainId,
         maker: address,
     });
 
     return {
         ok: !!newOtcDeal,
-        error: "Couldn't created offer"
     }
-
 }
 async function checkDealBeforeSigning(offerId, chainId, otcId, dealId, transaction) {
     const deal = await models.otcDeal.findOne({

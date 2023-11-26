@@ -72,8 +72,8 @@ module.exports = (sequelize) => {
             unique: true,
             allowNull: true,
             references: {
-                model: 'offerDescription', // This is a reference to another model
-                key: 'id',       // This is the column name of the referenced model
+                model: 'offerDescription',
+                key: 'id',
             }
         },
         ticker: {

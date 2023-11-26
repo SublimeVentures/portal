@@ -3,7 +3,8 @@ const {getEnv} = require("../../services/db");
 const {checkElite, checkBytesTimelock, checkBytesStake} = require("../../queries/neoTokyo.query");
 const {ACLs, userIdentification} = require("../../../src/lib/authHelpers");
 const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
-const logger = require("../../services/logger");
+const logger = require("../../../src/lib/logger");
+
 const {serializeError} = require("serialize-error");
 
 
@@ -159,42 +160,6 @@ function selectPointMultiplier(days) {
 }
 
 
-// async function checkStakingNT(address) { //todo:
-//     const stakingDetails = await getWeb3().contracts.ntStake.methods.getStakerPositions(address).call();
-//     const S1 = {}
-//     const S2 = {}
-//     stakingDetails.stakedS1Citizens.forEach(item=> {
-//         const { citizenId, ...data } = item;
-//         S1[citizenId] = {
-//             stakedBytes: Math.floor(Number(getWeb3().utils.fromWei(`${data.stakedBytes}`))),
-//             timelockEndTime: Number(data.timelockEndTime),
-//             points: Number(data.points),
-//             stakedVaultId: Number(data.stakedVaultId),
-//             hasVault: data.hasVault
-//         };
-//
-//     })
-//     stakingDetails.stakedS2Citizens.forEach(item=> {
-//         const { citizenId, ...data } = item;
-//         S2[citizenId] = {
-//             stakedBytes: Math.floor(Number(getWeb3().utils.fromWei(`${data.stakedBytes}`))),
-//             timelockEndTime: Number(data.timelockEndTime),
-//             points: Number(data.points),
-//         };
-//
-//     })
-//     return {
-//         stakedLP: {
-//             amount: Number(stakingDetails.stakedLPPosition.amount),
-//             timelockEndTime: Number(stakingDetails.stakedLPPosition.timelockEndTime),
-//             points: Number(stakingDetails.stakedLPPosition.points),
-//             multiplier: Number(stakingDetails.stakedLPPosition.multiplier)
-//         },
-//         stakedS2: S2,
-//         stakedS1: S1
-//     }
-// }
-
 async function checkBytesOwned(address) {
     const bytesOwned_raw = await getWeb3().contracts.bytes.methods.balanceOf(address).call();
     return Math.floor(Number(getWeb3().utils.fromWei(`${bytesOwned_raw}`)))
@@ -218,13 +183,13 @@ function calcAllocationBase(NFTs) {
 
     NFTs.forEach(identity => {
         if(identity.isS1) {
-            allocationBase += identity.isElite ? getEnv().allocationBase.elite * 1000 : getEnv().allocationBase.s1 * 1000
+            allocationBase += identity.isElite ? getEnv().allocationBase.elite * 10000 : getEnv().allocationBase.s1 * 10000
         } else {
-            allocationBase += getEnv().allocationBase.s2 * 1000
+            allocationBase += getEnv().allocationBase.s2 * 10000
         }
     })
 
-    return allocationBase / 1000
+    return allocationBase / 10000
 }
 
 function calcAllocationExtra(stakeCitCap, bytesOnWallet, NFTs) {
@@ -282,7 +247,8 @@ async function loginNeoTokyo(nfts, partners, address) {
 
         const allocation_base = calcAllocationBase(NFTs)
         const allocation_bonus = calcAllocationExtra(
-            stakeSize,
+            200, //todo:
+            // stakeSize,
             extra_bytes_owned,
             NFTs
         )
@@ -296,7 +262,8 @@ async function loginNeoTokyo(nfts, partners, address) {
             img: nftDisplay.image,
             img_fallback: nftDisplay.image,
             id: nftDisplay.tokenId,
-            ACL: ACLs.NeoTokyo,
+            ACL: ACLs.Admin, //todo:
+            // ACL: ACLs.NeoTokyo,
             //CitCap specific params
             isElite: haveElites.length>0,
             isS1: nftDisplay.isS1,

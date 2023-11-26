@@ -6,7 +6,7 @@ const {getPermittedOfferList} = require("./offerList");
 const moment = require("moment");
 const {createHash} = require("./helpers");
 const {signData} = require("../../src/lib/authHelpers");
-const logger = require("../services/logger");
+const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 const db = require("../services/db/db.init");
 const {OTC_STATE} = require("../../src/lib/enum/otc");
@@ -68,14 +68,17 @@ async function createOffer(user, req) {
         const hash = createHash(`${userId}` + `${now}`)
         const saved =  await saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell)
 
-        if(!saved.ok) return saved
+        if(!saved.ok)  return {
+            ok: false,
+            error: "Couldn't created offer"
+        }
 
         return {
             ok: true,
             hash: hash
         }
     } catch (error) {
-        logger.error(`ERROR :: [createOffer] OTC`, {error: serializeError(error), user, params: re.qparams, body: req.body});
+        logger.error(`ERROR :: [createOffer] OTC`, {error: serializeError(error), user, params: req.params, body: req.body});
         return {
             ok: false,
         }

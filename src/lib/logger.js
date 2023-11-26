@@ -1,37 +1,35 @@
-const { createLogger, format, transports } = require('winston');
-const util = require('util');
+const Sentry = require("@sentry/nextjs");
 
-function transform(info, opts) {
-    const args = info[Symbol.for('splat')];
-    if (args) { info.message = util.format(info.message, ...args); }
-    return info;
-}
+// Logger module
+module.exports = {
+    logHandledError: (error) => {
+        // Explicitly capture exceptions
+        Sentry.captureException(error);
+    },
+    error: (message, data) => {
+        console.log(`ERROR :: ${message}`, data)
+        Sentry.withScope((scope) => {
+            scope.setLevel("error");
+            scope.setExtras(data);
+            Sentry.captureMessage(message);
+        });
+    },
+    warn: (message, data) => {
+        console.log(`WARN :: ${message}`, data)
 
-function utilFormatter() { return {transform}; }
+        Sentry.withScope((scope) => {
+            scope.setLevel("warning");
+            scope.setExtras(data);
+            Sentry.captureMessage(message);
+        });
+    },
+    info: (message, data) => {
+        console.log(`INFO :: ${message}`, data)
 
-module.exports = createLogger({
-    transports:[
-        new transports.Console({
-            format: format.combine(
-                format.timestamp({format: 'YYYY-MM-DD HH:mm:ss.SSS'}),
-                utilFormatter(),     // <-- this is what changed
-                format.colorize(),
-                format.printf(({level, message, label, timestamp}) => `${timestamp} ${label || '-'} ${level}: ${message}`),
-
-            )
-        }),
-        // new transports.File({
-        //     filename: 'logs/activity.log',
-        //     format:format.combine(
-        //         format.label({ label: path.basename(process.mainModule.filename) }),
-        //         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        //         format.align(),
-        //         format.printf(info => `${info.level}: ${[info.timestamp]}: ${info.message}`),
-        //         format.metadata({ fillExcept: ["message", "level", "timestamp", "label"] }),
-        //         format.splat(),
-        //         format.json()
-        //     )}),
-    ]
-
-});
-
+        Sentry.withScope((scope) => {
+            scope.setLevel("info");
+            scope.setExtras(data);
+            Sentry.captureMessage(message);
+        });
+    },
+};

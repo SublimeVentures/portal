@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
         },
         userId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'user', // This is a reference to another model
                 key: 'id',       // This is the column name of the referenced model

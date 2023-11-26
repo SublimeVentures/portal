@@ -21,20 +21,13 @@ import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {isBased} from "@/lib/utils";
+import {checkIfNumberKey, isBased} from "@/lib/utils";
 import {ACLs} from "@/lib/authHelpers";
 import {IconButton} from "@/components/Button/IconButton";
 import IconPremium from "@/assets/svg/Premium.svg";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
+import {buttonInvestState, tooltipInvestState, userInvestmentState} from "@/lib/investment";
 
-const setButtonText = (isPaused, isSettled, offerIsProcessing, offerIsSettled, allocationUserGuaranteed, defaultText, investmentAmount) => {
-    if(isPaused) return "Investment Paused"
-    else if (isSettled) return "Filled"
-    else if (allocationUserGuaranteed>0) return defaultText
-    else if (offerIsSettled) return "Filled"
-    else if (offerIsProcessing) return "Processing..."
-    else return defaultText
-}
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -65,7 +58,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [isCalculateModal, setCalculateModal] = useState(false)
 
     const [expires, setExpires] = useState(0)
-    const [isAllocationOk, setIsAllocationOk] = useState(true)
     const [isButtonLoading, setButtonLoading] = useState(false)
 
     const [investmentCurrency, setInvestmentCurrency] = useState(0)
@@ -75,45 +67,31 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
     const [showInputInfo, setShowInputInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
+    const [investButtonDisabled, setInvestButtonDisabled] = useState(false)
+    const [investButtonText, setInvestButtonText] = useState("")
     const [isError, setIsError] = useState({})
 
     const [allocationData, setAllocationData] = useState({
-        allocationUserMax: 0,
-        allocationUserLeft: 0,
-        allocationPoolLeft:0,
-        canInvestMore: false,
-        offerIsProcessing: false,
-        offerIsSettled: false,
+        canInvestMore: 0,
+        allocationUser_max: 0,
+        allocationUser_min: 0,
+        allocationUser_left: 0,
+        allocationUser_invested: 0,
+        allocationUser_guaranteed: 0,
+        allocationOffer_left:0,
+        offer_isProcessing: false,
+        offer_isSettled: false,
     })
 
 
     const [cookies, setCookie, removeCookie] = useCookies();
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
+
+    //migrated
     const {ACL, isStaked} = account
-    const {id, isSettled, isPaused} = offer
-
     const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
+    //migrated end
 
-    const investButtonDisabled =
-        isPaused ||
-        phaseCurrent?.controlsDisabled ||
-        ntStakeGuard ||
-        !investmentAmount ||
-        !isAllocationOk ||
-        (
-            allocationData.allocationUserGuaranteed ?
-            (
-                allocationData.offerIsProcessing && allocationData.allocationUserGuaranteed === 0 ||
-                allocationData.offerIsSettled && allocationData.allocationUserGuaranteed === 0
-            )
-            : (
-                allocationData.offerIsProcessing ||
-                allocationData.offerIsSettled
-                )
-        )
-
-
-    const buttonText = setButtonText(isPaused, isSettled, allocationData.offerIsProcessing, allocationData.offerIsSettled, allocationData.allocationUserGuaranteed, phaseCurrent.button, investmentAmount)
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
     const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
@@ -125,13 +103,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const currencyNames = currencyList.map(el => el.symbol)
     const selectedCurrency = currencyList[investmentCurrency]
 
-    const cookieReservation = `hash_${id}`
+    const cookieReservation = `hash_${offer.id}`
 
-    const checkIfNumber = (event) => {
-        if (event.key.length === 1 && /\D/.test(event.key)) {
-            return;
-        }
-    }
 
     const setValue = (data) => {
         if (!Number.isInteger(data)) {
@@ -198,7 +171,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const startInvestmentProcess = async () => {
         setButtonLoading(true)
-        const response = await fetchHash(id, investmentAmount, selectedCurrency.address, chain.id)
+        const response = await fetchHash(offer.id, investmentAmount, selectedCurrency.address, chain.id)
+        console.log("response", response)
         if (!response.ok) {
             setErrorMsg(response.code)
             setErrorModal(true)
@@ -213,17 +187,28 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const processExistingSession = async (cookie) => {
         setButtonLoading(true)
         const cookieData = cookie.split('_')
+        console.log("cookie", cookieData)
+        try {
+            const savedTimestamp = Number(cookieData[2])
+            const savedAmount = Number(cookieData[1])
+            const savedHash = cookieData[0]
 
-        if (Number(cookieData[2]) < moment().unix()) {
+            if (savedTimestamp < moment().unix()) {
+                removeCookie(cookieReservation)
+                await startInvestmentProcess()
+            } else if (savedAmount === Number(investmentAmount)) {
+                openInvestmentModal(savedHash, savedTimestamp)
+            } else {
+                setOldAllocation(savedAmount)
+                setExpires(savedTimestamp)
+                setRestoreHashModal(true)
+            }
+        }catch(e) {
+            console.log("bad cookie")
             removeCookie(cookieReservation)
             await startInvestmentProcess()
-        } else if (Number(cookieData[1]) === Number(investmentAmount)) {
-            openInvestmentModal(cookieData[0], cookieData[2])
-        } else {
-            setOldAllocation(Number(cookieData[1]))
-            setExpires(Number(cookieData[2]))
-            setRestoreHashModal(true)
         }
+
 
         setButtonLoading(false)
     }
@@ -240,7 +225,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         removeCookie(cookieReservation)
         setRestoreHashModal(false)
         const cookieData = cookies[cookieReservation].split('_')
-        expireHash(id, cookieData[0])
+        expireHash(offer.id, cookieData[0])
         await startInvestmentProcess()
     }
 
@@ -257,8 +242,12 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }, [chain])
 
     useEffect(() => {
-        setValue(offer.alloMin)
-    }, []);
+        if(allocationData?.allocationUser_min) {
+            setValue(allocationData.allocationUser_min)
+        } else {
+            setValue(offer.alloMin)
+        }
+    }, [allocationData?.allocationUser_min]);
 
     useEffect(() => {
         if (showInputInfo) {
@@ -270,71 +259,37 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         }
     }, [showInputInfo]);
 
+
     useEffect(() => {
         if(!offer) return
-        const allocations = processAllocations(account, phaseCurrent, upgradesUse, userAllocation, offer, allocation)
+        const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation, allocation)
         setAllocationData(allocations)
-    }, [allocation?.alloFilled, allocation?.alloRes, upgradesUse?.increasedUsed?.amount, userAllocation])
+        const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
+        setIsError({state: !allocationIsValid, msg: message})
 
-    useEffect(() => {
-        if(allocationData.allocationUserGuaranteed > 0) {
+        const {isDisabled, text} = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, ntStakeGuard, phaseCurrent.button)
+        setInvestButtonDisabled(isDisabled)
+        setInvestButtonText(text)
 
-            if (investmentAmount > allocationData.allocationUserLeft + allocationData.allocationUserGuaranteed) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Maximum investment: $${(allocationData.allocationUserLeft > allocationData.allocationUserGuaranteed ? allocationData.allocationUserLeft : allocationData.allocationUserGuaranteed).toLocaleString()}`})
-            }
-            else if (!allocationData.allocationUserCurrent && investmentAmount < offer.alloMin) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-            }
-            else if(investmentAmount % (allocationData.allocationUserCurrent > 0 ? 50 : 100) > 0 || investmentAmount <= 0) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Allocation has to be divisible by $${allocationData.allocationUserCurrent > 0 ? 50 : 100}`})
-            }
-            else if (investmentAmount <= allocationData.allocationUserLeft + allocationData.allocationUserGuaranteed) {
-                setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Maximum investment: $${(allocationData.allocationUserLeft > allocationData.allocationUserGuaranteed ? allocationData.allocationUserLeft : allocationData.allocationUserGuaranteed).toLocaleString()}`})
-            }
-            else {
-                setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
-            }
-        } else {
-            if (allocationData.allocationUserLeft === 0) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Maximum allocation filled`})
-            }
-            else if (!allocationData.allocationUserCurrent && investmentAmount < offer.alloMin) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-            }
-            else if(investmentAmount % (allocationData.allocationUserCurrent > 0 ? 50 : 100) > 0 || investmentAmount <= 0) {
-                setIsAllocationOk(false)
-                return setIsError({state: true, msg: `Allocation has to be divisible by $${allocationData.allocationUserCurrent > 0 ? 50 : 100}`})
-            }
-            else if (investmentAmount > allocationData.allocationUserLeft) {
-                    setIsAllocationOk(false)
-                    return setIsError({state: true, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
-            }
-            else if (investmentAmount <= allocationData.allocationUserLeft) {
-                setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Maximum investment: $${(allocationData.allocationUserLeft).toLocaleString()}`})
-            }
-            else {
-                setIsAllocationOk(true)
-                return setIsError({state: false, msg: `Maximum investment: $${allocationData.allocationUserLeft.toLocaleString()}`})
-            }
-        }
-
-    }, [investmentAmount, allocationData.allocationUserCurrent, allocationData.allocationUserLeft, allocationData.allocationUserGuaranteed, upgradesUse?.increasedUsed?.amount]);
-
-
+        console.log("DANG :: allocations",allocations)
+        console.log("DANG :: allocationIsValid",allocationIsValid,message )
+        console.log("DANG :: button",isDisabled,text )
+    }, [
+        allocation?.alloFilled,
+        allocation?.alloRes,
+        upgradesUse?.increasedUsed?.amount,
+        upgradesUse?.guaranteedUsed?.amount,
+        upgradesUse?.guaranteedUsed?.alloUsed,
+        userAllocation,
+        investmentAmount,
+        phaseCurrent?.phase
+    ])
 
 
     const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const upgradesModalProps = {account,  phaseCurrent, offerId: offer.id, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse, allocationUserLeft: allocationData.allocationUserLeft}
-    const calculateModalProps = {investmentAmount, maxAllocation: allocationData.allocationUserMax, offer}
+    const upgradesModalProps = {account,  phaseCurrent, offerId: offer.id, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse, allocationUserLeft: allocationData.allocationUser_left}
+    const calculateModalProps = {investmentAmount, allocationData, offer}
     const investModalProps = {
         expires,
         investmentAmount,
@@ -350,7 +305,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
             <div className={"absolute right-5 top-5"} >
                 <div className={"flex flex-row items-center text-gold"}>
-                    {!!upgradesUse.guaranteedUsed && <div className={"mr-3 font-bold glow select-none"}> <Tooltiper wrapper={`GUARANTEED`} text={`$${allocationData.allocationUserGuaranteed} left`} type={TooltipType.Primary}/> </div>}
+                    {!!upgradesUse.guaranteedUsed && <div className={"mr-3 font-bold glow select-none"}> <Tooltiper wrapper={`GUARANTEED`} text={`$${allocationData.allocationUser_guaranteed} left`} type={TooltipType.Primary}/> </div>}
                     <div onClick={()=> {setUpgradeModal(true)}}>
                         <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
                     </div>
@@ -363,10 +318,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                         <input tabIndex="0"
                                value={investmentAmountFormatted}
                                onChange={onInputChange}
-                               onKeyDown={checkIfNumber}
+                               onKeyDown={checkIfNumberKey}
                                onFocus={() => setShowInputInfo(true)}
                                onBlur={() => setShowInputInfo(false)}
-                               className={`h-17 text-xl px-4 ${isInputActive ? 'highlight' : ''} ${investmentAmount >= offer.alloMin && investmentAmount <= allocationData.allocationUserMax ? 'valid' : ''} ${investmentAmount < offer.alloMin || investmentAmount > allocationData.allocationUserMax ? 'invalid' : ''}`}
+                               className={`h-17 text-xl px-4 ${isInputActive ? 'highlight' : ''} ${investmentAmount >= allocationData.allocationUser_min && investmentAmount <= allocationData.allocationUser_max ? 'valid' : ''} ${investmentAmount < allocationData.allocationUser_min || investmentAmount > allocationData.allocationUser_max ? 'invalid' : ''}`}
                         />
 
                         <Transition appear show={showClean} as={Fragment}>
@@ -380,7 +335,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                                 leaveTo="opacity-0"
                             >
                                 <div className="absolute top-5 right-5 cursor-pointer " onClick={() => {
-                                    setValue(offer.alloMin)
+                                    setValue(allocationData.allocationUser_min)
                                 }}><IconCancel className="w-6 opacity-70"/></div>
                             </Transition.Child>
                         </Transition>
@@ -408,7 +363,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 <div className={investButtonDisabled ? 'disabled' : ''}>
                     <UniButton
                         type={ButtonTypes.BASE}
-                        text={buttonText}
+                        text={investButtonText}
                         isPrimary={true}
                         state={"success"}
                         showParticles={true}
