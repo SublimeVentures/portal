@@ -4,7 +4,6 @@ const {defineParticipantModel} = require("../../models/participant.model");
 
 let connection = {
     dialect: "postgres",
-    ssl: process.env.IS_LOCAL_DB === 'true',
     pool: {
         max: 20,
         min: 0,
@@ -13,7 +12,8 @@ let connection = {
     }
 }
 
-if(!process.env.IS_LOCAL_DB) {
+if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
+    connection.ssl = true
     connection.dialectOptions = {
         ssl: {
             require: true,
@@ -23,6 +23,7 @@ if(!process.env.IS_LOCAL_DB) {
     connection.logging = false
     // connection.logging = logger.info.bind(logger)
 } else {
+    connection.ssl = false
     connection.logging = false
     // connection.logging = logger.info.bind(console.log)
 }
