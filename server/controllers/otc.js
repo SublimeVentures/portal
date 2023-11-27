@@ -64,7 +64,7 @@ async function createOffer(user, req) {
         const amount = Number(req.body.amount)
         const price = Number(req.body.price)
         const networkChainId = Number(req.body.networkChainId)
-        const now = moment().unix()
+        const now =  moment.utc().unix()
         const hash = createHash(`${userId}` + `${now}`)
         const saved =  await saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell)
 

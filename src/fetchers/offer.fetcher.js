@@ -55,18 +55,3 @@ export const useUpgrade = async (offerId, upgradeId) => {
     return {}
 }
 
-
-export const getUpgrades = async (offerId) => {
-    if(!offerId) return {}
-    try {
-        const {data} = await axiosPrivate.get(`${API.offerList}/${offerId}/upgrade`)
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "getUpgrades", e});
-        }
-    }
-    return {}
-}
-
-

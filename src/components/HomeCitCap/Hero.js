@@ -24,7 +24,7 @@ export default function Hero({account}) {
         setIsLoginLoading(true)
         setMessageSigned(true)
         try {
-            const time = moment().unix();
+            const time = moment.utc().unix();
             const nonce = uuidv4();
             const message = "INVEST EARLY\n" +
                 `INVEST WITH THE CITADEL\n\n` +

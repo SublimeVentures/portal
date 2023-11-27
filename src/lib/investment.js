@@ -1,71 +1,86 @@
-const {ACLs} = require("@/lib/authHelpers");
-const {PremiumItemsParamENUM} = require("@/lib/enum/store");
-const {PhaseId} = require("@/lib/phases");
+const {ACLs} = require("./authHelpers");
+const {PremiumItemsParamENUM} = require("./enum/store");
+const {PhaseId} = require("./phases");
+const {isBased} = require("./utils");
 
-function getPreTax(amount, offer) {
-    return amount / (100 - offer.tax) * 100
+const MIN_DIVISIBLE = 50 //50
+const MIN_ALLOCATION = 10 //100
+
+function roundAmount(amount) {
+    return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
 }
 
-function getAllocationBaseWithUpgrades(allocationUser_max_base, upgradesUse) {
-    const increasedAllocation = !!upgradesUse?.increasedUsed ? upgradesUse.increasedUsed.amount * PremiumItemsParamENUM.Increased : 0
+function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
+    let allocationUser_base, allocationUser_max, allocationUser_min
+    if (isBased && (account.ACL !== ACLs.NeoTokyo || account.ACL !== ACLs.Admin)) { //todo: celanup for admin
+        allocationUser_base = account.multi * offer.alloMin
+        allocationUser_min = offer.alloMin
+    } else {
+        allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
+        if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
+        allocationUser_min = MIN_ALLOCATION
+    }
+
+    allocationUser_max = getUserAllocationBaseWithIncreased(allocationUser_base, upgradeIncreasedUsed)
+
+    return {
+        allocationUser_base,
+        allocationUser_max,
+        allocationUser_min
+    }
+}
+
+function getUserAllocationBaseWithIncreased(allocationUser_max_base, upgradeIncreasedUsed = 0) {
+    const increasedAllocation = upgradeIncreasedUsed * PremiumItemsParamENUM.Increased
     return allocationUser_max_base + increasedAllocation
 }
 
-function getAllocationLeft(offer, allocationOffer_left, allocationUser_left) {
+function getUserAllocationGuaranteed(guaranteedUsed) {
+    if (!!guaranteedUsed && !guaranteedUsed?.isExpired) {
+        return guaranteedUsed.alloMax - guaranteedUsed.alloUsed
+    } else {
+        return 0
+    }
+}
+
+function getAllocationLeft(allocationOffer_left, allocationUser_left) {
     return allocationOffer_left < allocationUser_left ? allocationOffer_left : allocationUser_left
 }
 
 function allocationParseCapped(params) {
     const {
-        account,
-        offerPhaseCurrent,
-        upgradesUse,
         offer,
-        output,
-        allocationUser_invested,
         allocationOffer_left
     } = params
-    let allocationUser_max
-    if (
-        account.ACL === ACLs.Whale ||
-        offerPhaseCurrent.phase === PhaseId.Open ||
-        offerPhaseCurrent.phase === PhaseId.Unlimited
-    ) {
-        allocationUser_max = getAllocationBaseWithUpgrades(offer.alloMax, upgradesUse)
-    } else {
-        allocationUser_max = output.allocationUser_max_base_withUpgrade_raw
-    }
-    const allocationUser_left_raw = allocationUser_max - allocationUser_invested
 
-    params.output.allocationUser_max = allocationUser_max
-    params.output.allocationUser_left = getAllocationLeft(offer, allocationOffer_left, allocationUser_left_raw > 0 ? allocationUser_left_raw : 0)
-    params.output.canInvestMore = params.output.allocationUser_left > 0
+    params.output.allocationUser_max = params.output.allocationUser_max <= offer.alloMax ? params.output.allocationUser_max : offer.alloMax
+    params.output.allocationUser_left = getAllocationLeft(allocationOffer_left, params.output.allocationUser_max)
 
     return params
 }
 
 function allocationParseUnlimited(params) {
-    const {offer, allocationOffer_left} = params
-
-    params.output.allocationUser_max = getPreTax(offer.alloTotal, offer)
+    const {allocationOffer_left} = params
     params.output.allocationUser_left = allocationOffer_left
-    params.output.canInvestMore = allocationOffer_left > 0
-
     return params
 }
 
 function allocationParseFCFS(params) {
-    const {offer, allocationOffer_left, allocationUser_invested, output} = params
-    const allocationUser_left_raw = output.allocationUser_max_base_withUpgrade_raw - allocationUser_invested
+    const {allocationOffer_left, allocationUser_invested, output} = params
+    const {allocationUser_guaranteed, allocationUser_max} = output
 
-    params.output.allocationUser_max = output.allocationUser_max_base_withUpgrade_raw
-    params.output.allocationUser_left = getAllocationLeft(offer, allocationOffer_left, allocationUser_left_raw)
-    params.output.canInvestMore = params.output.allocationUser_left > 0
+    let allocationUser_left
+    if (allocationUser_guaranteed > 0) {
+        allocationUser_left = allocationUser_guaranteed
+    } else {
+        allocationUser_left = getAllocationLeft(allocationOffer_left, (allocationUser_max - allocationUser_invested))
+    }
 
+    params.output.allocationUser_left = allocationUser_left
     return params
 }
 
-function allocationParsePhased(params) {
+function allocationPhaseAdjust(params) {
     const {account, offerPhaseCurrent, offer} = params
     if (offer.alloMax) {
         return allocationParseCapped(params)
@@ -80,51 +95,33 @@ function allocationParsePhased(params) {
     }
 }
 
-function allocationBased(params) {
-    const {account, offer, upgradesUse} = params
-    const allocationUser_max_base = account.multi * offer.alloMin
-    const allocationUser_max = getAllocationBaseWithUpgrades(allocationUser_max_base, upgradesUse)
-    params.output.allocationUser_max_base_raw = allocationUser_max_base
-    params.output.allocationUser_max_base_withUpgrade_raw = allocationUser_max
-    params.output.allocationUser_min = offer.alloMin
-    return allocationParsePhased(params)
-}
-
-function allocationNeoTokyo(params) {
-    const {account, offer, upgradesUse} = params
-    const allocationUser_max_base = account.multi * offer.alloTotal + account.allocationBonus
-    const allocationUser_max = getAllocationBaseWithUpgrades(allocationUser_max_base, upgradesUse)
-    params.output.allocationUser_max_base_raw = allocationUser_max_base
-    params.output.allocationUser_max_base_withUpgrade_raw = allocationUser_max
-    // params.output.allocationUser_min = 100
-    params.output.allocationUser_min = 10 //todo:
-    return allocationParsePhased(params)
-}
-
 function allocationUserBuild(params) {
-    const {account} = params
-    if (account.ACL === ACLs.NeoTokyo || account.ACL === ACLs.Admin) { //todo: clean for admin
-        return allocationNeoTokyo(params)
-    } else {
-        return allocationBased(params)
-    }
+    const {
+        allocationUser_base,
+        allocationUser_max,
+        allocationUser_min
+    } = getUserAllocationMax(params.account, params.offer, params.upgradesUse?.increasedUsed?.amount || 0)
+    params.output.allocationUser_guaranteed = getUserAllocationGuaranteed(params.upgradesUse?.guaranteedUsed)
+    params.output.allocationUser_base = allocationUser_base
+    params.output.allocationUser_max = allocationUser_max
+    params.output.allocationUser_min = allocationUser_min
+    return allocationPhaseAdjust(params)
 }
 
 
-function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, allocationUser = 0, allocationOffer) {
-
-    const allocationOffer_left = offer.alloTotal - (allocationOffer?.alloFilled ? allocationOffer.alloFilled : 0) - (allocationOffer?.alloRes ? allocationOffer.alloRes : 0)
-    const allocationUser_invested = allocationUser / (100 - offer.tax) * 100
+function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, allocationUser_invested = 0, allocationOffer) {
+    const allocationOfferGuaranteed_left = allocationOffer?.alloGuaranteed || 0
+    const allocationOffer_left = offer.alloTotal - (allocationOffer?.alloFilled || 0) - (allocationOffer?.alloRes || 0) -  - (allocationOffer?.alloGuaranteed || 0)
 
     let build = {
         account,
         offer,
         offerPhaseCurrent,
         upgradesUse,
-        allocationUser,
         allocationUser_invested,
         allocationOffer,
-        allocationOffer_left: allocationOffer_left > 0 ? getPreTax(allocationOffer_left, offer) : 0,
+        allocationOffer_left,
+        allocationOfferGuaranteed_left,
         output: {}
     }
 
@@ -134,111 +131,71 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
         allocationUser_max,
         allocationUser_min,
         allocationUser_left,
-        canInvestMore,
+        allocationUser_guaranteed
     } = allocationState.output
 
-    const divisibleBy = allocationUser_invested > 0 ? 50 : 100
-    const allocationUser_left_final = Math.floor(allocationUser_left / divisibleBy) * divisibleBy;
-    const allocationUser_guaranteed = (upgradesUse?.guaranteedUsed && !upgradesUse?.guaranteedUsed?.isExpired ? upgradesUse.guaranteedUsed.alloMax - upgradesUse.guaranteedUsed.alloUsed : 0) / (100 - offer.tax) * 100
+
+    const allocationUser_left_rounded = roundAmount(allocationUser_left);
+    const allocationUser_max_rounded = roundAmount(allocationUser_max);
+    const allocationUser_guaranteed_rounded = roundAmount(allocationUser_guaranteed);
+
+    console.log("QUELCO - summary", {
+        allocationUser_min,
+        allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
+        allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
+        allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
+        allocationUser_max_raw: allocationUser_max,
+        allocationUser_left_raw: allocationUser_left,
+        allocationUser_guaranteed_raw: allocationUser_guaranteed,
+        allocationUser_invested,
+        allocationOffer_left,
+        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
+    })
 
     return {
-        canInvestMore,
-        allocationUser_max,
         allocationUser_min,
-        allocationUser_left: allocationUser_left_final < 0 ? 0 : allocationUser_left_final,
+        allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
+        allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
+        allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
         allocationUser_invested,
-        allocationUser_guaranteed,
         allocationOffer_left,
-        offer_isProcessing: allocationOffer_left <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 100 > 0),
-        offer_isSettled: allocationOffer_left <= 100 && offer.alloTotal - allocationOffer?.alloFilled - 100 <= 0
+        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
     }
 }
 
 
 function tooltipInvestState(offer, allocationData, investmentAmount) {
-    if(allocationData.allocationUser_guaranteed > 0) {
-        if (investmentAmount > allocationData.allocationUser_left + allocationData.allocationUser_guaranteed) {
-            return {
-                allocation: false,
-                message: `Maximum investment: $${
-                    (
-                        (allocationData.allocationUser_left > allocationData.allocationUser_guaranteed) ? 
-                        allocationData.allocationUser_left : 
-                        allocationData.allocationUser_guaranteed
-                    ).toLocaleString()}`
-            }
+    if (allocationData.allocationUser_left === 0) {
+        return {
+            allocation: false,
+            message: `Maximum allocation filled`
         }
-        else if (!allocationData.allocationUser_invested && investmentAmount < allocationData.allocationUser_min) {
-            return {
-                allocation: false,
-                message: `Minimum investment: $${allocationData.allocationUser_min.toLocaleString()}`
-            }
+    } else if (!allocationData.allocationUser_invested && investmentAmount < allocationData.allocationUser_min) {
+        return {
+            allocation: false,
+            message: `Minimum investment: $${allocationData.allocationUser_min.toLocaleString()}`
         }
-        else if(investmentAmount % (allocationData.allocationUser_invested > 0 ? 50 : 100) > 0 || investmentAmount <= 0) {
-            return {
-                allocation: false,
-                message: `Allocation has to be divisible by $${allocationData.allocationUser_invested > 0 ? 50 : 100}`
-            }
+    } else if (investmentAmount % MIN_DIVISIBLE > 0 || investmentAmount <= 0) {
+        return {
+            allocation: false,
+            message: `Allocation has to be divisible by $${MIN_DIVISIBLE}`
         }
-        else if (investmentAmount <= allocationData.allocationUser_left + allocationData.allocationUser_guaranteed) {
-            return {
-                allocation: true,
-                message: `Maximum investment: $${
-                    (
-                        allocationData.allocationUser_left > allocationData.allocationUser_guaranteed ? 
-                        allocationData.allocationUser_left : allocationData.allocationUser_guaranteed
-                    ).toLocaleString()
-                }`
-            }
+    } else if (investmentAmount > allocationData.allocationUser_left) {
+        return {
+            allocation: false,
+            message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`
         }
-        else {
-            return {
-                allocation: true,
-                message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`
-            }
+    } else if (investmentAmount <= allocationData.allocationUser_left) {
+        return {
+            allocation: true,
+            message: `Maximum investment: $${(allocationData.allocationUser_left).toLocaleString()}`
         }
     } else {
-        if (allocationData.allocationUser_left === 0) {
-            return {
-                allocation: false,
-                message:`Maximum allocation filled`
-            }
-        }
-        else if (!allocationData.allocationUser_invested && investmentAmount < allocationData.allocationUser_min) {
-            return {
-                allocation: false,
-                message:`Minimum investment: $${allocationData.allocationUser_min.toLocaleString()}`
-            }
-        }
-        else if(investmentAmount % (allocationData.allocationUser_invested > 0 ? 10 : 10) > 0 || investmentAmount <= 0) {
-            return {
-                allocation: false,
-                message:`Allocation has to be divisible by $${allocationData.allocationUser_invested > 0 ? 10 : 10}`
-            }
-        }
-        // else if(investmentAmount % (allocationData.allocationUser_invested > 0 ? 50 : 100) > 0 || investmentAmount <= 0) { //todo: change
-        //     return {
-        //         allocation: false,
-        //         message:`Allocation has to be divisible by $${allocationData.allocationUser_invested > 0 ? 50 : 100}`
-        //     }
-        // }
-        else if (investmentAmount > allocationData.allocationUser_left) {
-            return {
-                allocation: false,
-                message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`
-            }
-        }
-        else if (investmentAmount <= allocationData.allocationUser_left) {
-            return {
-                allocation: true,
-                message: `Maximum investment: $${(allocationData.allocationUser_left).toLocaleString()}`
-            }
-        }
-        else {
-            return {
-                allocation: true,
-                message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`
-            }
+        return {
+            allocation: true,
+            message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`
         }
     }
 }
@@ -250,50 +207,22 @@ function buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAl
         ntStakeGuard ||
         !investmentAmount ||
         !isAllocationOk ||
-        (
-            allocationData.allocationUser_guaranteed ?
-                (
-                    allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0 ||
-                    allocationData.offer_isSettled && allocationData.allocationUser_guaranteed === 0
-                )
-                : (
-                    allocationData.offer_isProcessing ||
-                    allocationData.offer_isSettled
-                )
-        )
+        ((allocationData.offer_isProcessing || allocationData.offer_isSettled) && !(allocationData.allocationUser_left > 0))
 }
 
 function buttonInvestText(offer, allocationData, defaultText) {
     if (offer.isPaused) return "Investment Paused"
     else if (offer.isSettled) return "Filled"
-    else if (allocationData.allocationUser_guaranteed > 0) return defaultText
     else if (allocationData.offer_isSettled) return "Filled"
-    else if (allocationData.offer_isProcessing) return "Processing..."
     else return defaultText
 }
 
-function buttonInvestState(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, ntStakeGuard, defaultText) {
+function buttonInvestState(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, ntStakeGuard) {
     return {
-        text: buttonInvestText(offer, allocationData, defaultText),
+        text: buttonInvestText(offer, allocationData, offerPhaseCurrent.button),
         isDisabled: buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, ntStakeGuard)
     }
 }
 
 
-
-module.exports = {userInvestmentState, tooltipInvestState, buttonInvestState}
-
-//todo: tooltip data
-
-
-// allocationUser_invested                          [PRE-TAX]
-// allocationUser_max_base_raw                      [PRE-TAX]
-// allocationUser_max_base_withUpgrade_raw          [PRE-TAX]
-// allocationOffer_left                             [PRE-TAX]
-// allocationUser_left                              [PRE-TAX]
-// allocationUser_min                               [PRE-TAX]
-
-//  allocationUser_max                              [PRE-TAX]
-//  offer.alloMax                                   [PRE-TAX]
-
-//  offer.alloTotal                                 [POST-TAX]
+module.exports = {userInvestmentState, tooltipInvestState, buttonInvestState, getUserAllocationMax, roundAmount}

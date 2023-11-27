@@ -19,7 +19,7 @@ async function fetchUpgrade(userId, offerId) {
 }
 
 async function fetchAppliedUpgradesInTransaction(userId, offerId, transaction) {
-    const result = await models.upgrade.findAll({
+    return await models.upgrade.findAll({
         where: {
             userId,
             offerId
@@ -27,29 +27,6 @@ async function fetchAppliedUpgradesInTransaction(userId, offerId, transaction) {
         raw: true
     }, {transaction})
 
-    if (result?.length === 0 || !result) {
-        await transaction.rollback();
-        return {
-            ok: false,
-            error: UPGRADE_ERRORS.NoAppliedUpgrade
-        }
-    }
-
-    return {
-        ok: true,
-        data: result
-    }
-}
-
-async function increaseGuaranteedAllocationUsed(offerId, userId, amount, transaction) {
-    return await models.upgrade.increment({alloUsed: amount}, {
-        where: {
-            offerId,
-            storeId: PremiumItemsENUM.Guaranteed,
-            userId,
-        },
-        transaction
-    });
 }
 
 async function saveUpgradeUse(userId, offerId, storeId, amount, allocation, transaction) {
@@ -62,8 +39,7 @@ async function saveUpgradeUse(userId, offerId, storeId, amount, allocation, tran
     `
 
     const upsert = await db.query(query, {type: QueryTypes.UPSERT, transaction})
-    // if (upsert[0] === undefined && upsert[1] === null) { //old
-    if (upsert && upsert[0] >= 1) {
+    if (upsert[0] === undefined && upsert[1] === null) {
         return {ok: true}
     } else {
         await transaction.rollback();
@@ -76,4 +52,4 @@ async function saveUpgradeUse(userId, offerId, storeId, amount, allocation, tran
 }
 
 
-module.exports = {saveUpgradeUse, fetchUpgrade, fetchAppliedUpgradesInTransaction, increaseGuaranteedAllocationUsed}
+module.exports = {saveUpgradeUse, fetchUpgrade, fetchAppliedUpgradesInTransaction}

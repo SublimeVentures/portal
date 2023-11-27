@@ -27,6 +27,8 @@ import {IconButton} from "@/components/Button/IconButton";
 import IconPremium from "@/assets/svg/Premium.svg";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
 import {buttonInvestState, tooltipInvestState, userInvestmentState} from "@/lib/investment";
+import Linker from "@/components/link";
+import {ExternalLinks} from "@/routes";
 
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
@@ -39,8 +41,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         refetchUserAllocation,
         allocation,
         userAllocation,
-        upgradesUsedRefetch,
-        upgradesUsedSuccess,
+        isSuccessUserAllocation,
         upgradesUse,
     } = paramsInvestPhase;
 
@@ -72,13 +73,12 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [isError, setIsError] = useState({})
 
     const [allocationData, setAllocationData] = useState({
-        canInvestMore: 0,
         allocationUser_max: 0,
         allocationUser_min: 0,
         allocationUser_left: 0,
         allocationUser_invested: 0,
-        allocationUser_guaranteed: 0,
         allocationOffer_left:0,
+        allocationUser_guaranteed:0,
         offer_isProcessing: false,
         offer_isSettled: false,
     })
@@ -86,6 +86,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const [cookies, setCookie, removeCookie] = useCookies();
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
+    console.log("upgradesUse",upgradesUse)
 
     //migrated
     const {ACL, isStaked} = account
@@ -193,7 +194,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             const savedAmount = Number(cookieData[1])
             const savedHash = cookieData[0]
 
-            if (savedTimestamp < moment().unix()) {
+            if (savedTimestamp < moment.utc().unix()) {
                 removeCookie(cookieReservation)
                 await startInvestmentProcess()
             } else if (savedAmount === Number(investmentAmount)) {
@@ -262,18 +263,15 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     useEffect(() => {
         if(!offer) return
-        const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation, allocation)
-        setAllocationData(allocations)
+        const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation, allocation ? allocation : {})
+        setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
         setIsError({state: !allocationIsValid, msg: message})
 
-        const {isDisabled, text} = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, ntStakeGuard, phaseCurrent.button)
+        const {isDisabled, text} = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, ntStakeGuard)
         setInvestButtonDisabled(isDisabled)
         setInvestButtonText(text)
 
-        console.log("DANG :: allocations",allocations)
-        console.log("DANG :: allocationIsValid",allocationIsValid,message )
-        console.log("DANG :: button",isDisabled,text )
     }, [
         allocation?.alloFilled,
         allocation?.alloRes,
@@ -288,7 +286,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const upgradesModalProps = {account,  phaseCurrent, offerId: offer.id, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse, allocationUserLeft: allocationData.allocationUser_left}
+    const upgradesModalProps = {account,  phaseCurrent, offerId: offer.id, refetchUserAllocation, isSuccessUserAllocation, upgradesUse, allocationUserLeft: allocationData.allocationUser_left}
     const calculateModalProps = {investmentAmount, allocationData, offer}
     const investModalProps = {
         expires,
@@ -358,8 +356,15 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
                 </div>
             </div>
+            <div className={"text-app-success text-center min-h-[88px] py-5 px-2"}>
+                {allocationData.offer_isProcessing && <div>
+                    All spots booked! Awaiting blockchain confirmations. <br/>
+                    <Linker url={ExternalLinks.LOOTBOX} text={"Check back soon."}/>
 
-            <div className="flex flex-row flex-wrap justify-center gap-2 py-10 px-2">
+                </div> }
+            </div>
+
+            <div className="flex flex-row flex-wrap justify-center gap-2 pb-10 px-2">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
                     <UniButton
                         type={ButtonTypes.BASE}

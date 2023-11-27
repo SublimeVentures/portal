@@ -5,12 +5,12 @@ const {bookAllocation, expireAllocation} = require("../queries/invest.query");
 const {createHash} = require("./helpers");
 const {ACLs} = require("../../src/lib/authHelpers");
 const {fetchUpgrade} = require("../queries/upgrade.query");
-const {PremiumItemsENUM, PremiumItemsParamENUM} = require("../../src/lib/enum/store");
+const {PremiumItemsENUM} = require("../../src/lib/enum/store");
 const {BookingErrorsENUM} = require("../../src/lib/enum/invest");
 const logger = require("../../src/lib/logger");
-
 const {serializeError} = require("serialize-error");
-const {isBased} = require("../../src/lib/utils");
+const {getUserAllocationMax} = require("../../src/lib/investment");
+const {PhaseId} = require("../../src/lib/phases");
 
 let CACHE = {}
 
@@ -39,15 +39,14 @@ function checkReserveSpotQueryParams(req) {
 }
 
 async function processReservation(queryParams, user) {
-    const {ACL, multi, userId, allocationBonus} = user
+    const {ACL, userId} = user
     const { _offerId, _amount, _currency, _chain} = queryParams
 
     try {
-
         //cache allocation data
-        if (!CACHE[_offerId]?.expire || CACHE[_offerId].expire < moment().unix()) {
+        if (!CACHE[_offerId]?.expire || CACHE[_offerId].expire < moment.utc().unix()) {
             const allocation = await getOfferById(_offerId)
-            CACHE[_offerId] = {...allocation, ...{expire: moment().unix() + 3 * 60}}
+            CACHE[_offerId] = {...allocation, ...{expire: moment.utc().unix() + 3 * 60}}
         }
 
         const isSeparatePool = CACHE[_offerId].alloTotalPartner > 0 && ACL !== ACLs.Whale;
@@ -64,7 +63,7 @@ async function processReservation(queryParams, user) {
         console.log("checks passed00")
 
         //generate hash
-        const now = moment().unix()
+        const now = moment.utc().unix()
         const expires = now + 15 * 60 //15min validity
         const hash = createHash(`${userId}` + `${now}`)
 
@@ -74,18 +73,17 @@ async function processReservation(queryParams, user) {
         const increased = upgrades.find(el => el.storeId === PremiumItemsENUM.Increased)
 
         const totalAllocation = CACHE[_offerId][isSeparatePool ? 'alloTotalPartner' : 'alloTotal']; //todo: whale
-        const amount = _amount * (100 - CACHE[_offerId].tax) / 100
-        console.log("checks passed0")
+        const amount = Number(_amount)
+        console.log("checks passed0",amount)
 
         const checkAllocationSize = checkAllocationConditions(
             CACHE[_offerId],
             totalAllocation,
             _amount,
             increased,
-            ACL,
-            multi,
-            allocationBonus
+            user
         )
+        console.log("checkAllocationSize",checkAllocationSize)
         if(!checkAllocationSize.ok) return checkAllocationSize;
 
         const isBooked = await bookAllocation(
@@ -95,7 +93,8 @@ async function processReservation(queryParams, user) {
             userId,
             hash,
             amount,
-            guaranteed
+            guaranteed,
+            checkAllocationSize.phase
         )
 
         if (!isBooked) {
@@ -127,7 +126,7 @@ function checkInvestmentStateConditions(ACL, offer) {
         code: BookingErrorsENUM.IsPaused
     }
 
-    const now = moment().unix()
+    const now =  moment.utc().unix()
     const startDate = (ACL !== ACLs.Whale && offer.d_openPartner > 0) ? offer.d_openPartner : offer.d_open
 
     if(now < startDate) return {
@@ -141,25 +140,27 @@ function checkInvestmentStateConditions(ACL, offer) {
     }
 }
 
-function checkAllocationConditions(offer, totalAllocation, amountRequested, increased, acl, multi, allocationBonus) {
-
+function checkAllocationConditions(offer, totalAllocation, amountRequested, increased, account) {
     let amountMax
+    let phase
     if(
-        acl === ACLs.Whale ||
-        offer.d_openPartner && offer.d_openPartner + 86400 < moment.utc()
+        account.acl === ACLs.Whale || //whales have always full allo
+        account.acl === ACLs.Member && offer.d_open && offer.d_open + 86400 < moment.utc().unix() ||
+        offer.d_openPartner && offer.d_openPartner + 86400 < moment.utc().unix()
     ) {
         amountMax = offer.alloTotal
+        phase = PhaseId.Unlimited
     } else {
-        if(isBased) {
-            amountMax = multi * offer.alloMin + ((increased ? increased.amount : 0) * PremiumItemsParamENUM.Increased)
-        } else {
-            amountMax = (totalAllocation * multi) + allocationBonus + ((increased ? increased.amount : 0) * PremiumItemsParamENUM.Increased)
-        }
+        const {allocationUser_max}  = getUserAllocationMax(account, offer, increased?.amount)
+        amountMax = allocationUser_max
+        phase = PhaseId.FCFS
     }
+    //todo: check allocation guaranteed + currently filled
 
     if(amountRequested <= amountMax) {
         return {
-            ok: true
+            ok: true,
+            phase
         }
     } else return {
         ok: false,

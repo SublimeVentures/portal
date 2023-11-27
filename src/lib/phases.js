@@ -1,5 +1,5 @@
 const moment = require('moment');
-const {ACLs} = require("@/lib/authHelpers");
+const {ACLs} = require("./authHelpers");
 
 const PhaseId = {
     Vote: -1,
@@ -54,7 +54,7 @@ function updatePhaseDate(phase, timestamp) {
 }
 
 function processPhases(phases, isSettled) {
-    const now = moment().unix()
+    const now = moment.utc().unix()
     let activeId
 
     if(isSettled) {
