@@ -264,7 +264,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     useEffect(() => {
         if(!offer) return
         console.log("refresh")
-        const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation, allocation ? allocation : {})
+        const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation?.invested, allocation ? allocation : {})
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
         setIsError({state: !allocationIsValid, msg: message})

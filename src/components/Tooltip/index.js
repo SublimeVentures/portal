@@ -2,7 +2,7 @@
 import {useState} from "react";
 import dynamic from "next/dynamic";
 const Tooltip = dynamic(
-    () => import('react-tooltip').then((mod) => mod.Tooltip),
+    () => import('react-tooltip').then((mod) => mod.default),
     { ssr: false }
 );
 

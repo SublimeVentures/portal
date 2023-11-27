@@ -37,4 +37,23 @@ async function checkBytesStake(array) {
     return []
 }
 
-module.exports = {checkElite, checkBytesStake}
+
+async function getNeoTokyoEnvs() {
+        try {
+            const result = await models.environment_citcap.findAll({
+                attributes: ['valueJSON'],
+                where: {
+                    name: {
+                        [Op.in]: ['rewardRate', 'allocationTrait', 'stakingTimelock']
+                    }
+                }
+            });
+
+            return result.map(row => row.valueJSON);
+        } catch (error) {
+            logger.error('QUERY :: [getNeoTokyoEnvs]', {error: serializeError(error)});
+        }
+        return []
+}
+
+module.exports = {checkElite, checkBytesStake, getNeoTokyoEnvs}

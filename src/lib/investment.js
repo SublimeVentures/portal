@@ -17,6 +17,9 @@ function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
         allocationUser_min = offer.alloMin
     } else {
         allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
+        console.log("bbbbb -account.multi ",account.multi )
+        console.log("bbbbb -alloTotal ",offer.alloTotal )
+        console.log("bbbbb -account.allocationBonus ",account.allocationBonus )
         if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
         allocationUser_min = MIN_ALLOCATION
     }
@@ -73,6 +76,8 @@ function allocationParseFCFS(params) {
     if (allocationUser_guaranteed > 0) {
         allocationUser_left = allocationUser_guaranteed
     } else {
+        console.log("ooop-- allocationUser_max",allocationUser_max)
+        console.log("ooop-- allocationUser_invested",allocationUser_invested)
         allocationUser_left = getAllocationLeft(allocationOffer_left, (allocationUser_max - allocationUser_invested))
     }
 

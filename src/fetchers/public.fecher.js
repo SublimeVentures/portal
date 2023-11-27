@@ -29,3 +29,19 @@ export const fetchPartners = async () => {
 
 }
 
+
+
+export const fetchNeoTokyoEnvs = async () => {
+    try {
+        const {data} = await axiosPublic.get(API.publicNeoTokyoEnvs)
+        return data
+    } catch(e) {
+
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchNeoTokyoEnvs", e});
+        }
+    }
+    return []
+
+}
+

@@ -29,6 +29,7 @@ export const API = {
     auth: "/api/auth/login",
     updateSession_CitCapStaking: "/api/auth/login/stake",
     publicPartners: "/api/public/partners",
+    publicNeoTokyoEnvs: "/api/public/nt-calculator",
 }
 
 const ExternalLinksBased = {
