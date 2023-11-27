@@ -30,7 +30,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
     - tasks
     - 
 
-
+  - 
   - fix withRetry to use my flow
   - migration
     - old data
@@ -40,7 +40,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
     - logo mobile
   - returned fail log
   - bytes burn
+  - do vault / guaranteed investment check based on bookings, not vault
 - take money back for testing
+- rounding on progress bar + req min stake
+- allow investment on booking (currently we have disabled button)
+- allocation to high error
 - wagmi - json rpc
 - auto-close investment after reaching success
 - make sure guaranteed allow rebooking

@@ -24,7 +24,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
     }
 
     const calcPrice = (multi, amt) => {
-        const value = (amt * (100 - offer.tax)/100  * multi - amt) * 95/100
+        const value = (amt * multi - amt) * 95/100
 
         setPrice(
             Number(

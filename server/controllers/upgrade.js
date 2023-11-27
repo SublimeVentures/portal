@@ -6,24 +6,20 @@ const {PremiumItemsENUM} = require("../../src/lib/enum/store");
 const logger = require("../../src/lib/logger");
 
 const {serializeError} = require("serialize-error");
-const {isBased} = require("../../src/lib/utils");
 const {PremiumItemsParamENUM} = require("../../src/lib/enum/store");
 const db = require("../services/db/db.init");
 const {getStoreItemsOwnedByUser, updateUserUpgradeAmount} = require("../queries/storeUser.query");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 const {getOfferById} = require("../queries/offers.query");
 const {bookAllocationGuaranteed} = require("../queries/invest.query");
+const {getUserAllocationMax, roundAmount} = require("../../src/lib/investment");
 
 async function useGuaranteed(offerId, user, transaction) {
-    const {ACL, multi, userId, allocationBonus} = user
+    const {userId} = user
 
     const userAppliedUpgrades = await fetchAppliedUpgradesInTransaction(userId, offerId, transaction)
-    if (!userAppliedUpgrades.ok) {
-        return userAppliedUpgrades
-    }
-
-    const upgradeGuaranteed = userAppliedUpgrades.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount
-    const upgradeIncreased = userAppliedUpgrades.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount
+    const upgradeGuaranteed = userAppliedUpgrades?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount
+    const upgradeIncreased = userAppliedUpgrades?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount
 
     if (upgradeGuaranteed) {
         await transaction.rollback();
@@ -34,27 +30,27 @@ async function useGuaranteed(offerId, user, transaction) {
     }
 
     const offer = await getOfferById(offerId)
-    const increasedAllocations = upgradeIncreased * PremiumItemsParamENUM.Increased
     const isSeparatePool = offer.alloTotalPartner > 0 && upgradeIncreased !== ACLs.Whale;
     const totalAllocation = offer[isSeparatePool ? 'alloTotalPartner' : 'alloTotal']
 
-    let amountMax
-    if (isBased) {
-        amountMax = multi * offer.alloMin + (increasedAllocations ? increasedAllocations : 0)
-    } else {
-        amountMax = (totalAllocation * multi) + allocationBonus + (increasedAllocations ? increasedAllocations : 0)
-    }
-
-    const amount = ACL === ACLs.Whale ? PremiumItemsParamENUM.Guaranteed : ((amountMax < PremiumItemsParamENUM.Guaranteed ? amountMax : PremiumItemsParamENUM.Guaranteed) * (100 - offer.tax) / 100)
+    const {allocationUser_max} = getUserAllocationMax(user, offer, upgradeIncreased)
+    const maxAllocation = roundAmount(allocationUser_max)
+    const amount = maxAllocation < PremiumItemsParamENUM.Guaranteed ? maxAllocation : PremiumItemsParamENUM.Guaranteed
 
     const increaseGuaranteedReservations = await bookAllocationGuaranteed(offerId, amount, totalAllocation, isSeparatePool, transaction)
+
+
     if (!increaseGuaranteedReservations.ok) {
-        return increaseGuaranteedReservations
+        await transaction.rollback();
+        return {
+            ok: false,
+            error: UPGRADE_ERRORS.NotEnoughAllocation
+        }
     }
 
     return {
         ok: true,
-        data: {amount}
+        data: amount
     }
 }
 
@@ -65,6 +61,7 @@ async function useUpgrade(user, req) {
         offerId = Number(req.params.id)
         storeId = Number(req.params.upgrade)
 
+        //todo: blocker on increased allocation
         if (storeId !== PremiumItemsENUM.Guaranteed && storeId !== PremiumItemsENUM.Increased) {
             throw new Error("Wrong Upgrade")
         }
@@ -76,7 +73,10 @@ async function useUpgrade(user, req) {
         //check if user has upgrades
         const isUserOwnsUpgrade = await getStoreItemsOwnedByUser(userId, storeId, transaction)
         if (!isUserOwnsUpgrade.ok) {
-            return isUserOwnsUpgrade
+            return {
+                ok: false,
+                error: "Error" //todo: extract
+            }
         }
 
         let allocation
@@ -92,7 +92,7 @@ async function useUpgrade(user, req) {
                 });
                 return saveStatus_upgrade
             }
-            allocation = saveStatus_upgrade.data.amount
+            allocation = saveStatus_upgrade.data
         }
 
         //save used upgrade

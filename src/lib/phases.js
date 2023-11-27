@@ -1,5 +1,5 @@
 const moment = require('moment');
-const {ACLs} = require("@/lib/authHelpers");
+const {ACLs} = require("./authHelpers");
 
 const PhaseId = {
     Vote: -1,

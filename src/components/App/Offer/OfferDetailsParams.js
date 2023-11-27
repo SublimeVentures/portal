@@ -10,7 +10,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_my = Number(userAllocation)?.toLocaleString()
-    const isSoldOut = allocation?.alloFilled >= alloTotal || phaseIsClosed
+    const isSoldOut = allocation?.alloFilled >= alloTotal-50 || phaseIsClosed
 
     return (
         <>
@@ -20,7 +20,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                     <div className={`text-5xl font-bold flex flex-1 glow font-light ${isBased ? "py-1" : "py-2 font-light"}`}>${normalized_total}</div>
 
                     <div className={"py-2"}>
-                        <OfferDetailsProgress alloTotal={alloTotal} alloFilled={allocation?.alloFilled} alloRequired={alloRequired} isSoldOut={isSoldOut}/>
+                        <OfferDetailsProgress alloTotal={alloTotal} allocations={allocation} alloRequired={alloRequired} isSoldOut={isSoldOut}/>
                     </div>
                     <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
                         {userAllocation > 0 && <div className={"detailRow text-app-success"}><p>My Allocation</p><hr className={"spacer"}/><p>${normalized_my}</p></div>}

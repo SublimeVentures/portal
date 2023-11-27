@@ -133,12 +133,14 @@ async function getOfferAllocation(user, req) {
         if(allocation.offer.alloTotalPartner > 0 && ACL !== ACLs.Whale) {
             return {
                 alloFilled: allocation.alloFilledPartner + allocation.alloSidePartner,
-                alloRes: allocation.alloResPartner + allocation.alloGuaranteed
+                alloRes: allocation.alloResPartner,
+                alloGuaranteed: allocation.alloGuaranteed
             }
         } else {
             return {
                 alloFilled: allocation.alloFilled + allocation.alloSide,
-                alloRes: allocation.alloRes + allocation.alloGuaranteed
+                alloRes: allocation.alloRes,
+                alloGuaranteed: allocation.alloGuaranteed
             }
         }
     } catch(error) {
@@ -146,7 +148,8 @@ async function getOfferAllocation(user, req) {
 
         return {
             alloFilled: 0,
-            alloRes: 0
+            alloRes: 0,
+            alloGuaranteed: 0
         }
     }
 

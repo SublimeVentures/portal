@@ -14,7 +14,7 @@ import {useUpgrade} from "@/fetchers/offer.fetcher";
 import {PhaseId} from "@/lib/phases";
 
 export default function UpgradesModal({model, setter, upgradesModalProps}) {
-    const {account, allocationUserLeft, offerId, phaseCurrent, upgradesUsedRefetch, upgradesUsedSuccess, upgradesUse} = upgradesModalProps
+    const {account, allocationUserLeft, offerId, phaseCurrent, refetchUserAllocation, isSuccessUserAllocation, upgradesUse} = upgradesModalProps
     const {address} = account
 
     let [selected, setSelected] = useState(0)
@@ -36,8 +36,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
     const increasedUsed = upgradesUse?.increasedUsed?.amount;
     const guaranteed = premiumData?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount;
     const increased = premiumData?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount;
-    const isGuaranteedEnabled = phaseCurrent?.phase === PhaseId.Pending
-    const isIncreasedEnabled = phaseCurrent?.phase === PhaseId.FCFS || phaseCurrent?.phase === PhaseId.Pending
+    const isStageEnabled = phaseCurrent?.phase === PhaseId.Pending
     const maximumGuaranteedBooking = allocationUserLeft > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : allocationUserLeft
     const imageId = (id) => isBased ? `${id}.jpg` : `Code_${id}.gif`
 
@@ -72,7 +71,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
             const result = await useUpgrade(offerId, selected)
             if(result?.ok) {
                 await refetch();
-                await upgradesUsedRefetch()
+                await refetchUserAllocation()
             } else {
                 setIsError(true)
                 setErrorMsg(result.error)
@@ -93,7 +92,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
 
     const content = () => {
         return (
-            <div className={`flex flex-1 flex-col gap-5 pt-5 relative ${upgradesUsedSuccess ? "" : "disabled"}`}>
+            <div className={`flex flex-1 flex-col gap-5 pt-5 relative ${isSuccessUserAllocation ? "" : "disabled"}`}>
                 {isError && <div className={"absolute top-0 bottom-0 -left-5 -right-5 px-5 bg-app-bg h-full opacity-100 z-20 flex flex-col gap-5"}>
                     <div className={"mx-auto  h-full items-center align-center justify-center flex flex-col text-app-error"}>
                         <div>{errorMsg}</div>
@@ -125,7 +124,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                         owned={guaranteed}
                         used={guaranteedUsed}
                         image={imageId}
-                        isRightPhase={isGuaranteedEnabled}
+                        isRightPhase={isStageEnabled}
                     />
                     <UpgradesModalItem
                         itemType={PremiumItemsENUM.Increased}
@@ -136,7 +135,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                         owned={increased}
                         used={increasedUsed}
                         image={imageId}
-                        isRightPhase={isIncreasedEnabled}
+                        isRightPhase={isStageEnabled}
                     />
                 </div>
 

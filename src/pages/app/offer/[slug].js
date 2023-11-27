@@ -59,15 +59,6 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
-    const {isSuccess: upgradesUsedSuccess, data: upgradesUse, refetch: upgradesUsedRefetch} = useQuery({
-            queryKey: ["upgradesUsed", offerData?.offer?.id, aclCache],
-            queryFn: () => getUpgrades(offerData?.offer?.id),
-            enabled: !!offerData?.offer?.id,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-        }
-    );
-
     const feedPhases = () => {
         if(!offerData?.offer) return
         const {isClosed, phaseCurrent, phaseNext} = phases(ACL, offerData.offer)
@@ -84,19 +75,21 @@ export const AppOfferDetails = ({account}) => {
         refreshInvestmentPhase: feedPhases,
     }
 
-    const guaranteedUsed = upgradesUse?.data?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
-    const increasedUsed = upgradesUse?.data?.find(el=>el.storeId === PremiumItemsENUM.Increased)
+    const guaranteedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
+    const increasedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Increased)
+
+    console.log("guaranteedUsed",guaranteedUsed)
+    console.log("increasedUsed",increasedUsed)
 
     const paramsInvest = {
         offer: offerData?.offer,
         currencies: offerData?.currencies,
         refetchUserAllocation,
+        isSuccessUserAllocation,
         refetchAllocation,
         userAllocation,
         allocation,
         account,
-        upgradesUsedRefetch,
-        upgradesUsedSuccess,
         upgradesUse: {guaranteedUsed, increasedUsed},
         phaseCurrent
     }
@@ -139,9 +132,9 @@ export const AppOfferDetails = ({account}) => {
     const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - ${getCopy("NAME")}`
     return (
         <>
-            <NextSeo title={pageTitle}/>
-            {renderPage()}
-        </>
+             <NextSeo title={pageTitle}/>
+             {renderPage()}
+         </>
     )
 }
 
