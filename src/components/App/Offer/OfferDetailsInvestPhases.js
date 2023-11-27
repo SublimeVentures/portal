@@ -7,7 +7,7 @@ import IconWhale from "@/assets/svg/Whale.svg";
 import IconLock from "@/assets/svg/Lock.svg";
 import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import { PhaseId, processAllocations} from "@/lib/phases";
+import { PhaseId} from "@/lib/phases";
 import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import UpgradesModal from "@/components/App/Offer/UpgradesModal";
@@ -263,6 +263,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     useEffect(() => {
         if(!offer) return
+        console.log("refresh")
         const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation, allocation ? allocation : {})
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
@@ -271,6 +272,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         const {isDisabled, text} = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, ntStakeGuard)
         setInvestButtonDisabled(isDisabled)
         setInvestButtonText(text)
+        console.log("refresh allocations",allocations)
 
     }, [
         allocation?.alloFilled,

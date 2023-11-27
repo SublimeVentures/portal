@@ -1,5 +1,12 @@
-import { Tooltip } from 'react-tooltip';
+// import { Tooltip } from 'react-tooltip';
 import {useState} from "react";
+import dynamic from "next/dynamic";
+const Tooltip = dynamic(
+    () => import('react-tooltip').then((mod) => mod.Tooltip),
+    { ssr: false }
+);
+
+
 
 export const TooltipType = {
     Success: 'app-success',
