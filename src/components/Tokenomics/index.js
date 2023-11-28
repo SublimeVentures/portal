@@ -74,15 +74,25 @@ export default function TokenomicsCitCap({}) {
     }
 
     const recalculate = () => {
-
-        const allocationBase = citizenType?.key * 10000 * investmentAllocation / 10000
+        // console.log("calc - citizen",citizenType)
+        // console.log("calc - reward rate",rewardRate)
+        // console.log("calc - allo trait",alloTrait)
+        // console.log("calc - stake length",stakeLength)
+        // console.log("calc - bytes Held",bytesHeld)
+        // console.log("calc - bytes staked",bytesStaked)
+        const allocationBase = Math.ceil(citizenType?.key * 10000 * investmentAllocation / 10000)
         const nft = citizenType?.value > CITIZENS.S1 ? alloTrait?.key : rewardRate?.key
         const allocationBonus = (((stakeLength?.key * Number(bytesStaked)) + 200 + Number(bytesHeld) * 0.25) * (nft * 10))/10
+        // console.log("calc - BYTES STAKED", (stakeLength?.key * Number(bytesStaked)))
         setAllocationBase(Number(allocationBase).toLocaleString())
         setAllocationBonus(Number(allocationBonus).toLocaleString())
         const total = Math.floor((allocationBonus+allocationBase) / MIN_DIVISIBLE) * MIN_DIVISIBLE;
         setAllocationTotal(Number(total).toLocaleString())
-
+        // console.log("============")
+        // console.log("calc - allocationBase",allocationBase)
+        // console.log("calc - allocationBonus",allocationBonus)
+        // console.log("============")
+        // console.log("============")
     }
 
     useEffect(() => {
@@ -98,7 +108,8 @@ export default function TokenomicsCitCap({}) {
         stakeLength?.key,
         alloTrait?.key,
         bytesHeld,
-        bytesStaked
+        bytesStaked,
+        investmentAllocation
     ]);
 
 
@@ -127,7 +138,7 @@ export default function TokenomicsCitCap({}) {
                     <div className=" flex flex-1 flex-col">
                         <div className={'pt-10'}>
                             <Input type={'number'}
-                                   placeholder={'Staked in NT Bank'}
+                                   placeholder={'Staked in Bank of NT'}
                                    initialValue={100}
                                    setStatus={()=>{}}
                                    setInput={setBytesStaked}
@@ -176,7 +187,7 @@ export default function TokenomicsCitCap({}) {
                     </div>
                     <div className={""}>
                         <div className={""}><Linker url={ExternalLinks.GETBYTES} text={"Get BYTES"}/></div>
-                        <div className={""}><Linker url={ExternalLinks.STAKE_NT} text={"Stake in Neo Tokyo Bank"}/></div>
+                        <div className={""}><Linker url={ExternalLinks.STAKE_NT} text={"Stake in Bank of Neo Tokyo"}/></div>
 
                     </div>
 
