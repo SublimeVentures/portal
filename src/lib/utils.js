@@ -19,8 +19,18 @@ const checkIfNumberKey = (event) => {
 
 const CITIZENS = {
     Elite: 0,
-    S1: 0,
-    S2: 0,
+    S1: 1,
+    S2: 2,
+    elite: 0,
+    s1: 1,
+    s2: 2,
+}
+
+const CITIZENS_NAME = {
+    s1: "Season 1",
+    s2: "Season 2",
+    elite: "Elite",
+
 }
 
 module.exports = {
@@ -28,5 +38,6 @@ module.exports = {
     isBased,
     NETWORKS,
     checkIfNumberKey,
-    CITIZENS
+    CITIZENS,
+    CITIZENS_NAME
 }

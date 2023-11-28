@@ -44,7 +44,7 @@ async function getNeoTokyoEnvs() {
                 attributes: ['valueJSON'],
                 where: {
                     name: {
-                        [Op.in]: ['rewardRate', 'allocationTrait', 'stakingTimelock']
+                        [Op.in]: ['rewardRate', 'allocationTrait', 'stakingTimelock', 'allocationBase']
                     }
                 }
             });

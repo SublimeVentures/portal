@@ -1,64 +1,79 @@
-import {useRef, useState} from "react";
-import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
+import {useState, Fragment} from "react";
+import {Listbox, Transition} from '@headlessui/react'
+import IconUpDown from "@/assets/svg/UpDown.svg";
+import IconSuccess from "@/assets/svg/Checkbox.svg";
 import {useEffect} from "react";
 
-export default function Select({options, classes, propSelected, position, isSmall}) {
-    const [isOpen, setIsOpen] = useState(false)
-    const [selected, setSelected] = useState(0)
-    const [direction, setDirection] = useState(0)
-    const [moved, setMoved] = useState(0)
-    const ref = useRef();
 
-    const changeOption = (index) => {
-        setMoved(index * (isSmall ? -35 : -62))
-        let _selected = selected
-        setSelected(index)
-        propSelected(index)
-        setDirection(_selected < index ? -1 : 1)
-        setTimeout(() => {
-            setDirection(0)
-            setIsOpen(false)
-        }, 500);
-    }
+export default function Select({label, options, setter}) {
+    const [selected, setSelected] = useState({})
+    useEffect(() => {
+        if(options.length>0) {
+            setSelected(options[0])
 
-    useOnClickOutside(ref, () => setIsOpen(false));
+        }
+    }, [options]);
+
 
     useEffect(() => {
-        if (position !== selected) changeOption(0)
-    }, [position])
+        setter(selected);
+    }, [selected, selected?.label]);
 
     return (
-        <div
-            className={`select-menu text-xl ${isOpen ? 'open' : ''} ${direction === -1 ? 'tilt-down' : ''} ${direction === 1 ? 'tilt-up' : ''} ${classes ? classes : ''} ${isSmall ? "small" : ""}`}
-            onClick={() => {
-                setIsOpen(true)
-            }}
-            ref={ref}
-        >
-            <select data-menu="">
-                {options.map((el, i) => {
-                    return <option key={i} defaultValue={i === selected ? 'selected' : ''}>{el}</option>
-                })}
-
-            </select>
-            <div className="button">
-                <em></em>
-                <ul style={{transform: `translateY(${moved}px)`}}>
-                    {options.map((el, i) => {
-                        return <li key={i}>{el}</li>
-                    })}
-
-                </ul>
-            </div>
-            <ul style={{transform: `translateY(${moved}px)`}}>
-                {options.map((el, i) => {
-                    return <li key={i} onClick={() => {
-                        changeOption(i)
-                    }}>{el}</li>
-                })
-                }
-            </ul>
-
+        <div className="relative select h-[62px]">
+            {label && <label className="absolute text-accent block z-10 -top-2 bg-outline">{label}</label>}
+            <Listbox value={selected} onChange={setSelected}>
+                <div className="relative ">
+                    <Listbox.Button
+                        className="relative w-full cursor-default rounded-lg bg-slides py-2 pl-3 pr-10 text-left shadow-md focus:outline-none h-[60px]">
+                        <span className="block truncate">{selected?.label}</span>
+                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                              <IconUpDown
+                                  className="h-5 w-5 "
+                                  aria-hidden="true"
+                              />
+                        </span>
+                    </Listbox.Button>
+                    <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <Listbox.Options
+                            className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-slides py-1 text-base shadow-lg ring-1 ring-black/5 z-10">
+                            {options.map((option, optionIndex) => (
+                                <Listbox.Option
+                                    key={optionIndex}
+                                    className={({active}) =>
+                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                            active ? 'bg-outline text-white' : 'text-gray'
+                                        }`
+                                    }
+                                    value={option}
+                                >
+                                    {({selected}) => (
+                                        <>
+                                          <span
+                                              className={`block truncate ${
+                                                  selected ? 'font-medium' : 'font-normal'
+                                              }`}
+                                          >
+                                            {option.label}
+                                          </span>
+                                            {selected ? (
+                                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-app-success">
+                                                  <IconSuccess className="h-5 w-5" aria-hidden="true"/>
+                                                </span>
+                                            ) : null}
+                                        </>
+                                    )}
+                                </Listbox.Option>
+                            ))}
+                        </Listbox.Options>
+                    </Transition>
+                </div>
+            </Listbox>
         </div>
     )
 }

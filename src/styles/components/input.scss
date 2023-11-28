@@ -186,6 +186,24 @@
 
 }
 
+.select {
+  label {
+    pointer-events: none;
+    z-index: 1;
+    transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    -moz-transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    -webkit-transition: 0.4s cubic-bezier(0.65, -0.32, 0.38, 1.23) all;
+    top: -10px;
+    left: 8px;
+    font-size: 14px;
+    opacity: 1;
+    padding: 1px 8px;
+    border-radius: 2px;
+    background-color: #5f87a6;
+    color: white;
+  }
+}
+
 
 .status {
   top:-55px;

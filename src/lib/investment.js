@@ -230,4 +230,4 @@ function buttonInvestState(offer, offerPhaseCurrent, investmentAmount, isAllocat
 }
 
 
-module.exports = {userInvestmentState, tooltipInvestState, buttonInvestState, getUserAllocationMax, roundAmount}
+module.exports = {MIN_DIVISIBLE, userInvestmentState, tooltipInvestState, buttonInvestState, getUserAllocationMax, roundAmount}
