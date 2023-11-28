@@ -1,10 +1,11 @@
 // import { Tooltip } from 'react-tooltip';
 import {useState} from "react";
 import dynamic from "next/dynamic";
-const Tooltip = dynamic(
-    () => import('react-tooltip').then((mod) => mod.default),
-    { ssr: false }
-);
+// const Tooltip = dynamic(
+//     () => import('react-tooltip').then((mod) => mod.default),
+//     { ssr: false }
+// );
+const ReactTooltip = dynamic(() => import('react-tooltip'), { ssr : false });
 
 
 
@@ -16,12 +17,13 @@ export const TooltipType = {
 }
 
 export function Tooltiper({wrapper, text, type}) {
-    const [id] = useState(() => `component-${Math.random().toString(16).slice(2)}`)
+    // const [id] = useState(() => `component-${Math.random().toString(16).slice(2)}`)
+    const id =`component-${Math.random().toString(16).slice(2)}`
 
     return (
         <div className={"inline-block tooltip"}>
             <a id={id} className={`text-${type} cursor-pointer`}>{wrapper}</a>
-            <Tooltip
+            <ReactTooltip
                 anchorSelect={`#${id}`}
                 className={`basic bg-app-accent2`}
                 content={text}

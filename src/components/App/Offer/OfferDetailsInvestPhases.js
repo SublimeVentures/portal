@@ -280,7 +280,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         upgradesUse?.increasedUsed?.amount,
         upgradesUse?.guaranteedUsed?.amount,
         upgradesUse?.guaranteedUsed?.alloUsed,
-        userAllocation,
+        userAllocation?.invested,
         investmentAmount,
         phaseCurrent?.phase
     ])

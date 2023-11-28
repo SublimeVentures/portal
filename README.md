@@ -26,15 +26,23 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 //tasks
 - webapp
   - calculator nt
-  - ops
-    - tasks
-    - 
+  - remove increased allo
+  - ops -ann
+  - ops - tasks
+  - ops - costs
+  - nfts
 
-  - 
-  - fix withRetry to use my flow
+- 
   - migration
     - old data
     - nt stake/withdraw
+  -  wallet split
+
+
+  
+
+  - fix withRetry to use my flow
+
     - generate
     - graphic for login
     - logo mobile
