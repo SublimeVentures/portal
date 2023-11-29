@@ -4,7 +4,7 @@ const {PhaseId} = require("./phases");
 const {isBased} = require("./utils");
 
 const MIN_DIVISIBLE = 50 //50
-const MIN_ALLOCATION = 10 //100
+const MIN_ALLOCATION = 100 //100
 
 function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
@@ -17,9 +17,6 @@ function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
         allocationUser_min = offer.alloMin
     } else {
         allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
-        console.log("bbbbb -account.multi ",account.multi )
-        console.log("bbbbb -alloTotal ",offer.alloTotal )
-        console.log("bbbbb -account.allocationBonus ",account.allocationBonus )
         if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
         allocationUser_min = MIN_ALLOCATION
     }
@@ -76,8 +73,6 @@ function allocationParseFCFS(params) {
     if (allocationUser_guaranteed > 0) {
         allocationUser_left = allocationUser_guaranteed
     } else {
-        console.log("ooop-- allocationUser_max",allocationUser_max)
-        console.log("ooop-- allocationUser_invested",allocationUser_invested)
         allocationUser_left = getAllocationLeft(allocationOffer_left, (allocationUser_max - allocationUser_invested))
     }
 
@@ -116,7 +111,7 @@ function allocationUserBuild(params) {
 
 function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, allocationUser_invested = 0, allocationOffer) {
     const allocationOfferGuaranteed_left = allocationOffer?.alloGuaranteed || 0
-    const allocationOffer_left = offer.alloTotal - (allocationOffer?.alloFilled || 0) - (allocationOffer?.alloRes || 0) -  - (allocationOffer?.alloGuaranteed || 0)
+    const allocationOffer_left = offer.alloTotal - (allocationOffer?.alloFilled || 0) - (allocationOffer?.alloRes || 0) - (allocationOffer?.alloGuaranteed || 0)
 
     let build = {
         account,
@@ -144,19 +139,19 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
     const allocationUser_max_rounded = roundAmount(allocationUser_max);
     const allocationUser_guaranteed_rounded = roundAmount(allocationUser_guaranteed);
 
-    console.log("QUELCO - summary", {
-        allocationUser_min,
-        allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
-        allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
-        allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
-        allocationUser_max_raw: allocationUser_max,
-        allocationUser_left_raw: allocationUser_left,
-        allocationUser_guaranteed_raw: allocationUser_guaranteed,
-        allocationUser_invested,
-        allocationOffer_left,
-        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
-        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
-    })
+    // console.log("QUELCO - summary", {
+    //     allocationUser_min,
+    //     allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
+    //     allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
+    //     allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
+    //     allocationUser_max_raw: allocationUser_max,
+    //     allocationUser_left_raw: allocationUser_left,
+    //     allocationUser_guaranteed_raw: allocationUser_guaranteed,
+    //     allocationUser_invested,
+    //     allocationOffer_left,
+    //     offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+    //     offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
+    // })
 
     return {
         allocationUser_min,

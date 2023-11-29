@@ -3,7 +3,7 @@ const {getEnv} = require("../services/db");
 const {isBased} = require("../../src/lib/utils");
 
 async function getStoreData() {
-    const storeItems =  await getStore()
+    const storeItems =  await getStore(isBased)
 
     if(isBased) {
         storeItems.forEach(function(v){ delete v.priceBytes });

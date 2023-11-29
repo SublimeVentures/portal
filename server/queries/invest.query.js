@@ -37,7 +37,7 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
     try {
         transaction = await db.transaction();
         const shouldAccountForGuaranteed = upgradeGuaranteed && phase === PhaseId.FCFS
-        console.log("phase", phase, PhaseId.FCFS)
+
         if (shouldAccountForGuaranteed) {
             const guaranteedAllocationLeft = upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed
 
@@ -77,7 +77,6 @@ async function bookAllocation(offerId, isSeparatePool, totalAllocation, userId, 
             `
         }
 
-        console.log("booked")
         //INCREASE RESERVED
         increaseBooking = await models.offerFundraise.increment({[variable]: shouldAccountForGuaranteed ? alloBase : amount}, {
             where: {

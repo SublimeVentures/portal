@@ -60,6 +60,14 @@ const OfferAccessACL = {
     }
 }
 
+const aclToOfferAccessMap = {};
+Object.keys(OfferAccessACL).forEach(aclKey => {
+    aclToOfferAccessMap[aclKey] = Object.entries(OfferAccessACL[aclKey])
+        .filter(([accessKey, isAllowed]) => isAllowed)
+        .map(([accessKey, _]) => parseInt(accessKey));
+});
+
+
 
 const domain = new URL(process.env.DOMAIN)
 const userIdentification = 'address'
@@ -205,5 +213,6 @@ module.exports = {
     buildCookie,
     verifyToken,
     verifyID,
-    signData
+    signData,
+    aclToOfferAccessMap
 }

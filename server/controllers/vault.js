@@ -29,8 +29,8 @@ async function userInvestment(user, req) {
 }
 
 async function userVault(user) {
-    const {userId} = user
-    const vault = await getUserVault(userId)
+    const {userId, ACL} = user
+    const vault = await getUserVault(userId, ACL)
     return {elements: vault, cdn: getEnv().cdn}
 }
 

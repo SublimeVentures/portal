@@ -22,9 +22,9 @@ async function loginSteadyStack(enabledCollections, address) {
     return {
         symbol: partner.symbol,
         multi: partner.multiplier,
-        img: partner.imageUri.replace("[ID]", `${selectedNft.tokenId}`),
+        img: partner.imageUri.replace("[ID]", `${selectedNft}`),
         img_fallback: partner.logo,
-        id: selectedNft.tokenId,
+        id: selectedNft,
         ACL: ACLs.Partner
     }
 }

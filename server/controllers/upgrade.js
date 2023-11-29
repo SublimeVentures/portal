@@ -13,6 +13,7 @@ const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 const {getOfferById} = require("../queries/offers.query");
 const {bookAllocationGuaranteed} = require("../queries/invest.query");
 const {getUserAllocationMax, roundAmount} = require("../../src/lib/investment");
+const {isBased} = require("../../src/lib/utils");
 
 async function useGuaranteed(offerId, user, transaction) {
     const {userId} = user
@@ -61,9 +62,14 @@ async function useUpgrade(user, req) {
         offerId = Number(req.params.id)
         storeId = Number(req.params.upgrade)
 
-        //todo: blocker on increased allocation
-        if (storeId !== PremiumItemsENUM.Guaranteed && storeId !== PremiumItemsENUM.Increased) {
-            throw new Error("Wrong Upgrade")
+        if (isBased) {
+            if (storeId < PremiumItemsENUM.Guaranteed && storeId > PremiumItemsENUM.Increased) {
+                throw new Error("Wrong Upgrade");
+            }
+        } else {
+            if (storeId !== PremiumItemsENUM.Guaranteed) {
+                throw new Error("Wrong Upgrade");
+            }
         }
 
         const {userId} = user

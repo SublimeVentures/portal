@@ -78,8 +78,6 @@ export const AppOfferDetails = ({account}) => {
     const guaranteedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
     const increasedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Increased)
 
-    console.log("guaranteedUsed",guaranteedUsed)
-    console.log("increasedUsed",increasedUsed)
 
     const paramsInvest = {
         offer: offerData?.offer,

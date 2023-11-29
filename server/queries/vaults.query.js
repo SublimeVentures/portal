@@ -1,7 +1,9 @@
 const {models} = require('../services/db/db.init');
+const db = require('../services/db/db.init');
 const {Op} = require("sequelize");
 const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
+const {OfferAccessACL,aclToOfferAccessMap } = require("../../src/lib/authHelpers");
 
 async function getUserInvestment(userId, offerId) {
     try {
@@ -20,8 +22,9 @@ async function getUserInvestment(userId, offerId) {
 
 }
 
-async function getUserVault(userId) {
+async function getUserVault(userId, ACL) {
     try {
+        const allowedOfferAccesses = aclToOfferAccessMap[ACL];
         return models.vault.findAll({
             where: {
                 userId,
@@ -34,7 +37,10 @@ async function getUserVault(userId) {
             ],
             include: {
                 attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
-                model: models.offer
+                model: models.offer,
+                where: {
+                    access: allowedOfferAccesses.length > 0 ? { [Op.in]: allowedOfferAccesses } : null
+                }
             },
             raw: true
         })

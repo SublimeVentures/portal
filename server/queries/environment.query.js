@@ -1,4 +1,4 @@
-const { models } = require('../services/db/db.init');
+const {models} = require('../services/db/db.init');
 const {isBased} = require("../../src/lib/utils");
 const logger = require("../../src/lib/logger");
 
@@ -8,19 +8,18 @@ async function getEnvironment() {
 
     //PAARAMS :: fetch global `environment`
     const envGlobal_raw = await models.environment.findAll({raw: true});
-    const envGlobal = Object.assign({}, ...(envGlobal_raw.map(item => ({ [item.name]: item.value }) )));
+    const envGlobal = Object.assign({}, ...(envGlobal_raw.map(item => ({[item.name]: item.value}))));
     environment = {...envGlobal, ...environment}
 
     //PARAMS :: fetch `environment_TENANT` table
     let envTenant_raw
-    if(isBased) {
+    if (isBased) {
         envTenant_raw = await models.environment_based.findAll({raw: true});
     } else {
         envTenant_raw = await models.environment_citcap.findAll({raw: true});
     }
-    const envTenant = Object.assign({}, ...(envTenant_raw.map(item => ({ [item.name]: item.value ? item.value : item.valueJSON }) )));
+    const envTenant = Object.assign({}, ...(envTenant_raw.map(item => ({[item.name]: item.value ? item.value : item.valueJSON}))));
     environment = {...envTenant, ...environment}
-
 
 
     //PRAM :: `isDev`
@@ -30,10 +29,10 @@ async function getEnvironment() {
 
     //PARAM :: `diamond`
     const diamonds = await models.diamond.findAll({include: {model: models.network}, raw: true});
-    console.log("diamonds",diamonds)
+
     let parsedDiamonds = {}
     diamonds.forEach(el => {
-        if(parsedDiamonds[el.tenant]) {
+        if (parsedDiamonds[el.tenant]) {
             parsedDiamonds[el.tenant][el.chainId] = el.address
         } else {
             parsedDiamonds[el.tenant] = {}
@@ -48,22 +47,40 @@ async function getEnvironment() {
 
 
     //PARAM :: `currencies`
-    const currencies = await models.currency.findAll({where: {isSettlement: true}, include: {model: models.network, where: {isDev}}, raw: true});
+    const currencies = await models.currency.findAll({
+        where: {isSettlement: true},
+        include: {model: models.network, where: {isDev}},
+        raw: true
+    });
     let parsedCurrencies = {}
     currencies.forEach(el => {
-        if(!parsedCurrencies[el.chainId]) parsedCurrencies[el.chainId] = {}
-        parsedCurrencies[el.chainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
+        if (!parsedCurrencies[el.chainId]) parsedCurrencies[el.chainId] = {}
+        parsedCurrencies[el.chainId][el.address] = {
+            name: el.name,
+            symbol: el.symbol,
+            precision: el.precision,
+            isSettlement: el.isSettlement
+        }
     })
     environment.currencies = parsedCurrencies
 
 
     //PARAM :: `currenciesStore`
-    const currenciesStore = isBased ? currencies : await models.currency.findAll({where: {isSettlement: false}, include: {model: models.network, where: {isDev}}, raw: true});
+    const currenciesStore = isBased ? currencies : await models.currency.findAll({
+        where: {isSettlement: false},
+        include: {model: models.network, where: {isDev}},
+        raw: true
+    });
     let parsedCurrenciesStore = {}
 
     currenciesStore.forEach(el => {
-        if(!parsedCurrenciesStore[el.chainId]) parsedCurrenciesStore[el.chainId] = {}
-        parsedCurrenciesStore[el.chainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
+        if (!parsedCurrenciesStore[el.chainId]) parsedCurrenciesStore[el.chainId] = {}
+        parsedCurrenciesStore[el.chainId][el.address] = {
+            name: el.name,
+            symbol: el.symbol,
+            precision: el.precision,
+            isSettlement: el.isSettlement
+        }
     })
     environment.currenciesStore = parsedCurrenciesStore
 
@@ -81,18 +98,15 @@ async function getEnvironment() {
     environment.stats.funded = funded + Number(environment.investedInjected)
 
 
-    //-- PARAM :: `ntData`
-    if(!isBased) {
-        environment.ntData = {
-            S1: partners.find(el => el.symbol === "NTCTZN")?.address,
-            S2: partners.find(el => el.symbol === "NTOCTZN")?.address,
-            staked: partners.find(el => el.symbol === "CTZN")?.address,
-            transcendence: partners.find(el => el.symbol === "CITCAP")?.address,
-        }
+    environment.ntData = {
+        S1: partners.find(el => el.symbol === "NTCTZN")?.address,
+        S2: partners.find(el => el.symbol === "NTOCTZN")?.address,
+        staked: partners.find(el => el.symbol === "CTZN")?.address,
+        transcendence: partners.find(el => el.symbol === "CITCAP")?.address,
     }
     logger.error(`ENVS - ${process.env.NEXT_PUBLIC_SITE}`, {environment});
 
     return environment
 }
 
-module.exports = { getEnvironment }
+module.exports = {getEnvironment}

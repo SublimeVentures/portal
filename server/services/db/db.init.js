@@ -20,8 +20,8 @@ if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
             rejectUnauthorized: false
         }
     }
-    connection.logging = false
-    // connection.logging = logger.info.bind(logger)
+    // connection.logging = false
+    connection.logging = logger.info.bind(logger)
 } else {
     connection.ssl = false
     connection.logging = false

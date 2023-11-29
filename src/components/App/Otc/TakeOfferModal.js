@@ -56,7 +56,7 @@ export default function TakeOfferModal({model, setter, props}) {
     }
 
     const buttonFn = async () => {
-        console.log("transactionProps - should feed new signature? ",  signature, signature?.expiry < moment.utc().unix())
+
         if(signature?.expiry && signature.expiry > moment.utc().unix()) {
             blockchainRef.current.runProcess();
         } else {

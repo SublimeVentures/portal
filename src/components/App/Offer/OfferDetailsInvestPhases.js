@@ -86,12 +86,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const [cookies, setCookie, removeCookie] = useCookies();
     const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
-    console.log("upgradesUse",upgradesUse)
 
-    //migrated
     const {ACL, isStaked} = account
     const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
-    //migrated end
 
 
     const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
@@ -173,7 +170,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const startInvestmentProcess = async () => {
         setButtonLoading(true)
         const response = await fetchHash(offer.id, investmentAmount, selectedCurrency.address, chain.id)
-        console.log("response", response)
         if (!response.ok) {
             setErrorMsg(response.code)
             setErrorModal(true)
@@ -188,7 +184,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const processExistingSession = async (cookie) => {
         setButtonLoading(true)
         const cookieData = cookie.split('_')
-        console.log("cookie", cookieData)
         try {
             const savedTimestamp = Number(cookieData[2])
             const savedAmount = Number(cookieData[1])
@@ -205,7 +200,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 setRestoreHashModal(true)
             }
         }catch(e) {
-            console.log("bad cookie")
             removeCookie(cookieReservation)
             await startInvestmentProcess()
         }
@@ -263,7 +257,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     useEffect(() => {
         if(!offer) return
-        console.log("refresh")
         const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation?.invested, allocation ? allocation : {})
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
@@ -272,7 +265,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         const {isDisabled, text} = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, ntStakeGuard)
         setInvestButtonDisabled(isDisabled)
         setInvestButtonText(text)
-        console.log("refresh allocations",allocations)
 
     }, [
         allocation?.alloFilled,

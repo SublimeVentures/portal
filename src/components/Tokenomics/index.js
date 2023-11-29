@@ -43,7 +43,7 @@ export default function TokenomicsCitCap({}) {
         }
     );
 
-    console.log("data0",data)
+
 
 
     const setAmountHandler = (amt) => {

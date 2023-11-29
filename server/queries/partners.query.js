@@ -20,7 +20,7 @@ async function getPublicPartners() {
 }
 
 async function getPartners(isDev, isBased) {
-    let filter = isBased ? {level: {[Op.gt]: 9}} : {level: {[Op.lt]: 10}}
+    let filter = isBased ? {} : {level: {[Op.lt]: 10}}
 
     try {
         return await models.partner.findAll({

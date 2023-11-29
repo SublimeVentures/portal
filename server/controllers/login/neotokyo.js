@@ -6,6 +6,7 @@ const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 const logger = require("../../../src/lib/logger");
 
 const {serializeError} = require("serialize-error");
+const {isBased} = require("../../../src/lib/utils");
 
 
 async function processS1(tokenIds, isStaked = false) {
@@ -21,7 +22,7 @@ async function processS1(tokenIds, isStaked = false) {
         return data.map(item => {
             const rewardRateTrait = item.attributes.find(attr => attr.trait_type === 'Reward Rate');
             const rewardRateTraitValue = rewardRateTrait ? Number(rewardRateTrait.value) : 1;
-            const pointMultiplier = getEnv().rewardRate[rewardRateTraitValue] || 1;
+            const pointMultiplier = getEnv()?.rewardRate ? (getEnv()?.rewardRate[rewardRateTraitValue] || 1) : 0;
 
             const tokenIdMatch = item.name.match(/\d+/);
             const tokenId = tokenIdMatch ? Number(tokenIdMatch[0]) : 999999;
@@ -40,9 +41,9 @@ async function processS1(tokenIds, isStaked = false) {
     }
 }
 
-async function isS1(nfts){
+async function isS1(nfts) {
     const ownedS1 = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.S1.toLowerCase())
-    if(ownedS1.length === 0) return [];
+    if (ownedS1.length === 0) return [];
     const tokenIds = ownedS1.map(nft => nft.token_id);
     return await processS1(tokenIds)
 }
@@ -57,7 +58,7 @@ async function processS2(tokenIds, isStaked = false) {
         return data.map(item => {
             const allocationTrait = item.attributes.find(attr => attr.trait_type === 'Allocation');
             const allocationTraitValue = allocationTrait ? allocationTrait.value : "Low";
-            const pointMultiplier = getEnv().allocationTrait[allocationTraitValue] || 1;
+            const pointMultiplier = getEnv()?.allocationTrait ? getEnv()?.allocationTrait[allocationTraitValue] || 1 : 0;
 
             const tokenIdMatch = item.name.match(/\d+/);
             const tokenId = tokenIdMatch ? Number(tokenIdMatch[0]) : 888888;
@@ -76,9 +77,9 @@ async function processS2(tokenIds, isStaked = false) {
     }
 }
 
-async function isS2(nfts){
+async function isS2(nfts) {
     const ownedS2 = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.S2.toLowerCase())
-    if(ownedS2.length === 0) return [];
+    if (ownedS2.length === 0) return [];
     const tokenIds = ownedS2.map(nft => nft.token_id);
     return await processS2(tokenIds)
 }
@@ -93,9 +94,9 @@ function decodeTokenID(id) {
     };
 }
 
-async function isStaked(nfts){
+async function isStaked(nfts) {
     const ownedStaked = nfts.filter(el => el.token_address.toLowerCase() === getEnv().ntData.staked.toLowerCase())
-    if(ownedStaked.length === 0) return [[], []];
+    if (ownedStaked.length === 0) return [[], []];
 
     const stakedCitizens = ownedStaked.map(stakedNFT => {
         const decoded = decodeTokenID(stakedNFT.token_id)
@@ -172,7 +173,7 @@ function updateEliteStatus(S1_all, haveElites) {
 
         // If found, update isElite property to true
         if (isEliteFound) {
-            return { ...element, isElite: true };
+            return {...element, isElite: true};
         }
         return element;
     });
@@ -182,7 +183,7 @@ function calcAllocationBase(NFTs) {
     let allocationBase = 0
 
     NFTs.forEach(identity => {
-        if(identity.isS1) {
+        if (identity.isS1) {
             allocationBase += identity.isElite ? getEnv().allocationBase.elite * 10000 : getEnv().allocationBase.s1 * 10000
         } else {
             allocationBase += getEnv().allocationBase.s2 * 10000
@@ -216,6 +217,45 @@ const updateSessionStaking = async (user) => {
     }
 }
 
+async function loginNeoTokyoBased(nfts, partners) {
+    try {
+        const nftsFiltered = nfts.filter(el => el.partnerDetails.level <= 3)
+        if(nftsFiltered.length === 0) return
+
+        const [S1_staked, S2_staked] = await isStaked(nftsFiltered)
+        const S1 = await isS1(nftsFiltered)
+        const S2 = await isS2(nftsFiltered)
+
+        let S1_all = [...S1_staked, ...S1]
+        let S2_all = [...S2_staked, ...S2]
+
+        if (S1_all.length === 0 && S2_all.length === 0) return false;
+
+        let collectionDetails
+        let nftDisplay
+        if(S1_all.length > 0) {
+            nftDisplay = S1_all[0]
+            collectionDetails = partners.find(el => el.address.toLowerCase() == getEnv().ntData.S1.toLowerCase())
+        } else {
+            nftDisplay = S2_all[0]
+            collectionDetails = partners.find(el => el.address.toLowerCase() == getEnv().ntData.S2.toLowerCase())
+        }
+
+        return {
+            symbol: nftDisplay.isS1 ? "NTCTZN" : "NTOCTZN",
+            multi: collectionDetails.multiplier,
+            img: nftDisplay.image,
+            img_fallback: collectionDetails.logo,
+            id: nftDisplay.tokenId,
+            ACL: ACLs.Partner,
+        }
+    } catch (error) {
+        logger.error('LOGIN :: [loginNeoTokyo]', {error: serializeError(error)});
+        return false
+    }
+
+}
+
 async function loginNeoTokyo(nfts, partners, address) {
     try {
         const [S1_staked, S2_staked] = await isStaked(nfts)
@@ -225,14 +265,15 @@ async function loginNeoTokyo(nfts, partners, address) {
         let S1_all = [...S1_staked, ...S1]
         let S2_all = [...S2_staked, ...S2]
 
-        if(S1_all.length === 0 && S2_all.length ===0) return false;
+        if (S1_all.length === 0 && S2_all.length === 0) return false;
+
 
         //ELITES DATA ENRICH
         let haveElites = []
-        if(S1_all.length > 0) {
+        if (S1_all.length > 0) {
             const S1_ids = S1_all.map(nft => nft.tokenId);
             haveElites = await checkElite(S1_ids)
-            if(haveElites.length>0) {
+            if (haveElites.length > 0) {
                 S1_all = updateEliteStatus(S1_all, haveElites);
             }
         }
@@ -253,7 +294,7 @@ async function loginNeoTokyo(nfts, partners, address) {
             NFTs
         )
 
-        const nftDisplay = haveElites.length>0 ? S1_all.find(el=>el.isElite) : (S1_all.length>0 ? NFTs.find(el=>el.isS1) : NFTs.find(el=>!el.isS1))
+        const nftDisplay = haveElites.length > 0 ? S1_all.find(el => el.isElite) : (S1_all.length > 0 ? NFTs.find(el => el.isS1) : NFTs.find(el => !el.isS1))
 
         return {
             symbol: nftDisplay.isS1 ? "NTCTZN" : "NTOCTZN",
@@ -262,17 +303,17 @@ async function loginNeoTokyo(nfts, partners, address) {
             img: nftDisplay.image,
             img_fallback: nftDisplay.image,
             id: nftDisplay.tokenId,
-            ACL: ACLs.Admin, //todo:
-            // ACL: ACLs.NeoTokyo,
+            ACL: ACLs.NeoTokyo,
             //CitCap specific params
-            isElite: haveElites.length>0,
+            isElite: haveElites.length > 0,
             isS1: nftDisplay.isS1,
             stakeReq: Number(getEnv().stakeCitCapAmount),
             isStaked: didUserStake,
             stakeSize,
             stakeDate
         }
-    } catch(error) {
+
+    } catch (error) {
         logger.error('LOGIN :: [loginNeoTokyo]', {error: serializeError(error)});
         return false
     }
@@ -280,5 +321,4 @@ async function loginNeoTokyo(nfts, partners, address) {
 }
 
 
-
-module.exports = {loginNeoTokyo, updateSessionStaking}
+module.exports = {loginNeoTokyo, updateSessionStaking, loginNeoTokyoBased}

@@ -23,80 +23,57 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## ToDo
 =================
 
-//tasks
-- webapp
-  - calculator nt
-  - remove increased allo
-  - ops -ann
-  - ops - tasks
-  - ops - costs
-  - nfts
+[//]: # (- currencies)
+[//]: # (- delgates)
+[//]: # (- diamonds)
+[//]: # (- environment)
+[//]: # (- environemnt_citcap)
+[//]: # (- vaults)
+[//]: # (- stroe)
+[//]: # (- networks)
+[//]: # (- partners)
+[//]: # (- onchain)
+[//]: # (- raises)
+[//]: # (- ntElites)
+[//]: # (- lootbox)
+[//]: # (- offers)
+[//]: # (- upgrade)
+[//]: # (- storeMysterybox)
+[//]: # (- storeUser)
+[//]: # (- nt stake/withdraw)
 
-- 
-  - migration
-    - old data
-    - nt stake/withdraw
-  -  wallet split
+- otcDeal
+- otcLocsk
 
 
-  
-  - fix withRetry to use my flow
+- notifications
+- injectedUsers
+- participants
 
-    - generate
-    - graphic for login
-    - logo mobile
-  - returned fail log
-  - bytes burn
-  - do vault / guaranteed investment check based on bookings, not vault
-- take money back for testing
-- rounding on progress bar + req min stake
-- allow investment on booking (currently we have disabled button)
-- allocation to high error
-- wagmi - json rpc
-- auto-close investment after reaching success
-- make sure guaranteed allow rebooking
-- reset hash on chain change on otc and investment size
 
-- refetch env + params.output.allocationUser_min
-- fliper to service worker to ensure it will refrehs correctly
-- check increaed allocation to expire
-- guaranteed allocation cant give more than 5k
-- add notfications for refunds
-- test separate pools
-- guaranteed - midify to be based on canInvestMore and ensure it will allows user to restart 
-- check guarnateed sub on transfer receive
-- guaranteed (either day before or smaller amount to book [select]) && reserveSpot() at  const totalAllocation && bookAllocation()  && bookAllocationGuaranteed
-- checkAllocationConditions - add support for offer.alloMax
-- user can have only three active bookings (expire old, inform on frontend, lock from new on frontend if more than 3)
-- add refund flow
-- if someone is whale, should always return the all available allo left (getOfferAllocation())
-  Add click pointer on side toolbars in slider
-  otc to sidebar
-  otc bot
+- ops - tasks
+- ops - costs
 
-- bg in sidebar
-- auth redirect fix
-- clean payload in owned allocation
-- dont send whole otc package for sell fill offers
-- check prices on-chain
-- in app vote for whales
-- custom 404 page
-- 500, 1000, user max button under investment size
+- check max allocation in based
+- test guarnateed buy
+- check expiry on booking window close
+- ensure invest button will work if i have valid booking but allo is full
 
-- whale NFT
-- whale page
-- invest from stake
-- whale deposit/ withdraw features in settings
-- onboarding whales
-- referral system
-- update data / refeed cach on url call
 
-- delegate cash fix
-- staking (force eth)
-  - delegate
-  - change total staked
-  - wyciagnij swoje
-- delegated -> invest to vault or hot
+fix vault
+[
+  {
+    "id": 6972,
+    "owner": "0x11bDEAB0a06Eb8eCDeAb105BF20d099372435755",
+    "offerId": null,
+    "createdAt": "2023-09-07 15:23:35.890000 +00:00",
+    "invested": 4950,
+    "refund": 0,
+    "refundState": 0,
+    "locked": 0,
+    "updatedAt": "2023-09-07 15:23:36.384000 +00:00"
+  }
+]
 
 ///REQUIREMENTS:
 - wallet cant be the same as last two investments

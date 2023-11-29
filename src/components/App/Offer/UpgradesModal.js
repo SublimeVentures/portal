@@ -126,7 +126,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                         image={imageId}
                         isRightPhase={isStageEnabled}
                     />
-                    <UpgradesModalItem
+                    {isBased && <UpgradesModalItem
                         itemType={PremiumItemsENUM.Increased}
                         name={"Increased Allocation"}
                         description={descriptionIncreased()}
@@ -136,7 +136,8 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                         used={increasedUsed}
                         image={imageId}
                         isRightPhase={isStageEnabled}
-                    />
+                    />}
+
                 </div>
 
                 <div className={"pt-5 pb-2 mt-auto mx-auto"}>

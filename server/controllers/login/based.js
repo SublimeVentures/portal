@@ -3,23 +3,22 @@ const {getEnv} = require("../../services/db");
 const {ACLs} = require("../../../src/lib/authHelpers");
 const {isDelegated} = require("./delegated");
 const {isPartnerSpecial} = require("./partners");
-const {getPartnerAvatar, filterNFTsByPartnersAndLevel, selectHighestMultiplier} = require("./helper");
+const {getPartnerAvatar, selectHighestMultiplier} = require("./helper");
 
 
-async function isPartner(nfts, partners) {
-    const regularPartners = partners.filter(el => el.level === 10)
-    if (regularPartners.length === 0) return false
+async function isPartner(allNFTs) {
+    const regularPartners = allNFTs.filter(el => el.partnerDetails.level === 10)
+    if(regularPartners.length === 0) return
 
-    const ownedNfts_basePartners = filterNFTsByPartnersAndLevel(nfts, regularPartners, 10)
-    const { nftWithHighestMultiplier, highestMultiplier, collectionSetup } = selectHighestMultiplier(ownedNfts_basePartners, regularPartners)
+    const { nftWithHighestMultiplier, highestMultiplier } = selectHighestMultiplier(regularPartners)
 
-    const tokenId = nftWithHighestMultiplier.token_id ? Number(nftWithHighestMultiplier.token_id) : Number(nftWithHighestMultiplier.tokenId)
-    const image = await getPartnerAvatar(tokenId, collectionSetup)
+    const tokenId = nftWithHighestMultiplier?.token_id ? Number(nftWithHighestMultiplier.token_id) : Number(nftWithHighestMultiplier.tokenId)
+    const image = await getPartnerAvatar(tokenId, nftWithHighestMultiplier.partnerDetails)
     return {
-        symbol: collectionSetup.symbol,
+        symbol: nftWithHighestMultiplier.partnerDetails.symbol,
         multi: highestMultiplier,
         img: image,
-        img_fallback: collectionSetup.logo,
+        img_fallback: nftWithHighestMultiplier.partnerDetails.logo,
         id: tokenId,
         ACL: ACLs.Partner
     }
@@ -40,7 +39,6 @@ async function isInjectedUser(address) {
 
 
 async function isWhale(ownedNfts) {
-    if (ownedNfts.length === 0) return false
     const ownedWhale = ownedNfts.find(el => el.token_address.toLowerCase() === getEnv().whaleId.toLowerCase())
     if (!ownedWhale) return false;
 
@@ -52,12 +50,24 @@ async function isWhale(ownedNfts) {
     }
 }
 
+function assignLevel(nfts, partners) {
+    const partnerMap = new Map(partners.map(partner => [partner.address.toLowerCase(), partner]));
+
+    nfts.forEach(nft => {
+        nft.partnerDetails = partnerMap.get(nft.token_address.toLowerCase());
+    });
+
+    return nfts;
+}
+
 async function loginBased(nfts, partners, address) {
-    let type = await isWhale(nfts)
+    const nftsEnriched = assignLevel(nfts, partners)
+
+    let type = await isWhale(nftsEnriched)
     if (!type) type = await isPartner(nfts, partners)
-    if (!type) type = await isInjectedUser(address)
+    // if (!type) type = await isInjectedUser(address)
     if (!type) type = await isPartnerSpecial(nfts, partners, address)
-    if (!type) type = await isDelegated(address, partners)
+    // if (!type) type = await isDelegated(address, partners)
 
     return type
 }

@@ -127,7 +127,7 @@ export default function AppOtc({account}) {
                                                       icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
                     />
                 </div>
-                {renderPage()}
+                {/*{renderPage()}*/}
             </div>
 
         </>

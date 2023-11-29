@@ -84,7 +84,6 @@ module.exports = (sequelize) => {
         },
     }, {
         indexes: [
-            {unique: false, fields: ['offerId', 'dealId']},
             {unique: false, fields: ['maker']},
             {unique: false, fields: ['taker']},
         ],

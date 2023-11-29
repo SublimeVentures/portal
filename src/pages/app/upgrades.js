@@ -38,8 +38,6 @@ export default function AppUpgrades({account}) {
 
     const storeData = response?.store?.filter(el => el.id !== PremiumItemsENUM.MysteryBox)
     const storeEnvironment = response?.env
-    const supportedNetworks = storeEnvironment?.currency ? Object.keys(storeEnvironment?.currency) : []
-
 
     const chainId = chain?.id
     const diamondContract = storeEnvironment?.contract[chainId]
