@@ -103,7 +103,7 @@ function getOfferDetailsWhale(offer, template) {
 }
 
 function getOfferDetailsPartner(offer, template) {
-    if (offer.accessPartnerDate && offer.accessPartnerDate > moment.utc()) {
+    if (offer.accessPartnerDate && offer.accessPartnerDate > moment.utc().unix()) {
         return false
     }
     template.d_open = offer.d_openPartner

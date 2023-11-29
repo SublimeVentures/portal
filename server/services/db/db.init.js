@@ -28,7 +28,7 @@ if(process.env.IS_LOCAL_DB === 'false' || !process.env.IS_LOCAL_DB) {
     // connection.logging = logger.info.bind(console.log)
 }
 
-const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE_URL
+const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE
 
 const sequelize = new Sequelize(URI, connection)
 

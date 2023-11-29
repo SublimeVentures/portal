@@ -36,7 +36,6 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
  *         saveDataFn: setBlockchainData        -/ point setter for saving JSON
  *     }
 ******************/
-//todo: setIsReady w stepach
 
 const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
 

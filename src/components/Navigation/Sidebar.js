@@ -98,7 +98,7 @@ export default function Sidebar({account}) {
                         </div>
                     </Link>
                     <ChangeNetwork/>
-                    {/*<ChangeAddress account={account}/>*/}
+                    <ChangeAddress account={account}/>
 
                 </div>
                 <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}>

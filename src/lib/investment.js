@@ -12,7 +12,7 @@ function roundAmount(amount) {
 
 function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min
-    if (isBased && (account.ACL !== ACLs.NeoTokyo || account.ACL !== ACLs.Admin)) { //todo: celanup for admin
+    if (isBased && (account.ACL !== ACLs.NeoTokyo)) {
         allocationUser_base = account.multi * offer.alloMin
         allocationUser_min = offer.alloMin
     } else {

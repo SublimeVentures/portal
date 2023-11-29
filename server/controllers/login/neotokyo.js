@@ -288,7 +288,7 @@ async function loginNeoTokyo(nfts, partners, address) {
 
         const allocation_base = calcAllocationBase(NFTs)
         const allocation_bonus = calcAllocationExtra(
-            200, //todo:
+            200,
             // stakeSize,
             extra_bytes_owned,
             NFTs
