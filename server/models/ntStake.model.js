@@ -1,41 +1,30 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('vaults', {
+    sequelize.define('ntStake', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
         },
-        owner: {
-            type: DataTypes.STRING,
+        tokenId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
-        invested: {
+        season: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
             allowNull: false,
         },
-        refund: {
+        bytes: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
             allowNull: false,
         },
-        refundState: {
+        timelock: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        locked: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
             allowNull: false,
         }
     }, {
-        indexes: [
-            {unique: true, fields: ['owner', 'offerId']},
-        ],
         freezeTableName: true,
         timestamps: true
     });

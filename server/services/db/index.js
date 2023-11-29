@@ -1,8 +1,6 @@
 const db = require('./db.init');
 const {getEnvironment} = require("../../queries/environment.query");
-const Sentry = require("@sentry/nextjs");
-// const {insertData} = require("../../queries/tem_del_inject");
-
+const logger = require("../../../src/lib/logger");
 let env = {}
 
 
@@ -15,13 +13,11 @@ async function connectDB() {
         await db.authenticate();
         // await db.sync({alter: true});
         // await db.sync();
-        console.log("|---- DB: connected")
+        logger.info("|---- DB: connected")
         env = await getEnvironment()
-        // await insertData()
-        console.log("|---- ENV: ", env)
+        logger.info("|---- ENV: ", env)
     } catch (error) {
-        Sentry.captureException({location: "connectDB", error});
-        console.error("DB connection failed.", error);
+        logger.error("connectDB", error);
         process.exit(1);
     }
 }

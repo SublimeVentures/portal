@@ -20,49 +20,32 @@ const getPartnerAvatar = async (tokenId, collectionDetails) => {
     return metadata.image.startsWith("http") ? metadata.image : `${getEnv().piniataGateway}ipfs/${metadata.image.split("ipfs://")[1]}`;
 };
 
-function selectHighestMultiplier(ownedNfts, enabledCollections) {
+function selectHighestMultiplier(ownedNfts) {
     let nftWithHighestMultiplier = null;
     let highestMultiplier = 0;
-    let collectionSetup = null;
 
     for (const nft of ownedNfts) {
-        const collectionDetails = enabledCollections.find(el => el.address.toLowerCase() === nft.token_address.toLowerCase());
-
-        if (!collectionDetails) continue; // Skip if the collection is not enabled
 
         let multiplier;
 
-        if (collectionDetails.isMetadata) {
-            const attributeVal = nft.normalized_metadata.attributes.find(el => el.trait_type === collectionDetails.metadataProp)?.value;
-            multiplier = collectionDetails.metadataVal[attributeVal] || 0;
+        if (nft.partnerDetails.isMetadata) {
+            const attributeVal = nft.normalized_metadata.attributes.find(el => el.trait_type === nft.partnerDetails.metadataProp)?.value;
+            multiplier = nft.partnerDetails.metadataVal[attributeVal] || 0;
         } else {
-            multiplier = collectionDetails.multiplier || 0;
+            multiplier = nft.partnerDetails.multiplier || 0;
         }
 
         if (multiplier > highestMultiplier) {
             highestMultiplier = multiplier;
             nftWithHighestMultiplier = nft;
-            collectionSetup = collectionDetails
         }
     }
 
     return {
         nftWithHighestMultiplier,
         highestMultiplier,
-        collectionSetup
     }
 }
 
-function filterNFTsByPartnersAndLevel(nfts, allPartners, requiredPartnerLevel) {
-    // Filter the nfts array
-    return nfts.filter((nft) => {
-        // Find a matching partner with the same address (case insensitive) and level 10
-        const matchingPartner = allPartners.find((partner) => {
-            return partner.address.toLowerCase() === nft.token_address.toLowerCase() && partner.level === requiredPartnerLevel;
-        });
-        // Return true to keep this NFT if there is a matching partner
-        return matchingPartner !== undefined;
-    });
-}
 
-module.exports = {getPartnerAvatar, selectHighestMultiplier, filterNFTsByPartnersAndLevel}
+module.exports = {getPartnerAvatar, selectHighestMultiplier}

@@ -33,8 +33,8 @@ export default function TakeOfferModal({model, setter, props}) {
     if(!currentMarket?.name || !offerDetails?.currency || !diamond) return
     const userAllocation = vault.find(el => el.offerId === currentMarket.id)
     const ownedAllocation = userAllocation ? userAllocation.invested - userAllocation.locked : 0
-    const selectedCurrency =  currencyListAll[offerDetails.networkChainId][offerDetails.currency]
-    const chainDesired = chains.find(el => el.id === offerDetails?.networkChainId)
+    const selectedCurrency =  currencyListAll[offerDetails.chainId][offerDetails.currency]
+    const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
 
@@ -56,11 +56,11 @@ export default function TakeOfferModal({model, setter, props}) {
     }
 
     const buttonFn = async () => {
-        console.log("transactionProps - should feed new signature? ",  signature, signature?.expiry < moment.utc().unix())
+
         if(signature?.expiry && signature.expiry > moment.utc().unix()) {
             blockchainRef.current.runProcess();
         } else {
-            const transaction = await getSignature(currentMarket.id, offerDetails.networkChainId, currentMarket.market, offerDetails.dealId)
+            const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
             if (transaction.ok) {
                 setSignature(transaction.data)
             } else {
@@ -71,7 +71,7 @@ export default function TakeOfferModal({model, setter, props}) {
 
     const blockchainProps = {
         processingData: {
-            requiredNetwork: offerDetails?.networkChainId,
+            requiredNetwork: offerDetails?.chainId,
             forcePrecheck: false,
             amount: totalPayment,
             amountAllowance: totalPayment,

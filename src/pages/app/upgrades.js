@@ -15,7 +15,7 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
 import {useNetwork} from "wagmi";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 
@@ -38,8 +38,6 @@ export default function AppUpgrades({account}) {
 
     const storeData = response?.store?.filter(el => el.id !== PremiumItemsENUM.MysteryBox)
     const storeEnvironment = response?.env
-    const supportedNetworks = storeEnvironment?.currency ? Object.keys(storeEnvironment?.currency) : []
-
 
     const chainId = chain?.id
     const diamondContract = storeEnvironment?.contract[chainId]

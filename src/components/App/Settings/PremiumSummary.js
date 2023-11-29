@@ -6,7 +6,7 @@ import {isBased} from "@/lib/utils";
 import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import Link from "next/link";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 
 export default function PremiumSummary({data}) {
     const guaranteed = data?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)

@@ -28,7 +28,7 @@ export default function LoginCitCap({}) {
         setIsLoginLoading(true)
         setMessageSigned(true)
         try {
-            const time = moment().unix();
+            const time = moment.utc().unix();
             const nonce = uuidv4();
             const message = "INVEST EARLY\n" +
                 `INVEST WITH THE CITADEL\n\n` +
@@ -86,7 +86,7 @@ export default function LoginCitCap({}) {
                 <div className="flex flex-col p-10 sm:p-20 w-full sm:w-max font-accent blurred glareBg bg-black lg:flex-row ">
                     <div className="flex flex-col flex-1 ">
                         <div className={"pb-2"}>Confirm your Citizenship.</div>
-                        <div className={"pb-10"}><Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"}/></div>
+                        {/*<div className={"pb-10"}><Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"}/></div>*/}
                         <div className="flex flex-col gap-5 justify-end flex-1 mt-10 lg:mt-0">
                             <CitCapButton text={'CONNECT'}  isLoading={isLoginLoading }  handler={() => { handleConnect()}} isWhite={true} icon={<PlayIcon className={ButtonCitCapIconSize.hero}/>}/>
                         </div>

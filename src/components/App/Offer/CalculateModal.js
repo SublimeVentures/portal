@@ -8,7 +8,7 @@ import {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 
 export default function CalculateModal({model, setter, calculateModalProps}) {
-    const { maxAllocation, offer } = calculateModalProps
+    const { allocationData } = calculateModalProps
 
     const [amount, setAmount] = useState(0)
     const [price, setPrice] = useState(0)
@@ -24,7 +24,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
     }
 
     const calcPrice = (multi, amt) => {
-        const value = (amt * (100 - offer.tax)/100  * multi - amt) * 95/100
+        const value = (amt * multi - amt) * 95/100
 
         setPrice(
             Number(
@@ -65,8 +65,8 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 <div className={'pt-10'}>
                     <Input type={'number'}
                            placeholder={'Buying allocation'}
-                           max={maxAllocation}
-                           min={offer.alloMin}
+                           max={allocationData.allocationUser_max}
+                           min={allocationData.allocationUser_min}
                            setStatus={setStatusAmount}
                            setInput={setAmountHandler}
                            input={amount}
@@ -94,7 +94,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 </div>
 
 
-                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x. <Linker url={ExternalLinks.INVESTMENT_RETURN}/></div>
+                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x.</div>
             </div>
         )
     }

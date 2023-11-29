@@ -1,29 +1,33 @@
-const Sentry = require("@sentry/nextjs");
 const {models} = require('../services/db/db.init');
+const db = require('../services/db/db.init');
 const {Op} = require("sequelize");
+const logger = require("../../src/lib/logger");
+const {serializeError} = require("serialize-error");
+const {OfferAccessACL,aclToOfferAccessMap } = require("../../src/lib/authHelpers");
 
-async function getUserInvestment(owner, offerId) {
+async function getUserInvestment(userId, offerId) {
     try {
-        return models.vaults.findOne({
+        return models.vault.findOne({
             attributes: ['invested'],
             where: {
-                owner,
+                userId,
                 offerId
             },
             raw: true
         });
-    } catch (e) {
-        Sentry.captureException({location: "getUserInvestment", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getUserInvestment]', {error: serializeError(error), userId, offerId});
     }
     return {}
 
 }
 
-async function getUserVault(owner) {
+async function getUserVault(userId, ACL) {
     try {
-        return models.vaults.findAll({
+        const allowedOfferAccesses = aclToOfferAccessMap[ACL];
+        return models.vault.findAll({
             where: {
-                owner,
+                userId,
                 invested: {
                     [Op.not]: 0
                 }
@@ -33,15 +37,17 @@ async function getUserVault(owner) {
             ],
             include: {
                 attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
-                model: models.offers
+                model: models.offer,
+                where: {
+                    access: allowedOfferAccesses.length > 0 ? { [Op.in]: allowedOfferAccesses } : null
+                }
             },
             raw: true
         })
-    } catch (e) {
-        Sentry.captureException({location: "getUserVault", type: 'query', e});
+    } catch (error) {
+        logger.error('QUERY :: [getUserVault]', {error: serializeError(error), userId});
     }
     return []
-
 }
 
 

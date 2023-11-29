@@ -1,7 +1,7 @@
 import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import {isBased} from "@/lib/utils";
+import {isBased, sleeper} from "@/lib/utils";
 
 
 
@@ -29,8 +29,10 @@ export default function OfferDetailsTopBar({paramsBar}) {
                 <div>
                     <FlipClockCountdown
                         className="flip-clock"
-                        onComplete={() => refreshInvestmentPhase()}
-                        to={moment.unix(phaseNext.startDate)}
+                        onComplete={async () => {
+                            refreshInvestmentPhase()
+                        }}
+                        to={moment.unix(phaseNext.startDate+1)}
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                     />
                 </div>

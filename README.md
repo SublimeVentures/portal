@@ -22,52 +22,58 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## ToDo
 =================
-Add click pointer on side toolbars in slider
-otc to sidebar
-otc bot
-fabweilt
-new relic to webapp
+
+[//]: # (- currencies)
+[//]: # (- delgates)
+[//]: # (- diamonds)
+[//]: # (- environment)
+[//]: # (- environemnt_citcap)
+[//]: # (- vaults)
+[//]: # (- stroe)
+[//]: # (- networks)
+[//]: # (- partners)
+[//]: # (- onchain)
+[//]: # (- raises)
+[//]: # (- ntElites)
+[//]: # (- lootbox)
+[//]: # (- offers)
+[//]: # (- upgrade)
+[//]: # (- storeMysterybox)
+[//]: # (- storeUser)
+[//]: # (- nt stake/withdraw)
+
+- otcDeal
+- otcLocsk
 
 
-- bg in sidebar
-- auth redirect fix
-- clean payload in owned allocation
-- dont send whole otc package for sell fill offers
-- check prices on-chain
+- notifications
+- injectedUsers
+- participants
 
 
-- notion in routes
-- ChatGPT - try more https://discord.com/channels/@me/997001334328918017/1155135672894636132
+- ops - tasks
+- ops - costs
 
-- in app vote
-- custom 404 page
-- 500, 1000, user max button under investment size
-
-- whale NFT
-- whale page
-- invest from stake
-- whale deposit/ withdraw features in settings
-- onboarding whales
-- referral system
-- update data / refeed cach on url call
-
-- delegate cash fix
-- staking (force eth)
-  - delegate
-  - change total staked
-  - wyciagnij swoje
-- delegated -> invest to vault or hot
+- check max allocation in based
+- test guarnateed buy
+- check expiry on booking window close
+- ensure invest button will work if i have valid booking but allo is full
 
 
+fix vault
+[
+  {
+    "id": 6972,
+    "owner": "0x11bDEAB0a06Eb8eCDeAb105BF20d099372435755",
+    "offerId": null,
+    "createdAt": "2023-09-07 15:23:35.890000 +00:00",
+    "invested": 4950,
+    "refund": 0,
+    "refundState": 0,
+    "locked": 0,
+    "updatedAt": "2023-09-07 15:23:36.384000 +00:00"
+  }
+]
 
-
-
-
-
-
-code
-https://discord.com/channels/959614664386424884/959614666852663408/1128581985779064833
-0xb27EE3cDDA91dAe0e68c3fb59C15fff0FADf362f
-
-
-
+///REQUIREMENTS:
+- wallet cant be the same as last two investments

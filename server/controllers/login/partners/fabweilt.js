@@ -5,20 +5,22 @@ const erc20_abi = require('../../../../abi/usdt.abi.json')
 const { Contract } = require('web3');
 
 async function haveBalance(address, partner) {
-    const web3 = getWeb3().onchain[NETWORKS[partner.networkChainId]];
+    const web3 = getWeb3().onchain[NETWORKS[partner.chainId]];
     const contractInstance = new Contract(erc20_abi, partner.address, web3);
 
     try {
         const balance = await contractInstance.methods.balanceOf(address).call();
         return Number(getWeb3().utils.fromWei(`${balance.toString()}`));
     } catch (error) {
-        return false
+
+        return 0
     }
 }
 
 
 async function loginFabwelt(partners, address) {
     const partnersFiltered = partners.filter(el => el.level === 12)
+
     if(!partnersFiltered) return false;
 
     const partnerDetails = partnersFiltered[0]

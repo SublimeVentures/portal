@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import TransparentModal from "@/components/Modal/TransparentModal";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import Linker from "@/components/link";
-import {MYSTERY_TYPES} from "@/lib/premiumHelper";
+import {MYSTERY_TYPES} from "@/lib/enum/store";
 
 
 

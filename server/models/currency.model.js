@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('currencies', {
+    sequelize.define('currency', {
         address: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -22,6 +22,14 @@ module.exports = (sequelize) => {
         },
         isSettlement: {
             type: DataTypes.BOOLEAN,
+        },
+        chainId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'network', // This is a reference to another model
+                key: 'chainId',       // This is the column name of the referenced model
+            }
         },
     }, {
         indexes: [

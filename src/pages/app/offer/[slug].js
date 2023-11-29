@@ -2,7 +2,7 @@ import LayoutApp from '@/components/Layout/LayoutApp';
 import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
 import dynamic from "next/dynamic";
 import {ACLs, verifyID} from "@/lib/authHelpers";
-import {fetchOfferAllocation, fetchOfferDetails, getUpgrades} from "@/fetchers/offer.fetcher";
+import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
 import {useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
 const OfferDetailsDetails = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
@@ -18,7 +18,7 @@ import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestC
 import routes from "@/routes";
 import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 
 export const AppOfferDetails = ({account}) => {
     const router = useRouter()
@@ -29,12 +29,6 @@ export const AppOfferDetails = ({account}) => {
     let [phaseIsClosed, setPhaseIsClosed] = useState(false)
     let [phaseCurrent, setPhaseCurrent] = useState(false)
     let [phaseNext, setPhaseNext] = useState(false)
-
-    // let [activePhase, setActivePhase] = useState(0)
-    // let [isLastPhase, setIsLastPhase] = useState(false)
-    // let [currentPhase, setCurrentPhase] = useState(false)
-    // let [nextPhase, setNextPhase] = useState(false)
-    // let [isClosed, setIsClosed] = useState(false)
 
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
             queryKey: ["offerDetails", {slug, aclCache}],
@@ -65,15 +59,6 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
-    const {isSuccess: upgradesUsedSuccess, data: upgradesUse, refetch: upgradesUsedRefetch} = useQuery({
-            queryKey: ["upgradesUsed", offerData?.offer?.id, aclCache],
-            queryFn: () => getUpgrades(offerData?.offer?.id),
-            enabled: !!offerData?.offer?.id,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-        }
-    );
-
     const feedPhases = () => {
         if(!offerData?.offer) return
         const {isClosed, phaseCurrent, phaseNext} = phases(ACL, offerData.offer)
@@ -90,19 +75,19 @@ export const AppOfferDetails = ({account}) => {
         refreshInvestmentPhase: feedPhases,
     }
 
-    const guaranteedUsed = upgradesUse?.data?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
-    const increasedUsed = upgradesUse?.data?.find(el=>el.storeId === PremiumItemsENUM.Increased)
+    const guaranteedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
+    const increasedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Increased)
+
 
     const paramsInvest = {
         offer: offerData?.offer,
         currencies: offerData?.currencies,
         refetchUserAllocation,
+        isSuccessUserAllocation,
         refetchAllocation,
         userAllocation,
         allocation,
         account,
-        upgradesUsedRefetch,
-        upgradesUsedSuccess,
         upgradesUse: {guaranteedUsed, increasedUsed},
         phaseCurrent
     }
@@ -145,9 +130,9 @@ export const AppOfferDetails = ({account}) => {
     const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - ${getCopy("NAME")}`
     return (
         <>
-            <NextSeo title={pageTitle}/>
-            {renderPage()}
-        </>
+             <NextSeo title={pageTitle}/>
+             {renderPage()}
+         </>
     )
 }
 

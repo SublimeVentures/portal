@@ -45,7 +45,7 @@ export default function LoginBased({}) {
         setIsLoginLoading(true)
         setMessageSigned(true)
         try {
-            const time = moment().unix();
+            const time = moment.utc().unix();
             const nonce = uuidv4();
             const message = "INVEST GROUND FLOOR\n" +
                 "DON'T BE EXIT LIQUIDITY\n\n" +

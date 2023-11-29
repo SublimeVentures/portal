@@ -20,8 +20,8 @@ export default function ErrorModal({model, setter, errorModalProps}) {
                     Encountered error while processing payment currency.<br/><br/> Please report issue on Discord.
                 </>}
                 {code === "OVERALLOCATED" && <>
-                    There are some <span className="text-gold">pending transactions</span> that booked the remaining allocation.
-                    <br/><br/><div className="font-bold">There is still a chance!</div><div>Bookings are <span className={"text-app-error"}>expiring after 15 minutes</span>.</div><br/>
+                    There are some <span className="text-gold contents">pending transactions</span> that booked the remaining allocation.
+                    <br/><br/><div className="font-bold">There is still a chance!</div><div>Bookings are <span className={"text-app-error contents"}>expiring after 15 minutes</span>.</div><br/>
                     Please wait for button to enable back again!
                     <div className="mt-5"><Linker url={ExternalLinks.BOOKING_SYSTEM}/></div>
                 </>}

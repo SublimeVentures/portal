@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('partners', {
+    sequelize.define('partner', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -52,6 +52,9 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             defaultValue: 5
         },
+        uniquePartner: {
+            type: DataTypes.INTEGER,
+        },
         isDynamicImage: {
             type: DataTypes.BOOLEAN,
             allowNull: true,
@@ -69,6 +72,14 @@ module.exports = (sequelize) => {
         imageUri: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        chainId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'network', // This is a reference to another model
+                key: 'chainId',       // This is the column name of the referenced model
+            }
         },
     }, {
         indexes: [

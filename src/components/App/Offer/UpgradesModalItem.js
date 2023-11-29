@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {isBased} from "@/lib/utils";
-import {PremiumItemsENUM} from "@/lib/premiumHelper";
+import {PremiumItemsENUM} from "@/lib/enum/store";
 
 export default function UpgradesModalItem({itemType, selected, setSelectedUpgrade, isRightPhase, owned, used, image, name, description}) {
     return (
@@ -20,7 +20,7 @@ export default function UpgradesModalItem({itemType, selected, setSelectedUpgrad
                 </div>
             </div>
             {!isRightPhase && <div className={"absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center flex-col"}>
-                Can't use <span className={"text-gold glow"}>{name}</span> in the current phase.
+                Can't use <span className={"text-gold glow"}>{name}</span> during investment.
             </div>}
             {isRightPhase && itemType === PremiumItemsENUM.Guaranteed && used>0 && <div className={"absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center flex-col"}>
                 <span className={"text-gold glow"}>{name}</span> can be used only once.

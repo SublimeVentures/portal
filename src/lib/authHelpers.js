@@ -2,12 +2,10 @@ const {serialize} = require("cookie");
 const {jwtVerify, SignJWT} = require("jose")
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 const {ethers} = require("ethers");
+const logger = require("../../src/lib/logger");
+const {serializeError} = require("serialize-error");
 
 const aws_secrets = new SecretsManagerClient({ region: process.env.SECRET_REGION });
-const aws_secrets_input = { // GetSecretValueRequest
-    SecretId: process.env.SECRET_NAME,
-};
-
 
 const ACLs = {
     Whale: 0,
@@ -61,6 +59,14 @@ const OfferAccessACL = {
         [OfferAccess.EveryoneWithoutNT]: true,
     }
 }
+
+const aclToOfferAccessMap = {};
+Object.keys(OfferAccessACL).forEach(aclKey => {
+    aclToOfferAccessMap[aclKey] = Object.entries(OfferAccessACL[aclKey])
+        .filter(([accessKey, isAllowed]) => isAllowed)
+        .map(([accessKey, _]) => parseInt(accessKey));
+});
+
 
 
 const domain = new URL(process.env.DOMAIN)
@@ -160,9 +166,9 @@ const getPrivateKeyFromAWSSecretManager = async () => {
             })
         );
         return response.SecretString
-    } catch (err) {
-        console.log(`AWS SecretsManager Read Error: ${err}`);
-        throw err;
+    } catch (error) {
+        logger.error(`ERROR :: [signData]`, {error: serializeError(error)});
+        throw error;
     }
 }
 
@@ -181,12 +187,10 @@ const signData = async (wallet, otcId, dealId, nonce, expire) => {
             ok: true,
             data: await signer.signMessage(ethers.utils.arrayify(payloadHash))
         };
-    } catch (e) {
-        console.log("signature error" ,e)
-
+    } catch (error) {
+        logger.error(`ERROR :: [signData]`, {error: serializeError(error), wallet, otcId, dealId, nonce, expire});
         return {
             ok: false,
-            error: e
         }
     }
 }
@@ -209,5 +213,6 @@ module.exports = {
     buildCookie,
     verifyToken,
     verifyID,
-    signData
+    signData,
+    aclToOfferAccessMap
 }

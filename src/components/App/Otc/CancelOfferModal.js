@@ -39,11 +39,11 @@ export default function CancelOfferModal({model, setter, props}) {
 
 
 
-    const chainDesired = chains.find(el => el.id === offerDetails?.networkChainId)
+    const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
 
     const blockchainProps = {
         processingData: {
-            requiredNetwork: offerDetails?.networkChainId,
+            requiredNetwork: offerDetails?.chainId,
             forcePrecheck: false,
             userWallet: account.address,
             diamond: diamond,
@@ -79,7 +79,12 @@ export default function CancelOfferModal({model, setter, props}) {
                 <div className="grid gap-1 grid-cols-2 my-10 mx-5">
                     <div className="font-bold">MARKET</div><div className={"text-right text-app-success"}>{currentMarket.name}</div>
                     <div className="font-bold">TYPE</div><div className={`text-right ${offerDetails.isSell ? 'text-app-error' : 'text-app-success'} `}>{offerDetails.isSell ? "SELL" : "BUY"}</div>
-                    <div className="font-bold">BLOCKCHAIN</div><div className={"text-right flex flex-row justify-end"}>{getChainIcon(chainDesired?.id, ButtonIconSize.hero4)} {chainDesired?.name}</div>
+                        <div className="font-bold">BLOCKCHAIN</div>
+                        <div className="flex flex-row justify-end items-center overflow-hidden whitespace-nowrap">
+                            {getChainIcon(chainDesired?.id, ButtonIconSize.hero4)}
+                            <span className="text-right truncate">{chainDesired?.name}</span>
+                        </div>
+
                     <div className="font-bold">AMOUNT</div><div className={"text-right"}>${cancelOfferAmount_parsed}</div>
                     <div className="font-bold">PRICE</div><div className={"text-right"}>${cancelOfferPrice_parsed}</div>
                     {!offerDetails.isSell && <><div className="font-bold text-gold">FUNDS RETURNED</div><div className={"flex justify-end text-gold"}>{getCurrencyIcon(offerDetails.currency, currencies)} <span className={"ml-2"}>${cancelOfferPrice_parsed}</span></div></>}

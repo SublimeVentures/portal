@@ -56,7 +56,7 @@ function getOfferListMember(offers, acl) {
         if(OfferAccessACL[acl][el.access]) {
             if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
             else {
-                if (el.accessPartnerDate < moment.utc()) {
+                if (el.accessPartnerDate < moment.utc().unix()) {
                     offerList.push(fillPartnerData(el))
                 }
             }
@@ -71,7 +71,7 @@ function offerListNeoTokyo(offers, acl) {
         if(OfferAccessACL[acl][el.access]) {
             if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
             else {
-                if (el.accessPartnerDate < moment.utc()) {
+                if (el.accessPartnerDate < moment.utc().unix()) {
                     offerList.push(fillPartnerData(el))
                 }
             }
@@ -100,7 +100,7 @@ function offerListInjectedProcess(data) {
     data.forEach(el => {
             if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
             else {
-                if (el.accessPartnerDate < moment.utc()) {
+                if (el.accessPartnerDate < moment.utc().unix()) {
                     offerList.push(fillPartnerData(el))
                 }
             }
@@ -114,7 +114,7 @@ function offerListPartner(data, acl) {
         if(OfferAccessACL[acl][el.access]) {
             if (!el.accessPartnerDate) offerList.push(fillPartnerData(el))
             else {
-                if (el.accessPartnerDate < moment.utc()) {
+                if (el.accessPartnerDate < moment.utc().unix()) {
                     offerList.push(fillPartnerData(el))
                 }
             }

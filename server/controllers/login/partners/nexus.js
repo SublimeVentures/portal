@@ -19,17 +19,18 @@ function getTierByAmount(tiers, amount) {
 }
 
 
-async function loginNexus(nfts, partners) {
-    const partnerFiltered = partners.find(el => el.level === 14)
+async function loginNexus(nfts) {
+    const partnerFiltered = nfts.filter(el => el.partnerDetails.level === 14)
     if(!partnerFiltered) return false;
 
-    const getTier = getTierByAmount(partnerFiltered.metadataVal, nfts.length)
+    const partner = partnerFiltered[0].partnerDetails
+    const getTier = getTierByAmount(partner.metadataVal, partnerFiltered.length)
 
     return {
-        symbol: partnerFiltered.symbol,
-        multi: getTier[partnerFiltered.metadataProp],
-        img: await getPartnerAvatar(null, partnerFiltered),
-        img_fallback: partnerFiltered.logo,
+        symbol: partner.symbol,
+        multi: getTier[partner.metadataProp],
+        img: await getPartnerAvatar(null, partner),
+        img_fallback: partner.logo,
         id: getTier.tier,
         ACL: ACLs.Partner
     }

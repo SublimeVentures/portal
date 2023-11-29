@@ -18,8 +18,21 @@ module.exports = (sequelize) => {
         to: {
             type: DataTypes.STRING,
         },
-        type: {
-            type: DataTypes.STRING,
+        typeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'onchainType', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
+        chainId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'network', // This is a reference to another model
+                key: 'chainId',       // This is the column name of the referenced model
+            }
         },
         tenant: {
             type: DataTypes.STRING,
@@ -32,6 +45,10 @@ module.exports = (sequelize) => {
             defaultValue: false
         },
         isReverted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isRegisteredExecuted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
@@ -54,10 +71,9 @@ module.exports = (sequelize) => {
         },
     }, {
         indexes: [
-            {unique: true, fields: ['txID']},
+            {unique: true, fields: ['txID', 'chainId']},
         ],
         freezeTableName: true,
         timestamps: true
     });
-    //blockchain networkId
 };
