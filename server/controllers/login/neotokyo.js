@@ -307,7 +307,7 @@ async function loginNeoTokyo(nfts, partners, address) {
             //CitCap specific params
             isElite: haveElites.length > 0,
             isS1: nftDisplay.isS1,
-            stakeReq: Number(getEnv().stakeCitCapAmount),
+            stakeReq: Number(nftDisplay.isStaked || !nftDisplay.isS1 ? getEnv().citcapStakeS2 : getEnv().citcapStakeS1),
             isStaked: didUserStake,
             stakeSize,
             stakeDate
