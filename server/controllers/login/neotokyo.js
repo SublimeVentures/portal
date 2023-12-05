@@ -247,7 +247,7 @@ async function loginNeoTokyoBased(nfts, partners) {
             img: nftDisplay.image,
             img_fallback: collectionDetails.logo,
             id: nftDisplay.tokenId,
-            ACL: ACLs.Partner,
+            ACL: ACLs.Admin,
         }
     } catch (error) {
         logger.error('LOGIN :: [loginNeoTokyo]', {error: serializeError(error)});
