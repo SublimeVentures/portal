@@ -19,9 +19,9 @@ export default function Navbar() {
         {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
         {name: 'INVESTMENTS', link: 'investments'},
     ] : [
+        {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
         {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
         {name: 'TOKENOMICS', link: 'tokenomics'},
-        {name: 'INVESTMENTS', link: 'investments'},
     ]
 
     const toggleMobile = (e) => {

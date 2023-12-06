@@ -68,6 +68,7 @@ const ExternalLinksCitCap = {
     HOW_TO_ACCESS: "https://info.citizencapital.fund/overview/how-to-join",
     DELEGATED_ACCESS: "#",
     VAULT: "https://info.citizencapital.fund/overview/managing-your-investments",
+    APPLY:"https://tally.so/r/wLPg0l",
 
     OTC: "https://info.citizencapital.fund/OTC-08ce38805290416eb073b139bd54e3f7",
     OTC_ANNOUNCE: "https://discord.com/channels/959614664386424884/1038006855445774347",
