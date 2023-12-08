@@ -5,11 +5,13 @@ export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userAllocation, phaseIsClosed} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal, alloRequired} = offer
 
+    const userAllocationData = userAllocation?.invested ? userAllocation.invested : 0
+
     const normalized_ppu = Number(ppu)?.toLocaleString()
     const normalized_tge = Number(tge)?.toLocaleString()
     const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
-    const normalized_my = Number(userAllocation)?.toLocaleString()
+    const normalized_my = Number(userAllocationData)?.toLocaleString()
     const isSoldOut = allocation?.alloFilled >= alloTotal-50 || phaseIsClosed
 
     return (
@@ -23,7 +25,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                         <OfferDetailsProgress alloTotal={alloTotal} allocations={allocation} alloRequired={alloRequired} isSoldOut={isSoldOut}/>
                     </div>
                     <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
-                        {userAllocation > 0 && <div className={"detailRow text-app-success"}><p>My Allocation</p><hr className={"spacer"}/><p>${normalized_my}</p></div>}
+                        {userAllocationData > 0 && <div className={"detailRow text-app-success"}><p>My Allocation</p><hr className={"spacer"}/><p>${normalized_my}</p></div>}
                         <div className={"detailRow"}><p>Ticker</p><hr className={"spacer"}/><p>${ticker}</p></div>
                         <div className={"detailRow"}><p>Price</p><hr className={"spacer"}/><p>${normalized_ppu}</p></div>
                         {tge && <div className={"detailRow text-app-success"}><p>TGE</p><hr className={"spacer"}/><p>({normalized_tgeDiff}%) ${normalized_tge}</p></div>}
