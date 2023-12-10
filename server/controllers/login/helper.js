@@ -1,7 +1,7 @@
 const {getEnv} = require("../../services/db");
 
 const buildUrl = (path) => {
-    if(path.startsWith("http")) { //centralized hosting
+    if (path.startsWith("http")) { //centralized hosting
         return path
     } else { //ipfs hosting
         return getEnv().piniataGateway + path
@@ -28,7 +28,7 @@ function selectHighestMultiplier(ownedNfts) {
 
         let multiplier;
 
-        if (nft.partnerDetails.isMetadata) {
+        if (nft.partnerDetails.isMetadata && nft.normalized_metadata.name) {
             const attributeVal = nft.normalized_metadata.attributes.find(el => el.trait_type === nft.partnerDetails.metadataProp)?.value;
             multiplier = nft.partnerDetails.metadataVal[attributeVal] || 0;
         } else {

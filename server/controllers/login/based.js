@@ -11,7 +11,6 @@ async function isPartner(allNFTs) {
     if(regularPartners.length === 0) return
 
     const { nftWithHighestMultiplier, highestMultiplier } = selectHighestMultiplier(regularPartners)
-
     const tokenId = nftWithHighestMultiplier?.token_id ? Number(nftWithHighestMultiplier.token_id) : Number(nftWithHighestMultiplier.tokenId)
     const image = await getPartnerAvatar(tokenId, nftWithHighestMultiplier.partnerDetails)
     return {
@@ -62,7 +61,6 @@ function assignLevel(nfts, partners) {
 
 async function loginBased(nfts, partners, address) {
     const nftsEnriched = assignLevel(nfts, partners)
-
     let type = await isWhale(nftsEnriched)
     if (!type) type = await isPartner(nfts, partners)
     // if (!type) type = await isInjectedUser(address)

@@ -21,7 +21,7 @@ function getTierByAmount(tiers, amount) {
 
 async function loginNexus(nfts) {
     const partnerFiltered = nfts.filter(el => el.partnerDetails.level === 14)
-    if(!partnerFiltered) return false;
+    if(partnerFiltered?.length === 0) return false;
 
     const partner = partnerFiltered[0].partnerDetails
     const getTier = getTierByAmount(partner.metadataVal, partnerFiltered.length)
