@@ -1,4 +1,5 @@
 const {withSentryConfig} = require("@sentry/nextjs");
+const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -9,7 +10,13 @@ const nextConfig = {
             issuer: /\.[jt]sx?$/,
             use: ['@svgr/webpack']
         })
+        const absolutePathToSpinnerSvg = path.resolve(__dirname, 'src/components/Flipbook/spinner.svg');
 
+        config.module.rules.push({
+            test: absolutePathToSpinnerSvg,
+            issuer: /\.[jt]sx?$/,
+            use: ['url-loader']
+        })
         return config
     },
     images: {

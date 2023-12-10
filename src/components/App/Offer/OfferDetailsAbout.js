@@ -3,17 +3,40 @@ import IconDiscord from "@/assets/svg/Discord.svg";
 import IconWebsite from "@/assets/svg/Website.svg";
 import IconTwitter from "@/assets/svg/Twitter.svg";
 import {IconButton} from "@/components/Button/IconButton";
-import Script from "next/script";
 import {isBased} from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
-
+import { useEffect, useState, useMemo } from "react";
+import Flipbook from "@/components/Flipbook/Flipbook";
 
 export default function OfferDetailsAbout({offer}) {
     const {url_web, url_twitter, url_discord, cdn, slug, description} = offer;
-
+    const [amount, setAmount] = useState(0);
     function createMarkup() {
         return {__html: description};
     }
+
+    const parsePages = useMemo(() => {
+        let pages = [];
+        for (let i = 1; i < amount; i++) {
+            const paddedNumber = String(i).padStart(4, '0');
+            pages.push(`${cdn}/research/${slug}/ResearchReport_page-${paddedNumber}.jpg`);
+        }
+        return pages;
+    }, [amount, slug]);
+
+    const fetchMeta = async () => {
+        const response = await fetch(`${cdn}/research/${slug}/meta.json`);
+        const data = await response.json();
+        if (data) {
+            setAmount(Number(data.pages));
+        }
+    };
+
+    useEffect(() => {
+        setAmount(0);
+        fetchMeta();
+    }, [slug]);
+
 
     return (
         <>
@@ -48,8 +71,13 @@ export default function OfferDetailsAbout({offer}) {
             <OfferDetailsMediaSlider offer={offer}/>
 
             <div className="my-10">
-                <Script src="/browser/index-d5086682.js"/>
-                <div id="flipbook"></div>
+                {parsePages.length > 0 && amount > 0 && <div id="flipbook">
+                    <Flipbook
+                        pages={parsePages}
+                        startPage={1}
+                        zooms={[1, 1.5, 2]}
+                    />
+                </div>}
             </div>
         </>
 
