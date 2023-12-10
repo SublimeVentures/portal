@@ -176,7 +176,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 setErrorModal(true)
                 refetchAllocation()
             } else {
-                const confirmedAmount = Number(response.data.amount)
+                const confirmedAmount = Number(response.amount)
                 setValue(confirmedAmount)
                 setCookie(cookieReservation, `${response.hash}_${confirmedAmount}_${response.expires}`, {expires: new Date(response.expires * 1000)})
                 openInvestmentModal(response.hash, response.expires)
