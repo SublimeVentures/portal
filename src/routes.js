@@ -43,8 +43,8 @@ const ExternalLinksBased = {
     DELEGATED_ACCESS: "https://info.basedvc.fund/Delegated-access-dc60abd8a5654641a7bd77d537256aa7",
     VAULT: "https://info.basedvc.fund/App-Navigation-2f8097958f69467aaa03bbfda0ecd89e",
     WIKI: "https://info.basedvc.fund",
-    DISCORD: "https://discord.gg/3SaqVVdzUH",
-    TWITTER:"https://twitter.com/basedVCfund",
+    DISCORD: "https://discord.gg/AsGvs6uRU8",
+    TWITTER:"https://twitter.com/basedvcfund",
     OTC_ANNOUNCE: "https://discord.com/channels/1031176608729550849/1156911245602078832",
     OTC: "https://info.basedvc.fund/OTC-fdad47130a0a49bbaa1a1e4c9fd95907",
 
