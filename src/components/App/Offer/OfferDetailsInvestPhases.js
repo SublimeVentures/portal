@@ -168,17 +168,23 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const startInvestmentProcess = async () => {
-        setButtonLoading(true)
-        const response = await fetchHash(offer.id, investmentAmount, selectedCurrency.address, chain.id)
-        if (!response.ok) {
-            setErrorMsg(response.code)
-            setErrorModal(true)
-            refetchAllocation()
-        } else {
-            setCookie(cookieReservation, `${response.hash}_${investmentAmount}_${response.expires}`, {expires: new Date(response.expires * 1000)})
-            openInvestmentModal(response.hash, response.expires)
+        if(investmentAmount>0) {
+            setButtonLoading(true)
+            const response = await fetchHash(offer.id, investmentAmount, selectedCurrency.address, chain.id)
+            if (!response.ok) {
+                setErrorMsg(response.code)
+                setErrorModal(true)
+                refetchAllocation()
+            } else {
+                const confirmedAmount = Number(response.data.amount)
+                setValue(confirmedAmount)
+                setCookie(cookieReservation, `${response.hash}_${confirmedAmount}_${response.expires}`, {expires: new Date(response.expires * 1000)})
+                openInvestmentModal(response.hash, response.expires)
+            }
+            setButtonLoading(false)
         }
-        setButtonLoading(false)
+
+
     }
 
     const processExistingSession = async (cookie) => {
