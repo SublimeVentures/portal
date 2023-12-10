@@ -150,8 +150,11 @@ function applyExtraSetup(sequelize) {
     onchain.belongsTo(network, { foreignKey: 'chainId' });
 
     //otcDeal model
-    otcDeal.belongsTo(onchain, { foreignKey: 'onchainId', targetKey: 'id' });
-    onchain.hasOne(otcDeal, { foreignKey: 'onchainId', sourceKey: 'id' });
+    otcDeal.belongsTo(onchain, { foreignKey: 'onchainIdMaker', targetKey: 'id' });
+    onchain.hasOne(otcDeal, { foreignKey: 'onchainIdMaker', sourceKey: 'id' });
+
+    otcDeal.belongsTo(onchain, { foreignKey: 'onchainIdTaker', targetKey: 'id' });
+    onchain.hasOne(otcDeal, { foreignKey: 'onchainIdTaker', sourceKey: 'id' });
 
     offer.hasMany(otcDeal, { foreignKey: 'offerId' });
     otcDeal.belongsTo(offer, { foreignKey: 'offerId' });

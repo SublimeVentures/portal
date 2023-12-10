@@ -22,6 +22,11 @@ function checkReserveSpotQueryParams(req) {
         _amount = Number(req.query.amount)
         _currency = req.query.currency
         _chain = req.query.chain
+
+        if(_amount<50) {
+            throw Error("Amount too small")
+        }
+
     } catch (error) {
         logger.error('ERROR :: [checkReserveSpotQueryParams]', {error: serializeError(error), _offerId, _amount, _currency, _chain, params: req.query});
         return {
@@ -108,7 +113,8 @@ async function processReservation(queryParams, user) {
             ok: true,
             data: {
                 hash,
-                expires
+                expires,
+                amount
             }
         }
     } catch(error) {

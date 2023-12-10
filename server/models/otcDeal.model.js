@@ -60,7 +60,16 @@ module.exports = (sequelize) => {
                 key: 'chainId',       // This is the column name of the referenced model
             }
         },
-        onchainId: {
+        onchainIdMaker: {
+            type: DataTypes.INTEGER,
+            unique: true,
+            allowNull: true,
+            references: {
+                model: 'onchain', // This is a reference to another model
+                key: 'id',       // This is the column name of the referenced model
+            }
+        },
+        onchainIdTaker: {
             type: DataTypes.INTEGER,
             unique: true,
             allowNull: true,

@@ -20,7 +20,7 @@ async function getActiveOffers(otcId) {
             'maker',
             [db.literal('"onchain"."chainId"'), 'chainId'] // Alias 'chainId' from onchain
         ],
-        where: {otcId, isFilled: false, isCancelled: false, onchainId: { [Op.ne]: null }},
+        where: {otcId, isFilled: false, isCancelled: false, onchainIdMaker: { [Op.ne]: null }},
         include: {
             model: models.onchain,
             attributes: [],
