@@ -105,15 +105,21 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
 
     const setValue = (data) => {
-        if (!Number.isInteger(data)) {
-            data = data.replace(/[^0-9]/g, '')
+        try {
+            if (!Number.isInteger(data)) {
+                data = data.replace(/[^0-9]/g, '');
+            }
+            setInvestmentAmount(data);
+            let formatted = Number(data).toLocaleString();
+            if (formatted == 0) {
+                formatted = "";
+            }
+            setInvestmentAmountFormatted(formatted);
+        } catch (error) {
+            // Error handling: do nothing or log the error if needed
+            console.error("Error in setValue:", error);
         }
-        setInvestmentAmount(data)
-        let formatted = Number(data).toLocaleString()
-        if(formatted==0) {
-            formatted = ""
-        }
-        setInvestmentAmountFormatted(formatted)
+
     }
 
     const isInputActive = () => {
