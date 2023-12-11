@@ -24,7 +24,6 @@ export default function TakeOfferModal({model, setter, props}) {
     const blockchainRef = useRef();
 
     useEffect(() => {
-        // console.log("AllowanceStep - enough", isEnoughAllowance ,isReady)
         if(!signature?.expiry) return;
         blockchainRef.current.runProcess();
 
@@ -42,6 +41,7 @@ export default function TakeOfferModal({model, setter, props}) {
 
     const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee
     const otcTakeFunction = getOtcTakeFunction(currentMarket.market, offerDetails.dealId, signature?.nonce, signature?.expiry, signature?.hash, diamond)
+
     const closeModal = async () => {
         if(transactionData?.transferConfirmed) {
             await refetchVault()

@@ -1,4 +1,4 @@
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconCart from "@/assets/svg/Cart.svg";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import IconHistory from "@/assets/svg/History.svg";
@@ -143,11 +143,11 @@ export default function OtcOffers({propOffers}) {
                                     <IconCancel className={'w-6'}/>
                                 </div>
                             }
-                            {/*{user != el.maker &&*/}
+                            {user != el.maker &&
                                 <div className={'duration-300 hover:text-app-error cursor-pointer'} onClick={()=> openTake(el)}>
                                     <IconCart className={'w-6'}/>
                                 </div>
-                            {/*}*/}
+                            }
                         </div>
 
 
