@@ -65,7 +65,6 @@ async function processReservation(queryParams, user) {
             code: BookingErrorsENUM.BadCurrency
         }
 
-        console.log("checks passed00")
 
         //generate hash
         const now = moment.utc().unix()
@@ -79,7 +78,6 @@ async function processReservation(queryParams, user) {
 
         const totalAllocation = CACHE[_offerId][isSeparatePool ? 'alloTotalPartner' : 'alloTotal']; //todo: whale
         const amount = Number(_amount)
-        console.log("checks passed0",amount)
 
         const checkAllocationSize = checkAllocationConditions(
             CACHE[_offerId],
@@ -88,7 +86,6 @@ async function processReservation(queryParams, user) {
             increased,
             user
         )
-        console.log("checkAllocationSize",checkAllocationSize)
         if(!checkAllocationSize.ok) return checkAllocationSize;
 
         const isBooked = await bookAllocation(
@@ -185,7 +182,8 @@ async function reserveSpot(user, req) {
         return {
             ok: true,
             hash: reservation.data.hash,
-            expires: reservation.data.expires
+            expires: reservation.data.expires,
+            amount: reservation.data.amount,
         }
     } catch(error) {
         logger.error(`ERROR :: [reserveSpot]`, {
