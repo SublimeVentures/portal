@@ -42,7 +42,6 @@ export default function TakeOfferModal({model, setter, props}) {
 
     const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee
     const otcTakeFunction = getOtcTakeFunction(currentMarket.market, offerDetails.dealId, signature?.nonce, signature?.expiry, signature?.hash, diamond)
-
     const closeModal = async () => {
         if(transactionData?.transferConfirmed) {
             await refetchVault()
@@ -56,17 +55,19 @@ export default function TakeOfferModal({model, setter, props}) {
     }
 
     const buttonFn = async () => {
-
-        if(signature?.expiry && signature.expiry > moment.utc().unix()) {
+        if(
+            signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell ||
+            offerDetails.isSell
+        ) {
             blockchainRef.current.runProcess();
         } else {
-            const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
-            if (transaction.ok) {
-                setSignature(transaction.data)
-            } else {
-                //todo: error handling
+                const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
+                if (transaction.ok) {
+                    setSignature(transaction.data)
+                } else {
+                    //todo: error handling
+                }
             }
-        }
     }
 
     const blockchainProps = {

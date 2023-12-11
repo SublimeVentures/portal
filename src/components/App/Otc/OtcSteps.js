@@ -36,9 +36,9 @@ export const getOtcTakeFunction = (otcId, dealId, nonce, expire, hash, diamond) 
         args: [
             otcId,
             dealId,
-            nonce,
-            expire,
-            hash
+            !!nonce ? nonce : 0,
+            !!expire ? expire : 0,
+            !!hash ? hash : ""
         ],
         address: diamond,
         abi: otcAbi

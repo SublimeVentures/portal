@@ -24,7 +24,10 @@ async function getActiveOffers(otcId) {
         include: {
             model: models.onchain,
             attributes: [],
-            required: true // Ensures INNER JOIN
+            required: true, // Ensures INNER JOIN
+            on: {
+                'id': { [Op.eq]: db.col('otcDeal.onchainIdMaker') }
+            }
         },
         raw: true
     });
@@ -94,11 +97,14 @@ async function checkDealBeforeSigning(offerId, chainId, otcId, dealId, transacti
         include: [
             {
                 model: models.offer,
-                attributes: ['id', 'otc']
+                attributes: ['id', 'otc'],
             },
             {
                 model: models.onchain,
-                attributes: ['chainId']
+                attributes: ['chainId'],
+                on: {
+                    'id': { [Op.eq]: db.col('otcDeal.onchainIdMaker') }
+                }
             }
         ],
         raw: true,

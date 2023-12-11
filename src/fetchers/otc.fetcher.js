@@ -59,10 +59,10 @@ export const saveTransaction = async (offerId, networkChainId, price, amount, is
     }
     return {}
 }
-export const getSignature = async (offerId, networkChainId, otcId, dealId) => {
+export const getSignature = async (offerId, chainId, otcId, dealId) => {
     try {
         const {data} = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {
-            networkChainId,
+            chainId,
             otcId,
             dealId
         })

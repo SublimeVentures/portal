@@ -92,7 +92,7 @@ async function signOffer(user, req) {
 
     try {
         const offerId = Number(req.params.id)
-        const networkChainId = Number(req.body.networkChainId)
+        const networkChainId = Number(req.body.chainId)
         const otcId = Number(req.body.otcId)
         const dealId = Number(req.body.dealId)
         const expireDate =  moment.utc().unix() + 3 * 60
@@ -102,10 +102,8 @@ async function signOffer(user, req) {
         const deal = await checkDealBeforeSigning(offerId, networkChainId, otcId, dealId, transaction)
         if(!deal.ok) return deal
 
-        if(!deal.data.isSell) {
-            const isBuyLockup = await processSellOtcDeal(userId, deal.data, transaction)
-            if(!isBuyLockup.ok) return isBuyLockup
-        }
+        const isBuyLockup = await processSellOtcDeal(userId, deal.data, transaction)
+        if(!isBuyLockup.ok) return isBuyLockup
 
         await saveOtcLock(userId, address, deal.data, expireDate, transaction)
 

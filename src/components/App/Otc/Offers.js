@@ -133,7 +133,7 @@ export default function OtcOffers({propOffers}) {
                     </td>
                     <td className=" text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
                         data-label="CHAIN"><span
-                        className="flex flex-row flex-1 justify-center">{getChainIcon(el.networkChainId, ButtonIconSize.hero4)} {getCurrencyIcon(el.currency, currencies)}</span>
+                        className="flex flex-row flex-1 justify-center">{getChainIcon(el.chainId, ButtonIconSize.hero4)} {getCurrencyIcon(el.currency, currencies)}</span>
                     </td>
                     <td className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                         data-label="ACTION">
@@ -207,7 +207,7 @@ export default function OtcOffers({propOffers}) {
                     </td>
                     <td className=" text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
                         data-label="CHAIN"><span
-                        className="flex flex-row flex-1 justify-center">{getChainIcon(el.networkChainId, ButtonIconSize.hero3)}</span>
+                        className="flex flex-row flex-1 justify-center">{getChainIcon(el.chainId, ButtonIconSize.hero3)}</span>
                     </td>
                     <td className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                         data-label="ACTION">{moment(el.updatedAt).utc().local().format("YYYY-MM-DD")}</td>

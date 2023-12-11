@@ -45,7 +45,7 @@ const ExternalLinksBased = {
     WIKI: "https://info.basedvc.fund",
     DISCORD: "https://discord.gg/AsGvs6uRU8",
     TWITTER:"https://twitter.com/basedvcfund",
-    OTC_ANNOUNCE: "https://discord.com/channels/1031176608729550849/1156911245602078832",
+    OTC_ANNOUNCE: "https://discord.gg/gXDZBnmuQ6",
     OTC: "https://info.basedvc.fund/OTC-fdad47130a0a49bbaa1a1e4c9fd95907",
 
     APPLY:"https://tally.so/r/mK5Pvk",
