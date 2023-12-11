@@ -6,6 +6,10 @@ const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 
 const aws_secrets = new SecretsManagerClient({ region: process.env.SECRET_REGION });
+const aws_secrets_input = { // GetSecretValueRequest
+    SecretId: process.env.SECRET_NAME,
+};
+
 
 const ACLs = {
     Whale: 0,

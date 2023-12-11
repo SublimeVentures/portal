@@ -106,8 +106,7 @@ async function signOffer(user, req) {
         if(!isBuyLockup.ok) return isBuyLockup
 
         await saveOtcLock(userId, address, deal.data, expireDate, transaction)
-
-        const signature = await signData(userId, otcId, dealId, deal.data.id, expireDate)
+        const signature = await signData(address, otcId, dealId, deal.data.id, expireDate)
         if(!signature.ok){
             throw new Error("Invalid signature")
         }

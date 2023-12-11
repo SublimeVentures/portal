@@ -1,9 +1,7 @@
 import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import {isBased, sleeper} from "@/lib/utils";
-
-
+import {isBased} from "@/lib/utils";
 
 export default function OfferDetailsTopBar({paramsBar}) {
     let {offer, phaseCurrent, phaseNext, refreshInvestmentPhase, phaseIsClosed} = paramsBar
