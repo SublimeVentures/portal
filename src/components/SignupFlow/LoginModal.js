@@ -34,13 +34,13 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
         return (<span className={!isBased && `text-app-error`}>Connect Wallet {isBased && <span className="text-gold">{isPartner ? "Partners" : "Whale"}</span>}</span>)
     }
 
-
     const content = () => {
         return (<> <div className="pb-10 font-accent">
             Don't want to connect your cold wallet? You can delegate access! <Linker url={ExternalLinks.DELEGATED_ACCESS} />
         </div>
             <div className="flex flex-col gap-5 fullWidth">
-                {connectors.map((connector) => (
+                {connectors.filter(connector => !(connector.id === "injected" && connector.name === "MetaMask"))
+                    .map((connector) => (
 
                     <UniButton
                         type={ButtonTypes.BASE}
