@@ -39,7 +39,7 @@ export default function TransactionStep({stepProps}) {
         enabled: isReady
     })
 
-    console.log("STATE :: T - usePrepareContractWrite", {successPrep, isErrorPrep})
+    console.log("STATE :: T - usePrepareContractWrite", {configPrep, errorPrep, successPrep, isErrorPrep})
 
     const {
         data: txId,
@@ -110,7 +110,7 @@ export default function TransactionStep({stepProps}) {
         // if (isLoadingWrite || isLoadingConfirmed) {
         //     setIsTransactionLoading(TransactionState.Processing)
         // }
-        console.log("ERRORS", !!errorWrite, !!errorPrep, !!errorConfirmed, JSON.stringify(errorWrite))
+        console.log("ERRORS", !!errorWrite, !!errorPrep, !!errorConfirmed, errorWrite)
 
         if (!!errorConfirmed || !!errorWrite || !!errorPrep) {
             setFinished(false)
