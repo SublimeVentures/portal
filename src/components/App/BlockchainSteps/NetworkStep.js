@@ -30,9 +30,9 @@ export default function NetworkStep({stepProps}) {
     const chainDesired = chains.find(el => el.id === requiredNetwork)
     const isRightChain = chainDesired.id === chainSelected.id
 
-    // console.log("NetworkStep - debug", isRightChain, isLoading, error)
+    console.log("NetworkStep - debug", isRightChain, isLoading, error)
     const changeNetwork = () => {
-        // console.log("NetworkStep - trigger", isReady, !isLoading, !isFinished, !isRightChain)
+        console.log("NetworkStep - trigger", isReady, !isLoading, !isFinished, !isRightChain)
 
         if (isReady && !isLoading) {
             if (!isRightChain) {

@@ -2,7 +2,7 @@ import {usePrepareContractWrite, useContractWrite, useWaitForTransaction} from '
 import {useEffect} from "react";
 
 export default function TransactionStep({stepProps}) {
-    // console.log("STATE :: T -================")
+    console.log("STATE :: T -================")
 
     const {
         processingData,
@@ -39,7 +39,7 @@ export default function TransactionStep({stepProps}) {
         enabled: isReady
     })
 
-    // console.log("STATE :: T - usePrepareContractWrite", {successPrep, isErrorPrep})
+    console.log("STATE :: T - usePrepareContractWrite", {successPrep, isErrorPrep})
 
     const {
         data: txId,
@@ -50,7 +50,7 @@ export default function TransactionStep({stepProps}) {
         isLoading: isLoadingWrite
     } = useContractWrite(configPrep)
 
-    // console.log("STATE :: T - useContractWrite", {txId, isErrorWrite, errorWrite, isSuccessWrite, isLoadingWrite})
+    console.log("STATE :: T - useContractWrite", {txId, isErrorWrite, errorWrite, isSuccessWrite, isLoadingWrite})
 
     const {
         data: transferConfirmed,
@@ -64,14 +64,14 @@ export default function TransactionStep({stepProps}) {
         hash: txId?.hash,
     })
 
-    // console.log("STATE :: T - useWaitForTransaction", {
-    //     transferConfirmed,
-    //     isErrorConfirmed,
-    //     errorConfirmed,
-    //     isSuccessConfirmed,
-    //     isLoadingConfirmed,
-    //     isFetchingConfirmed
-    // })
+    console.log("STATE :: T - useWaitForTransaction", {
+        transferConfirmed,
+        isErrorConfirmed,
+        errorConfirmed,
+        isSuccessConfirmed,
+        isLoadingConfirmed,
+        isFetchingConfirmed
+    })
 
 
     const disabledButton = !isReady || isLoadingWrite || isLoadingConfirmed || isFetchingConfirmed
@@ -82,13 +82,13 @@ export default function TransactionStep({stepProps}) {
     }
 
     useEffect(() => {
-        // console.log("STATE :: T - setIsTransactionLoading?", {disabledButton, isReady, successPrep})
+        console.log("STATE :: T - setIsTransactionLoading?", {disabledButton, isReady, successPrep})
         // setIsTransactionLoading(disabledButton && isReady ? (successPrep ? TransactionState.Executing : TransactionState.Processing) : TransactionState.Init)
     }, [disabledButton, isReady, successPrep])
 
 
     useEffect(() => {
-        // console.log("QQQ :: trigger", trigger, successPrep, isReady)
+        console.log("QQQ :: trigger",  successPrep, isReady)
         // if (trigger) {
             transfer()
         // }
@@ -110,7 +110,7 @@ export default function TransactionStep({stepProps}) {
         // if (isLoadingWrite || isLoadingConfirmed) {
         //     setIsTransactionLoading(TransactionState.Processing)
         // }
-        // console.log("ERRORS", !!errorWrite, !!errorPrep, !!errorConfirmed, JSON.stringify(errorWrite))
+        console.log("ERRORS", !!errorWrite, !!errorPrep, !!errorConfirmed, JSON.stringify(errorWrite))
 
         if (!!errorConfirmed || !!errorWrite || !!errorPrep) {
             setFinished(false)
@@ -120,9 +120,9 @@ export default function TransactionStep({stepProps}) {
     // }, [isLoadingWrite, isLoadingConfirmed, errorConfirmed, errorWrite])
     }, [errorConfirmed, errorWrite, errorPrep])
 
-    // console.log("STATE :: T - errorConfirmed",errorConfirmed)
-    // console.log("STATE :: T - errorWrite",errorWrite ? Object.keys(errorWrite) : 0, errorWrite?.shortMessage, errorWrite?.metaMessages, errorWrite?.message, errorWrite?.cause)
-    // console.log("STATE :: T - errorWrite",errorWrite)
+    console.log("STATE :: T - errorConfirmed",errorConfirmed)
+    console.log("STATE :: T - errorWrite",errorWrite ? Object.keys(errorWrite) : 0, errorWrite?.shortMessage, errorWrite?.metaMessages, errorWrite?.message, errorWrite?.cause)
+    console.log("STATE :: T - errorWrite",errorWrite)
     return (
         <div className={'fullWidth min-h-[25px]'}>
             {(!!errorConfirmed || !!errorWrite || !!errorPrep) && <div className={"text-app-error text-center"}>

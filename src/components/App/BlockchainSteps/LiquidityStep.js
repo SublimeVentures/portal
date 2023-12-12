@@ -35,6 +35,8 @@ export default function LiquidityStep({stepProps}) {
         }
     )
 
+    console.log("Liquidity",balanceFed,isLoading,currentBalance)
+
     const power = BigNumber(10).pow(currency.precision)
     const currentBalanceBN = BigNumber(currentBalance)
     const currentBalanceHuman = currentBalance ? currentBalanceBN.dividedBy(power).toNumber() : 0
@@ -45,6 +47,8 @@ export default function LiquidityStep({stepProps}) {
 
 
     useEffect(() => {
+        console.log("Liquidity - watch",isReady, balanceFed, isEnoughLiquidity, currency?.address)
+
         if (balanceFed && isReady) {
             setFinished(isEnoughLiquidity)
             saveData({
