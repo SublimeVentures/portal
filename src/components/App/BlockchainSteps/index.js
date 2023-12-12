@@ -10,6 +10,7 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 /******************
  * @devnote
  *     const blockchainProps = {
+ *     const blockchainProps = {
  *         processingData: {                    -/ object with extra data required for each step
  *             requiredChainId: 137,            -/ ONLY: [network]
  *             forcePrecheck: false             -/ ONLY: [network]                              - forces network precheck
@@ -67,7 +68,7 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
     const [transactionReady, setTransactionReady] = useState(false)
     const [transactionData, setTransactionData] = useState(false)
 
-    // console.log("cleanCheck", networkChecked, networkReady, networkData, liquidityChecked, liquidityReady, liquidityData, allowanceChecked, allowanceReady, allowanceData, transactionChecked, transactionReady,transactionData)
+    console.log("cleanCheck", networkChecked, networkReady, networkData, liquidityChecked, liquidityReady, liquidityData, allowanceChecked, allowanceReady, allowanceData, transactionChecked, transactionReady,transactionData)
 
 
     const networkProps = {
@@ -78,8 +79,8 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         setFinished: setNetworkChecked,
         saveData: setNetworkData,
     }
-    // console.log("networkProps", networkProps)
-    // console.log("NetworkStep - check", checkNetwork, networkReady, !networkChecked)
+    console.log("networkProps", networkProps)
+    console.log("NetworkStep - check", checkNetwork, networkReady, !networkChecked)
 
     const liquidityCanRun = liquidityReady && (checkNetwork ? networkChecked : true)
     const liquidityProps = {
@@ -90,8 +91,8 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         setFinished: setLiquidityChecked,
         saveData: setLiquidityData,
     }
-    // console.log("liquidityProps", liquidityProps)
-    // console.log("LiquidityStep - check", checkLiquidity, liquidityCanRun, liquidityChecked)
+    console.log("liquidityProps", liquidityProps)
+    console.log("LiquidityStep - check", checkLiquidity, liquidityCanRun, liquidityChecked)
 
     const allowanceCanRun = allowanceReady && (checkNetwork ? networkChecked : true) && (checkLiquidity ? liquidityChecked : true)
     const allowanceProps = {
@@ -102,8 +103,8 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         setFinished: setAllowanceChecked,
         saveData: setAllowanceData,
     }
-    // console.log("allowanceProps", allowanceProps)
-    // console.log("AllowanceStep - check", checkAllowance, allowanceCanRun, allowanceChecked)
+    console.log("allowanceProps", allowanceProps)
+    console.log("AllowanceStep - check", checkAllowance, allowanceCanRun, allowanceChecked)
 
 
     const transactionCanRun = transactionReady && (checkNetwork ? networkChecked : true) && (checkLiquidity ? liquidityChecked : true) && (checkAllowance ? allowanceChecked : true)

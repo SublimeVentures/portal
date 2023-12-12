@@ -78,16 +78,16 @@ export default function AllowanceStep({stepProps}) {
     const isEnoughAllowance = amountAllowance <= allowanceHuman
     const amountLocale = Number(amountAllowance).toLocaleString()
     const allowanceLocale = Number(allowanceHuman).toLocaleString()
-    // console.log("AllowanceStep - debug", isReady,isFinished, isEnoughAllowance, isSuccessConfig )
+    console.log("AllowanceStep - debug", isReady,isFinished, isEnoughAllowance, isSuccessConfig )
 
 
     const setAllowance = () => {
-        // console.log("AllowanceStep - trigger", !processing ,isReady, !isLoadingWrite, isSuccessConfig, !isEnoughAllowance )
+        console.log("AllowanceStep - trigger", !processing ,isReady, !isLoadingWrite, isSuccessConfig, !isEnoughAllowance )
 
         if (!processing && isReady && !isLoadingWrite && isSuccessConfig) {
             setProcessing(true)
             if(!isEnoughAllowance) {
-                // console.log("AllowanceStep - debug trigger")
+                console.log("AllowanceStep - debug trigger")
                 write()
             }
         }
@@ -99,7 +99,7 @@ export default function AllowanceStep({stepProps}) {
 
 
     useEffect(() => {
-        // console.log("AllowanceStep - enough", isEnoughAllowance ,isReady)
+        console.log("AllowanceStep - enough", isEnoughAllowance ,isReady)
 
         if(isEnoughAllowance && isReady) {
             setFinished(true)
@@ -111,7 +111,7 @@ export default function AllowanceStep({stepProps}) {
 
     useEffect(() => {
         if(isErrorWrite || isErrorPending) {
-            // console.log("AllowanceStep - trigger - disable isReady")
+            console.log("AllowanceStep - trigger - disable isReady")
             setIsReady(false)
             if(isSuccessConfig) {
                 setProcessing(false)
