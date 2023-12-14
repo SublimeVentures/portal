@@ -137,15 +137,14 @@ export const AppOfferDetails = ({account}) => {
 }
 
 
-export const getServerSideProps = async ({res}) => {
+export const getServerSideProps = async ({res, resolvedUrl}) => {
     const account = await verifyID(res.req)
-    const redirect = res.req.originalUrl
 
     if(account.exists){
         return {
             redirect: {
                 permanent: true,
-                destination: `/app/auth?callbackUrl=${redirect}`
+                destination: `/app/auth?callbackUrl=${resolvedUrl}`
             }
         }
     }
@@ -154,7 +153,7 @@ export const getServerSideProps = async ({res}) => {
         return {
             redirect: {
                 permanent: true,
-                destination: `/login?callbackUrl=${redirect}`
+                destination: `/login?callbackUrl=${resolvedUrl}`
             }
         }
     }
