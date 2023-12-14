@@ -7,6 +7,16 @@ import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
+import {KNOWN_CONNECTORS} from "@/lib/blockchain";
+
+
+function getConnectorImage(connectorName) {
+    if (KNOWN_CONNECTORS.includes(connectorName)) {
+        return `${connectorName}.png`;
+    }
+    return 'wallet.png';
+}
+
 
 export default function LoginModal({isPartner, isLoginLoading, handleConnect, isSignin, signError, model, setter}) {
     const { connect, connectors, error, pendingConnector, isLoading } = useConnect()
@@ -54,7 +64,7 @@ export default function LoginModal({isPartner, isLoginLoading, handleConnect, is
                         isLoading={connector.id === pendingConnector?.id && !error && isLoginLoading  }
                         isLoadingWithIcon={true}
                         isDisabled={buttonIsDisabled(connector)}
-                        icon={<Image src={`/img/login/${connector.name}.png`} width={32} height={32} alt={connector.name} className={ButtonIconSize.hero}/>}
+                        icon={<Image src={`/img/login/${getConnectorImage(connector.name)}`} width={32} height={32} alt={connector.name} className={ButtonIconSize.hero}/>}
                     />
 
                 ))}
