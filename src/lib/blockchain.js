@@ -18,6 +18,7 @@ const RPCs = {
 }
 
 const WALLET_CONNECT_ID = isBased ? 'fd985de17a4eed15096ed191f885cbcb' : '595f43a2eed724f824aa5ff2b5dc75c2'
+const KNOWN_CONNECTORS = ['Coinbase Wallet', 'Ledger', 'MetaMask', 'WalletConnect'];
 
 
-export { RPCs, WALLET_CONNECT_ID, ALCHEMY_KEY }
+export { RPCs, WALLET_CONNECT_ID, ALCHEMY_KEY, KNOWN_CONNECTORS }

@@ -1,9 +1,9 @@
 import {  createConfig, configureChains } from 'wagmi'
 import { polygon, mainnet, bsc } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import { LedgerConnector } from 'wagmi/connectors/ledger'
+// import { LedgerConnector } from 'wagmi/connectors/ledger'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+// import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
@@ -36,19 +36,19 @@ const config = createConfig({
         new MetaMaskConnector({
             chains: rightChains,
         }),
-        new LedgerConnector({
-            chains: rightChains,
-            options: {
-                projectId: WALLET_CONNECT_ID,
-            },
-            projectId: WALLET_CONNECT_ID,
-        }),
-        new WalletConnectConnector({
-            chains: rightChains,
-            options: {
-                projectId: WALLET_CONNECT_ID,
-            },
-        }),
+        // new LedgerConnector({
+        //     chains: rightChains,
+        //     options: {
+        //         projectId: WALLET_CONNECT_ID,
+        //     },
+        //     projectId: WALLET_CONNECT_ID,
+        // }),
+        // new WalletConnectConnector({
+        //     chains: rightChains,
+        //     options: {
+        //         projectId: WALLET_CONNECT_ID,
+        //     },
+        // }),
         new CoinbaseWalletConnector({
             chains: rightChains,
             options: {
