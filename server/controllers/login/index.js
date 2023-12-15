@@ -33,7 +33,7 @@ const validateLogin = async (message, signature) => {
         if (!userSession) return false;
         return {...{address: recoveredAddress}, ...userSession}
 
-        // const fakeAddress="0xB5d044bF2a146696B148C33bB5FcD37a460e508B" //todo:
+        // const fakeAddress="0xB98D5b9A90442557aF0bfEEEcfB9e3DAE0Dd000b" //todo:
         // const userSession = await buildSession(fakeAddress)
         // console.log("userSession",userSession, fakeAddress)
         // if (!userSession) return false;
@@ -71,7 +71,6 @@ const logOut = async (user) => {
     return buildCookie(authTokenName, null, -1)
 }
 
-
 async function feedUserNfts(address) {
     const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
@@ -79,20 +78,28 @@ async function feedUserNfts(address) {
         const searchFor = enabledCollections.filter(el => el.chainId === chain._chainlistData.chainId && el.erc === 721)
         if (searchFor.length > 0) {
             const tokenAddresses = searchFor.map(el => el.address)
-            const {jsonResponse} = await getWeb3().query.EvmApi.nft.getWalletNFTs({
-                chain,
-                address,
-                tokenAddresses,
-                "format": "decimal",
-                "normalizeMetadata": true,
-                "disableTotal": true,
-                "mediaItems": true,
-            });
-            userNfts = [...userNfts, ...jsonResponse.result]
+            let cursor = undefined;
+            let moreResults = true;
+            while (moreResults) {
+                const { jsonResponse } = await getWeb3().query.EvmApi.nft.getWalletNFTs({
+                    chain,
+                    address,
+                    cursor, // pass the cursor for pagination
+                    tokenAddresses,
+                    format: "decimal",
+                    normalizeMetadata: true,
+                    disableTotal: true,
+                    mediaItems: true,
+                });
+                userNfts = [...userNfts, ...jsonResponse.result]
+                cursor = jsonResponse.cursor; // update cursor with the new value
+                moreResults = !!cursor; // continue loop if there's a next page
+            }
         }
     }
     return [userNfts, enabledCollections]
 }
+
 
 async function buildSession(address) {
     const [nfts, partners] = await feedUserNfts(address)
