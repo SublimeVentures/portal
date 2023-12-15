@@ -9,6 +9,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import {isBased} from "@/lib/utils";
 import {ALCHEMY_KEY, RPCs, WALLET_CONNECT_ID} from "@/lib/blockchain";
+import {createWalletClient, custom, publicActions} from "viem";
 
 // const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 const rightChains = [mainnet, polygon, bsc]
@@ -57,7 +58,19 @@ const config = createConfig({
             },
         })
     ],
-    publicClient,
+    publicClient: (chain) => {
+        if (typeof window !== 'undefined' && typeof (window).ethereum !== 'undefined') {
+            // create a special client that sends rpc calls through wallet
+            console.log("laduje z twojego providera")
+            return createWalletClient({
+                chain: chain,
+                transport: custom(window.ethereum),
+        }).extend(publicActions);
+        }
+
+        console.log("laduje z priv provider")
+        return publicClient(chain)
+    },
     webSocketPublicClient,
 })
 
