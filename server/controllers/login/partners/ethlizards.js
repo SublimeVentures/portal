@@ -5,27 +5,33 @@ async function loginEthlizards(nfts) {
     const partnersFiltered = nfts.filter(el => el.partnerDetails.level === 15)
     if(partnersFiltered.length===0) return;
 
-    const genesis = partnersFiltered.find(el => el.partnerDetails.symbol == 'LIZARD')
-    const venture = partnersFiltered.find(el => el.partnerDetails.symbol == 'LIZARD_V')
+    const genesis = partnersFiltered.filter(el => el.partnerDetails.symbol == 'LIZARD')
+    const venture = partnersFiltered.filter(el => el.partnerDetails.symbol == 'LIZARD_V')
     const locked = partnersFiltered.filter(el => el.partnerDetails.symbol == 'LLZ')
 
-    let selected, multiplier;
-    if(genesis) {
-        selected = genesis
-        multiplier = selected.partnerDetails.multiplier
-    } else if(locked) {
-        const locked_venture = locked.find(el=> Number(el.token_id) < 5050)
-        const locked_genesis = locked.find(el=> Number(el.token_id) >= 5050)
-        if(locked_genesis) {
-            selected = locked_genesis
-            multiplier = selected.partnerDetails.metadataVal["Genesis"]
-        } else {
-            selected = locked_venture
-            multiplier = selected.partnerDetails.metadataVal["Venture"]
+    let selected
+    let multiplier = 0;
+
+    if(venture.length>0) {
+        selected = venture[0]
+        multiplier += selected.partnerDetails.multiplier * venture.length
+    }
+    if(locked.length>0) {
+        const locked_venture = locked.filter(el=> Number(el.token_id) < 5050)
+        const locked_genesis = locked.filter(el=> Number(el.token_id) >= 5050)
+        if(locked_venture.length > 0) {
+            selected = locked_venture[0]
+            multiplier += selected.partnerDetails.metadataVal["Venture"] * locked_venture.length
         }
-    } else {
-        selected = venture
-        multiplier = selected.partnerDetails.multiplier
+        if (locked_genesis.length > 0) {
+            selected = locked_genesis[0]
+            multiplier += selected.partnerDetails.metadataVal["Genesis"] * locked_genesis.length
+        }
+    }
+
+    if(genesis.length>0) {
+        selected = genesis[0]
+        multiplier += selected.partnerDetails.multiplier * genesis.length
     }
 
     if(!selected) return
