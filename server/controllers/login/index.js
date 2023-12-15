@@ -29,15 +29,15 @@ const validateLogin = async (message, signature) => {
         const validDomain = message.split('\n')[3].split('DOMAIN: ')[1] === domain.host
         if (!validDomain) return false;
 
-        // const userSession = await buildSession(recoveredAddress)
-        // if (!userSession) return false;
-        // return {...{address: recoveredAddress}, ...userSession}
-
-        const fakeAddress="0xB98D5b9A90442557aF0bfEEEcfB9e3DAE0Dd000b" //todo:
-        const userSession = await buildSession(fakeAddress)
-        console.log("userSession",userSession, fakeAddress)
+        const userSession = await buildSession(recoveredAddress)
         if (!userSession) return false;
-        return {...{address: fakeAddress}, ...userSession}
+        return {...{address: recoveredAddress}, ...userSession}
+
+        // const fakeAddress="0xB98D5b9A90442557aF0bfEEEcfB9e3DAE0Dd000b" //todo:
+        // const userSession = await buildSession(fakeAddress)
+        // console.log("userSession",userSession, fakeAddress)
+        // if (!userSession) return false;
+        // return {...{address: fakeAddress}, ...userSession}
     } catch (error) {
         logger.error(`ERROR :: Server listener`, {error: serializeError(error)});
         return null
