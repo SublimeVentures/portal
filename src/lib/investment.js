@@ -14,14 +14,18 @@ function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min
     if (isBased && (account.ACL !== ACLs.NeoTokyo)) {
         allocationUser_base = account.multi * offer.alloMin
+        console.log("allocationUser_max - tylek", allocationUser_base)
         allocationUser_min = offer.alloMin
     } else {
         allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
         if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
         allocationUser_min = MIN_ALLOCATION
     }
+    console.log("allocationUser_max - allocationUser_min",allocationUser_min)
+    console.log("allocationUser_max - allocationUser_base",allocationUser_base)
 
     allocationUser_max = getUserAllocationBaseWithIncreased(allocationUser_base, upgradeIncreasedUsed)
+    console.log("allocationUser_max",allocationUser_max)
 
     return {
         allocationUser_base,
@@ -139,19 +143,19 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
     const allocationUser_max_rounded = roundAmount(allocationUser_max);
     const allocationUser_guaranteed_rounded = roundAmount(allocationUser_guaranteed);
 
-    // console.log("QUELCO - summary", {
-    //     allocationUser_min,
-    //     allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
-    //     allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
-    //     allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
-    //     allocationUser_max_raw: allocationUser_max,
-    //     allocationUser_left_raw: allocationUser_left,
-    //     allocationUser_guaranteed_raw: allocationUser_guaranteed,
-    //     allocationUser_invested,
-    //     allocationOffer_left,
-    //     offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
-    //     offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
-    // })
+    console.log("QUELCO - summary", {
+        allocationUser_min,
+        allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
+        allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
+        allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
+        allocationUser_max_raw: allocationUser_max,
+        allocationUser_left_raw: allocationUser_left,
+        allocationUser_guaranteed_raw: allocationUser_guaranteed,
+        allocationUser_invested,
+        allocationOffer_left,
+        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
+    })
 
     return {
         allocationUser_min,

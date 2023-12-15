@@ -52,13 +52,13 @@ const LiquidityStep = memo(({ stepProps }) => {
     useEffect(() => {
         // console.log("Liquidity - watch",isReady, balanceFed, isEnoughLiquidity, currency?.address)
 
-        if (balanceFed && isReady) {
+        if (balanceFed && isReady && !isFinished) {
             setFinished(isEnoughLiquidity)
             saveData({
                 liquidity: currentBalanceHuman
             })
         }
-    }, [isReady, balanceFed, currency?.address])
+    }, [isReady, balanceFed, currentBalance, currency?.address, isLoading])
 
 
     const statuses = (state) => {

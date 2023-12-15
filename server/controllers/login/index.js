@@ -74,6 +74,7 @@ const logOut = async (user) => {
     return buildCookie(authTokenName, null, -1)
 }
 
+
 async function feedUserNfts(address) {
     const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
@@ -102,7 +103,6 @@ async function feedUserNfts(address) {
     }
     return [userNfts, enabledCollections]
 }
-
 
 async function buildSession(address) {
     const [nfts, partners] = await feedUserNfts(address)

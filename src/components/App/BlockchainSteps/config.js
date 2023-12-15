@@ -53,7 +53,7 @@ export const getStatusColor = (status) => {
         }
         case Transaction.PrecheckFailed:
         case Transaction.Failed: {
-            return 'text-app-error cursor-pointer'
+            return 'text-app-error'
         }
         default: {
             return ''

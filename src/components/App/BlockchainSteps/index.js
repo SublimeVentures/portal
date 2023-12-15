@@ -5,6 +5,7 @@ import TransactionStep from "@/components/App/BlockchainSteps/TransactionStep";
 import React,  {useState, useEffect, forwardRef,} from "react";
 import {isBased} from "@/lib/utils";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 
 /******************
@@ -38,19 +39,21 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
  *     }
 ******************/
 
-const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
+const  BlockchainSteps = forwardRef(({}, ref) => {
 // const BlockchainSteps = React.memo(forwardRef(({ blockchainProps }, ref) => {
-    const {
-        processingData,
-        checkNetwork,
-        checkLiquidity,
-        checkAllowance,
-        checkTransaction,
-        showButton,
-        buttonData,
-        saveData,
-        saveDataFn
-    } = blockchainProps
+//     const {
+//         processingData,
+//         checkNetwork,
+//         checkLiquidity,
+//         checkAllowance,
+//         checkTransaction,
+//         showButton,
+//         buttonData,
+//         saveData,
+//         saveDataFn
+//     } = blockchainProps
+
+    const { blockchainProps } = useBlockchainContext();
 
     const [networkChecked, setNetworkChecked] = useState(false)
     const [networkReady, setNetworkReady] = useState(false)
@@ -227,10 +230,10 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         <>
             <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content">
 
-                {checkNetwork && <NetworkStep stepProps={networkProps}/>}
+                {/*{checkNetwork && <NetworkStep stepProps={networkProps}/>}*/}
                 {checkLiquidity && <LiquidityStep stepProps={liquidityProps}/>}
-                {checkAllowance && <AllowanceStep stepProps={allowanceProps}/>}
-                {checkTransaction && <TransactionStep stepProps={transactionProps}/>}
+                {/*{checkAllowance && <AllowanceStep stepProps={allowanceProps}/>}*/}
+                {/*{checkTransaction && <TransactionStep stepProps={transactionProps}/>}*/}
             </div>
             {showButton && <div className={` pb-5 ${isBased ? "fullWidth" : "flex flex-1 justify-center"}`}>
                 <UniButton
