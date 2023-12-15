@@ -2,7 +2,7 @@ import NetworkStep from "@/components/App/BlockchainSteps/NetworkStep";
 import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
 import AllowanceStep from "@/components/App/BlockchainSteps/AllowanceStep";
 import TransactionStep from "@/components/App/BlockchainSteps/TransactionStep";
-import {useState, useEffect, forwardRef, useImperativeHandle} from "react";
+import React,  {useState, useEffect, forwardRef,} from "react";
 import {isBased} from "@/lib/utils";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 
@@ -39,7 +39,7 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 ******************/
 
 const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
-
+// const BlockchainSteps = React.memo(forwardRef(({ blockchainProps }, ref) => {
     const {
         processingData,
         checkNetwork,
@@ -79,8 +79,8 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         setFinished: setNetworkChecked,
         saveData: setNetworkData,
     }
-    console.log("networkProps", networkProps)
-    console.log("NetworkStep - check", checkNetwork, networkReady, !networkChecked)
+    // console.log("networkProps", networkProps)
+    // console.log("NetworkStep - check", checkNetwork, networkReady, !networkChecked)
 
     const liquidityCanRun = liquidityReady && (checkNetwork ? networkChecked : true)
     const liquidityProps = {
@@ -91,8 +91,8 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         setFinished: setLiquidityChecked,
         saveData: setLiquidityData,
     }
-    console.log("liquidityProps", liquidityProps)
-    console.log("LiquidityStep - check", checkLiquidity, liquidityCanRun, liquidityChecked)
+    // console.log("liquidityProps", liquidityProps)
+    // console.log("LiquidityStep - check", checkLiquidity, liquidityCanRun, liquidityChecked)
 
     const allowanceCanRun = allowanceReady && (checkNetwork ? networkChecked : true) && (checkLiquidity ? liquidityChecked : true)
     const allowanceProps = {
@@ -103,8 +103,8 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         setFinished: setAllowanceChecked,
         saveData: setAllowanceData,
     }
-    console.log("allowanceProps", allowanceProps)
-    console.log("AllowanceStep - check", checkAllowance, allowanceCanRun, allowanceChecked)
+    // console.log("allowanceProps", allowanceProps)
+    // console.log("AllowanceStep - check", checkAllowance, allowanceCanRun, allowanceChecked)
 
 
     const transactionCanRun = transactionReady && (checkNetwork ? networkChecked : true) && (checkLiquidity ? liquidityChecked : true) && (checkAllowance ? allowanceChecked : true)
@@ -211,9 +211,9 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
         // buttonData.buttonFn();
     }
 
-    useImperativeHandle(ref, () => ({
-        runProcess,
-    }));
+    // useImperativeHandle(ref, () => ({
+    //     runProcess,
+    // }));
 
     useEffect(() => {
         if (saveData) {
@@ -247,6 +247,7 @@ const  BlockchainSteps = forwardRef(({blockchainProps}, ref) => {
             </div>}
         </>
     )
-});
+// }))
+})
 
 export default BlockchainSteps;

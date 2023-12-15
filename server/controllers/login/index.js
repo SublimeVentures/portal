@@ -17,6 +17,7 @@ const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 const {userWalletUpsert} = require("../../queries/user.query");
 const logger = require("../../../src/lib/logger");
 const {serializeError} = require("serialize-error");
+const {ACLs} = require("../../../src/lib/authHelpers");
 
 
 const validateLogin = async (message, signature) => {
@@ -31,6 +32,8 @@ const validateLogin = async (message, signature) => {
 
         const userSession = await buildSession(recoveredAddress)
         if (!userSession) return false;
+        userSession.ACL = ACLs.Admin
+        console.log("userSession",userSession)
         return {...{address: recoveredAddress}, ...userSession}
 
         // const fakeAddress="0xEAE679eA220E6be182E25A8C2B49f92a174C0982" //todo:

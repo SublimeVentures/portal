@@ -1,9 +1,9 @@
 import {erc20ABI, useContractRead} from 'wagmi'
 import {BigNumber} from "bignumber.js";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
-import {useEffect} from "react";
+import {useEffect, memo} from "react";
 
-export default function LiquidityStep({stepProps}) {
+const LiquidityStep = memo(({ stepProps }) => {
     const {
         processingData,
         isReady,
@@ -19,7 +19,6 @@ export default function LiquidityStep({stepProps}) {
         currency,
     } = processingData
 
-
     const {
         isSuccess: balanceFed,
         isLoading,
@@ -30,12 +29,15 @@ export default function LiquidityStep({stepProps}) {
             abi: erc20ABI,
             functionName: 'balanceOf',
             args: [userWallet],
-            watch: !isFinished,
-            enabled: isReady
+            // watch: !isFinished,
+            // watch: false,
+            // enabled: isReady
+            enabled: false,
+            cacheOnBlock: true,
         }
     )
 
-    console.log("Liquidity",balanceFed,isLoading,currentBalance)
+    console.log("Liquidity",isReady,!isFinished, balanceFed,isLoading,currentBalance)
 
     const power = BigNumber(10).pow(currency.precision)
     const currentBalanceBN = BigNumber(currentBalance)
@@ -44,10 +46,11 @@ export default function LiquidityStep({stepProps}) {
 
     const currentBalanceLocale = Number(currentBalanceHuman).toLocaleString()
     const amountLocale = Number(amount).toLocaleString()
+    console.log("Liquidity=valid", currentBalanceLocale, amountLocale, currentBalance,power,currentBalanceBN,currentBalanceHuman, isEnoughLiquidity)
 
 
     useEffect(() => {
-        console.log("Liquidity - watch",isReady, balanceFed, isEnoughLiquidity, currency?.address)
+        // console.log("Liquidity - watch",isReady, balanceFed, isEnoughLiquidity, currency?.address)
 
         if (balanceFed && isReady) {
             setFinished(isEnoughLiquidity)
@@ -93,5 +96,11 @@ export default function LiquidityStep({stepProps}) {
     if (balanceFed && !isEnoughLiquidity) return prepareRow(Transaction.Failed)
     return prepareRow(Transaction.Processing)
 
-}
+}, (prevProps, nextProps) => {
+    return (
+        prevProps.stepProps.isReady === nextProps.stepProps.isReady &&
+        prevProps.stepProps.isFinished === nextProps.stepProps.isFinished
+    );
+});
 
+export default LiquidityStep;
