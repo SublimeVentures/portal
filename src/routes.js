@@ -71,7 +71,7 @@ const ExternalLinksCitCap = {
     APPLY:"https://tally.so/r/wLPg0l",
 
     OTC: "https://info.citizencapital.fund/OTC-08ce38805290416eb073b139bd54e3f7",
-    OTC_ANNOUNCE: "https://discord.com/channels/959614664386424884/1038006855445774347",
+    OTC_ANNOUNCE: "https://discord.com/channels/884204406189490176/1185352947308171324",
     STAKING: "https://info.citizencapital.fund/BYTES-Staking-Requirement-f1621bfe909b41d797fd77ca784a8fa0",
 
 }

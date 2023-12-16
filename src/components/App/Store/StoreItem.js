@@ -45,7 +45,7 @@ export default function StoreItem({item, env, setOrder}) {
                                 <UniButton type={ButtonTypes.BASE} text={'BUY'} isWide={true}
                                            isLarge={false}
                                            size={'text-sm xs'}
-                                           handler={()=> { setOrder(item) }}
+                                           handler={()=> { if(isAvailable>0) setOrder(item) }}
                                 />
                             </div>
 
