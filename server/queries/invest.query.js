@@ -157,7 +157,8 @@ async function expireAllocation(offerId, userId, hash) {
             SET "isExpired" = true,
                 "updatedAt" = now()
             WHERE "userId" = :userId
-              AND "hash" = :hash;
+              AND "hash" = :hash
+              AND "onchainId" is null;
         `;
 
         return await db.query(participantsQuery, {

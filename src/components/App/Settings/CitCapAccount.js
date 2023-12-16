@@ -14,7 +14,10 @@ const CitCapStakingModal = dynamic(() => import('@/components/App/Settings/CitCa
 const CitCapUnStakingModal = dynamic(() => import('@/components/App/Settings/CitCapUnStakingModal'), {ssr: false})
 
 
-function timeUntilNextUnstakeWindow(stakedAt) {
+function timeUntilNextUnstakeWindow(stakedAt, staked) {
+    if(!staked) return {
+        unstake:false
+    }
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const SECONDS_IN_A_DAY = 24 * 60 * 60;
     const SECONDS_IN_A_HOUR = 1 * 60 * 60;
@@ -25,6 +28,7 @@ function timeUntilNextUnstakeWindow(stakedAt) {
     let timeSinceStaked = currentTimestamp - stakedAt;
     let periodPosition = timeSinceStaked % PERIOD_LENGTH;
 
+    console.log("periodPosition",periodPosition)
     if (periodPosition >= (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH)) {
         let timeUntilNextRestake = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
         let timeUntilNextRestakeHours = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
@@ -56,7 +60,9 @@ export default function CitCapAccount({account}) {
     const isElite = account.isElite
 
     const unstakeDate = account?.stakeDate ? account.stakeDate : stakeDate
-    const {unstake, nextDate, nextDateH} = timeUntilNextUnstakeWindow(unstakeDate)
+    const {unstake, nextDate, nextDateH} = timeUntilNextUnstakeWindow(unstakeDate, staked)
+
+
     const refreshSession = async (force) => {
         const {updatedSession} = await updateSession_CitCapStaking()
         if (!updatedSession) return
