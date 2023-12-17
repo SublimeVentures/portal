@@ -17,6 +17,7 @@ import {getOtcMakeFunction} from "@/components/App/Otc/OtcSteps";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import {saveTransaction} from "@/fetchers/otc.fetcher";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
+import {useEffect} from "react";
 
 
 export default function MakeOfferModal({model, setter, props}) {
@@ -51,6 +52,15 @@ export default function MakeOfferModal({model, setter, props}) {
 
     const {selectedChain, currencyList, currencyNames, diamond} = useGetChainEnvironment(currencies, diamonds)
     const {transactionData} = blockchainData
+    const setAmountHandler = (amt) => {
+        setAmount(amt)
+        if(amt) calcPrice(multiplier, amt)
+    }
+    useEffect(() => {
+        if(!isBuyer && amount > allocationMax) setAmountHandler(allocationMax)
+    }, [isBuyer]);
+    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi).toFixed(2)))}
+
 
     if(!selectedChain || !currentMarket) return;
     const selectedCurrency = currencyList[dealCurrency]
@@ -71,12 +81,8 @@ export default function MakeOfferModal({model, setter, props}) {
 
     }
 
-    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi).toFixed(2)))}
     const calcMulti = (price_) => {setMultiplier(Number(Number(price_) / Number(amount).toFixed(2)))}
-    const setAmountHandler = (amt) => {
-        setAmount(amt)
-        if(amt) calcPrice(multiplier, amt)
-    }
+
     const setPriceHandler = (amt) => {
         setPrice(amt)
         if(amt && amount) calcMulti(amt)
@@ -111,6 +117,7 @@ export default function MakeOfferModal({model, setter, props}) {
             //todo: error handling
         }
     }
+
 
     const blockchainProps = {
         processingData: {
@@ -181,7 +188,7 @@ export default function MakeOfferModal({model, setter, props}) {
                     <div className={'pt-10'}>
                         <Input type={'number'}
                                placeholder={`${titleCopy} allocation`}
-                               max={allocationMax}
+                               max={isBuyer ? null : allocationMax}
                                min={allocationMin}
                                setStatus={setStatusAmount}
                                setInput={setAmountHandler}
