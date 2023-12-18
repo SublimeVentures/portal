@@ -29,6 +29,7 @@ import {Tooltiper, TooltipType} from "@/components/Tooltip";
 import {buttonInvestState, tooltipInvestState, userInvestmentState} from "@/lib/investment";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
+import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
@@ -421,9 +422,11 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {
                 setErrorModal(false)
             }}/>
-            {isNetworkSupported && <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
-                setInvestModal(false)
-            }}/> }
+            <BlockchainProvider>
+                {isNetworkSupported && <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
+                    setInvestModal(false)
+                }}/> }
+            </BlockchainProvider>
         </div>
     )
 }

@@ -1,12 +1,15 @@
+import React, {forwardRef, memo} from "react";
+
 import NetworkStep from "@/components/App/BlockchainSteps/NetworkStep";
 import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
 import AllowanceStep from "@/components/App/BlockchainSteps/AllowanceStep";
 import TransactionStep from "@/components/App/BlockchainSteps/TransactionStep";
-import React,  {useState, useEffect, forwardRef,} from "react";
-import {isBased} from "@/lib/utils";
-import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import ErrorStep from "@/components/App/BlockchainSteps/ErrorStep";
+import InteractStep from "@/components/App/BlockchainSteps/InteractStep";
+
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
+import {isBased} from "@/lib/utils";
 
 /******************
  * @devnote
@@ -37,220 +40,40 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
  *         saveData: true,                      -/ enable blockchain data to JSON
  *         saveDataFn: setBlockchainData        -/ point setter for saving JSON
  *     }
-******************/
+ ******************/
 
-const  BlockchainSteps = forwardRef(({}, ref) => {
-// const BlockchainSteps = React.memo(forwardRef(({ blockchainProps }, ref) => {
-//     const {
-//         processingData,
-//         checkNetwork,
-//         checkLiquidity,
-//         checkAllowance,
-//         checkTransaction,
-//         showButton,
-//         buttonData,
-//         saveData,
-//         saveDataFn
-//     } = blockchainProps
+const BlockchainSteps = forwardRef(({}, ref) => {
 
-    const { blockchainProps } = useBlockchainContext();
+    const {blockchainProps} = useBlockchainContext();
+    const {checkNetwork, checkLiquidity, checkAllowance, checkTransaction, showButton} = blockchainProps
 
-    const [networkChecked, setNetworkChecked] = useState(false)
-    const [networkReady, setNetworkReady] = useState(false)
-    const [networkData, setNetworkData] = useState(false)
+    console.log("Init BlockchainSteps", blockchainProps, checkNetwork, checkLiquidity, checkAllowance, checkTransaction)
 
-    const [liquidityChecked, setLiquidityChecked] = useState(false)
-    const [liquidityReady, setLiquidityReady] = useState(false)
-    const [liquidityData, setLiquidityData] = useState(false)
-
-    const [allowanceChecked, setAllowanceChecked] = useState(false)
-    const [allowanceReady, setAllowanceReady] = useState(false)
-    const [allowanceData, setAllowanceData] = useState(false)
-
-    const [transactionChecked, setTransactionChecked] = useState(false)
-    const [transactionReady, setTransactionReady] = useState(false)
-    const [transactionData, setTransactionData] = useState(false)
-
-    console.log("cleanCheck", networkChecked, networkReady, networkData, liquidityChecked, liquidityReady, liquidityData, allowanceChecked, allowanceReady, allowanceData, transactionChecked, transactionReady,transactionData)
-
-
-    const networkProps = {
-        processingData,
-        isReady: networkReady,
-        setIsReady: setNetworkReady,
-        isFinished: networkChecked,
-        setFinished: setNetworkChecked,
-        saveData: setNetworkData,
-    }
-    // console.log("networkProps", networkProps)
-    // console.log("NetworkStep - check", checkNetwork, networkReady, !networkChecked)
-
-    const liquidityCanRun = liquidityReady && (checkNetwork ? networkChecked : true)
-    const liquidityProps = {
-        processingData,
-        isReady: liquidityCanRun,
-        setIsReady: setLiquidityReady,
-        isFinished: liquidityChecked,
-        setFinished: setLiquidityChecked,
-        saveData: setLiquidityData,
-    }
-    // console.log("liquidityProps", liquidityProps)
-    // console.log("LiquidityStep - check", checkLiquidity, liquidityCanRun, liquidityChecked)
-
-    const allowanceCanRun = allowanceReady && (checkNetwork ? networkChecked : true) && (checkLiquidity ? liquidityChecked : true)
-    const allowanceProps = {
-        processingData,
-        isReady: allowanceCanRun,
-        setIsReady: setAllowanceReady,
-        isFinished: allowanceChecked,
-        setFinished: setAllowanceChecked,
-        saveData: setAllowanceData,
-    }
-    // console.log("allowanceProps", allowanceProps)
-    // console.log("AllowanceStep - check", checkAllowance, allowanceCanRun, allowanceChecked)
-
-
-    const transactionCanRun = transactionReady && (checkNetwork ? networkChecked : true) && (checkLiquidity ? liquidityChecked : true) && (checkAllowance ? allowanceChecked : true)
-    const transactionProps = {
-        processingData,
-        isReady: transactionCanRun,
-        setIsReady: setTransactionReady,
-        isFinished: transactionChecked,
-        setFinished: setTransactionChecked,
-        saveData: setTransactionData,
-    }
-
-
-    const dataPack = {
-        networkData,
-        liquidityData,
-        allowanceData,
-        transactionData,
-    }
-
-
-
-    const buttonState = () => {
-        if(!showButton) return {};
-
-        if(buttonData?.customLock) {
-            if(buttonData.customLockParams.length>0) {
-                for(let i=0; i<buttonData.customLockParams.length; i++ ){
-                    if(buttonData.customLockParams[i].check) {
-                        return {
-                            text: buttonData.customLockParams[i]?.error ? buttonData.customLockParams[i]?.error : "Processing...",
-                            lock: buttonData.customLockParams[i].check
-                        }
-
-                    }
-                }
-            }
-        }
-
-        if(checkNetwork && networkReady && !networkChecked) {
-            return {
-                text: "Processing...",
-                lock: true
-            }
-        }
-
-        if(checkLiquidity && liquidityCanRun && !liquidityChecked) {
-            return {
-                text: "Not enough liquidity",
-                lock: true
-            }
-        }
-
-        if(checkAllowance && allowanceCanRun && !allowanceChecked) {
-            return {
-                text: "Processing...",
-                lock: true
-            }
-        }
-
-        if(checkTransaction && transactionCanRun && !transactionChecked) {
-            return {
-                text: "Processing...",
-                lock: true
-            }
-        }
-
-        return {
-            text: buttonData.text,
-            lock: false
-        }
-    }
-
-
-    const cleanProcess = () => {
-        setNetworkChecked(false)
-        setNetworkReady(false)
-        setNetworkData(false)
-        setLiquidityChecked(false)
-        setLiquidityReady(false)
-        setLiquidityData(false)
-        setAllowanceChecked(false)
-        setAllowanceReady(false)
-        setAllowanceData(false)
-        setTransactionChecked(false)
-        setTransactionReady(false)
-        setTransactionData(false)
-    }
-
-    const runProcess = () => {
-        // if(buttonState().lock) return;
-        if(checkNetwork) {
-            setNetworkReady(true)
-        }
-        if(checkLiquidity) {
-            setLiquidityReady(true)
-        }
-        if(checkAllowance) {
-            setAllowanceReady(true)
-        }
-        if(checkTransaction) {
-            setTransactionReady(true)
-        }
-        // buttonData.buttonFn();
-    }
-
-    // useImperativeHandle(ref, () => ({
-    //     runProcess,
-    // }));
-
-    useEffect(() => {
-        if (saveData) {
-            saveDataFn({...dataPack, ...{lock: buttonState().lock}})
-        }
-    }, [networkChecked, networkReady, liquidityChecked, liquidityReady, allowanceChecked, allowanceReady, transactionChecked, transactionReady])
-
+    // // useImperativeHandle(ref, () => ({ //todo:
+    // //     runProcess,
+    // // }));
 
 
     return (
         <>
-            <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content">
-
-                {/*{checkNetwork && <NetworkStep stepProps={networkProps}/>}*/}
-                {checkLiquidity && <LiquidityStep stepProps={liquidityProps}/>}
-                {/*{checkAllowance && <AllowanceStep stepProps={allowanceProps}/>}*/}
-                {/*{checkTransaction && <TransactionStep stepProps={transactionProps}/>}*/}
+            <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content text-sm">
+                {checkNetwork && <NetworkStep/>}
+                {checkLiquidity && <LiquidityStep/>}
+                {checkAllowance && <AllowanceStep/>}
+                {checkTransaction && <TransactionStep/>}
+                <ErrorStep/>
             </div>
+
             {showButton && <div className={` pb-5 ${isBased ? "fullWidth" : "flex flex-1 justify-center"}`}>
-                <UniButton
-                    type={ButtonTypes.BASE}
-                    isWide={true}
-                    size={'text-sm sm'}
-                    text={buttonState().text}
-                    state={"danger"}
-                    icon={buttonData.icon}
-                    isDisabled={buttonState().lock}
-                    handler={() => {
-                        buttonData?.buttonFn ? buttonData?.buttonFn() : runProcess()
-                    }}/>
+                <InteractStep/>
             </div>}
         </>
     )
-// }))
 })
 
-export default BlockchainSteps;
+const areEqual = (prevProps, nextProps) => {
+    // Only re-render if checkLiquidity has changed
+    return prevProps.blockchainProps?.checkLiquidity === nextProps.blockchainProps?.checkLiquidity;
+};
+
+export default memo(BlockchainSteps, areEqual);

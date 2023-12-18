@@ -2,9 +2,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import {useState, useRef, useEffect} from "react";
-import {ButtonIconSize} from "@/components/Button/RoundButton";
 import PAGE, {ExternalLinks} from "@/routes";
-import Link from "next/link";
 import Linker from "@/components/link";
 import {getInvestFunction} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
@@ -24,7 +22,7 @@ export const StakeSteps = {
 
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
-    const { updateBlockchainProps } = useBlockchainContext();
+    const { updateBlockchainProps, stepCleanup } = useBlockchainContext();
     const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
 
 
@@ -44,6 +42,7 @@ export default function InvestModal({model, setter, investModalProps}) {
         }
         setTimeout(() => {
             setBlockchainData(false)
+            stepCleanup()
         }, 400);
     }
 
@@ -56,19 +55,24 @@ export default function InvestModal({model, setter, investModalProps}) {
         if(investmentAmount<50 || !model || !hash || hash?.length === 0) return;
 
         console.log("REEEEKTO")
-        const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
+        const investFunction = getInvestFunction(account.ACL, false, 1, offer, selectedCurrency, hash, account.id)
+        // const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
 
         updateBlockchainProps({
             processingData: {
-                amount: investmentAmount,
+                requiredNetwork: 56, //todo: comment
+                forcePrecheck: false,//todo: comment
+                // amount: investmentAmount, //todo: uncomment
+                amount: 1,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 transactionData: investFunction
             },
             buttonData: {
-                icon: <RocketIcon className="hero-size" />, // Adjust class as needed
+                icon: <RocketIcon className="w-10 mr-2" />, // Adjust class as needed
                 text: "Transfer funds",
             },
+            checkNetwork: true,//todo: comment
             checkLiquidity: true,
             checkTransaction: true,
             showButton: true,
@@ -117,7 +121,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                     You have successfully booked <span className="text-gold font-medium">${amountLocale}</span> allocation in <span className="font-bold text-gold ">{offer.name}</span>.
                 </div>
                 <div className="pt-10 pb-5 flex flex-col items-center">
-                    <div className="pb-2">Your allocation is safely booked for</div>
+                    <div className="pb-2">Complete transfer in the next</div>
                     <FlipClockCountdown
                         className="flip-clock"
                         onComplete={() => bookingExpire()}
@@ -125,13 +129,10 @@ export default function InvestModal({model, setter, investModalProps}) {
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                         labelStyle={{fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color: 'white'}}
                     />
-                    <div className="mt-5"><strong>No need for gas wars!</strong></div>
-                    <div>Execute transactions carefully.</div>
+
                 </div>
 
-                {/*<BlockchainProvider>*/}
-                {/*    <BlockchainSteps ref={blockchainRef}/>*/}
-                {/*</BlockchainProvider>*/}
+                <BlockchainSteps ref={blockchainRef}/>
                 <div>Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>
             </div>

@@ -36,8 +36,9 @@ const validateLogin = async (message, signature) => {
         console.log("userSession",userSession)
         return {...{address: recoveredAddress}, ...userSession}
 
-        // const fakeAddress="0xEAE679eA220E6be182E25A8C2B49f92a174C0982" //todo:
+        // const fakeAddress="0xB98D5b9A90442557aF0bfEEEcfB9e3DAE0Dd000b" //todo:
         // const userSession = await buildSession(fakeAddress)
+        // userSession.ACL = ACLs.Admin
         // console.log("userSession",userSession, fakeAddress)
         // if (!userSession) return false;
         // return {...{address: fakeAddress}, ...userSession}

@@ -7,16 +7,25 @@ import {
     Transaction
 } from "@/components/App/BlockchainSteps/config";
 import {useEffect} from "react";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
-export default function NetworkStep({stepProps}) {
+export default function NetworkStep() {
+    const {networkState, blockchainProps} = useBlockchainContext();
     const {
-        processingData,
         isReady,
         setIsReady,
+        isFetched,
+        setIsFetched,
+        setIsLoading,
+        result,
+        setResult,
         isFinished,
-        setFinished,
-        saveData
-    } = stepProps
+        setIsFinished,
+        setIsError,
+        setError,
+    } = networkState
+
+    const {processingData} = blockchainProps
 
     const {
         requiredNetwork,
@@ -24,52 +33,44 @@ export default function NetworkStep({stepProps}) {
     } = processingData
 
     const {chain} = useNetwork()
-    const {chains, error, isLoading, switchNetwork} = useSwitchNetwork()
-
+    const {chains, error, isLoading: network_isLoading, switchNetwork} = useSwitchNetwork()
     const chainSelected = chains.find(el => el.id === chain?.id);
     const chainDesired = chains.find(el => el.id === requiredNetwork)
     const isRightChain = chainDesired.id === chainSelected.id
 
-    console.log("NetworkStep - debug", isRightChain, isLoading, error)
     const changeNetwork = () => {
-        console.log("NetworkStep - trigger", isReady, !isLoading, !isFinished, !isRightChain)
-
-        if (isReady && !isLoading) {
-            if (!isRightChain) {
-            // if (!isFinished && !isRightChain) {
-                setIsReady(true)
-                switchNetwork?.(requiredNetwork)
-            }
+        if (!network_isLoading && !isRightChain) {
+            switchNetwork?.(requiredNetwork)
         }
     }
 
     useEffect(() => {
+        console.log("IQZ :: NETWORK R/F", isReady, isRightChain)
+        if (!isReady) return;
+        setIsFinished(isRightChain)
         changeNetwork()
-    }, [isReady])
+    }, [chain?.id, isReady])
 
     useEffect(() => {
-        if (isReady && !isLoading) {
+        setIsLoading(network_isLoading)
+    }, [network_isLoading])
+
+
+    useEffect(() => {
+        console.log("IQZ :: NETWORK E/L", error, network_isLoading)
+        setIsError(!!error)
+        setError(error)
+        if(!!error) {
             setIsReady(false)
         }
-    }, [error])
+    }, [error, network_isLoading])
 
 
     useEffect(() => {
-        if (isRightChain) {
-            setFinished(true)
-            if(error) {
-                setIsReady(true)
-            }
-        } else {
-            setFinished(false)
-            changeNetwork()
-        }
-    }, [isRightChain])
-
-    useEffect(() => {
-        saveData({
+        setResult({
             chainSelected,
-            chainDesired
+            chainDesired,
+            isRightChain
         })
     }, [chain?.id])
 
@@ -98,6 +99,7 @@ export default function NetworkStep({stepProps}) {
     }
 
     const prepareRow = (state) => {
+        // return <div className={`flex flex-row items-center ${getStatusColor(state)}`} >
         return <div className={`flex flex-row items-center ${getStatusColor(state)}`} onClick={() => changeNetwork()}>
             {getIcon(state)}
             <div>
@@ -106,13 +108,13 @@ export default function NetworkStep({stepProps}) {
         </div>
     }
 
-    if (isLoading) {
+    if (network_isLoading) {
         return prepareRow(Transaction.Processing)
     }
-    if (isRightChain && isReady || isRightChain && forcePrecheck) {
+    if (isFinished && isReady || isFinished && forcePrecheck) {
         return prepareRow(Transaction.Executed)
     }
-    if (!isLoading && isReady && !isRightChain || error) {
+    if (!network_isLoading && isReady && !isFinished || error) {
         return prepareRow(Transaction.Failed)
     }
     if (forcePrecheck) {

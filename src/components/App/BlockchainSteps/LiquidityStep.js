@@ -1,17 +1,27 @@
 import {erc20ABI, useContractRead} from 'wagmi'
 import {BigNumber} from "bignumber.js";
 import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
-import {useEffect, memo} from "react";
+import {useEffect} from "react";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
-const LiquidityStep = memo(({ stepProps }) => {
+
+export default function LiquidityStep() {
+
+    const { liquidityState, blockchainProps } = useBlockchainContext();
     const {
-        processingData,
         isReady,
-        setIsReady,
+        isFetched,
+        setIsFetched,
+        setIsLoading,
+        result,
+        setResult,
         isFinished,
-        setFinished,
-        saveData
-    } = stepProps
+        setIsFinished,
+        setIsError,
+        setError,
+    } = liquidityState
+
+    const {processingData} = blockchainProps
 
     const {
         amount,
@@ -19,46 +29,57 @@ const LiquidityStep = memo(({ stepProps }) => {
         currency,
     } = processingData
 
+    const balance_user = Number(result).toLocaleString()
+    const balance_required = Number(amount).toLocaleString()
+
+
     const {
-        isSuccess: balanceFed,
-        isLoading,
-        data: currentBalance
+        isSuccess: onchain_isSuccess,
+        isLoading: onchain_isLoading,
+        data: onchain_data,
+        isError: onchain_isError,
+        error: onchain_error,
+        refetch: onchain_refetch
     } = useContractRead(
         {
             address: currency.address,
             abi: erc20ABI,
             functionName: 'balanceOf',
             args: [userWallet],
-            // watch: !isFinished,
-            // watch: false,
-            // enabled: isReady
-            enabled: false,
+            watch: !isFinished,
+            enabled: isReady,
             cacheOnBlock: true,
         }
     )
 
-    console.log("Liquidity",isReady,!isFinished, balanceFed,isLoading,currentBalance)
+    useEffect(() => {
+        console.log("IQZ :: LIQUIDITY :: R", isReady)
 
-    const power = BigNumber(10).pow(currency.precision)
-    const currentBalanceBN = BigNumber(currentBalance)
-    const currentBalanceHuman = currentBalance ? currentBalanceBN.dividedBy(power).toNumber() : 0
-    const isEnoughLiquidity = amount <= currentBalanceHuman
+        if(!isReady) return
+        setIsLoading(onchain_isLoading)
+        setIsFetched(onchain_isSuccess)
+        let balance_user = 0
+        if(onchain_data?.toString() != undefined && currency?.precision) {
+            const power = BigNumber(10).pow(currency.precision)
+            const currentBalanceBN = BigNumber(onchain_data)
+            balance_user = onchain_data ? currentBalanceBN.dividedBy(power).toNumber() : 0
 
-    const currentBalanceLocale = Number(currentBalanceHuman).toLocaleString()
-    const amountLocale = Number(amount).toLocaleString()
-    console.log("Liquidity=valid", currentBalanceLocale, amountLocale, currentBalance,power,currentBalanceBN,currentBalanceHuman, isEnoughLiquidity)
+        }
+        setResult(balance_user)
+        setIsFinished(amount <= balance_user)
+        console.log("IQZ :: LIQUIDITY :: S", onchain_isLoading, onchain_isSuccess,onchain_data, balance_user,amount <= balance_user)
+
+    }, [onchain_isSuccess, onchain_isLoading, onchain_data])
 
 
     useEffect(() => {
-        // console.log("Liquidity - watch",isReady, balanceFed, isEnoughLiquidity, currency?.address)
-
-        if (balanceFed && isReady && !isFinished) {
-            setFinished(isEnoughLiquidity)
-            saveData({
-                liquidity: currentBalanceHuman
-            })
+        console.log("IQZ :: LIQUIDITY :: E", onchain_isError, onchain_error)
+        if(onchain_isError || onchain_error){
+            // refetch()
         }
-    }, [isReady, balanceFed, currentBalance, currency?.address, isLoading])
+        setIsError(onchain_isError)
+        setError(onchain_error)
+    }, [onchain_isError, onchain_error])
 
 
     const statuses = (state) => {
@@ -73,7 +94,7 @@ const LiquidityStep = memo(({ stepProps }) => {
                 return <>Availability of funds confirmed </>
             }
             case Transaction.Failed: {
-                return <span className="underline">Wallet doesn't hold {amountLocale} {currency?.symbol}</span>
+                return <span className="underline">Wallet doesn't hold {balance_required} {currency?.symbol}</span>
             }
             default: {
                 return <>Check allowance</>
@@ -87,20 +108,13 @@ const LiquidityStep = memo(({ stepProps }) => {
             <div>
                 {statuses(state)}
                 {state !== Transaction.Executed && isReady &&
-                    <div className="text-xs -mt-1">wallet holdings: {currentBalanceLocale} {currency?.symbol}</div>}
+                    <div className="text-xs -mt-1">wallet holdings: {balance_user} {currency?.symbol}</div>}
             </div>
         </div>
     }
-    if (isFinished && isEnoughLiquidity) return prepareRow(Transaction.Executed)
+
+    if (isFinished && isReady) return prepareRow(Transaction.Executed)
     if (!isReady) return prepareRow(Transaction.Waiting)
-    if (balanceFed && !isEnoughLiquidity) return prepareRow(Transaction.Failed)
+    if (isFetched && !isFinished) return prepareRow(Transaction.Failed)
     return prepareRow(Transaction.Processing)
-
-}, (prevProps, nextProps) => {
-    return (
-        prevProps.stepProps.isReady === nextProps.stepProps.isReady &&
-        prevProps.stepProps.isFinished === nextProps.stepProps.isFinished
-    );
-});
-
-export default LiquidityStep;
+};
