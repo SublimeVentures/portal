@@ -23,7 +23,6 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
     const [blockchainData, setBlockchainData] = useState(false)
 
     const {transactionData} = blockchainData
-    const blockchainRef = useRef();
 
     const purchaseUpgradesFunction = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
 
@@ -108,7 +107,7 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
                         </div>
                     </div>
                 </div>
-                <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
+                <BlockchainSteps blockchainProps={blockchainProps}/>
             </div>
         )
     }

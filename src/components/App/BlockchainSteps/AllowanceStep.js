@@ -94,22 +94,21 @@ export default function AllowanceStep() {
     })
 
 
-
     useEffect(() => {
         console.log("IQZ :: ALLOWANCE :: R", isReady)
-        if(!isReady) return
+        if (!isReady) return
         setIsLoading(onchain_isLoading)
         setIsFetched(onchain_isSuccess)
         let allowance_current = 0
-        if(onchain_data?.toString() != undefined && currency?.precision) {
+        if (onchain_data?.toString() != undefined && currency?.precision) {
             const power = BigNumber(10).pow(currency.precision)
             const balance_currentBN = BigNumber(onchain_data)
             allowance_current = onchain_data ? balance_currentBN.dividedBy(power).toNumber() : 0
         }
         setResult(allowance_current)
-        setIsFinished(requiredAllowance <= allowance_current) //todo:
+        setIsFinished((amountAllowance >= allowance_current) && allowance_current > 0)
 
-        console.log("IQZ :: ALLOWANCE :: S", requiredAllowance,allowance_current, onchain_isLoading, onchain_isSuccess,onchain_data, allowance_current,balance_required <= allowance_current)
+        console.log("IQZ :: ALLOWANCE :: S", amountAllowance, allowance_current, onchain_isLoading, onchain_isSuccess, onchain_data, allowance_current, balance_required <= allowance_current)
     }, [onchain_isSuccess, onchain_isLoading, onchain_data])
 
 
@@ -117,7 +116,7 @@ export default function AllowanceStep() {
         if (isReady && prep_isSuccess && !write_isLoading) {
             setIsError(false)
             setError(null)
-            if(!isFinished) {
+            if (!isFinished) {
                 write_send()
             }
         }
@@ -139,8 +138,8 @@ export default function AllowanceStep() {
 
     useEffect(() => {
         console.log("IQZ :: ALLOWANCE :: ERROR", {
-            prep: { prep_isError, prep_error },
-            write: { write_isError, write_error },
+            prep: {prep_isError, prep_error},
+            write: {write_isError, write_error},
             confirm: {confirmation_isError, confirmation_error}
         })
 
@@ -158,9 +157,6 @@ export default function AllowanceStep() {
     ])
 
 
-
-
-
     const statuses = (state) => {
         switch (state) {
             case Transaction.Waiting: {
@@ -168,7 +164,7 @@ export default function AllowanceStep() {
             }
             case Transaction.Processing: {
                 return <>Confirm allowance in wallet
-                    ({currency.isSettlement ? `$${balance_user}` : `${balance_user} ${currency.symbol}`})</>
+                    ({currency.isSettlement ? `$${balance_required}` : `${balance_required} ${currency.symbol}`})</>
             }
             case Transaction.Executed: {
                 return <>Allowance confirmed
@@ -189,12 +185,9 @@ export default function AllowanceStep() {
             {getIcon(state)}
             <div>
                 {statuses(state)}
-                {state !== Transaction.Executed && <div className="text-xs -mt-1">current
-                    allowance: {currency.isSettlement ? `$${balance_user}` : `${balance_user} ${currency.symbol}`}</div>}
             </div>
         </div>
     }
-
 
     if (isFinished) {
         return prepareRow(Transaction.Executed)
@@ -207,7 +200,5 @@ export default function AllowanceStep() {
     } else {
         return prepareRow(Transaction.Processing)
     }
-
-
 }
 

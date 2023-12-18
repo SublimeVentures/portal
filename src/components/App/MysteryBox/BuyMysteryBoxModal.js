@@ -23,7 +23,6 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
     const [blockchainData, setBlockchainData] = useState(false)
 
     const {transactionData} = blockchainData
-    const blockchainRef = useRef();
 
 
     const purchaseMysteryBoxFunction = getMysteryBoxFunction(contract, selectedCurrency.address, 1)
@@ -116,7 +115,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                         </div>
                     </div>
                 </div>
-                <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
+                <BlockchainSteps blockchainProps={blockchainProps}/>
 
             </div>
         )

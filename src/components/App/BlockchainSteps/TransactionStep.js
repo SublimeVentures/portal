@@ -111,14 +111,6 @@ export default function TransactionStep() {
         confirmation_isError, confirmation_error
     ])
 
-    // useEffect(() => {
-    //     if (!isReady) {
-    //         setIsError(false)
-    //         setError(null)
-    //     }
-    // }, [
-    //     isReady
-    // ])
 
     const statuses = (state) => {
         switch (state) {
@@ -152,7 +144,6 @@ export default function TransactionStep() {
     if (isFinished) return prepareRow(Transaction.Executed)
     if ((!!prep_error || !!write_error || !!confirmation_error) && !isFinished) return prepareRow(Transaction.Failed)
     if (!isReady) return prepareRow(Transaction.Waiting)
-
     return prepareRow(Transaction.Processing)
 }
 

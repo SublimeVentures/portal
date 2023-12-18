@@ -6,8 +6,10 @@ export default function InteractStep() {
     const {
         blockchainProps,
         networkState,
+        allowanceState,
         liquidityState,
-        transactionState
+        transactionState,
+        buttonState
     } = useBlockchainContext();
 
     const {
@@ -47,12 +49,15 @@ export default function InteractStep() {
         setLock: transaction_setLock
     } = transactionState
 
+    const {
+        buttonLock,
+        setButtonLock,
+        buttonText,
+        setButtonText
+    } = buttonState
 
 
-    const [buttonLock, setButtonLock] = useState(false)
-    const [buttonText, setButtonText] = useState("")
-
-    const buttonState = () => {
+    const processButtonState = () => {
         if(!showButton) return {};
 
         if(buttonData?.customLock) {
@@ -83,7 +88,7 @@ export default function InteractStep() {
             }
         }
 
-        if(checkAllowance && allowance_isFetched && liquidity_isReady && !allowance_isFinished) {
+        if(checkAllowance && allowance_isReady && !allowance_isFinished) {
             return {
                 text: "Processing...",
                 lock: true
@@ -113,7 +118,7 @@ export default function InteractStep() {
             liquidity_setLock(false)
         }
         if(checkAllowance) {
-            allowance_setLock(true)
+            allowance_setLock(false)
         }
         if(checkTransaction) {
             transaction_setLock(false)
@@ -121,22 +126,22 @@ export default function InteractStep() {
         // // buttonData.buttonFn();
     }
 
-    //todo: cleanup
 
     useEffect(() => {
         console.log("IQZ :: INTERACT NETWORK", network_isReady, network_isFinished,)
-        const {text, lock} = buttonState()
+        const {text, lock} = processButtonState()
         setButtonLock(lock)
         setButtonText(text)
     }, [
         showButton,
         liquidity_isFetched, liquidity_isReady, liquidity_isFinished,
         network_isReady, network_isFinished,
+        allowance_isReady, allowance_isFinished,
         transaction_isReady, transaction_isFinished,
     ])
 
     return(
-        <UniButton
+       <UniButton
             type={ButtonTypes.BASE}
             isWide={true}
             size={'text-sm sm'}

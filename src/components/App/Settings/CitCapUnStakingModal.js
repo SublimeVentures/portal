@@ -11,7 +11,6 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const [blockchainData, setBlockchainData] = useState(false)
 
     const {transactionData} = blockchainData
-    const blockchainRef = useRef();
 
     const unstakingFunction = getCitCapUnStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
 
@@ -70,7 +69,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                     <div className={"my-5"}>
                         <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSze} BYTES</p></div>
                     </div>
-                     <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
+                     <BlockchainSteps blockchainProps={blockchainProps}/>
 
             </div>
         )

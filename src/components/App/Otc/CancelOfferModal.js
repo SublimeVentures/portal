@@ -20,7 +20,6 @@ export default function CancelOfferModal({model, setter, props}) {
     const {diamond} = useGetChainEnvironment(currencies, diamonds)
 
     const {transactionData} = blockchainData
-    const blockchainRef = useRef();
 
     if(!currentMarket?.name || !offerDetails?.currency) return
 
@@ -90,7 +89,7 @@ export default function CancelOfferModal({model, setter, props}) {
                     {!offerDetails.isSell && <><div className="font-bold text-gold">FUNDS RETURNED</div><div className={"flex justify-end text-gold"}>{getCurrencyIcon(offerDetails.currency, currencies)} <span className={"ml-2"}>${cancelOfferPrice_parsed}</span></div></>}
 
                 </div>
-                <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
+                <BlockchainSteps  blockchainProps={blockchainProps}/>
             </div>
         )
     }

@@ -47,12 +47,9 @@ const BlockchainSteps = forwardRef(({}, ref) => {
     const {blockchainProps} = useBlockchainContext();
     const {checkNetwork, checkLiquidity, checkAllowance, checkTransaction, showButton} = blockchainProps
 
-    console.log("Init BlockchainSteps", blockchainProps, checkNetwork, checkLiquidity, checkAllowance, checkTransaction)
-
     // // useImperativeHandle(ref, () => ({ //todo:
     // //     runProcess,
     // // }));
-
 
     return (
         <>
@@ -72,7 +69,6 @@ const BlockchainSteps = forwardRef(({}, ref) => {
 })
 
 const areEqual = (prevProps, nextProps) => {
-    // Only re-render if checkLiquidity has changed
     return prevProps.blockchainProps?.checkLiquidity === nextProps.blockchainProps?.checkLiquidity;
 };
 

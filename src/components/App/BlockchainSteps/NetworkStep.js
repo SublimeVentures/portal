@@ -99,7 +99,6 @@ export default function NetworkStep() {
     }
 
     const prepareRow = (state) => {
-        // return <div className={`flex flex-row items-center ${getStatusColor(state)}`} >
         return <div className={`flex flex-row items-center ${getStatusColor(state)}`} onClick={() => changeNetwork()}>
             {getIcon(state)}
             <div>
@@ -121,6 +120,5 @@ export default function NetworkStep() {
         return prepareRow(Transaction.PrecheckFailed)
     } else
         return prepareRow(Transaction.Waiting)
-
 }
 

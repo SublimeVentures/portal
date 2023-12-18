@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import merge from 'lodash/merge';
 
 const BlockchainContext = createContext({
@@ -9,7 +9,6 @@ const BlockchainContext = createContext({
         checkTransaction: false,
         showButton: false,
         saveData: false,
-        saveDataFn: () => {},
     },
     updateBlockchainProps: () => {}, // Dummy function as placeholder
 });
@@ -24,15 +23,23 @@ export const BlockchainProvider = ({ children }) => {
         checkTransaction: false,
         showButton: false,
         saveData: false,
-        saveDataFn: () => {},
     });
+
+    //SUMMARY
+    const [blockchainSummary, setBlockchainSummary] = useState({});
+
+
+    //BUTTON
+    const [buttonLock, setButtonLock] = useState(false)
+    const [buttonText, setButtonText] = useState("")
+
 
     //NETWORK
     const [network_isLoading, setNetwork_isLoading] = useState(false)
     const [network_isFinished, setNetwork_isFinished] = useState(false)
     const [network_isError, setNetwork_isError] = useState(false)
     const [network_error, setNetwork_error] = useState(null)
-    const [network_result, setNetwork_result] = useState(0) //todo: to saveData
+    const [network_result, setNetwork_result] = useState(0)
     const [network_lock, setNetwork_lock] = useState(true)
     const network_isReady = !network_lock
 
@@ -73,35 +80,66 @@ export const BlockchainProvider = ({ children }) => {
         setBlockchainProps(prevProps => merge({}, prevProps, newProps));
     };
 
-    const updateBlockchainData = () => {
-        //todo:
-    }
-
-    const stepCleanup = () => {
-        setNetwork_lock(true)
-        setLiquidity_lock(true)
-        setAllowance_lock(true)
-        setTransaction_lock(true)
-
-        setLiquidity_isFinished(false)
-        setAllowance_isFinished(false)
-        setTransaction_isFinished(false)
-
+    const blockchainCleanup = () => {
+        setNetwork_isLoading(false)
+        setNetwork_isFinished(false)
         setNetwork_isError(false)
         setNetwork_error(null)
+        setNetwork_result(0)
+        setNetwork_lock(true)
+
+        setLiquidity_isFetched(false)
+        setLiquidity_isLoading(false)
+        setLiquidity_isFinished(false)
         setLiquidity_isError(false)
         setLiquidity_error(null)
+        setLiquidity_result(0)
+        setLiquidity_lock(true)
+
+        setAllowance_isFetched(false)
+        setAllowance_isLoading(false)
+        setAllowance_isFinished(false)
         setAllowance_isError(false)
         setAllowance_error(null)
+        setAllowance_result(0)
+        setAllowance_lock(true)
+
+        setTransaction_isFetched(false)
+        setTransaction_isLoading(false)
+        setTransaction_isFinished(false)
         setTransaction_isError(false)
         setTransaction_error(null)
+        setTransaction_result(0)
+        setTransaction_lock(true)
+
+        setBlockchainSummary({})
     }
+
+    useEffect(() => {
+        if (blockchainProps.saveData) {
+            setBlockchainSummary(prevProps => merge({}, prevProps, {
+                network_result,
+                liquidity_result,
+                allowance_result,
+                transaction_result,
+                buttonLock,
+                buttonText
+            }));
+        }
+    }, [
+        network_isFinished,
+        liquidity_isFinished,
+        allowance_isFinished,
+        transaction_isFinished,
+        buttonLock,
+        buttonText,
+    ])
 
     const value = {
         blockchainProps,
+        blockchainSummary,
         updateBlockchainProps,
-        updateBlockchainData,
-        stepCleanup,
+        blockchainCleanup,
         networkState: {
             isReady: network_isReady,
             setIsReady: (state) => {setNetwork_lock(!state)},
@@ -135,6 +173,7 @@ export const BlockchainProvider = ({ children }) => {
         },
         allowanceState: {
             isReady: allowance_isReady,
+            setIsReady: (state) => {setAllowance_lock(!state)},
             isFetched: allowance_isFetched,
             setIsFetched: setAllowance_isFetched,
             isLoading: allowance_isLoading,
@@ -165,6 +204,12 @@ export const BlockchainProvider = ({ children }) => {
             error: transaction_error,
             setError: setTransaction_error,
             setLock: setTransaction_lock
+        },
+        buttonState: {
+            buttonLock,
+            setButtonLock,
+            buttonText,
+            setButtonText
         },
     };
 

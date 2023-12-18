@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import {useState, useRef, useEffect} from "react";
+import {useEffect} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {getInvestFunction} from "@/components/App/BlockchainSteps/config";
@@ -12,7 +12,7 @@ import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useRouter} from "next/router";
-import {BlockchainProvider, useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export const StakeSteps = {
     Select: 0,
@@ -22,27 +22,29 @@ export const StakeSteps = {
 
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
-    const { updateBlockchainProps, stepCleanup } = useBlockchainContext();
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
     const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
-
-    const [blockchainData, setBlockchainData] = useState(false)
-
-    const {transactionData} = blockchainData
-    const blockchainRef = useRef();
 
     if(!selectedCurrency) return
 
     const amountLocale = Number(investmentAmount).toLocaleString()
 
+    const testClean = () => {
+        if(!blockchainSummary?.buttonLock && !transactionSuccessful) {
+            console.log("reset")
+            blockchainCleanup()
+        }
+    }
+
     const closeModal = () => {
         setter()
-        if(transactionData?.transferConfirmed) {
+        if(transactionSuccessful) {
             afterInvestmentCleanup()
         }
         setTimeout(() => {
-            setBlockchainData(false)
-            stepCleanup()
+            blockchainCleanup()
         }, 400);
     }
 
@@ -54,9 +56,8 @@ export default function InvestModal({model, setter, investModalProps}) {
     useEffect(() => {
         if(investmentAmount<50 || !model || !hash || hash?.length === 0) return;
 
-        console.log("REEEEKTO")
         const investFunction = getInvestFunction(account.ACL, false, 1, offer, selectedCurrency, hash, account.id)
-        // const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
+        //todo: uncomment const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
 
         updateBlockchainProps({
             processingData: {
@@ -77,7 +78,6 @@ export default function InvestModal({model, setter, investModalProps}) {
             checkTransaction: true,
             showButton: true,
             saveData: true,
-            saveDataFn: setBlockchainData,
         });
     }, [
         investmentAmount,
@@ -90,7 +90,7 @@ export default function InvestModal({model, setter, investModalProps}) {
     const title = () => {
         return (
             <>
-                {transactionData?.transferConfirmed ?
+                {transactionSuccessful ?
                     <>Investment <span className="text-app-success">successful</span></>
                     :
                     <>Booking <span className="text-app-success">success</span></>
@@ -132,8 +132,8 @@ export default function InvestModal({model, setter, investModalProps}) {
 
                 </div>
 
-                <BlockchainSteps ref={blockchainRef}/>
-                <div>Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
+                <BlockchainSteps/>
+                <div>Booked allocation will be <span onClick={()=> testClean()}>released</span> when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>
             </div>
         )
@@ -141,7 +141,7 @@ export default function InvestModal({model, setter, investModalProps}) {
 
 
     const content = () => {
-       return transactionData?.transferConfirmed ? contentSuccess() : contentSteps()
+       return transactionSuccessful ? contentSuccess() : contentSteps()
     }
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)
