@@ -32,7 +32,7 @@ const validateLogin = async (message, signature) => {
 
         const userSession = await buildSession(recoveredAddress)
         if (!userSession) return false;
-        userSession.ACL = ACLs.Admin //todo: comment out
+        // userSession.ACL = ACLs.Admin //todo: comment out
         console.log("userSession",userSession) //uncomment
         return {...{address: recoveredAddress}, ...userSession}
 

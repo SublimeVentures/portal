@@ -41,14 +41,9 @@ import {isBased} from "@/lib/utils";
  *     }
  ******************/
 
-const BlockchainSteps = forwardRef(({}, ref) => {
-
+const BlockchainSteps = () => {
     const {blockchainProps} = useBlockchainContext();
     const {checkNetwork, checkLiquidity, checkAllowance, checkTransaction, showButton} = blockchainProps
-
-    // // useImperativeHandle(ref, () => ({ //todo:
-    // //     runProcess,
-    // // }));
 
     return (
         <>
@@ -65,10 +60,13 @@ const BlockchainSteps = forwardRef(({}, ref) => {
             </div>}
         </>
     )
-})
+}
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.blockchainProps?.checkLiquidity === nextProps.blockchainProps?.checkLiquidity;
+    return prevProps.blockchainProps?.checkNetwork === nextProps.blockchainProps?.checkNetwork &&
+             prevProps.blockchainProps?.checkLiquidity === nextProps.blockchainProps?.checkLiquidity &&
+             prevProps.blockchainProps?.checkAllowance === nextProps.blockchainProps?.checkAllowance &&
+             prevProps.blockchainProps?.checkTransaction === nextProps.blockchainProps?.checkTransaction;
 };
 
 export default memo(BlockchainSteps, areEqual);
