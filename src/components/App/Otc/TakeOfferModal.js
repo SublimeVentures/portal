@@ -22,6 +22,7 @@ export default function TakeOfferModal({model, setter, props}) {
     const [signature, setSignature] = useState(null)
 
     const {diamond, currencyListAll} = useGetChainEnvironment(currencies, diamonds)
+    const selectedCurrency =  offerDetails ? currencyListAll[offerDetails.chainId][offerDetails.currency] : {}
 
     useEffect(() => {
         if(!signature?.expiry) return;
@@ -70,7 +71,7 @@ export default function TakeOfferModal({model, setter, props}) {
     if(!currentMarket?.name || !offerDetails?.currency || !diamond) return
     const userAllocation = vault.find(el => el.offerId === currentMarket.id)
     const ownedAllocation = userAllocation ? userAllocation.invested - userAllocation.locked : 0
-    const selectedCurrency =  currencyListAll[offerDetails.chainId][offerDetails.currency]
+
     const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()

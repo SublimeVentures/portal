@@ -58,17 +58,18 @@ const config = createConfig({
             },
         })
     ],
-    publicClient: (chain) => {
-        if (typeof window !== 'undefined' && typeof (window).ethereum !== 'undefined') {
-            // create a special client that sends rpc calls through wallet
-            return createWalletClient({
-                chain: chain,
-                transport: custom(window.ethereum),
-        }).extend(publicActions);
-        }
-
-        return publicClient(chain)
-    },
+    // publicClient: (chain) => {
+    //     if (typeof window !== 'undefined' && typeof (window).ethereum !== 'undefined') {
+    //         // create a special client that sends rpc calls through wallet
+    //         return createWalletClient({
+    //             chain: chain,
+    //             transport: custom(window.ethereum),
+    //     }).extend(publicActions);
+    //     }
+    //
+    //     return publicClient(chain)
+    // },
+    publicClient,
     webSocketPublicClient,
 })
 

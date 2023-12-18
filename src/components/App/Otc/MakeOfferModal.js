@@ -51,6 +51,10 @@ export default function MakeOfferModal({model, setter, props}) {
     const textCopy = isBuyer ? 'buy' : 'sell';
 
     const {selectedChain, currencyList, currencyNames, diamond} = useGetChainEnvironment(currencies, diamonds)
+
+    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi).toFixed(2)))}
+    const selectedCurrency = currencyList ? currencyList[dealCurrency] : {}
+
     const setAmountHandler = (amt) => {
         setAmount(amt)
         if(amt) calcPrice(multiplier, amt)
@@ -58,7 +62,7 @@ export default function MakeOfferModal({model, setter, props}) {
     useEffect(() => {
         if(!isBuyer && amount > allocationMax) setAmountHandler(allocationMax)
     }, [isBuyer]);
-    const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi).toFixed(2)))}
+
 
     useEffect(() => {
         if(!model || !selectedCurrency?.address) return;
@@ -97,7 +101,6 @@ export default function MakeOfferModal({model, setter, props}) {
 
 
     if(!selectedChain || !currentMarket) return;
-    const selectedCurrency = currencyList[dealCurrency]
 
     const closeModal = async () => {
         refetchVault()
