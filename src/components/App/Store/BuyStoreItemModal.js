@@ -1,6 +1,5 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import { useState} from "react";
-import {ButtonIconSize} from "@/components/Button/RoundButton";
+import {useEffect} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {
@@ -14,23 +13,19 @@ import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 import Dropdown from "@/components/App/Dropdown";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
-import {useRef} from "react";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function BuyStoreItemModal({model, setter, buyModalProps}) {
     const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
-
-    const [blockchainData, setBlockchainData] = useState(false)
-
-    const {transactionData} = blockchainData
-
-    const purchaseUpgradesFunction = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
             setOrder(null)
-            setBlockchainData(false)
+            blockchainCleanup()
         }, 400);
     }
 
@@ -40,36 +35,43 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
         })
     }
 
-    const blockchainProps = {
-        processingData: {
-            requiredNetwork: 1,
-            amount: order.price,
-            amountAllowance: order.price,
-            userWallet: account.address,
-            currency: selectedCurrency,
-            diamond: contract,
-            transactionData: purchaseUpgradesFunction
-        },
-        buttonData: {
-            // buttonFn,
-            icon: <RocketIcon className={ButtonIconSize.hero}/>,
-            text: "Buy",
-        },
-        checkNetwork: !isBased,
-        checkLiquidity: true,
-        checkAllowance: true,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
 
+    useEffect(() => {
+        if(!model || !selectedCurrency?.address) return;
+        const purchaseUpgradesFunction = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
+
+
+        updateBlockchainProps({
+            processingData: {
+                requiredNetwork: 1,
+                amount: order.price,
+                amountAllowance: order.price,
+                userWallet: account.address,
+                currency: selectedCurrency,
+                diamond: contract,
+                transactionData: purchaseUpgradesFunction
+            },
+            buttonData: {
+                icon: <RocketIcon className="w-10 mr-2"/>,
+                text: "Buy",
+            },
+            checkNetwork: !isBased,
+            checkLiquidity: true,
+            checkAllowance: true,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true,
+        });
+    }, [
+        selectedCurrency?.address,
+        model
+    ]);
 
 
     const title = () => {
         return (
             <>
-                {transactionData?.transferConfirmed ?
+                {transactionSuccessful ?
                     <>Transaction <span className="text-app-success">successful</span></> :
                     <><span className="text-app-success">Buy</span> Upgrade</>
                 }
@@ -107,14 +109,14 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
                         </div>
                     </div>
                 </div>
-                <BlockchainSteps blockchainProps={blockchainProps}/>
+                <BlockchainSteps/>
             </div>
         )
     }
 
 
     const content = () => {
-       return transactionData?.transferConfirmed ? contentSuccess() : contentSteps()
+       return transactionSuccessful ? contentSuccess() : contentSteps()
     }
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)

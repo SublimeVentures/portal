@@ -14,7 +14,6 @@ import {isBased} from "@/lib/utils";
 /******************
  * @devnote
  *     const blockchainProps = {
- *     const blockchainProps = {
  *         processingData: {                    -/ object with extra data required for each step
  *             requiredChainId: 137,            -/ ONLY: [network]
  *             forcePrecheck: false             -/ ONLY: [network]                              - forces network precheck

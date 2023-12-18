@@ -146,12 +146,13 @@ export default function CitCapAccount({account}) {
                     setStakingModal(false)
                     await refreshSession()
                 }}/>
-            </BlockchainProvider>
             {unstake &&
                 <CitCapUnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
                     setUnStakingModal(false)
                     await refreshSession(true)
                 }}/>}
+            </BlockchainProvider>
+
 
         </div>
     )

@@ -1,6 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useState , useRef, useEffect} from "react";
-import {getCitCapStakingFunction, getInvestFunction} from "@/components/App/BlockchainSteps/config";
+import { useEffect} from "react";
+import {getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
@@ -9,16 +9,13 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const { account, isS1} = stakingModalProps
-    const { updateBlockchainProps, blockchainCleanup } = useBlockchainContext();
-
-    const [blockchainData, setBlockchainData] = useState(false)
-    const {transactionData} = blockchainData
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
-            setBlockchainData(false)
             blockchainCleanup()
         }, 400);
     }
@@ -32,16 +29,14 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
 
     useEffect(() => {
-        if(!model) return;
+        if(!model || !selectedCurrency?.address) return;
         const stakingFunction = getCitCapStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
 
         updateBlockchainProps({
             processingData: {
                 requiredNetwork: 1,
-                amount: 1,
-                amountAllowance: 1,
-                // amount: account.stakeReq,
-                // amountAllowance: account.stakeReq,
+                amount: account.stakeReq,
+                amountAllowance: account.stakeReq,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
@@ -57,7 +52,6 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
             checkTransaction: true,
             showButton: true,
             saveData: true,
-            saveDataFn: setBlockchainData,
         });
     }, [
         selectedCurrency?.address,
@@ -106,12 +100,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     }
 
     const content = () => {
-        if(transactionData?.transferConfirmed) {
-            return contentSuccess()
-        } else {
-            return contentStake()
-
-        }
+        return transactionSuccessful ?  contentSuccess() : contentStake()
     }
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()}/>)

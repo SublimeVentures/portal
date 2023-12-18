@@ -24,6 +24,7 @@ export const BlockchainProvider = ({ children }) => {
         showButton: false,
         saveData: false,
     });
+    const {checkNetwork, checkLiquidity, checkAllowance, checkTransaction} = blockchainProps
 
     //SUMMARY
     const [blockchainSummary, setBlockchainSummary] = useState({});
@@ -115,6 +116,23 @@ export const BlockchainProvider = ({ children }) => {
         setBlockchainSummary({})
     }
 
+    const blockchainRunProcess = () => {
+        if(buttonLock) return;
+
+        if(checkNetwork) {
+            setNetwork_lock(false)
+        }
+        if(checkLiquidity) {
+            setLiquidity_lock(false)
+        }
+        if(checkAllowance) {
+            setAllowance_lock(false)
+        }
+        if(checkTransaction) {
+            setTransaction_lock(false)
+        }
+    }
+
     useEffect(() => {
         if (blockchainProps.saveData) {
             setBlockchainSummary(prevProps => merge({}, prevProps, {
@@ -140,6 +158,7 @@ export const BlockchainProvider = ({ children }) => {
         blockchainSummary,
         updateBlockchainProps,
         blockchainCleanup,
+        blockchainRunProcess,
         networkState: {
             isReady: network_isReady,
             setIsReady: (state) => {setNetwork_lock(!state)},

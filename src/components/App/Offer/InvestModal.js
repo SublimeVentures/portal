@@ -54,17 +54,13 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     useEffect(() => {
-        if(investmentAmount<50 || !model || !hash || hash?.length === 0) return;
+        if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address) return;
 
-        const investFunction = getInvestFunction(account.ACL, false, 1, offer, selectedCurrency, hash, account.id)
-        //todo: uncomment const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
+        const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
 
         updateBlockchainProps({
             processingData: {
-                requiredNetwork: 56, //todo: comment
-                forcePrecheck: false,//todo: comment
-                // amount: investmentAmount, //todo: uncomment
-                amount: 1,
+                amount: investmentAmount,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 transactionData: investFunction
@@ -73,7 +69,6 @@ export default function InvestModal({model, setter, investModalProps}) {
                 icon: <RocketIcon className="w-10 mr-2" />, // Adjust class as needed
                 text: "Transfer funds",
             },
-            checkNetwork: true,//todo: comment
             checkLiquidity: true,
             checkTransaction: true,
             showButton: true,

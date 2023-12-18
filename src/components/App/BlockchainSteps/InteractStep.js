@@ -4,6 +4,7 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function InteractStep() {
     const {
+        blockchainRunProcess,
         blockchainProps,
         networkState,
         allowanceState,
@@ -108,25 +109,6 @@ export default function InteractStep() {
         }
     }
 
-    const runProcess = () => {
-        if(buttonLock) return;
-
-        if(checkNetwork) {
-            network_setLock(false)
-        }
-        if(checkLiquidity) {
-            liquidity_setLock(false)
-        }
-        if(checkAllowance) {
-            allowance_setLock(false)
-        }
-        if(checkTransaction) {
-            transaction_setLock(false)
-        }
-        // // buttonData.buttonFn();
-    }
-
-
     useEffect(() => {
         console.log("IQZ :: INTERACT NETWORK", network_isReady, network_isFinished,)
         const {text, lock} = processButtonState()
@@ -150,7 +132,7 @@ export default function InteractStep() {
             icon={buttonData.icon}
             isDisabled={buttonLock}
             handler={() => {
-                buttonData?.buttonFn ? buttonData?.buttonFn() : runProcess()
+                buttonData?.buttonFn ? buttonData?.buttonFn() : blockchainRunProcess()
             }}/>
     )
 
