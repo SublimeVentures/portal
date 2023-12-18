@@ -1,6 +1,5 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useState} from "react";
-import {ButtonIconSize} from "@/components/Button/RoundButton";
+import {useEffect} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {
@@ -14,25 +13,20 @@ import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 import Dropdown from "@/components/App/Dropdown";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
-import {useRef} from "react";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
     const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
-    const [blockchainData, setBlockchainData] = useState(false)
-
-    const {transactionData} = blockchainData
-    const blockchainRef = useRef();
-
-
-    const purchaseMysteryBoxFunction = getMysteryBoxFunction(contract, selectedCurrency.address, 1)
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
             setOrder(null)
-            setBlockchainData(false)
+            blockchainCleanup()
         }, 400);
     }
 
@@ -42,35 +36,42 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
         })
     }
 
-    const blockchainProps = {
-        processingData: {
-            requiredNetwork: 1,
-            amount: order.price,
-            amountAllowance: order.price,
-            userWallet: account.address,
-            currency: selectedCurrency,
-            diamond: contract,
-            transactionData: purchaseMysteryBoxFunction
-        },
-        buttonData: {
-            // buttonFn,
-            icon: <RocketIcon className={ButtonIconSize.hero}/>,
-            text: "Buy",
-        },
-        checkNetwork: !isBased,
-        checkLiquidity: true,
-        checkAllowance: true,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
+
+    useEffect(() => {
+        if(!model || !selectedCurrency?.address) return;
+        const purchaseMysteryBoxFunction = getMysteryBoxFunction(contract, selectedCurrency.address, 1)
+
+        updateBlockchainProps({
+            processingData: {
+                requiredNetwork: 1,
+                amount: order.price,
+                amountAllowance: order.price,
+                userWallet: account.address,
+                currency: selectedCurrency,
+                diamond: contract,
+                transactionData: purchaseMysteryBoxFunction
+            },
+            buttonData: {
+                icon: <RocketIcon className="w-10 mr-2"/>,
+                text: "Buy",
+            },
+            checkNetwork: !isBased,
+            checkLiquidity: true,
+            checkAllowance: true,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true,
+        });
+    }, [
+        selectedCurrency?.address,
+        model
+    ]);
 
 
     const title = () => {
         return (
             <>
-                {transactionData?.transferConfirmed ?
+                {transactionSuccessful ?
                     <>Transaction <span className="text-app-success">successful</span></> :
                     <><span className="text-app-success">Buy</span> MysteryBox</>
                 }
@@ -116,14 +117,14 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                         </div>
                     </div>
                 </div>
-                <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
+                <BlockchainSteps/>
 
             </div>
         )
     }
 
     const content = () => {
-        return transactionData?.transferConfirmed ? contentSuccess() : contentSteps()
+        return transactionSuccessful ? contentSuccess() : contentSteps()
     }
 
     return (

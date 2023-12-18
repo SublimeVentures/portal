@@ -1,5 +1,5 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useRef, useState} from "react";
+import { useEffect} from "react";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconTrash from "@/assets/svg/trash.svg";
 import {getOtcCancelFunction} from "@/components/App/Otc/OtcSteps";
@@ -7,33 +7,58 @@ import useGetChainEnvironment from "@/lib/hooks/useGetChainEnvironment";
 import {useSwitchNetwork} from "wagmi";
 import {getChainIcon} from "@/components/Navigation/StoreNetwork";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 
 export default function CancelOfferModal({model, setter, props}) {
     const {getCurrencyIcon, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
     const {chains} = useSwitchNetwork()
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
 
-    const [blockchainData, setBlockchainData] = useState(false)
     const {diamond} = useGetChainEnvironment(currencies, diamonds)
 
-    const {transactionData} = blockchainData
-    const blockchainRef = useRef();
+
+    useEffect(() => {
+        if(!model) return;
+        const otcCancelFunction = getOtcCancelFunction(currentMarket.market, offerDetails.dealId, diamond)
+
+
+        updateBlockchainProps({
+            processingData: {
+                requiredNetwork: offerDetails?.chainId,
+                forcePrecheck: false,
+                userWallet: account.address,
+                diamond: diamond,
+                transactionData: otcCancelFunction
+            },
+            buttonData: {
+                icon: <IconTrash className="w-10 mr-2"/>,
+                text: "Cancel Offer",
+            },
+            checkNetwork: true,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true
+        });
+    }, [
+        model
+    ]);
 
     if(!currentMarket?.name || !offerDetails?.currency) return
 
-    const otcCancelFunction = getOtcCancelFunction(currentMarket.market, offerDetails.dealId, diamond)
 
     const closeModal = async () => {
-        if(transactionData?.transferConfirmed) {
+        if(transactionSuccessful) {
             await refetchVault()
             await refetchOffers()
         }
         setter()
         setTimeout(() => {
-            setBlockchainData(false)
+            blockchainCleanup()
         }, 400);
     }
 
@@ -41,29 +66,12 @@ export default function CancelOfferModal({model, setter, props}) {
 
     const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
 
-    const blockchainProps = {
-        processingData: {
-            requiredNetwork: offerDetails?.chainId,
-            forcePrecheck: false,
-            userWallet: account.address,
-            diamond: diamond,
-            transactionData: otcCancelFunction
-        },
-        buttonData: {
-            icon: <IconTrash className={ButtonIconSize.hero5}/>,
-            text: "Cancel Offer",
-        },
-        checkNetwork: true,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
+
 
     const title = () => {
         return (
             <>
-                {transactionData?.transferConfirmed ?
+                {transactionSuccessful ?
                     <>OTC offer <span className="text-app-success">cancelled</span></>
                     :
                     <><span className="text-app-error">Cancel</span> OTC offer</>
@@ -90,7 +98,7 @@ export default function CancelOfferModal({model, setter, props}) {
                     {!offerDetails.isSell && <><div className="font-bold text-gold">FUNDS RETURNED</div><div className={"flex justify-end text-gold"}>{getCurrencyIcon(offerDetails.currency, currencies)} <span className={"ml-2"}>${cancelOfferPrice_parsed}</span></div></>}
 
                 </div>
-                <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
+                <BlockchainSteps/>
             </div>
         )
     }
@@ -110,7 +118,7 @@ export default function CancelOfferModal({model, setter, props}) {
     }
 
     const content = () => {
-       return transactionData?.transferConfirmed ? contentSuccess() : contentQuery()
+       return transactionSuccessful ? contentSuccess() : contentQuery()
     }
 
     return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)

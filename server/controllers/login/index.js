@@ -17,6 +17,7 @@ const {getRefreshToken, deleteRefreshToken, refreshAuth} = require("./tokens");
 const {userWalletUpsert} = require("../../queries/user.query");
 const logger = require("../../../src/lib/logger");
 const {serializeError} = require("serialize-error");
+const {ACLs} = require("../../../src/lib/authHelpers");
 
 
 const validateLogin = async (message, signature) => {
@@ -31,10 +32,13 @@ const validateLogin = async (message, signature) => {
 
         const userSession = await buildSession(recoveredAddress)
         if (!userSession) return false;
+        // userSession.ACL = ACLs.Admin //todo: comment out
+        console.log("userSession",userSession) //uncomment
         return {...{address: recoveredAddress}, ...userSession}
 
-        // const fakeAddress="0xEAE679eA220E6be182E25A8C2B49f92a174C0982" //todo:
+        // const fakeAddress="0xB98D5b9A90442557aF0bfEEEcfB9e3DAE0Dd000b" //todo:
         // const userSession = await buildSession(fakeAddress)
+        // userSession.ACL = ACLs.Admin
         // console.log("userSession",userSession, fakeAddress)
         // if (!userSession) return false;
         // return {...{address: fakeAddress}, ...userSession}
@@ -71,6 +75,7 @@ const logOut = async (user) => {
     return buildCookie(authTokenName, null, -1)
 }
 
+
 async function feedUserNfts(address) {
     const enabledCollections = await getPartners(getEnv().isDev, isBased)
     let userNfts = []
@@ -99,7 +104,6 @@ async function feedUserNfts(address) {
     }
     return [userNfts, enabledCollections]
 }
-
 
 async function buildSession(address) {
     const [nfts, partners] = await feedUserNfts(address)

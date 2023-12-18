@@ -18,16 +18,18 @@ import RocketIcon from "@/assets/svg/Rocket.svg";
 import {saveTransaction} from "@/fetchers/otc.fetcher";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useEffect} from "react";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 
 export default function MakeOfferModal({model, setter, props}) {
     const {currentMarket, diamonds, allocation, refetchVault, refetchOffers, currencies, account} = props
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary, blockchainRunProcess } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
     const allocationMax = allocation ? (allocation.invested - allocation.locked) : 0
 
     const [isBuyer, setIsBuyer] = useState(allocationMax === 0)
     const [dealCurrency, setDealCurrency] = useState(0)
-    const [blockchainData, setBlockchainData] = useState(false)
 
 
     const [waitingForHash, setWaitingForHash] = useState(false)
@@ -48,10 +50,7 @@ export default function MakeOfferModal({model, setter, props}) {
     const titleCopy = isBuyer ? 'Buying' : 'Selling';
     const textCopy = isBuyer ? 'buy' : 'sell';
 
-    const blockchainRef = useRef();
-
     const {selectedChain, currencyList, currencyNames, diamond} = useGetChainEnvironment(currencies, diamonds)
-    const {transactionData} = blockchainData
     const setAmountHandler = (amt) => {
         setAmount(amt)
         if(amt) calcPrice(multiplier, amt)
@@ -61,10 +60,44 @@ export default function MakeOfferModal({model, setter, props}) {
     }, [isBuyer]);
     const calcPrice = (multi, amt) => {setPrice(Number(Number(amt * multi).toFixed(2)))}
 
+    useEffect(() => {
+        if(!model || !selectedCurrency?.address) return;
+        const otcSellFunction = getOtcMakeFunction(hash, currentMarket.market, price, selectedCurrency, !isBuyer, diamond)
+
+
+        updateBlockchainProps({
+            processingData: {
+                amount: price,
+                amountAllowance: price,
+                userWallet: account.address,
+                currency: selectedCurrency,
+                diamond: diamond,
+                transactionData: otcSellFunction
+            },
+            buttonData: {
+                buttonFn,
+                icon: <RocketIcon className="w-10 mr-2"/>,
+                text: "Make Offer",
+                customLock: true,
+                customLockParams: [
+                    {check: statusCheck, error: "Bad parameters"},
+                    {check: waitingForHash, error: "Generating hash"},
+                ],
+            },
+            checkLiquidity: isBuyer,
+            checkAllowance: isBuyer,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true,
+        });
+    }, [
+        selectedCurrency?.address,
+        model
+    ]);
+
 
     if(!selectedChain || !currentMarket) return;
     const selectedCurrency = currencyList[dealCurrency]
-    const otcSellFunction = getOtcMakeFunction(hash, currentMarket.market, price, selectedCurrency, !isBuyer, diamond)
 
     const closeModal = async () => {
         refetchVault()
@@ -76,7 +109,7 @@ export default function MakeOfferModal({model, setter, props}) {
             setAmount(allocationMin)
             setMultiplier(1)
             setHash("")
-            setBlockchainData(false)
+            blockchainCleanup()
         }, 400);
 
     }
@@ -111,7 +144,7 @@ export default function MakeOfferModal({model, setter, props}) {
         if (transaction.ok) {
             setHash(transaction.hash)
             setWaitingForHash(false)
-            blockchainRef.current.runProcess();
+            blockchainRunProcess();
         } else {
             setWaitingForHash(false)
             //todo: error handling
@@ -119,38 +152,12 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
 
-    const blockchainProps = {
-        processingData: {
-            amount: price,
-            amountAllowance: price,
-            userWallet: account.address,
-            currency: selectedCurrency,
-            diamond: diamond,
-            transactionData: otcSellFunction
-        },
-        buttonData: {
-            buttonFn,
-            icon: <RocketIcon className={ButtonIconSize.hero}/>,
-            text: "Make Offer",
-            customLock: true,
-            customLockParams: [
-                {check: statusCheck, error: "Bad parameters"},
-                {check: waitingForHash, error: "Generating hash"},
-            ],
-        },
-        checkLiquidity: isBuyer,
-        checkAllowance: isBuyer,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
 
-    const lockActivities = waitingForHash || blockchainData.lock
+    const lockActivities = waitingForHash || blockchainSummary.buttonLock
     const title = () => {
         return (
             <>
-                {!!transactionData?.transferConfirmed ?
+                {!!transactionSuccessful ?
                     <>OTC offer <span className="text-app-success">created</span></>
                     :
                     <><span className="text-app-success">Create</span> OTC offer</>
@@ -217,7 +224,7 @@ export default function MakeOfferModal({model, setter, props}) {
                         />
                         <Dropdown options={currencyNames} classes={'!text-inherit blended'} propSelected={setDealCurrency} position={dealCurrency}/>
                     </div>
-                    <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
+                    <BlockchainSteps/>
                 </div>
 
                 <div className="mt-auto text-center"> <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span></div>
@@ -227,9 +234,9 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
     const content = () => {
-       return transactionData?.transferConfirmed ? contentSuccess() : contentForm()
+       return transactionSuccessful ? contentSuccess() : contentForm()
     }
 
-    return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} persistent={blockchainData.lock}/>)
+    return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} persistent={blockchainSummary.buttonLock}/>)
 }
 

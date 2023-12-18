@@ -1,24 +1,22 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useState , useRef} from "react";
-import { getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
+import { useEffect} from "react";
+import {getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {isBased} from "@/lib/utils";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const { account, isS1} = stakingModalProps
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
-    const [blockchainData, setBlockchainData] = useState(false)
-
-    const {transactionData} = blockchainData
-    const blockchainRef = useRef();
-
-    const stakingFunction = getCitCapStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
-            setBlockchainData(false)
+            blockchainCleanup()
         }, 400);
     }
 
@@ -29,28 +27,36 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         isSettlement: false
     }
 
-    const blockchainProps = {
-        processingData: {
-            requiredNetwork: 1,
-            amount: account.stakeReq,
-            amountAllowance: account.stakeReq,
-            userWallet: account.address,
-            currency: selectedCurrency,
-            diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
-            transactionData: stakingFunction
-        },
-        buttonData: {
-            icon: <RocketIcon className={ButtonIconSize.hero}/>,
-            text: "Stake",
-        },
-        checkNetwork: !isBased,
-        checkLiquidity: true,
-        checkAllowance: true,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
+
+    useEffect(() => {
+        if(!model || !selectedCurrency?.address) return;
+        const stakingFunction = getCitCapStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
+
+        updateBlockchainProps({
+            processingData: {
+                requiredNetwork: 1,
+                amount: account.stakeReq,
+                amountAllowance: account.stakeReq,
+                userWallet: account.address,
+                currency: selectedCurrency,
+                diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
+                transactionData: stakingFunction
+            },
+            buttonData: {
+                icon: <RocketIcon className={ButtonIconSize.hero}/>,
+                text: "Stake",
+            },
+            checkNetwork: !isBased,
+            checkLiquidity: true,
+            checkAllowance: true,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true,
+        });
+    }, [
+        selectedCurrency?.address,
+        model
+    ]);
 
     const title = () => {
         return (
@@ -69,9 +75,9 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                    </div>
                     <div className={"my-5"}>
                         <div className={"detailRow"}><p>Detected Citizen</p><hr className={"spacer"}/><p>{isS1 ? "S1" : "S2"}</p></div>
-                        <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{account.stakeSize} BYTES</p></div>
+                        <div className={"detailRow"}><p>Required Stake</p><hr className={"spacer"}/><p>{account.stakeReq} BYTES</p></div>
                     </div>
-                    <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
+                    <BlockchainSteps/>
             </div>
         )
     }
@@ -94,12 +100,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     }
 
     const content = () => {
-        if(transactionData?.transferConfirmed) {
-            return contentSuccess()
-        } else {
-            return contentStake()
-
-        }
+        return transactionSuccessful ?  contentSuccess() : contentStake()
     }
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()}/>)

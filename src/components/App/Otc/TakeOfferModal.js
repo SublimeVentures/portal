@@ -9,25 +9,63 @@ import {getChainIcon} from "@/components/Navigation/StoreNetwork";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {getSignature} from "@/fetchers/otc.fetcher";
 import moment from "moment";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+
 
 
 export default function TakeOfferModal({model, setter, props}) {
     const {getCurrencyIcon,vault, otcFee, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
     const {chains} = useSwitchNetwork()
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary, blockchainRunProcess } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
     const [signature, setSignature] = useState(null)
 
-    const [blockchainData, setBlockchainData] = useState(false)
     const {diamond, currencyListAll} = useGetChainEnvironment(currencies, diamonds)
-
-    const {transactionData} = blockchainData
-    const blockchainRef = useRef();
 
     useEffect(() => {
         if(!signature?.expiry) return;
-        blockchainRef.current.runProcess();
+        blockchainRunProcess();
 
     }, [signature?.expiry])
+
+    useEffect(() => {
+        if(!model || !selectedCurrency?.address) return;
+
+        const otcTakeFunction = getOtcTakeFunction(currentMarket.market, offerDetails.dealId, signature?.nonce, signature?.expiry, signature?.hash, diamond)
+
+
+        updateBlockchainProps({
+            processingData: {
+                requiredNetwork: offerDetails?.chainId,
+                forcePrecheck: false,
+                amount: totalPayment,
+                amountAllowance: totalPayment,
+                userWallet: account.address,
+                currency: selectedCurrency,
+                diamond: diamond,
+                transactionData: otcTakeFunction
+            },
+            buttonData: {
+                buttonFn,
+                icon: <IconTrash className="w-10 mr-2"/>,
+                text: "Take Offer",
+                customLock: true,
+                customLockParams: [
+                    {check: !haveEnoughAllocation, error: "Not enough allocation"},
+                ],
+            },
+            checkNetwork: true,
+            checkLiquidity: true,
+            checkAllowance: true,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true,
+        });
+    }, [
+        selectedCurrency?.address,
+        model
+    ]);
 
     if(!currentMarket?.name || !offerDetails?.currency || !diamond) return
     const userAllocation = vault.find(el => el.offerId === currentMarket.id)
@@ -40,16 +78,15 @@ export default function TakeOfferModal({model, setter, props}) {
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
 
     const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee
-    const otcTakeFunction = getOtcTakeFunction(currentMarket.market, offerDetails.dealId, signature?.nonce, signature?.expiry, signature?.hash, diamond)
 
     const closeModal = async () => {
-        if(transactionData?.transferConfirmed) {
+        if(transactionSuccessful) {
             await refetchVault()
             await refetchOffers()
         }
         setter()
         setTimeout(() => {
-            setBlockchainData(false)
+            blockchainCleanup()
             setSignature(null)
         }, 400);
     }
@@ -59,7 +96,7 @@ export default function TakeOfferModal({model, setter, props}) {
             signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell ||
             offerDetails.isSell
         ) {
-            blockchainRef.current.runProcess();
+            blockchainRunProcess();
         } else {
                 const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
                 if (transaction.ok) {
@@ -70,39 +107,11 @@ export default function TakeOfferModal({model, setter, props}) {
             }
     }
 
-    const blockchainProps = {
-        processingData: {
-            requiredNetwork: offerDetails?.chainId,
-            forcePrecheck: false,
-            amount: totalPayment,
-            amountAllowance: totalPayment,
-            userWallet: account.address,
-            currency: selectedCurrency,
-            diamond: diamond,
-            transactionData: otcTakeFunction
-        },
-        buttonData: {
-            buttonFn,
-            icon: <IconTrash className={ButtonIconSize.hero5}/>,
-            text: "Take Offer",
-            customLock: true,
-            customLockParams: [
-                {check: !haveEnoughAllocation, error: "Not enough allocation"},
-            ],
-        },
-        checkNetwork: true,
-        checkLiquidity: true,
-        checkAllowance: true,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
 
     const title = () => {
         return (
             <>
-                {transactionData?.transferConfirmed ?
+                {transactionSuccessful ?
                     <>OTC offer <span className="text-app-success">filled</span></>
                     :
                     <><span className="text-app-success">Take</span> OTC offer</>
@@ -126,7 +135,7 @@ export default function TakeOfferModal({model, setter, props}) {
                     <hr/>
                     <div className="font-bold text-gold">TOTAL PAYMENT</div><div className={"flex justify-end text-gold"}>{getCurrencyIcon(offerDetails.currency, currencies)} <span className={"ml-2"}>${totalPayment}</span></div>
                 </div>
-                <BlockchainSteps ref={blockchainRef}  blockchainProps={blockchainProps}/>
+                <BlockchainSteps/>
             </div>
         )
     }
@@ -146,7 +155,7 @@ export default function TakeOfferModal({model, setter, props}) {
     }
 
     const content = () => {
-        return transactionData?.transferConfirmed ? contentSuccess() : contentQuery()
+        return transactionSuccessful ? contentSuccess() : contentQuery()
     }
 
     return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)

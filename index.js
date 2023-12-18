@@ -22,7 +22,6 @@ const {router: otcRoute} = require("./server/routes/otc.router.js");
 const {router: mysteryboxRoute} = require("./server/routes/mysterybox.router");
 const {router: storeRoute} = require("./server/routes/store.router.js");
 
-// const {router: protected} = require("./server/routes/protected.js");
 
 const port = process.env.PORT || 3000
 const dev = process.env.ENV !== 'production' || process.env.FORCE_DEV === "true" ;

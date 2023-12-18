@@ -1,24 +1,21 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useState, useRef } from "react";
+import {useEffect } from "react";
 import {
     getCitCapUnStakingFunction
 } from "@/components/App/BlockchainSteps/config";
 import RocketIcon from "@/assets/svg/Rocket.svg";
-import {ButtonIconSize} from "@/components/Button/RoundButton";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
+import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const {stakeReq, account, stakeSze} = stakingModalProps
-    const [blockchainData, setBlockchainData] = useState(false)
-
-    const {transactionData} = blockchainData
-    const blockchainRef = useRef();
-
-    const unstakingFunction = getCitCapUnStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
+    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
+    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
-            setBlockchainData(false)
+            blockchainCleanup()
         }, 400);
     }
 
@@ -29,28 +26,38 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         isSettlement: false
     }
 
-    const blockchainProps = {
-        processingData: {
-            amount: stakeReq,
-            amountAllowance: stakeReq,
-            userWallet: account.address,
-            currency: selectedCurrency,
-            diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
-            transactionData: unstakingFunction
-        },
-        buttonData: {
-            // buttonFn,
-            icon: <RocketIcon className={ButtonIconSize.hero}/>,
-            text: "UnStake",
-        },
-        checkLiquidity: false,
-        checkAllowance: false,
-        checkTransaction: true,
-        showButton: true,
-        saveData: true,
-        saveDataFn: setBlockchainData,
-    }
 
+
+    useEffect(() => {
+        if(!model || !selectedCurrency?.address) return;
+
+        const unstakingFunction = getCitCapUnStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
+
+
+        updateBlockchainProps({
+            processingData: {
+                amount: stakeReq,
+                amountAllowance: stakeReq,
+                userWallet: account.address,
+                currency: selectedCurrency,
+                diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
+                transactionData: unstakingFunction
+            },
+            buttonData: {
+                // buttonFn,
+                icon: <RocketIcon className="w-10 mr-2"/>,
+                text: "UnStake",
+            },
+            checkLiquidity: false,
+            checkAllowance: false,
+            checkTransaction: true,
+            showButton: true,
+            saveData: true,
+        });
+    }, [
+        selectedCurrency?.address,
+        model
+    ]);
 
     const title = () => {
         return (
@@ -70,7 +77,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                     <div className={"my-5"}>
                         <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSze} BYTES</p></div>
                     </div>
-                     <BlockchainSteps ref={blockchainRef} blockchainProps={blockchainProps}/>
+                     <BlockchainSteps/>
 
             </div>
         )
@@ -88,12 +95,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     }
 
     const content = () => {
-        if(transactionData?.transferConfirmed) {
-            return contentSuccess()
-        } else {
-            return contentStake()
-
-        }
+        return transactionSuccessful ? contentSuccess() : contentStake()
     }
 
     return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()}/>)

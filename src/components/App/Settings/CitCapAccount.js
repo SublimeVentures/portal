@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 
 import {updateSession_CitCapStaking} from "@/fetchers/auth.fetcher";
 import {isBased} from "@/lib/utils";
+import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 const CitCapStakingModal = dynamic(() => import('@/components/App/Settings/CitCapStakingModal'), {ssr: false})
 const CitCapUnStakingModal = dynamic(() => import('@/components/App/Settings/CitCapUnStakingModal'), {ssr: false})
@@ -140,15 +141,18 @@ export default function CitCapAccount({account}) {
                 </div>
                 }
             </div>
-            <CitCapStakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={async () => {
-                setStakingModal(false)
-                await refreshSession()
-            }}/>
+            <BlockchainProvider>
+                <CitCapStakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={async () => {
+                    setStakingModal(false)
+                    await refreshSession()
+                }}/>
             {unstake &&
                 <CitCapUnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
                     setUnStakingModal(false)
                     await refreshSession(true)
                 }}/>}
+            </BlockchainProvider>
+
 
         </div>
     )

@@ -14,14 +14,18 @@ function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min
     if (isBased && (account.ACL !== ACLs.NeoTokyo)) {
         allocationUser_base = account.multi * offer.alloMin
+        // console.log("allocationUser_max - tylek", allocationUser_base)
         allocationUser_min = offer.alloMin
     } else {
         allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
         if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
         allocationUser_min = MIN_ALLOCATION
     }
+    // console.log("allocationUser_max - allocationUser_min",allocationUser_min)
+    // console.log("allocationUser_max - allocationUser_base",allocationUser_base)
 
     allocationUser_max = getUserAllocationBaseWithIncreased(allocationUser_base, upgradeIncreasedUsed)
+    // console.log("allocationUser_max",allocationUser_max)
 
     return {
         allocationUser_base,

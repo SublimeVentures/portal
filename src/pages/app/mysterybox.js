@@ -17,6 +17,7 @@ import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxMod
 import {claimMysterybox} from "@/fetchers/mysterbox.fetcher";
 import dynamic from "next/dynamic";
 import {PremiumItemsENUM} from "@/lib/enum/store";
+import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
 const ErrorModal = dynamic(() => import('@/components/App/MysteryBox/ClaimErrorModal'), {ssr: false})
 
 
@@ -173,7 +174,9 @@ export default function AppLootbox({account}) {
                 <div className={"absolute bottom-0 z-10"}><Linker url={ExternalLinks.LOOTBOX} text={"Learn more"}/></div>
 
             </div>
-            <BuyMysteryBoxModal model={isBuyModal} setter={() => {closeBuy()}} buyModalProps={buyModalProps} />
+            <BlockchainProvider>
+                <BuyMysteryBoxModal model={isBuyModal} setter={() => {closeBuy()}} buyModalProps={buyModalProps} />
+            </BlockchainProvider>
             <ClaimMysteryBoxModal model={claimModal} setter={() => {setClaimModal(false)}} claimData={claimData} />
             <ErrorModal model={isClaimError}  setter={() => {setClaimError(false)}} errorMessage={errorMessage}/>
         </>

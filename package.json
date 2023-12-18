@@ -56,6 +56,7 @@
     "react-slick": "0.29.0",
     "react-slider-3d": "0.1.0",
     "react-tooltip": "5.8.3",
+    "rematrix": "^0.7.2",
     "sass": "1.60.0",
     "sequelize": "6.31.1",
     "serialize-error": "8.1.0",
@@ -69,8 +70,7 @@
     "wagmi": "1.3.11",
     "web3": "4.2.2",
     "web3-utils": "1.9.0",
-    "winston": "3.11.0",
-    "rematrix": "^0.7.2"
+    "winston": "3.11.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^7.0.0",

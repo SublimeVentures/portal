@@ -18,6 +18,7 @@ import {isBased} from "@/lib/utils";
 import {getChainIcon} from "@/components/Navigation/StoreNetwork";
 import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 
 const getCurrencyIcon = (inputString, currencies)=> {
@@ -248,13 +249,12 @@ export default function OtcOffers({propOffers}) {
                     {((!offersIsSuccess || !vaultIsSuccess) || (!historyIsSuccess && showHistory)) ? <Loader/> : (showHistory ? renderOfferHistoryTable() : renderOfferTable())}
                 </div>
             </div>
-
-            <MakeOfferModal model={isMakeOfferModal} setter={() => {setIsMakeOfferModal(false)}} props={{...makeOfferProps}}/>
-            <CancelOfferModal model={isCancelOfferModal} setter={() => {setIsCancelOfferModal(false)}} props={{...interactOfferProps}}/>
-            <TakeOfferModal model={isTakeOfferModal} setter={() => {setIsTakeOfferModal(false)}} props={{...interactOfferProps}}/>
+            <BlockchainProvider>
+                <MakeOfferModal model={isMakeOfferModal} setter={() => {setIsMakeOfferModal(false)}} props={{...makeOfferProps}}/>
+                <CancelOfferModal model={isCancelOfferModal} setter={() => {setIsCancelOfferModal(false)}} props={{...interactOfferProps}}/>
+                <TakeOfferModal model={isTakeOfferModal} setter={() => {setIsTakeOfferModal(false)}} props={{...interactOfferProps}}/>
+            </BlockchainProvider>
         </>
-
-
 
     )
 }
