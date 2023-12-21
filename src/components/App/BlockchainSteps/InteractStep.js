@@ -39,7 +39,7 @@ export default function InteractStep() {
 
         if (checkNetwork && network_isReady && !network_isFinished) {
             return {
-                text: "Processing1...",
+                text: "Processing.",
                 lock: true
             }
         }
@@ -53,14 +53,14 @@ export default function InteractStep() {
 
         if (checkAllowance && allowance_isReady && !allowance_isFinished) {
             return {
-                text: "Processing2...",
+                text: "Processing..",
                 lock: true
             }
         }
 
         if (checkTransaction && transaction_isReady && !transaction_isFinished) {
             return {
-                text: "Processing3...",
+                text: "Processing...",
                 lock: true
             }
         }

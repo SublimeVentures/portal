@@ -61,7 +61,7 @@ export default function Sidebar({account}) {
             {name: 'Vault', link: PAGE.App, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'Accelerator', link: PAGE.Accelerator, icon: isBased ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
-            {name: 'OTC', disabled: true, link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
+            {name: 'OTC', link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
             {name: 'MysteryBox', link: PAGE.Mysterybox, icon: <IconMysteryBox className="w-8 mr-3"/>},
             {name: 'Upgrades', link: PAGE.Upgrades, icon: <IconPremium className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
