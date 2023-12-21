@@ -43,7 +43,8 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     useEffect(() => {
-        if(!model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
+        if(!model || !hash || hash?.length === 0 || !selectedCurrency?.address ) return;
+        // if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address) return;
         // if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
 
         insertConfiguration({
@@ -80,44 +81,44 @@ export default function InvestModal({model, setter, investModalProps}) {
     ]);
 
 
-    useEffect(() => {
-        if (!selectedCurrency?.address || investmentAmount < 50 || blockchainProps.isClean) return;
-        const {prerequisites, method} = getTransaction(INTERACTION_TYPE.INVEST, {
-            amount: investmentAmount,
-            vault: offer.vault,
-            selectedCurrency,
-            selectedChain
-        })
-
-
-        updateBlockchainProps(
-            [
-                {path: 'data.currency', value: selectedCurrency},
-                {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
-                {path: 'data.transaction.params.selectedChain', value: selectedChain},
-                {path: 'data.currency', value: selectedCurrency},
-                {path: 'data.chain', value: selectedChain},
-
-                {path: 'data.transaction.method', value: method},
-
-                {path: 'state.liquidity.isFetched', value: false},
-                {path: 'state.liquidity.isFinished', value: false},
-                {path: 'state.liquidity.isError', value: false},
-                {path: 'state.liquidity.error', value: null},
-
-                {path: 'state.transaction.isFinished', value: false},
-                {path: 'state.transaction.isError', value: false},
-                {path: 'state.transaction.error', value: null},
-
-                {path: 'state.liquidity.lock', value: true},
-                {path: 'state.transaction.lock', value: true},
-            ]
-        )
-    }, [
-        selectedCurrency?.address,
-        selectedCurrency?.precision,
-        selectedCurrency?.symbol,
-    ]);
+    // useEffect(() => {
+    //     if (!selectedCurrency?.address || investmentAmount < 50 || blockchainProps.isClean) return;
+    //     const {prerequisites, method} = getTransaction(INTERACTION_TYPE.INVEST, {
+    //         amount: investmentAmount,
+    //         vault: offer.vault,
+    //         selectedCurrency,
+    //         selectedChain
+    //     })
+    //
+    //
+    //     updateBlockchainProps(
+    //         [
+    //             {path: 'data.currency', value: selectedCurrency},
+    //             {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
+    //             {path: 'data.transaction.params.selectedChain', value: selectedChain},
+    //             {path: 'data.currency', value: selectedCurrency},
+    //             {path: 'data.chain', value: selectedChain},
+    //
+    //             {path: 'data.transaction.method', value: method},
+    //
+    //             {path: 'state.liquidity.isFetched', value: false},
+    //             {path: 'state.liquidity.isFinished', value: false},
+    //             {path: 'state.liquidity.isError', value: false},
+    //             {path: 'state.liquidity.error', value: null},
+    //
+    //             {path: 'state.transaction.isFinished', value: false},
+    //             {path: 'state.transaction.isError', value: false},
+    //             {path: 'state.transaction.error', value: null},
+    //
+    //             {path: 'state.liquidity.lock', value: true},
+    //             {path: 'state.transaction.lock', value: true},
+    //         ]
+    //     )
+    // }, [
+    //     selectedCurrency?.address,
+    //     selectedCurrency?.precision,
+    //     selectedCurrency?.symbol,
+    // ]);
 
 
     const title = () => {
