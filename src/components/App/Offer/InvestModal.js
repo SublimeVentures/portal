@@ -44,10 +44,9 @@ export default function InvestModal({model, setter, investModalProps}) {
     useEffect(() => {
         if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
 
-        const investmentAmount_ = 1
         insertConfiguration({
             data: {
-                amount: investmentAmount_,
+                amount: investmentAmount,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 chain: selectedChain,
@@ -58,7 +57,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                 transaction: {
                     type: INTERACTION_TYPE.INVEST,
                     params: {
-                        amount: investmentAmount_,
+                        amount: investmentAmount,
                         vault: offer.vault,
                         selectedCurrency,
                         selectedChain
@@ -81,9 +80,8 @@ export default function InvestModal({model, setter, investModalProps}) {
 
     useEffect(() => {
         if (!selectedCurrency?.address || investmentAmount < 50 || blockchainProps.isClean) return;
-        const investmentAmount_ =1
         const {prerequisites, method} = getTransaction(INTERACTION_TYPE.INVEST, {
-            amount: investmentAmount_,
+            amount: investmentAmount,
             vault: offer.vault,
             selectedCurrency,
             selectedChain

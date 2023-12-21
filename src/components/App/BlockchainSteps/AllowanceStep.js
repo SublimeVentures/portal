@@ -17,7 +17,6 @@ export default function AllowanceStep() {
 
 
     const balance_user = Number(result?.allowance?.amount ? result.allowance.amount: 0).toLocaleString()
-    console.log("allowance_current2",balance_user, result?.allowance)
 
     const balance_required = Number(amountAllowance).toLocaleString()
 
@@ -42,7 +41,6 @@ export default function AllowanceStep() {
             enabled: isReady,
         }
     )
-    // console.log("allowance ready", isReady,isFinished)
 
     const {
         config: prep_config,

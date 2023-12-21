@@ -10,8 +10,7 @@ export default function StoreItem({item, env, setOrder}) {
     let {id, name, description, price, availability, enabled} = item
     let {cdn} = env
 
-    const isAvailable = 1
-    // const isAvailable = (availability === 0 || !enabled) ? 0 : 1
+    const isAvailable = (availability === 0 || !enabled) ? 0 : 1
     const status = !isAvailable ? "closed disabled" : "inprogress"
     const imageId = isBased ? `${id}.jpg` : `Code_${id}.gif`
 
