@@ -101,6 +101,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const currencyNames = currencyList.map(el => el.symbol)
     const selectedCurrency = currencyList[investmentCurrency]
+    console.log("0x - QUEUE selectedCurrency",selectedCurrency.symbol,selectedChain)
 
     const cookieReservation = `hash_${offer.id}`
 
@@ -151,17 +152,23 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const bookingExpire = () => {
-        removeCookie(cookieReservation)
+        setButtonLoading(true)
+        removeCookie(cookieReservation, { path: '/app' });
         setHash(0)
         setExpires(0)
         setInvestModal(false)
         setRestoreHashModal(false)
         refetchAllocation()
+        setButtonLoading(false)
+
     }
 
     const afterInvestmentCleanup = () => {
-        removeCookie(cookieReservation)
+        setButtonLoading(true)
+        removeCookie(cookieReservation, { path: '/app' });
         refetchUserAllocation()
+        setButtonLoading(false)
+
     }
 
     const openInvestmentModal = (hash, expires) => {
@@ -175,7 +182,12 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const startInvestmentProcess = async () => {
-        if(investmentAmount>0) {
+        if(
+            investmentAmount>0 &&
+            allocationData.allocationUser_max>0 &&
+            allocationData.allocationUser_min>0 &&
+            allocationData.allocationUser_left>0
+        ) {
             setButtonLoading(true)
             const response = await fetchHash(offer.id, investmentAmount, selectedCurrency.address, chain.id)
             if (!response.ok) {
@@ -297,6 +309,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const calculateModalProps = {investmentAmount, allocationData, offer}
     const investModalProps = {
         expires,
+        selectedChain,
         investmentAmount,
         offer,
         account,

@@ -1,6 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import { useEffect} from "react";
-import {getCitCapStakingFunction} from "@/components/App/BlockchainSteps/config";
+import { INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
@@ -9,8 +9,8 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const { account, isS1} = stakingModalProps
-    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
-    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
+    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
+    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
 
     const closeModal = () => {
@@ -30,28 +30,33 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
 
     useEffect(() => {
         if(!model || !selectedCurrency?.address) return;
-        const stakingFunction = getCitCapStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
 
-        updateBlockchainProps({
-            processingData: {
+        insertConfiguration({
+            data: {
                 requiredNetwork: 1,
                 amount: account.stakeReq,
                 amountAllowance: account.stakeReq,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
-                transactionData: stakingFunction
+                button: {
+                    icon: <RocketIcon className={ButtonIconSize.hero}/>,
+                    text: "Stake",
+                },
+                transaction: {
+                    type: INTERACTION_TYPE.STAKE,
+                    params: {
+                        contract: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
+                    },
+                },
             },
-            buttonData: {
-                icon: <RocketIcon className={ButtonIconSize.hero}/>,
-                text: "Stake",
-            },
-            checkNetwork: !isBased,
-            checkLiquidity: true,
-            checkAllowance: true,
-            checkTransaction: true,
-            showButton: true,
-            saveData: true,
+            steps: {
+                network:!isBased,
+                liquidity:true,
+                allowance:true,
+                transaction:true,
+                button:true,
+            }
         });
     }, [
         selectedCurrency?.address,

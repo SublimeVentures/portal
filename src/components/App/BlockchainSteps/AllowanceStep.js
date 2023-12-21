@@ -1,38 +1,23 @@
 import {erc20ABI, useContractRead, usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
 import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {BigNumber} from "bignumber.js";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function AllowanceStep() {
-    const {allowanceState, blockchainProps} = useBlockchainContext();
+    const [lastAllowance, setLastAllowance] = useState(0);
+    const { blockchainProps, stepsIsReady, updateBlockchainProps} = useBlockchainContext();
 
-    const {
-        isReady,
-        setIsReady,
-        isFetched,
-        setIsFetched,
-        setIsLoading,
-        result,
-        setResult,
-        isFinished,
-        setIsFinished,
-        setIsError,
-        setError,
-    } = allowanceState
+    const {data, state, result} = blockchainProps
+
+    const {amountAllowance, userWallet, currency, diamond} = data
+    const {allowance: isReady} = stepsIsReady
+    const {isFinished, isError, isFetched} = state.allowance
+    const {isFinished: liquidity_isFinished} = state.liquidity
 
 
-    const {processingData} = blockchainProps
+    const balance_user = Number(result?.allowance?.amount ? result.allowance.amount: 0).toLocaleString()
 
-    const {
-        amountAllowance,
-        userWallet,
-        currency,
-        diamond
-    } = processingData
-
-
-    const balance_user = Number(result).toLocaleString()
     const balance_required = Number(amountAllowance).toLocaleString()
 
     const power = BigNumber(10).pow(currency.precision)
@@ -54,7 +39,6 @@ export default function AllowanceStep() {
             args: [userWallet, diamond],
             watch: !isFinished,
             enabled: isReady,
-            cacheOnBlock: true
         }
     )
 
@@ -97,43 +81,64 @@ export default function AllowanceStep() {
     useEffect(() => {
         console.log("IQZ :: ALLOWANCE :: R", isReady)
         if (!isReady) return
-        setIsLoading(onchain_isLoading)
-        setIsFetched(onchain_isSuccess)
+        updateBlockchainProps([
+            { path: 'state.allowance.isLoading', value: onchain_isLoading },
+            { path: 'state.allowance.isFetched', value: onchain_isSuccess }
+        ])
+        setLastAllowance(amountAllowance)
         let allowance_current = 0
         if (onchain_data?.toString() != undefined && currency?.precision) {
             const power = BigNumber(10).pow(currency.precision)
             const balance_currentBN = BigNumber(onchain_data)
             allowance_current = onchain_data ? balance_currentBN.dividedBy(power).toNumber() : 0
         }
-        setResult(allowance_current)
-        setIsFinished((amountAllowance >= allowance_current) && allowance_current > 0)
 
-        console.log("IQZ :: ALLOWANCE :: S", amountAllowance, allowance_current, onchain_isLoading, onchain_isSuccess, onchain_data, allowance_current, balance_required <= allowance_current)
-    }, [onchain_isSuccess, onchain_isLoading, onchain_data])
+        updateBlockchainProps([
+            { path: 'result.allowance.amount', value: allowance_current },
+            { path: 'state.allowance.isFinished', value: (amountAllowance <= allowance_current) && allowance_current > 0 }
+        ])
+        console.log("IQZ :: ALLOWANCE :: S2", amountAllowance, allowance_current,  amountAllowance <= allowance_current)
+    }, [onchain_isSuccess, onchain_isLoading, onchain_data, isReady])
 
 
     useEffect(() => {
-        if (isReady && prep_isSuccess && !write_isLoading) {
-            setIsError(false)
-            setError(null)
+        console.log("IQZ :: ALLOWANCE :: WRITE", isReady && prep_isSuccess && !write_isLoading && result?.allowance?.amount !== undefined, isReady, isFinished, prep_isSuccess,!write_isLoading, result?.allowance?.amount !== undefined)
+        if (isReady && prep_isSuccess && !write_isLoading && result?.allowance?.amount !== undefined) {
+            updateBlockchainProps([
+                { path: 'state.allowance.isError', value: false },
+                { path: 'state.allowance.error', value: null }
+            ])
             if (!isFinished) {
                 write_send()
             }
         }
-    }, [isReady, prep_isSuccess])
+    }, [isReady, prep_isSuccess, onchain_data,result?.allowance?.amount])
 
 
     useEffect(() => {
         if (!!confirmation_data && confirmation_isSuccess) {
-            setIsError(false)
-            setError(null)
-            setIsFinished(true)
-            setResult({
-                confirmation_isSuccess,
-                confirmation_data
-            })
+            if(result.allowance.amount>=amountAllowance) {
+                updateBlockchainProps([
+                    { path: 'state.allowance.isError', value: false },
+                    { path: 'state.allowance.error', value: null },
+                    { path: 'state.allowance.isFinished', value: true },
+                    { path: 'result.allowance.confirmation', value: {
+                            confirmation_isSuccess,
+                            confirmation_data
+                        }
+                    }
+                ])
+            } else {
+                updateBlockchainProps([
+                    { path: 'state.allowance.isError', value: true },
+                    { path: 'state.allowance.error', value: "" },
+                    { path: 'state.allowance.isFinished', value: false },
+                    { path: 'state.allowance.lock', value: true }
+                ])
+            }
+
         }
-    }, [confirmation_data, confirmation_isSuccess])
+    }, [confirmation_data, confirmation_isSuccess, result.allowance?.amount])
 
 
     useEffect(() => {
@@ -144,16 +149,18 @@ export default function AllowanceStep() {
         })
 
         if (!!prep_error || !!write_error || !!confirmation_error) {
-            setIsFinished(false)
-            setIsReady(false)
-            setIsError(!!prep_error || !!write_error || !!confirmation_error || !!onchain_error)
-            setError(prep_error || write_error || confirmation_error || onchain_error)
+            updateBlockchainProps([
+                { path: 'state.allowance.isError', value: !!prep_error || !!write_error || !!confirmation_error || !!onchain_error },
+                { path: 'state.allowance.error', value: prep_error || write_error || confirmation_error || onchain_error },
+                { path: 'state.allowance.isFinished', value: false },
+                { path: 'state.allowance.lock', value: true }
+            ])
         }
     }, [
-        onchain_isError, onchain_error,
-        prep_isError, prep_error,
-        write_isError, write_error,
-        confirmation_isError, confirmation_error
+        prep_isError,
+        write_isError,
+        confirmation_isError,
+        onchain_isError,
     ])
 
 
@@ -172,13 +179,14 @@ export default function AllowanceStep() {
             }
             case Transaction.Failed: {
                 return <span
-                    className="underline">Failed to set allowance for {currency.isSettlement ? `$${balance_user}` : `${balance_user} ${currency.symbol}`}</span>
+                    className="underline">Failed to set allowance for {currency.isSettlement ? `$${lastAllowance}` : `${lastAllowance} ${currency.symbol}`}</span>
             }
             default: {
                 return <>Check allowance</>
             }
         }
     }
+
 
     const prepareRow = (state) => {
         return <div className={`flex flex-row items-center ${getStatusColor(state)}`}>
@@ -192,7 +200,7 @@ export default function AllowanceStep() {
     if (isFinished) {
         return prepareRow(Transaction.Executed)
     }
-    if ((!!prep_error || !!write_error || !!confirmation_error) && !isFinished) {
+    if (isError && !isFinished && liquidity_isFinished) {
         return prepareRow(Transaction.Failed)
     }
     if (!isReady) {

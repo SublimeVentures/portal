@@ -43,8 +43,9 @@ import {isBased} from "@/lib/utils";
 
 const BlockchainSteps = () => {
     const {blockchainProps} = useBlockchainContext();
-    const {checkNetwork, checkLiquidity, checkAllowance, checkTransaction, showButton} = blockchainProps
+    const {network: checkNetwork, liquidity: checkLiquidity, allowance: checkAllowance, transaction: checkTransaction, button: showButton} = blockchainProps.steps
 
+    // console.log("#####RERENDER!!!!!")
     return (
         <>
             <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content text-sm">

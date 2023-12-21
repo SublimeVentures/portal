@@ -4,30 +4,12 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
 
 export default function TransactionStep() {
-    const { transactionState, blockchainProps } = useBlockchainContext();
+    const {blockchainProps, stepsIsReady, updateBlockchainProps} = useBlockchainContext();
+    const {data, state} = blockchainProps
 
-    const {
-        isReady,
-        setIsReady,
-        isFetched,
-        setIsFetched,
-        setIsLoading,
-        result,
-        setResult,
-        isFinished,
-        setIsFinished,
-        setIsError,
-        setError,
-    } = transactionState
-
-    const {processingData} = blockchainProps
-
-
-    const {
-        userWallet,
-        transactionData
-    } = processingData
-
+    const {userWallet, transaction} = data
+    const {transaction: isReady} = stepsIsReady
+    const {isFinished, isError} = state.transaction
 
     const {
         config: prep_config,
@@ -35,10 +17,10 @@ export default function TransactionStep() {
         isError: prep_isError,
         error: prep_error,
     } = usePrepareContractWrite({
-        address: transactionData.address,
-        abi: transactionData.abi,
-        functionName: transactionData.method,
-        args: transactionData.args,
+        address: transaction.method.address,
+        abi: transaction.method.abi,
+        functionName: transaction.method.method,
+        args: transaction.method.args,
         overrides: {
             from: userWallet,
         },
@@ -73,22 +55,27 @@ export default function TransactionStep() {
 
     useEffect(() => {
         console.log("IQZ :: TRANSACTION :: SEND", isReady, prep_isSuccess, write_isLoading)
-        if (isReady && prep_isSuccess && !write_isLoading) {
-            setIsError(false)
-            setError(null)
+        if (isReady && prep_isSuccess && !write_isLoading && transaction.method.method) {
+            updateBlockchainProps([
+                { path: 'state.transaction.isError', value: false },
+                { path: 'state.transaction.error', value: null }
+            ])
             write_send()
         }
-    }, [prep_isSuccess, isReady])
+    }, [prep_isSuccess, isReady, transaction.method.method])
 
     useEffect(() => {
         if (!!confirmation_data && confirmation_isSuccess) {
-            setIsError(false)
-            setError(null)
-            setIsFinished(true)
-            setResult({
-                confirmation_isSuccess,
-                confirmation_data
-            })
+            updateBlockchainProps([
+                { path: 'state.transaction.isError', value: false },
+                { path: 'state.transaction.error', value: null },
+                { path: 'state.transaction.isFinished', value: true },
+                { path: 'result.transaction', value: {
+                        confirmation_isSuccess,
+                        confirmation_data
+                    }
+                }
+            ])
         }
     }, [confirmation_data, confirmation_isSuccess])
 
@@ -100,10 +87,13 @@ export default function TransactionStep() {
         })
 
         if (!!prep_error || !!write_error || !!confirmation_error) {
-            setIsFinished(false)
-            setIsReady(false)
-            setIsError(!!prep_error || !!write_error || !!confirmation_error)
-            setError(prep_error || write_error || confirmation_error)
+            updateBlockchainProps([
+                { path: 'state.transaction.isError', value: !!prep_error || !!write_error || !!confirmation_error },
+                { path: 'state.transaction.error', value: prep_error || write_error || confirmation_error },
+                { path: 'state.transaction.isFinished', value: false },
+                { path: 'state.transaction.lock', value: true },
+                { path: 'state.allowance.lock', value: true }
+            ])
         }
     }, [
         prep_isError, prep_error,
@@ -115,7 +105,7 @@ export default function TransactionStep() {
     const statuses = (state) => {
         switch (state) {
             case Transaction.Waiting: {
-                return <>Transfer funds</>
+                return <>Send transaction</>
             }
             case Transaction.Processing: {
                 return <>{confirmation_isLoading ? "Processing transaction" : "Confirm transaction in wallet"}</>
@@ -127,7 +117,7 @@ export default function TransactionStep() {
                 return <span className="underline">Transaction failed</span>
             }
             default: {
-                return <>Transfer funds</>
+                return <>Send transaction</>
             }
         }
     }
@@ -142,7 +132,7 @@ export default function TransactionStep() {
     }
 
     if (isFinished) return prepareRow(Transaction.Executed)
-    if ((!!prep_error || !!write_error || !!confirmation_error) && !isFinished) return prepareRow(Transaction.Failed)
+    if (isError && !isFinished) return prepareRow(Transaction.Failed)
     if (!isReady) return prepareRow(Transaction.Waiting)
     return prepareRow(Transaction.Processing)
 }

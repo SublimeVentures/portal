@@ -29,7 +29,6 @@ function timeUntilNextUnstakeWindow(stakedAt, staked) {
     let timeSinceStaked = currentTimestamp - stakedAt;
     let periodPosition = timeSinceStaked % PERIOD_LENGTH;
 
-    console.log("periodPosition",periodPosition)
     if (periodPosition >= (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH)) {
         let timeUntilNextRestake = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
         let timeUntilNextRestakeHours = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;

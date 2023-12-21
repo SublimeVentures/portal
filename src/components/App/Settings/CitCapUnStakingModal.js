@@ -1,7 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {useEffect } from "react";
 import {
-    getCitCapUnStakingFunction
+     INTERACTION_TYPE
 } from "@/components/App/BlockchainSteps/config";
 import RocketIcon from "@/assets/svg/Rocket.svg";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
@@ -9,8 +9,8 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     const {stakeReq, account, stakeSze} = stakingModalProps
-    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
-    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
+    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
+    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const closeModal = () => {
         setter()
@@ -31,28 +31,31 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
     useEffect(() => {
         if(!model || !selectedCurrency?.address) return;
 
-        const unstakingFunction = getCitCapUnStakingFunction("0x1feEFAD7c874A93056AFA904010F9982c0722dFc")
 
-
-        updateBlockchainProps({
-            processingData: {
+        insertConfiguration({
+            data: {
+                requiredNetwork: 1,
                 amount: stakeReq,
                 amountAllowance: stakeReq,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 diamond: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
-                transactionData: unstakingFunction
+                button: {
+                    icon: <RocketIcon className="w-10 mr-2"/>,
+                    text: "UnStake",
+                },
+                transaction: {
+                    type: INTERACTION_TYPE.UNSTAKE,
+                    params: {
+                        contract: "0x1feEFAD7c874A93056AFA904010F9982c0722dFc",
+                    },
+                },
             },
-            buttonData: {
-                // buttonFn,
-                icon: <RocketIcon className="w-10 mr-2"/>,
-                text: "UnStake",
-            },
-            checkLiquidity: false,
-            checkAllowance: false,
-            checkTransaction: true,
-            showButton: true,
-            saveData: true,
+            steps: {
+                network:true,
+                transaction:true,
+                button:true,
+            }
         });
     }, [
         selectedCurrency?.address,

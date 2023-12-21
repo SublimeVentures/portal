@@ -9,7 +9,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import {isBased} from "@/lib/utils";
 import {ALCHEMY_KEY, RPCs, WALLET_CONNECT_ID} from "@/lib/blockchain";
-import {createWalletClient, custom, publicActions} from "viem";
+// import {createWalletClient, custom, publicActions} from "viem";
 
 // const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
 const rightChains = [mainnet, polygon, bsc]
@@ -19,13 +19,24 @@ const { chains,  publicClient, webSocketPublicClient } = configureChains(
     [
         jsonRpcProvider({
             rpc: (chain) => ({
-                http: RPCs[chain.id].http,
-                webSocket: RPCs[chain.id].webSocket,
+                http: RPCs[chain.id].http1,
+                webSocket: RPCs[chain.id].webSocket1,
+            }),
+        }),
+        jsonRpcProvider({
+            rpc: (chain) => ({
+                http: RPCs[chain.id].http2,
+                webSocket: RPCs[chain.id].webSocket2,
             }),
         }),
         publicProvider()
     ],
-    { stallTimeout: 5000, retryCount: 5},
+    {
+        batch: { multicall: true },
+        retryCount: 7,
+        retryDelay: 150,
+        stallTimeout: 10_000
+    },
 )
 
 const config = createConfig({
@@ -58,17 +69,6 @@ const config = createConfig({
             },
         })
     ],
-    // publicClient: (chain) => {
-    //     if (typeof window !== 'undefined' && typeof (window).ethereum !== 'undefined') {
-    //         // create a special client that sends rpc calls through wallet
-    //         return createWalletClient({
-    //             chain: chain,
-    //             transport: custom(window.ethereum),
-    //     }).extend(publicActions);
-    //     }
-    //
-    //     return publicClient(chain)
-    // },
     publicClient,
     webSocketPublicClient,
 })

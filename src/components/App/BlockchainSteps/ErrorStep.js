@@ -1,17 +1,13 @@
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function ErrorStep() {
-    const {
-        networkState,
-        liquidityState,
-        allowanceState,
-        transactionState,
-    } = useBlockchainContext();
+    const { blockchainProps } = useBlockchainContext();
+    const {state} = blockchainProps
 
-    const {error: errorNetwork, isError: isErrorNetwork} = networkState
-    const {error: errorLiquidity, isError: isErrorLiquidity} = liquidityState
-    const {error: errorAllowance, isError: isErrorAllowance} = allowanceState
-    const {error: errorTransaction, isError: isErrorTransactions} = transactionState
+    const {error: errorNetwork} = state.network
+    const {error: errorLiquidity} = state.liquidity
+    const {error: errorAllowance} = state.allowance
+    const {error: errorTransaction} = state.transaction
 
 
     return (

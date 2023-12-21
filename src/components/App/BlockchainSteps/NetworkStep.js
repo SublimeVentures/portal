@@ -10,27 +10,12 @@ import {useEffect} from "react";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function NetworkStep() {
-    const {networkState, blockchainProps} = useBlockchainContext();
-    const {
-        isReady,
-        setIsReady,
-        isFetched,
-        setIsFetched,
-        setIsLoading,
-        result,
-        setResult,
-        isFinished,
-        setIsFinished,
-        setIsError,
-        setError,
-    } = networkState
+    const {blockchainProps, stepsIsReady, updateBlockchainProps} = useBlockchainContext();
+    const {data, state} = blockchainProps
 
-    const {processingData} = blockchainProps
-
-    const {
-        requiredNetwork,
-        forcePrecheck
-    } = processingData
+    const {requiredNetwork, forcePrecheck} = data
+    const {network: isReady} = stepsIsReady
+    const {isFinished} = state.network
 
     const {chain} = useNetwork()
     const {chains, error, isLoading: network_isLoading, switchNetwork} = useSwitchNetwork()
@@ -45,33 +30,42 @@ export default function NetworkStep() {
     }
 
     useEffect(() => {
-        console.log("IQZ :: NETWORK R/F", isReady, isRightChain)
         if (!isReady) return;
-        setIsFinished(isRightChain)
+        console.log("IQZ :: NETWORK R/F", isReady, isRightChain)
+        updateBlockchainProps([{path: 'state.network.isFinished', value: isRightChain}])
         changeNetwork()
     }, [chain?.id, isReady])
 
     useEffect(() => {
-        setIsLoading(network_isLoading)
+        updateBlockchainProps([{path: 'state.network.isLoading', value: network_isLoading}])
     }, [network_isLoading])
 
 
     useEffect(() => {
         console.log("IQZ :: NETWORK E/L", error, network_isLoading)
-        setIsError(!!error)
-        setError(error)
-        if(!!error) {
-            setIsReady(false)
+        let updates = [
+            {path: 'state.network.isError', value: !!error},
+            {path: 'state.network.error', value: error}
+        ]
+        if (!!error) {
+            updates.push({path: 'state.network.lock', value: true})
+            updates.push({path: 'state.network.isFinished', value: false})
         }
+        updateBlockchainProps(updates)
     }, [error, network_isLoading])
 
 
     useEffect(() => {
-        setResult({
-            chainSelected,
-            chainDesired,
-            isRightChain
-        })
+        updateBlockchainProps([
+            {
+                path: 'result.network',
+                value: {
+                    chainSelected,
+                    chainDesired,
+                    isRightChain
+                }
+            }
+        ])
     }, [chain?.id])
 
 
