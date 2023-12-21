@@ -2,19 +2,19 @@ import GenericModal from "@/components/Modal/GenericModal";
 import { useEffect} from "react";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconTrash from "@/assets/svg/trash.svg";
-import {getOtcCancelFunction} from "@/components/App/Otc/OtcSteps";
 import useGetChainEnvironment from "@/lib/hooks/useGetChainEnvironment";
 import {useSwitchNetwork} from "wagmi";
 import {getChainIcon} from "@/components/Navigation/StoreNetwork";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 
 
 export default function CancelOfferModal({model, setter, props}) {
     const {getCurrencyIcon, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
     const {chains} = useSwitchNetwork()
-    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
-    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
+    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
+    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
@@ -23,26 +23,33 @@ export default function CancelOfferModal({model, setter, props}) {
 
 
     useEffect(() => {
-        if(!model) return;
-        const otcCancelFunction = getOtcCancelFunction(currentMarket.market, offerDetails.dealId, diamond)
 
+        if(!model || !diamond || !offerDetails?.dealId || !offerDetails?.otcId) return;
 
-        updateBlockchainProps({
-            processingData: {
+        insertConfiguration({
+            data: {
                 requiredNetwork: offerDetails?.chainId,
                 forcePrecheck: false,
                 userWallet: account.address,
                 diamond: diamond,
-                transactionData: otcCancelFunction
+                button: {
+                    icon: <IconTrash className="w-10 mr-2"/>,
+                    text: "Cancel Offer",
+                },
+                transaction: {
+                    type: INTERACTION_TYPE.OTC_CANCEL,
+                    params: {
+                        diamond,
+                        dealId: offerDetails.dealId,
+                        otcId: currentMarket.market,
+                    },
+                },
             },
-            buttonData: {
-                icon: <IconTrash className="w-10 mr-2"/>,
-                text: "Cancel Offer",
-            },
-            checkNetwork: true,
-            checkTransaction: true,
-            showButton: true,
-            saveData: true
+            steps: {
+                network:true,
+                transaction:true,
+                button:true,
+            }
         });
     }, [
         model
@@ -63,10 +70,7 @@ export default function CancelOfferModal({model, setter, props}) {
     }
 
 
-
     const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
-
-
 
     const title = () => {
         return (

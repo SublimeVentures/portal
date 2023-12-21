@@ -4,7 +4,7 @@ import moment from "moment";
 import {useEffect} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
-import {getInvestFunction} from "@/components/App/BlockchainSteps/config";
+import {getTransaction, INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
 import RocketIcon from "@/assets/svg/Rocket.svg";
@@ -14,32 +14,20 @@ import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useRouter} from "next/router";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
-export const StakeSteps = {
-    Select: 0,
-    Use: 1,
-    Skip: 2
-}
 
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
-    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
-    const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
-    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
-
+    const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
+    const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps } = useBlockchainContext();
+    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     if(!selectedCurrency) return
 
     const amountLocale = Number(investmentAmount).toLocaleString()
 
-    const testClean = () => {
-        if(!blockchainSummary?.buttonLock && !transactionSuccessful) {
-            console.log("reset")
-            blockchainCleanup()
-        }
-    }
-
     const closeModal = () => {
         setter()
+
         if(transactionSuccessful) {
             afterInvestmentCleanup()
         }
@@ -54,31 +42,81 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     useEffect(() => {
-        if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address) return;
+        if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
 
-        const investFunction = getInvestFunction(account.ACL, false, investmentAmount, offer, selectedCurrency, hash, account.id)
-
-        updateBlockchainProps({
-            processingData: {
-                amount: investmentAmount,
+        const investmentAmount_ = 1
+        insertConfiguration({
+            data: {
+                amount: investmentAmount_,
                 userWallet: account.address,
                 currency: selectedCurrency,
-                transactionData: investFunction
+                chain: selectedChain,
+                button: {
+                    icon: <RocketIcon className="w-10 mr-2" />, // Adjust class as needed
+                    text: "Transfer funds",
+                },
+                transaction: {
+                    type: INTERACTION_TYPE.INVEST,
+                    params: {
+                        amount: investmentAmount_,
+                        vault: offer.vault,
+                        selectedCurrency,
+                        selectedChain
+                    },
+                },
             },
-            buttonData: {
-                icon: <RocketIcon className="w-10 mr-2" />, // Adjust class as needed
-                text: "Transfer funds",
-            },
-            checkLiquidity: true,
-            checkTransaction: true,
-            showButton: true,
-            saveData: true,
+            steps: {
+                liquidity:true,
+                transaction:true,
+                button:true,
+            }
         });
     }, [
         investmentAmount,
         selectedCurrency?.address,
         hash,
         model
+    ]);
+
+
+    useEffect(() => {
+        if (!selectedCurrency?.address || investmentAmount < 50 || blockchainProps.isClean) return;
+        const investmentAmount_ =1
+        const {prerequisites, method} = getTransaction(INTERACTION_TYPE.INVEST, {
+            amount: investmentAmount_,
+            vault: offer.vault,
+            selectedCurrency,
+            selectedChain
+        })
+
+
+        updateBlockchainProps(
+            [
+                {path: 'data.currency', value: selectedCurrency},
+                {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
+                {path: 'data.transaction.params.selectedChain', value: selectedChain},
+                {path: 'data.currency', value: selectedCurrency},
+                {path: 'data.chain', value: selectedChain},
+
+                {path: 'data.transaction.method', value: method},
+
+                {path: 'state.liquidity.isFetched', value: false},
+                {path: 'state.liquidity.isFinished', value: false},
+                {path: 'state.liquidity.isError', value: false},
+                {path: 'state.liquidity.error', value: null},
+
+                {path: 'state.transaction.isFinished', value: false},
+                {path: 'state.transaction.isError', value: false},
+                {path: 'state.transaction.error', value: null},
+
+                {path: 'state.liquidity.lock', value: true},
+                {path: 'state.transaction.lock', value: true},
+            ]
+        )
+    }, [
+        selectedCurrency?.address,
+        selectedCurrency?.precision,
+        selectedCurrency?.symbol,
     ]);
 
 
@@ -128,7 +166,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                 </div>
 
                 <BlockchainSteps/>
-                <div>Booked allocation will be <span onClick={()=> testClean()}>released</span> when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
+                <div>Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>
             </div>
         )

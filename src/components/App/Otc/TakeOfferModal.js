@@ -1,8 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useRef, useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import IconTrash from "@/assets/svg/trash.svg";
-import {getOtcTakeFunction} from "@/components/App/Otc/OtcSteps";
 import useGetChainEnvironment from "@/lib/hooks/useGetChainEnvironment";
 import {useSwitchNetwork} from "wagmi";
 import {getChainIcon} from "@/components/Navigation/StoreNetwork";
@@ -10,75 +8,99 @@ import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {getSignature} from "@/fetchers/otc.fetcher";
 import moment from "moment";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
-
+import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
+import RocketIcon from "@/assets/svg/Rocket.svg";
 
 
 export default function TakeOfferModal({model, setter, props}) {
     const {getCurrencyIcon,vault, otcFee, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
     const {chains} = useSwitchNetwork()
-    const { updateBlockchainProps, blockchainCleanup, blockchainSummary, blockchainRunProcess } = useBlockchainContext();
-    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
+    const {updateBlockchainProps, insertConfiguration, blockchainCleanup ,blockchainProps} = useBlockchainContext();
+    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const [signature, setSignature] = useState(null)
 
     const {diamond, currencyListAll} = useGetChainEnvironment(currencies, diamonds)
-    const selectedCurrency =  offerDetails ? currencyListAll[offerDetails.chainId][offerDetails.currency] : {}
+    const selectedCurrency =  offerDetails && currencyListAll ? currencyListAll[offerDetails.chainId][offerDetails.currency] : {}
+    const userAllocation = currentMarket && vault ? vault.find(el => el.offerId === currentMarket.id) : {}
+    const ownedAllocation = userAllocation ? userAllocation.invested - userAllocation.locked : 0
+    const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
+    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee
 
+    const customLocks = () => {
+        if(!haveEnoughAllocation) return {lock: true, text: "Not enough allocation"}
+        else return {lock: false}
+    }
     useEffect(() => {
-        if(!signature?.expiry) return;
-        blockchainRunProcess();
+        if (!model || !selectedCurrency?.address || !blockchainProps.isClean || !(totalPayment>0) || !offerDetails?.chainId) return;
 
-    }, [signature?.expiry])
+        const {lock, text} = customLocks()
 
-    useEffect(() => {
-        if(!model || !selectedCurrency?.address) return;
-
-        const otcTakeFunction = getOtcTakeFunction(currentMarket.market, offerDetails.dealId, signature?.nonce, signature?.expiry, signature?.hash, diamond)
-
-
-        updateBlockchainProps({
-            processingData: {
+        insertConfiguration({
+            data: {
                 requiredNetwork: offerDetails?.chainId,
-                forcePrecheck: false,
                 amount: totalPayment,
                 amountAllowance: totalPayment,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 diamond: diamond,
-                transactionData: otcTakeFunction
+                button: {
+                    buttonFn,
+                    icon: <RocketIcon className="w-10 mr-2"/>,
+                    text: "Take Offer",
+                    customLockState: lock,
+                    customLockText: text,
+                },
+                transaction: {
+                    type: INTERACTION_TYPE.OTC_TAKE,
+                    params: {
+                        otcId: currentMarket.market,
+                        dealId: offerDetails.dealId,
+                        diamond,
+                        listen: false
+
+                    },
+                },
             },
-            buttonData: {
-                buttonFn,
-                icon: <IconTrash className="w-10 mr-2"/>,
-                text: "Take Offer",
-                customLock: true,
-                customLockParams: [
-                    {check: !haveEnoughAllocation, error: "Not enough allocation"},
-                ],
+            steps: {
+                network:true,
+                liquidity:true,
+                allowance:true,
+                transaction:true,
+                button:true,
             },
-            checkNetwork: true,
-            checkLiquidity: true,
-            checkAllowance: true,
-            checkTransaction: true,
-            showButton: true,
-            saveData: true,
         });
     }, [
+        model,
         selectedCurrency?.address,
-        model
+        offerDetails?.chainId,
+        totalPayment,
+        currentMarket?.id
     ]);
 
+    useEffect(() => {
+        if (!selectedCurrency?.address || blockchainProps.isClean) return;
+        const {lock, text} = customLocks()
+
+        updateBlockchainProps(
+            [
+                {path: 'data.button.customLockState', value: lock},
+                {path: 'data.button.customLockText', value: text},
+            ]
+        )
+    }, [
+        haveEnoughAllocation
+    ]);
+
+
+
     if(!currentMarket?.name || !offerDetails?.currency || !diamond) return
-    const userAllocation = vault.find(el => el.offerId === currentMarket.id)
-    const ownedAllocation = userAllocation ? userAllocation.invested - userAllocation.locked : 0
 
     const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
 
-    const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
 
-    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee
 
     const closeModal = async () => {
         if(transactionSuccessful) {
@@ -93,17 +115,29 @@ export default function TakeOfferModal({model, setter, props}) {
     }
 
     const buttonFn = async () => {
+
         if(
-            signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell ||
-            offerDetails.isSell
+            signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell
         ) {
-            blockchainRunProcess();
+            return [{ param: 'signature', value: signature }]
+        } else if(offerDetails.isSell){
+            return {
+                ok: true,
+                update: [{ param: 'listen', value: false }]
+            }
         } else {
-                const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
+            const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
                 if (transaction.ok) {
                     setSignature(transaction.data)
+                    return [
+                        { param: 'signature', value: transaction.data },
+                        { param: 'listen', value: true },
+                    ]
                 } else {
                     //todo: error handling
+                    return {
+                        ok: false,
+                    }
                 }
             }
     }
@@ -128,7 +162,7 @@ export default function TakeOfferModal({model, setter, props}) {
                 <div className="grid gap-1 grid-cols-2 my-10 mx-5 mb-0">
                     <div className="font-bold">MARKET</div><div className={"text-right text-app-success"}>{currentMarket.name}</div>
                     <div className="font-bold">TYPE</div><div className={`text-right ${offerDetails.isSell ? 'text-app-error' : 'text-app-success'} `}>{offerDetails.isSell ? "SELL" : "BUY"}</div>
-                    <div className="font-bold">BLOCKCHAIN</div><div className={"text-right flex flex-row justify-end"}>{getChainIcon(chainDesired?.id, ButtonIconSize.hero4)} {chainDesired?.name}</div>
+                    <div className="font-bold">BLOCKCHAIN</div><div className={"text-right flex flex-row justify-end"}>{getChainIcon(chainDesired?.id, ButtonIconSize.hero4)} <span className={"truncate"}>{chainDesired?.name}</span></div>
                     <div className="font-bold">AMOUNT</div><div className={"text-right"}>${cancelOfferAmount_parsed}</div>
                     <div className="font-bold">PRICE</div><div className={"text-right"}>${cancelOfferPrice_parsed}</div>
                     <div className="font-bold">OTC FEE</div><div className={"text-right"}>${otcFee}</div>

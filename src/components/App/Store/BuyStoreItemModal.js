@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {
-    getUpgradesFunction
+    getUpgradesFunction, INTERACTION_TYPE
 } from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
@@ -18,8 +18,8 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 export default function BuyStoreItemModal({model, setter, buyModalProps}) {
     const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
     const router = useRouter()
-    const { updateBlockchainProps, blockchainCleanup, blockchainSummary } = useBlockchainContext();
-    const transactionSuccessful = blockchainSummary?.transaction_result?.confirmation_data
+    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
+    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const closeModal = () => {
         setter()
@@ -38,29 +38,35 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
 
     useEffect(() => {
         if(!model || !selectedCurrency?.address) return;
-        const purchaseUpgradesFunction = getUpgradesFunction(contract, selectedCurrency.address, 1, order.id)
 
-
-        updateBlockchainProps({
-            processingData: {
+        insertConfiguration({
+            data: {
                 requiredNetwork: 1,
                 amount: order.price,
                 amountAllowance: order.price,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 diamond: contract,
-                transactionData: purchaseUpgradesFunction
+                button: {
+                    icon: <RocketIcon className="w-10 mr-2"/>,
+                    text: "Buy",
+                },
+                transaction: {
+                    type: INTERACTION_TYPE.UPGRADE,
+                    params: {
+                        contract,
+                        selectedCurrency,
+                        amount: 1,
+                    },
+                },
             },
-            buttonData: {
-                icon: <RocketIcon className="w-10 mr-2"/>,
-                text: "Buy",
+            steps: {
+                network:!isBased,
+                liquidity:true,
+                allowance:true,
+                transaction:true,
+                button:true,
             },
-            checkNetwork: !isBased,
-            checkLiquidity: true,
-            checkAllowance: true,
-            checkTransaction: true,
-            showButton: true,
-            saveData: true,
         });
     }, [
         selectedCurrency?.address,

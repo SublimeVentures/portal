@@ -1,104 +1,66 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function InteractStep() {
-    const {
-        blockchainRunProcess,
-        blockchainProps,
-        networkState,
-        allowanceState,
-        liquidityState,
-        transactionState,
-        buttonState
-    } = useBlockchainContext();
+    const {blockchainProps, stepsIsReady, updateBlockchainProps, blockchainRunProcess, blockchainRunProcessDirect} = useBlockchainContext();
+    const {steps, data, state} = blockchainProps
 
     const {
-        checkLiquidity,
-        checkAllowance,
-        checkNetwork,
-        checkTransaction,
-
-        showButton,
-        buttonData
-    } = blockchainProps
-
+        network: checkNetwork,
+        liquidity: checkLiquidity,
+        allowance: checkAllowance,
+        transaction: checkTransaction,
+        button: showButton
+    } = steps
+    const {button: buttonData} = data
     const {
-        isReady: network_isReady,
-        isFinished: network_isFinished,
-        setLock: network_setLock
-    } = networkState
-
-    const {
-        isFetched: liquidity_isFetched,
-        isReady: liquidity_isReady,
-        isFinished: liquidity_isFinished,
-        setLock: liquidity_setLock
-    } = liquidityState
-
-    const {
-        isFetched: allowance_isFetched,
-        isReady: allowance_isReady,
-        isFinished: allowance_isFinished,
-        setLock: allowance_setLock
-    } = allowanceState
-
-    const {
-        isFetched: transaction_isFetched,
-        isReady: transaction_isReady,
-        isFinished: transaction_isFinished,
-        setLock: transaction_setLock
-    } = transactionState
-
-    const {
-        buttonLock,
-        setButtonLock,
-        buttonText,
-        setButtonText
-    } = buttonState
+        network: network_isReady,
+        liquidity: liquidity_isReady,
+        allowance: allowance_isReady,
+        transaction: transaction_isReady,
+    } = stepsIsReady
+    const {isFinished: network_isFinished} = state.network
+    const {isFinished: liquidity_isFinished, isFetched: liquidity_isFetched} = state.liquidity
+    const {isFinished: allowance_isFinished, isFetched: allowance_isFetched} = state.allowance
+    const {isFinished: transaction_isFinished, isFetched: transaction_isFetched} = state.transaction
+    const {lock: buttonLock, text: buttonText} = state.button
 
 
     const processButtonState = () => {
-        if(!showButton) return {};
+        if (!showButton) return {};
 
-        if(buttonData?.customLock) {
-            if(buttonData?.customLockParams.length>0) {
-                for(let i=0; i<buttonData?.customLockParams.length; i++ ){
-                    if(buttonData?.customLockParams[i].check) {
-                        return {
-                            text: buttonData?.customLockParams[i]?.error ? buttonData?.customLockParams[i]?.error : "Processing...",
-                            lock: buttonData?.customLockParams[i].check
-                        }
-
-                    }
+        if (buttonData.customLockState) {
+                return {
+                    text: buttonData.customLockText,
+                    lock: buttonData.customLockState,
                 }
-            }
         }
 
-        if(checkNetwork && network_isReady && !network_isFinished) {
+        if (checkNetwork && network_isReady && !network_isFinished) {
             return {
-                text: "Processing...",
+                text: "Processing1...",
                 lock: true
             }
         }
 
-        if(checkLiquidity && liquidity_isFetched && liquidity_isReady && !liquidity_isFinished) {
+        if (checkLiquidity && liquidity_isFetched && liquidity_isReady && !liquidity_isFinished) {
             return {
                 text: "Not enough liquidity",
                 lock: true
             }
         }
 
-        if(checkAllowance && allowance_isReady && !allowance_isFinished) {
+        if (checkAllowance && allowance_isReady && !allowance_isFinished) {
             return {
-                text: "Processing...",
+                text: "Processing2...",
                 lock: true
             }
         }
 
-        if(checkTransaction && transaction_isReady && !transaction_isFinished) {
+        if (checkTransaction && transaction_isReady && !transaction_isFinished) {
             return {
-                text: "Processing...",
+                text: "Processing3...",
                 lock: true
             }
         }
@@ -109,11 +71,44 @@ export default function InteractStep() {
         }
     }
 
+    const mapToResult = (inputArray) => {
+        return inputArray.map(item => {
+            return {
+                path: `data.transaction.params.${item.param}`,
+                value: item.value
+            };
+        });
+    };
+
+
+    const button = async () => {
+        if (buttonData?.buttonFn) {
+            const newParams = await buttonData.buttonFn()
+            if (Array.isArray(newParams)) {
+                const result = mapToResult(newParams);
+                updateBlockchainProps(result)
+            } else {
+                if (newParams.ok) {
+                    const result = mapToResult(newParams.update);
+                    updateBlockchainProps(result)
+                    blockchainRunProcess()
+                } else {
+
+                }
+            }
+        } else {
+            blockchainRunProcess()
+        }
+
+    }
+
     useEffect(() => {
-        console.log("IQZ :: INTERACT NETWORK", network_isReady, network_isFinished,)
         const {text, lock} = processButtonState()
-        setButtonLock(lock)
-        setButtonText(text)
+
+        updateBlockchainProps([
+            {path: 'state.button.lock', value: lock},
+            {path: 'state.button.text', value: text}
+        ])
     }, [
         showButton,
         liquidity_isFetched, liquidity_isReady, liquidity_isFinished,
@@ -122,17 +117,17 @@ export default function InteractStep() {
         transaction_isReady, transaction_isFinished,
     ])
 
-    return(
-       <UniButton
+    return (
+        <UniButton
             type={ButtonTypes.BASE}
             isWide={true}
             size={'text-sm sm'}
-            text={buttonText}
             state={"danger"}
             icon={buttonData.icon}
-            isDisabled={buttonLock}
-            handler={() => {
-                buttonData?.buttonFn ? buttonData?.buttonFn() : blockchainRunProcess()
+            isDisabled={buttonData.customLockState || buttonLock}
+            text={buttonData.customLockText ? buttonData.customLockText : buttonText}
+            handler={async () => {
+                await button()
             }}/>
     )
 
