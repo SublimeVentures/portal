@@ -150,6 +150,7 @@ export const BlockchainProvider = ({children}) => {
 
 
     useEffect(() => {
+        console.log("listen", !data.button?.buttonFn, !dataTransaction.params.listen)
         if(!data.button?.buttonFn || !dataTransaction.params.listen) return;
         const {prerequisites, method} = getTransaction(dataTransaction.type, dataTransaction.params)
         let updates = [{path: 'data.transaction.prerequisites', value: prerequisites}]
