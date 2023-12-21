@@ -17,10 +17,11 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
-    const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
+    const {account, expires, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
+    // const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
     const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps } = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
-
+    const investmentAmount =1
     if(!selectedCurrency) return
 
     const amountLocale = Number(investmentAmount).toLocaleString()
@@ -42,7 +43,8 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     useEffect(() => {
-        if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
+        if(!model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
+        // if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
 
         insertConfiguration({
             data: {
