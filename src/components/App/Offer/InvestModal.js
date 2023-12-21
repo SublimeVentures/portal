@@ -17,14 +17,13 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
-    const {account, expires, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
-    // const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
+    const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
     const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps } = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
-    const investmentAmount =1
+    const investmentAmount_ = investmentAmount/10
     if(!selectedCurrency) return
 
-    const amountLocale = Number(investmentAmount).toLocaleString()
+    const amountLocale = Number(investmentAmount_).toLocaleString()
 
     const closeModal = () => {
         setter()
@@ -43,13 +42,12 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     useEffect(() => {
-        if(!model || !hash || hash?.length === 0 || !selectedCurrency?.address ) return;
-        // if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address) return;
+        if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address) return;
         // if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
 
         insertConfiguration({
             data: {
-                amount: investmentAmount,
+                amount: investmentAmount_,
                 userWallet: account.address,
                 currency: selectedCurrency,
                 chain: selectedChain,
@@ -60,7 +58,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                 transaction: {
                     type: INTERACTION_TYPE.INVEST,
                     params: {
-                        amount: investmentAmount,
+                        amount: investmentAmount_,
                         vault: offer.vault,
                         selectedCurrency,
                         selectedChain
