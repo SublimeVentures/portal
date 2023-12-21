@@ -1,5 +1,5 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useState} from "react";
+import { useState, useRef} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import Input from "@/components/App/Input";
@@ -23,7 +23,7 @@ import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 
 export default function MakeOfferModal({model, setter, props}) {
     const {currentMarket, diamonds, allocation, refetchVault, refetchOffers, currencies, account} = props
-    const {updateBlockchainProps, insertConfiguration, blockchainCleanup, blockchainProps} = useBlockchainContext();
+    const {updateBlockchainProps, insertConfiguration, blockchainCleanup ,blockchainProps} = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const allocationMax = allocation ? (allocation.invested - allocation.locked) : 0
@@ -50,6 +50,21 @@ export default function MakeOfferModal({model, setter, props}) {
 
     const {selectedChain, currencyList, currencyNames, diamond} = useGetChainEnvironment(currencies, diamonds)
 
+
+    const currentMarketRef = useRef(currentMarket);
+    const selectedChainRef = useRef(selectedChain);
+    const priceRef = useRef(price);
+    const amountRef = useRef(amount);
+    const isBuyerRef = useRef(isBuyer);
+
+    useEffect(() => {
+        currentMarketRef.current = currentMarket;
+        selectedChainRef.current = selectedChain;
+        priceRef.current = price;
+        amountRef.current = amount;
+        isBuyerRef.current = isBuyer;
+    }, [currentMarket, selectedChain, price, amount, isBuyer]);
+
     const calcPrice = (multi, amt) => {
         setPrice(Number(Number(amt * multi).toFixed(2)))
     }
@@ -61,8 +76,8 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
     const customLocks = () => {
-        if (statusCheck) return {lock: true, text: "Bad parameters"}
-        else if (waitingForHash) return {lock: true, text: "Generating hash"}
+        if(statusCheck) return {lock: true, text: "Bad parameters"}
+        else if(waitingForHash) return {lock: true, text: "Generating hash"}
         else return {lock: false}
     }
 
@@ -100,10 +115,10 @@ export default function MakeOfferModal({model, setter, props}) {
                 },
             },
             steps: {
-                liquidity: isBuyer,
-                allowance: isBuyer,
-                transaction: true,
-                button: true,
+                liquidity:isBuyer,
+                allowance:isBuyer,
+                transaction:true,
+                button:true,
             },
         });
     }, [
@@ -187,43 +202,10 @@ export default function MakeOfferModal({model, setter, props}) {
                 {path: 'state.liquidity.lock', value: true},
                 {path: 'state.allowance.lock', value: true},
                 {path: 'state.transaction.lock', value: true},
-            ]
+             ]
         )
     }, [
-        isBuyer,
-        price,
-        amount
-    ]);
-    useEffect(() => {
-
-        if (Number(price) < 50 || Number(amount) < 50  || blockchainProps.isClean) return;
-        updateBlockchainProps(
-            [
-                {path: 'data.amount', value: price},
-                {path: 'data.amountAllowance', value: price},
-                {path: 'data.transaction.params.price', value: price},
-
-                {path: 'state.liquidity.isFetched', value: false},
-                {path: 'state.liquidity.isFinished', value: false},
-                {path: 'state.liquidity.isError', value: false},
-                {path: 'state.liquidity.error', value: null},
-
-                {path: 'state.allowance.isFinished', value: false},
-                {path: 'state.allowance.isError', value: false},
-                {path: 'state.allowance.error', value: null},
-
-                {path: 'state.transaction.isFinished', value: false},
-                {path: 'state.transaction.isError', value: false},
-                {path: 'state.transaction.error', value: null},
-
-                {path: 'state.liquidity.lock', value: true},
-                {path: 'state.allowance.lock', value: true},
-                {path: 'state.transaction.lock', value: true},
-            ]
-        )
-    }, [
-        price,
-        amount
+        isBuyer
     ]);
 
 
@@ -268,22 +250,27 @@ export default function MakeOfferModal({model, setter, props}) {
         }
     }
 
-    const buttonFn = async () => {
-        setWaitingForHash(true)
-        const transaction = await saveTransaction(currentMarket.id, selectedChain, price, amount, !isBuyer)
-        if (transaction.ok) {
-            setWaitingForHash(false)
-            return [
-                {param: 'hash', value: transaction.hash},
-                {param: 'listen', value: true},
-            ]
-        } else {
-            setWaitingForHash(false)
-            //todo: error handling
-            return {ok: false}
-        }
-    }
 
+    const buttonFn = async () => {
+        setWaitingForHash(true);
+        const transaction = await saveTransaction(
+            currentMarketRef.current.id,
+            selectedChainRef.current,
+            priceRef.current,
+            amountRef.current,
+            !isBuyerRef.current
+        );
+        if (transaction.ok) {
+            setWaitingForHash(false);
+            return [
+                { param: 'hash', value: transaction.hash },
+                { param: 'listen', value: true },
+            ];
+        } else {
+            setWaitingForHash(false);
+            return {ok: false};
+        }
+    };
 
     const lockActivities = waitingForHash
     const title = () => {
