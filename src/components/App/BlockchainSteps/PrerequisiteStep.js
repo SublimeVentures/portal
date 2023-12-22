@@ -5,11 +5,6 @@ import {
 import {useEffect} from "react";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
-// const mapResponseToUpdatePaths = (responseData) => {
-//     return Object.keys(responseData).map(key => {
-//         return {path: `data.transaction.params.${key}`, value: responseData[key]};
-//     });
-// };
 
 const mapResponseToUpdatePaths = (responseData) => {
     return Object.keys(responseData).flatMap(key => [

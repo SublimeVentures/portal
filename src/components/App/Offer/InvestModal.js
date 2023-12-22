@@ -18,7 +18,7 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
     const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
-    const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps } = useBlockchainContext();
+    const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps, DEFAULT_STEP_STATE } = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     if(!selectedCurrency) return
@@ -81,35 +81,21 @@ export default function InvestModal({model, setter, investModalProps}) {
 
     useEffect(() => {
         if (!selectedCurrency?.address || investmentAmount < 50 || blockchainProps.isClean) return;
-        const {prerequisites, method} = getTransaction(INTERACTION_TYPE.INVEST, {
-            amount: investmentAmount,
-            vault: offer.vault,
-            selectedCurrency,
-            selectedChain
-        })
-
 
         updateBlockchainProps(
             [
                 {path: 'data.currency', value: selectedCurrency},
-                {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
-                {path: 'data.transaction.params.selectedChain', value: selectedChain},
-                {path: 'data.currency', value: selectedCurrency},
                 {path: 'data.chain', value: selectedChain},
 
-                {path: 'data.transaction.method', value: method},
+                {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
+                {path: 'data.transaction.params.selectedChain', value: selectedChain},
 
-                {path: 'state.liquidity.isFetched', value: false},
-                {path: 'state.liquidity.isFinished', value: false},
-                {path: 'state.liquidity.isError', value: false},
-                {path: 'state.liquidity.error', value: null},
+                {path: 'data.transaction.ready', value: false},
+                {path: 'data.transaction.method', value: {}},
 
-                {path: 'state.transaction.isFinished', value: false},
-                {path: 'state.transaction.isError', value: false},
-                {path: 'state.transaction.error', value: null},
-
-                {path: 'state.liquidity.lock', value: true},
-                {path: 'state.transaction.lock', value: true},
+                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
             ],
             "invest modal update"
         )

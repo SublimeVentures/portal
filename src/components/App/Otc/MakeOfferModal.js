@@ -45,7 +45,7 @@ export default function MakeOfferModal({model, setter, props}) {
     const [isBuyer, setIsBuyer] = useState(allocationMax === 0)
     const [dealCurrency, setDealCurrency] = useState(0)
 
-    const [waitingForHash, setWaitingForHash] = useState(false)
+
 
     const [amount, setAmount] = useState(50)
     const [statusAmount, setStatusAmount] = useState(false)
@@ -76,11 +76,9 @@ export default function MakeOfferModal({model, setter, props}) {
 
     const customLocks = () => {
         if (statusCheck) return {lock: true, text: "Bad parameters"}
-        // else if (waitingForHash) return {lock: true, text: "Generating hash"}
         else return {lock: false}
     }
 
-    console.log("diamond",diamond)
     useEffect(() => {
         if (!isBuyer && amount > allocationMax) setAmountHandler(allocationMax)
     }, [isBuyer]);
@@ -220,7 +218,6 @@ export default function MakeOfferModal({model, setter, props}) {
         refetchVault()
         refetchOffers()
         setter()
-        setWaitingForHash(false)
 
         setTimeout(() => {
             setAmount(allocationMin)
@@ -256,7 +253,7 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
 
-    const lockActivities = waitingForHash
+    const lockActivities = false
     const title = () => {
         return (
             <>

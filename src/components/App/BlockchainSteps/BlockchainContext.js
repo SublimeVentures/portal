@@ -133,7 +133,7 @@ export const BlockchainProvider = ({children}) => {
             updates.forEach(update => {
                 _.set(newState, update.path, update.value);
             });
-            console.log("Updates:", updates, source);
+            // console.log("Updates:", updates, source);
 
             return newState;
         });

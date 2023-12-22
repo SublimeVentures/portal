@@ -1,4 +1,4 @@
-import React, {forwardRef, memo} from "react";
+import React, { memo} from "react";
 
 import NetworkStep from "@/components/App/BlockchainSteps/NetworkStep";
 import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";

@@ -44,7 +44,6 @@ export default function AllowanceStep() {
         }
     )
 
-    console.log("ONCHAIN DATA", onchain_data, onchain_isSuccess, onchain_isLoading, onchain_isFetched)
 
     const {
         config: prep_config,

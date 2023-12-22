@@ -4,7 +4,7 @@ import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainC
 
 export default function InteractStep() {
     const {blockchainProps, stepsIsReady, updateBlockchainProps, blockchainRunProcess} = useBlockchainContext();
-    const {steps, data, state, isClean} = blockchainProps
+    const {steps, data, state} = blockchainProps
 
     const {
         network: checkNetwork,
@@ -81,7 +81,7 @@ export default function InteractStep() {
             {path: 'state.button.text', value: text}
         ], "button interact")
     }, [
-        showButton, isClean,
+        showButton,
         liquidity_isFetched, liquidity_isReady, liquidity_isFinished,
         network_isReady, network_isFinished,
         allowance_isReady, allowance_isFinished,
