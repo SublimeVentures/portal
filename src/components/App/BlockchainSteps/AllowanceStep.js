@@ -27,6 +27,7 @@ export default function AllowanceStep() {
     const {
         isSuccess: onchain_isSuccess,
         isLoading: onchain_isLoading,
+        isFetched: onchain_isFetched,
         data: onchain_data,
         isError: onchain_isError,
         error: onchain_error,
@@ -39,8 +40,10 @@ export default function AllowanceStep() {
             args: [userWallet, diamond],
             watch: !isFinished,
             enabled: isReady,
+            cacheTime:0
         }
     )
+
 
     const {
         config: prep_config,
@@ -84,7 +87,7 @@ export default function AllowanceStep() {
         updateBlockchainProps([
             { path: 'state.allowance.isLoading', value: onchain_isLoading },
             { path: 'state.allowance.isFetched', value: onchain_isSuccess }
-        ])
+        ],"allowance ready")
         setLastAllowance(amountAllowance)
         let allowance_current = 0
         if (onchain_data?.toString() != undefined && currency?.precision) {
@@ -95,8 +98,8 @@ export default function AllowanceStep() {
 
         updateBlockchainProps([
             { path: 'result.allowance.amount', value: allowance_current },
-            { path: 'state.allowance.isFinished', value: (amountAllowance <= allowance_current) && allowance_current > 0 }
-        ])
+            // { path: 'state.allowance.isFinished', value: (amountAllowance <= allowance_current) && allowance_current > 0 }
+        ],"allowance fetched")
         console.log("IQZ :: ALLOWANCE :: S2", amountAllowance, allowance_current,  amountAllowance <= allowance_current)
     }, [onchain_isSuccess, onchain_isLoading, onchain_data, isReady])
 
@@ -107,7 +110,7 @@ export default function AllowanceStep() {
             updateBlockchainProps([
                 { path: 'state.allowance.isError', value: false },
                 { path: 'state.allowance.error', value: null }
-            ])
+            ], "allowance write start")
             if (!isFinished) {
                 write_send()
             }
@@ -127,14 +130,14 @@ export default function AllowanceStep() {
                             confirmation_data
                         }
                     }
-                ])
+                ], "allowance confirmed on chain")
             } else {
                 updateBlockchainProps([
                     { path: 'state.allowance.isError', value: true },
                     { path: 'state.allowance.error', value: "" },
                     { path: 'state.allowance.isFinished', value: false },
                     { path: 'state.allowance.lock', value: true }
-                ])
+                ], "allowance refused onchain")
             }
 
         }
@@ -154,7 +157,7 @@ export default function AllowanceStep() {
                 { path: 'state.allowance.error', value: prep_error || write_error || confirmation_error || onchain_error },
                 { path: 'state.allowance.isFinished', value: false },
                 { path: 'state.allowance.lock', value: true }
-            ])
+            ], "allowance errors")
         }
     }, [
         prep_isError,

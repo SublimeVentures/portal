@@ -16,9 +16,9 @@ import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
-    const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency} = buyModalProps
+    const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency, DEFAULT_STEP_STATE} = buyModalProps
     const router = useRouter()
-    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
+    const { insertConfiguration, blockchainCleanup, blockchainProps, updateBlockchainProps } = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const closeModal = () => {
@@ -61,6 +61,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                 },
             },
             steps: {
+                prerequisite: true,
                 network:!isBased,
                 liquidity:true,
                 allowance:true,
@@ -69,8 +70,8 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
             },
         });
     }, [
+        model,
         selectedCurrency?.address,
-        model
     ]);
 
 

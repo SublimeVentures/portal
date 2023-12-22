@@ -13,7 +13,7 @@ import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 export default function CancelOfferModal({model, setter, props}) {
     const {getCurrencyIcon, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
     const {chains} = useSwitchNetwork()
-    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
+    const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps, DEFAULT_STEP_STATE } = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
@@ -46,13 +46,34 @@ export default function CancelOfferModal({model, setter, props}) {
                 },
             },
             steps: {
+                prerequisite:true,
                 network:true,
                 transaction:true,
                 button:true,
             }
         });
     }, [
-        model
+        model,
+    ]);
+
+    useEffect(() => {
+        if (!model || blockchainProps.isClean) return;
+        updateBlockchainProps(
+            [
+                {path: 'data.diamond', value: diamond},
+                {path: 'data.transaction.ready', value: false},
+                {path: 'data.transaction.method', value: {}},
+                {path: 'data.transaction.params.diamond', value: diamond},
+
+                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.network', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.allowance', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
+            ],"make offer val change"
+        )
+    }, [
+        diamond
     ]);
 
     if(!currentMarket?.name || !offerDetails?.currency) return

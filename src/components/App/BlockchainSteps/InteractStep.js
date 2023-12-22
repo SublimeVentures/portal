@@ -3,7 +3,7 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function InteractStep() {
-    const {blockchainProps, stepsIsReady, updateBlockchainProps, blockchainRunProcess, blockchainRunProcessDirect} = useBlockchainContext();
+    const {blockchainProps, stepsIsReady, updateBlockchainProps, blockchainRunProcess} = useBlockchainContext();
     const {steps, data, state} = blockchainProps
 
     const {
@@ -71,44 +71,15 @@ export default function InteractStep() {
         }
     }
 
-    const mapToResult = (inputArray) => {
-        return inputArray.map(item => {
-            return {
-                path: `data.transaction.params.${item.param}`,
-                value: item.value
-            };
-        });
-    };
 
 
-    const button = async () => {
-        if (buttonData?.buttonFn) {
-            const newParams = await buttonData.buttonFn()
-            if (Array.isArray(newParams)) {
-                const result = mapToResult(newParams);
-                updateBlockchainProps(result)
-            } else {
-                if (newParams.ok) {
-                    const result = mapToResult(newParams.update);
-                    updateBlockchainProps(result)
-                    blockchainRunProcess()
-                } else {
-
-                }
-            }
-        } else {
-            blockchainRunProcess()
-        }
-
-    }
 
     useEffect(() => {
         const {text, lock} = processButtonState()
-
         updateBlockchainProps([
             {path: 'state.button.lock', value: lock},
             {path: 'state.button.text', value: text}
-        ])
+        ], "button interact")
     }, [
         showButton,
         liquidity_isFetched, liquidity_isReady, liquidity_isFinished,
@@ -126,8 +97,8 @@ export default function InteractStep() {
             icon={buttonData.icon}
             isDisabled={buttonData.customLockState || buttonLock}
             text={buttonData.customLockText ? buttonData.customLockText : buttonText}
-            handler={async () => {
-                await button()
+            handler={ () => {
+                blockchainRunProcess()
             }}/>
     )
 

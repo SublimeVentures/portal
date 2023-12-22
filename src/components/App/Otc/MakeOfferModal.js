@@ -1,5 +1,5 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import { useState, useRef} from "react";
+import {useState} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import Input from "@/components/App/Input";
@@ -20,10 +20,24 @@ import {useEffect} from "react";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 
+export const blockchainPrerequisite = async (params) => {
+    const {currentMarket, selectedChain, price, amount, isBuyer} = params
+    const transaction = await saveTransaction(currentMarket.id, selectedChain, price, amount, !isBuyer)
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: {hash: transaction.hash}
+        }
+    } else {
+        return {
+            ok: false
+        }
+    }
+}
 
 export default function MakeOfferModal({model, setter, props}) {
     const {currentMarket, diamonds, allocation, refetchVault, refetchOffers, currencies, account} = props
-    const {updateBlockchainProps, insertConfiguration, blockchainCleanup ,blockchainProps} = useBlockchainContext();
+    const {updateBlockchainProps, insertConfiguration, blockchainCleanup, blockchainProps, DEFAULT_STEP_STATE} = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const allocationMax = allocation ? (allocation.invested - allocation.locked) : 0
@@ -31,7 +45,7 @@ export default function MakeOfferModal({model, setter, props}) {
     const [isBuyer, setIsBuyer] = useState(allocationMax === 0)
     const [dealCurrency, setDealCurrency] = useState(0)
 
-    const [waitingForHash, setWaitingForHash] = useState(false)
+
 
     const [amount, setAmount] = useState(50)
     const [statusAmount, setStatusAmount] = useState(false)
@@ -50,21 +64,6 @@ export default function MakeOfferModal({model, setter, props}) {
 
     const {selectedChain, currencyList, currencyNames, diamond} = useGetChainEnvironment(currencies, diamonds)
 
-
-    const currentMarketRef = useRef(currentMarket);
-    const selectedChainRef = useRef(selectedChain);
-    const priceRef = useRef(price);
-    const amountRef = useRef(amount);
-    const isBuyerRef = useRef(isBuyer);
-
-    useEffect(() => {
-        currentMarketRef.current = currentMarket;
-        selectedChainRef.current = selectedChain;
-        priceRef.current = price;
-        amountRef.current = amount;
-        isBuyerRef.current = isBuyer;
-    }, [currentMarket, selectedChain, price, amount, isBuyer]);
-
     const calcPrice = (multi, amt) => {
         setPrice(Number(Number(amt * multi).toFixed(2)))
     }
@@ -76,8 +75,7 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
     const customLocks = () => {
-        if(statusCheck) return {lock: true, text: "Bad parameters"}
-        else if(waitingForHash) return {lock: true, text: "Generating hash"}
+        if (statusCheck) return {lock: true, text: "Bad parameters"}
         else return {lock: false}
     }
 
@@ -86,7 +84,7 @@ export default function MakeOfferModal({model, setter, props}) {
     }, [isBuyer]);
 
     useEffect(() => {
-        if (!model || !selectedCurrency?.address || price === 0 || !blockchainProps.isClean) return;
+        if (!model || !selectedCurrency?.address || price === 0 || !currentMarket?.market ||  !blockchainProps.isClean) return;
         const {lock, text} = customLocks()
         insertConfiguration({
             data: {
@@ -96,29 +94,38 @@ export default function MakeOfferModal({model, setter, props}) {
                 currency: selectedCurrency,
                 diamond: diamond,
                 button: {
-                    buttonFn,
                     icon: <RocketIcon className="w-10 mr-2"/>,
                     text: "Make Offer",
                     customLockState: lock,
                     customLockText: text
                 },
+                prerequisite: {
+                    currentMarket,
+                    selectedChain,
+                    price,
+                    amount,
+                    isBuyer,
+                    textProcessing: "Generating hash",
+                    textError: "Couldn't generate hash"
+                },
                 transaction: {
                     type: INTERACTION_TYPE.OTC_MAKE,
                     params: {
-                        listen: false,
+                        //hash <-- from prerequisite
                         diamond,
                         price,
                         selectedCurrency,
                         isSell: !isBuyer,
                         market: currentMarket.market,
-                    },
+                    }
                 },
             },
             steps: {
-                liquidity:isBuyer,
-                allowance:isBuyer,
-                transaction:true,
-                button:true,
+                prerequisite: true,
+                liquidity: isBuyer,
+                allowance: isBuyer,
+                transaction: true,
+                button: true,
             },
         });
     }, [
@@ -129,36 +136,64 @@ export default function MakeOfferModal({model, setter, props}) {
 
 
     useEffect(() => {
-        if (!selectedCurrency?.address || price === 0 || blockchainProps.isClean) return;
+        if (!model || !selectedCurrency?.address || price === 0 || blockchainProps.isClean || !currentMarket?.market) return;
         updateBlockchainProps(
             [
-                {path: 'data.currency', value: selectedCurrency},
                 {path: 'data.amount', value: price},
                 {path: 'data.amountAllowance', value: price},
-                {path: 'data.transaction.price', value: price},
-                {path: 'data.transaction.selectedCurrency', value: selectedCurrency},
+                {path: 'data.currency', value: selectedCurrency},
+                {path: 'data.diamond', value: diamond},
 
-                {path: 'state.liquidity.isFetched', value: false},
-                {path: 'state.liquidity.isFinished', value: false},
-                {path: 'state.liquidity.isError', value: false},
-                {path: 'state.liquidity.error', value: null},
+                {path: 'data.transaction.ready', value: false},
+                {path: 'data.transaction.method', value: {}},
 
-                {path: 'state.allowance.isFinished', value: false},
-                {path: 'state.allowance.isError', value: false},
-                {path: 'state.allowance.error', value: null},
+                {path: 'data.prerequisite.currentMarket', value: currentMarket},
+                {path: 'data.prerequisite.selectedChain', value: selectedChain},
+                {path: 'data.prerequisite.price', value: price},
+                {path: 'data.prerequisite.amount', value: amount},
 
-                {path: 'state.transaction.isFinished', value: false},
-                {path: 'state.transaction.isError', value: false},
-                {path: 'state.transaction.error', value: null},
+                {path: 'data.transaction.params.diamond', value: diamond},
+                {path: 'data.transaction.params.price', value: price},
+                {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
+                {path: 'data.transaction.params.market', value: currentMarket.market},
 
-                {path: 'state.liquidity.lock', value: true},
-                {path: 'state.allowance.lock', value: true},
-                {path: 'state.transaction.lock', value: true},
-            ]
+                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.allowance', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
+            ],"make offer val change"
         )
     }, [
         selectedCurrency?.address,
-        price
+        currentMarket?.market,
+        price,
+        amount,
+        diamond
+    ]);
+
+    useEffect(() => {
+        if (!selectedCurrency?.address || blockchainProps.isClean) return;
+        updateBlockchainProps(
+            [
+                {path: 'steps.liquidity', value: isBuyer},
+                {path: 'steps.allowance', value: isBuyer},
+
+                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.allowance', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
+
+                {path: 'data.prerequisite.isBuyer', value: isBuyer},
+
+                {path: 'data.transaction.params.isSell', value: !isBuyer},
+                {path: 'data.transaction.ready', value: false},
+                {path: 'data.transaction.method', value: {}},
+                {path: 'result.allowance', value: {}},
+
+            ],"make order - buyer change"
+        )
+    }, [
+        isBuyer
     ]);
 
     useEffect(() => {
@@ -169,44 +204,12 @@ export default function MakeOfferModal({model, setter, props}) {
             [
                 {path: 'data.button.customLockState', value: lock},
                 {path: 'data.button.customLockText', value: text},
-            ]
+            ],"make offer button lock"
         )
     }, [
         statusCheck,
-        waitingForHash
     ]);
 
-    useEffect(() => {
-        if (!selectedCurrency?.address || blockchainProps.isClean) return;
-        updateBlockchainProps(
-            [
-
-                {path: 'steps.liquidity', value: isBuyer},
-                {path: 'steps.allowance', value: isBuyer},
-                {path: 'data.transaction.params.isSell', value: !isBuyer},
-                {path: 'data.transaction.params.listen', value: false},
-
-                {path: 'state.liquidity.isFetched', value: false},
-                {path: 'state.liquidity.isFinished', value: false},
-                {path: 'state.liquidity.isError', value: false},
-                {path: 'state.liquidity.error', value: null},
-
-                {path: 'state.allowance.isFinished', value: false},
-                {path: 'state.allowance.isError', value: false},
-                {path: 'state.allowance.error', value: null},
-
-                {path: 'state.transaction.isFinished', value: false},
-                {path: 'state.transaction.isError', value: false},
-                {path: 'state.transaction.error', value: null},
-
-                {path: 'state.liquidity.lock', value: true},
-                {path: 'state.allowance.lock', value: true},
-                {path: 'state.transaction.lock', value: true},
-             ]
-        )
-    }, [
-        isBuyer
-    ]);
 
 
     if (!selectedChain || !currentMarket) return;
@@ -215,7 +218,6 @@ export default function MakeOfferModal({model, setter, props}) {
         refetchVault()
         refetchOffers()
         setter()
-        setWaitingForHash(false)
 
         setTimeout(() => {
             setAmount(allocationMin)
@@ -251,28 +253,7 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
 
-    const buttonFn = async () => {
-        setWaitingForHash(true);
-        const transaction = await saveTransaction(
-            currentMarketRef.current.id,
-            selectedChainRef.current,
-            priceRef.current,
-            amountRef.current,
-            !isBuyerRef.current
-        );
-        if (transaction.ok) {
-            setWaitingForHash(false);
-            return [
-                { param: 'hash', value: transaction.hash },
-                { param: 'listen', value: true },
-            ];
-        } else {
-            setWaitingForHash(false);
-            return {ok: false};
-        }
-    };
-
-    const lockActivities = waitingForHash
+    const lockActivities = false
     const title = () => {
         return (
             <>

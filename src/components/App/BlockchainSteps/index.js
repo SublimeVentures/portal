@@ -1,4 +1,4 @@
-import React, {forwardRef, memo} from "react";
+import React, { memo} from "react";
 
 import NetworkStep from "@/components/App/BlockchainSteps/NetworkStep";
 import LiquidityStep from "@/components/App/BlockchainSteps/LiquidityStep";
@@ -10,6 +10,7 @@ import InteractStep from "@/components/App/BlockchainSteps/InteractStep";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 import {isBased} from "@/lib/utils";
+import PrerequisiteStep from "@/components/App/BlockchainSteps/PrerequisiteStep";
 
 /******************
  * @devnote
@@ -43,12 +44,12 @@ import {isBased} from "@/lib/utils";
 
 const BlockchainSteps = () => {
     const {blockchainProps} = useBlockchainContext();
-    const {network: checkNetwork, liquidity: checkLiquidity, allowance: checkAllowance, transaction: checkTransaction, button: showButton} = blockchainProps.steps
+    const {prerequisite: checkPrerequisite, network: checkNetwork, liquidity: checkLiquidity, allowance: checkAllowance, transaction: checkTransaction, button: showButton} = blockchainProps.steps
 
-    // console.log("#####RERENDER!!!!!")
     return (
         <>
             <div className="flex flex-col flex-1 gap-2 pt-5 pb-2 justify-content text-sm">
+                {checkPrerequisite && <PrerequisiteStep/>}
                 {checkNetwork && <NetworkStep/>}
                 {checkLiquidity && <LiquidityStep/>}
                 {checkAllowance && <AllowanceStep/>}
@@ -64,10 +65,10 @@ const BlockchainSteps = () => {
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.blockchainProps?.checkNetwork === nextProps.blockchainProps?.checkNetwork &&
-             prevProps.blockchainProps?.checkLiquidity === nextProps.blockchainProps?.checkLiquidity &&
-             prevProps.blockchainProps?.checkAllowance === nextProps.blockchainProps?.checkAllowance &&
-             prevProps.blockchainProps?.checkTransaction === nextProps.blockchainProps?.checkTransaction;
+    return prevProps.blockchainProps?.steps?.network === nextProps.blockchainProps?.steps?.network &&
+             prevProps.blockchainProps?.steps?.liquidity === nextProps.blockchainProps?.steps?.liquidity &&
+             prevProps.blockchainProps?.steps?.allowance === nextProps.blockchainProps?.steps?.allowance &&
+             prevProps.blockchainProps?.steps?.transaction === nextProps.blockchainProps?.steps?.transaction;
 };
 
 export default memo(BlockchainSteps, areEqual);

@@ -42,7 +42,7 @@ export default function LiquidityStep() {
         updateBlockchainProps([
             { path: 'state.liquidity.isLoading', value: onchain_isLoading },
             { path: 'state.liquidity.isFetched', value: onchain_isSuccess }
-        ])
+        ], "liquidty loading")
         let balance_user = 0
         if(onchain_data?.toString() != undefined && currency?.precision) {
             const power = BigNumber(10).pow(currency.precision)
@@ -53,7 +53,7 @@ export default function LiquidityStep() {
         updateBlockchainProps([
             { path: 'result.liquidity', value: balance_user },
             { path: 'state.liquidity.isFinished', value: amount <= balance_user }
-        ])
+        ], "liquidity fetched onchain")
         console.log("IQZ :: LIQUIDITY :: S", onchain_isLoading, onchain_isSuccess,onchain_data, balance_user,amount <= balance_user)
 
     }, [onchain_isSuccess, onchain_isLoading, onchain_data, isReady])
@@ -67,7 +67,7 @@ export default function LiquidityStep() {
         updateBlockchainProps([
             { path: 'state.liquidity.isError', value: onchain_isError },
             { path: 'state.liquidity.error', value: amount <= onchain_error }
-        ])
+        ], "liquidty error onchain")
     }, [onchain_isError, onchain_error])
 
 

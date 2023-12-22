@@ -57,10 +57,12 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
                         contract,
                         selectedCurrency,
                         amount: 1,
+                        upgradeId: order.id
                     },
                 },
             },
             steps: {
+                prerequisite: true,
                 network:!isBased,
                 liquidity:true,
                 allowance:true,
