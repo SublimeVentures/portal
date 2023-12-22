@@ -16,6 +16,7 @@ export default function TransactionStep() {
         isSuccess: prep_isSuccess,
         isError: prep_isError,
         error: prep_error,
+        refetch: prep_refetch
     } = usePrepareContractWrite({
         address: transaction.method.address,
         abi: transaction.method.abi,
@@ -55,27 +56,28 @@ export default function TransactionStep() {
 
     useEffect(() => {
         console.log("IQZ :: TRANSACTION :: SEND", isReady, prep_isSuccess, write_isLoading)
-        if (isReady && prep_isSuccess && !write_isLoading && transaction.method.method) {
+        if (isReady && prep_isSuccess && !write_isLoading && transaction.ready) {
             updateBlockchainProps([
                 { path: 'state.transaction.isError', value: false },
                 { path: 'state.transaction.error', value: null }
-            ])
+            ], "transaction write")
             write_send()
         }
-    }, [prep_isSuccess, isReady, transaction.method.method])
+    }, [prep_isSuccess, isReady, transaction.method.method, transaction.ready])
 
     useEffect(() => {
+        console.log("IQZ :: TRANSACTION - success - confirmation_data, confirmation_isSuccess",confirmation_data, confirmation_isSuccess)
         if (!!confirmation_data && confirmation_isSuccess) {
             updateBlockchainProps([
                 { path: 'state.transaction.isError', value: false },
                 { path: 'state.transaction.error', value: null },
-                { path: 'state.transaction.isFinished', value: true },
+                // { path: 'state.transaction.isFinished', value: true },
                 { path: 'result.transaction', value: {
                         confirmation_isSuccess,
                         confirmation_data
                     }
                 }
-            ])
+            ],"transaction succesfully ocnfirmed")
         }
     }, [confirmation_data, confirmation_isSuccess])
 
@@ -93,7 +95,7 @@ export default function TransactionStep() {
                 { path: 'state.transaction.isFinished', value: false },
                 { path: 'state.transaction.lock', value: true },
                 { path: 'state.allowance.lock', value: true }
-            ])
+            ], "transaction errored")
         }
     }, [
         prep_isError, prep_error,
@@ -130,6 +132,8 @@ export default function TransactionStep() {
             </div>
         </div>
     }
+
+    console.log("IQZ :: TRANACTION UI status", isFinished, isError, isReady)
 
     if (isFinished) return prepareRow(Transaction.Executed)
     if (isError && !isFinished) return prepareRow(Transaction.Failed)

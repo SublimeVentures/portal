@@ -12,6 +12,8 @@ import usdtAbi from "../../../../abi/usdt.abi.json";
 import {erc20ABI} from "wagmi";
 import {BigNumber} from "bignumber.js";
 import {isBased} from "@/lib/utils";
+import {blockchainPrerequisite as prerequisite_otcMakeOffer} from "@/components/App/Otc/MakeOfferModal";
+import {blockchainPrerequisite as prerequisite_otcTakeOffer} from "@/components/App/Otc/TakeOfferModal";
 
 export const Transaction = {
     PrecheckFailed: -1,
@@ -33,10 +35,44 @@ export const INTERACTION_TYPE = {
     UNSTAKE: 8,
 }
 
-export const getTransaction = (type, params) => {
+
+export const getPrerequisite = async (type, params) => {
     switch (type) {
         case INTERACTION_TYPE.NONE: {
             return {prerequisites: false, method: {}}
+        }
+        case INTERACTION_TYPE.INVEST: {
+            return {ok:true, data: {}}
+        }
+        case INTERACTION_TYPE.OTC_MAKE: {
+           return await prerequisite_otcMakeOffer(params)
+        }
+        case INTERACTION_TYPE.OTC_CANCEL: {
+           return {ok:true, data: {}}
+        }
+        case INTERACTION_TYPE.OTC_TAKE: {
+           return await prerequisite_otcTakeOffer(params)
+        }
+        case INTERACTION_TYPE.MYSTERYBOX: {
+            return {ok:true, data: {}}
+        }
+        case INTERACTION_TYPE.UPGRADE: {
+            return {ok:true, data: {}}
+        }
+        case INTERACTION_TYPE.STAKE: {
+            return {ok:true, data: {}}
+        }
+        case INTERACTION_TYPE.UNSTAKE: {
+            return {ok:true, data: {}}
+        }
+
+    }
+}
+
+export const getTransaction = (type, params) => {
+    switch (type) {
+        case INTERACTION_TYPE.NONE: {
+            return {validation: false, method: {}}
         }
         case INTERACTION_TYPE.INVEST: {
             const {amount, vault, selectedCurrency} = params
@@ -49,19 +85,26 @@ export const getTransaction = (type, params) => {
             // Check if selectedCurrency is an object with a non-undefined .address property
             const isSelectedCurrencyValid = selectedCurrency && typeof selectedCurrency.address !== 'undefined';
 
-            const prerequisites = isVaultValid && isPriceValid && isSelectedCurrencyValid
-            const method = prerequisites ? getInvestFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isVaultValid && isPriceValid && isSelectedCurrencyValid
+            const method = validation ? getInvestFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.OTC_MAKE: {
-            const {diamond, hash, price, selectedCurrency, isSell, market} = params;
+            const {diamond, price, selectedCurrency, isSell, market, hash} = params;
 
             // Check if diamond and hash are non-empty strings
             const isDiamondValid = typeof diamond === 'string' && diamond !== '';
             const isHashValid = typeof hash === 'string' && hash !== '';
 
             // Check if price is a number greater than 0
-            const isPriceValid = typeof price === 'number' && price > 0;
+
+            let isPriceValid
+                try{
+                    const number = Number(price)
+                    isPriceValid = number > 0
+                } catch(e){
+
+                }
 
             // Check if selectedCurrency is an object with a non-undefined .address property
             const isSelectedCurrencyValid = selectedCurrency && typeof selectedCurrency.address !== 'undefined';
@@ -70,10 +113,11 @@ export const getTransaction = (type, params) => {
             const isIsSellValid = typeof isSell === 'boolean';
 
             // Check if market exists
-            const isMarketValid = market !== undefined;
-            const prerequisites = isDiamondValid && isHashValid && isPriceValid && isSelectedCurrencyValid && isIsSellValid && isMarketValid;
-            const method = prerequisites ? getOtcMakeFunction(params) : {}
-            return {prerequisites, method}
+            const isMarketValid = market !== undefined ;
+
+            const validation = isDiamondValid && isHashValid && isPriceValid && isSelectedCurrencyValid && isIsSellValid && isMarketValid;
+            const method = validation ? getOtcMakeFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.OTC_CANCEL: {
             const {diamond, dealId, otcId} = params;
@@ -85,9 +129,9 @@ export const getTransaction = (type, params) => {
             const isOtcIdValid = otcId !== undefined && otcId > 0;
             const isDealIdValid = dealId !== undefined && dealId > 0;
 
-            const prerequisites = isDiamondValid && isOtcIdValid && isDealIdValid;
-            const method = prerequisites ? getOtcCancelFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isDiamondValid && isOtcIdValid && isDealIdValid;
+            const method = validation ? getOtcCancelFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.OTC_TAKE: {
             const {otcId, dealId, signature, diamond} = params;
@@ -110,9 +154,9 @@ export const getTransaction = (type, params) => {
             const isOtcIdValid = otcId !== undefined && otcId > 0;
             const isDealIdValid = dealId !== undefined && dealId > 0;
 
-            const prerequisites = isDiamondValid && isOtcIdValid && isDealIdValid && isNonceValid && isExpiryValid && isHashValid;
-            const method = prerequisites ? getOtcTakeFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isDiamondValid && isOtcIdValid && isDealIdValid && isNonceValid && isExpiryValid && isHashValid;
+            const method = validation ? getOtcTakeFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.MYSTERYBOX: {
             const {contract, selectedCurrency, amount} = params;
@@ -121,9 +165,9 @@ export const getTransaction = (type, params) => {
             const isDiamondValid = typeof contract === 'string' && contract !== '';
             const isAmountValid = amount !== undefined && amount > 0;
 
-            const prerequisites = isDiamondValid && isSelectedCurrencyValid && isAmountValid;
-            const method = prerequisites ? getMysteryBoxFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isDiamondValid && isSelectedCurrencyValid && isAmountValid;
+            const method = validation ? getMysteryBoxFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.UPGRADE: {
             const {contract, selectedCurrency, amount, upgradeId} = params
@@ -133,27 +177,27 @@ export const getTransaction = (type, params) => {
             const isAmountValid = amount !== undefined && amount > 0;
             const isUpgradeValid = upgradeId !== undefined && upgradeId >= 0;
 
-            const prerequisites = isDiamondValid && isSelectedCurrencyValid && isAmountValid && isUpgradeValid;
-            const method = prerequisites ? getUpgradesFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isDiamondValid && isSelectedCurrencyValid && isAmountValid && isUpgradeValid;
+            const method = validation ? getUpgradesFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.STAKE: {
             const {contract} = params
 
             const isDiamondValid = typeof contract === 'string' && contract !== '';
 
-            const prerequisites = isDiamondValid;
-            const method = prerequisites ? getCitCapStakingFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isDiamondValid;
+            const method = validation ? getCitCapStakingFunction(params) : {}
+            return {validation, method}
         }
         case INTERACTION_TYPE.UNSTAKE: {
             const {contract} = params
 
             const isDiamondValid = typeof contract === 'string' && contract !== '';
 
-            const prerequisites = isDiamondValid;
-            const method = prerequisites ? getCitCapUnStakingFunction(params) : {}
-            return {prerequisites, method}
+            const validation = isDiamondValid;
+            const method = validation ? getCitCapUnStakingFunction(params) : {}
+            return {validation, method}
         }
     }
 }
@@ -266,14 +310,15 @@ export const getMysteryBoxFunction = (params) => {
 
 export const getOtcMakeFunction = (params) => {
     const {hash, market, price, selectedCurrency, isSell, diamond} = params
-    const power = BigNumber(10).pow(selectedCurrency.precision)
-    const _price = BigNumber(price).multipliedBy(power)
+
+    const power = new BigNumber(10).pow(selectedCurrency.precision)
+    const _price = new BigNumber(price).multipliedBy(power)
     return {
         method: 'offerMake',
         args: [
             hash,
             market,
-            _price,
+            _price.toFixed(0),
             selectedCurrency.address,
             isSell
         ],

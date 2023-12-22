@@ -32,12 +32,12 @@ export default function NetworkStep() {
     useEffect(() => {
         if (!isReady) return;
         console.log("IQZ :: NETWORK R/F", isReady, isRightChain)
-        updateBlockchainProps([{path: 'state.network.isFinished', value: isRightChain}])
+        updateBlockchainProps([{path: 'state.network.isFinished', value: isRightChain}], "network finished")
         changeNetwork()
     }, [chain?.id, isReady])
 
     useEffect(() => {
-        updateBlockchainProps([{path: 'state.network.isLoading', value: network_isLoading}])
+        updateBlockchainProps([{path: 'state.network.isLoading', value: network_isLoading}], "network loading")
     }, [network_isLoading])
 
 
@@ -51,7 +51,7 @@ export default function NetworkStep() {
             updates.push({path: 'state.network.lock', value: true})
             updates.push({path: 'state.network.isFinished', value: false})
         }
-        updateBlockchainProps(updates)
+        updateBlockchainProps(updates, "network error/loading updates")
     }, [error, network_isLoading])
 
 
@@ -65,7 +65,7 @@ export default function NetworkStep() {
                     isRightChain
                 }
             }
-        ])
+        ], "network update networks")
     }, [chain?.id])
 
 

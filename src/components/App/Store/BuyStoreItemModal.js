@@ -61,6 +61,7 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
                 },
             },
             steps: {
+                prerequisite: true,
                 network:!isBased,
                 liquidity:true,
                 allowance:true,

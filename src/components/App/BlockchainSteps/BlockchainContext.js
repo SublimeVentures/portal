@@ -1,14 +1,20 @@
 import React, {createContext, useContext, useEffect, useState, useMemo} from 'react';
 import _ from 'lodash';
 import merge from 'lodash/merge';
-import {
-    getTransaction,
-    INTERACTION_TYPE
-} from "@/components/App/BlockchainSteps/config";
+
+const DEFAULT_STEP_STATE = {
+    isFinished: false,
+    isLoading: false,
+    isFetched: false,
+    isError: false,
+    error: false,
+    lock: true,
+}
 
 const DEFAULT_STATE = {
     isClean: true,
     result: {
+        prerequisite: {},
         network: {},
         liquidity: {},
         allowance: {},
@@ -16,56 +22,31 @@ const DEFAULT_STATE = {
     }, //blockchainSummary
     data: {
         userWallet: "",
+        prerequisite: {},
         transaction: {
+            type: 0,
             params: {},
-            type: INTERACTION_TYPE.NONE,
-            prerequisites: false,
+            ready: false,
             method: {},
-            listen: false
         },
         button: {
             customLockState: false,
             customLockText: "",
         }
-    }, //processingData
+    },
     state: {
-        network: {
-            isLoading: false,
-            isFinished: false,
-            isError: false,
-            error: false,
-            lock: true,
-        },
-        liquidity: {
-            isFetched: false,
-            isLoading: false,
-            isFinished: false,
-            isError: false,
-            error: false,
-            lock: true,
-        },
-        allowance: {
-            isFetched: false,
-            isLoading: false,
-            isFinished: false,
-            isError: false,
-            error: false,
-            lock: true,
-        },
-        transaction: {
-            isFetched: false,
-            isLoading: false,
-            isFinished: false,
-            isError: false,
-            error: false,
-            lock: true,
-        },
+        prerequisite: { ...DEFAULT_STEP_STATE },
+        network: { ...DEFAULT_STEP_STATE },
+        liquidity: { ...DEFAULT_STEP_STATE },
+        allowance: { ...DEFAULT_STEP_STATE },
+        transaction: { ...DEFAULT_STEP_STATE },
         button: {
             lock: false,
             text: "",
         }
     },
     steps: {
+        prerequisite: false,
         network: false,
         liquidity: false,
         allowance: false,
@@ -80,8 +61,8 @@ const BlockchainContext = createContext({
     blockchainCleanup: () => {},
     insertConfiguration: () => {},
     blockchainRunProcess: () => {},
-    blockchainRunProcessDirect: () => {},
     stepsIsReady: {
+        prerequisite: false,
         network: false,
         liquidity: false,
         allowance: false,
@@ -95,12 +76,14 @@ export const BlockchainProvider = ({children}) => {
     const [blockchainProps, setBlockchainProps] = useState(DEFAULT_STATE);
     const {steps, state, data} = blockchainProps
     const {
+        prerequisite: checkPrerequisite,
         network: checkNetwork,
         liquidity: checkLiquidity,
         allowance: checkAllowance,
         transaction: checkTransaction
     } = steps
     const {
+        prerequisite: stepPrerequisite,
         network: stepNetwork,
         liquidity: stepLiquidity,
         allowance: stepAllowance,
@@ -110,36 +93,54 @@ export const BlockchainProvider = ({children}) => {
     const {transaction: dataTransaction} = data
 
     const stepsIsReady = useMemo(() => ({
-        network: !stepNetwork.lock,
-        liquidity: !stepLiquidity.lock && (checkNetwork ? stepNetwork.isFinished : true),
-        allowance: !stepAllowance.lock && (checkLiquidity ? stepLiquidity.isFinished : (checkNetwork ? stepNetwork.isFinished : true)),
-        transaction: (!stepTransaction.lock && dataTransaction.prerequisites) && (checkAllowance ? stepAllowance.isFinished : (checkLiquidity ? stepLiquidity.isFinished : (checkNetwork ? stepNetwork.isFinished : true)))
+        prerequisite: !stepPrerequisite.lock,
+        network: !stepNetwork.lock && (checkPrerequisite ? stepPrerequisite.isFinished : true),
+        liquidity: !stepLiquidity.lock && (checkNetwork ? stepNetwork.isFinished : (checkPrerequisite ? stepPrerequisite.isFinished : true)),
+        allowance: !stepAllowance.lock && (checkLiquidity ? stepLiquidity.isFinished : (checkNetwork ? stepNetwork.isFinished : (checkPrerequisite ? stepPrerequisite.isFinished : true))),
+        transaction: (!stepTransaction.lock && dataTransaction.ready) && (checkAllowance ? stepAllowance.isFinished : (checkLiquidity ? stepLiquidity.isFinished : (checkNetwork ? stepNetwork.isFinished : (checkPrerequisite ? stepPrerequisite.isFinished : true)))),
     }), [
+        stepPrerequisite.lock,
         stepNetwork.lock,
         stepLiquidity.lock,
         stepAllowance.lock,
         stepTransaction.lock,
-        dataTransaction.prerequisites,
+        stepPrerequisite.isFinished,
         stepNetwork.isFinished,
         stepLiquidity.isFinished,
         stepLiquidity.isFetched,
-        stepAllowance.isFinished
+        stepAllowance.isFinished,
+        dataTransaction.ready,
+        checkPrerequisite,
+        checkNetwork,
+        checkLiquidity,
+        checkAllowance
     ]);
+
+    console.log("IQZ :: context",stepsIsReady, blockchainProps)
 
     const insertConfiguration = (newProps) => {
         setBlockchainProps(_ => {
             const mergedProps = merge({}, DEFAULT_STATE, newProps);
             mergedProps.isClean = false;
+            mergedProps.state.button.text = mergedProps.data.button.text;
+            mergedProps.state.button.lock = mergedProps.data.button.customLockState;
+            console.log("mergedProps",mergedProps)
             return mergedProps;
         });
     };
 
-    const updateBlockchainProps = (updates) => {
+    const updateBlockchainProps = (updates, source) => {
         setBlockchainProps(prevProps => {
             const newState = _.cloneDeep(prevProps);
             updates.forEach(update => {
                 _.set(newState, update.path, update.value);
+                // console.log("update.path",update.path, source)
             });
+            // console.log("Before update - source:", source, "Prev State:", prevProps, source);
+            console.log("Updates:", updates, source);
+            // console.log("After update - New State:", newState, source);
+            // console.log("UPDATES -", source, updates, newState, source)
+
             return newState;
         });
     };
@@ -149,48 +150,14 @@ export const BlockchainProvider = ({children}) => {
     }
 
 
-    useEffect(() => {
-        console.log("listen", !data.button?.buttonFn, !dataTransaction.params.listen)
-        if(!data.button?.buttonFn || !dataTransaction.params.listen) return;
-        const {prerequisites, method} = getTransaction(dataTransaction.type, dataTransaction.params)
-        let updates = [{path: 'data.transaction.prerequisites', value: prerequisites}]
-        if(prerequisites) {
-            updates.push({path: 'data.transaction.method', value: method})
-        }
-        updateBlockchainProps(updates)
-        if(prerequisites) {
-            console.log("STARTING PROCESSS")
-            blockchainRunProcessDirect()
-        }
-    }, [
-        dataTransaction.params.listen,
-        dataTransaction.prerequisites,
-        dataTransaction.params.diamond,
-        dataTransaction.params.hash,
-        dataTransaction.params.price,
-        dataTransaction.params.selectedCurrency?.address,
-        dataTransaction.params.isSell,
-        dataTransaction.params.market,
-        dataTransaction.params.otcId,
-        dataTransaction.params.dealId,
-        dataTransaction.params.signature?.hash,
-    ])
-
 
     const blockchainRunProcess = () => {
-        const {prerequisites, method} = getTransaction(dataTransaction.type, dataTransaction.params)
-        let updates = [{path: 'data.transaction.prerequisites', value: prerequisites}]
-        if(prerequisites) {
-            updates.push({path: 'data.transaction.method', value: method})
-        }
-        updateBlockchainProps(updates)
-        blockchainRunProcessDirect()
-    }
-
-
-    const blockchainRunProcessDirect = () => {
+        console.log("IQZ :: UNLOCKS")
         if (stepButton.lock) return;
         let enable = []
+        if (checkPrerequisite) {
+            enable.push({path: 'state.prerequisite.lock', value: false})
+        }
         if (checkNetwork) {
             enable.push({path: 'state.network.lock', value: false})
         }
@@ -203,16 +170,16 @@ export const BlockchainProvider = ({children}) => {
         if (checkTransaction) {
             enable.push({path: 'state.transaction.lock', value: false})
         }
-        updateBlockchainProps(enable);
+        updateBlockchainProps(enable, "button start");
     }
 
     const value = {
+        DEFAULT_STEP_STATE,
         blockchainProps,
         stepsIsReady,
         updateBlockchainProps,
         blockchainCleanup,
         insertConfiguration,
-        blockchainRunProcessDirect,
         blockchainRunProcess
     };
 

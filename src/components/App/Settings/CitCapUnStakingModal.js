@@ -52,6 +52,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                 },
             },
             steps: {
+                prerequisite: true,
                 network:true,
                 transaction:true,
                 button:true,

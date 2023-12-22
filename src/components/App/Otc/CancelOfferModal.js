@@ -46,6 +46,7 @@ export default function CancelOfferModal({model, setter, props}) {
                 },
             },
             steps: {
+                prerequisite:true,
                 network:true,
                 transaction:true,
                 button:true,

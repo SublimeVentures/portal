@@ -65,6 +65,7 @@ export default function InvestModal({model, setter, investModalProps}) {
                 },
             },
             steps: {
+                prerequisite: true,
                 liquidity:true,
                 transaction:true,
                 button:true,
@@ -109,7 +110,8 @@ export default function InvestModal({model, setter, investModalProps}) {
 
                 {path: 'state.liquidity.lock', value: true},
                 {path: 'state.transaction.lock', value: true},
-            ]
+            ],
+            "invest modal update"
         )
     }, [
         selectedCurrency?.address,
