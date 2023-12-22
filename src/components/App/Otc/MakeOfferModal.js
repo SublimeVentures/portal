@@ -80,6 +80,7 @@ export default function MakeOfferModal({model, setter, props}) {
         else return {lock: false}
     }
 
+    console.log("diamond",diamond)
     useEffect(() => {
         if (!isBuyer && amount > allocationMax) setAmountHandler(allocationMax)
     }, [isBuyer]);
@@ -138,12 +139,12 @@ export default function MakeOfferModal({model, setter, props}) {
 
     useEffect(() => {
         if (!model || !selectedCurrency?.address || price === 0 || blockchainProps.isClean || !currentMarket?.market) return;
-        console.log("MAKE_RESET - update data", model)
         updateBlockchainProps(
             [
                 {path: 'data.amount', value: price},
                 {path: 'data.amountAllowance', value: price},
                 {path: 'data.currency', value: selectedCurrency},
+                {path: 'data.diamond', value: diamond},
 
                 {path: 'data.transaction.ready', value: false},
                 {path: 'data.transaction.method', value: {}},
@@ -153,6 +154,7 @@ export default function MakeOfferModal({model, setter, props}) {
                 {path: 'data.prerequisite.price', value: price},
                 {path: 'data.prerequisite.amount', value: amount},
 
+                {path: 'data.transaction.params.diamond', value: diamond},
                 {path: 'data.transaction.params.price', value: price},
                 {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
                 {path: 'data.transaction.params.market', value: currentMarket.market},
@@ -167,12 +169,12 @@ export default function MakeOfferModal({model, setter, props}) {
         selectedCurrency?.address,
         currentMarket?.market,
         price,
-        amount
+        amount,
+        diamond
     ]);
 
     useEffect(() => {
         if (!selectedCurrency?.address || blockchainProps.isClean) return;
-        console.log("MAKE_RESET - change order type")
         updateBlockchainProps(
             [
                 {path: 'steps.liquidity', value: isBuyer},
@@ -188,6 +190,7 @@ export default function MakeOfferModal({model, setter, props}) {
                 {path: 'data.transaction.params.isSell', value: !isBuyer},
                 {path: 'data.transaction.ready', value: false},
                 {path: 'data.transaction.method', value: {}},
+                {path: 'result.allowance', value: {}},
 
             ],"make order - buyer change"
         )

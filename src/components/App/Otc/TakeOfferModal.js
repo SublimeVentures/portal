@@ -45,7 +45,7 @@ export const blockchainPrerequisite = async (params) => {
 export default function TakeOfferModal({model, setter, props}) {
     const {getCurrencyIcon,vault, otcFee, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
     const {chains} = useSwitchNetwork()
-    const {updateBlockchainProps, insertConfiguration, blockchainCleanup ,blockchainProps} = useBlockchainContext();
+    const {updateBlockchainProps, insertConfiguration, blockchainCleanup ,blockchainProps, DEFAULT_STEP_STATE} = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
     const {diamond, currencyListAll} = useGetChainEnvironment(currencies, diamonds)
@@ -60,34 +60,8 @@ export default function TakeOfferModal({model, setter, props}) {
         else return {lock: false}
     }
 
-    // const buttonFn = async () => {
-    //
-    //     if(
-    //         signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell
-    //     ) {
-    //         return [{ param: 'signature', value: signature }]
-    //     } else if(offerDetails.isSell){
-    //         return {
-    //             ok: true,
-    //             update: [{ param: 'listen', value: false }]
-    //         }
-    //     } else {
-    //         const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
-    //         if (transaction.ok) {
-    //             setSignature(transaction.data)
-    //             return [
-    //                 { param: 'signature', value: transaction.data },
-    //                 { param: 'listen', value: true },
-    //             ]
-    //         } else {
-    //             //todo: error handling
-    //             return {
-    //                 ok: false,
-    //             }
-    //         }
-    //     }
-    // }
 
+    console.log("diamond",        diamond)
     useEffect(() => {
         if (!model || !selectedCurrency?.address || !blockchainProps.isClean || !(totalPayment>0) || !offerDetails?.chainId) return;
 
@@ -137,7 +111,27 @@ export default function TakeOfferModal({model, setter, props}) {
         selectedCurrency?.address,
         offerDetails?.chainId,
         totalPayment,
-        currentMarket?.id
+        currentMarket?.id,
+    ]);
+
+    useEffect(() => {
+        if (!model || blockchainProps.isClean) return;
+        updateBlockchainProps(
+            [
+                {path: 'data.diamond', value: diamond},
+                {path: 'data.transaction.ready', value: false},
+                {path: 'data.transaction.method', value: {}},
+                {path: 'data.transaction.params.diamond', value: diamond},
+
+                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.network', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.allowance', value: { ...DEFAULT_STEP_STATE }},
+                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
+            ],"make offer val change"
+        )
+    }, [
+        diamond
     ]);
 
     useEffect(() => {

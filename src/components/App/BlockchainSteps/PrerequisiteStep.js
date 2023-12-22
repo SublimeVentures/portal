@@ -82,7 +82,7 @@ export default function PrerequisiteStep() {
     useEffect(() => {
         if (isFinished) {
             const {validation, method} = getTransaction(transactionType, transactionParams)
-            console.log("IQZ :: PREREQUISITE - set method",isFinished, validation, method)
+            console.log("IQZ :: PREREQUISITE - set method",transactionType,transactionParams, isFinished, validation, method)
 
             if (validation) {
                 updateBlockchainProps([

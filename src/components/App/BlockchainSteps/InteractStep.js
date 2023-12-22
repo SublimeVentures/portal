@@ -76,7 +76,6 @@ export default function InteractStep() {
 
     useEffect(() => {
         const {text, lock} = processButtonState()
-        console.log("update button", text, lock, isClean)
         updateBlockchainProps([
             {path: 'state.button.lock', value: lock},
             {path: 'state.button.text', value: text}

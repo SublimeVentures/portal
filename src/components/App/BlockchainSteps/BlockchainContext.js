@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useState, useMemo} from 'react';
+import React, {createContext, useContext, useState, useMemo} from 'react';
 import _ from 'lodash';
 import merge from 'lodash/merge';
 
@@ -19,7 +19,7 @@ const DEFAULT_STATE = {
         liquidity: {},
         allowance: {},
         transaction: {},
-    }, //blockchainSummary
+    },
     data: {
         userWallet: "",
         prerequisite: {},
@@ -116,7 +116,6 @@ export const BlockchainProvider = ({children}) => {
         checkAllowance
     ]);
 
-    console.log("IQZ :: context",stepsIsReady, blockchainProps)
 
     const insertConfiguration = (newProps) => {
         setBlockchainProps(_ => {
@@ -124,7 +123,6 @@ export const BlockchainProvider = ({children}) => {
             mergedProps.isClean = false;
             mergedProps.state.button.text = mergedProps.data.button.text;
             mergedProps.state.button.lock = mergedProps.data.button.customLockState;
-            console.log("mergedProps",mergedProps)
             return mergedProps;
         });
     };
@@ -134,12 +132,8 @@ export const BlockchainProvider = ({children}) => {
             const newState = _.cloneDeep(prevProps);
             updates.forEach(update => {
                 _.set(newState, update.path, update.value);
-                // console.log("update.path",update.path, source)
             });
-            // console.log("Before update - source:", source, "Prev State:", prevProps, source);
             console.log("Updates:", updates, source);
-            // console.log("After update - New State:", newState, source);
-            // console.log("UPDATES -", source, updates, newState, source)
 
             return newState;
         });

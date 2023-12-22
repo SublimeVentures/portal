@@ -27,6 +27,7 @@ export default function AllowanceStep() {
     const {
         isSuccess: onchain_isSuccess,
         isLoading: onchain_isLoading,
+        isFetched: onchain_isFetched,
         data: onchain_data,
         isError: onchain_isError,
         error: onchain_error,
@@ -39,8 +40,11 @@ export default function AllowanceStep() {
             args: [userWallet, diamond],
             watch: !isFinished,
             enabled: isReady,
+            cacheTime:0
         }
     )
+
+    console.log("ONCHAIN DATA", onchain_data, onchain_isSuccess, onchain_isLoading, onchain_isFetched)
 
     const {
         config: prep_config,
@@ -95,7 +99,7 @@ export default function AllowanceStep() {
 
         updateBlockchainProps([
             { path: 'result.allowance.amount', value: allowance_current },
-            { path: 'state.allowance.isFinished', value: (amountAllowance <= allowance_current) && allowance_current > 0 }
+            // { path: 'state.allowance.isFinished', value: (amountAllowance <= allowance_current) && allowance_current > 0 }
         ],"allowance fetched")
         console.log("IQZ :: ALLOWANCE :: S2", amountAllowance, allowance_current,  amountAllowance <= allowance_current)
     }, [onchain_isSuccess, onchain_isLoading, onchain_data, isReady])
