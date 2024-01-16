@@ -10,6 +10,7 @@ export default function Dropdown({options, classes, propSelected, position, isSm
     const ref = useRef();
 
     const changeOption = (index) => {
+
         setMoved(index * (isSmall ? -35 : -62))
         let _selected = selected
         setSelected(index)
@@ -31,7 +32,7 @@ export default function Dropdown({options, classes, propSelected, position, isSm
         <div
             className={`select-menu text-xl ${isOpen ? 'open' : ''} ${direction === -1 ? 'tilt-down' : ''} ${direction === 1 ? 'tilt-up' : ''} ${classes ? classes : ''} ${isSmall ? "small" : ""}`}
             onClick={() => {
-                setIsOpen(true)
+                if(options.length>1) setIsOpen(true)
             }}
             ref={ref}
         >
@@ -41,7 +42,7 @@ export default function Dropdown({options, classes, propSelected, position, isSm
                 })}
 
             </select>
-            <div className="button">
+            <div className={`button ${options.length===1 ? 'disableDropdown' : ''}`}>
                 <em></em>
                 <ul style={{transform: `translateY(${moved}px)`}}>
                     {options.map((el, i) => {

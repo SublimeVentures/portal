@@ -15,8 +15,8 @@ export default function OtcMarkets({propMarkets}) {
 
                 <table>
                     <tbody>
-                    {otc.markets.map((el) => {
-                        return <tr key={el.id} onClick={()=> changeMarket(el.slug)}
+                    {otc.map((el) => {
+                        return <tr key={el.offerId} onClick={()=> changeMarket(el.slug)}
                                    className={`cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${el?.slug === currentMarket?.slug ? 'bg-app-success text-black' : ''}`}>
                             <td className="group text-sm px-5 py-3 relative text-left sm:py-4">
                                 {el.name}

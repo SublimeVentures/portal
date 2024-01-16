@@ -1,5 +1,23 @@
 @use "sass:math";
 
+.fullWidthButton {
+  .v-align, .btn, .btn-wrap {
+    width:100%
+  }
+
+  .btn-wrap {
+    margin:0;
+  }
+
+}
+
+.btn-narrow {
+  .btn {
+      height: 56px!important;
+  }
+}
+
+
 .btn-wrap {
   position: relative;
   width: fit-content;
@@ -56,6 +74,11 @@
       padding: 0 15px;
       min-width: 150px;
       height: 50px;
+    }
+    &.xxs {
+      padding: 0 15px;
+      min-width: 120px;
+      height: 40px;
     }
 
     &.onlyIcon {

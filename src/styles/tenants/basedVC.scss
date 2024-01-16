@@ -12,3 +12,16 @@ body {
 .aboutBg {
   background-image:    url('https://cdn.basedvc.fund/webapp/aboutBG.jpg');
 }
+
+
+.loginSelect {
+  padding:5px 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &.disabled {
+    background: rgba(255, 255, 255, 0.13);
+  }
+}

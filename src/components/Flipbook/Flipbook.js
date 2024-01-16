@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import spinner from "./spinner.svg";
 import Matrix from "./Matrix"
+import DynamicIcon from "@/components/Icon";
 
 const Flipbook = ({
                       pages,
@@ -17,7 +17,7 @@ const Flipbook = ({
                       forwardDirection = "right",
                       centering = true,
                       startPage = null,
-                      loadingImage = spinner,
+                      loadingImage = <DynamicIcon name={'spinner'}/>,
                       clickToZoom = true,
                       dragToFlip = true,
                       wheel = "scroll",
@@ -70,6 +70,7 @@ const Flipbook = ({
     const viewportRef = useRef(null)
 
     const pageUrl = (page, hiRes = false) => {
+        console.log("FLIP page url", page, hiRes, pagesHiRes[page], pages[page])
         if (hiRes && zoom > 1 && !zooming) {
             const url = pagesHiRes[page]
             if (url) return url;
@@ -468,6 +469,7 @@ const Flipbook = ({
 
     const pageUrlLoading = (page, hiRes = false) => {
         const url = pageUrl(page, hiRes)
+        console.log("FLIP pageUrlLoading url", url, hiRes, page)
         // High-res image doesn't use 'loading'
         if (hiRes && zoom > 1 && !zooming) {
             return url;
@@ -677,6 +679,7 @@ const Flipbook = ({
     };
 
     const didLoadImage = (ev) => {
+        console.log("FLIP didLoadImage")
         if (imageWidth === null) {
             const image = ev.target || ev.path[0];
             setImageWidth(image.naturalWidth)
@@ -769,6 +772,7 @@ const Flipbook = ({
         animate();
 
         if (end > 1) {
+            console.log("FLIP animate - preloadImage")
             preloadImages(true);
         }
     }
@@ -951,7 +955,10 @@ const Flipbook = ({
     };
 
     const preloadImages = (hiRes = false) => {
+        console.log("FLIP preload")
         for (let i = currentPage - 3; i <= currentPage + 3; i++) {
+            console.log("FLIP preload", i)
+
             pageUrlLoading(i); // this preloads image
         }
 
@@ -995,12 +1002,16 @@ const Flipbook = ({
             if (loadedImages[url]) {
                 return url;
             } else {
-                const img = new Image();
-                img.onload = () => {
-                    setLoadedImages({ ...loadedImages, [url]: true });
-                };
-                img.src = url;
-                return loadingImage;
+                console.log("FLIP MAGA url",url)
+                //todo: uncomment and fix
+                // const img = new Image();
+                // img.onload = () => {
+                //     setLoadedImages({ ...loadedImages, [url]: true });
+                // };
+                // img.src = url;
+                // return loadingImage;
+                return url;
+
             }
         }
     };
@@ -1096,6 +1107,7 @@ const Flipbook = ({
         };
     }, []);
 
+    console.log("FLIP RENDER")
     return (
         <div
             className={`viewport ${zooming || zoom > 1 ? 'zoom' : ''} ${dragToScroll ? 'drag-to-scroll' : ''}`}
@@ -1132,6 +1144,7 @@ const Flipbook = ({
                                 left: `${xMargin}px`,
                                 top: `${yMargin}px`,
                             }}
+                            // src={"https://cdn.basedvc.fund/research/shrapnel-nodes/ResearchReport_page-0008.jpg"}
                             src={pageUrlLoading(leftPage, true)}
                             onLoad={didLoadImage}
                         />
@@ -1145,6 +1158,7 @@ const Flipbook = ({
                                 left: `${viewWidth / 2}px`,
                                 top: `${yMargin}px`,
                             }}
+                            // src={"https://cdn.basedvc.fund/research/shrapnel-nodes/ResearchReport_page-0007.jpg"}
                             src={pageUrlLoading(rightPage, true)}
                             onLoad={didLoadImage}
                         />

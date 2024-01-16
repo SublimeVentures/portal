@@ -1,5 +1,5 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import {
@@ -7,19 +7,27 @@ import {
 } from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 import Dropdown from "@/components/App/Dropdown";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
 export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
-    const {account, order, setOrder, contract, currency, setCurrency, currencyNames, selectedCurrency, DEFAULT_STEP_STATE} = buyModalProps
+    const {
+        order,
+        setOrder,
+    } = buyModalProps
     const router = useRouter()
-    const { insertConfiguration, blockchainCleanup, blockchainProps, updateBlockchainProps } = useBlockchainContext();
+    const {insertConfiguration, blockchainCleanup, blockchainProps} = useBlockchainContext();
+
+    const {activeChainStoreSymbol: currencyNames, account, activeDiamond, network} = useEnvironmentContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
+    const [currencySymbol, setCurrencySymbol] = useState(0)
+
+    const selectedCurrency = currencyNames[currencySymbol]
 
     const closeModal = () => {
         setter()
@@ -37,43 +45,36 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
 
 
     useEffect(() => {
-        if(!model || !selectedCurrency?.address) return;
+        if (!model || !selectedCurrency) return;
 
         insertConfiguration({
             data: {
+                account: account.address,
                 requiredNetwork: 1,
-                amount: order.price,
-                amountAllowance: order.price,
-                userWallet: account.address,
+                amount: 1,
+                liquidity: order.price,
+                allowance: order.price,
                 currency: selectedCurrency,
-                diamond: contract,
-                button: {
-                    icon: <RocketIcon className="w-10 mr-2"/>,
-                    text: "Buy",
-                },
-                transaction: {
-                    type: INTERACTION_TYPE.MYSTERYBOX,
-                    params: {
-                        contract,
-                        selectedCurrency,
-                        amount: 1
-                    },
-                },
+                contract: activeDiamond,
+                buttonText: "Buy",
+                transactionType: INTERACTION_TYPE.MYSTERYBOX,
             },
             steps: {
-                prerequisite: true,
-                network:!isBased,
-                liquidity:true,
-                allowance:true,
-                transaction:true,
-                button:true,
+                network: !isBased,
+                liquidity: true,
+                allowance: true,
+                transaction: true,
             },
         });
     }, [
         model,
-        selectedCurrency?.address,
+        activeDiamond,
+        selectedCurrency
     ]);
 
+    useEffect(() => {
+        setCurrencySymbol(0)
+    }, [network.chainId])
 
     const title = () => {
         return (
@@ -119,7 +120,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                         <hr className={"spacer"}/>
                         <div className="font-bold text-gold flex items-center">
                             <span className={"mr-2"}>{order.price}</span>
-                            {isBased ? <Dropdown options={currencyNames} propSelected={setCurrency} position={currency}
+                            {isBased ? <Dropdown options={currencyNames} propSelected={setCurrencySymbol} position={currencySymbol}
                                                  isSmall={true}/> : <>BYTES</>}
                         </div>
                     </div>

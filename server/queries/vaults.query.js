@@ -1,54 +1,51 @@
-const {models} = require('../services/db/db.init');
-const db = require('../services/db/db.init');
-const {Op} = require("sequelize");
+const db = require('../services/db/definitions/db.init');
+const { QueryTypes} = require("sequelize");
 const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
-const {OfferAccessACL,aclToOfferAccessMap } = require("../../src/lib/authHelpers");
 
-async function getUserInvestment(userId, offerId) {
+
+const query_getUserVault = `
+        SELECT
+            "vault"."invested",
+            "vault"."locked",
+            -- Add other vault columns as needed
+            "offer"."slug",
+            "offer"."name",
+            "offer"."tge",
+            "offer"."id",
+            "offer"."ppu",
+            "offer"."t_unlock"
+            -- Add other offer columns as needed
+        FROM
+            "vault"
+                JOIN
+            "offer" ON "vault"."offerId" = "offer"."id"
+        WHERE
+            "vault"."userId" = :userId AND
+            "vault"."invested" != 0 AND
+        "offer"."id" IN (
+            SELECT DISTINCT "offerId" 
+            FROM "offerLimit"
+            WHERE "offerLimit"."partnerId" IN (:partnerId, :tenantId)
+        )
+        ORDER BY
+            "vault"."createdAt" DESC;
+    `;
+
+
+async function getUserVault(userId, partnerId, tenantId) {
+
     try {
-        return models.vault.findOne({
-            attributes: ['invested'],
-            where: {
-                userId,
-                offerId
-            },
-            raw: true
+        return await db.query(query_getUserVault, {
+            type: QueryTypes.SELECT,
+            replacements: { userId, partnerId, tenantId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getUserInvestment]', {error: serializeError(error), userId, offerId});
-    }
-    return {}
-
-}
-
-async function getUserVault(userId, ACL) {
-    try {
-        const allowedOfferAccesses = aclToOfferAccessMap[ACL];
-        return models.vault.findAll({
-            where: {
-                userId,
-                invested: {
-                    [Op.not]: 0
-                }
-            },
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-            include: {
-                attributes: ['slug', 'name', 'tge', 'ppu', 't_unlock'],
-                model: models.offer,
-                where: {
-                    access: allowedOfferAccesses.length > 0 ? { [Op.in]: allowedOfferAccesses } : null
-                }
-            },
-            raw: true
-        })
-    } catch (error) {
         logger.error('QUERY :: [getUserVault]', {error: serializeError(error), userId});
+        return [];
     }
-    return []
 }
 
 
-module.exports = {getUserInvestment, getUserVault}
+
+module.exports = { getUserVault}

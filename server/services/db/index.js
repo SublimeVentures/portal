@@ -1,4 +1,4 @@
-const db = require('./db.init');
+const db = require('./definitions/db.init');
 const {getEnvironment} = require("../../queries/environment.query");
 const logger = require("../../../src/lib/logger");
 let env = {}
@@ -11,8 +11,6 @@ function getEnv () {
 async function connectDB() {
     try {
         await db.authenticate();
-        // await db.sync({alter: true});
-        // await db.sync();
         logger.info("|---- DB: connected")
         env = await getEnvironment()
         logger.info("|---- ENV: ", env)

@@ -22,7 +22,7 @@ export function Tooltiper({wrapper, text, type}) {
             <a id={id} className={`text-${type} cursor-pointer`}>{wrapper}</a>
             <Tooltip
                 anchorSelect={`#${id}`}
-                className={`basic bg-app-accent2`}
+                className={`basic ${type === TooltipType.Error ? 'bg-app-error opacity-100'  : 'bg-app-accent2'}`}
                 content={text}
             />
         </div>

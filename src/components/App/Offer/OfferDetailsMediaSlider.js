@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {useState} from "react";
 import useWidth from "@/lib/hooks/useScreenWidth";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
 const MEDIA_TYPE = {
     IMAGE: 0,
@@ -14,7 +15,9 @@ const MEDIA_TYPE = {
 }
 
 export default function OfferDetailsMediaSlider({offer}) {
-    const {cdn, slug, media} = offer;
+    const {cdn} = useEnvironmentContext();
+
+    const { slug, media} = offer;
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
     const haveMedia = media ? media?.length > 0 : false

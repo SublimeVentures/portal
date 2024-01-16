@@ -1,41 +1,65 @@
-const {models} = require('../services/db/db.init');
+const {models} = require('../services/db/definitions/db.init');
+const db = require('../services/db/definitions/db.init');
 const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
-const {Op} = require("sequelize");
-const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 
-async function getStoreItemsOwned(userId) {
+async function getStoreItemsOwned(userId, tenantId) {
     try {
-        return models.storeUser.findAll(
-            {
+        return models.storeUser.findAll({
+            where: {
+                userId: userId
+            },
+            include: [{
+                model: models.storePartner,
+                as: 'storePartner', // replace with the correct alias if you have defined one
                 where: {
-                    userId
+                    tenantId: tenantId
                 },
-                attributes: ['userId', 'amount', 'storeId'],
-                order: [
-                    ['storeId', 'ASC'],
-                ],
-                raw: true
-            })
-    } catch (error) {
-        logger.error('QUERY :: [getStoreItemsOwned]', {error: serializeError(error), userId});
+                include: [{
+                    model: models.store,
+                    as: 'store', // replace with the correct alias if you have defined one
+                    attributes: [] // Only fetch the storeId
+                }],
+                attributes: [] // No additional attributes from storePartner are needed
+            }],
+            attributes: [
+                'amount',
+                [db.literal('"storePartner->store"."id"'), 'id'],
+                [db.literal('"storePartner->store"."name"'), 'name'],
+                [db.literal('"storePartner"."img"'), 'img'],
 
+            ],
+            raw: true
+        });
+    } catch (error) {
+        logger.error('QUERY :: [getStoreItemsOwned]', {error: serializeError(error), userId, tenantId});
     }
-    return []
+    return [];
 }
 
 
-async function getStoreItemsOwnedByUser(userId, storeId, transaction) {
+
+async function getStoreItemsOwnedByUser(userId, tenantId, storeId, transaction) {
         const result = await models.storeUser.findOne({
             where: {
-                userId,
-                storeId,
-                amount: {
-                    [Op.gt]: 0
-                }
+                userId
             },
-            raw: true
-        }, { transaction })
+            include: [{
+                model: models.storePartner,
+                as: 'storePartner', // replace with the correct alias if you have defined one
+                where: {
+                    tenantId,
+                    storeId
+                },
+            }],
+            attributes: [
+                [db.literal('"storePartner"."id"'), 'storePartnerId'],
+                [db.literal('"storePartner"."storeId"'), 'id'],
+                'amount'
+            ],
+            raw: true,
+            transaction
+        });
 
         if(!result) {
             return {
@@ -49,10 +73,10 @@ async function getStoreItemsOwnedByUser(userId, storeId, transaction) {
         }
 }
 
-async function updateUserUpgradeAmount(userId, storeId, amount, transaction) {
+async function updateUserUpgradeAmount(userId, storePartnerId, amount, transaction) {
     const result = await models.storeUser.increment(
         {amount},
-        { where: { userId, storeId }, raw:true, transaction })
+        { where: { userId, storePartnerId }, raw:true, transaction })
 
     return {
         ok: result[0][1] === 1

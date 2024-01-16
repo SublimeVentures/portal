@@ -9,17 +9,19 @@ import Stat from "@/components/Stat";
 import IconNetwork from "@/assets/svg/Network.svg";
 import IconStars from "@/assets/svg/Stars.svg";
 import IconMoney from "@/assets/svg/Money.svg";
-import {verifyID, ACLs} from "@/lib/authHelpers";
-import routes from "@/routes";
  import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
+import {processServerSideData} from "@/lib/serverSideHelpers";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import routes from "@/routes";
 
-export default function AppOffer({account}) {
-    const ACL = account.ACL
-    const ADDRESS = ACL !==ACLs.PartnerInjected ? ACL : account.address
+export default function AppOffer({session}) {
+    const TENANT_ID = session.tenantId
+    const PARTNER_ID = session.partnerId
+    const {cdn} = useEnvironmentContext();
 
     const { isLoading, data: response, isError } = useQuery({
-            queryKey: ["offerList", {ACL, ADDRESS}],
+            queryKey: ["offerList", {TENANT_ID, PARTNER_ID}],
             queryFn: fetchOfferList,
             cacheTime: 5 * 60 * 1000,
             staleTime: 1 * 60 * 1000,
@@ -30,19 +32,18 @@ export default function AppOffer({account}) {
 
 
     const offerList = response?.offers
-    const offerListRender = offerList ? offerList.filter(el=> !el.accelerator) : []
+    const offerListRender = offerList ? offerList.filter(el=> !el.isAccelerator) : []
     const stats = response?.stats
     const partners = stats ? stats.partners : 0;
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
     const renderPage = () => {
         if(isLoading) return <Loader/>
-        if(!offerList || offerList.length === 0) return  <Empty/>
-
+        if(!offerListRender || offerListRender.length === 0) return  <Empty/>
         return (
                 <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                     {!!offerList && offerListRender.map(el =>
-                        <OfferItem offer={el} key={el.slug} ACL={ACL} cdn={response?.cdn}/>
+                        <OfferItem offer={el} cdn={cdn} key={el.slug}/>
                     )}
                 </div>
         )
@@ -70,29 +71,8 @@ export default function AppOffer({account}) {
     </>
 }
 
-export const getServerSideProps = async({res}) => {
-    const account = await verifyID(res.req)
-    if(account.exists){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/app/auth?callbackUrl=${routes.Opportunities}`
-            }
-        }
-    }
-    if(!account.auth){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${routes.Opportunities}`
-            }
-        }
-    }
-    return {
-        props: {
-            account: account.user
-        }
-    }
+export const getServerSideProps = async({ req, res }) => {
+    return await processServerSideData(req, res, routes.Opportunities);
 }
 
 AppOffer.getLayout = function (page) {

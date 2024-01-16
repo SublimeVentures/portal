@@ -6,18 +6,12 @@ const nextConfig = {
     reactStrictMode: false,
     webpack(config) {
         config.module.rules.push({
-            test: /\.svg$/i,
-            issuer: /\.[jt]sx?$/,
-            use: ['@svgr/webpack']
-        })
-        const absolutePathToSpinnerSvg = path.resolve(__dirname, 'src/components/Flipbook/spinner.svg');
+            test: /\.svg$/,
+            use: ["@svgr/webpack"]
+        });
 
-        config.module.rules.push({
-            test: absolutePathToSpinnerSvg,
-            issuer: /\.[jt]sx?$/,
-            use: ['url-loader']
-        })
-        return config
+
+        return config;
     },
     images: {
         remotePatterns: [

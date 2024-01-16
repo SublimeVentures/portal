@@ -30,7 +30,7 @@ export function CitCapGlitchButton({text, state, handler, isLoading, isDisabled,
             shakeBtn font-accent before:content-[attr(text)] after:content-[attr(text)]  
             `}
              data-text={text} onClick={() => click()}>
-            <span className={"flex flex-row justify-center items-center"}>{isLoading ? <>Loading...</> : <>{icon}{text}</>}</span>
+            <span className={"flex flex-row justify-center items-center text-nowrap"}>{isLoading ? <>Loading...</> : <>{icon}{text}</>}</span>
         </div>
     )
 }

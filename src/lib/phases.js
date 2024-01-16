@@ -1,5 +1,4 @@
 const moment = require('moment');
-const {ACLs} = require("./authHelpers");
 
 const PhaseId = {
     Vote: -1,
@@ -73,22 +72,19 @@ function processPhases(phases, isSettled) {
 }
 
 
-function phases(ACL, offer) {
+function phases(offer) {
     let data
-    if (ACL === ACLs.Whale || !offer.isPhased) {
-        data = processPhases([
-            Phases.Pending,
-            updatePhaseDate(Phases.Open, offer.d_open),
-            updatePhaseDate(Phases.Closed, offer.d_close),
-        ], offer.isSettled)
-    } else {
-        data = processPhases([
-            Phases.Pending,
-            updatePhaseDate(Phases.FCFS, offer.d_open),
-            updatePhaseDate(Phases.Unlimited, offer.d_open + 86400), // start 24h after FCFS
-            updatePhaseDate(Phases.Closed, offer.d_close),
-        ],  offer.isSettled)
+    let phases = [
+        Phases.Pending,
+        updatePhaseDate(Phases.Open, offer.d_open)
+    ]
+    if(offer.lengthFCFS) {
+        phases.push(updatePhaseDate(Phases.FCFS, offer.d_open))
     }
+    phases.push(updatePhaseDate(Phases.Unlimited, offer.d_open + offer.lengthFCFS))
+    phases.push(updatePhaseDate(Phases.Closed, offer.d_close))
+
+    data = processPhases(phases, offer.isSettled)
 
     return {
         isClosed: !!data.phases && data.isLast || offer.isSettled,
@@ -96,6 +92,8 @@ function phases(ACL, offer) {
         phaseNext: data.isLast ? data.phases[data.activeId] : data.phases[data.activeId + 1],
     }
 }
+
+
 
 
 module.exports = {phases, PhaseId}

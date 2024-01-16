@@ -1,51 +1,45 @@
-const {ACLs} = require("../../src/lib/authHelpers");
 const {
-    fetchUpgrade, fetchAppliedUpgradesInTransaction, saveUpgradeUse
+   saveUpgradeUse, fetchUpgradeUsed
 } = require("../queries/upgrade.query");
 const {PremiumItemsENUM} = require("../../src/lib/enum/store");
 const logger = require("../../src/lib/logger");
 
 const {serializeError} = require("serialize-error");
 const {PremiumItemsParamENUM} = require("../../src/lib/enum/store");
-const db = require("../services/db/db.init");
+const db = require("../services/db/definitions/db.init");
 const {getStoreItemsOwnedByUser, updateUserUpgradeAmount} = require("../queries/storeUser.query");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
-const {getOfferById} = require("../queries/offers.query");
+const {getOfferWithLimits} = require("../queries/offers.query");
 const {bookAllocationGuaranteed} = require("../queries/invest.query");
 const {getUserAllocationMax, roundAmount} = require("../../src/lib/investment");
-const {isBased} = require("../../src/lib/utils");
 
 async function useGuaranteed(offerId, user, transaction) {
-    const {userId} = user
+    const {userId,partnerId, tenantId} = user
 
-    const userAppliedUpgrades = await fetchAppliedUpgradesInTransaction(userId, offerId, transaction)
-    const upgradeGuaranteed = userAppliedUpgrades?.find(el => el.storeId === PremiumItemsENUM.Guaranteed)?.amount
-    const upgradeIncreased = userAppliedUpgrades?.find(el => el.storeId === PremiumItemsENUM.Increased)?.amount
+    const userAppliedUpgrades = await fetchUpgradeUsed(userId, offerId, tenantId, transaction)
+    const upgradeGuaranteed = userAppliedUpgrades?.find(el => el.id === PremiumItemsENUM.Guaranteed)?.amount
+    const upgradeIncreased = userAppliedUpgrades?.find(el => el.id === PremiumItemsENUM.Increased)?.amount
 
     if (upgradeGuaranteed) {
-        await transaction.rollback();
         return {
             ok: false,
-            error: UPGRADE_ERRORS.GuaranteedUsed
+            state:1
         }
     }
 
-    const offer = await getOfferById(offerId)
-    const isSeparatePool = offer.alloTotalPartner > 0 && upgradeIncreased !== ACLs.Whale;
-    const totalAllocation = offer[isSeparatePool ? 'alloTotalPartner' : 'alloTotal']
+    const offer = await getOfferWithLimits(offerId)
+    const offerLimit = offer.offerLimits.find(el => el.partnerId === partnerId) || offer.offerLimits.find(el => el.partnerId === tenantId);
+    const {allocationUser_max} = getUserAllocationMax(user, {...offer, ...offerLimit}, upgradeIncreased)
 
-    const {allocationUser_max} = getUserAllocationMax(user, offer, upgradeIncreased)
+
     const maxAllocation = roundAmount(allocationUser_max)
     const amount = maxAllocation < PremiumItemsParamENUM.Guaranteed ? maxAllocation : PremiumItemsParamENUM.Guaranteed
-
-    const increaseGuaranteedReservations = await bookAllocationGuaranteed(offerId, amount, totalAllocation, isSeparatePool, transaction)
-
+    const increaseGuaranteedReservations = await bookAllocationGuaranteed(offerId, amount, offer.alloTotal, transaction)
 
     if (!increaseGuaranteedReservations.ok) {
-        await transaction.rollback();
         return {
             ok: false,
-            error: UPGRADE_ERRORS.NotEnoughAllocation
+            state:2
         }
     }
 
@@ -62,26 +56,17 @@ async function useUpgrade(user, req) {
         offerId = Number(req.params.id)
         storeId = Number(req.params.upgrade)
 
-        if (isBased) {
-            if (storeId < PremiumItemsENUM.Guaranteed && storeId > PremiumItemsENUM.Increased) {
-                throw new Error("Wrong Upgrade");
-            }
-        } else {
-            if (storeId !== PremiumItemsENUM.Guaranteed) {
-                throw new Error("Wrong Upgrade");
-            }
-        }
-
-        const {userId} = user
+        const {userId, tenantId} = user
 
         transaction = await db.transaction();
 
         //check if user has upgrades
-        const isUserOwnsUpgrade = await getStoreItemsOwnedByUser(userId, storeId, transaction)
-        if (!isUserOwnsUpgrade.ok) {
+        const isUserOwnsUpgrade = await getStoreItemsOwnedByUser(userId, tenantId, storeId, transaction)
+        if (!isUserOwnsUpgrade.ok || !(isUserOwnsUpgrade?.data?.amount>0)) {
+            await transaction.rollback();
             return {
                 ok: false,
-                error: "Error" //todo: extract
+                error: "No upgrade owned"
             }
         }
 
@@ -96,21 +81,33 @@ async function useUpgrade(user, req) {
                     user,
                     prams: req.params
                 });
-                return saveStatus_upgrade
+                await transaction.rollback();
+                return {
+                    ok: false,
+                    error: saveStatus_upgrade.state === 1 ? UPGRADE_ERRORS.NotEnoughAllocation : UPGRADE_ERRORS.GuaranteedUsed
+                }
             }
             allocation = saveStatus_upgrade.data
         }
 
         //save used upgrade
-        const save = await saveUpgradeUse(userId, offerId, storeId, 1, allocation, transaction)
+        const save = await saveUpgradeUse(userId, isUserOwnsUpgrade.data.storePartnerId, offerId, 1, allocation, transaction)
         if (!save.ok) {
             logger.warn('ERROR :: [useUpgrade] - couldnt save use of upgrade', {save, user, offerId, storeId});
-            return save
+            await transaction.rollback();
+            return {
+                ok: false,
+                error: UPGRADE_ERRORS.ErrorSavingUse
+            }
         }
 
-        const deduct = await updateUserUpgradeAmount(userId, storeId, -1, transaction)
+        const deduct = await updateUserUpgradeAmount(userId, isUserOwnsUpgrade.data.storePartnerId, -1, transaction)
         if (!deduct.ok) {
-            return deduct
+            await transaction.rollback();
+            return {
+                ok: false,
+                error: UPGRADE_ERRORS.NotEnoughAllocation
+            }
         }
 
         await transaction.commit();
@@ -131,22 +128,4 @@ async function useUpgrade(user, req) {
 }
 
 
-async function getUpgrades(user, req) {
-    try {
-        const offerId = Number(req.params.id)
-        const {userId} = user
-        return {ok: true, data: await fetchUpgrade(userId, offerId)}
-
-    } catch (error) {
-        logger.error('ERROR :: [getUpgrades]', {error: serializeError(error), params: req.params, user});
-        return {
-            ok: false,
-            usedUpgrades: {}
-        }
-    }
-
-
-}
-
-
-module.exports = {useUpgrade, getUpgrades}
+module.exports = {useUpgrade}

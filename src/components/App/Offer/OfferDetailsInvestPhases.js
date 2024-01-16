@@ -1,53 +1,48 @@
 import moment from 'moment'
 import {useEffect, useState} from "react";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import IconWait from "@/assets/svg/Wait.svg";
-import IconPantheon from "@/assets/svg/Pantheon.svg";
-import IconWhale from "@/assets/svg/Whale.svg";
-import IconLock from "@/assets/svg/Lock.svg";
-import IconCalculator from "@/assets/svg/Calculator.svg";
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import { PhaseId} from "@/lib/phases";
-import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
+import {PhaseId} from "@/lib/phases";
+import {fetchHash} from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
 import UpgradesModal from "@/components/App/Offer/UpgradesModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
-import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
-import {useNetwork} from "wagmi";
 import {Transition} from "@headlessui/react";
 import {Fragment} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {checkIfNumberKey, isBased} from "@/lib/utils";
-import {ACLs} from "@/lib/authHelpers";
 import {IconButton} from "@/components/Button/IconButton";
-import IconPremium from "@/assets/svg/Premium.svg";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
 import {buttonInvestState, tooltipInvestState, userInvestmentState} from "@/lib/investment";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
 import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import DynamicIcon from "@/components/Icon";
+import {ICONS} from "@/lib/icons";
+import {useInvestContext} from "@/components/App/Offer/InvestContext";
 
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
         offer,
         phaseCurrent,
-        account,
-        currencies,
+        session,
         refetchAllocation,
         refetchUserAllocation,
         allocation,
-        userAllocation,
+        userInvested,
         isSuccessUserAllocation,
         upgradesUse,
     } = paramsInvestPhase;
-
-
-    const {chain, chains} = useNetwork()
+    const {network, activeChainSettlementSymbol, activeChainCurrency} = useEnvironmentContext();
+    const {
+        cleanHash, setHash, hashData, getCookie
+    } = useInvestContext();
 
     const [isUpgradeModal, setUpgradeModal] = useState(false)
     const [isErrorModal, setErrorModal] = useState(false)
@@ -59,11 +54,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const [isInvestModal, setInvestModal] = useState(false)
     const [isCalculateModal, setCalculateModal] = useState(false)
 
-    const [expires, setExpires] = useState(0)
     const [isButtonLoading, setButtonLoading] = useState(false)
 
-    const [investmentCurrency, setInvestmentCurrency] = useState(0)
-    const [hash, setHash] = useState(0)
+    const [currencyOption, setCurrencyOption] = useState(0)
 
     const [investmentAmount, setInvestmentAmount] = useState(0)
     const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
@@ -78,35 +71,19 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         allocationUser_min: 0,
         allocationUser_left: 0,
         allocationUser_invested: 0,
-        allocationOffer_left:0,
-        allocationUser_guaranteed:0,
+        allocationOffer_left: 0,
+        allocationUser_guaranteed: 0,
         offer_isProcessing: false,
         offer_isSettled: false,
     })
 
 
-    const [cookies, setCookie, removeCookie] = useCookies();
-    const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
+    const isStakeLock = session?.isStaked !== undefined ? !session.isStaked : false
 
-    const {ACL, isStaked} = account
-    const ntStakeGuard = ACL === ACLs.NeoTokyo && !isStaked
-
-
-    const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
-    const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
-        let currency = currencies[selectedChain][el]
-        currency.address = el
-        return currency
-    }) : [{}]
-
-    const currencyNames = currencyList.map(el => el.symbol)
-    const selectedCurrency = currencyList[investmentCurrency]
-    console.log("0x - QUEUE selectedCurrency",selectedCurrency.symbol,selectedChain)
-
-    const cookieReservation = `hash_${offer.id}`
-
+    const selectedCurrency = activeChainSettlementSymbol[currencyOption]
 
     const setValue = (data) => {
+        if (!data) return
         try {
             if (!Number.isInteger(data)) {
                 data = data.replace(/[^0-9]/g, '');
@@ -125,7 +102,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const isInputActive = () => {
-            return investmentAmount > 0
+        return investmentAmount > 0
     }
 
     const onInputChange = (event) => {
@@ -135,61 +112,56 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const getInvestmentButtonIcon = () => {
         switch (phaseCurrent.phase) {
             case PhaseId.Pending: {
-                return <IconWait className={ButtonIconSize.invest}/>
-            }
-            case PhaseId.Vote: {
-                return <IconPantheon className={ButtonIconSize.invest}/>
+                return <DynamicIcon name={ICONS.WAIT} style={ButtonIconSize.invest} fill={"white"}/>
             }
             case PhaseId.Open:
             case PhaseId.FCFS:
             case PhaseId.Unlimited: {
-                return <IconWhale className={ButtonIconSize.invest}/>
+                return <DynamicIcon name={ICONS.WHALE} style={ButtonIconSize.invest}/>
             }
             case PhaseId.Closed: {
-                return <IconLock className={ButtonIconSize.invest}/>
+                return <DynamicIcon name={ICONS.LOCK} style={ButtonIconSize.invest}/>
+
             }
         }
     }
 
     const bookingExpire = () => {
         setButtonLoading(true)
-        removeCookie(cookieReservation, { path: '/app' });
-        setHash(0)
-        setExpires(0)
+        cleanHash(true)
         setInvestModal(false)
         setRestoreHashModal(false)
         refetchAllocation()
         setButtonLoading(false)
-
     }
 
     const afterInvestmentCleanup = () => {
         setButtonLoading(true)
-        removeCookie(cookieReservation, { path: '/app' });
+        cleanHash()
         refetchUserAllocation()
         setButtonLoading(false)
-
     }
 
-    const openInvestmentModal = (hash, expires) => {
-        setHash(hash)
-        setExpires(Number(expires))
-
-        if(ntStakeGuard) {
+    const openInvestmentModal = () => {
+        if (isStakeLock) {
             return
         }
         setInvestModal(true)
     }
 
     const startInvestmentProcess = async () => {
-        if(
-            investmentAmount>0 &&
-            allocationData.allocationUser_max>0 &&
-            allocationData.allocationUser_min>0 &&
-            allocationData.allocationUser_left>0
+        console.log("click", investmentAmount, allocationData, selectedCurrency, activeChainCurrency, activeChainCurrency[selectedCurrency])
+
+        if (
+            investmentAmount > 0 &&
+            allocationData.allocationUser_max > 0 &&
+            allocationData.allocationUser_min > 0 &&
+            allocationData.allocationUser_left > 0
         ) {
+            console.log("passed")
             setButtonLoading(true)
-            const response = await fetchHash(offer.id, investmentAmount, selectedCurrency.address, chain.id)
+            const response = await fetchHash(offer.id, investmentAmount, activeChainCurrency[selectedCurrency]?.address, network.chainId)
+            console.log("response", response)
             if (!response.ok) {
                 setErrorMsg(response.code)
                 setErrorModal(true)
@@ -197,72 +169,63 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             } else {
                 const confirmedAmount = Number(response.amount)
                 setValue(confirmedAmount)
-                setCookie(cookieReservation, `${response.hash}_${confirmedAmount}_${response.expires}`, {expires: new Date(response.expires * 1000)})
-                openInvestmentModal(response.hash, response.expires)
+                setHash(response.hash, Number(response.expires), confirmedAmount)
+                openInvestmentModal()
             }
             setButtonLoading(false)
         }
 
-
     }
 
-    const processExistingSession = async (cookie) => {
+    const processExistingSession = async () => {
         setButtonLoading(true)
-        const cookieData = cookie.split('_')
         try {
-            const savedTimestamp = Number(cookieData[2])
-            const savedAmount = Number(cookieData[1])
-            const savedHash = cookieData[0]
-
+            const savedTimestamp = hashData.expires
+            const savedAmount = hashData.amount
             if (savedTimestamp < moment.utc().unix()) {
-                removeCookie(cookieReservation)
+                await cleanHash(true)
                 await startInvestmentProcess()
             } else if (savedAmount === Number(investmentAmount)) {
-                openInvestmentModal(savedHash, savedTimestamp)
+                openInvestmentModal()
             } else {
                 setOldAllocation(savedAmount)
-                setExpires(savedTimestamp)
                 setRestoreHashModal(true)
             }
-        }catch(e) {
-            removeCookie(cookieReservation)
+        } catch (e) {
+            await cleanHash(true)
             await startInvestmentProcess()
         }
-
-
         setButtonLoading(false)
     }
 
     const bookingRestore = async () => {
         setRestoreHashModal(false)
-        const cookieData = cookies[cookieReservation].split('_')
+        const cookieData = getCookie().split('_')
         setValue(Number(cookieData[1]))
-        openInvestmentModal(cookieData[0], cookieData[2])
+        openInvestmentModal()
     }
 
     const bookingCreateNew = async () => {
         setButtonLoading(true)
-        removeCookie(cookieReservation)
         setRestoreHashModal(false)
-        const cookieData = cookies[cookieReservation].split('_')
-        expireHash(offer.id, cookieData[0])
+        await cleanHash(true)
         await startInvestmentProcess()
     }
 
     const makeInvestment = async () => {
-        if (!!cookies && Object.keys.length > 0 && cookies[cookieReservation]?.length > 0) {
-            await processExistingSession(cookies[cookieReservation])
+        if (!!getCookie()?.length > 0) {
+            await processExistingSession()
         } else {
             await startInvestmentProcess()
         }
     }
 
     useEffect(() => {
-        setInvestmentCurrency(0)
-    }, [chain])
+        setCurrencyOption(0)
+    }, [network?.chainId])
 
     useEffect(() => {
-        if(allocationData?.allocationUser_min) {
+        if (allocationData?.allocationUser_min) {
             setValue(allocationData.allocationUser_min)
         } else {
             setValue(offer.alloMin)
@@ -281,13 +244,16 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
 
     useEffect(() => {
-        if(!offer) return
-        const allocations = userInvestmentState(account, offer, phaseCurrent, upgradesUse, userAllocation?.invested, allocation ? allocation : {})
+        if (!offer) return
+        const allocations = userInvestmentState(session, offer, phaseCurrent, upgradesUse, userInvested.total, allocation ? allocation : {})
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
         setIsError({state: !allocationIsValid, msg: message})
 
-        const {isDisabled, text} = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, ntStakeGuard)
+        const {
+            isDisabled,
+            text
+        } = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, isStakeLock)
         setInvestButtonDisabled(isDisabled)
         setInvestButtonText(text)
 
@@ -297,35 +263,47 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         upgradesUse?.increasedUsed?.amount,
         upgradesUse?.guaranteedUsed?.amount,
         upgradesUse?.guaranteedUsed?.alloUsed,
-        userAllocation?.invested,
+        userInvested.total,
         investmentAmount,
         phaseCurrent?.phase
     ])
 
 
-    const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
+    const restoreModalProps = {allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
-    const upgradesModalProps = {account,  phaseCurrent, offerId: offer.id, refetchUserAllocation, isSuccessUserAllocation, upgradesUse, allocationUserLeft: allocationData.allocationUser_left}
+    const upgradesModalProps = {
+        session,
+        phaseCurrent,
+        offerId: offer.id,
+        refetchUserAllocation,
+        isSuccessUserAllocation,
+        upgradesUse,
+        allocationUserLeft: allocationData.allocationUser_left
+    }
     const calculateModalProps = {investmentAmount, allocationData, offer}
     const investModalProps = {
-        expires,
-        selectedChain,
         investmentAmount,
         offer,
-        account,
-        bookingExpire,
-        hash,
         selectedCurrency,
+        bookingExpire,
         afterInvestmentCleanup
     }
 
     return (
         <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
-            <div className={"absolute right-5 top-5"} >
+            <div className={"absolute right-5 top-5"}>
                 <div className={"flex flex-row items-center text-gold"}>
-                    {!!upgradesUse.guaranteedUsed && <div className={"mr-3 font-bold glow select-none"}> <Tooltiper wrapper={`GUARANTEED`} text={`$${allocationData.allocationUser_guaranteed} left`} type={TooltipType.Primary}/> </div>}
-                    <div onClick={()=> {setUpgradeModal(true)}}>
-                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<IconPremium className={"text-gold"}/>} noBorder={!isBased} />
+                    {!!upgradesUse.guaranteedUsed &&
+                        <div className={"mr-3 font-bold glow select-none"}><Tooltiper wrapper={`GUARANTEED`}
+                                                                                      text={`$${allocationData.allocationUser_guaranteed} left`}
+                                                                                      type={TooltipType.Primary}/>
+                        </div>}
+                    <div className={"flex gap-2 flex-row justify-center align-center items-center"}>
+                        <IconButton zoom={1.1} size={'w-12 p-3'} icon={<DynamicIcon name={ICONS.CALCULATOR}/>}
+                                    noBorder={!isBased} handler={() => setCalculateModal(true)}/>
+                        <IconButton zoom={1.1} size={'w-12 p-3'}
+                                    icon={<DynamicIcon name={ICONS.DIAMOND} className={"text-gold"}/>}
+                                    noBorder={!isBased} handler={() => setUpgradeModal(true)}/>
                     </div>
                 </div>
             </div>
@@ -354,11 +332,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                             >
                                 <div className="absolute top-5 right-5 cursor-pointer " onClick={() => {
                                     setValue(allocationData.allocationUser_min)
-                                }}><IconCancel className="w-6 opacity-70"/></div>
+                                }}>
+                                    <IconCancel className="w-6 opacity-70"/></div>
                             </Transition.Child>
                         </Transition>
                     </div>
-                    <Dropdown options={currencyNames} classes={'customSize'} propSelected={setInvestmentCurrency} position={investmentCurrency}/>
+                    <Dropdown options={activeChainSettlementSymbol} classes={'customSize'}
+                              propSelected={setCurrencyOption} position={currencyOption}/>
                     <Transition appear show={showInputInfo} as={Fragment}>
                         <Transition.Child
                             as={Fragment}
@@ -376,15 +356,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
                 </div>
             </div>
-            <div className={"text-app-success text-center min-h-[88px] py-5 px-2"}>
+            <div className={"text-app-success text-center min-h-[68px] py-5 px-2"}>
                 {allocationData.offer_isProcessing && <div>
                     All spots booked! Awaiting blockchain confirmations. <br/>
                     <Linker url={ExternalLinks.LOOTBOX} text={"Check back soon."}/>
-
-                </div> }
+                </div>}
             </div>
-
-            <div className="flex flex-row flex-wrap justify-center gap-2 pb-10 px-2">
+            <div className="flex flex-row flex-wrap justify-center gap-2 pb-10 px-2 items-center">
                 <div className={investButtonDisabled ? 'disabled' : ''}>
                     <UniButton
                         type={ButtonTypes.BASE}
@@ -396,32 +374,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                         handler={makeInvestment}
                         size={'text-sm sm'} icon={getInvestmentButtonIcon()}
                     />
-
-
-                </div>
-                <div className="hidden sinvest:flex">
-                    <UniButton
-                        type={ButtonTypes.BASE}
-                        text={'Calculate'}
-                        isWide={true}
-                        zoom={1.1}
-                        size={'text-sm sm'}
-                        handler={() => setCalculateModal(true)}
-                        icon={<IconCalculator className={ButtonIconSize.hero}/>}
-                    />
-                </div>
-                <div className="flex sinvest:hidden">
-                    <UniButton
-                        type={ButtonTypes.BASE}
-                        text={'Calculate'}
-                        isWide={true}
-                        zoom={1.1}
-                        size={'text-sm icon'}
-                        handler={() => setCalculateModal(true)}
-                        icon={<IconCalculator className={ButtonIconSize.small}/>}
-                    />
                 </div>
             </div>
+
 
             <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreHash} setter={() => {
                 setRestoreHashModal(false)
@@ -436,9 +391,10 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 setErrorModal(false)
             }}/>
             <BlockchainProvider>
-                {isNetworkSupported && <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
-                    setInvestModal(false)
-                }}/> }
+                {network?.isSupported &&
+                    <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
+                        setInvestModal(false)
+                    }}/>}
             </BlockchainProvider>
         </div>
     )

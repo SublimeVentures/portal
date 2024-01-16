@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {PhaseId, phases} from "@/lib/phases";
 import {isBased} from "@/lib/utils";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
 export const OfferStatus = {
     PENDING: "pending",
@@ -42,16 +43,16 @@ const showDate = (status, start, ends ) => {
     }
 }
 
-export default function OfferItem({offer, ACL, cdn}) {
+export default function OfferItem({offer, cdn}) {
     const imageTilt = useRef(null);
-    let {name, slug,genre, d_open: starts, d_close:ends} = offer
+    let {name, slug, genre, d_open: starts, d_close:ends} = offer
 
     useEffect(() => {
         VanillaTilt.init(imageTilt.current, {scale: 1.02, speed: 1000, max: isBased ? 5 : 0.2});
     }, []);
 
 
-    const {phaseCurrent} = phases(ACL, offer)
+    const {phaseCurrent} = phases(offer)
     const state = phaseCurrent?.phaseName
 
     const status = getStatus(phaseCurrent)

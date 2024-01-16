@@ -13,27 +13,28 @@ export default function InteractStep() {
         transaction: checkTransaction,
         button: showButton
     } = steps
-    const {button: buttonData} = data
+
+    const { buttonCustomLock, buttonCustomText, buttonText, buttonIcon} = data
     const {
         network: network_isReady,
         liquidity: liquidity_isReady,
         allowance: allowance_isReady,
         transaction: transaction_isReady,
     } = stepsIsReady
+
     const {isFinished: network_isFinished} = state.network
     const {isFinished: liquidity_isFinished, isFetched: liquidity_isFetched} = state.liquidity
     const {isFinished: allowance_isFinished, isFetched: allowance_isFetched} = state.allowance
     const {isFinished: transaction_isFinished, isFetched: transaction_isFetched} = state.transaction
-    const {lock: buttonLock, text: buttonText} = state.button
+    const {lock: buttonFinalLock, text: buttonFinalText} = state.button
 
 
     const processButtonState = () => {
-        if (!showButton) return {};
-
-        if (buttonData.customLockState) {
+        console.log("buttonChecskk",buttonCustomLock, buttonText)
+        if (buttonCustomLock) {
                 return {
-                    text: buttonData.customLockText,
-                    lock: buttonData.customLockState,
+                    text: buttonCustomText,
+                    lock: buttonCustomLock,
                 }
         }
 
@@ -65,17 +66,17 @@ export default function InteractStep() {
             }
         }
 
+
         return {
-            text: buttonData.text,
+            text: buttonText,
             lock: false
         }
     }
 
 
-
-
     useEffect(() => {
         const {text, lock} = processButtonState()
+        console.log("IQZ :: interact set", text, lock, buttonCustomLock)
         updateBlockchainProps([
             {path: 'state.button.lock', value: lock},
             {path: 'state.button.text', value: text}
@@ -86,6 +87,7 @@ export default function InteractStep() {
         network_isReady, network_isFinished,
         allowance_isReady, allowance_isFinished,
         transaction_isReady, transaction_isFinished,
+        buttonCustomLock,
     ])
 
     return (
@@ -94,9 +96,9 @@ export default function InteractStep() {
             isWide={true}
             size={'text-sm sm'}
             state={"danger"}
-            icon={buttonData.icon}
-            isDisabled={buttonData.customLockState || buttonLock}
-            text={buttonData.customLockText ? buttonData.customLockText : buttonText}
+            icon={buttonIcon}
+            isDisabled={buttonCustomLock || buttonFinalLock}
+            text={buttonCustomText? buttonCustomText: buttonFinalText}
             handler={ () => {
                 blockchainRunProcess()
             }}/>

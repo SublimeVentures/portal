@@ -1,33 +1,34 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useEffect} from "react";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import useGetChainEnvironment from "@/lib/hooks/useGetChainEnvironment";
-import {useSwitchNetwork} from "wagmi";
-import {getChainIcon} from "@/components/Navigation/StoreNetwork";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {getSignature} from "@/fetchers/otc.fetcher";
 import moment from "moment";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
-import RocketIcon from "@/assets/svg/Rocket.svg";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import DynamicIcon from "@/components/Icon";
+import {NETWORKS} from "@/lib/utils";
+import GenericRightModal from "@/components/Modal/GenericRightModal";
+import Lottie from "lottie-react";
+import lottieSuccess from "@/assets/lottie/success.json";
 
 
 export const blockchainPrerequisite = async (params) => {
-    const {signature, offerDetails, currentMarket} = params
+    const {signature, otcId, dealId, offerId, isSeller, requiredNetwork, account } = params
         if(
-            signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell
+            signature?.expiry && signature.expiry > moment.utc().unix() && !isSeller
         ) {
             return {
                 ok: true,
                 data: {signature}
             }
-        } else if(offerDetails.isSell){
+        } else if(isSeller){
             return {
                 ok: true,
                 data: {valid: true}
             }
         } else {
-            const transaction = await getSignature(currentMarket.id, offerDetails.chainId, currentMarket.market, offerDetails.dealId)
+            const transaction = await getSignature(offerId, requiredNetwork, otcId, dealId, account)
             if (transaction.ok) {
                 return {
                     ok: true,
@@ -43,15 +44,15 @@ export const blockchainPrerequisite = async (params) => {
 }
 
 export default function TakeOfferModal({model, setter, props}) {
-    const {getCurrencyIcon,vault, otcFee, currentMarket, offerDetails, refetchVault, refetchOffers, account, currencies,diamonds} = props
-    const {chains} = useSwitchNetwork()
+    const {vault, currentMarket, offerDetails, refetchVault, refetchOffers} = props
+    const { getCurrencySymbolByAddress, account, currencies, network, activeOtcContract, otcFee} = useEnvironmentContext();
+
     const {updateBlockchainProps, insertConfiguration, blockchainCleanup ,blockchainProps, DEFAULT_STEP_STATE} = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
-    const {diamond, currencyListAll} = useGetChainEnvironment(currencies, diamonds)
-    const selectedCurrency =  offerDetails && currencyListAll ? currencyListAll[offerDetails.chainId][offerDetails.currency] : {}
-    const userAllocation = currentMarket && vault ? vault.find(el => el.offerId === currentMarket.id) : {}
-    const ownedAllocation = userAllocation ? userAllocation.invested - userAllocation.locked : 0
+    const selectedCurrency =  offerDetails ? currencies.find(el=> el.chainId === offerDetails.chainId && el.address === offerDetails.currency) : {}
+    const userAllocation = currentMarket && vault?.length>0 ? vault.find(el => el.id === currentMarket.offerId) : {}
+    const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
     const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee
 
@@ -61,7 +62,6 @@ export default function TakeOfferModal({model, setter, props}) {
     }
 
 
-    console.log("diamond",        diamond)
     useEffect(() => {
         if (!model || !selectedCurrency?.address || !blockchainProps.isClean || !(totalPayment>0) || !offerDetails?.chainId) return;
 
@@ -69,41 +69,29 @@ export default function TakeOfferModal({model, setter, props}) {
 
         insertConfiguration({
             data: {
+                account: account.address,
                 requiredNetwork: offerDetails?.chainId,
                 amount: totalPayment,
-                amountAllowance: totalPayment,
-                userWallet: account.address,
-                currency: selectedCurrency,
-                diamond: diamond,
-                button: {
-                    icon: <RocketIcon className="w-10 mr-2"/>,
-                    text: "Take Offer",
-                    customLockState: lock,
-                    customLockText: text,
-                },
-                prerequisite: {
-                    offerDetails,
-                    currentMarket,
-                    textProcessing: "Getting signature",
-                    textError: "Couldn't sign transaction"
-                },
-                transaction: {
-                    type: INTERACTION_TYPE.OTC_TAKE,
-                    params: {
-                        // signature <-- from prerequisite
-                        otcId: currentMarket.market,
-                        dealId: offerDetails.dealId,
-                        diamond,
-                    },
-                },
+                allowance: totalPayment,
+                contract: activeOtcContract,
+                currency: selectedCurrency.symbol,
+                offerDetails: offerDetails,
+                buttonText: "Take Offer",
+                buttonCustomLock: lock,
+                buttonCustomText: text,
+                prerequisiteTextProcessing: "Getting signature",
+                prerequisiteTextError: "Couldn't sign transaction",
+                transactionType:  INTERACTION_TYPE.OTC_TAKE,
+                otcId: offerDetails.otcId,
+                dealId: offerDetails.dealId,
+                offerId: offerDetails.offerId,
+                isSeller: offerDetails.isSell,
             },
             steps: {
-                prerequisite: true,
                 network:true,
                 liquidity:true,
                 allowance:true,
                 transaction:true,
-                button:true,
             },
         });
     }, [
@@ -112,47 +100,27 @@ export default function TakeOfferModal({model, setter, props}) {
         offerDetails?.chainId,
         totalPayment,
         currentMarket?.id,
+        activeOtcContract
     ]);
 
-    useEffect(() => {
-        if (!model || blockchainProps.isClean) return;
-        updateBlockchainProps(
-            [
-                {path: 'data.diamond', value: diamond},
-                {path: 'data.transaction.ready', value: false},
-                {path: 'data.transaction.method', value: {}},
-                {path: 'data.transaction.params.diamond', value: diamond},
-
-                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
-                {path: 'state.network', value: { ...DEFAULT_STEP_STATE }},
-                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
-                {path: 'state.allowance', value: { ...DEFAULT_STEP_STATE }},
-                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
-            ],"make offer val change"
-        )
-    }, [
-        diamond
-    ]);
 
     useEffect(() => {
-        if (!selectedCurrency?.address || blockchainProps.isClean) return;
+        if (!model || !selectedCurrency?.address || blockchainProps.isClean) return;
         const {lock, text} = customLocks()
 
         updateBlockchainProps(
             [
-                {path: 'data.button.customLockState', value: lock},
-                {path: 'data.button.customLockText', value: text},
+                {path: 'data.buttonCustomLock', value: lock},
+                {path: 'data.buttonCustomText', value: text},
             ],"take offer custom buttom"
         )
     }, [
         haveEnoughAllocation
     ]);
 
+    if(!currentMarket?.name || !offerDetails?.currency) return
 
-
-    if(!currentMarket?.name || !offerDetails?.currency || !diamond) return
-
-    const chainDesired = chains.find(el => el.id === offerDetails?.chainId)
+    const chainDesired = network.chains.find(el => el.id === offerDetails?.chainId)
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
 
@@ -188,16 +156,21 @@ export default function TakeOfferModal({model, setter, props}) {
         return (
             <div className="flex flex-col flex-1">
                 <div>Are you sure you want to take this offer?</div>
-                <div className="grid gap-1 grid-cols-2 my-10 mx-5 mb-0">
+                <div className="grid gap-1 grid-cols-2 my-10 mb-0">
                     <div className="font-bold">MARKET</div><div className={"text-right text-app-success"}>{currentMarket.name}</div>
                     <div className="font-bold">TYPE</div><div className={`text-right ${offerDetails.isSell ? 'text-app-error' : 'text-app-success'} `}>{offerDetails.isSell ? "SELL" : "BUY"}</div>
-                    <div className="font-bold">BLOCKCHAIN</div><div className={"text-right flex flex-row justify-end"}>{getChainIcon(chainDesired?.id, ButtonIconSize.hero4)} <span className={"truncate"}>{chainDesired?.name}</span></div>
+                    <div className="font-bold">BLOCKCHAIN</div><div className={"text-right flex flex-row justify-end"}>  <DynamicIcon name={NETWORKS[chainDesired?.id]} style={ButtonIconSize.hero4}/>
+                    <span className={"truncate"}>{chainDesired?.name}</span></div>
                     <div className="font-bold">AMOUNT</div><div className={"text-right"}>${cancelOfferAmount_parsed}</div>
                     <div className="font-bold">PRICE</div><div className={"text-right"}>${cancelOfferPrice_parsed}</div>
                     <div className="font-bold">OTC FEE</div><div className={"text-right"}>${otcFee}</div>
                     <hr/>
                     <hr/>
-                    <div className="font-bold text-gold">TOTAL PAYMENT</div><div className={"flex justify-end text-gold"}>{getCurrencyIcon(offerDetails.currency, currencies)} <span className={"ml-2"}>${totalPayment}</span></div>
+                    <div className="font-bold text-gold pt-2">TOTAL PAYMENT</div>
+                    <div className={"flex justify-end text-gold pt-2"}>
+                            <DynamicIcon name={getCurrencySymbolByAddress(offerDetails.currency)} style={"w-6"}/>
+                            <span className={"ml-2"}>${totalPayment}</span>
+                    </div>
                 </div>
                 <BlockchainSteps/>
             </div>
@@ -207,13 +180,11 @@ export default function TakeOfferModal({model, setter, props}) {
     const contentSuccess = () => {
         return (
             <div className=" flex flex-col flex-1">
-                <div>You have successfully filled OTC offer.</div>
-                {/*<lottie-player*/}
-                {/*    autoplay*/}
-                {/*    style={{width: '320px', margin: '30px auto 0px'}}*/}
-                {/*    mode="normal"*/}
-                {/*    src="/static/lottie/success.json"*/}
-                {/*/>*/}
+                <div className={"flex flex-1 flex-col justify-center items-center"}>
+                    <div className={"-mt-10"}>You have successfully filled OTC offer.</div>
+                    <Lottie animationData={lottieSuccess} loop={true} autoplay={true}
+                            style={{width: '320px', margin: '30px auto 0px'}}/>
+                </div>
             </div>
         )
     }
@@ -222,6 +193,6 @@ export default function TakeOfferModal({model, setter, props}) {
         return transactionSuccessful ? contentSuccess() : contentQuery()
     }
 
-    return (<GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)
+    return (<GenericRightModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />)
 }
 

@@ -27,3 +27,16 @@ export const expireHash = async (id, hash) => {
     }
     return {}
 }
+
+export const expireBookings = async (id) => {
+    const url = `/api/invest/expire?id=${id}`
+    try {
+        const {data} = await axiosPrivate.get(url)
+        return data
+    } catch(e) {
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "expireHash", e,url});
+        }
+    }
+    return {}
+}

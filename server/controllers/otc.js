@@ -1,4 +1,3 @@
-const {getEnv} = require("../services/db");
 const {getActiveOffers, getHistoryOffers, saveOtcHash, checkDealBeforeSigning, processSellOtcDeal,
     saveOtcLock
 } = require("../queries/otc.query");
@@ -8,26 +7,19 @@ const {createHash} = require("./helpers");
 const {signData} = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
-const db = require("../services/db/db.init");
-const {OTC_STATE} = require("../../src/lib/enum/otc");
-
+const db = require("../services/db/definitions/db.init");
+const { isAddress } = require('web3-validator');
+const axios = require("axios");
 
 async function getMarkets(session) {
     try {
         const offers = await getPermittedOfferList(session)
-        return {
-            markets: offers.filter(el => el.market !== OTC_STATE.DISABLED),
-            otcFee: Number(getEnv().feeOtc),
-            currencies: getEnv().currencies,
-            diamond: getEnv().diamondBased
-        }
+        console.log("offers markets", offers, session)
+        return offers
     } catch(error) {
         logger.error(`ERROR :: [getOffers] OTC`, {error: serializeError(error)});
         return {
             markets: [],
-            otcFee: Number(getEnv().feeOtc),
-            currencies: getEnv().currencies,
-            diamond: getEnv().diamondBased
         }
     }
 
@@ -35,8 +27,7 @@ async function getMarkets(session) {
 
 async function getOffers(req) {
     try {
-        const otcId = Number(req.params.id)
-        return await getActiveOffers(otcId)
+        return await getActiveOffers(Number(req.params.id))
     } catch(error) {
         logger.error(`ERROR :: [getOffers] OTC`, {error: serializeError(error)});
         return []
@@ -46,8 +37,7 @@ async function getOffers(req) {
 
 async function getHistory(req) {
     try {
-        const ID = Number(req.params.id)
-        return await getHistoryOffers(ID)
+        return await getHistoryOffers(Number(req.params.id))
     } catch (error) {
         logger.error(`ERROR :: [getHistory] OTC`, {error: serializeError(error)});
         return []
@@ -56,7 +46,7 @@ async function getHistory(req) {
 }
 
 async function createOffer(user, req) {
-    const {userId, address} = user
+    const {userId, wallets} = user
 
     try {
         const offerId = Number(req.params.id)
@@ -64,9 +54,13 @@ async function createOffer(user, req) {
         const amount = Number(req.body.amount)
         const price = Number(req.body.price)
         const networkChainId = Number(req.body.networkChainId)
+        if(!wallets.includes(req.body.account) && !isAddress(req.body.account)) {
+            throw Error("Account not assigned to user")
+        }
+
         const now =  moment.utc().unix()
         const hash = createHash(`${userId}` + `${now}`)
-        const saved =  await saveOtcHash(address, networkChainId, offerId, hash, price, amount, isSell)
+        const saved =  await saveOtcHash(req.body.account, networkChainId, offerId, hash, price, amount, isSell)
 
         if(!saved.ok)  return {
             ok: false,
@@ -86,7 +80,9 @@ async function createOffer(user, req) {
 }
 
 async function signOffer(user, req) {
-    const {userId, address} = user
+    const {userId, wallets} = user
+
+    console.log("user",user)
 
     let transaction
 
@@ -96,6 +92,9 @@ async function signOffer(user, req) {
         const otcId = Number(req.body.otcId)
         const dealId = Number(req.body.dealId)
         const expireDate =  moment.utc().unix() + 3 * 60
+        const wallet = wallets.find(el=> el === req.body.wallet)
+        console.log("wallet",wallet, wallets, req.body.wallet)
+        if(!wallet) throw new Error("Bad wallet")
 
         transaction = await db.transaction();
 
@@ -105,9 +104,20 @@ async function signOffer(user, req) {
         const isBuyLockup = await processSellOtcDeal(userId, deal.data, transaction)
         if(!isBuyLockup.ok) return isBuyLockup
 
-        await saveOtcLock(userId, address, deal.data, expireDate, transaction)
-        const signature = await signData(address, otcId, dealId, deal.data.id, expireDate)
-        if(!signature.ok){
+        await saveOtcLock(userId, wallet, deal.data, expireDate, transaction)
+
+        console.log("jestem")
+        const signature = await axios.post(`${process.env.AUTHER}/otc/sign`, {
+            wallet, otcId, dealId, nonce: deal.data.id, expireDate
+        }, {
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+        console.log("sig data", signature.data)
+
+        // const signature = await signData(address, otcId, dealId, deal.data.id, expireDate)
+        if(!signature?.data?.ok){
             throw new Error("Invalid signature")
         }
 
@@ -118,7 +128,7 @@ async function signOffer(user, req) {
             data: {
                 nonce: deal.data.id,
                 expiry: expireDate,
-                hash: signature.data
+                hash: signature.data.data
             }
         }
     } catch (error) {

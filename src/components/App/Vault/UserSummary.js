@@ -13,6 +13,7 @@ import Lottie from "lottie-react";
 import lottieAvatar from "@/assets/lottie/avatar.json";
 import { useGlitch } from 'react-powerglitch'
 import FallbackImage from "@/components/App/Vault/FallbackImage";
+import PremiumSummary from "@/components/App/Settings/PremiumSummary";
 
 function amount(item){
     return item.invested;
@@ -22,7 +23,7 @@ function sum(prev, next){
     return prev + next;
 }
 
-export default function UserSummary({vault, account}) {
+export default function UserSummary({vault, session, premiumData}) {
     const portfolio = Number(vault?.length>0 ? vault.map(amount).reduce(sum) : 0).toLocaleString()
     let glitch
     if(!isBased) {
@@ -61,11 +62,11 @@ export default function UserSummary({vault, account}) {
                                         <Lottie animationData={lottieAvatar} loop={true} autoplay={true} style={{width: '400px'}}/>
                                     </div>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                        <FallbackImage src={account.img} fallbackSrc={account.img_fallback} alt="Profile" />
+                                        <FallbackImage src={session.img} fallbackSrc={session.img_fallback} alt="Profile" />
                                     </div>
                                 </> : <>
                                     <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                        {account.img ? <img className="flex rounded-full my-auto glitch" src={account.img } alt={"avatar"} ref={glitch.ref}/> : <div ref={glitch.ref}><IconNT className={"glitch w-full max-w-[15rem]"} /></div>}
+                                        {session.img ? <img className="flex rounded-full my-auto glitch" src={session.img } alt={"avatar"} ref={glitch.ref}/> : <div ref={glitch.ref}><IconNT className={"glitch w-full max-w-[15rem]"} /></div>}
                                     </div>
                                 </>}
 
@@ -79,12 +80,8 @@ export default function UserSummary({vault, account}) {
                         <Stat color={"teal"} title={"Nearest Unlock"} value={'TBA'} icon={<IconClock className={"w-7"}/>}/>
                         <Stat color={"blue"} title={"Portfolio Size"} value={`$${portfolio}`} icon={<IconMoney className={"w-7"}/>}/>
                     </div>
-                    <RoundSpacer title={'Vault'} subtitle={'All your investments in one place.'}
-                                 action={<UniButton type={ButtonTypes.BASE} text={'Learn more'} isWide={true}
-                                                      size={'text-sm sm'}
-                                                      handler={()=> {window.open(ExternalLinks.VAULT, '_blank');}}
-                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
-                    />
+                    <PremiumSummary data={premiumData}/>
+
                 </div>
             </div>
         </>

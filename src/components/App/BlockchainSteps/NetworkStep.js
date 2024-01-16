@@ -1,40 +1,50 @@
 import {
-    useNetwork, useSwitchNetwork
-} from 'wagmi'
-import {
-    getIcon,
-    getStatusColor,
+    blockchainRow,
+    statusRow,
     Transaction
 } from "@/components/App/BlockchainSteps/config";
 import {useEffect} from "react";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {ICONS} from "@/lib/icons";
 
 export default function NetworkStep() {
     const {blockchainProps, stepsIsReady, updateBlockchainProps} = useBlockchainContext();
     const {data, state} = blockchainProps
-
-    const {requiredNetwork, forcePrecheck} = data
     const {network: isReady} = stepsIsReady
-    const {isFinished} = state.network
+    const {isFinished, error} = state.network
 
-    const {chain} = useNetwork()
-    const {chains, error, isLoading: network_isLoading, switchNetwork} = useSwitchNetwork()
-    const chainSelected = chains.find(el => el.id === chain?.id);
-    const chainDesired = chains.find(el => el.id === requiredNetwork)
-    const isRightChain = chainDesired.id === chainSelected.id
+    const {network: environmentNetwork} = useEnvironmentContext();
+    const {switchChain, chainId, name, error: envNetworkError, isLoading: network_isLoading} = environmentNetwork
+
+    const isRightChain = data.requiredNetwork === chainId
 
     const changeNetwork = () => {
         if (!network_isLoading && !isRightChain) {
-            switchNetwork?.(requiredNetwork)
+            switchChain?.({chainId: data.requiredNetwork})
         }
     }
 
     useEffect(() => {
-        if (!isReady) return;
-        console.log("IQZ :: NETWORK R/F", isReady, isRightChain)
-        updateBlockchainProps([{path: 'state.network.isFinished', value: isRightChain}], "network finished")
+        console.log("IQZ :: NETWORK R", isReady, isRightChain, chainId)
+        let updates = [
+            {path: 'state.network.isError', value: false},
+            {path: 'state.network.error', value: false},
+            {path: 'state.network.isFinished', value: isRightChain}
+        ]
+        if (isRightChain) {
+            updates.push({path: 'state.network.lock', value: false})
+        }
+        updateBlockchainProps(updates, "network finished")
+    }, [chainId, isRightChain])
+
+
+    useEffect(() => {
+        if (!isReady && !isFinished && !isRightChain) return;
+        console.log("IQZ :: NETWORK F", !isReady, !isRightChain, !isFinished)
         changeNetwork()
-    }, [chain?.id, isReady])
+    }, [isReady])
+
 
     useEffect(() => {
         updateBlockchainProps([{path: 'state.network.isLoading', value: network_isLoading}], "network loading")
@@ -42,17 +52,17 @@ export default function NetworkStep() {
 
 
     useEffect(() => {
-        console.log("IQZ :: NETWORK E/L", error, network_isLoading)
-        let updates = [
-            {path: 'state.network.isError', value: !!error},
-            {path: 'state.network.error', value: error}
-        ]
-        if (!!error) {
-            updates.push({path: 'state.network.lock', value: true})
-            updates.push({path: 'state.network.isFinished', value: false})
+        console.log("IQZ :: NETWORK E/L", !!envNetworkError, network_isLoading, !!envNetworkError)
+        if (!!envNetworkError || !isRightChain) {
+            updateBlockchainProps([
+                {path: 'state.network.lock', value: true},
+                {path: 'state.network.isReady', value: true},
+                {path: 'state.network.isFinished', value: false},
+                {path: 'state.network.error', value: envNetworkError}
+            ], "network error/loading updates")
+
         }
-        updateBlockchainProps(updates, "network error/loading updates")
-    }, [error, network_isLoading])
+    }, [error, network_isLoading, chainId])
 
 
     useEffect(() => {
@@ -60,59 +70,27 @@ export default function NetworkStep() {
             {
                 path: 'result.network',
                 value: {
-                    chainSelected,
-                    chainDesired,
+                    chainId,
+                    requiredNetwork: data.requiredNetwork,
                     isRightChain
                 }
             }
         ], "network update networks")
-    }, [chain?.id])
+    }, [chainId])
 
 
-    const statuses = (state) => {
-        switch (state) {
-            case Transaction.PrecheckFailed: {
-                return <span className="underline">Wrong network {chainSelected.name}</span>
-            }
-            case Transaction.Waiting: {
-                return <>Check connected blockchain</>
-            }
-            case Transaction.Processing: {
-                return <>Switching connected blockchain...</>
-            }
-            case Transaction.Executed: {
-                return <>Connected blockchain: <strong>{chainDesired.name}</strong></>
-            }
-            case Transaction.Failed: {
-                return <span className="underline">Failed to switch to {chainDesired.name}</span>
-            }
-            default: {
-                return <>Check blockchain</>
-            }
-        }
-    }
-
-    const prepareRow = (state) => {
-        return <div className={`flex flex-row items-center ${getStatusColor(state)}`} onClick={() => changeNetwork()}>
-            {getIcon(state)}
-            <div>
-                {statuses(state)}
-            </div>
-        </div>
-    }
-
+    console.log("IQZ :: NETWORK SUMM", !network_isLoading, isReady, !isFinished, error,isRightChain,envNetworkError )
+    const icon = data.requiredNetwork === 1 ? ICONS.ETH_MONO : (data.requiredNetwork === 137 ? ICONS.MATIC_MONO : ICONS.BSC_MONO )
+    const iconPadding = data.requiredNetwork === 137 ?  "p-[6px]" : "p-[3px]"
     if (network_isLoading) {
-        return prepareRow(Transaction.Processing)
+        return blockchainRow(Transaction.Processing, <>Switching network...</>, icon, iconPadding)
     }
-    if (isFinished && isReady || isFinished && forcePrecheck) {
-        return prepareRow(Transaction.Executed)
+    if (isRightChain) {
+        return blockchainRow(Transaction.Executed, <>Connected network:&nbsp;<strong>{name}</strong></>, icon, iconPadding)
     }
     if (!network_isLoading && isReady && !isFinished || error) {
-        return prepareRow(Transaction.Failed)
+        return blockchainRow(Transaction.Failed, envNetworkError?.shortMessage ? <>Failed to switch network</>: <>Wrong network:&nbsp;<strong>{name}</strong></>, icon, iconPadding, envNetworkError?.shortMessage ? envNetworkError?.shortMessage : "Switched to wrong network", changeNetwork)
     }
-    if (forcePrecheck) {
-        return prepareRow(Transaction.PrecheckFailed)
-    } else
-        return prepareRow(Transaction.Waiting)
+    return blockchainRow(Transaction.Waiting, <>Wrong network:&nbsp;<strong>{name}</strong></>, icon, iconPadding)
 }
 

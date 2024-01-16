@@ -1,5 +1,3 @@
-import {isBased} from "@/lib/utils";
-
 export default function HeroBg({subtitle, title, content, extraClass}) {
     return (
         <div className={`min-h-screen bg-app-bg`}>
@@ -16,7 +14,7 @@ export default function HeroBg({subtitle, title, content, extraClass}) {
                     </div>
 
                 </div>
-                <div className={`flex p-10 md:max-w-[80%] md:mx-auto xl:max-w-[1200px] ${extraClass}`}>
+                <div className={`flex flex-1 p-10 md:max-w-[80%] md:mx-auto xl:max-w-[1200px] ${extraClass ? extraClass : ""}`}>
                    {content}
                 </div>
             </div>

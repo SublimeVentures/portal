@@ -6,13 +6,10 @@ import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 
 
-export default function StoreItem({item, env, setOrder}) {
-    let {id, name, description, price, availability, enabled} = item
-    let {cdn} = env
+export default function StoreItem({item, cdn, setOrder}) {
+    let {id, name, description, price, availability, img} = item
 
-    const isAvailable = (availability === 0 || !enabled) ? 0 : 1
-    const status = !isAvailable ? "closed disabled" : "inprogress"
-    const imageId = isBased ? `${id}.jpg` : `Code_${id}.gif`
+    const status = !availability ? "closed disabled" : "inprogress"
 
     return (
         <div
@@ -25,7 +22,7 @@ export default function StoreItem({item, env, setOrder}) {
             <div className={`flex flex-1 flex-col bg-navy-accent ${isBased ? "rounded-xl" : ""}`}>
                 <div className="bg-center relative min-h-[300px]">
                     <div className={'image-container min-h-[300px]'}>
-                        <Image src={`${cdn}/webapp/store/${imageId}`} fill className={`imageOfferList ${isBased ? "rounded-tl-xl rounded-tr-xl" : ""}  `} alt={name} sizes="(max-width: 768px) 100vw"/>
+                        <Image src={`${cdn}/webapp/store/${img}`} fill className={`imageOfferList ${isBased ? "rounded-tl-xl rounded-tr-xl" : ""}  `} alt={name} sizes="(max-width: 768px) 100vw"/>
                     </div>
                 </div>
                 <div className={"flex flex-row z-10 "}>
@@ -45,7 +42,7 @@ export default function StoreItem({item, env, setOrder}) {
                                 <UniButton type={ButtonTypes.BASE} text={'BUY'} isWide={true}
                                            isLarge={false}
                                            size={'text-sm xs'}
-                                           handler={()=> { if(isAvailable>0) setOrder(item) }}
+                                           handler={()=> { if(availability>0) setOrder(item) }}
                                 />
                             </div>
 
@@ -54,7 +51,7 @@ export default function StoreItem({item, env, setOrder}) {
 
                     <div
                         className={`color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto  ${isBased ? "border-b-xl" : ""}`}>
-                        {isAvailable ? `Available (${availability})` : "Sold out"}
+                        {availability ? `Available (${availability})` : "Sold out"}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,4 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import {verifyID} from "@/lib/authHelpers";
 import routes, {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
  import {getCopy} from "@/lib/seoConfig";
@@ -14,22 +13,25 @@ import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
-import {useNetwork} from "wagmi";
 import {PremiumItemsENUM} from "@/lib/enum/store";
 import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
+import { processServerSideData} from "@/lib/serverSideHelpers";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 
 
-export default function AppUpgrades({account}) {
+export default function AppUpgrades({session}) {
+    const { tenantId} = session
+    const {cdn, network} = useEnvironmentContext();
+
     const [isBuyModal, setBuyModal] = useState(false)
     const [order, setOrder] = useState(null)
     const [currency, setCurrency] = useState(0)
 
-    const {chain} = useNetwork()
 
     const {isLoading, data: response, refetch} = useQuery({
-            queryKey: ["store"],
+            queryKey: ["store", tenantId],
             queryFn: fetchStore,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
@@ -37,21 +39,9 @@ export default function AppUpgrades({account}) {
         }
     );
 
-    const storeData = response?.store?.filter(el => el.id !== PremiumItemsENUM.MysteryBox)
-    const storeEnvironment = response?.env
+    const storeData = response?.filter(el => el.id !== PremiumItemsENUM.MysteryBox)
 
-    const chainId = chain?.id
-    const diamondContract = storeEnvironment?.contract[chainId]
-    const availableCurrencies = storeEnvironment?.currency[chainId]
-
-    const currencyList = availableCurrencies ? Object.keys(availableCurrencies).map(el => {
-        let currency = availableCurrencies[el]
-        currency.address = el
-        return currency
-    }) : [{}]
-
-    const currencyNames = currencyList.map(el => el.symbol)
-    const selectedCurrency = currencyList[currency]
+    console.log("storeData",storeData )
 
     const renderPage = () => {
         if(isLoading) return <Loader/>
@@ -60,7 +50,7 @@ export default function AppUpgrades({account}) {
         return (
             <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                 {!!storeData && storeData.map(el =>
-                    <StoreItem item={el} key={el.id} env={storeEnvironment} setOrder={setOrder}/>
+                    <StoreItem item={el} key={el.id} cdn={cdn} setOrder={setOrder}/>
                 )}
             </div>
         )
@@ -74,7 +64,7 @@ export default function AppUpgrades({account}) {
 
     useEffect(() => {
         setCurrency(0)
-    }, [chain])
+    }, [network.chainId])
 
     const closeBuy = () => {
         setBuyModal(false);
@@ -82,14 +72,8 @@ export default function AppUpgrades({account}) {
     }
 
     const buyModalProps = {
-        account,
         order: !!order ? order : {},
         setOrder,
-        currency,
-        selectedCurrency,
-        setCurrency,
-        currencyNames,
-        contract: diamondContract,
     }
 
 
@@ -126,34 +110,10 @@ export default function AppUpgrades({account}) {
     )
 }
 
-
-export const getServerSideProps = async({res}) => {
-    const account = await verifyID(res.req)
-
-    if(account.exists){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/app/auth?callbackUrl=${routes.Upgrades}`
-            }
-        }
-    }
-
-    if(!account.auth){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${routes.Upgrades}`
-            }
-        }
-    }
-
-    return {
-        props: {
-            account: account.user
-        }
-    }
+export const getServerSideProps = async({ req, res }) => {
+    return await processServerSideData(req, res, routes.Upgrades);
 }
+
 
 AppUpgrades.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;

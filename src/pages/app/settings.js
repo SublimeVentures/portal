@@ -1,26 +1,44 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import {verifyID} from "@/lib/authHelpers";
 import routes from "@/routes";
-import CitCapAccount from "@/components/App/Settings/CitCapAccount";
- import {getCopy} from "@/lib/seoConfig";
+import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
 import Head from "next/head";
-import PremiumSummary from "@/components/App/Settings/PremiumSummary";
-import {useQuery} from "@tanstack/react-query";
-import {fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
+import {processServerSideData} from "@/lib/serverSideHelpers";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import ExternalStaking from "@/components/App/Settings/ExternalStaking";
+import BasedStaking from "@/components/App/Settings/BasedStaking";
+import {queryClient} from "@/lib/queryCache";
+import {dehydrate, useQuery} from "@tanstack/react-query";
+import {fetchUserWallets, fetchUserWalletsSsr} from "@/fetchers/settings.fetcher";
+import ManageWallets from "@/components/App/Settings/ManageWallets";
 
 
-export default function AppSettings({account}) {
-    const address = account.address
-    const {isSuccess: premiumIsSuccess, data: premiumData} = useQuery({
-            queryKey: ["premiumOwned", {address}],
-            queryFn: fetchStoreItemsOwned,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 5 * 1000,
+export default function AppSettings({session}) {
+    const {currencies, account, activeDiamond} = useEnvironmentContext();
+    const stakingEnabled = currencies.find(el=> el.isStaking)
+    const userId = session?.userId;
+
+
+
+    const {data: userWallets, refetch: refetchUserWallets} = useQuery({
+            queryKey: ["userWallets", userId],
+            queryFn: () => fetchUserWallets(),
+            refetchOnWindowFocus: true,
         }
     );
 
+    const stakingProps = {
+        session,
+        currency: stakingEnabled,
+        account,
+        activeDiamond
+    }
+
+    const walletProps = {
+        session,
+        wallets: userWallets,
+        refetchUserWallets
+    }
 
     const title = `Settings - ${getCopy("NAME")}`
     return (
@@ -29,11 +47,12 @@ export default function AppSettings({account}) {
                 <title>{title}</title>
             </Head>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                <div className="col-span-12 sm:col-span-8 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
-                    {!isBased && <CitCapAccount account={account}/>}
+                <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
+                    <ManageWallets walletProps={walletProps}/>
+
                 </div>
-                <div className={"flex col-span-12 sm:col-span-4 xl:col-span-4"}>
-                    <PremiumSummary data={premiumData}/>
+                <div className={"flex col-span-12 xl:col-span-6"}>
+                    {isBased ? <BasedStaking stakingProps={stakingProps}/> : (stakingEnabled  && <ExternalStaking stakingProps={stakingProps}/>) }
                 </div>
             </div>
         </>
@@ -43,33 +62,24 @@ export default function AppSettings({account}) {
     )
 }
 
+export const getServerSideProps = async({ req, res }) => {
+    const customLogicCallback = async (account, token) => {
+        const userId = account?.userId;
 
-export const getServerSideProps = async({res}) => {
-    const account = await verifyID(res.req)
+        await queryClient.prefetchQuery({
+            queryKey: ["userWallets", userId],
+            queryFn: () => fetchUserWalletsSsr(token),
+        })
 
-    if(account.exists){
         return {
-            redirect: {
-                permanent: true,
-                destination: `/app/auth?callbackUrl=${routes.Settings}`
+            additionalProps: {
+                dehydratedState: dehydrate(queryClient),
             }
-        }
+        };
     }
 
-    if(!account.auth){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${routes.Settings}`
-            }
-        }
-    }
 
-    return {
-        props: {
-            account: account.user
-        }
-    }
+    return await processServerSideData(req, res, routes.Settings, customLogicCallback);
 }
 
 AppSettings.getLayout = function (page) {

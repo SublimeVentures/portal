@@ -99,11 +99,22 @@ tbody tr:nth-child(odd) {
 }
 
 .hoverTable {
+  .hiddenIcon {
+    opacity: 0.3;
+  }
+
   &:hover {
     background:  theme('colors.app-success');
 
     .text-app-success {
       color: theme('colors.app-error')!important;
+    }
+
+
+    .hiddenIcon {
+      //visibility: visible;
+      opacity: 1;
+      color: theme('colors.black')
     }
   }
 

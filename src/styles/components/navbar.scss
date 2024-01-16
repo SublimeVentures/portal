@@ -42,6 +42,11 @@
   color: white;
   background: rgba(0, 0, 0, 0.5);
 }
+.blurred5 {
+  backdrop-filter: blur(5px);
+  color: white;
+  background: rgba(0, 0, 0, 0.1);
+}
 .blurred2 {
   backdrop-filter: blur(20px);
   color: white;

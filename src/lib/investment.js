@@ -1,7 +1,6 @@
-const {ACLs} = require("./authHelpers");
 const {PremiumItemsParamENUM} = require("./enum/store");
 const {PhaseId} = require("./phases");
-const {isBased} = require("./utils");
+const {TENANT} = require("../../src/lib/tenantHelper");
 
 const MIN_DIVISIBLE = 50 //50
 const MIN_ALLOCATION = 100 //100
@@ -12,15 +11,21 @@ function roundAmount(amount) {
 
 function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min
-    if (isBased && (account.ACL !== ACLs.NeoTokyo)) {
-        allocationUser_base = account.multi * offer.alloMin
-        // console.log("allocationUser_max - tylek", allocationUser_base)
-        allocationUser_min = offer.alloMin
-    } else {
-        allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
-        if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
-        allocationUser_min = MIN_ALLOCATION
+    switch(account.tenantId) {
+        case TENANT.basedVC: {
+            allocationUser_base = account.multi * offer.alloMin
+            // console.log("allocationUser_max - tylek", allocationUser_base)
+            allocationUser_min = offer.alloMin
+            break;
+        }
+        case TENANT.NeoTokyo: {
+            allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
+            if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
+            allocationUser_min = MIN_ALLOCATION
+            break;
+        }
     }
+
     // console.log("allocationUser_max - allocationUser_min",allocationUser_min)
     // console.log("allocationUser_max - allocationUser_base",allocationUser_base)
 
@@ -85,11 +90,11 @@ function allocationParseFCFS(params) {
 }
 
 function allocationPhaseAdjust(params) {
-    const {account, offerPhaseCurrent, offer} = params
+    const {offerPhaseCurrent, offer} = params
+
     if (offer.alloMax) {
         return allocationParseCapped(params)
     } else if (
-        account.ACL === ACLs.Whale ||
         offerPhaseCurrent.phase === PhaseId.Open ||
         offerPhaseCurrent.phase === PhaseId.Unlimited
     ) {
@@ -116,7 +121,7 @@ function allocationUserBuild(params) {
 function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, allocationUser_invested = 0, allocationOffer) {
     const allocationOfferGuaranteed_left = allocationOffer?.alloGuaranteed || 0
     const allocationOffer_left = offer.alloTotal - (allocationOffer?.alloFilled || 0) - (allocationOffer?.alloRes || 0) - (allocationOffer?.alloGuaranteed || 0)
-
+    console.log("allocationOffer_left",allocationOffer_left, offer.alloTotal,allocationOffer )
     let build = {
         account,
         offer,
@@ -143,19 +148,19 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
     const allocationUser_max_rounded = roundAmount(allocationUser_max);
     const allocationUser_guaranteed_rounded = roundAmount(allocationUser_guaranteed);
 
-    // console.log("QUELCO - summary", {
-    //     allocationUser_min,
-    //     allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
-    //     allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
-    //     allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
-    //     allocationUser_max_raw: allocationUser_max,
-    //     allocationUser_left_raw: allocationUser_left,
-    //     allocationUser_guaranteed_raw: allocationUser_guaranteed,
-    //     allocationUser_invested,
-    //     allocationOffer_left,
-    //     offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
-    //     offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
-    // })
+    console.log("QUELCO - summary", {
+        allocationUser_min,
+        allocationUser_max: allocationUser_max_rounded < 0 ? 0 : allocationUser_max_rounded,
+        allocationUser_left: allocationUser_left_rounded < 0 ? 0 : allocationUser_left_rounded,
+        allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
+        allocationUser_max_raw: allocationUser_max,
+        allocationUser_left_raw: allocationUser_left,
+        allocationUser_guaranteed_raw: allocationUser_guaranteed,
+        allocationUser_invested,
+        allocationOffer_left,
+        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
+    })
 
     return {
         allocationUser_min,
@@ -205,10 +210,10 @@ function tooltipInvestState(offer, allocationData, investmentAmount) {
 }
 
 
-function buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, ntStakeGuard) {
+function buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock) {
     return offer.isPaused ||
         offerPhaseCurrent?.controlsDisabled ||
-        ntStakeGuard ||
+        isStakeLock ||
         !investmentAmount ||
         !isAllocationOk ||
         ((allocationData.offer_isProcessing || allocationData.offer_isSettled) && !(allocationData.allocationUser_left > 0))
@@ -221,10 +226,10 @@ function buttonInvestText(offer, allocationData, defaultText) {
     else return defaultText
 }
 
-function buttonInvestState(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, ntStakeGuard) {
+function buttonInvestState(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock) {
     return {
         text: buttonInvestText(offer, allocationData, offerPhaseCurrent.button),
-        isDisabled: buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, ntStakeGuard)
+        isDisabled: buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock)
     }
 }
 

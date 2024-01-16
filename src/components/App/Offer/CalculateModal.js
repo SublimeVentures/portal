@@ -94,7 +94,7 @@ export default function CalculateModal({model, setter, calculateModalProps}) {
                 </div>
 
 
-                <div className=" pt-10">Usual multiplier for seed investment is between 20-50x.</div>
+                <div className="text-app-success pt-10 text-center">Usual multiplier for seed investment is between 20-50x.</div>
             </div>
         )
     }

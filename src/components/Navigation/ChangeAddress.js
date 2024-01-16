@@ -1,29 +1,17 @@
-import {useAccount} from "wagmi";
 import GenericModal from "@/components/Modal/GenericModal";
-import {useEffect} from "react";
-import {logOut} from "@/fetchers/auth.fetcher";
-import routes from "@/routes";
-import {useRouter} from "next/router";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {isBased} from "@/lib/utils";
+import {ExternalLinks} from "@/routes";
+import Linker from "@/components/link";
 
-export default function ChangeAddress({account}) {
-    const router = useRouter();
-    const {isConnected, address} = useAccount()
+export default function ChangeAddress({session}) {
+    const {wallets} = session
+    const { account, environmentCleanup, walletGuard} = useEnvironmentContext();
+
     const userAddress = account?.address
-    // const isAddressNotSupported = false
-    const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
+    const isAddressSupported = Boolean(walletGuard && (userAddress !== undefined && wallets.find(el=> el === userAddress)))
 
-
-    const signOut = () => {
-        logOut()
-        router.push(routes.Landing)
-    }
-
-    useEffect(() => {
-        if (!isConnected) {
-            signOut()
-        }
-    }, [isConnected]);
 
     const title = () => {
         return (
@@ -37,20 +25,18 @@ export default function ChangeAddress({account}) {
         return (
             <div className={"flex flex-1 flex-col"}>
                 You've changed the wallet account. <br/>
-                Please use the account you logged in with.
-                <div className={"flex flex-col my-10"}>
-                    <div className="text-app-success">Signed</div>
-                    <div className="truncate text-app-success">{userAddress}</div>
-                    <div className="text-app-error mt-5">Current</div>
-                    <div className="truncate text-app-error">{address}</div>
+                You can only use wallets approved in the <span className={"contents text-app-success"}>Setting</span> page.
+                <div className={"my-10"}>
+                    <div className={"glowNormal font-bold pb-2 w-full text-center"}>Unknown Wallet</div>
+                    <div
+                        className={`text-xs p-2 bg-slides text-center ${isBased ? "rounded-xl" : ""}`}>{userAddress}</div>
                 </div>
-
                 <div className="mt-auto w-full">
                     <div className={" w-full fullWidth"}>
 
                         <UniButton type={ButtonTypes.BASE}
-                                   state={"danger ml-auto"} text={'Logout'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={() => {
-                            signOut()
+                                   state={"danger ml-auto"} text={'Logout'} isWide={true} zoom={1.1} size={'text-sm sm'} handler={ () => {
+                            environmentCleanup()
                         }} />
 
 
@@ -61,7 +47,6 @@ export default function ChangeAddress({account}) {
     }
 
     return (
-        <GenericModal isOpen={isAddressNotSupported} closeModal={() => {
-        }} title={title()} content={content()} persistent={true} noClose={true}/>
+        <GenericModal isOpen={!isAddressSupported} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>
     )
 }

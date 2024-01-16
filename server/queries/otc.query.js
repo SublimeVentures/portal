@@ -1,5 +1,5 @@
-const {models} = require('../services/db/db.init');
-const db = require('../services/db/db.init');
+const {models} = require('../services/db/definitions/db.init');
+const db = require('../services/db/definitions/db.init');
 const {Op} = require("sequelize");
 const {OTC_ERRORS} = require("../../src/lib/enum/otc");
 

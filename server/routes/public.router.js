@@ -5,14 +5,14 @@ const {getOffersPublic} = require("../queries/offers.query");
 const {getNeoTokyoEnvs} = require("../queries/neoTokyo.query");
 
 router.get('/investments', async (req, res) => {
-  res.status(200).json(await getOffersPublic())
+  return res.status(200).json(await getOffersPublic())
 });
 
 router.get('/partners', async (req, res) => {
-  res.status(200).json(await getPublicPartners())
+  return res.status(200).json(await getPublicPartners())
 })
 router.get('/nt-calculator', async (req, res) => {
-  res.status(200).json(await getNeoTokyoEnvs())
+  return res.status(200).json(await getNeoTokyoEnvs())
 })
 
 module.exports = { router }

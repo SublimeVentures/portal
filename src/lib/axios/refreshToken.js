@@ -1,25 +1,17 @@
 import mem from "mem";
-
 import { axiosPublic } from "./axiosPublic";
-import {clearToken, refreshTokenName, retrieveToken, saveToken} from "@/lib/authHelpers";
 
 const refreshTokenFn = async () => {
     try {
-        const response = await axiosPublic.put("/api/auth/login", {}, {
-            headers: {
-                [refreshTokenName]: `${retrieveToken(refreshTokenName)}`,
-            }
-        });
+        const response = await axiosPublic.put("/api/auth/login");
+        console.log("response refres", response)
 
-        const { refreshToken } = response.data;
-        if (refreshToken) {
-            clearToken(refreshTokenName)
+        if (response.status === 200) {
+            return true;
+        } else {
+            return false;
         }
-        saveToken(refreshTokenName, refreshToken)
-
-        return refreshToken;
     } catch (error) {
-        clearToken(refreshTokenName)
         return false;
     }
 };

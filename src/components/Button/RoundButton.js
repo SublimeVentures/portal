@@ -8,6 +8,7 @@ export const ButtonIconSize = {
     hero2: "w-6 mr-5",
     hero4: "w-6 mr-2",
     hero3: "w-6",
+    hero3center: "w-6 mx-auto",
     small: "w-8",
     vsmall: "w-6 -ml-2 -mr-2",
     clicks: "w-5",

@@ -1,18 +1,18 @@
 const { pickMysteryBox, assignMysteryBox,  processMBAllocation, processMBUpgrade} = require("../queries/mysterybox.query");
-const db = require("../services/db/db.init");
+const db = require("../services/db/definitions/db.init");
 const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES} = require("../../src/lib/enum/store");
 const {getStoreItemsOwnedByUser, updateUserUpgradeAmount} = require("../queries/storeUser.query");
 const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 
-async function processMysteryBox(owner, claim, transaction) {
+async function processMysteryBox(userId, claim, transaction) {
     switch(claim.type) {
         case MYSTERY_TYPES.Allocation: {
-            return await processMBAllocation(transaction, claim, owner)
+            return await processMBAllocation(transaction, claim, userId)
         }
         case MYSTERY_TYPES.Upgrade: {
-            return await processMBUpgrade(transaction, claim, owner)
+            return await processMBUpgrade(transaction, claim, userId)
         }
         case MYSTERY_TYPES.Discount: {
             return {ok:true}
@@ -24,14 +24,14 @@ async function processMysteryBox(owner, claim, transaction) {
 }
 
 async function claim(user) {
-    const {userId} = user
+    const {userId, tenantId} = user
 
     let transaction;
     try {
         transaction = await db.transaction();
 
-        const isUserOwnMB = await getStoreItemsOwnedByUser(userId, PremiumItemsENUM.MysteryBox, transaction)
-        if(!isUserOwnMB.ok) {
+        const isUserOwnMB = await getStoreItemsOwnedByUser(userId, tenantId, PremiumItemsENUM.MysteryBox, transaction)
+        if(!isUserOwnMB.ok || !(isUserOwnMB?.data?.amount>0)) {
             await transaction.rollback();
             return {
                 ok: false,
@@ -39,7 +39,8 @@ async function claim(user) {
             }
         }
 
-        const selectedMysteryBox = await pickMysteryBox(transaction)
+        const selectedMysteryBox = await pickMysteryBox(tenantId, transaction)
+
         if(!selectedMysteryBox.ok) {
             await transaction.rollback();
             return {
@@ -47,6 +48,7 @@ async function claim(user) {
                 error: MYSTERYBOX_CLAIM_ERRORS.NotEnoughBoxes
             }
         }
+
 
         const assign = await assignMysteryBox(userId, selectedMysteryBox.data.id, transaction)
         if(!assign.ok) {
@@ -57,7 +59,7 @@ async function claim(user) {
             }
         }
 
-        const deduct = await updateUserUpgradeAmount(userId, PremiumItemsENUM.MysteryBox, -1, transaction)
+        const deduct = await updateUserUpgradeAmount(userId, isUserOwnMB.data.storePartnerId,  -1, transaction)
 
         if(!deduct.ok) {
             await transaction.rollback();

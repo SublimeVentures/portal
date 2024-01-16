@@ -7,16 +7,18 @@ import PAGE from "@/routes";
 import Link from "next/link";
 import {parseVesting} from "@/lib/vesting";
 import {isBased} from "@/lib/utils";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
-export default function VaultItem({item, cdn}) {
+export default function VaultItem({item}) {
+    const {cdn} = useEnvironmentContext();
     const {offerDetails, createdAt, invested } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
-    const normalized_tgeDiff = Number(100*(item["offer.tge"] - item["offer.ppu"])/item["offer.ppu"])?.toLocaleString()
+    const normalized_tgeDiff = Number(100*(item.tge - item.ppu)/item.ppu)?.toLocaleString()
     const normalized_invested = Number(invested).toLocaleString()
     const tge = offerDetails?.tge > 0 ? `+${normalized_tgeDiff}%` : "TBA"
 
-    const {vested, nextUnlock} = parseVesting(item["offer.t_unlock"])
+    const {vested, nextUnlock} = parseVesting(item.t_unlock)
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {scale: isBased ? 1.05 : 1, speed: 1000, max: 1});
@@ -26,7 +28,7 @@ export default function VaultItem({item, cdn}) {
         <div
             className={`${isBased ? "rounded-tl-xl rounded-bl-xl rounded-tr-xl rounded-br-xl sm:rounded-tr-none sm:rounded-br-none lg:!rounded-tr-xl lg:!rounded-br-xl xl:!rounded-tr-none xl:!rounded-br-none" : ""} relative bg-navy-accent flex flex-1 flex-col p-5 `}>
             <div className="font-bold text-2xl flex items-center glowNormal">
-                {item["offer.name"]}
+                {item.name}
             </div>
             <div className="pt-1 text-xs text-gray text-left">Participated {participated}</div>
 
@@ -48,8 +50,8 @@ export default function VaultItem({item, cdn}) {
         </div>
 
         <div className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex ${isBased ? "" : "border-l border-app-bg-split"} `}  ref={tilt}>
-            <Link href={`${PAGE.Opportunities}/${item["offer.slug"]}`}>
-            <Image src={`${cdn}/research/${item["offer.slug"]}/logo.jpg`} fill className={`${isBased ? "rounded-tr-xl rounded-br-xl" : ""} imageOfferList  bg-cover `} alt={item["offer.name"]} sizes="(max-width: 2000px) 200px"/>
+            <Link href={`${PAGE.Opportunities}/${item.slug}`}>
+            <Image src={`${cdn}/research/${item.slug}/logo.jpg`} fill className={`${isBased ? "rounded-tr-xl rounded-br-xl" : ""} imageOfferList  bg-cover `} alt={item.slug} sizes="(max-width: 2000px) 200px"/>
             </Link>
         </div>
 

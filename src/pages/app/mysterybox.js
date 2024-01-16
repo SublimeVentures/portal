@@ -1,5 +1,4 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import {verifyID} from "@/lib/authHelpers";
 import routes, {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
@@ -11,18 +10,18 @@ import VanillaTilt from "vanilla-tilt";
 import Head from "next/head";
 import {useQuery} from "@tanstack/react-query";
 import {fetchStore, fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
-import {useNetwork} from "wagmi";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
-import ClaimMysteryBoxModal from "@/components/App/MysteryBox/ClaimMysteryBoxModal";
 import {claimMysterybox} from "@/fetchers/mysterbox.fetcher";
 import dynamic from "next/dynamic";
 import {PremiumItemsENUM} from "@/lib/enum/store";
 import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {processServerSideData} from "@/lib/serverSideHelpers";
 const ErrorModal = dynamic(() => import('@/components/App/MysteryBox/ClaimErrorModal'), {ssr: false})
+const ClaimMysteryBoxModal = dynamic(() => import('@/components/App/MysteryBox/ClaimMysteryBoxModal'), {ssr: false})
 
 
-export default function AppLootbox({account}) {
-    const {address} = account
+export default function AppLootbox({session}) {
+    const {userId, tenantId} = session
     const imageTilt = useRef(null);
     const [isBuyModal, setBuyModal] = useState(false)
     const [isClaimError, setClaimError] = useState(false)
@@ -31,12 +30,10 @@ export default function AppLootbox({account}) {
     const [claimModal, setClaimModal] = useState(false)
     const [claimProcessing, setClaimProcessing] = useState(false)
     const [order, setOrder] = useState(null)
-    const [currency, setCurrency] = useState(0)
 
-    const {chain} = useNetwork()
 
     const {data: storeData, refetch: refetchStoreState} = useQuery({
-            queryKey: ["store"],
+            queryKey: ["store", tenantId],
             queryFn: fetchStore,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
@@ -45,7 +42,7 @@ export default function AppLootbox({account}) {
     );
 
     const {data: premiumData, refetch: refetchStoreItems} = useQuery({
-            queryKey: ["premiumOwned", {address}],
+            queryKey: ["premiumOwned", userId, tenantId ],
             queryFn: fetchStoreItemsOwned,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
@@ -54,27 +51,12 @@ export default function AppLootbox({account}) {
     );
 
 
-    const mysteryBox = storeData?.store?.find(el => el.id === PremiumItemsENUM.MysteryBox)
+    const mysteryBox = storeData?.find(el => el.id === PremiumItemsENUM.MysteryBox)
     const storeAvailable = mysteryBox ? mysteryBox.availability : 0
 
-    const mysteryBoxOwned = premiumData?.find(el => el.storeId === PremiumItemsENUM.MysteryBox)
+    const mysteryBoxOwned = premiumData?.find(el => el.id === PremiumItemsENUM.MysteryBox)
     const mysteryBoxOwnedAmount = mysteryBoxOwned ? mysteryBoxOwned.amount : 0
 
-    const storeEnvironment = storeData?.env
-
-
-    const chainId = chain?.id
-    const diamondContract = storeEnvironment?.contract[chainId]
-    const availableCurrencies = storeEnvironment?.currency[chainId]
-
-    const currencyList = availableCurrencies ? Object.keys(availableCurrencies).map(el => {
-        let currency = availableCurrencies[el]
-        currency.address = el
-        return currency
-    }) : [{}]
-
-    const currencyNames = currencyList.map(el => el.symbol)
-    const selectedCurrency = currencyList[currency]
 
     const closeBuy = () => {
         refetchStoreItems()
@@ -111,20 +93,10 @@ export default function AppLootbox({account}) {
         }
     }, [order]);
 
-    useEffect(() => {
-        setCurrency(0)
-    }, [chain])
 
     const buyModalProps = {
-        account,
         order: !!order ? order : {},
         setOrder,
-        currency,
-        selectedCurrency,
-        setCurrency,
-        currencyNames,
-        contract: diamondContract,
-
     }
 
 
@@ -136,7 +108,7 @@ export default function AppLootbox({account}) {
                 <title>{title}</title>
             </Head>
             <div className={`mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative ${isBased ? "" : "font-accent"}`}>
-                {mysteryBoxOwnedAmount > 0 && <div className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[50px] text-center collap:top-[50px]"} flex glowNormal pb-5`}>You have {mysteryBoxOwnedAmount} unopened MysteryBox!</div>}
+                {mysteryBoxOwnedAmount > 0 && <div className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[50px] text-center collap:top-[50px]"} flex absolute top-5 glowNormal pb-5 z-10`}>You have {mysteryBoxOwnedAmount} unopened MysteryBox!</div>}
 
                 {isBased ? <div className={"video-wrapper"}>
                         <video loop autoPlay muted playsInline className="">
@@ -185,34 +157,10 @@ export default function AppLootbox({account}) {
     )
 }
 
-
-export const getServerSideProps = async({res}) => {
-    const account = await verifyID(res.req)
-
-    if(account.exists){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/app/auth?callbackUrl=${routes.Mysterybox}`
-            }
-        }
-    }
-
-    if(!account.auth){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${routes.Mysterybox}`
-            }
-        }
-    }
-
-    return {
-        props: {
-            account: account.user
-        }
-    }
+export const getServerSideProps = async({ req, res }) => {
+    return await processServerSideData(req, res, routes.Mysterybox);
 }
+
 
 AppLootbox.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
