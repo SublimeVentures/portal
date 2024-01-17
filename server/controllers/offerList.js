@@ -1,9 +1,9 @@
 const {getEnv} = require("../services/db");
 const {getOfferList} = require("../queries/offers.query");
 
-async function getPermittedOfferList(user) {
+async function getPermittedOfferList(user, isOtc) {
     const {tenantId, partnerId} = user
-    return await getOfferList(partnerId, tenantId)
+    return await getOfferList(partnerId, tenantId, isOtc)
 }
 
 async function getParamOfferList(user) {

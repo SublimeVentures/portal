@@ -1,6 +1,4 @@
-// require('newrelic');
 require('dotenv').config()
-require('dotenv').config({path: `.env.local`, override: true});
 const express = require('express');
 const next = require('next');
 const url = require('url');

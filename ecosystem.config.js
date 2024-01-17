@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "ThreeVC",
+      name: "basedVC",
       script: './index.js',
       instances: "1",
       autorestart: true,
@@ -9,11 +9,8 @@ module.exports = {
       error: './error.log',
       log: './combined.outerr.log',
       env: {
-        NODE_ENV: "development",
+        NODE_ENV: 'production', // Set NODE_ENV to production
       },
-      env_production: {
-        NODE_ENV: "production",
-      }
     }
   ]
 };

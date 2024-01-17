@@ -13,7 +13,7 @@ const axios = require("axios");
 
 async function getMarkets(session) {
     try {
-        const offers = await getPermittedOfferList(session)
+        const offers = await getPermittedOfferList(session, true)
         console.log("offers markets", offers, session)
         return offers
     } catch(error) {

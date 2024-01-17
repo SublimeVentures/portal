@@ -12,7 +12,7 @@ async function getOffersPublic() {
                 displayPublic: true
             },
             order: [
-                ['d_open', 'DESC'],
+                ['createdAt', 'DESC'],
             ],
             raw: true
         });
@@ -59,6 +59,47 @@ const query_getOfferList = `
 ) ol ON true
     WHERE
         o.display = true AND
+        ol."offerId" IS NOT NULL
+    ORDER BY
+        ol.d_open DESC;
+`;
+
+const query_getOfferListOtc = `
+    SELECT
+        o.slug,
+        o.name,
+        o.genre,
+        o.otc,
+        o.ticker,
+        o."isAccelerator",
+        -- Add other offer columns as needed
+        ol.d_open,
+        ol.d_close,
+        ol."offerId"
+        -- Add other offerLimit columns as needed
+    FROM
+        "offer" o
+            LEFT JOIN LATERAL (
+            SELECT
+                ol1.d_open,
+                ol1.d_close,
+                ol1."offerId"
+                -- Add other offerLimit columns as needed
+            FROM
+                "offerLimit" ol1
+            WHERE
+                ol1."offerId" = o.id AND
+                ol1."partnerId" IN (:partnerId, :tenantId)
+            ORDER BY
+                CASE
+                    WHEN ol1."partnerId" = :partnerId THEN 1
+                    WHEN ol1."partnerId" = :tenantId THEN 2
+                    ELSE 3
+                    END
+                LIMIT 1
+) ol ON true
+    WHERE
+        o.display = true AND
         o.otc != 0 AND
         ol."offerId" IS NOT NULL
     ORDER BY
@@ -66,9 +107,10 @@ const query_getOfferList = `
 `;
 
 
-async function getOfferList(partnerId, tenantId) {
+async function getOfferList(partnerId, tenantId, isOtc) {
     try {
-        return await db.query(query_getOfferList, {
+        const query = isOtc ? query_getOfferListOtc : query_getOfferList
+        return await db.query(query, {
             type: QueryTypes.SELECT,
             replacements: { partnerId, tenantId },
         });

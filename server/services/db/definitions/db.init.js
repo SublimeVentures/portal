@@ -1,5 +1,4 @@
 const {Sequelize} = require("sequelize");
-const logger = require('../../logger');
 const {defineParticipantModel} = require("./models/participant.model");
 
 let connection = {
@@ -27,9 +26,7 @@ if (!process.env.IS_LOCAL_DB) {
     // connection.logging = logger.info.bind(console.log)
 }
 
-const URI = process.env.IS_LOCAL_DB ? process.env.DATABASE_URL_LOCAL : process.env.DATABASE
-
-const sequelize = new Sequelize(URI, connection)
+const sequelize = new Sequelize(process.env.DATABASE, connection)
 
 const modelDefiners = [
     require('./models/currency.model'),
