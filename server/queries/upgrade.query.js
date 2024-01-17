@@ -1,12 +1,25 @@
-const {models} = require('../services/db/db.init');
-const db = require("../services/db/db.init");
+const {models} = require('../services/db/definitions/db.init');
+const db = require("../services/db/definitions/db.init");
 const {Op, QueryTypes} = require("sequelize");
-const {PremiumItemsENUM} = require("../../src/lib/enum/store");
 const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
 
-async function fetchUpgrade(userId, offerId) {
+async function fetchUpgradeUsed(userId, offerId, tenantId, transaction) {
     return await models.upgrade.findAll({
-        attributes: ['amount', 'storeId', 'alloUsed', 'alloMax', 'isExpired'],
+        attributes: [
+            'amount',
+            'alloUsed',
+            'alloMax',
+            'isExpired',
+            [db.col('storePartner.storeId'), 'id']
+        ],
+        include: [{
+            model: models.storePartner,
+            as: 'storePartner',
+            attributes: [],
+            where: {
+                tenantId,
+            },
+        }],
         where: {
             userId,
             offerId,
@@ -14,27 +27,19 @@ async function fetchUpgrade(userId, offerId) {
                 [Op.gt]: 0
             }
         },
-        raw: true
-    })
+        raw: true,
+        nest: true,
+        transaction
+    });
 }
 
-async function fetchAppliedUpgradesInTransaction(userId, offerId, transaction) {
-    return await models.upgrade.findAll({
-        where: {
-            userId,
-            offerId
-        },
-        raw: true
-    }, {transaction})
 
-}
 
-async function saveUpgradeUse(userId, offerId, storeId, amount, allocation, transaction) {
-
+async function saveUpgradeUse(userId, storePartnerId, offerId, amount, allocation, transaction) {
     const query = `
-        INSERT INTO public."upgrade" ("userId", "amount", "createdAt", "updatedAt", "storeId", "offerId", "alloMax")
-        VALUES (${userId}, ${amount}, now(), now(), ${storeId}, ${offerId}, ${allocation ? allocation : 0})
-            ON CONFLICT ("userId", "storeId", "offerId") DO
+        INSERT INTO public."upgrade" ("userId", "storePartnerId", "offerId", "amount",  "alloMax", "createdAt", "updatedAt")
+        VALUES (${userId}, ${storePartnerId}, ${offerId}, ${amount}, ${allocation ? allocation : 0}, now(), now())
+            ON CONFLICT ("userId", "storePartnerId", "offerId") DO
         UPDATE SET "amount" = "upgrade"."amount" + EXCLUDED.amount, "updatedAt" = now();
     `
 
@@ -42,14 +47,12 @@ async function saveUpgradeUse(userId, offerId, storeId, amount, allocation, tran
     if (upsert[0] === undefined && upsert[1] === null) {
         return {ok: true}
     } else {
-        await transaction.rollback();
         return {
             ok: false,
-            error: UPGRADE_ERRORS.ErrorSavingUse
         }
     }
 
 }
 
 
-module.exports = {saveUpgradeUse, fetchUpgrade, fetchAppliedUpgradesInTransaction}
+module.exports = {saveUpgradeUse, fetchUpgradeUsed}

@@ -6,10 +6,14 @@ import {IconButton} from "@/components/Button/IconButton";
 import {isBased} from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
 import { useEffect, useState, useMemo } from "react";
-import Flipbook from "@/components/Flipbook/Flipbook";
+const Flipbook = dynamic(() => import('@/components/Flipbook/Flipbook'), {ssr: false,})
+
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import dynamic from "next/dynamic";
 
 export default function OfferDetailsAbout({offer}) {
-    const {url_web, url_twitter, url_discord, cdn, slug, description} = offer;
+    const {cdn} = useEnvironmentContext();
+    const {url_web, url_twitter, url_discord, slug, description} = offer;
     const [amount, setAmount] = useState(0);
     function createMarkup() {
         return {__html: description};
@@ -72,11 +76,11 @@ export default function OfferDetailsAbout({offer}) {
 
             <div className="my-10">
                 {parsePages.length > 0 && amount > 0 && <div id="flipbook">
-                    <Flipbook
-                        pages={parsePages}
-                        startPage={1}
-                        zooms={[1, 1.5, 2]}
-                    />
+                    {/*<Flipbook*/}
+                    {/*    pages={parsePages}*/}
+                    {/*    startPage={1}*/}
+                    {/*    zooms={[1, 1.5, 2]}*/}
+                    {/*/>*/}
                 </div>}
             </div>
         </>

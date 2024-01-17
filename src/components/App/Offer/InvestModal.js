@@ -4,31 +4,51 @@ import moment from "moment";
 import {useEffect} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
-import {getTransaction, INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
+import { INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
-import RocketIcon from "@/assets/svg/Rocket.svg";
+import RocketIcon from "@/assets/svg/rocket.svg";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useRouter} from "next/router";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useInvestContext} from "@/components/App/Offer/InvestContext";
 
 
 export default function InvestModal({model, setter, investModalProps}) {
     const router = useRouter()
-    const {account, expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire, selectedChain} = investModalProps
-    const { insertConfiguration, blockchainCleanup, updateBlockchainProps, blockchainProps, DEFAULT_STEP_STATE } = useBlockchainContext();
+    const {
+        investmentAmount,
+        offer,
+        selectedCurrency,
+        bookingExpire,
+        afterInvestmentCleanup,
+    } = investModalProps
+
+    const {
+        insertConfiguration,
+        blockchainCleanup,
+        blockchainProps,
+    } = useBlockchainContext();
+
+    const {
+        account,
+    } = useEnvironmentContext();
+
+    const {
+        hashData,
+    } = useInvestContext();
+
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
-    if(!selectedCurrency) return
 
     const amountLocale = Number(investmentAmount).toLocaleString()
 
     const closeModal = () => {
         setter()
-
-        if(transactionSuccessful) {
+        if (transactionSuccessful) {
             afterInvestmentCleanup()
         }
         setTimeout(() => {
@@ -42,68 +62,31 @@ export default function InvestModal({model, setter, investModalProps}) {
     }
 
     useEffect(() => {
-        if(investmentAmount<50 || !model || !hash || hash?.length === 0 || !selectedCurrency?.address || !blockchainProps.isClean) return;
-
+        if (investmentAmount < 50 || !model || !hashData?.code || hashData?.code?.length === 0 || !selectedCurrency || !blockchainProps.isClean) return;
+        console.log("insertting config")
         insertConfiguration({
             data: {
-                amount: investmentAmount,
-                userWallet: account.address,
+                account: account.address,
+                liquidity: investmentAmount,
                 currency: selectedCurrency,
-                chain: selectedChain,
-                button: {
-                    icon: <RocketIcon className="w-10 mr-2" />, // Adjust class as needed
-                    text: "Transfer funds",
-                },
-                transaction: {
-                    type: INTERACTION_TYPE.INVEST,
-                    params: {
-                        amount: investmentAmount,
-                        vault: offer.vault,
-                        selectedCurrency,
-                        selectedChain
-                    },
-                },
+                buttonIcon: <RocketIcon className="w-10 mr-2"/>, // Adjust class as needed
+                buttonText: "Transfer funds",
+                transactionType: INTERACTION_TYPE.INVEST,
+                vault: offer.vault,
             },
             steps: {
-                prerequisite: true,
-                liquidity:true,
-                transaction:true,
-                button:true,
+                liquidity: true,
+                transaction: true,
             }
         });
     }, [
         investmentAmount,
-        selectedCurrency?.address,
-        hash,
+        selectedCurrency,
+        hashData?.code,
         model
     ]);
 
-
-    useEffect(() => {
-        if (!selectedCurrency?.address || investmentAmount < 50 || blockchainProps.isClean) return;
-
-        updateBlockchainProps(
-            [
-                {path: 'data.currency', value: selectedCurrency},
-                {path: 'data.chain', value: selectedChain},
-
-                {path: 'data.transaction.params.selectedCurrency', value: selectedCurrency},
-                {path: 'data.transaction.params.selectedChain', value: selectedChain},
-
-                {path: 'data.transaction.ready', value: false},
-                {path: 'data.transaction.method', value: {}},
-
-                {path: 'state.prerequisite', value: { ...DEFAULT_STEP_STATE }},
-                {path: 'state.liquidity', value: { ...DEFAULT_STEP_STATE }},
-                {path: 'state.transaction', value: { ...DEFAULT_STEP_STATE }},
-            ],
-            "invest modal update"
-        )
-    }, [
-        selectedCurrency?.address,
-        selectedCurrency?.precision,
-        selectedCurrency?.symbol,
-    ]);
+    if (!selectedCurrency) return
 
 
     const title = () => {
@@ -121,15 +104,21 @@ export default function InvestModal({model, setter, investModalProps}) {
     const contentSuccess = () => {
         return (
             <div className=" flex flex-col flex-1">
-                <div>Congratulations! You have successfully invested <span className="text-app-success font-bold">${amountLocale}</span> in <span className="font-bold text-app-success">{offer.name}</span>.</div>
-                <Lottie animationData={lottieSuccess} loop={true} autoplay={true} style={{width: '320px', margin: '30px auto 0px'}}/>
+                <div>Congratulations! You have successfully invested <span
+                    className="text-app-success font-bold">${amountLocale}</span> in <span
+                    className="font-bold text-app-success">{offer.name}</span>.
+                </div>
+                <Lottie animationData={lottieSuccess} loop={true} autoplay={true}
+                        style={{width: '320px', margin: '30px auto 0px'}}/>
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`} onClick={redirectToVault}>
-                        <UniButton type={ButtonTypes.BASE} text={'Check Vault'} state={"danger"} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
+                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}
+                         onClick={redirectToVault}>
+                        <UniButton type={ButtonTypes.BASE} text={'Check Vault'} state={"danger"} isLoading={false}
+                                   isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'}/>
                     </div>
                 </div>
-                <div className="mt-auto">What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT} /></div>
+                <div className="mt-auto">What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT}/></div>
             </div>
         )
     }
@@ -137,14 +126,16 @@ export default function InvestModal({model, setter, investModalProps}) {
         return (
             <div className={`flex flex-1 flex-col`}>
                 <div>
-                    You have successfully booked <span className="text-gold font-medium">${amountLocale}</span> allocation in <span className="font-bold text-gold ">{offer.name}</span>.
+                    You have successfully booked <span
+                    className="text-gold font-medium">${amountLocale}</span> allocation in <span
+                    className="font-bold text-gold ">{offer.name}</span>.
                 </div>
                 <div className="pt-10 pb-5 flex flex-col items-center">
                     <div className="pb-2">Complete transfer in the next</div>
                     <FlipClockCountdown
                         className="flip-clock"
                         onComplete={() => bookingExpire()}
-                        to={moment.unix(expires)}
+                        to={moment.unix(hashData.expires)}
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                         labelStyle={{fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color: 'white'}}
                     />
@@ -152,7 +143,8 @@ export default function InvestModal({model, setter, investModalProps}) {
                 </div>
 
                 <BlockchainSteps/>
-                <div>Booked allocation will be released when the timer runs to zero. <Linker url={ExternalLinks.BOOKING_SYSTEM}/>
+                <div>Booked allocation will be released when the timer runs to zero. <Linker
+                    url={ExternalLinks.BOOKING_SYSTEM}/>
                 </div>
             </div>
         )
@@ -160,9 +152,10 @@ export default function InvestModal({model, setter, investModalProps}) {
 
 
     const content = () => {
-       return transactionSuccessful ? contentSuccess() : contentSteps()
+        return transactionSuccessful ? contentSuccess() : contentSteps()
     }
 
-    return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)
+    return (
+        <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)
 }
 

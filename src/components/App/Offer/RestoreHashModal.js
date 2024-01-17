@@ -3,9 +3,13 @@ import moment from "moment";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
+import {useInvestContext} from "@/components/App/Offer/InvestContext";
 
 export default function RestoreHashModal({model, setter, restoreModalProps}) {
-    const { expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps
+    const { allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps
+    const {
+        hashData,
+    } = useInvestContext();
     const title = () => {
         return (
             <>
@@ -13,6 +17,7 @@ export default function RestoreHashModal({model, setter, restoreModalProps}) {
             </>
         )
     }
+
     const allocationOldLocal = Number(allocationOld).toLocaleString()
     const allocationNewLocal = Number(investmentAmount).toLocaleString()
     const content = () => {
@@ -29,7 +34,7 @@ export default function RestoreHashModal({model, setter, restoreModalProps}) {
                     <FlipClockCountdown
                         className="flip-clock"
                         onComplete={()=> bookingExpire()}
-                        to={moment.unix(expires)}
+                        to={moment.unix(hashData?.expires)}
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                         labelStyle={{fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color: 'white'}}
                     />

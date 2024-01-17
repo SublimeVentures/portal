@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
 import {isBased} from "@/lib/utils";
 
-export default function OfferDetailsProgress({alloTotal, allocations, alloRequired, isSoldOut}) {
+export default function OfferDetailsProgress({alloTotal, allocations, isSoldOut}) {
     const tilt = useRef(null);
     useEffect(() => {
         VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: isBased ? 5 : 0.2});
@@ -18,6 +18,7 @@ export default function OfferDetailsProgress({alloTotal, allocations, alloRequir
     const filled_guaranteed = Math.round(amt_guaranteed/alloTotal * 100)
 
     const progress = isSoldOut ? 100 : filled_base
+
     return (
         <>
             <div className="rounded-2xl h-[50px]  w-full flex flex-row items-center relative select-none" ref={tilt}>
@@ -38,19 +39,8 @@ export default function OfferDetailsProgress({alloTotal, allocations, alloRequir
                 </div>
 
                 <div className="absolute right-1 ">
-                           <div className="mr-1">Filled {Number(filled_base).toFixed(0)}%</div>
+                           <div className="mr-1">Filled {Number(progress).toFixed(0)}%</div>
                  </div>
-
-                {/*{filled >= required ?*/}
-                {/*    <div className="absolute right-1 ">*/}
-                {/*        <div className="mr-1">Filled {Number(filled).toFixed(0)}%</div>*/}
-                {/*    </div>*/}
-                {/*    :*/}
-                {/*    <div className="absolute w-full flex  ">*/}
-                {/*        {filled !== null && <div className="border-r-2 border-app-error h-[50px] " style={{'width': `${required}%`}}></div>}*/}
-                {/*        <div className="text-app-error glowing ml-2 flex items-center">Required {required}%</div>*/}
-                {/*    </div>*/}
-                {/*}*/}
             </div>
 
         </>

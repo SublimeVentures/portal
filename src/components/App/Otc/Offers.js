@@ -2,8 +2,6 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import IconCart from "@/assets/svg/Cart.svg";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import IconHistory from "@/assets/svg/History.svg";
-import IconUSDC from "@/assets/svg/Usdc.svg";
-import IconUSDT from "@/assets/svg/Usdt.svg";
 import {useState} from "react";
 import {useEffect} from "react";
 import Empty from "@/components/App/Empty";
@@ -14,27 +12,21 @@ import moment from "moment";
 import Loader from "@/components/App/Loader";
 import MakeOfferModal from "@/components/App/Otc/MakeOfferModal";
 import CancelOfferModal from "@/components/App/Otc/CancelOfferModal";
-import {isBased} from "@/lib/utils";
-import {getChainIcon} from "@/components/Navigation/StoreNetwork";
+import {isBased, NETWORKS} from "@/lib/utils";
 import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
+import DynamicIcon from "@/components/Icon";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {Tooltiper, TooltipType} from "@/components/Tooltip";
 
-
-const getCurrencyIcon = (inputString, currencies)=> {
-    for (const chainId in currencies) {
-        for (const address in currencies[chainId]) {
-            if (address.toLowerCase() === inputString.toLowerCase()) {
-                const symbol = currencies[chainId][address].symbol.toLowerCase();
-                return symbol === 'usdc' ? <IconUSDC className={ButtonIconSize.hero3}/> : <IconUSDT className={ButtonIconSize.hero3}/>
-            }
-        }
-    }
-    return null; // Return null if no matching address is found or symbol is not "usdt" or "usdc"
-}
 
 export default function OtcOffers({propOffers}) {
-    let { offers, vault, currentMarket, account, refetchOffers, offersIsSuccess, vaultIsSuccess, currencies} = propOffers
+    const {offers, vault, currentMarket, session, refetchOffers, offersIsSuccess, vaultIsSuccess} = propOffers
+    const {wallets} = session
+
+    const {getCurrencySymbolByAddress, account} = useEnvironmentContext();
+
     const [isMakeOfferModal, setIsMakeOfferModal] = useState(false);
     const [isCancelOfferModal, setIsCancelOfferModal] = useState(false);
     const [isTakeOfferModal, setIsTakeOfferModal] = useState(false);
@@ -43,15 +35,12 @@ export default function OtcOffers({propOffers}) {
 
     const [showHistory, setShowHistory] = useState(false);
 
-    const haveAllocation = vault && currentMarket ? vault.find(el=> el.offerId === currentMarket.id) : null
-
-    const {ACL, id, address } = account
-    const user = ACL === 0 ? id : address
+    const haveAllocation = vault && currentMarket ? vault.find(el => el.id === currentMarket.offerId) : null
 
 
-    const {isSuccess: historyIsSuccess, data: history, refetch: refetchHistory} = useQuery({
-            queryKey: ["otcHistory", currentMarket?.id],
-            queryFn: () => fetchHistory(currentMarket?.id),
+    const {isSuccess: historyIsSuccess, data: history} = useQuery({
+            queryKey: ["otcHistory", currentMarket?.offerId],
+            queryFn: () => fetchHistory(currentMarket?.offerId),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
             cacheTime: 5 * 60 * 1000,
@@ -71,9 +60,16 @@ export default function OtcOffers({propOffers}) {
         setIsTakeOfferModal(true)
     }
 
+    function isUserOffer(userWallets, checkWallet) {
+        return {
+            ok: userWallets.includes(checkWallet),
+            isActive: account?.address === checkWallet
+        }
+    }
+
 
     useEffect(() => {
-        if(!showHistory) {
+        if (!showHistory) {
             refetchOffers()
         } else {
 
@@ -89,11 +85,11 @@ export default function OtcOffers({propOffers}) {
     const interactOfferProps = {
         ...propOffers,
         offerDetails,
-        getCurrencyIcon
     }
 
+
     const renderOfferTable = () => {
-        return  <table>
+        return <table>
             <thead className="bg-navy-2">
             <tr>
                 <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
@@ -119,6 +115,7 @@ export default function OtcOffers({propOffers}) {
                 </td>
             </tr>}
             {offers.length !== 0 && offers.map(el => {
+                const ownership = isUserOffer(wallets, el.maker)
                 return <tr key={el.id}
                            className="hoverTable transition-all duration-300 hover:text-black">
 
@@ -133,19 +130,34 @@ export default function OtcOffers({propOffers}) {
                         className="text-app-success">{Number(el.price / el.amount).toFixed(2)}x</span>
                     </td>
                     <td className=" text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
-                        data-label="CHAIN"><span
-                        className="flex flex-row flex-1 justify-center">{getChainIcon(el.chainId, ButtonIconSize.hero4)} {getCurrencyIcon(el.currency, currencies)}</span>
+                        data-label="CHAIN">
+                        <span
+                            className="flex flex-row flex-1 justify-center gap-2">
+                            <DynamicIcon name={getCurrencySymbolByAddress(el.currency)} style={ButtonIconSize.hero3}/>
+                            <DynamicIcon name={NETWORKS[el.chainId]} style={ButtonIconSize.hero3}/>
+                        </span>
                     </td>
                     <td className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                         data-label="ACTION">
                         <div className={'flex flex-row gap-1 justify-end sm:justify-center'}>
-                            {user == el.maker &&
-                                <div className={'duration-300 hover:text-app-error cursor-pointer'} onClick={() => openCancel(el)}>
-                                    <IconCancel className={'w-6'}/>
-                                </div>
+                            {ownership.ok &&
+                                (ownership.isActive ?
+                                    <div className={` duration-300 hover:text-app-error cursor-pointer`}
+                                         onClick={() => openCancel(el)}>
+                                        <IconCancel className={'w-6'}/>
+                                    </div> :
+                                    <Tooltiper
+                                        wrapper={
+                                            <div className={`disabled duration-300 hover:text-app-error cursor-pointer`} onClick={() => {}}>
+                                                <IconCancel className={'w-6'}/>
+                                            </div>
+                                        }
+                                        text={`Created from other wallet`}
+                                        type={TooltipType.Error}/>)
                             }
-                            {user != el.maker &&
-                                <div className={'duration-300 hover:text-app-error cursor-pointer'} onClick={()=> openTake(el)}>
+                            {!ownership.ok &&
+                                <div className={'duration-300 hover:text-app-error cursor-pointer'}
+                                     onClick={() => openTake(el)}>
                                     <IconCart className={'w-6'}/>
                                 </div>
                             }
@@ -162,7 +174,7 @@ export default function OtcOffers({propOffers}) {
     }
 
     const renderOfferHistoryTable = () => {
-        return  <table>
+        return <table>
             <thead className="bg-navy-2">
             <tr>
                 <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
@@ -208,7 +220,10 @@ export default function OtcOffers({propOffers}) {
                     </td>
                     <td className=" text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
                         data-label="CHAIN"><span
-                        className="flex flex-row flex-1 justify-center">{getChainIcon(el.chainId, ButtonIconSize.hero3)}</span>
+                        className="flex flex-row flex-1 justify-center">
+                             <DynamicIcon name={NETWORKS[el.chainId]} style={ButtonIconSize.hero3}/>
+
+                        </span>
                     </td>
                     <td className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                         data-label="ACTION">{moment(el.updatedAt).utc().local().format("YYYY-MM-DD")}</td>
@@ -225,8 +240,10 @@ export default function OtcOffers({propOffers}) {
         <>
             <div className={`${isBased ? ' rounded-xl ' : ''} bg-navy-accent flex flex-1 offerWrap`}>
                 <div className={`overflow-x-auto flex flex-col flex-1 bg-navy-accent ${isBased ? ' rounded-xl ' : ''}`}>
-                    <div className={`p-5 flex flex-row relative  ${isBased ? ' rounded-tl-xl rounded-tr-xl bg-navy' : 'bg-black'}`}>
-                        <div className={`${isBased ? " font-medium text-[1.7rem] " : "text-app-error font-accent glowRed uppercase font-light text-2xl"} flex glowNormal   header`}>
+                    <div
+                        className={`p-5 flex flex-row relative  ${isBased ? ' rounded-tl-xl rounded-tr-xl bg-navy' : 'bg-black'}`}>
+                        <div
+                            className={`${isBased ? " font-medium text-[1.7rem] " : "text-app-error font-accent glowRed uppercase font-light text-2xl"} flex glowNormal   header`}>
                             Offers {showHistory && "History"}
                         </div>
                         <div className="absolute right-5 top-3 flex flex-row gap-5 items-center ">
@@ -241,18 +258,27 @@ export default function OtcOffers({propOffers}) {
                                 icon={<IconCart className={ButtonIconSize.hero}/>}
                             />
                             <div>
-                                <IconButton zoom={1.1} size={'p-3'} noBorder={!isBased} icon={<IconHistory className={isBased ? "w-5" : "w-15 p-2"}/>} handler={() => setShowHistory((current)=> !current)} />
+                                <IconButton zoom={1.1} size={'p-3'} noBorder={!isBased}
+                                            icon={<IconHistory className={isBased ? "w-5" : "w-15 p-2"}/>}
+                                            handler={() => setShowHistory((current) => !current)}/>
                             </div>
 
                         </div>
                     </div>
-                    {((!offersIsSuccess || !vaultIsSuccess) || (!historyIsSuccess && showHistory)) ? <Loader/> : (showHistory ? renderOfferHistoryTable() : renderOfferTable())}
+                    {((!offersIsSuccess || !vaultIsSuccess) || (!historyIsSuccess && showHistory)) ?
+                        <Loader/> : (showHistory ? renderOfferHistoryTable() : renderOfferTable())}
                 </div>
             </div>
             <BlockchainProvider>
-                <MakeOfferModal model={isMakeOfferModal} setter={() => {setIsMakeOfferModal(false)}} props={{...makeOfferProps}}/>
-                <CancelOfferModal model={isCancelOfferModal} setter={() => {setIsCancelOfferModal(false)}} props={{...interactOfferProps}}/>
-                <TakeOfferModal model={isTakeOfferModal} setter={() => {setIsTakeOfferModal(false)}} props={{...interactOfferProps}}/>
+                <MakeOfferModal model={isMakeOfferModal} setter={() => {
+                    setIsMakeOfferModal(false)
+                }} props={{...makeOfferProps}}/>
+                <CancelOfferModal model={isCancelOfferModal} setter={() => {
+                    setIsCancelOfferModal(false)
+                }} props={{...interactOfferProps}}/>
+                <TakeOfferModal model={isTakeOfferModal} setter={() => {
+                    setIsTakeOfferModal(false)
+                }} props={{...interactOfferProps}}/>
             </BlockchainProvider>
         </>
 

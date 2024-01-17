@@ -7,16 +7,13 @@ import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import Linker from "@/components/link";
 import {MYSTERY_TYPES} from "@/lib/enum/store";
 
-
-
 export default function ClaimMysteryBoxModal({model, setter, claimData}) {
-    if(!claimData?.type) return;
-
     const lottieRef = useRef(null);
 
     useEffect(() => {
-        if(model) {
-            lottieRef.current.goToAndPlay(100)
+        // Ensure lottieRef.current is not null and model is true
+        if (model && lottieRef.current) {
+            lottieRef.current.goToAndPlay(100);
         }
     }, [model]);
 
@@ -25,21 +22,29 @@ export default function ClaimMysteryBoxModal({model, setter, claimData}) {
     }
 
     const rewardType = (type, item) => {
-        switch(type){
+        switch (type) {
             case MYSTERY_TYPES.NFT: {
                 return <div>
-                    To redeem your NFT, all you need to do is head over to <br/>our Discord and <Linker text={"create a ticket."}/><br/>
-                    <span className={"text-app-error"}>Make sure to include your redeem code in the ticket message!</span><br/>
-                    It's a one-time-use code to claim your shiny new NFT, so don't share it with anyone - you risk losing your prize. <br/>
-                    <span className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
+                    To redeem your NFT, all you need to do is head over to <br/>our Discord and <Linker
+                    text={"create a ticket."}/><br/>
+                    <span
+                        className={"text-app-error"}>Make sure to include your redeem code in the ticket message!</span><br/>
+                    It's a one-time-use code to claim your shiny new NFT, so don't share it with anyone - you risk
+                    losing your prize. <br/>
+                    <span
+                        className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
                 </div>
             }
             case MYSTERY_TYPES.Discount: {
                 return <div>
-                    To redeem your discount, all you need to do is head over to <br/>our Discord and <Linker text={"create a ticket."}/><br/>
-                    <span className={"text-app-error"}>Make sure to include your redeem code in the ticket message!</span><br/>
-                    It's a one-time-use code that ensures {item.discount}% discount on floor price of the {item.item}, so don't share it with anyone - you risk losing your prize. <br/>
-                    <span className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
+                    To redeem your discount, all you need to do is head over to <br/>our Discord and <Linker
+                    text={"create a ticket."}/><br/>
+                    <span
+                        className={"text-app-error"}>Make sure to include your redeem code in the ticket message!</span><br/>
+                    It's a one-time-use code that ensures {item.discount}% discount on floor price of the {item.item},
+                    so don't share it with anyone - you risk losing your prize. <br/>
+                    <span
+                        className={"text-app-error"}>The redeem code won't appear again, save it before closing!</span>
                 </div>
             }
             case MYSTERY_TYPES.Upgrade: {
@@ -57,14 +62,14 @@ export default function ClaimMysteryBoxModal({model, setter, claimData}) {
     }
 
 
-
     const content = () => {
-        return (     <div className={"loot"}>
+        return (<div className={"loot"}>
             <div className="website">
-                <section className={`modal pt-10 ${model ? 'is-in' : ''}`}>
+                <section className={`modal ${model ? 'is-in' : ''}`}>
                     <div className="modal-content">
                         <div className={"lottie-container"}>
-                            <Lottie animationData={lootboxLottie} renderer={"svg"} loop={false} autoplay={true} lottieRef={lottieRef}/>
+                            <Lottie animationData={lootboxLottie} renderer={"svg"} loop={false} autoplay={true}
+                                    lottieRef={lottieRef}/>
                         </div>
                         <div className="rewards">
                             <div className="rewards-container">
@@ -94,17 +99,21 @@ export default function ClaimMysteryBoxModal({model, setter, claimData}) {
                                         <div className="reward-text mt-10 flex flex-col">
                                             <div className={"text-xl text-app-success uppercase"}>{claimData.type}</div>
                                             <div>{claimData.name}</div>
-                                            {claimData?.code && <div className={"text-app-success font-bold"}>REDEEM CODE: #{claimData.code}</div>}
+                                            {claimData?.code &&
+                                                <div className={"text-app-success font-bold"}>REDEEM CODE:
+                                                    #{claimData.code}</div>}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="reward-comments p-5">
-                                <div className={`text-3xl font-accent tracking-widest font-md colorText pb-5`}>Congratulations</div>
+                                <div
+                                    className={`text-3xl font-accent tracking-widest font-md colorText pb-5`}>Congratulations
+                                </div>
                                 <div className={"text-app-white text-sm"}>
                                     {rewardType(claimData.type, claimData)}
-                                {/*    telated investment*/}
+                                    {/*    telated investment*/}
                                 </div>
                                 <div className="flex flex-1 absolute  bottom-10 justify-center mx-auto left-0 right-0">
                                     <UniButton type={ButtonTypes.BASE}
@@ -112,7 +121,9 @@ export default function ClaimMysteryBoxModal({model, setter, claimData}) {
                                                isWide={true}
                                                zoom={1.05}
                                                size={'text-sm sm'}
-                                               handler={()=> { setter() }}
+                                               handler={() => {
+                                                   setter()
+                                               }}
                                     />
                                 </div>
                             </div>
@@ -129,7 +140,9 @@ export default function ClaimMysteryBoxModal({model, setter, claimData}) {
         return <></>
     }
 
-    return (<TransparentModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)
+    return (
+        <TransparentModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}
+                          noClose={true}/>)
 
 }
 

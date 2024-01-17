@@ -7,7 +7,7 @@ export default function UpgradesModalItem({itemType, selected, setSelectedUpgrad
         <div className={"relative"}>
             <div className={`flex flex-row upgrade ${isBased ? "rounded-xl" : ""} ${selected === itemType ? 'active' : ''} ${!isRightPhase || isRightPhase && itemType === PremiumItemsENUM.Guaranteed && used>0 ? 'blur disabled' :'cursor-pointer'} ${!owned ? 'disabled' :''}`} onClick={()=> { if(isRightPhase && owned>0) setSelectedUpgrade(itemType) }}>
                 <div className={"image-container min-w-[150px] min-h-[150px] max-w-[150px]"}>
-                    <Image src={`https://cdn.basedvc.fund/webapp/store/${image(itemType)}`} fill style={{objectFit:"cover"}} className={` ${isBased ? "rounded-xl" : ""}  `}  alt={"img"}/>
+                    <Image src={`https://cdn.basedvc.fund/webapp/store/${image}`} fill style={{objectFit:"cover"}} className={` ${isBased ? "rounded-xl" : ""}  `}  alt={"img"}/>
                 </div>
                 <div className={"pl-5 py-2 flex flex-col"}>
                     <div className={"text-md font-bold flex  glow name"}>{name}</div>

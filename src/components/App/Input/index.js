@@ -1,9 +1,7 @@
 import {Transition} from '@headlessui/react'
-import {debounce} from "debounce";
 import {Fragment, useEffect, useState} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
-import Dropdown from "@/components/App/Dropdown";
-
+import { isAddress } from 'web3-validator';
 
 export default function Input({type, placeholder, max, min, setStatus, input, setInput, after, light, full, dividable, customClear, initialValue, customCss}) {
     const [inputFormatted, setInputFormatted] = useState("")
@@ -95,6 +93,9 @@ export default function Input({type, placeholder, max, min, setStatus, input, se
                     return setIsError({state: false})
 
             }
+        } else if(type === "wallet") {
+            setStatus(!isAddress(input))
+            return setIsError({state: !isAddress(input), msg: `Provided address is not valid`})
         }
 
 
@@ -117,6 +118,7 @@ export default function Input({type, placeholder, max, min, setStatus, input, se
             <div className={`relative centr  ${isActive() ? 'active' : ''}`}>
                 <label className="absolute text-accent block">{placeholder}</label>
                 <input tabIndex="0"
+                       type={type === "password" ? type :""}
                        value={inputFormatted}
                        onChange={onInputChange}
                        onKeyDown={checkIfNumber}

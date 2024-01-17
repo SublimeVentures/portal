@@ -1,42 +1,41 @@
-import {WagmiConfig} from 'wagmi'
-import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
+import {QueryClientProvider, HydrationBoundary} from '@tanstack/react-query'
+import {WagmiProvider} from 'wagmi'
 import {config} from '@/lib/wagmi'
-import {queryClient} from '@/lib/queryCache'
+import {queryClient} from "@/lib/queryCache";
+
 import Layout from '@/components/Layout/Layout';
 import 'react-tooltip/dist/react-tooltip.css';
 import '@/styles/globals.scss'
-import {isBased} from "@/lib/utils";
-import Gtag from "@/components/gtag";
 
-if (isBased){
+import Gtag from "@/components/gtag";
+import {EnvironmentProvider} from "@/components/App/BlockchainSteps/EnvironmentContext";
+
+import {isBased} from "@/lib/utils";
+
+if (isBased) {
     import('@/styles/tenants/basedVC.scss')
 } else {
     import('@/styles/tenants/citcap.scss')
 }
 
 export default function App({Component, pageProps: {...pageProps}}) {
-
-    const renderWithLayout =
-        Component.getLayout ||
-        function (page) {
-            return <Layout>{page}</Layout>;
-        };
+    const {environmentData} = pageProps;
+    const renderWithLayout = Component.getLayout || (page => <Layout>{page}</Layout>);
 
     return (
         <>
-            <WagmiConfig config={config}>
-                {renderWithLayout(
-                    <QueryClientProvider client={queryClient}>
-                        <Hydrate state={pageProps.dehydratedState}>
-                            <Component  {...pageProps} />
-                        </Hydrate>
-                    </QueryClientProvider>
-                )}
-            </WagmiConfig>
+            <WagmiProvider config={config}>
+                <QueryClientProvider client={queryClient}>
+                    <EnvironmentProvider initialData={environmentData}>
+                        <HydrationBoundary state={pageProps.dehydratedState}>
+                            {renderWithLayout(
+                                <Component  {...pageProps} />
+                            )}
+                        </HydrationBoundary>
+                    </EnvironmentProvider>
+                </QueryClientProvider>
+            </WagmiProvider>
             <Gtag/>
         </>
-
-
-);
-
+    );
 }

@@ -1,19 +1,19 @@
-import IconWait from "@/assets/svg/Wait.svg";
-import IconLoading from "@/assets/svg/LoadingCustom.svg";
-import IconSuccess from "@/assets/svg/Success.svg";
-import IconError from "@/assets/svg/Error.svg";
 import CitCapStakingAbi from "../../../../abi/citcapStaking.abi.json";
 import upgradeAbi_based from "../../../../abi/upgradeBased.abi.json";
 import upgradeAbi_citcap from "../../../../abi/upgradeCitCap.abi.json";
 import mysteryBoxAbi_based from "../../../../abi/mysteryboxBased.abi.json";
 import mysteryBoxAbi_citcap from "../../../../abi/mysteryboxCitCap.abi.json";
 import otcAbi from "../../../../abi/otcFacet.abi.json";
-import usdtAbi from "../../../../abi/usdt.abi.json";
-import {erc20ABI} from "wagmi";
 import {BigNumber} from "bignumber.js";
 import {isBased} from "@/lib/utils";
 import {blockchainPrerequisite as prerequisite_otcMakeOffer} from "@/components/App/Otc/MakeOfferModal";
 import {blockchainPrerequisite as prerequisite_otcTakeOffer} from "@/components/App/Otc/TakeOfferModal";
+import { motion, AnimatePresence } from 'framer-motion';
+import DynamicIcon from "@/components/Icon";
+import {ICONS} from "@/lib/icons";
+import {Tooltiper, TooltipType} from "@/components/Tooltip";
+import {usdtAbi} from "../../../../abi/usdt.abi.js";
+import { erc20Abi } from 'viem'
 
 export const Transaction = {
     PrecheckFailed: -1,
@@ -34,7 +34,6 @@ export const INTERACTION_TYPE = {
     STAKE: 7,
     UNSTAKE: 8,
 }
-
 
 export const getPrerequisite = async (type, params) => {
     switch (type) {
@@ -75,66 +74,41 @@ export const getTransaction = (type, params) => {
             return {validation: false, method: {}}
         }
         case INTERACTION_TYPE.INVEST: {
-            const {amount, vault, selectedCurrency} = params
-            // Check if diamond and hash are non-empty strings
+            const {liquidity, vault, currencyDetails} = params
             const isVaultValid = typeof vault === 'string' && vault !== '';
-
-            // Check if price is a number greater than 0
-            const isPriceValid = typeof amount === 'number' && amount > 0;
-
-            // Check if selectedCurrency is an object with a non-undefined .address property
-            const isSelectedCurrencyValid = selectedCurrency && typeof selectedCurrency.address !== 'undefined';
-
+            const isPriceValid = typeof liquidity === 'number' && liquidity > 0;
+            const isSelectedCurrencyValid = currencyDetails && typeof currencyDetails.address !== 'undefined';
             const validation = isVaultValid && isPriceValid && isSelectedCurrencyValid
             const method = validation ? getInvestFunction(params) : {}
             return {validation, method}
         }
         case INTERACTION_TYPE.OTC_MAKE: {
-            const {diamond, price, selectedCurrency, isSell, market, hash} = params;
-
-            // Check if diamond and hash are non-empty strings
-            const isDiamondValid = typeof diamond === 'string' && diamond !== '';
+            const {contract, price, currencyDetails, isSeller, market, hash} = params;
+            const isDiamondValid = typeof contract === 'string' && contract !== '';
             const isHashValid = typeof hash === 'string' && hash !== '';
-
-            // Check if price is a number greater than 0
-
+            const isselectedCurrencyValid = currencyDetails && typeof currencyDetails.address !== 'undefined';
+            const isMarketValid = market !== undefined ;
+            const isIsSellValid = typeof isSeller === 'boolean';
             let isPriceValid
                 try{
                     const number = Number(price)
                     isPriceValid = number > 0
-                } catch(e){
-
-                }
-
-            // Check if selectedCurrency is an object with a non-undefined .address property
-            const isSelectedCurrencyValid = selectedCurrency && typeof selectedCurrency.address !== 'undefined';
-
-            // Check if isSell is a boolean
-            const isIsSellValid = typeof isSell === 'boolean';
-
-            // Check if market exists
-            const isMarketValid = market !== undefined ;
-
-            const validation = isDiamondValid && isHashValid && isPriceValid && isSelectedCurrencyValid && isIsSellValid && isMarketValid;
+                } catch(e){}
+            const validation = isDiamondValid && isHashValid && isPriceValid && isselectedCurrencyValid && isIsSellValid && isMarketValid;
             const method = validation ? getOtcMakeFunction(params) : {}
             return {validation, method}
         }
         case INTERACTION_TYPE.OTC_CANCEL: {
-            const {diamond, dealId, otcId} = params;
-
-            // Check if diamond and hash are non-empty strings
-            const isDiamondValid = typeof diamond === 'string' && diamond !== '';
-
-            // Check if market exists
+            const {contract, dealId, otcId} = params;
+            const isDiamondValid = typeof contract === 'string' && contract !== '';
             const isOtcIdValid = otcId !== undefined && otcId > 0;
             const isDealIdValid = dealId !== undefined && dealId > 0;
-
             const validation = isDiamondValid && isOtcIdValid && isDealIdValid;
             const method = validation ? getOtcCancelFunction(params) : {}
             return {validation, method}
         }
         case INTERACTION_TYPE.OTC_TAKE: {
-            const {otcId, dealId, signature, diamond} = params;
+            const {otcId, dealId, signature, contract} = params;
             let isHashValid = true
             let isNonceValid = true
             let isExpiryValid = true
@@ -147,7 +121,7 @@ export const getTransaction = (type, params) => {
             }
 
             // Check if diamond and hash are non-empty strings
-            const isDiamondValid = typeof diamond === 'string' && diamond !== '';
+            const isDiamondValid = typeof contract === 'string' && contract !== '';
 
 
             // Check if market exists
@@ -159,9 +133,9 @@ export const getTransaction = (type, params) => {
             return {validation, method}
         }
         case INTERACTION_TYPE.MYSTERYBOX: {
-            const {contract, selectedCurrency, amount} = params;
+            const {contract, currencyDetails, amount} = params;
 
-            const isSelectedCurrencyValid = selectedCurrency && typeof selectedCurrency.address !== 'undefined';
+            const isSelectedCurrencyValid = currencyDetails && typeof currencyDetails.address !== 'undefined';
             const isDiamondValid = typeof contract === 'string' && contract !== '';
             const isAmountValid = amount !== undefined && amount > 0;
 
@@ -170,13 +144,11 @@ export const getTransaction = (type, params) => {
             return {validation, method}
         }
         case INTERACTION_TYPE.UPGRADE: {
-            const {contract, selectedCurrency, amount, upgradeId} = params
-
-            const isSelectedCurrencyValid = selectedCurrency && typeof selectedCurrency.address !== 'undefined';
+            const {contract, currencyDetails, amount, upgradeId} = params
+            const isSelectedCurrencyValid = currencyDetails && typeof currencyDetails.address !== 'undefined';
             const isDiamondValid = typeof contract === 'string' && contract !== '';
             const isAmountValid = amount !== undefined && amount > 0;
             const isUpgradeValid = upgradeId !== undefined && upgradeId >= 0;
-
             const validation = isDiamondValid && isSelectedCurrencyValid && isAmountValid && isUpgradeValid;
             const method = validation ? getUpgradesFunction(params) : {}
             return {validation, method}
@@ -203,57 +175,18 @@ export const getTransaction = (type, params) => {
 }
 
 
-export const getIcon = (status) => {
-    switch (status) {
-        case Transaction.Waiting: {
-            return <IconWait className="w-8 mr-2"/>
-        }
-        case Transaction.Processing: {
-            return <IconLoading className="animate-spin w-7 text-gold mr-2"/>
-        }
-        case Transaction.Executed: {
-            return <IconSuccess className="w-7 text-app-success mr-2"/>
-        }
-        case Transaction.PrecheckFailed:
-        case Transaction.Failed: {
-            return <IconError className="w-7 text-app-error mr-2"/>
-        }
-    }
-}
-
-export const getStatusColor = (status) => {
-    switch (status) {
-        case Transaction.Waiting: {
-            return 'text-gray'
-        }
-        case Transaction.Processing: {
-            return 'text-gold'
-        }
-        case Transaction.Executed: {
-            return 'text-app-success'
-        }
-        case Transaction.PrecheckFailed:
-        case Transaction.Failed: {
-            return 'text-app-error'
-        }
-        default: {
-            return ''
-        }
-    }
-}
-
 export const getInvestFunction = (params) => {
-    const {amount, vault, selectedCurrency, selectedChain} = params
-    const power = BigNumber(10).pow(selectedCurrency.precision)
-    const _amount = BigNumber(amount).multipliedBy(power)
+    const {liquidity, vault, currencyDetails, chainId} = params
+    const power = BigNumber(10).pow(currencyDetails.precision)
+    const _amount = BigNumber(liquidity).multipliedBy(power)
     return {
         method: 'transfer',
         args: [
             vault,
             _amount,
         ],
-        address: selectedCurrency.address,
-        abi: (selectedCurrency.symbol === 'USDT' || selectedChain !== 1) ? usdtAbi : erc20ABI
+        address: currencyDetails.address,
+        abi: (currencyDetails.symbol === 'USDT' && chainId === 1) ? usdtAbi : erc20Abi
     }
 }
 
@@ -276,14 +209,14 @@ export const getCitCapUnStakingFunction = (params) => {
 }
 
 export const getUpgradesFunction = (params) => {
-    const {contract, selectedCurrency, amount, upgradeId} = params
+    const {contract, currencyDetails, amount, upgradeId} = params
 
     return {
         method: 'buyUpgrade',
         args: isBased ? [
             amount,
             upgradeId,
-            selectedCurrency.address
+            currencyDetails.address
         ] : [
             amount,
             upgradeId
@@ -294,12 +227,12 @@ export const getUpgradesFunction = (params) => {
 }
 
 export const getMysteryBoxFunction = (params) => {
-    const {contract, selectedCurrency, amount} = params
+    const {contract, currencyDetails, amount} = params
     return {
         method: 'buyMysteryBox',
         args: isBased ? [
             amount,
-            selectedCurrency.address
+            currencyDetails.address
         ] : [
             amount
         ],
@@ -309,39 +242,39 @@ export const getMysteryBoxFunction = (params) => {
 }
 
 export const getOtcMakeFunction = (params) => {
-    const {hash, market, price, selectedCurrency, isSell, diamond} = params
-
-    const power = new BigNumber(10).pow(selectedCurrency.precision)
+    const {contract, price, currencyDetails, isSeller, market, hash} = params;
+    console.log("getOtcMakeFunction params", params)
+    const power = new BigNumber(10).pow(currencyDetails.precision)
     const _price = new BigNumber(price).multipliedBy(power)
     return {
         method: 'offerMake',
         args: [
             hash,
-            market,
+            market.otc,
             _price.toFixed(0),
-            selectedCurrency.address,
-            isSell
+            currencyDetails.address,
+            isSeller
         ],
-        address: diamond,
+        address: contract,
         abi: otcAbi
     }
 }
 
 export const getOtcCancelFunction = (params) => {
-    const {otcId, dealId, diamond} = params
+    const {otcId, dealId, contract} = params
     return {
         method: 'offerCancel',
         args: [
             otcId,
             dealId
         ],
-        address: diamond,
+        address: contract,
         abi: otcAbi
     }
 }
 
 export const getOtcTakeFunction = (params) => {
-    const {otcId, dealId, signature, diamond} = params
+    const {otcId, dealId, signature, contract} = params
     let nonce = 0
     let expiry = 0
     let hash = "";
@@ -357,12 +290,70 @@ export const getOtcTakeFunction = (params) => {
         args: [
             otcId,
             dealId,
-            !!nonce ? nonce : 0,
-            !!expiry ? expiry : 0,
-            !!hash ? hash : ""
+            nonce,
+            expiry,
+            hash
         ],
-        address: diamond,
+        address: contract,
         abi: otcAbi
     }
 }
+
+
+
+export const getStatusColor = (status) => {
+    switch (status) {
+        case Transaction.Waiting: {
+            return 'text-gray'
+        }
+        case Transaction.Processing: {
+            return 'text-gold'
+        }
+        case Transaction.Executed: {
+            return 'text-app-success'
+        }
+        case Transaction.PrecheckFailed:
+        case Transaction.Failed: {
+            return 'text-app-error'
+        }
+        default: {
+            return ''
+        }
+    }
+}
+
+
+export const blockchainRow = (state, content, stepIcon, iconPadding, error, errorAction, colorOverride) => {
+    return (
+        <>
+            <motion.div
+                className={`flex flex-row  items-center text-[14px]  ${colorOverride ? colorOverride : getStatusColor(state)}`}
+                layout
+            >
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={state}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className={"flex flex-1 gap-3 items-center"}
+                    >
+                        <div className={`blob relative ${state === Transaction.Processing ? 'active' : ''}`}>
+                            <DynamicIcon name={stepIcon} style={iconPadding}/>
+                            {/*{ state == Transaction.Processing && <IconLoading className="animate-spin w-[30px] top-0 text-gold absolute"/>}*/}
+                        </div>
+
+                        <div className={"flex flex-1"}>{content}</div>
+
+                        {state === Transaction.Executed && <div className={"rightIcon "}><DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"}/></div>}
+                        {state === Transaction.Failed && <div className={"rightIcon "} onClick={()=> {if(errorAction) errorAction()} }><Tooltiper wrapper={<DynamicIcon name={ICONS.ALERT} style={""}/>} text={`${error}`} type={TooltipType.Error}/></div>}
+                        {/*{state == Transaction.Failed && <div className={"rightIcon error cursor-pointer"}><DynamicIcon name={ICONS.ALERT} style={""}/></div>}*/}
+                    </motion.div>
+                </AnimatePresence>
+            </motion.div>
+            {stepIcon !== ICONS.ROCKET && <div className={"spacer"}></div> }
+        </>
+    );
+};
 

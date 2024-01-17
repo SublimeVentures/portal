@@ -1,76 +1,47 @@
-import {  createConfig, configureChains } from 'wagmi'
-import { polygon, mainnet, bsc } from 'wagmi/chains'
-import { publicProvider } from 'wagmi/providers/public'
-import { LedgerConnector } from 'wagmi/connectors/ledger'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import {isBased} from "@/lib/utils";
-import {ALCHEMY_KEY, RPCs, WALLET_CONNECT_ID} from "@/lib/blockchain";
-// import {createWalletClient, custom, publicActions} from "viem";
+import {http, createConfig, fallback } from 'wagmi'
+import { mainnet, polygon, bsc } from 'wagmi/chains'
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
+import {RPCs, WALLET_CONNECT_ID} from "@/lib/blockchain";
 
-// const rightChains = process.env.NEXT_PUBLIC_ENV !== 'production' ? [sepolia, polygonMumbai, bscTestnet] : [mainnet, polygon, bsc]
-const rightChains = [mainnet, polygon, bsc]
+const retryOptions = {
+    retryCount: 7,
+    retryDelay: 150,
+    timeout: 10_000,
+    batch: true
+}
 
-const { chains,  publicClient, webSocketPublicClient } = configureChains(
-    rightChains,
-    [
-        jsonRpcProvider({
-            rpc: (chain) => ({
-                http: RPCs[chain.id].http1,
-                webSocket: RPCs[chain.id].webSocket1,
-            }),
-        }),
-        jsonRpcProvider({
-            rpc: (chain) => ({
-                http: RPCs[chain.id].http2,
-                webSocket: RPCs[chain.id].webSocket2,
-            }),
-        }),
-        publicProvider()
-    ],
-    {
-        batch: { multicall: true },
-        retryCount: 7,
-        retryDelay: 150,
-        stallTimeout: 10_000
-    },
-)
+const fallbackOptions = {
+    retryCount: 5,
+    retryDelay: 150,
+}
 
-const config = createConfig({
-    autoConnect: true,
+export const config = createConfig({
+    chains: [mainnet, polygon, bsc],
+    batch: { multicall: true },
+    cacheTime: 1_000, //default: 4_000
+    pollingInterval: 4_000,
+    ssr: true,
     connectors: [
-        new InjectedConnector({
-            chains: rightChains,
+        // metaMask(),
+        // walletConnect({
+        //     projectId: WALLET_CONNECT_ID,
+        // }),
+        coinbaseWallet({
+            appName: 'Venture Capital',
         }),
-        new MetaMaskConnector({
-            chains: rightChains,
-        }),
-        new LedgerConnector({
-            chains: rightChains,
-            options: {
-                projectId: WALLET_CONNECT_ID,
-            },
-            projectId: WALLET_CONNECT_ID,
-        }),
-        new WalletConnectConnector({
-            chains: rightChains,
-            options: {
-                projectId: WALLET_CONNECT_ID,
-            },
-        }),
-        new CoinbaseWalletConnector({
-            chains: rightChains,
-            options: {
-                appName: isBased ? "basedVC" : "Citizen Capital",
-                jsonRpcUrl: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-            },
-        })
     ],
-    publicClient,
-    webSocketPublicClient,
+    transports: {
+        [mainnet.id]: fallback([
+            http(RPCs[mainnet.id].main, retryOptions),
+            http(RPCs[mainnet.id].fallback, retryOptions),
+        ], fallbackOptions),
+        [polygon.id]: fallback([
+            http(RPCs[polygon.id].main, retryOptions),
+            http(RPCs[polygon.id].fallback, retryOptions),
+        ], fallbackOptions),
+        [bsc.id]: fallback([
+            http(RPCs[bsc.id].main, retryOptions),
+            http(RPCs[bsc.id].fallback, retryOptions),
+        ], fallbackOptions),
+    },
 })
-
-export { chains, config }

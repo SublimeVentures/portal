@@ -1,43 +1,46 @@
-import {usePrepareContractWrite, useContractWrite, useWaitForTransaction} from 'wagmi'
+import {
+    useSimulateContract,
+    useWriteContract, useWaitForTransactionReceipt
+} from 'wagmi'
 import {useEffect} from "react";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
-import {getIcon, getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
+import {blockchainRow, Transaction} from "@/components/App/BlockchainSteps/config";
+import {ICONS} from "@/lib/icons";
 
 export default function TransactionStep() {
     const {blockchainProps, stepsIsReady, updateBlockchainProps} = useBlockchainContext();
     const {data, state} = blockchainProps
+    const {error: errorPrerequisite} = state.prerequisite
 
-    const {userWallet, transaction} = data
+    const {transactionMethod, transactionReady} = data
     const {transaction: isReady} = stepsIsReady
-    const {isFinished, isError} = state.transaction
+    const {isFinished, isError, error} = state.transaction
 
+    console.log("TRANSACTION IS ENABLED?", isReady)
     const {
-        config: prep_config,
+        data: prep_config,
         isSuccess: prep_isSuccess,
         isError: prep_isError,
         error: prep_error,
-        refetch: prep_refetch
-    } = usePrepareContractWrite({
-        address: transaction.method.address,
-        abi: transaction.method.abi,
-        functionName: transaction.method.method,
-        args: transaction.method.args,
-        overrides: {
-            from: userWallet,
-        },
-        cacheTime:0,
+    } = useSimulateContract({
+        address: transactionMethod.address,
+        abi: transactionMethod.abi,
+        functionName: transactionMethod.method,
+        args: transactionMethod.args,
+        scopeKey: 'foo1',
         enabled: isReady
     })
 
 
     const {
         data: write_data,
-        write: write_send,
+        writeContract: write_send,
         isError: write_isError,
         error: write_error,
         isSuccess: write_isSuccess,
-        isLoading: write_isLoading
-    } = useContractWrite(prep_config)
+        isLoading: write_isLoading,
+        isPending: write_Pending
+    } = useWriteContract()
 
 
     const {
@@ -47,23 +50,23 @@ export default function TransactionStep() {
         isSuccess: confirmation_isSuccess,
         isLoading: confirmation_isLoading,
         isFetching: confirmation_isFetching
-    } = useWaitForTransaction({
+    } = useWaitForTransactionReceipt({
         confirmations: 2,
-        hash: write_data?.hash,
+        hash: write_data,
     })
 
 
 
     useEffect(() => {
         console.log("IQZ :: TRANSACTION :: SEND", isReady, prep_isSuccess, write_isLoading)
-        if (isReady && prep_isSuccess && !write_isLoading && transaction.ready) {
+        if (isReady && prep_isSuccess && !write_isLoading && transactionReady) {
             updateBlockchainProps([
                 { path: 'state.transaction.isError', value: false },
                 { path: 'state.transaction.error', value: null }
             ], "transaction write")
-            write_send()
+            write_send(prep_config?.request)
         }
-    }, [prep_isSuccess, isReady, transaction.method.method, transaction.ready])
+    }, [prep_isSuccess, isReady, transactionMethod.method, transactionReady])
 
     useEffect(() => {
         console.log("IQZ :: TRANSACTION - success - confirmation_data, confirmation_isSuccess",confirmation_data, confirmation_isSuccess)
@@ -71,7 +74,7 @@ export default function TransactionStep() {
             updateBlockchainProps([
                 { path: 'state.transaction.isError', value: false },
                 { path: 'state.transaction.error', value: null },
-                // { path: 'state.transaction.isFinished', value: true },
+                { path: 'state.transaction.isFinished', value: true },
                 { path: 'result.transaction', value: {
                         confirmation_isSuccess,
                         confirmation_data
@@ -103,41 +106,21 @@ export default function TransactionStep() {
         confirmation_isError, confirmation_error
     ])
 
-
-    const statuses = (state) => {
-        switch (state) {
-            case Transaction.Waiting: {
-                return <>Send transaction</>
-            }
-            case Transaction.Processing: {
-                return <>{confirmation_isLoading ? "Processing transaction" : "Confirm transaction in wallet"}</>
-            }
-            case Transaction.Executed: {
-                return <>Executed</>
-            }
-            case Transaction.Failed: {
-                return <span className="underline">Transaction failed</span>
-            }
-            default: {
-                return <>Send transaction</>
-            }
-        }
-    }
-
-    const prepareRow = (state) => {
-        return <div className={`flex flex-row items-center ${getStatusColor(state)}`}>
-            {getIcon(state)}
-            <div>
-                {statuses(state)}
-            </div>
-        </div>
-    }
-
     console.log("IQZ :: TRANACTION UI status", isFinished, isError, isReady)
 
-    if (isFinished) return prepareRow(Transaction.Executed)
-    if (isError && !isFinished) return prepareRow(Transaction.Failed)
-    if (!isReady) return prepareRow(Transaction.Waiting)
-    return prepareRow(Transaction.Processing)
+
+    const iconPadding = "p-[7px]"
+
+    if (isFinished) {
+        return blockchainRow(Transaction.Executed, <>Executed</>, ICONS.ROCKET, iconPadding)
+    }
+    if (isError && !isFinished || errorPrerequisite) {
+        return blockchainRow(Transaction.Failed, <>Transaction failed</>, ICONS.ROCKET, iconPadding, error.shortMessage || errorPrerequisite)
+    }
+    if (!isReady) {
+        return blockchainRow(Transaction.Waiting, <>Send transaction</>, ICONS.ROCKET, iconPadding)
+    }
+    return blockchainRow(Transaction.Processing, <>{confirmation_isLoading ? "Processing transaction" : "Confirm transaction in wallet"}</>, ICONS.ROCKET, iconPadding)
+
 }
 

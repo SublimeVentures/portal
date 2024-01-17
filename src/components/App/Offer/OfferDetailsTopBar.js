@@ -2,10 +2,12 @@ import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import {isBased} from "@/lib/utils";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
 export default function OfferDetailsTopBar({paramsBar}) {
+    const {cdn} = useEnvironmentContext();
     let {offer, phaseCurrent, phaseNext, refreshInvestmentPhase, phaseIsClosed} = paramsBar
-    let {name, genre, slug, cdn} = offer
+    let {name, genre, slug} = offer
 
     return (
         <div className={"col-span-12 flex flex-col gap-10 md:flex-row"}>

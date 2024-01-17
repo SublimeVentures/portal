@@ -1,37 +1,43 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
-import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
-import dynamic from "next/dynamic";
-import {ACLs, verifyID} from "@/lib/authHelpers";
-import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
-import {useQuery} from "@tanstack/react-query";
+import {
+    fetchOfferAllocation,
+    fetchOfferAllocationSsr,
+    fetchOfferDetails,
+    fetchOfferDetailsSsr
+} from "@/fetchers/offer.fetcher";
+import {dehydrate, useQuery} from "@tanstack/react-query";
 import {useRouter} from "next/router";
-const OfferDetailsDetails = dynamic(() => import('@/components/App/Offer/OfferDetailsAbout'), {ssr: false,})
-import {fetchUserInvestment} from "@/fetchers/vault.fetcher";
+import {fetchUserInvestment, fetchUserInvestmentSsr} from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import {NextSeo} from "next-seo";
-import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
 import {phases} from "@/lib/phases";
 import {useState, useEffect} from "react";
-import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
-import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import routes from "@/routes";
 import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
 import {PremiumItemsENUM} from "@/lib/enum/store";
+import {queryClient} from "@/lib/queryCache";
+import {processServerSideData} from "@/lib/serverSideHelpers";
+import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
+import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
+import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
+import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
+import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
+import {InvestProvider} from "@/components/App/Offer/InvestContext";
 
-export const AppOfferDetails = ({account}) => {
+
+export const AppOfferDetails = ({session}) => {
     const router = useRouter()
     const {slug} = router.query
-    const {ACL, address} = account
-    const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
+    const {userId} = session
 
     let [phaseIsClosed, setPhaseIsClosed] = useState(false)
     let [phaseCurrent, setPhaseCurrent] = useState(false)
     let [phaseNext, setPhaseNext] = useState(false)
 
     const {isSuccess: offerDetailsState, data: offerData} = useQuery({
-            queryKey: ["offerDetails", {slug, aclCache}],
+            queryKey: ["offerDetails", slug],
             queryFn: () => fetchOfferDetails(slug),
             refetchOnMount: false,
             refetchOnWindowFocus: false,
@@ -40,130 +46,150 @@ export const AppOfferDetails = ({account}) => {
         }
     );
 
+    const offerId = offerData?.id
     const {data: allocation, refetch: refetchAllocation} = useQuery({
-            queryKey: ["offerAllocation", offerData?.offer?.id],
-            queryFn: () => fetchOfferAllocation(offerData?.offer?.id),
-            refetchOnMount: true,
+            queryKey: ["offerAllocation", offerId],
+            queryFn: () => fetchOfferAllocation(offerId),
+            refetchOnMount: false,
             refetchOnWindowFocus: true,
-            enabled: !!offerData?.offer?.id,
             refetchInterval: phaseIsClosed ? false : 15000
         }
     );
 
     const {data: userAllocation, refetch: refetchUserAllocation, isSuccess: isSuccessUserAllocation} = useQuery({
-            queryKey: ["userAllocation", offerData?.offer?.id, address],
-            queryFn: () => fetchUserInvestment(offerData?.offer?.id),
+            queryKey: ["userAllocation", offerId, userId],
+            queryFn: () => fetchUserInvestment(offerData?.id),
             refetchOnMount: false,
             refetchOnWindowFocus: !phaseIsClosed,
-            enabled: !!offerData?.offer?.id,
+            enabled: !!offerData?.id,
         }
     );
 
     const feedPhases = () => {
-        if(!offerData?.offer) return
-        const {isClosed, phaseCurrent, phaseNext} = phases(ACL, offerData.offer)
+        if (!offerData?.id) return
+        const {isClosed, phaseCurrent, phaseNext} = phases(offerData)
         setPhaseIsClosed(isClosed)
         setPhaseCurrent(phaseCurrent)
         setPhaseNext(phaseNext)
     }
 
     const paramsBar = {
-        offer: offerData?.offer,
+        offer: offerData,
         phaseCurrent,
         phaseNext,
         phaseIsClosed,
         refreshInvestmentPhase: feedPhases,
     }
 
-    const guaranteedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Guaranteed)
-    const increasedUsed = userAllocation?.upgrades?.find(el=>el.storeId === PremiumItemsENUM.Increased)
-
+    const guaranteedUsed = userAllocation?.upgrades?.find(el => el.id === PremiumItemsENUM.Guaranteed)
+    const increasedUsed = userAllocation?.upgrades?.find(el => el.id === PremiumItemsENUM.Increased)
 
     const paramsInvest = {
-        offer: offerData?.offer,
-        currencies: offerData?.currencies,
+        offer: offerData,
         refetchUserAllocation,
         isSuccessUserAllocation,
         refetchAllocation,
-        userAllocation,
+        userInvested: userAllocation,
         allocation,
-        account,
+        session,
         upgradesUse: {guaranteedUsed, increasedUsed},
         phaseCurrent
     }
 
     const paramsParams = {
-        offer: offerData?.offer,
+        offer: offerData,
         allocation,
-        userAllocation,
-        phaseIsClosed
+        userInvested: userAllocation?.invested,
+        phaseIsClosed,
+        refetchUserAllocation
     }
 
     const renderPage = () => {
         if (!offerDetailsState || !phaseNext) return <Loader/>
-        if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
+        if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty/>
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar}/>
                 <div className={`${isBased ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}>
-                    {!phaseIsClosed ? <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}  /> : <OfferDetailsInvestClosed paramsInvestClosed={paramsInvest}/>}
+                    {!phaseIsClosed ?
+                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest}/> :
+                        <OfferDetailsInvestClosed/>
+                    }
                 </div>
-                <div
-                    className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
+                <div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
                     <OfferDetailsParams paramsParams={paramsParams}/>
                 </div>
-
                 <div className="flex flex-col col-span-12">
-                    <OfferDetailsDetails offer={offerData.offer}/>
+                    <OfferDetailsDetails offer={offerData}/>
                 </div>
             </div>
         )
     }
 
     useEffect(() => {
-        if(offerData?.notExist) {
+        if (!offerData?.ok) {
             router.push(routes.Opportunities)
         }
         feedPhases()
     }, [offerData])
 
-    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - ${getCopy("NAME")}`
+    const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${getCopy("NAME")}`
     return (
         <>
-             <NextSeo title={pageTitle}/>
-             {renderPage()}
-         </>
+            <NextSeo title={pageTitle}/>
+            <InvestProvider initialData={offerId}>
+                {renderPage()}
+            </InvestProvider>
+        </>
     )
 }
 
 
-export const getServerSideProps = async ({res, resolvedUrl}) => {
-    const account = await verifyID(res.req)
+export const getServerSideProps = async ({req, res, resolvedUrl, query}) => {
+    const customLogicCallback = async (account, token) => {
+        const slug = query.slug
 
-    if(account.exists){
+        await queryClient.prefetchQuery({
+            queryKey: ["offerDetails", slug],
+            queryFn: () => fetchOfferDetailsSsr(slug, token),
+            cacheTime: 30 * 60 * 1000,
+            staleTime: 15 * 60 * 1000,
+        })
+        const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
+        const offerId = offerDetails?.id;
+        if (!offerId) {
+            return {
+                redirect: {
+                    permanent: true,
+                    destination: routes.Opportunities,
+                },
+            };
+        }
+
+
+        await queryClient.prefetchQuery({
+            queryKey: ["offerAllocation", offerId],
+            queryFn: () => fetchOfferAllocationSsr(offerId, token),
+        })
+
+        const userId = account?.userId;
+
+        if (userId) {
+            await queryClient.prefetchQuery({
+                queryKey: ["userAllocation", offerId, userId],
+                queryFn: () => fetchUserInvestmentSsr(offerId, token),
+            })
+        }
+
         return {
-            redirect: {
-                permanent: true,
-                destination: `/app/auth?callbackUrl=${resolvedUrl}`
+            additionalProps: {
+                dehydratedState: dehydrate(queryClient),
             }
-        }
-    }
+        };
+    };
 
-    if(!account.auth){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${resolvedUrl}`
-            }
-        }
-    }
-
-    return {
-        props: {
-            account: account.user
-        }
-    }
-}
+    return await processServerSideData(req, res, resolvedUrl, customLogicCallback);
+};
 
 AppOfferDetails.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;

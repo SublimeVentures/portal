@@ -17,16 +17,17 @@ import IconNT from "@/assets/svg/NT.svg";
 import IconGrowth from "@/assets/svg/Seed.svg";
 import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
-import {logOut} from "@/fetchers/auth.fetcher";
-import routes from "@/routes";
 import {isBased} from "@/lib/utils";
 import Logo from "@/assets/svg/logo.svg";
-const ChangeNetwork = dynamic(() => import('@/components/Navigation/ChangeNetwork'), {ssr: false,})
-const ChangeAddress = dynamic(() => import('@/components/Navigation/ChangeAddress'), {ssr: false,})
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import ChangeNetwork  from "@/components/Navigation/ChangeNetwork";
+import ChangeAddress  from "@/components/Navigation/ChangeAddress";
 const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
 
 
-export default function Sidebar({account}) {
+export default function Sidebar({session}) {
+    const {environmentCleanup} = useEnvironmentContext();
+
     let [isMobileOpen, setIsMobileOpen] = useState(false)
     const router = useRouter();
     const toggleMobile = (e) => {
@@ -50,10 +51,8 @@ export default function Sidebar({account}) {
         setIsMobileOpen(false)
     }
 
-    const logout = async () => {
-        setIsMobileOpen(false)
-        await logOut()
-        router.push(routes.Landing)
+    const logout = () => {
+        environmentCleanup()
     }
 
     const menu = {
@@ -61,7 +60,7 @@ export default function Sidebar({account}) {
             {name: 'Vault', link: PAGE.App, icon: <IconVault className="w-8 mr-3"/>},
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'Accelerator', link: PAGE.Accelerator, icon: isBased ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
-            {name: 'OTC', link: PAGE.OTC, disabled:true, icon: <IconExchange className="w-8 mr-3"/>},
+            {name: 'OTC', link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
             {name: 'MysteryBox', link: PAGE.Mysterybox, icon: <IconMysteryBox className="w-8 mr-3"/>},
             {name: 'Upgrades', link: PAGE.Upgrades, icon: <IconPremium className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
@@ -71,7 +70,7 @@ export default function Sidebar({account}) {
             {name: 'Wiki', icon: <IconWiki className="w-6 ml-1 mr-3"/>, action: true, handler: openNotion},
         ],
         groupProfile: [
-            {name: 'Settings', link: PAGE.Settings, disabled: isBased, icon: <IconSetting className="w-8 mr-3"/>},
+            {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
             {name: 'Log out', icon: <IconLogout className="w-8 mr-3"/>, action: true, handler: logout},
         ]
     }
@@ -98,7 +97,7 @@ export default function Sidebar({account}) {
                         </div>
                     </Link>
                     <ChangeNetwork/>
-                    <ChangeAddress account={account}/>
+                    <ChangeAddress session={session}/>
 
                 </div>
                 <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}>

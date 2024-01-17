@@ -1,8 +1,63 @@
-const {models} = require('../services/db/db.init');
-const db = require("../services/db/db.init");
+const {models} = require('../services/db/definitions/db.init');
+const db = require("../services/db/definitions/db.init");
 const {Op, Sequelize, QueryTypes} = require("sequelize");
-const {MYSTERYBOX_CLAIM_ERRORS} = require("../../src/lib/enum/store");
+const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM} = require("../../src/lib/enum/store");
 
+
+
+async function pickMysteryBox(tenantId, transaction) {
+    const rolledMysterybox = await models.storeMysterybox.findOne({
+        where: {
+            userId: {
+                [Op.eq]: null,
+            },
+            tenantId
+        },
+        order: [
+            Sequelize.fn('random'),
+        ],
+        raw: true,
+        transaction
+    });
+
+    if (!rolledMysterybox) {
+        return {
+            ok: false,
+        }
+    }
+    return {
+        ok: true,
+        data: rolledMysterybox
+    }
+}
+
+
+
+async function assignMysteryBox(userId, mbId, transaction) {
+    const assignClaim = await models.storeMysterybox.update(
+        {
+            userId
+        },
+        {
+            where: {
+                id: mbId
+            }
+        }, {transaction}
+    )
+
+    if (!assignClaim) {
+        return {
+            ok: false,
+        }
+    }
+    return {
+        ok: true,
+        data: assignClaim
+    }
+}
+
+
+//todo: to be tested
 
 async function processMBAllocation(transaction, claim, userId) {
     const query = `
@@ -31,9 +86,9 @@ async function processMBAllocation(transaction, claim, userId) {
 
 async function processMBUpgrade(transaction, claim, userId) {
     const query = `
-        INSERT INTO public."storeUser" ("userId", "amount", "createdAt", "updatedAt", "storeId")
-        VALUES (${userId}, 1, now(), now(), ${claim.storeId})
-            ON CONFLICT ("userId", "storeId") DO
+        INSERT INTO public."storeUser" ("userId", "amount", "createdAt", "updatedAt", "storePartnerId")
+        VALUES (${userId}, 1, now(), now(), ${claim.storePartnerId})
+            ON CONFLICT ("userId", "storePartnerId") DO
         UPDATE SET "amount" = "storeUser"."amount" + EXCLUDED.amount, "updatedAt" = now();
 
     `
@@ -52,54 +107,6 @@ async function processMBUpgrade(transaction, claim, userId) {
     }
 }
 
-
-async function pickMysteryBox(transaction) {
-    const rolledMysterybox = await models.storeMysterybox.findOne({
-        where: {
-            userId: {
-                [Op.eq]: null
-            }
-        },
-        order: [
-            Sequelize.fn('random'),
-        ],
-        raw: true
-    }, {transaction});
-
-    if (!rolledMysterybox) {
-        return {
-            ok: false,
-        }
-    }
-    return {
-        ok: true,
-        data: rolledMysterybox
-    }
-}
-
-
-async function assignMysteryBox(userId, mbId, transaction) {
-    const assignClaim = await models.storeMysterybox.update(
-        {
-            userId
-        },
-        {
-            where: {
-                id: mbId
-            }
-        }, {transaction}
-    )
-
-    if (!assignClaim) {
-        return {
-            ok: false,
-        }
-    }
-    return {
-        ok: true,
-        data: assignClaim
-    }
-}
 
 
 module.exports = {pickMysteryBox, assignMysteryBox, processMBAllocation, processMBUpgrade}

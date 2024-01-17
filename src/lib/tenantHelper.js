@@ -1,8 +1,8 @@
-const Tenant = {
-    basedVC: 0,
-    NeoTokyo: 1,
+const TENANT = {
+    basedVC: 1,
+    NeoTokyo: 6,
 }
 
 module.exports = {
-    Tenant
+    TENANT
 }

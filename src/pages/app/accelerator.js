@@ -7,17 +7,20 @@ import Empty from "@/components/App/Empty";
 import Head from "next/head";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
-import {verifyID, ACLs} from "@/lib/authHelpers";
 import routes from "@/routes";
 import {isBased} from "@/lib/utils";
 import {getCopy} from "@/lib/seoConfig";
+import { processServerSideData} from "@/lib/serverSideHelpers";
+import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
 
-export default function AppAccelerator({account}) {
-    const ACL = account.ACL
-    const ADDRESS = ACL !==ACLs.PartnerInjected ? ACL : account.address
+export default function AppAccelerator({session}) {
+    const {cdn} = useEnvironmentContext();
+
+    const TENANT_ID = session.tenantId
+    const PARTNER_ID = session.partnerId
 
     const { isLoading, data: response, isError } = useQuery({
-            queryKey: ["offerList", {ACL, ADDRESS}],
+            queryKey: ["offerList", {TENANT_ID, PARTNER_ID}],
             queryFn: fetchOfferList,
             cacheTime: 5 * 60 * 1000,
             staleTime: 1 * 60 * 1000,
@@ -28,7 +31,7 @@ export default function AppAccelerator({account}) {
 
 
     const offerList = response?.offers
-    const acceleratorList = !!offerList ? offerList.filter(el => el.accelerator) : [];
+    const acceleratorList = !!offerList ? offerList.filter(el => el.isAccelerator) : [];
     const accelerator = acceleratorList.length
 
     const renderPage = () => {
@@ -38,7 +41,7 @@ export default function AppAccelerator({account}) {
         return (
                 <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                     {!!offerList && acceleratorList.map(el => {
-                            return <OfferItem offer={el} key={el.slug} ACL={ACL} cdn={response?.cdn}/>
+                            return <OfferItem offer={el} cdn={cdn} key={el.slug}/>
                         }
                     )}
                 </div>
@@ -103,31 +106,10 @@ export default function AppAccelerator({account}) {
     </>
 }
 
-export const getServerSideProps = async({res}) => {
-    const account = await verifyID(res.req)
-    if(account.exists){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/app/auth?callbackUrl=${routes.Accelerator}`
-            }
-        }
-    }
-    if(!account.auth){
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${routes.Accelerator}`
-            }
-        }
-    }
-
-    return {
-        props: {
-            account: account.user
-        }
-    }
+export const getServerSideProps = async({ req, res }) => {
+    return await processServerSideData(req, res, routes.Accelerator);
 }
+
 
 AppAccelerator.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;

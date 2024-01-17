@@ -1,27 +1,40 @@
-const {models} = require('../services/db/db.init');
+const {models} = require('../services/db/definitions/db.init');
 const logger = require("../../src/lib/logger");
 const {serializeError} = require("serialize-error");
 const {Op} = require("sequelize");
-const {PremiumItemsENUM} = require("../../src/lib/enum/store");
-
-async function getStore(isBased) {
+const db = require("../services/db/definitions/db.init");
+async function getStore(partnerId, tenantId) {
     try {
-        const whereClause = {};
-        if (!isBased) {
-            whereClause.id = { [Op.ne]: PremiumItemsENUM.Increased };
-        }
-        return models.store.findAll({
-            attributes: ['id', 'name', 'description', 'price', 'priceBytes', 'enabled', 'availability'],
-            where: whereClause,
-            order: [
-                ['id', 'ASC'],
+        return await  models.storePartner.findAll({
+            where: {
+                enabled: true,
+                tenantId: tenantId
+                // [Op.or]: [
+                //     { tenantId: partnerId },
+                //     { tenantId: tenantId },
+                // ],
+            },
+            include: [{
+                model: models.store,
+                as: 'store',
+                attributes: []
+            }],
+            attributes: [
+                'availability',
+                'price',
+                'img',
+                [db.literal('"store"."id"'), 'id'],
+                [db.literal('"store"."name"'), 'name'],
+                [db.literal('"store"."description"'), 'description'],
+
             ],
             raw: true
-        })
+        });
     } catch (error) {
-        logger.error('QUERY :: [getStore]', {error: serializeError(error)});
+        logger.error('QUERY :: [getStore]', { error: serializeError(error) });
     }
-    return []
+    return [];
 }
+
 
 module.exports = {getStore}

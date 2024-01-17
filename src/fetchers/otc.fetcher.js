@@ -43,13 +43,14 @@ export const fetchHistory = async (offerId) => {
     return {}
 }
 
-export const saveTransaction = async (offerId, networkChainId, price, amount, isSell) => {
+export const saveTransaction = async (offerId, networkChainId, price, amount, isSell, account) => {
     try {
         const {data} = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
             networkChainId,
             price,
             amount,
             isSell,
+            account
         })
         return data
     } catch(e) {
@@ -59,12 +60,13 @@ export const saveTransaction = async (offerId, networkChainId, price, amount, is
     }
     return {}
 }
-export const getSignature = async (offerId, chainId, otcId, dealId) => {
+export const getSignature = async (offerId, chainId, otcId, dealId, wallet) => {
     try {
         const {data} = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {
             chainId,
             otcId,
-            dealId
+            dealId,
+            wallet
         })
         return data
     } catch(e) {

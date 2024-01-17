@@ -3,7 +3,7 @@ function sleeper(ms) {
 }
 
 
-const isBased = process.env.NEXT_PUBLIC_SITE === "based"
+const isBased = process.env.NEXT_PUBLIC_TENANT === "1"
 
 const NETWORKS = {
     1: 'eth',
