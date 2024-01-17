@@ -14,9 +14,11 @@ import {fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
 const UserSummary = dynamic(() => import('@/components/App/Vault/UserSummary'), {ssr: false})
 
 export default function AppVault({session}) {
-    const USER_ID = session.userId
+    const userId = session.userId
+    const tenantId = session.tenantId
+
     const {isSuccess: isSuccessDataFeed, data: vault} = useQuery({
-            queryKey: ["userVault", USER_ID],
+            queryKey: ["userVault", userId],
             queryFn: fetchVault,
             refetchOnMount: true,
             refetchOnWindowFocus: false,
@@ -26,7 +28,7 @@ export default function AppVault({session}) {
     );
 
     const {data: premiumData} = useQuery({
-            queryKey: ["premiumOwned", USER_ID],
+            queryKey: ["premiumOwned", userId, tenantId],
             queryFn: fetchStoreItemsOwned,
             refetchOnMount: true,
             refetchOnWindowFocus: false,

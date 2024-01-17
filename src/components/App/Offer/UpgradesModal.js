@@ -46,7 +46,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         isSuccessUserAllocation,
         upgradesUse
     } = upgradesModalProps
-    const {userId} = session
+    const {userId, tenantId} = session
 
     let [selected, setSelected] = useState(0)
     let [isProcessing, setIsProcessing] = useState(false)
@@ -54,7 +54,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
     let [errorMsg, setErrorMsg] = useState("")
 
     const {data: premiumData, refetch} = useQuery({
-            queryKey: ["premiumOwned", {userId}],
+            queryKey: ["premiumOwned", userId, tenantId],
             queryFn: fetchStoreItemsOwned,
             enabled: model,
             refetchOnMount: false,
@@ -63,6 +63,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         }
     );
 
+    const applicable = premiumData?.filter(el=>el.id !== 0)
     const isStageEnabled = phaseCurrent?.phase === PhaseId.Pending
     const maximumGuaranteedBooking = allocationUserLeft > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : allocationUserLeft
 
@@ -140,7 +141,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                 </div>
                 }
                 <div>
-                    {premiumData?.length > 0 ? premiumData.map(el => {
+                    {applicable?.length > 0 ? applicable.map(el => {
                         return <UpgradesModalItem
                             key={el.id}
                             itemType={el.id}
@@ -159,7 +160,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                 </div>
 
                 <div className={"pt-5 pb-2 mt-auto mx-auto"}>
-                    {premiumData?.length > 0 ?
+                    {applicable?.length > 0 ?
                         <UniButton
                             type={ButtonTypes.BASE}
                             text={isProcessing ? 'Processing...' : 'Upgrade'}
