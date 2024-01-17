@@ -97,7 +97,7 @@ export default function Sidebar({session}) {
                         </div>
                     </Link>
                     <ChangeNetwork/>
-                    {/*<ChangeAddress session={session}/>*/}
+                    <ChangeAddress session={session}/>
 
                 </div>
                 <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}>
