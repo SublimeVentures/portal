@@ -23,9 +23,9 @@ export const config = createConfig({
     ssr: true,
     connectors: [
         // metaMask(),
-        // walletConnect({
-        //     projectId: WALLET_CONNECT_ID,
-        // }),
+        walletConnect({
+            projectId: WALLET_CONNECT_ID,
+        }),
         coinbaseWallet({
             appName: 'Venture Capital',
         }),
