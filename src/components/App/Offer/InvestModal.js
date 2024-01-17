@@ -63,7 +63,6 @@ export default function InvestModal({model, setter, investModalProps}) {
 
     useEffect(() => {
         if (investmentAmount < 50 || !model || !hashData?.code || hashData?.code?.length === 0 || !selectedCurrency || !blockchainProps.isClean) return;
-        console.log("insertting config")
         insertConfiguration({
             data: {
                 account: account.address,

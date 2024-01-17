@@ -72,6 +72,7 @@ export default function TakeOfferModal({model, setter, props}) {
                 account: account.address,
                 requiredNetwork: offerDetails?.chainId,
                 amount: totalPayment,
+                liquidity: totalPayment,
                 allowance: totalPayment,
                 contract: activeOtcContract,
                 currency: selectedCurrency.symbol,
