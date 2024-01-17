@@ -44,7 +44,6 @@ export default function AppOtc({session}) {
         }
     );
 
-    console.log("vault",vault)
     const currentMarket = otc?.find(el => el.slug === market)
 
     const {isSuccess: offersIsSuccess, data: offers, refetch: refetchOffers} = useQuery({
@@ -58,8 +57,6 @@ export default function AppOtc({session}) {
         }
     );
 
-
-    console.log("PAGE LOADS", otc,vault ,offers)
 
     const changeMarket = (slug) => {
         router.push(`${PAGE.OTC}/?market=${slug}`, undefined, {shallow: true})
