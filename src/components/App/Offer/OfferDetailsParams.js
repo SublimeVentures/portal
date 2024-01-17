@@ -29,7 +29,6 @@ export const OfferDetailsParams = ({paramsParams}) => {
         const currentTime = Date.now();
 
         if (currentTime - lastExecution >= 60000) {
-            console.log("debounce")
             setLastExecution(currentTime)
             try {
                 await clearBookings();
@@ -38,7 +37,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                     ok: true
                 };
             } catch (e) {
-                logger.error(`ERROR :: [clearPendingBookings]`, e);
+                console.log(`ERROR :: [clearPendingBookings]`, e);
                 return {
                     ok: false
                 };
@@ -46,9 +45,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
         }
     }, 0); // Set the second argument to 0 for immediate execution
 
-    const clearPendingBookings2 = async () => {
-        console.log("debounce")
-    }
+
 
     return (
         <>
@@ -67,7 +64,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                         </div></div>}
                         {invested > 0 && <div className={"detailRow text-app-success"}><p>My Investment</p><hr className={"spacer"}/><p>${normalized_invested}</p></div>}
                         <div className={"detailRow"}><p>Ticker</p><hr className={"spacer"}/><p>${ticker}</p></div>
-                        <div className={"detailRow"}><p>Price</p><hr className={"spacer"}/><p>${normalized_ppu}</p></div>
+                        <div className={"detailRow"}><p>Price</p><hr className={"spacer"}/><p>{ppu === 0 ? "TBA" : `$${normalized_ppu}`}</p></div>
                         {tge && <div className={"detailRow text-app-success"}><p>TGE</p><hr className={"spacer"}/><p>({normalized_tgeDiff}%) ${normalized_tge}</p></div>}
                         <div className={"detailRow"}><p>Cliff</p><hr className={"spacer"}/><p>{t_cliff ? <>{t_cliff}</> : <>TBA</>}</p></div>
                         <div className={"detailRow"}><p>Vesting</p><hr className={"spacer"}/><p>{t_vesting ? <>{t_vesting}</> : <>TBA</>}</p></div>

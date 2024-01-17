@@ -128,7 +128,7 @@ const query_getOfferDetails = `
         od.description
     FROM
         "offer" o
-            JOIN
+            LEFT JOIN
         "offerDescription" od ON o."descriptionId" = od.id
             LEFT JOIN LATERAL (
             SELECT
@@ -143,14 +143,14 @@ const query_getOfferDetails = `
                     WHEN ol1."partnerId" = :partnerId THEN 1
                     WHEN ol1."partnerId" = :tenantId THEN 2
                     ELSE 3
-                    END
-                LIMIT 1
+                END
+            LIMIT 1
     ) ol ON true
     WHERE
         o.display = true AND
         o.slug = :slug AND
         ol."offerId" IS NOT NULL
-        LIMIT 1;
+    LIMIT 1;
 `;
 
 

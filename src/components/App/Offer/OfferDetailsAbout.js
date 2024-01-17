@@ -76,11 +76,11 @@ export default function OfferDetailsAbout({offer}) {
 
             <div className="my-10">
                 {parsePages.length > 0 && amount > 0 && <div id="flipbook">
-                    {/*<Flipbook*/}
-                    {/*    pages={parsePages}*/}
-                    {/*    startPage={1}*/}
-                    {/*    zooms={[1, 1.5, 2]}*/}
-                    {/*/>*/}
+                    <Flipbook
+                        pages={parsePages}
+                        startPage={1}
+                        zooms={[1, 1.5, 2]}
+                    />
                 </div>}
             </div>
         </>

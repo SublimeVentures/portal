@@ -245,7 +245,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     useEffect(() => {
         if (!offer) return
-        const allocations = userInvestmentState(session, offer, phaseCurrent, upgradesUse, userInvested.total, allocation ? allocation : {})
+        const allocations = userInvestmentState(session, offer, phaseCurrent, upgradesUse, userInvested?.total, allocation ? allocation : {})
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
         setIsError({state: !allocationIsValid, msg: message})
@@ -263,7 +263,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         upgradesUse?.increasedUsed?.amount,
         upgradesUse?.guaranteedUsed?.amount,
         upgradesUse?.guaranteedUsed?.alloUsed,
-        userInvested.total,
+        userInvested?.total,
         investmentAmount,
         phaseCurrent?.phase
     ])
