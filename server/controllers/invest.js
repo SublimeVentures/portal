@@ -93,11 +93,8 @@ async function processBooking(
 
         console.log("userAllocation", userAllocation)
 
-        if (userAllocation.allocationUser_left < amount) {
-            throw Error("User don't have enough allocation left")
-        }
-        if (userAllocation.offer_isProcessing) {
-            throw Error("Reservations are still processing")
+        if (userAllocation.allocationUser_left < amount || userAllocation.offer_isProcessing) {
+            throw Error(BookingErrorsENUM.Overallocated)
         }
         if (userAllocation.offer_isSettled) {
             throw Error(BookingErrorsENUM.NotOpen)
