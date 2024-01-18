@@ -32,12 +32,14 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         offer,
         phaseCurrent,
         session,
-        refetchAllocation,
+        refetchOfferAllocation,
         refetchUserAllocation,
         allocation,
         userInvested,
-        isSuccessUserAllocation,
+        userAllocationState,
         upgradesUse,
+        premiumData,
+        refetchPremiumData
     } = paramsInvestPhase;
     const {network, activeChainSettlementSymbol, activeChainCurrency} = useEnvironmentContext();
     const {
@@ -131,7 +133,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         cleanHash(true)
         setInvestModal(false)
         setRestoreHashModal(false)
-        refetchAllocation()
+        refetchOfferAllocation()
         setButtonLoading(false)
     }
 
@@ -150,22 +152,18 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const startInvestmentProcess = async () => {
-        console.log("click", investmentAmount, allocationData, selectedCurrency, activeChainCurrency, activeChainCurrency[selectedCurrency])
-
         if (
             investmentAmount > 0 &&
             allocationData.allocationUser_max > 0 &&
             allocationData.allocationUser_min > 0 &&
             allocationData.allocationUser_left > 0
         ) {
-            console.log("passed")
             setButtonLoading(true)
             const response = await fetchHash(offer.id, investmentAmount, activeChainCurrency[selectedCurrency]?.address, network.chainId)
-            console.log("response", response)
             if (!response.ok) {
                 setErrorMsg(response.code)
                 setErrorModal(true)
-                refetchAllocation()
+                refetchOfferAllocation()
             } else {
                 const confirmedAmount = Number(response.amount)
                 setValue(confirmedAmount)
@@ -272,12 +270,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const restoreModalProps = {allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
     const errorModalProps = {code: errorMsg}
     const upgradesModalProps = {
-        session,
         phaseCurrent,
         offerId: offer.id,
         refetchUserAllocation,
-        isSuccessUserAllocation,
+        userAllocationState,
         upgradesUse,
+        premiumData ,
+        refetchPremiumData,
         allocationUserLeft: allocationData.allocationUser_left
     }
     const calculateModalProps = {investmentAmount, allocationData, offer}

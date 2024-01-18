@@ -1,8 +1,6 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import PAGE, {ExternalLinks} from "@/routes";
-import {useQuery} from "@tanstack/react-query";
-import {fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
 import {useState} from "react";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import UpgradesModalItem from "@/components/App/Offer/UpgradesModalItem";
@@ -38,30 +36,21 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
     const router = useRouter()
 
     const {
-        session,
         allocationUserLeft,
         offerId,
         phaseCurrent,
         refetchUserAllocation,
-        isSuccessUserAllocation,
-        upgradesUse
+        userAllocationState,
+        upgradesUse,
+        premiumData,
+        refetchPremiumData
     } = upgradesModalProps
-    const {userId, tenantId} = session
 
     let [selected, setSelected] = useState(0)
     let [isProcessing, setIsProcessing] = useState(false)
     let [isError, setIsError] = useState(false)
     let [errorMsg, setErrorMsg] = useState("")
 
-    const {data: premiumData, refetch} = useQuery({
-            queryKey: ["premiumOwned", userId, tenantId],
-            queryFn: fetchStoreItemsOwned,
-            enabled: model,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 5 * 1000,
-        }
-    );
 
     const applicable = premiumData?.filter(el=>el.id !== 0)
     const isStageEnabled = phaseCurrent?.phase === PhaseId.Pending
@@ -94,7 +83,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         if (selected > 0) {
             const result = await useUpgrade(offerId, selected)
             if (result?.ok) {
-                await refetch();
+                await refetchPremiumData();
                 await refetchUserAllocation()
             } else {
                 setIsError(true)
@@ -117,7 +106,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
 
     const content = () => {
         return (
-            <div className={`flex flex-1 flex-col gap-5 pt-5 relative ${isSuccessUserAllocation ? "" : "disabled"}`}>
+            <div className={`flex flex-1 flex-col gap-5 pt-5 relative ${userAllocationState ? "" : "disabled"}`}>
                 {isError && <div
                     className={"absolute top-0 bottom-0 -left-5 -right-5 px-5 bg-app-bg h-full opacity-100 z-20 flex flex-col gap-5"}>
                     <div
@@ -152,14 +141,14 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                             owned={el.amount}
                             used={used(el.id, upgradesUse)}
                             image={el.img}
-                            isRightPhase={isStageEnabled}
+                            isRightPhase={el.id === PremiumItemsENUM.Guaranteed ? isStageEnabled : true}
                         />
                     }) : <div className={"w-full text-center"}>No upgrades detected.</div>
                     }
 
                 </div>
 
-                <div className={"pt-5 pb-2 mt-auto mx-auto"}>
+                <div className={"pt-5 pb-2 mt-auto fullWidthButton"}>
                     {applicable?.length > 0 ?
                         <UniButton
                             type={ButtonTypes.BASE}

@@ -25,18 +25,20 @@ import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestP
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
 import {InvestProvider} from "@/components/App/Offer/InvestContext";
+import PAGE from "@/routes";
+import {fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
 
 
 export const AppOfferDetails = ({session}) => {
     const router = useRouter()
     const {slug} = router.query
-    const {userId} = session
+    const {userId, tenantId} = session
 
     let [phaseIsClosed, setPhaseIsClosed] = useState(false)
     let [phaseCurrent, setPhaseCurrent] = useState(false)
     let [phaseNext, setPhaseNext] = useState(false)
 
-    const {isSuccess: offerDetailsState, data: offerData} = useQuery({
+    const {isSuccess: offerDetailsState, data: offerData, error: errorOfferDetails, refetch: refetchOfferDetails} = useQuery({
             queryKey: ["offerDetails", slug],
             queryFn: () => fetchOfferDetails(slug),
             refetchOnMount: false,
@@ -47,7 +49,7 @@ export const AppOfferDetails = ({session}) => {
     );
 
     const offerId = offerData?.id
-    const {data: allocation, refetch: refetchAllocation} = useQuery({
+    const {isSuccess: offerAllocationState, data: allocation, error: errorOfferAllocation, refetch: refetchOfferAllocation} = useQuery({
             queryKey: ["offerAllocation", offerId],
             queryFn: () => fetchOfferAllocation(offerId),
             refetchOnMount: false,
@@ -56,7 +58,7 @@ export const AppOfferDetails = ({session}) => {
         }
     );
 
-    const {data: userAllocation, refetch: refetchUserAllocation, isSuccess: isSuccessUserAllocation} = useQuery({
+    const {isSuccess: userAllocationState, data: userAllocation, refetch: refetchUserAllocation,error: errorUserAllocation } = useQuery({
             queryKey: ["userAllocation", offerId, userId],
             queryFn: () => fetchUserInvestment(offerData?.id),
             refetchOnMount: false,
@@ -64,6 +66,51 @@ export const AppOfferDetails = ({session}) => {
             enabled: !!offerData?.id,
         }
     );
+
+    const {data: premiumData, refetch: refetchPremiumData} = useQuery({
+            queryKey: ["premiumOwned", userId, tenantId],
+            queryFn: fetchStoreItemsOwned,
+            refetchOnMount: true,
+            refetchOnWindowFocus: false,
+            cacheTime: 5 * 60 * 1000,
+            staleTime: 5 * 1000,
+        }
+    );
+
+    useEffect(() => {
+        try {
+            if(!!errorOfferDetails) {
+                refetchOfferDetails().then((el=> {
+                    if(!!errorOfferDetails) {
+                        throw Error("Offer details fetch fail")
+                    }
+                }))
+            }
+            if(!!errorOfferAllocation) {
+                refetchOfferAllocation().then((el=> {
+                    if(!!errorOfferAllocation) {
+                        throw Error("Offer allocations fetch fail")
+                    }
+                }))
+            }
+            if(!!errorUserAllocation) {
+                refetchUserAllocation().then((el=> {
+                    if(!!errorUserAllocation) {
+                        throw Error("User allocations fetch fail")
+                    }
+                }))
+            }
+
+        } catch(error) {
+            router.push(PAGE.Opportunities)
+        }
+
+    },[
+        errorOfferDetails,
+        errorOfferAllocation,
+        errorUserAllocation,
+    ])
+
 
     const feedPhases = () => {
         if (!offerData?.id) return
@@ -87,13 +134,15 @@ export const AppOfferDetails = ({session}) => {
     const paramsInvest = {
         offer: offerData,
         refetchUserAllocation,
-        isSuccessUserAllocation,
-        refetchAllocation,
+        userAllocationState,
+        refetchOfferAllocation,
         userInvested: userAllocation,
         allocation,
         session,
         upgradesUse: {guaranteedUsed, increasedUsed},
-        phaseCurrent
+        phaseCurrent,
+        premiumData,
+        refetchPremiumData
     }
 
     const paramsParams = {
@@ -105,7 +154,7 @@ export const AppOfferDetails = ({session}) => {
     }
 
     const renderPage = () => {
-        if (!offerDetailsState || !phaseNext) return <Loader/>
+        if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader/>
         if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty/>
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
