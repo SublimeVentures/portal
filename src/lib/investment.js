@@ -25,12 +25,7 @@ function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
             break;
         }
     }
-
-    // console.log("allocationUser_max - allocationUser_min",allocationUser_min)
-    // console.log("allocationUser_max - allocationUser_base",allocationUser_base)
-
     allocationUser_max = getUserAllocationBaseWithIncreased(allocationUser_base, upgradeIncreasedUsed)
-    // console.log("allocationUser_max",allocationUser_max)
 
     return {
         allocationUser_base,
@@ -46,7 +41,10 @@ function getUserAllocationBaseWithIncreased(allocationUser_max_base, upgradeIncr
 
 function getUserAllocationGuaranteed(guaranteedUsed) {
     if (!!guaranteedUsed && !guaranteedUsed?.isExpired) {
-        return guaranteedUsed.alloMax - guaranteedUsed.alloUsed
+        return {
+            left: guaranteedUsed.alloMax - guaranteedUsed.alloUsed,
+            total: guaranteedUsed.alloMax
+        }
     } else {
         return 0
     }
@@ -79,8 +77,8 @@ function allocationParseFCFS(params) {
     const {allocationUser_guaranteed, allocationUser_max} = output
 
     let allocationUser_left
-    if (allocationUser_guaranteed > 0) {
-        allocationUser_left = allocationUser_guaranteed
+    if (allocationUser_guaranteed.total > 0) {
+        allocationUser_left = allocationUser_guaranteed.left
     } else {
         allocationUser_left = getAllocationLeft(allocationOffer_left, (allocationUser_max - allocationUser_invested))
     }
@@ -146,7 +144,7 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
 
     const allocationUser_left_rounded = roundAmount(allocationUser_left);
     const allocationUser_max_rounded = roundAmount(allocationUser_max);
-    const allocationUser_guaranteed_rounded = roundAmount(allocationUser_guaranteed);
+    const allocationUser_guaranteed_rounded = roundAmount(allocationUser_guaranteed.left);
 
     console.log("QUELCO - summary", {
         allocationUser_min,

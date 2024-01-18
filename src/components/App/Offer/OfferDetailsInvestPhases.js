@@ -357,7 +357,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 </div>
             </div>
             <div className={"text-app-success text-center min-h-[68px] py-5 px-2"}>
-                {allocationData.offer_isProcessing && <div>
+                {allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0 && <div>
                     All spots booked! Awaiting blockchain confirmations. <br/>
                     <Linker url={ExternalLinks.LOOTBOX} text={"Check back soon."}/>
                 </div>}

@@ -149,36 +149,43 @@ export const getServerSideProps = async ({req, res, resolvedUrl, query}) => {
     const customLogicCallback = async (account, token) => {
         const slug = query.slug
 
-        await queryClient.prefetchQuery({
-            queryKey: ["offerDetails", slug],
-            queryFn: () => fetchOfferDetailsSsr(slug, token),
-            cacheTime: 30 * 60 * 1000,
-            staleTime: 15 * 60 * 1000,
-        })
-        const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
-        const offerId = offerDetails?.id;
-        if (!offerId) {
+        try {
+            await queryClient.prefetchQuery({
+                queryKey: ["offerDetails", slug],
+                queryFn: () => fetchOfferDetailsSsr(slug, token),
+                cacheTime: 30 * 60 * 1000,
+                staleTime: 15 * 60 * 1000,
+            })
+            const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
+            const offerId = offerDetails.id;
+
+            await queryClient.prefetchQuery({
+                queryKey: ["offerAllocation", offerId],
+                queryFn: () => fetchOfferAllocationSsr(offerId, token),
+            })
+            const userId = account.userId;
+            await queryClient.prefetchQuery({
+                queryKey: ["userAllocation", offerId, userId],
+                queryFn: () => fetchUserInvestmentSsr(offerId, token),
+            })
+
+            const offerAllocation = queryClient.getQueryData(["offerAllocation", offerId]);
+            const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
+
+            if(
+                !(offerAllocation.alloFilled >= 0) ||
+                !(userAllocation.invested.booked >= 0)
+            ) {
+                throw Error("Data not fetched")
+            }
+        } catch(error) {
+            console.log("Error", error)
             return {
                 redirect: {
                     permanent: true,
                     destination: routes.Opportunities,
                 },
             };
-        }
-
-
-        await queryClient.prefetchQuery({
-            queryKey: ["offerAllocation", offerId],
-            queryFn: () => fetchOfferAllocationSsr(offerId, token),
-        })
-
-        const userId = account?.userId;
-
-        if (userId) {
-            await queryClient.prefetchQuery({
-                queryKey: ["userAllocation", offerId, userId],
-                queryFn: () => fetchUserInvestmentSsr(offerId, token),
-            })
         }
 
         return {
