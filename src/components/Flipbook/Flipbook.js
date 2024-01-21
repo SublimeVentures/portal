@@ -1002,8 +1002,8 @@ const Flipbook = ({
             if (loadedImages[url]) {
                 return url;
             } else {
-                console.log("FLIP MAGA url",url)
-                //todo: uncomment and fix
+                // console.log("FLIP MAGA url",url)
+                // //todo: uncomment and fix
                 // const img = new Image();
                 // img.onload = () => {
                 //     setLoadedImages({ ...loadedImages, [url]: true });

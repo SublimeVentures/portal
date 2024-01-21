@@ -5,29 +5,32 @@ import {
     useWaitForTransactionReceipt,
     useWriteContract
 } from 'wagmi'
-import { v4 as uuidv4 } from 'uuid';
+import {useEffect} from "react";
 
-function useSendTransaction(params) {
-    const transactionId = uuidv4();
+function useSendTransaction(isEnabled, method, forceChainId) {
     const chainId = useChainId()
     const { address: account } = useAccount()
-    const {isEnabled, method, forceChainId} = params
     const {name, inputs, contract, abi, confirmations} = method
 
 
-    const scope = `${account}_trans_${contract}_${name}_${transactionId}`
+    const scope = `${account}_trans_${contract}_${name}_${inputs[1]||inputs[0]}`
     const finalChainId = forceChainId || chainId
 
-    // const inputs = useMemo(() => [spender, amount], [spender, amount])
-    // const abi = useGetTokenAbi(token, finalChainId)
+    const simulate = useSimulateContract({
+        functionName: name,
+        address: contract,
+        args: inputs,
+        abi: abi,
+        blockTag: 'safe',
+        chainId: finalChainId,
+        scopeKey: scope,
+        account: account, //todo: chcekc
+        query: {
+            enabled: isEnabled,
+        },
+    })
 
-
-    const {
-        data: simulateData,
-        isSuccess: simulateIsSuccess,
-        isError: simulateIsError,
-        error: simulateError,
-    } = useSimulateContract({
+    console.log("ALL SIMUL", isEnabled,simulate, {
         functionName: name,
         address: contract,
         args: inputs,
@@ -43,43 +46,31 @@ function useSendTransaction(params) {
         },
     })
 
+    const write = useWriteContract()
 
-    const {
-        writeContract: write,
-        writeContractAsync: writeAsync,
-        reset: writeReset,
-        data: writeData,
-        isError: writeIsError,
-        error: writeError,
-        isLoading: writeIsLoading,
-    } = useWriteContract()
-
-
-    const {
-        data: confirmationData,
-        isError: confirmation_isErrorZero,
-        error: confirmation_errorZero,
-        isSuccess: confirmation_isSuccessZero,
-    } = useWaitForTransactionReceipt({
-        confirmations: 2,
-        hash: writeData,
+    const confirmEnabled = write.isSuccess
+    const confirm = useWaitForTransactionReceipt({
+        confirmations: confirmations,
+        hash: write?.data,
         query: {
-            enabled: isEnabled
+            enabled: confirmEnabled
         }
     })
 
 
-    // return {
-    //     ...rest,
-    //     allowance: useMemo(() => {
-    //         if (typeof data !== 'undefined' && !!contract && precision) {
-    //             const power = new BigNumber(10).pow(precision);
-    //             const currentBalanceBN = new BigNumber(data);
-    //             return currentBalanceBN.dividedBy(power).toNumber();
-    //         }
-    //         return 0
-    //     }, [data]),
-    // }
+    useEffect(() => {
+        console.log("BIX :: ALLOWANCE trigger TRANSACTION",simulate.isSuccess, write.isPending, simulate.data )
+        if (simulate.isSuccess && !write.isPending) {
+            write.writeContract(simulate.data?.request)
+        }
+    }, [simulate.isSuccess]);
+
+
+    return {
+        simulate,
+        write,
+        confirm
+    }
 }
 
 export default useSendTransaction;

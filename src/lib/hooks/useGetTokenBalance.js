@@ -1,12 +1,12 @@
-import { useMemo} from 'react';
-import {useAccount, useReadContract, useWatchBlocks, useChainId} from 'wagmi'
-import { erc20Abi } from 'viem'
+import {useMemo} from 'react';
+import {useAccount, useChainId, useReadContract, useWatchBlocks} from 'wagmi'
+import {erc20Abi} from 'viem'
 import BigNumber from "bignumber.js";
 
-function useTokenBalance(params) {
+function useGetTokenBalance(isEnabled, token, forceChainId) {
     const chainId = useChainId()
     const { address: account } = useAccount()
-    const {isCheckActive, contract, forceChainId} = params
+    const {contract, precision} = token
 
     const scope = `${account}_liq_${contract}`
 
@@ -27,25 +27,31 @@ function useTokenBalance(params) {
             chainId: finalChainId,
             scopeKey: scope,
             query: {
-                enabled: isCheckActive,
-                staleTime: 1_000,
+                enabled: isEnabled,
+                staleTime: 5_000,
             },
         }
     )
 
-
     useWatchBlocks({
-        enabled: isCheckActive,
+        enabled: isEnabled,
         onBlock(block) {
-            console.log('New block', block.number)
+            console.log('BIX :: New block', block.number)
             refetch()
         },
     })
 
     return {
         ...rest,
-        balance: useMemo(() => (typeof data !== 'undefined' ? new BigNumber(data.toString()) : new BigNumber(0)), [data]),
+        balance: useMemo(() => {
+            if (typeof data !== 'undefined') {
+                const power = new BigNumber(10).pow(precision);
+                const currentBalanceBN = new BigNumber(data);
+                return currentBalanceBN.dividedBy(power).toNumber();
+            }
+            return 0
+        }, [data]),
     }
 }
 
-export default useTokenBalance;
+export default useGetTokenBalance;

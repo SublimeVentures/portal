@@ -1,33 +1,23 @@
-import React, { memo} from "react";
-import useGetTokenBalance from "@/lib/hooks/useGetTokenBalance";
+import React from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import DynamicIcon from "@/components/Icon";
 import {ICONS} from "@/lib/icons";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
-import {getStatusColor, Transaction} from "@/components/App/BlockchainSteps/config";
 import {v4 as uuidv4} from "uuid";
-
-const Transaction = {
-    Waiting: 0,
-    Processing: 1,
-    Executed: 2,
-    Failed: 3,
-}
-
+import {STEP_STATE} from "@/components/BlockchainInteraction/StepsState";
 
 const getStatusColor = (status) => {
     switch (status) {
-        case Transaction.Waiting: {
+        case STEP_STATE.Waiting: {
             return 'text-gray'
         }
-        case Transaction.Processing: {
+        case STEP_STATE.Processing: {
             return 'text-gold'
         }
-        case Transaction.Executed: {
+        case STEP_STATE.Executed: {
             return 'text-app-success'
         }
-        case Transaction.PrecheckFailed:
-        case Transaction.Failed: {
+        case STEP_STATE.Failed: {
             return 'text-app-error'
         }
         default: {
@@ -37,11 +27,9 @@ const getStatusColor = (status) => {
 }
 
 
-const BlockchainStep = (state, data, error, colorOverride) => {
-    const transactionId = uuidv4();
-    const {content, icon, iconPadding} = data
-    const {errorText, errorAction} = error
-
+const BlockchainStep = ({data}) => {
+    const {state, content, icon, iconPadding, error, colorOverride} = data
+    console.log("BIX step detail",data)
     return (
         <>
             <motion.div
@@ -50,21 +38,21 @@ const BlockchainStep = (state, data, error, colorOverride) => {
             >
                 <AnimatePresence mode="wait">
                     <motion.div
-                        key={transactionId}
+                        key={state}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
                         className={"flex flex-1 gap-3 items-center"}
                     >
-                        <div className={`blob relative ${state === Transaction.Processing ? 'active' : ''}`}>
+                        <div className={`blob relative ${state === STEP_STATE.Processing ? 'active' : ''}`}>
                             <DynamicIcon name={icon} style={iconPadding}/>
                         </div>
 
                         <div className={"flex flex-1"}>{content}</div>
 
-                        {state === Transaction.Executed && <div className={"rightIcon "}><DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"}/></div>}
-                        {state === Transaction.Failed && <div className={"rightIcon "} onClick={()=> {if(errorAction) errorAction()} }><Tooltiper wrapper={<DynamicIcon name={ICONS.ALERT} style={""}/>} text={`${errorText}`} type={TooltipType.Error}/></div>}
+                        {state === STEP_STATE.Executed && <div className={"rightIcon "}><DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"}/></div>}
+                        {state === STEP_STATE.Failed && <div className={"rightIcon "} onClick={()=> {if(error?.action) error?.action()} }><Tooltiper wrapper={<DynamicIcon name={ICONS.ALERT} style={""}/>} text={`${error?.text}`} type={TooltipType.Error}/></div>}
                     </motion.div>
                 </AnimatePresence>
             </motion.div>

@@ -22,15 +22,6 @@ export default function LoginModal({loginModalProps}) {
         signErrorMsg, setErrorMsg,
         accountIsConnecting, isSigningMessage, isLoginLoading
     } = loginModalProps
-    const connectorsRemoveInjected = connectors.filter(el => !(el.id === 'injected' && el.name === "Injected"))
-    const ioMetaMaskExists = connectorsRemoveInjected.some(connector => connector.id === "io.metamask");
-    let filteredConnectors;
-    if (ioMetaMaskExists) {
-        filteredConnectors = connectorsRemoveInjected.filter(connector => connector.id !== "metaMaskSDK");
-    } else {
-        filteredConnectors = connectorsRemoveInjected;
-    }
-
 
     const buttonHandler = async (connector) => {
         setErrorMsg("")
@@ -58,7 +49,7 @@ export default function LoginModal({loginModalProps}) {
                 url={ExternalLinks.DELEGATED_ACCESS}/>
             </div>
             <div className="flex flex-col gap-5 fullWidth">
-                {filteredConnectors.sort((a, b) => {
+                {connectors.sort((a, b) => {
                     if (a.type === "injected") return -1;
                     if (b.type === "injected") return 1;
                     return 0;

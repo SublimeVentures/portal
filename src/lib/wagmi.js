@@ -20,7 +20,7 @@ export const config = createConfig({
     batch: { multicall: true },
     cacheTime: 1_000, //default: 4_000
     pollingInterval: 4_000,
-    ssr: true,
+    // ssr: true,
     connectors: [
         // metaMask(),
         walletConnect({
