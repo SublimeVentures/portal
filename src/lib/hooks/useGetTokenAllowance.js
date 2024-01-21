@@ -1,57 +1,50 @@
 import {useMemo} from 'react';
-import {useAccount, useChainId, useReadContract, useWatchBlocks} from 'wagmi'
-import {erc20Abi} from 'viem'
+import { useChainId, useReadContract} from 'wagmi'
 import BigNumber from "bignumber.js";
+import useGetTokenAbi from "@/lib/hooks/useGetTokenAbi";
 
-function useGetTokenBalance(params) {
+function useGetTokenAllowance(isEnabled, token, owner, spender, forceChainId) {
     const chainId = useChainId()
-    const { address: account } = useAccount()
-    const {isEnabled, contract, precision, forceChainId} = params
+    const {contract, precision} = token
 
-    const scope = `${account}_liq_${contract}`
+    const scope = `${owner}_allowance_${contract}`
 
     const finalChainId = forceChainId || chainId
-    const finalAccount = account || '0x'
+
+    const inputs = useMemo(() => [owner, spender], [owner, spender])
+    const abi = useGetTokenAbi(token, finalChainId)
 
     const {
-        refetch,
         data,
         ...rest
     } = useReadContract(
         {
-            functionName: 'balanceOf',
+            functionName: 'allowance',
             address: contract,
-            args: [finalAccount],
-            abi: erc20Abi,
+            args: inputs,
+            abi,
             blockTag: 'safe',
             chainId: finalChainId,
             scopeKey: scope,
             query: {
                 enabled: isEnabled,
-                staleTime: 1_000,
+                gcTime: 15_000,
+                staleTime: 1_000
             },
         }
     )
 
-    useWatchBlocks({
-        enabled: isEnabled,
-        onBlock(block) {
-            console.log('New block', block.number)
-            refetch()
-        },
-    })
-
     return {
         ...rest,
-        balance: useMemo(() => {
-            if (typeof data !== 'undefined') {
+        allowance: useMemo(() => {
+            if (typeof data !== 'undefined' && !!contract && precision) {
                 const power = new BigNumber(10).pow(precision);
                 const currentBalanceBN = new BigNumber(data);
                 return currentBalanceBN.dividedBy(power).toNumber();
             }
-            return new BigNumber(0)
+            return 0
         }, [data]),
     }
 }
 
-export default useGetTokenBalance;
+export default useGetTokenAllowance;

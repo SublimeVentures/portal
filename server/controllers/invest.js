@@ -91,7 +91,6 @@ async function processBooking(
             }
         )
 
-        console.log("userAllocation", userAllocation)
 
         if (userAllocation.allocationUser_left < amount || userAllocation.offer_isProcessing) {
             throw Error(BookingErrorsENUM.Overallocated)

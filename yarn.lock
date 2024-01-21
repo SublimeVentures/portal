@@ -3557,10 +3557,10 @@
   resolved "https://registry.yarnpkg.com/@tyriar/fibonacci-heap/-/fibonacci-heap-2.0.9.tgz#df3dcbdb1b9182168601f6318366157ee16666e9"
   integrity sha512-bYuSNomfn4hu2tPiDN+JZtnzCpSpbJ/PNeulmocDy3xN2X5OkJL65zo6rPZp65cPPhLF9vfT/dgE+RtFRCSxOA==
 
-"@wagmi/connectors@4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-4.0.2.tgz#fceaed10f6e65df78005a158374c9a991d43c037"
-  integrity sha512-riR1oX5WeyAO8xKRPKZBWLKKid3/0qIOBHFJXR3kazd2huLEC2/OFVrriRAynWR121djPoBeDjZENQt7OdCSdg==
+"@wagmi/connectors@4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-4.1.6.tgz#f05849646c40941028aa6d5182b8758b5028982a"
+  integrity sha512-Kew/4K3AFMF4eNwg5ZEDMDu0R2MaLWwkgzWTPNwIp3Jjm8jtxSJ2Qyg23wS0YxaaGGefXX4/9K9MAN2Vjpsowg==
   dependencies:
     "@coinbase/wallet-sdk" "3.9.1"
     "@metamask/sdk" "0.14.1"
@@ -3569,10 +3569,10 @@
     "@walletconnect/ethereum-provider" "2.11.0"
     "@walletconnect/modal" "2.6.2"
 
-"@wagmi/core@2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-2.0.2.tgz#722f3f7e6def9ed5fd78b2c7526e48f675a62e56"
-  integrity sha512-XprKBbLqBwtbGrfGfZBGt1buc0YiAdDc4tUsxUIhQlbiAZBguU/NbdfGHcTZf0xnk8DWuoEomuzF/DKWRclzBw==
+"@wagmi/core@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-2.3.1.tgz#f665e33de823462665010efc72feb4e650a2dd58"
+  integrity sha512-vpD5el6E8s2gmTDFPr1ghRuQCBTe45QSOSxAPkImCXWXiAh4xoCfwPH8lBUBpRJouu2eVBPVaCpGQNGO8yD1xw==
   dependencies:
     eventemitter3 "5.0.1"
     mipd "0.0.5"
@@ -8291,13 +8291,13 @@ void-elements@3.1.0:
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-3.1.0.tgz#614f7fbf8d801f0bb5f0661f5b2f5785750e4f09"
   integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
 
-wagmi@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-2.0.3.tgz#41fd568b6b90a11c3b15479842b36784640b5c88"
-  integrity sha512-c9ABnEWU57S9B32YI+CIYIsZp1JntjLMJ7XOX7gBo9PWcXJSnNo09EBijch76pTT7rFSawODujhkaKIAVAH9hA==
+wagmi@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-2.3.1.tgz#8239d8bf956f85592adfb3ebe605ea405661ab92"
+  integrity sha512-Cwc9d1aP3EY+kvbNhP1HWgOJxFwqG3i6BaFnGlpTTEmmk8IKT7oGeb8MU39IpU03QC4C2OhViZ+hYxeXIa1dYA==
   dependencies:
-    "@wagmi/connectors" "4.0.2"
-    "@wagmi/core" "2.0.2"
+    "@wagmi/connectors" "4.1.6"
+    "@wagmi/core" "2.3.1"
     use-sync-external-store "1.2.0"
 
 web3-errors@^1.1.3:

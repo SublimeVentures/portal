@@ -161,6 +161,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             setButtonLoading(true)
             const response = await fetchHash(offer.id, investmentAmount, activeChainCurrency[selectedCurrency]?.address, network.chainId)
             if (!response.ok) {
+                await cleanHash(true)
                 setErrorMsg(response.code)
                 setErrorModal(true)
                 refetchOfferAllocation()

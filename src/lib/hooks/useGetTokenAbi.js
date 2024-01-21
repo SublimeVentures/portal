@@ -1,60 +1,20 @@
 import {useMemo} from 'react';
-import {useAccount, useChainId, useReadContract, useWatchBlocks} from 'wagmi'
+import {useChainId} from 'wagmi'
+import {usdtAbi} from "../../../abi/usdt.abi";
 import {erc20Abi} from 'viem'
-import BigNumber from "bignumber.js";
+import {ETH_USDT} from "@/components/BlockchainInteraction/utils";
 
-function useGetTokenAllowance(params) {
+function useGetTokenAbi(token, forceChainId) {
     const chainId = useChainId()
-    const { address: account } = useAccount()
-    const {isEnabled, token, owner, spender, forceChainId} = params
-    const {contract, precision} = token
-
-    const scope = `${account}_allowance_${contract}`
-
+    const {contract} = token
     const finalChainId = forceChainId || chainId
-    const finalAccount = account || '0x'
 
-    const inputs = useMemo(() => [owner, spender], [owner, spender])
-
-    const {
-        refetch,
-        data,
-        ...rest
-    } = useReadContract(
-        {
-            functionName: 'allowance',
-            address: contract,
-            args: [finalAccount],
-            abi: erc20Abi,
-            blockTag: 'safe',
-            chainId: finalChainId,
-            scopeKey: scope,
-            query: {
-                enabled: isEnabled,
-                staleTime: 1_000,
-            },
-        }
-    )
-
-    useWatchBlocks({
-        enabled: isEnabled,
-        onBlock(block) {
-            console.log('New block', block.number)
-            refetch()
-        },
-    })
-
-    return {
-        ...rest,
-        balance: useMemo(() => {
-            if (typeof data !== 'undefined') {
-                const power = new BigNumber(10).pow(precision);
-                const currentBalanceBN = new BigNumber(data);
-                return currentBalanceBN.dividedBy(power).toNumber();
+    return useMemo(() => {
+            if (!!token) {
+               return contract.toLowerCase() === ETH_USDT ? usdtAbi : erc20Abi
             }
-            return new BigNumber(0)
-        }, [data]),
-    }
+            return erc20Abi
+        }, [contract, finalChainId])
 }
 
-export default useGetTokenAllowance;
+export default useGetTokenAbi;
