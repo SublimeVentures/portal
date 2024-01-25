@@ -41,6 +41,7 @@ function useGetTokenBalance(isEnabled, token, forceChainId) {
         },
     })
 
+
     return {
         ...rest,
         balance: useMemo(() => {

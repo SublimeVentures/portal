@@ -165,7 +165,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 setErrorMsg(response.code)
                 setErrorModal(true)
                 refetchOfferAllocation()
-            } else {
+            } else if(response.hash?.length>5) {
                 const confirmedAmount = Number(response.amount)
                 setValue(confirmedAmount)
                 setHash(response.hash, Number(response.expires), confirmedAmount)

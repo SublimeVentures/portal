@@ -13,6 +13,16 @@ function useGetToken(address) {
             "isStaking": null,
             "chainId": 1,
             "contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+        },
+        "0x55d398326f99059fF775485246999027B3197955": {
+            "name": "Tether USD",
+            "symbol": "USDT",
+            "precision": 18,
+            "isSettlement": true,
+            "isStore": null,
+            "isStaking": null,
+            "chainId": 56,
+            "contract": "0x55d398326f99059fF775485246999027B3197955"
         }
     }
 

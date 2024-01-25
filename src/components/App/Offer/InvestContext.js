@@ -80,8 +80,8 @@ export const InvestProvider = ({children, initialData}) => {
         removeCookie(`hash_${offerId}`, { path: '/app/offer' });
         setHashData(DEFAULT_STATE)
         if(onServer) {
-            const split = removedCookieContent.split('_')
-            await expireHash(offerId, split[0])
+            const split = removedCookieContent?.split('_')
+            if(split) await expireHash(offerId, split[0])
         }
     }
 

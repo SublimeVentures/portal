@@ -22,8 +22,10 @@ import BlockchainInteraction from "@/components/BlockchainInteraction";
 import useGetToken from "@/lib/hooks/useGetToken";
 
 export const blockchainPrerequisite = async (params) => {
-    const {market, chainId, price, amount, isSeller, account} = params
-    const transaction = await saveTransaction(market.offerId, chainId, price, amount, isSeller, account)
+    const {market, chainId, price, amount, isSeller, account, network} = params
+    console.log("blockchainPrerequisite params", params)
+    console.log("blockchainPrerequisite", market.offerId, network?.chainId, price, amount, isSeller, account)
+    const transaction = await saveTransaction(market.offerId, network?.chainId, price, amount, isSeller, account)
     if (transaction.ok) {
         console.log("transaction", transaction)
         return {
@@ -32,7 +34,8 @@ export const blockchainPrerequisite = async (params) => {
         }
     } else {
         return {
-            ok: false
+            ok: false,
+            error: "Error generating hash"
         }
     }
 }
@@ -101,30 +104,35 @@ export default function MakeOfferModal({model, setter, props}) {
         if (isSeller && amount > allocationMax) setAmountHandler(allocationMax)
     }, [isSeller]);
 
-    const token = useGetToken("0xdAC17F958D2ee523a2206206994597C13D831ec7")
+    const token = useGetToken("0x55d398326f99059fF775485246999027B3197955")
+    // const token = useGetToken("0xdAC17F958D2ee523a2206206994597C13D831ec7")//usdt eth
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
+                network: true,
                 liquidity: true,
                 allowance: true,
                 transaction: true,
             },
             params: {
-                // price: Number(price),
+                requiredNetwork: 56,
+
+                price: Number(price),
                 liquidity: Number(price),
                 allowance: Number(price),
-                // amount: Number(amount),
+                amount: Number(amount),
                 account: account.address,
                 spender: activeOtcContract,
+                contract: activeOtcContract,
                 // currency: selectedCurrency,
                 // buttonCustomText: text,
                 // buttonCustomLock: lock,
-                // buttonText: "Make Offer",
-                // market: currentMarket,
-                // isSeller,
+                buttonText: "Make Offer",
+                market: currentMarket,
+                isSeller,
                 // prerequisiteTextProcessing: "Generating hash",
                 // prerequisiteTextError: "Couldn't generate hash",
-                // transactionType: INTERACTION_TYPE.OTC_MAKE
+                transactionType: INTERACTION_TYPE.OTC_MAKE
             },
             token
         }
