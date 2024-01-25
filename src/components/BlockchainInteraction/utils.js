@@ -83,7 +83,8 @@ export const getMethod = (type, token, params) => {
                         token.contract,
                         params.isSeller
                     ],
-                    abi: otcAbi,
+                    abi: token.abi,
+                    // abi: otcAbi,
                     confirmations: 2,
                     contract: params.contract
                 }

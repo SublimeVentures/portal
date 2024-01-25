@@ -54,7 +54,8 @@ function useSendTransaction(isEnabled, method, forceChainId) {
     return {
         isError: simulate.isError || write.isError || confirm.isError,
         error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage,
-        isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || confirm.isPending || write.isPending,
+        isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || write.isPending,
+        // isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || confirm.isPending || write.isPending,
         simulate,
         write,
         confirm

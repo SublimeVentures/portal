@@ -3,7 +3,6 @@ import {useEnvironmentContext} from "@/components/App/BlockchainSteps/Environmen
 
 function useGetNetwork(isEnabled, requiredNetwork) {
     const {network} = useEnvironmentContext();
-    console.log("asdsadasd", network)
     const isValid = network?.chainId === requiredNetwork
 
     console.log("BIX :: NETWORK_CHECK - render", isValid, network?.chainId, requiredNetwork)

@@ -1,37 +1,24 @@
-import React, {memo, useReducer, useEffect, useState, useMemo} from "react";
-import useGetTokenBalance from "@/lib/hooks/useGetTokenBalance";
-import {initialState, reducer} from "@/components/BlockchainInteraction/reducer";
+import React, {useReducer, useEffect, useMemo, useCallback} from "react";
 import BlockchainStep from "@/components/BlockchainInteraction/BlockchainStep";
+import {initialState, reducer} from "@/components/BlockchainInteraction/reducer";
 import {STEP_STATE, STEPS, StepsState} from "@/components/BlockchainInteraction/StepsState";
-import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 import {ETH_USDT, getMethod, getPrerequisite, METHOD} from "@/components/BlockchainInteraction/utils";
-import useSendTransaction from "@/lib/hooks/useSendTransaction";
-import {isBased} from "@/lib/utils";
-import InteractStep from "@/components/App/BlockchainSteps/InteractStep";
-import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import useGetNetwork from "@/lib/hooks/useGetNetwork";
-
+import useGetTokenBalance from "@/lib/hooks/useGetTokenBalance";
+import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
+import useSendTransaction from "@/lib/hooks/useSendTransaction";
+import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
+import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
+import {isBased} from "@/lib/utils";
+import debounce from 'lodash/debounce';
 
 const BlockchainInteraction = ({data}) => {
-    const {steps, token, params} = data
+    const {steps, token, params, setTransactionSuccessful} = data
     const [state, dispatch] = useReducer(reducer, initialState);
     console.log("BIX :: INIAITL:" ,data, token, state)
 
-    useEffect(() => {
-        console.log("BIX :: PARAM CHANGED", state, params)
-        dispatch({ type: 'RESET'});
-    }, [
-        params.price,
-        params.liquidity,
-        params.allowance,
-        params.amount,
-        params.account,
-        params.spender
-    ]);
 
     const network_isReady = steps.network && !state.network.lock
-    // const network_shouldRun =  network_isReady
     const network_shouldRun = !state.network.isFinished && network_isReady
     console.log("BIX :: NETWORK_CHECK - shouldRun / isReady",network_shouldRun,network_isReady)
     const network_current = useGetNetwork(network_shouldRun, params.requiredNetwork)
@@ -43,12 +30,21 @@ const BlockchainInteraction = ({data}) => {
             dispatch({ type: 'SET_NETWORK', payload: {network: network_current.network, chainId: network_current.chainId, isFinished: network_isFinished} });
         }
     }, [network_current.isValid, network_current?.network,network_shouldRun]);
+
+
     useEffect(() => {
-        if(steps.network && !network_isFinished) {
-            console.log(`BIX :: NETWORK_CHECK - RESET DUE TO NETWORK CHANGE`)
-            dispatch({ type: 'RESET'});
-        }
-    }, [network_current?.network]);
+        console.log("BIX :: PARAM CHANGED", state, params)
+        dispatch({ type: 'RESET'});
+        resetState()
+    }, [
+        params.price,
+        params.liquidity,
+        params.allowance,
+        params.amount,
+        params.account,
+        params.spender,
+        network_current?.chainId
+    ]);
 
 
 
@@ -135,16 +131,22 @@ const BlockchainInteraction = ({data}) => {
                 }
             })
         }
-    }, [prerequisite_isReady]);
+    }, [prerequisite_isReady, prerequisite_shouldRun]);
 
 
     const transaction_isReady = steps?.allowance ? state.allowance.isFinished : (steps?.liquidity ? state.liquidity.isFinished : (steps?.network ? state.network.isFinished : true))
     const transaction_shouldRun = steps.transaction && !state.transaction.isFinished && !state.transaction.lock && transaction_isReady && state.prerequisite.isFinished
     console.log("BIX :: TRANSACTION - shouldRun / isReady",transaction_shouldRun, transaction_isReady)
-    console.log("BIX :: TRANSACTION - shouldRun split",steps.transaction, !state.transaction.isFinished, !state.transaction.lock, transaction_isReady, state.prerequisite.isFinished)
+    console.log("BIX :: TRANSACTION - shouldRun split",
+        steps.transaction,
+        !state.transaction.isFinished,
+        !state.transaction.lock,
+        transaction_isReady,
+        state.prerequisite.isFinished
+    )
     const transaction = useSendTransaction(transaction_shouldRun, state.prerequisite.method  || {})
     console.log(`BIX :: TRANSACTION - HOOK STATE`, transaction)
-    const transaction_isFinished = transaction.confirm?.data
+    const transaction_isFinished = transaction.confirm?.data?.transactionHash
     console.log(`BIX :: TRANSACTION - RUN`, transaction_isFinished)
     useEffect(() => {
         if (transaction_shouldRun) {
@@ -153,8 +155,10 @@ const BlockchainInteraction = ({data}) => {
         }
     }, [transaction_isFinished]);
 
+
     //todo: test prerequisite fail and retry
     //todo: fix handup on bad abi
+    //todo: loading states
 
     const stepNetwork = StepsState(STEPS.NETWORK, state.network, {...network_current, params, network_isReady,network_shouldRun, network_isFinished  })
     const stepLiquidity = StepsState(STEPS.LIQUIDITY, state.liquidity, {...liquidity_balance, token, params, liquidity_isFinished, liquidity_isReady })
@@ -162,8 +166,29 @@ const BlockchainInteraction = ({data}) => {
     const stepTransaction = StepsState(STEPS.TRANSACTION, state.transaction, {...transaction, token, params, transaction_isFinished, transaction_isReady, method_error: state.prerequisite.error })
 
 
+    const resetState = () => {
+        console.log("BIX :: PARAM CHANGED - reset writers")
+        allowance_set_reset.write?.reset()
+        allowance_set.write?.reset()
+        transaction.write?.reset()
+    }
+
+    const runProcess = () => {
+        resetState()
+        dispatch({type: 'START'});
+    }
+
+    const debouncedRunProcess = useCallback(debounce(runProcess, 500, {
+        leading: true,
+        trailing: false
+    }), []);
+
+
     useEffect(() => {
-        console.log(`BIX :: RESET STATE`, stepLiquidity.state, stepAllowance.state)
+        console.log(`BIX :: RESET STATE`, stepNetwork.state,
+            stepLiquidity.state,
+            stepAllowance.state,
+            stepTransaction.state)
 
         if(stepNetwork.state === STEP_STATE.ERROR) {
             dispatch({ type: 'RESET_NETWORK'});
@@ -173,6 +198,7 @@ const BlockchainInteraction = ({data}) => {
         }
         if(stepAllowance.state === STEP_STATE.ERROR) {
             dispatch({ type: 'RESET_ALLOWANCE'});
+            transaction.write?.reset()
         }
         if(stepTransaction.state === STEP_STATE.ERROR) {
             dispatch({ type: 'RESET_TRANSACTION'});
@@ -186,29 +212,33 @@ const BlockchainInteraction = ({data}) => {
     ]);
 
 
+    useEffect(() => {
+        if(!!transaction_isFinished) {
+            console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished")
+            setTransactionSuccessful(transaction_isFinished)
+        }
+    }, [
+        transaction_isFinished
+    ]);
+
+
     const extraState = {
+        stepNetwork,
         stepLiquidity,
+        stepAllowance,
+        stepTransaction,
     }
 
     const {buttonIcon, buttonLock, buttonText} = useBlockchainButton(steps, state, params, extraState)
 
-    const runProcess = () => {
-        dispatch({
-            type: 'START',
-            payload: {
-                liquidity: !steps.liquidity,
-                allowance: !steps.allowance,
-            }
-        });
-    }
-
-    console.log(`BIX :: RENDER STATE`, {stepLiquidity, stepAllowance})
+    console.log(`BIX :: RENDER STATE`, extraState)
 
     return (
         <>
             <div className="flex flex-col flex-1 pb-2 justify-content text-sm">
-                <div className={"h-[50px] w-full flex items-center"}><div className={"w-full h-[1px] bg-outline opacity-30"}></div></div>
-
+                <div className={"h-[50px] w-full flex items-center"}>
+                    <div className={"w-full h-[1px] bg-outline opacity-30"}></div>
+                </div>
                 {steps.network && <BlockchainStep data={stepNetwork}/>}
                 {steps.liquidity && <BlockchainStep data={stepLiquidity}/>}
                 {steps.allowance && <BlockchainStep data={stepAllowance}/>}
@@ -223,9 +253,7 @@ const BlockchainInteraction = ({data}) => {
                     icon={buttonIcon}
                     isDisabled={buttonLock}
                     text={buttonText}
-                    handler={ () => {
-                        runProcess()
-                    }}/>
+                    handler={debouncedRunProcess}/>
             </div>
         </>
     )
