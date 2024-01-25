@@ -15,7 +15,7 @@ export const METHOD = {
     UPGRADE: 6,
     STAKE: 7,
     UNSTAKE: 8,
-    ALLOWANCE:0
+    ALLOWANCE:9
 }
 
 const validAddress = (address) => {
@@ -63,26 +63,29 @@ export const getMethod = (type, token, params) => {
         }
         case METHOD.OTC_MAKE: {
             const isValid =
-                validHash(params?.hash) &&
+                validHash(params.prerequisite?.hash) &&
                 validAllowance(params.market.otc) &&
                 validNumber(params.price) &&
-                validBoolean(params.isSeller)
+                validNumber(params.market.otc) &&
+                validBoolean(params.isSeller) &&
+                validAddress(token?.contract) &&
+                validAddress(params?.contract)
             const amount = getTokenInWei(params.price, token)
-
+            console.log("VALIDATION_HARD", isValid, amount, params)
             return isValid ? {
                 ok: true,
                 method: {
                     name: 'offerMake',
                     inputs: [
-                        params?.hash,
+                        params?.prerequisite?.hash,
                         params.market.otc,
                         amount,
                         token.contract,
                         params.isSeller
                     ],
-                    abi: token.abi,
+                    abi: otcAbi,
                     confirmations: 2,
-                    contract: otcAbi
+                    contract: params.contract
                 }
             } : {
                 ok: false,

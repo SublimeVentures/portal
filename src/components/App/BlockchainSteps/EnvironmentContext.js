@@ -61,6 +61,7 @@ export const EnvironmentProvider = ({children, initialData}) => {
         switchChain
     } = useSwitchChain()
 
+    console.log("NETWOR_SWITCH", networkIsLoading, networkIsPending)
 
     useEffect(() => {
         console.log("EC :: context pass init",environmentProps.isClean && initialData?.cdn, environmentProps.isClean, !!initialData?.cdn, initialData, environmentProps)

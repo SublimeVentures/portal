@@ -8,16 +8,16 @@ import {STEP_STATE} from "@/components/BlockchainInteraction/StepsState";
 
 const getStatusColor = (status) => {
     switch (status) {
-        case STEP_STATE.Waiting: {
+        case STEP_STATE.PENDING: {
             return 'text-gray'
         }
-        case STEP_STATE.Processing: {
+        case STEP_STATE.PROCESSING: {
             return 'text-gold'
         }
-        case STEP_STATE.Executed: {
+        case STEP_STATE.SUCCESS: {
             return 'text-app-success'
         }
-        case STEP_STATE.Failed: {
+        case STEP_STATE.ERROR: {
             return 'text-app-error'
         }
         default: {
@@ -29,7 +29,6 @@ const getStatusColor = (status) => {
 
 const BlockchainStep = ({data}) => {
     const {state, content, icon, iconPadding, error, colorOverride} = data
-    console.log("BIX step detail",data)
     return (
         <>
             <motion.div
@@ -45,14 +44,14 @@ const BlockchainStep = ({data}) => {
                         transition={{ duration: 0.5 }}
                         className={"flex flex-1 gap-3 items-center"}
                     >
-                        <div className={`blob relative ${state === STEP_STATE.Processing ? 'active' : ''}`}>
+                        <div className={`blob relative ${state === STEP_STATE.PROCESSING ? 'active' : ''}`}>
                             <DynamicIcon name={icon} style={iconPadding}/>
                         </div>
 
                         <div className={"flex flex-1"}>{content}</div>
 
-                        {state === STEP_STATE.Executed && <div className={"rightIcon "}><DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"}/></div>}
-                        {state === STEP_STATE.Failed && <div className={"rightIcon "} onClick={()=> {if(error?.action) error?.action()} }><Tooltiper wrapper={<DynamicIcon name={ICONS.ALERT} style={""}/>} text={`${error?.text}`} type={TooltipType.Error}/></div>}
+                        {state === STEP_STATE.SUCCESS && <div className={"rightIcon "}><DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"}/></div>}
+                        {state === STEP_STATE.ERROR && <div className={"rightIcon "} onClick={()=> {if(error?.action) error?.action()} }><Tooltiper wrapper={<DynamicIcon name={ICONS.ALERT} style={""}/>} text={`${error?.text}`} type={TooltipType.Error}/></div>}
                     </motion.div>
                 </AnimatePresence>
             </motion.div>

@@ -53,6 +53,8 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
         transaction
     });
 
+    console.log("investIncreaseAllocationReserved",result, updateQuery)
+
     return {
         ok: result[0].length ===1,
         data: result[0][0]
@@ -62,20 +64,31 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
 
 async function investUpsertParticipantReservation(offer, userId, partnerId, tenantId, amount, hash, upgradeGuaranteed, transaction) {
     const participantsQuery = `
-        INSERT INTO public.z_participant_${offer.id} ("userId", "partnerId", "tenantId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
-        VALUES (${userId}, ${partnerId}, ${tenantId}, ${amount}, '${hash}', ${upgradeGuaranteed?.isExpired === false}, 'now()', 'now()') on conflict("userId", "hash") do
-        update set amount=EXCLUDED.amount, "updatedAt"=EXCLUDED."updatedAt"
-        RETURNING *;
-    `
+            INSERT INTO public.z_participant_${offer.id} ("userId", "partnerId", "tenantId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
+            VALUES (:userId, :partnerId, :tenantId, :amount, :hash, :isGuaranteed, NOW(), NOW())
+            ON CONFLICT ("userId", "hash") DO
+            UPDATE SET amount = EXCLUDED.amount, "updatedAt" = NOW()
+            RETURNING *;
+        `;
 
-    const addReservation = await db.query(participantsQuery, {
-        type: QueryTypes.UPSERT,
-        returning: true,
+    // Execute the query using a raw query execution
+    const result = await db.query(participantsQuery, {
+        replacements: {
+            userId, partnerId, tenantId, amount, hash,
+            isGuaranteed: upgradeGuaranteed?.isExpired === false
+        },
+        type: QueryTypes.RAW,
         transaction
-    })
+    });
+
+
+    if(result[1] !== 1) return {
+        ok:false
+    }
 
     return {
-        ok: addReservation && addReservation[0] === undefined &&  addReservation[1] === null
+        ok: result[1],
+        data: result[0][0]
     }
 }
 
