@@ -7,7 +7,7 @@ import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
 
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
-    const { account, currency, activeDiamond} = stakingModalProps
+    const { account, currency, activeDiamond, session} = stakingModalProps
     const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
     const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
 
@@ -58,7 +58,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
                        To partake in Citadel's investments, every Citizen must stake BYTES.
                    </div>
                     <div className={"my-5"}>
-                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSze} BYTES</p></div>
+                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{session.stakeSize} BYTES</p></div>
                     </div>
                      <BlockchainSteps/>
 
