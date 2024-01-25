@@ -18,9 +18,8 @@ const fallbackOptions = {
 export const config = createConfig({
     chains: [mainnet, polygon, bsc],
     batch: { multicall: true },
-    cacheTime: 1_000, //default: 4_000
+    cacheTime: 0, //default: 4_000
     pollingInterval: 4_000,
-    ssr: true,
     connectors: [
         // metaMask(),
         walletConnect({
@@ -33,15 +32,20 @@ export const config = createConfig({
     transports: {
         [mainnet.id]: fallback([
             http(RPCs[mainnet.id].main, retryOptions),
-            http(RPCs[mainnet.id].fallback, retryOptions),
+            http(RPCs[mainnet.id].fallback1, retryOptions),
+            http(RPCs[mainnet.id].fallback2, retryOptions),
+            http(RPCs[mainnet.id].fallback3, retryOptions),
         ], fallbackOptions),
         [polygon.id]: fallback([
             http(RPCs[polygon.id].main, retryOptions),
-            http(RPCs[polygon.id].fallback, retryOptions),
+            http(RPCs[polygon.id].fallback1, retryOptions),
+            http(RPCs[polygon.id].fallback2, retryOptions),
+            http(RPCs[polygon.id].fallback3, retryOptions),
         ], fallbackOptions),
         [bsc.id]: fallback([
             http(RPCs[bsc.id].main, retryOptions),
-            http(RPCs[bsc.id].fallback, retryOptions),
+            http(RPCs[bsc.id].fallback1, retryOptions),
+            http(RPCs[bsc.id].fallback2, retryOptions),
         ], fallbackOptions),
     },
 })
