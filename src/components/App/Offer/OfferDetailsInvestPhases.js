@@ -363,7 +363,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 </div>}
             </div>
             <div className="flex flex-row flex-wrap justify-center gap-2 pb-10 px-2 items-center">
-                <div className={investButtonDisabled ? 'disabled' : ''}>
+                <div className={(investButtonDisabled || isStakeLock) ? 'disabled' : ''}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={investButtonText}

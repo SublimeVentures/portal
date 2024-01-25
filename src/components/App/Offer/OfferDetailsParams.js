@@ -3,48 +3,31 @@ import {isBased} from "@/lib/utils";
 import DynamicIcon from "@/components/Icon";
 import {ICONS} from "@/lib/icons";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
-import {useInvestContext} from "@/components/App/Offer/InvestContext";
-import { debounce } from "debounce";
-import {useState} from "react";
+
+function toLocaleStringWithPrecision(number) {
+    const numberAsString = number.toString();
+
+    const decimalPointIndex = numberAsString.indexOf('.');
+    const numberOfDecimalPlaces = decimalPointIndex === -1 ? 0 : numberAsString.length - decimalPointIndex - 1;
+
+    return number.toLocaleString(undefined, {
+        minimumFractionDigits: numberOfDecimalPlaces,
+        maximumFractionDigits: numberOfDecimalPlaces
+    });
+}
 
 export const OfferDetailsParams = ({paramsParams}) => {
-    const {offer, allocation, userInvested, phaseIsClosed, refetchUserAllocation} = paramsParams
+    const {offer, allocation, userInvested, phaseIsClosed} = paramsParams
     let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal} = offer
     let {booked, invested} = userInvested
-    const [lastExecution, setLastExecution] = useState(0)
-    const {
-        clearBookings
-    } = useInvestContext();
-    const normalized_ppu = Number(ppu)?.toLocaleString()
-    const normalized_tge = Number(tge)?.toLocaleString()
-    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
+
+    const normalized_ppu = toLocaleStringWithPrecision(ppu)
+    const normalized_tge = toLocaleStringWithPrecision(tge)
+    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {maximumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_invested = Number(invested)?.toLocaleString()
     const normalized_booked = Number(booked)?.toLocaleString()
     const isSoldOut = allocation?.alloFilled >= alloTotal-50 || phaseIsClosed
-
-
-
-    const clearPendingBookings = debounce(async () => {
-        const currentTime = Date.now();
-
-        if (currentTime - lastExecution >= 60000) {
-            setLastExecution(currentTime)
-            try {
-                await clearBookings();
-                refetchUserAllocation();
-                return {
-                    ok: true
-                };
-            } catch (e) {
-                console.log(`ERROR :: [clearPendingBookings]`, e);
-                return {
-                    ok: false
-                };
-            }
-        }
-    }, 0); // Set the second argument to 0 for immediate execution
-
 
 
     return (
@@ -59,7 +42,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
                     </div>
                     <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
                         {booked > 0 && <div className={"detailRow text-warn"}><p>My Bookings</p><hr className={"spacer"}/><div >
-                            <Tooltiper wrapper={<div onClick={() => {clearPendingBookings()}}><DynamicIcon name={ICONS.ALERT} style={"w-5 mr-1"}/></div>} text={`Click here to cancel all pending bookings`} type={TooltipType.Error}/>
+                            <Tooltiper wrapper={<div onClick={() => {}}><DynamicIcon name={ICONS.ALERT} style={"w-5 mr-1"}/></div>} text={`Click here to cancel all pending bookings`} type={TooltipType.Error}/>
                             ${normalized_booked}
                         </div></div>}
                         {invested > 0 && <div className={"detailRow text-app-success"}><p>My Investment</p><hr className={"spacer"}/><p>${normalized_invested}</p></div>}
