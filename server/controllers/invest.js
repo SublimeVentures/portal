@@ -49,6 +49,7 @@ async function processBooking(
             upgradeGuaranteed,
             transaction
         )
+        console.log("increaseReserved",increaseReserved)
 
         if (!increaseReserved.ok) throw Error(BookingErrorsENUM.Overallocated)
 
@@ -71,7 +72,7 @@ async function processBooking(
             upgradeGuaranteed,
             transaction
         )
-        if (!upsertReservation.ok) throw Error(BookingErrorsENUM.ProcessingError)
+        if (!upsertReservation.ok || !(upsertReservation.data.hash?.length > 3)) throw Error(BookingErrorsENUM.ProcessingError)
 
 
         //confirm enough allocation
@@ -91,8 +92,6 @@ async function processBooking(
             }
         )
 
-        console.log("userAllocation", userAllocation)
-
         if (userAllocation.allocationUser_left < amount || userAllocation.offer_isProcessing) {
             throw Error(BookingErrorsENUM.Overallocated)
         }
@@ -105,7 +104,7 @@ async function processBooking(
         return {
             data: {
                 expires,
-                hash,
+                hash: upsertReservation.data.hash,
                 amount,
                 phase: phaseCurrent.phase
             },
@@ -117,7 +116,7 @@ async function processBooking(
         }
         return {
             ok: false,
-            code: error?.shortMessage ||serializeError(error).message
+            code: error?.shortMessage || serializeError(error).message
         }
     }
 }
@@ -167,7 +166,6 @@ async function processReservation(queryParams, user) {
         const checkIsReadyForStart = checkInvestmentStateConditions(userId, tenantId, CACHE[_offerId], offerLimit)
         if (!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
-
         //check conditions and book
         const isBooked = await processBooking(
             CACHE[_offerId],
@@ -181,6 +179,7 @@ async function processReservation(queryParams, user) {
                 code: isBooked.code,
             }
         }
+
 
         return {
             ok: true,
