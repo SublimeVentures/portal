@@ -72,7 +72,7 @@ async function processBooking(
             upgradeGuaranteed,
             transaction
         )
-        if (!upsertReservation.ok) throw Error(BookingErrorsENUM.ProcessingError)
+        if (!upsertReservation.ok || !(upsertReservation.data.hash?.length > 3)) throw Error(BookingErrorsENUM.ProcessingError)
 
 
         //confirm enough allocation
