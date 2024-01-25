@@ -82,8 +82,8 @@ export function reducer(state, action) {
                 prerequisite: {
                     ...state.prerequisite,
                     method: action.payload?.method,
+                    error: action.payload?.error,
                     isFinished: action.payload?.isFinished,
-                    error: action.payload?.error
                 }
             };
         case 'SET_TRANSACTION':
@@ -92,13 +92,11 @@ export function reducer(state, action) {
                 ...state,
                 transaction: {
                     ...state.transaction,
-                    method: action.payload?.method,
-                    isFinished: action.payload?.isFinished,
-                    error: action.payload?.error
+                    isFinished: !!action.result,
+                    txID: action.result,
                 }
             };
         case 'START':
-            console.log("START_STATE-DISPACTCH", state, action.payload)
             return {
                 ...initialState,
                 network: {
@@ -147,7 +145,7 @@ export function reducer(state, action) {
             return {
                 ...state,
                 prerequisite: {
-                    ...DEFAULT_PREREQUISITE
+                    ...DEFAULT_PREREQUISITE,
                 },
                 transaction: {
                     ...DEFAULT_TRANSACTION

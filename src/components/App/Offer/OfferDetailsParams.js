@@ -1,11 +1,5 @@
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 import {isBased} from "@/lib/utils";
-import DynamicIcon from "@/components/Icon";
-import {ICONS} from "@/lib/icons";
-import {Tooltiper, TooltipType} from "@/components/Tooltip";
-import {useInvestContext} from "@/components/App/Offer/InvestContext";
-import { debounce } from "debounce";
-import {useState} from "react";
 
 export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userInvested, phaseIsClosed} = paramsParams

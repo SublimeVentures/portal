@@ -142,7 +142,7 @@ const stepAllowance = (state, data) => {
                 state: STEP_STATE.ERROR,
                 content: `Error on checking allowance`,
                 error: {
-                    text: data?.error?.shortMessage,
+                    text: data?.error?.shortMessage || data?.error,
                     action: data.refetch
                 }
             }
@@ -194,7 +194,7 @@ const stepTransaction = (state, data) => {
                 state: STEP_STATE.ERROR,
                 content: `Error on sending transaction`,
                 error: {
-                    text: data?.error?.shortMessage,
+                    text: data?.error,
                     // action: data.refetch
                 }
             }
