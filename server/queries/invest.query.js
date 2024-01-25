@@ -53,7 +53,6 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
         transaction
     });
 
-    console.log("investIncreaseAllocationReserved",result, updateQuery)
 
     return {
         ok: result[0].length ===1,
