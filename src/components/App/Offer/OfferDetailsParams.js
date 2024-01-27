@@ -22,7 +22,7 @@ export const OfferDetailsParams = ({paramsParams}) => {
     let {booked, invested} = userInvested
 
     const normalized_ppu = toLocaleStringWithPrecision(ppu)
-    const normalized_tge = toLocaleStringWithPrecision(tge)
+    const normalized_tge = tge ? toLocaleStringWithPrecision(tge) : 0
     const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {maximumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_invested = Number(invested)?.toLocaleString()
