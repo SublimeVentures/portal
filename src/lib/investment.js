@@ -2,8 +2,8 @@ const {PremiumItemsParamENUM} = require("./enum/store");
 const {PhaseId} = require("./phases");
 const {TENANT} = require("../../src/lib/tenantHelper");
 
-const MIN_DIVISIBLE = 1 //50
-const MIN_ALLOCATION = 1 //100
+const MIN_DIVISIBLE = 50 //50
+const MIN_ALLOCATION = 100 //100
 
 function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
