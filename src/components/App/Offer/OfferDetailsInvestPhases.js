@@ -318,7 +318,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                                                                                       text={`$${allocationData.allocationUser_guaranteed} left`}
                                                                                       type={TooltipType.Primary}/>
                         </div>}
-                    <div className={"flex gap-2 flex-row justify-center align-center items-center"}>
+                    <div className={`flex gap-2 flex-row justify-center align-center items-center ${isBased ? "" : "fill-gold"}`}>
                         <IconButton zoom={1.1} size={'w-12 p-3'} icon={<DynamicIcon name={ICONS.CALCULATOR}/>}
                                     noBorder={!isBased} handler={() => setCalculateModal(true)}/>
                         <IconButton zoom={1.1} size={'w-12 p-3'}
