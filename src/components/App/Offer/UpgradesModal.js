@@ -9,11 +9,10 @@ import {useUpgrade} from "@/fetchers/offer.fetcher";
 import {PhaseId} from "@/lib/phases";
 import {useRouter} from "next/router";
 
-const description = (type, maximumGuaranteedBooking) => {
+const description = (type, maximumGuaranteedBooking, length) => {
     switch (type) {
         case PremiumItemsENUM.Guaranteed: {
-            return (<>Books <span className={"text-gold glow"}>${maximumGuaranteedBooking}</span> allocation for first
-                24h of the investment.</>)
+            return (<>Books <span className={"text-gold glow"}>${maximumGuaranteedBooking}</span> allocation for first {(length/3600).toFixed(0)}h of the investment.</>)
         }
         case PremiumItemsENUM.Increased: {
             return (<>Increases maximum allocation by <span
@@ -37,7 +36,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
 
     const {
         allocationUserLeft,
-        offerId,
+        offer,
         phaseCurrent,
         refetchUserAllocation,
         userAllocationState,
@@ -46,6 +45,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
         refetchPremiumData
     } = upgradesModalProps
 
+    const { id: offerId, lengthGuaranteed} = offer
     let [selected, setSelected] = useState(0)
     let [isProcessing, setIsProcessing] = useState(false)
     let [isError, setIsError] = useState(false)
@@ -135,7 +135,7 @@ export default function UpgradesModal({model, setter, upgradesModalProps}) {
                             key={el.id}
                             itemType={el.id}
                             name={el.name}
-                            description={description(el.id, maximumGuaranteedBooking)}
+                            description={description(el.id, maximumGuaranteedBooking, lengthGuaranteed)}
                             selected={selected}
                             setSelectedUpgrade={setSelectedUpgrade}
                             owned={el.amount}

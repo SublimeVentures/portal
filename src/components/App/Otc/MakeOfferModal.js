@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useMemo} from "react";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import Input from "@/components/App/Input";
@@ -11,26 +11,26 @@ import Lottie from "lottie-react";
 import lottieOtc from "@/assets/lottie/otc.json";
 import Linker from "@/components/link";
 import {saveTransaction} from "@/fetchers/otc.fetcher";
-import BlockchainSteps from "@/components/App/BlockchainSteps";
 import {useEffect} from "react";
-import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
-import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
 import {motion, AnimatePresence} from "framer-motion";
+import BlockchainSteps from "@/components/BlockchainSteps";
+import useGetToken from "@/lib/hooks/useGetToken";
+import {METHOD} from "@/components/BlockchainSteps/utils";
 
 export const blockchainPrerequisite = async (params) => {
-    const {market, chainId, price, amount, isSeller, account} = params
-    const transaction = await saveTransaction(market.offerId, chainId, price, amount, isSeller, account)
+    const {market, price, amount, isSeller, account, network} = params
+    const transaction = await saveTransaction(market.offerId, network?.chainId, price, amount, isSeller, account)
     if (transaction.ok) {
-        console.log("transaction", transaction)
         return {
             ok: true,
             data: {hash: transaction.hash}
         }
     } else {
         return {
-            ok: false
+            ok: false,
+            error: "Error generating hash"
         }
     }
 }
@@ -41,29 +41,21 @@ const TABS = {
 }
 
 export default function MakeOfferModal({model, setter, props}) {
-    const {currentMarket, allocation, refetchVault, refetchOffers, session} = props
-    const {
-        updateBlockchainProps,
-        insertConfiguration,
-        blockchainCleanup,
-        blockchainProps,
-        DEFAULT_STEP_STATE,
-        DEFAULT_RESULT_STATE
-    } = useBlockchainContext();
-    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
-    const {activeChainSettlementSymbol, account, activeOtcContract} = useEnvironmentContext();
+    const {currentMarket, allocation, refetchVault, refetchOffers} = props
+    const {getCurrencySettlement, account, activeOtcContract, network} = useEnvironmentContext();
 
     const allocationMax = allocation ? (allocation.invested - allocation.locked) : 0
 
     const [selectedTab, setSelectedTab] = useState(TABS.BUY)
-    const [dealCurrency, setDealCurrency] = useState(0)
+    const [selectedCurrency, setSelectedCurrency] = useState({})
+    const dropdownCurrencyOptions = getCurrencySettlement()
 
-    const selectedCurrency = activeChainSettlementSymbol[dealCurrency]
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false)
 
-    const [amount, setAmount] = useState(50)
+    const [amount, setAmount] = useState(10)
     const [statusAmount, setStatusAmount] = useState(false)
 
-    const [price, setPrice] = useState(50)
+    const [price, setPrice] = useState(10)
     const [statusPrice, setStatusPrice] = useState(false)
     const [multiplier, setMultiplier] = useState(1)
 
@@ -76,6 +68,11 @@ export default function MakeOfferModal({model, setter, props}) {
     const isSeller = selectedTab === TABS.SELL
     const titleCopy = isSeller ? 'Selling' : 'Buying';
     const textCopy = isSeller ? 'sell' : 'buy';
+
+
+    useEffect(() => {
+        setSelectedCurrency(dropdownCurrencyOptions[0])
+    }, [network.chainId, isSeller])
 
     const calcPrice = (multi, amt) => {
         setPrice(Number(Number(amt * multi).toFixed(2)))
@@ -99,82 +96,84 @@ export default function MakeOfferModal({model, setter, props}) {
         if (isSeller && amount > allocationMax) setAmountHandler(allocationMax)
     }, [isSeller]);
 
-    useEffect(() => {
-        // console.log("MOM :: insert",
-        //     !model || !selectedCurrency || price === 0 || !currentMarket?.market || !blockchainProps.isClean,
-        //     !model,
-        //     !selectedCurrency,
-        //     price === 0,
-        //     !currentMarket?.market,
-        //     !blockchainProps.isClean,
-        // )
-        if (!model || !selectedCurrency || price === 0 || !currentMarket?.otc || !account?.address) return;
-        // if (!model || !selectedCurrency || price === 0 || !currentMarket?.otc || !account?.address || !blockchainProps.isClean) return;
-        console.log("MOM :: insert success", {
-            liquidity: !isSeller,
-            allowance: !isSeller,
-            transaction: true,
-        })
-        console.log("IQZ :: ALLOWANCE - reset system ", {
-            amount: Number(amount),
-            allowance: Number(price),
-        })
 
-        const {lock, text} = customLocks()
+    const {lock, text} = customLocks()
 
-        insertConfiguration({
-            data: {
-                account: account.address,
+    const token = useGetToken(selectedCurrency?.contract)
+    console.log("selectedCurrency?.contract",selectedCurrency?.contract)
+    const blockchainInteractionDataSELL = useMemo(() => {
+        console.log("BIX :: BUTTON STATE locked - refresh")
+        return {
+            steps: {
+                transaction: true,
+            },
+            params: {
                 price: Number(price),
-                liquidity: Number(price),
-                allowance: Number(price),
                 amount: Number(amount),
+                account: account.address,
+                spender: activeOtcContract,
                 contract: activeOtcContract,
-                currency: selectedCurrency,
                 buttonCustomText: text,
                 buttonCustomLock: lock,
                 buttonText: "Make Offer",
                 market: currentMarket,
-                isSeller,
-                prerequisiteTextProcessing: "Generating hash",
-                prerequisiteTextError: "Couldn't generate hash",
-                transactionType: INTERACTION_TYPE.OTC_MAKE
+                isSeller: true,
+                transactionType: METHOD.OTC_MAKE
             },
-            steps: {
-                liquidity: !isSeller,
-                allowance: !isSeller,
-                transaction: true,
-            },
-        });
+            token,
+            setTransactionSuccessful
+        }
     }, [
-        model,
-        selectedCurrency,
+        selectedCurrency?.contract,
         price,
         amount,
+        account,
         activeOtcContract,
-        currentMarket?.otc,
-        account?.address,
-        isSeller
-    ]);
+        model,
+        text,
+    ])
 
-
-    useEffect(() => {
-        if (!model || !selectedCurrency) return;
-        const {lock, text} = customLocks()
-        console.log("customLocks", lock, text)
-        updateBlockchainProps(
-            [
-                {path: 'data.buttonCustomLock', value: lock},
-                {path: 'data.buttonCustomText', value: text},
-
-            ], "make offer button lock"
-        )
+    const blockchainInteractionDataBUY = useMemo(() => {
+        console.log("BIX :: BUTTON STATE locked - refresh")
+        return {
+            steps: {
+                liquidity: true,
+                allowance: true,
+                transaction: true,
+            },
+            params: {
+                price: Number(price),
+                liquidity: Number(price),
+                allowance: Number(price),
+                amount: Number(amount),
+                account: account.address,
+                spender: activeOtcContract,
+                contract: activeOtcContract,
+                buttonCustomText: text,
+                buttonCustomLock: lock,
+                buttonText: "Make Offer",
+                market: currentMarket,
+                isSeller: false,
+                prerequisiteTextWaiting: "Generate hash",
+                prerequisiteTextProcessing:  "Generating hash",
+                prerequisiteTextSuccess: "Hash obtained",
+                prerequisiteTextError: "Couldn't generate hash",
+                transactionType: METHOD.OTC_MAKE
+            },
+            token,
+            setTransactionSuccessful
+        }
     }, [
-        statusCheck,
-    ]);
+        selectedCurrency?.contract,
+        price,
+        amount,
+        account,
+        activeOtcContract,
+        model,
+        text,
+    ])
 
 
-    if (!currentMarket) return;
 
     const closeModal = async () => {
         refetchVault()
@@ -184,7 +183,7 @@ export default function MakeOfferModal({model, setter, props}) {
         setTimeout(() => {
             setAmount(allocationMin)
             setMultiplier(1)
-            blockchainCleanup()
+            setTransactionSuccessful(false)
         }, 400);
 
     }
@@ -283,7 +282,7 @@ export default function MakeOfferModal({model, setter, props}) {
                         <div className={'pt-10'}>
                             <Input type={'number'}
                                    placeholder={`${titleCopy} allocation`}
-                                   max={isSeller ? allocationMax : null}
+                                   max={isSeller ? allocationMax : 1000000}
                                    min={allocationMin}
                                    setStatus={setStatusAmount}
                                    setInput={setAmountHandler}
@@ -307,6 +306,7 @@ export default function MakeOfferModal({model, setter, props}) {
                             <Input type={'number'}
                                    placeholder={`For price`}
                                    min={priceMin}
+                                   max={1000000}
                                    setStatus={setStatusPrice}
                                    setInput={setPriceHandler}
                                    input={price}
@@ -314,12 +314,16 @@ export default function MakeOfferModal({model, setter, props}) {
                                    full={true}
                                    customCss={"flex-1"}
                             />
-                            <Dropdown options={activeChainSettlementSymbol} classes={'!text-inherit blended'}
-                                      propSelected={setDealCurrency} position={dealCurrency}/>
+                            <Dropdown options={dropdownCurrencyOptions} selector={"symbol"}  classes={'!text-inherit blended'}
+                                      propSelected={setSelectedCurrency}/>
                         </div>
                     </motion.div>
                 </AnimatePresence>
-                <BlockchainSteps/>
+                {model && <div className={"flex flex-1 flex-col"}>
+                    { isSeller &&  <BlockchainSteps data={blockchainInteractionDataSELL}/>}
+                    { !isSeller &&  <BlockchainSteps data={blockchainInteractionDataBUY}/>}
+                </div>}
+
                 <div className="absolute -bottom-6 w-full text-center"><Linker url={ExternalLinks.OTC}/> <span
                     className={"ml-5"}>before creating an offer.</span>
                 </div>
@@ -333,6 +337,6 @@ export default function MakeOfferModal({model, setter, props}) {
     }
 
     return (<GenericRightModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()}
-                               persistent={blockchainProps.state.button.lock}/>)
+                               persistent={true}/>)
 }
 

@@ -64,8 +64,16 @@ async function getEnvironment() {
     const partners = await models.partner.findAll({where: {isEnabled: true, isPartner:true}, raw: true});
     environment.stats.partners = partners.length;
     //-- PARAM :: `stats.funded`
-    const offers = await models.offer.findAll({raw: true});
-    const funded = offers.map(item => item.alloRaised).reduce((prev, next) => prev + next);
+    const offers = await models.offer.findAll({
+        include: [{
+            model: models.offerFundraise,
+            as: 'offerFundraise',
+            attributes: ['alloRaised']
+        }],
+        raw: true,
+        nest: true  // Required for nested include to work properly with raw: true
+    });
+    const funded = offers.map(item => item.offerFundraise.alloRaised).reduce((prev, next) => prev + next);
     environment.stats.funded = funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
 
 

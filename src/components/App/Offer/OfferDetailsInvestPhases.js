@@ -20,12 +20,11 @@ import {Tooltiper, TooltipType} from "@/components/Tooltip";
 import {buttonInvestState, tooltipInvestState, userInvestmentState} from "@/lib/investment";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
-import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import {ICONS} from "@/lib/icons";
 import {useInvestContext} from "@/components/App/Offer/InvestContext";
-
+import debounce from 'lodash/debounce';
 
 export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const {
@@ -41,31 +40,23 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         premiumData,
         refetchPremiumData
     } = paramsInvestPhase;
-    const {network, activeChainSettlementSymbol, activeChainCurrency} = useEnvironmentContext();
+    const {network, getCurrencySettlement} = useEnvironmentContext();
     const {
-        cleanHash, setHash, hashData, getCookie
+        clearBooking, bookingDetails, setBooking, getSavedBooking
     } = useInvestContext();
-
-    const [isUpgradeModal, setUpgradeModal] = useState(false)
-    const [isErrorModal, setErrorModal] = useState(false)
-    const [errorMsg, setErrorMsg] = useState("")
-
-    const [isRestoreHash, setRestoreHashModal] = useState(false)
-    const [allocationOld, setOldAllocation] = useState(0)
 
     const [isInvestModal, setInvestModal] = useState(false)
     const [isCalculateModal, setCalculateModal] = useState(false)
+    const [isUpgradeModal, setUpgradeModal] = useState(false)
 
-    const [isButtonLoading, setButtonLoading] = useState(false)
-
-    const [currencyOption, setCurrencyOption] = useState(0)
+    const [isRestoreModal, setRestoreModal] = useState({open: false, amount: 0})
+    const [isErrorModal, setErrorModal] = useState({open: false, code: null})
 
     const [investmentAmount, setInvestmentAmount] = useState(0)
     const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
     const [showInputInfo, setShowInputInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
     const [investButtonDisabled, setInvestButtonDisabled] = useState(false)
-    const [investButtonText, setInvestButtonText] = useState("")
     const [isError, setIsError] = useState({})
 
     const [allocationData, setAllocationData] = useState({
@@ -79,10 +70,16 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         offer_isSettled: false,
     })
 
+    const [isButtonLoading, setButtonLoading] = useState(false)//done
+    const [investButtonText, setInvestButtonText] = useState("")
+    const isStakeLock = session?.stakingEnabled ? !session.isStaked : false
+    const investmentLocked = investButtonDisabled || isStakeLock
 
-    const isStakeLock = session?.isStaked !== undefined ? !session.isStaked : false
+    const displayGuaranteed = !!upgradesUse.guaranteedUsed && phaseCurrent.phase === PhaseId.FCFS && upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax
 
-    const selectedCurrency = activeChainSettlementSymbol[currencyOption]
+
+    const [selectedCurrency, setSelectedCurrency] = useState({})
+    const dropdownCurrencyOptions = getCurrencySettlement()
 
     const setValue = (data) => {
         if (!data) return
@@ -100,17 +97,13 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             // Error handling: do nothing or log the error if needed
             console.error("Error in setValue:", error);
         }
-
     }
-
     const isInputActive = () => {
         return investmentAmount > 0
     }
-
     const onInputChange = (event) => {
         setValue(event.target.value)
     }
-
     const getInvestmentButtonIcon = () => {
         switch (phaseCurrent.phase) {
             case PhaseId.Pending: {
@@ -128,22 +121,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         }
     }
 
-    const bookingExpire = () => {
-        setButtonLoading(true)
-        cleanHash(true)
-        setInvestModal(false)
-        setRestoreHashModal(false)
-        refetchOfferAllocation()
-        setButtonLoading(false)
-    }
-
-    const afterInvestmentCleanup = () => {
-        setButtonLoading(true)
-        cleanHash()
-        refetchUserAllocation()
-        setButtonLoading(false)
-    }
-
     const openInvestmentModal = () => {
         if (isStakeLock) {
             return
@@ -152,75 +129,103 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     }
 
     const startInvestmentProcess = async () => {
+        console.log("allocakassd", investmentAmount,allocationData )
         if (
             investmentAmount > 0 &&
             allocationData.allocationUser_max > 0 &&
             allocationData.allocationUser_min > 0 &&
-            allocationData.allocationUser_left > 0
+            allocationData.allocationUser_left > 0 &&
+            investmentAmount <= allocationData.allocationUser_left
         ) {
             setButtonLoading(true)
-            const response = await fetchHash(offer.id, investmentAmount, activeChainCurrency[selectedCurrency]?.address, network.chainId)
+            console.log("BOOOKING_DETAILS", offer.id, investmentAmount, selectedCurrency?.contract, network.chainId)
+            const response = await fetchHash(offer.id, investmentAmount, selectedCurrency?.contract, network.chainId)
             if (!response.ok) {
-                await cleanHash(true)
-                setErrorMsg(response.code)
-                setErrorModal(true)
+                await clearBooking()
+                setErrorModal({open: true, code: response.code})
                 refetchOfferAllocation()
-            } else if(response.hash?.length>5) {
+            } else if (response.hash?.length > 5) {
                 const confirmedAmount = Number(response.amount)
                 setValue(confirmedAmount)
-                setHash(response.hash, Number(response.expires), confirmedAmount)
+                setBooking(response)
                 openInvestmentModal()
             }
             setButtonLoading(false)
         }
-
     }
 
     const processExistingSession = async () => {
         setButtonLoading(true)
         try {
-            const savedTimestamp = hashData.expires
-            const savedAmount = hashData.amount
+            const savedTimestamp = bookingDetails.expires
+            const savedAmount = bookingDetails.amount
             if (savedTimestamp < moment.utc().unix()) {
-                await cleanHash(true)
+                clearBooking()
                 await startInvestmentProcess()
             } else if (savedAmount === Number(investmentAmount)) {
                 openInvestmentModal()
             } else {
-                setOldAllocation(savedAmount)
-                setRestoreHashModal(true)
+                console.log("restore ", savedAmount)
+                setRestoreModal({
+                    open: true,
+                    amount: savedAmount
+                })
             }
         } catch (e) {
-            await cleanHash(true)
+            await clearBooking()
             await startInvestmentProcess()
         }
         setButtonLoading(false)
     }
 
-    const bookingRestore = async () => {
-        setRestoreHashModal(false)
-        const cookieData = getCookie().split('_')
-        setValue(Number(cookieData[1]))
-        openInvestmentModal()
-    }
-
-    const bookingCreateNew = async () => {
-        setButtonLoading(true)
-        setRestoreHashModal(false)
-        await cleanHash(true)
-        await startInvestmentProcess()
-    }
-
     const makeInvestment = async () => {
-        if (!!getCookie()?.length > 0) {
+        const test = getSavedBooking()
+        console.log("summary",test)
+        if (getSavedBooking().ok) {
             await processExistingSession()
         } else {
             await startInvestmentProcess()
         }
     }
 
+    const debouncedMakeInvestment = debounce(makeInvestment, 5000, {
+        leading: true,
+        trailing: false
+    });
+
+    const bookingRestore = async () => {
+        const amount = getSavedBooking().amount
+        setRestoreModal({open: false, amount: amount})
+        setValue(amount)
+        openInvestmentModal()
+    }
+
+    const bookingCreateNew = async () => {
+        setButtonLoading(true)
+        setRestoreModal({open: false, amount: 0})
+        clearBooking()
+        await startInvestmentProcess()
+    }
+
+    const bookingExpire = async () => {
+        setRestoreModal({open: false, amount: 0})
+        setInvestModal(false)
+        await afterInvestmentCleanup()
+    }
+
+    const afterInvestmentCleanup = async () => {
+        setButtonLoading(true)
+        clearBooking()
+        await Promise.all([
+            refetchUserAllocation(),
+            refetchOfferAllocation()
+        ]);
+
+        setButtonLoading(false)
+    }
+
     useEffect(() => {
-        setCurrencyOption(0)
+        setSelectedCurrency(dropdownCurrencyOptions[0])
     }, [network?.chainId])
 
     useEffect(() => {
@@ -244,7 +249,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     useEffect(() => {
         if (!offer) return
-        const allocations = userInvestmentState(session, offer, phaseCurrent, upgradesUse, userInvested?.total, allocation ? allocation : {})
+        const allocations = userInvestmentState(session, offer, phaseCurrent, upgradesUse, userInvested?.invested?.total, allocation ? allocation : {})
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
         setIsError({state: !allocationIsValid, msg: message})
@@ -252,7 +257,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         const {
             isDisabled,
             text
-        } = buttonInvestState(offer, phaseCurrent, investmentAmount, allocationIsValid, allocations, isStakeLock)
+        } = buttonInvestState(allocation ? allocation : {}, phaseCurrent, investmentAmount, allocationIsValid, allocations, isStakeLock)
+
         setInvestButtonDisabled(isDisabled)
         setInvestButtonText(text)
 
@@ -262,25 +268,37 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         upgradesUse?.increasedUsed?.amount,
         upgradesUse?.guaranteedUsed?.amount,
         upgradesUse?.guaranteedUsed?.alloUsed,
-        userInvested?.total,
+        userInvested?.invested?.total,
         investmentAmount,
         phaseCurrent?.phase
     ])
 
 
-    const restoreModalProps = {allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
-    const errorModalProps = {code: errorMsg}
+    const restoreModalProps = {
+        allocationOld: isRestoreModal.amount,
+        investmentAmount,
+        bookingExpire,
+        bookingRestore,
+        bookingCreateNew
+    }
+    const errorModalProps = {
+        code: isErrorModal.code
+    }
     const upgradesModalProps = {
         phaseCurrent,
-        offerId: offer.id,
+        offer: offer,
         refetchUserAllocation,
         userAllocationState,
         upgradesUse,
-        premiumData ,
+        premiumData,
         refetchPremiumData,
         allocationUserLeft: allocationData.allocationUser_left
     }
-    const calculateModalProps = {investmentAmount, allocationData, offer}
+    const calculateModalProps = {
+        investmentAmount,
+        allocationData,
+        offer
+    }
     const investModalProps = {
         investmentAmount,
         offer,
@@ -289,16 +307,18 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         afterInvestmentCleanup
     }
 
+    console.log("phaseCurrent",phaseCurrent)
+
     return (
         <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
             <div className={"absolute right-5 top-5"}>
                 <div className={"flex flex-row items-center text-gold"}>
-                    {!!upgradesUse.guaranteedUsed &&
+                    {displayGuaranteed &&
                         <div className={"mr-3 font-bold glow select-none"}><Tooltiper wrapper={`GUARANTEED`}
                                                                                       text={`$${allocationData.allocationUser_guaranteed} left`}
                                                                                       type={TooltipType.Primary}/>
                         </div>}
-                    <div className={`flex gap-2 flex-row justify-center align-center items-center ${isBased ? "" : "fill-gold"}`}>
+                    <div className={"flex gap-2 flex-row justify-center align-center items-center"}>
                         <IconButton zoom={1.1} size={'w-12 p-3'} icon={<DynamicIcon name={ICONS.CALCULATOR}/>}
                                     noBorder={!isBased} handler={() => setCalculateModal(true)}/>
                         <IconButton zoom={1.1} size={'w-12 p-3'}
@@ -337,8 +357,8 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                             </Transition.Child>
                         </Transition>
                     </div>
-                    <Dropdown options={activeChainSettlementSymbol} classes={'customSize'}
-                              propSelected={setCurrencyOption} position={currencyOption}/>
+                    <Dropdown options={dropdownCurrencyOptions}  selector={"symbol"}  classes={'customSize'}
+                              propSelected={setSelectedCurrency}/>
                     <Transition appear show={showInputInfo} as={Fragment}>
                         <Transition.Child
                             as={Fragment}
@@ -363,7 +383,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                 </div>}
             </div>
             <div className="flex flex-row flex-wrap justify-center gap-2 pb-10 px-2 items-center">
-                <div className={(investButtonDisabled || isStakeLock) ? 'disabled' : ''}>
+                <div className={(investmentLocked) ? 'disabled' : ''}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={investButtonText}
@@ -371,31 +391,29 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                         state={"success"}
                         showParticles={true}
                         isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
-                        handler={makeInvestment}
+                        handler={debouncedMakeInvestment}
                         size={'text-sm sm'} icon={getInvestmentButtonIcon()}
                     />
                 </div>
             </div>
 
 
-            <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreHash} setter={() => {
-                setRestoreHashModal(false)
-            }}/>
             <CalculateModal calculateModalProps={calculateModalProps} model={isCalculateModal} setter={() => {
                 setCalculateModal(false)
             }}/>
             <UpgradesModal upgradesModalProps={upgradesModalProps} model={isUpgradeModal} setter={() => {
                 setUpgradeModal(false)
             }}/>
-            <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {
-                setErrorModal(false)
+            <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreModal.open} setter={() => {
+                setRestoreModal({open: false, amount: 0})
             }}/>
-            <BlockchainProvider>
-                {network?.isSupported &&
-                    <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
-                        setInvestModal(false)
-                    }}/>}
-            </BlockchainProvider>
+            <ErrorModal errorModalProps={errorModalProps} model={isErrorModal.open} setter={() => {
+                setErrorModal({open: false, code: null})
+            }}/>
+            {network?.isSupported && selectedCurrency &&
+                <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
+                    setInvestModal(false)
+                }}/>}
         </div>
     )
 }

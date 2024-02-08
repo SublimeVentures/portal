@@ -82,7 +82,6 @@ async function createOffer(user, req) {
 async function signOffer(user, req) {
     const {userId, wallets} = user
 
-    console.log("user",user)
 
     let transaction
 
@@ -93,7 +92,7 @@ async function signOffer(user, req) {
         const dealId = Number(req.body.dealId)
         const expireDate =  moment.utc().unix() + 3 * 60
         const wallet = wallets.find(el=> el === req.body.wallet)
-        console.log("wallet",wallet, wallets, req.body.wallet)
+
         if(!wallet) throw new Error("Bad wallet")
 
         transaction = await db.transaction();
@@ -106,7 +105,6 @@ async function signOffer(user, req) {
 
         await saveOtcLock(userId, wallet, deal.data, expireDate, transaction)
 
-        console.log("jestem")
         const signature = await axios.post(`${process.env.AUTHER}/otc/sign`, {
             wallet, otcId, dealId, nonce: deal.data.id, expireDate
         }, {
@@ -114,7 +112,6 @@ async function signOffer(user, req) {
                 'content-type': 'application/json'
             }
         });
-        console.log("sig data", signature.data)
 
         // const signature = await signData(address, otcId, dealId, deal.data.id, expireDate)
         if(!signature?.data?.ok){

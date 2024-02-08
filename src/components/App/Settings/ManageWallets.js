@@ -9,7 +9,7 @@ import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
 import {ExternalLinks} from "@/routes";
 import {IconButton} from "@/components/Button/IconButton";
 import IconInfo from "@/assets/svg/Info.svg";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function ManageWallets({walletProps}) {
     const { updateEnvironmentProps} = useEnvironmentContext();

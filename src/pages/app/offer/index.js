@@ -12,7 +12,7 @@ import IconMoney from "@/assets/svg/Money.svg";
  import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
 import {processServerSideData} from "@/lib/serverSideHelpers";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import routes from "@/routes";
 
 export default function AppOffer({session}) {

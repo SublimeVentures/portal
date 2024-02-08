@@ -8,7 +8,7 @@ import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSli
 import { useEffect, useState, useMemo } from "react";
 const Flipbook = dynamic(() => import('@/components/Flipbook/Flipbook'), {ssr: false,})
 
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import dynamic from "next/dynamic";
 
 export default function OfferDetailsAbout({offer}) {

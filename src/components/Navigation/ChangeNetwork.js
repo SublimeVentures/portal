@@ -3,7 +3,7 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import {NETWORKS} from "@/lib/utils";
 import DynamicIcon from "@/components/Icon";
 

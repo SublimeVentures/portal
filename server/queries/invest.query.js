@@ -33,11 +33,12 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
             alloGuaranteed = wantedAllocation
         }
 
-        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer.alloTotal}`
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerFundraise?.alloTotal}`
     } else {
         effectiveAllocationReserved = wantedAllocation
-        sumFilter += ` + ${wantedAllocation} <= ${offer.alloTotal}`
+        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerFundraise?.alloTotal}`
     }
+
 
 
     const updateQuery = `
@@ -53,6 +54,7 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
         transaction
     });
 
+    console.log("investIncreaseAllocationReserved",result, updateQuery)
 
     return {
         ok: result[0].length ===1,
@@ -118,33 +120,6 @@ async function expireAllocation(offerId, userId, hash) {
     return true
 }
 
-async function expireAllocationAll(offerId, userId, tenantId) {
-    try {
-        const participantsQuery = `
-            UPDATE public.z_participant_${offerId}
-            SET "isExpired" = true,
-                "updatedAt" = now()
-            WHERE "userId" = :userId
-              AND "tenantId" = :tenantId
-              AND "onchainId" is null
-              AND "isConfirmedInitial" = false;
-        `;
-
-        return await db.query(participantsQuery, {
-            replacements: {
-                userId,
-                tenantId
-            },
-            type: QueryTypes.UPDATE
-        });
-    } catch (e) {
-        logger.error(`ERROR :: [expireAllocationAll] for ${offerId} `, {
-            offerId, userId, tenantId
-        });
-    }
-    return true
-}
-
 
 async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transaction) {
     let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`
@@ -170,7 +145,6 @@ module.exports = {
     getOfferRaise,
     bookAllocationGuaranteed,
     expireAllocation,
-    expireAllocationAll,
     investIncreaseAllocationReserved,
     investUpsertParticipantReservation
 }

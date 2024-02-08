@@ -22,9 +22,9 @@ export const config = createConfig({
     pollingInterval: 4_000,
     connectors: [
         // metaMask(),
-        walletConnect({
-            projectId: WALLET_CONNECT_ID,
-        }),
+        // walletConnect({
+        //     projectId: WALLET_CONNECT_ID,
+        // }),
         coinbaseWallet({
             appName: 'Venture Capital',
         }),

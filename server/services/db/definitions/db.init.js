@@ -19,10 +19,10 @@ if (!process.env.IS_LOCAL_DB) {
             rejectUnauthorized: false
         }
     }
-    connection.logging = false
+    // connection.logging = false
 } else {
     connection.ssl = false
-    connection.logging = false
+    // connection.logging = false
     // connection.logging = logger.info.bind(console.log)
 }
 

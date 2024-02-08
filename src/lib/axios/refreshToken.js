@@ -6,11 +6,7 @@ const refreshTokenFn = async () => {
         const response = await axiosPublic.put("/api/auth/login");
         console.log("response refres", response)
 
-        if (response.status === 200) {
-            return true;
-        } else {
-            return false;
-        }
+        return response.status === 200;
     } catch (error) {
         return false;
     }

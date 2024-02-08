@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {PhaseId, phases} from "@/lib/phases";
 import {isBased} from "@/lib/utils";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export const OfferStatus = {
     PENDING: "pending",
@@ -51,6 +51,7 @@ export default function OfferItem({offer, cdn}) {
         VanillaTilt.init(imageTilt.current, {scale: 1.02, speed: 1000, max: isBased ? 5 : 0.2});
     }, []);
 
+    console.log("offer",offer)
 
     const {phaseCurrent} = phases(offer)
     const state = phaseCurrent?.phaseName

@@ -20,27 +20,25 @@ const DEFAULT_STATE = {
         address: "",
     },
     diamonds: {},
-    currencies: [],
-    currencySettlement: [],
-    currencyStore: [],
-    otcContracts: {},
-
+    currencies: {},
+    currencyStaking: {},
+    sharedContracts: {},
     activeDiamond: "",
-    activeChainCurrency: {},
-    activeChainSettlementSymbol: [],
-    activeChainStoreSymbol: [],
-    activeChainStakingSymbol: [],
 }
 
 const EnvironmentContext = createContext({
     environmentProps: DEFAULT_STATE,
-    getCurrencySymbolByAddress: () => {
-    },
     environmentCleanup: () => {
     },
     insertEnvironment: () => {
     },
     updateEnvironmentProps: () => {
+    },
+    getCurrencyStore: () => {
+    },
+    getCurrencySettlement: () => {
+    },
+    getCurrencySymbolByAddress: () => {
     },
 });
 
@@ -49,7 +47,7 @@ export const useEnvironmentContext = () => useContext(EnvironmentContext);
 export const EnvironmentProvider = ({children, initialData}) => {
     const router = useRouter();
     const [environmentProps, setEnvironmentProps] = useState(DEFAULT_STATE);
-    const {network: networkProp, account: accountProp, diamonds, currencies, otcContracts} = environmentProps
+    const {network: networkProp, account: accountProp, diamonds, currencies, sharedContracts} = environmentProps
 
     const {isConnected: accountIsConnected, address: accountAddress, chain} = useAccount()
 
@@ -61,14 +59,35 @@ export const EnvironmentProvider = ({children, initialData}) => {
         switchChain
     } = useSwitchChain()
 
-
     useEffect(() => {
         console.log("EC :: context pass init",environmentProps.isClean && initialData?.cdn, environmentProps.isClean, !!initialData?.cdn, initialData, environmentProps)
         if (environmentProps.isClean && initialData?.cdn) {
+            const currencyAvailable = {};
+            let currencyStaking = {};
+
+            for (const currency of initialData.currencies) {
+                currencyAvailable[currency.contract] = {
+                    name: currency.name,
+                    symbol: currency.symbol,
+                    precision: currency.precision,
+                    chainId: currency.chainId,
+                    contract: currency.contract,
+                    isSettlement: currency.isSettlement,
+                    isStore: currency.isStore,
+                    isStaking: currency.isStaking,
+                };
+                if(currency.isStaking) {
+                    currencyStaking = currencyAvailable[currency.contract]
+                }
+            }
+
+            console.log("currencyAvailable",currencyAvailable)
+
             updateEnvironmentProps([
                 {path: 'diamonds', value: initialData.diamonds},
-                {path: 'currencies', value: initialData.currencies},
-                {path: 'otcContracts', value: initialData.otcContracts},
+                {path: 'currencies', value: currencyAvailable},
+                {path: 'currencyStaking', value: currencyStaking},
+                {path: 'sharedContracts', value: initialData.sharedContracts},
                 {path: 'otcFee', value: initialData.otcFee},
                 {path: 'cdn', value: initialData.cdn},
                 {path: 'isClean', value: false},
@@ -80,47 +99,6 @@ export const EnvironmentProvider = ({children, initialData}) => {
     useEffect(() => {
         const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
 
-        const activeChainCurrency = {};
-        const currencySettlementSymbol = [];
-        const currencyStoreSymbol = [];
-        const currencySettlement = [];
-        const currencyStore = [];
-        for (const currency of currencies) {
-            if (currency.chainId === chain?.id) {
-                activeChainCurrency[currency.symbol] = {
-                    name: currency.name,
-                    symbol: currency.symbol,
-                    precision: currency.precision,
-                    isSettlement: currency.isSettlement,
-                    chainId: currency.chainId,
-                    address: currency.address
-                };
-
-                if (currency.isSettlement) {
-                    currencySettlementSymbol.push(currency.symbol)
-                    currencySettlement.push({
-                        name: currency.name,
-                        symbol: currency.symbol,
-                        precision: currency.precision,
-                        isSettlement: currency.isSettlement,
-                        chainId: currency.chainId,
-                        address: currency.address
-                    });
-                }
-                if (currency.isStore || Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
-                    currencyStoreSymbol.push(currency.symbol)
-                    currencyStore.push({
-                        name: currency.name,
-                        symbol: currency.symbol,
-                        precision: currency.precision,
-                        isSettlement: currency.isSettlement,
-                        chainId: currency.chainId,
-                        address: currency.address
-                    });
-                }
-            }
-        }
-
         updateEnvironmentProps([
             {path: 'network.isSupported', value: isNetworkSupported},
             {path: 'network.chainId', value: chain?.id},
@@ -131,13 +109,8 @@ export const EnvironmentProvider = ({children, initialData}) => {
             {path: 'account.isConnected', value: accountIsConnected},
             {path: 'account.address', value: accountAddress},
             {path: 'activeDiamond', value: diamonds[chain?.id ? chain.id : 1]},
-            {path: 'activeOtcContract', value: otcContracts[chain?.id ? chain.id : 1]},
-
-            {path: 'activeChainCurrency', value: activeChainCurrency},
-            {path: 'activeChainSettlementSymbol', value: currencySettlementSymbol},
-            {path: 'activeChainStoreSymbol', value: currencyStoreSymbol},
-            {path: 'currencySettlement', value: currencySettlement},
-            {path: 'currencyStore', value: currencyStore},
+            {path: 'activeOtcContract', value: sharedContracts[chain?.id ? chain.id : 1]},
+            {path: 'activeInvestContract', value: sharedContracts[chain?.id ? chain.id : 1]},
 
         ], "set network and account environment")
     }, [
@@ -146,10 +119,45 @@ export const EnvironmentProvider = ({children, initialData}) => {
         initialData?.cdn
     ])
 
+    useEffect(() => {
+        const handleLogoutEvent = () => {
+            environmentCleanup();
+        };
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('logoutEvent', handleLogoutEvent);
+        }
+
+        // Cleanup the event listener on unmount
+        return () => {
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('logoutEvent', handleLogoutEvent);
+            }
+        };
+    }, []);
+
+
+    const getCurrencySettlement = () => {
+        if(networkProp.isSupported) {
+            return Object.values(currencies).filter(currency => currency.chainId === networkProp?.chainId && currency.isSettlement);
+        } else {
+            return [{symbol: "..."}]
+        }
+    }
+
+    const getCurrencyStore = () => {
+        if(Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) return getCurrencySettlement()
+        if(networkProp.isSupported) {
+            return Object.values(currencies).filter(currency => currency.chainId === networkProp?.chainId && currency.isStore);
+        } else {
+            return [{symbol: "..."}]
+        }
+    }
 
     const getCurrencySymbolByAddress = (address) => {
-        return currencies.find(el => el.address == address)?.symbol
+        return currencies[address]?.symbol
     }
+
 
     const insertEnvironment = (newProps) => {
         setEnvironmentProps(_ => {
@@ -190,11 +198,13 @@ export const EnvironmentProvider = ({children, initialData}) => {
         account: accountProp,
         activeDiamond: environmentProps.activeDiamond,
         activeOtcContract: environmentProps.activeOtcContract,
+        activeInvestContract: environmentProps.activeInvestContract,
         currencies: environmentProps.currencies,
-        activeChainCurrency: environmentProps.activeChainCurrency,
-        activeChainSettlementSymbol: environmentProps.activeChainSettlementSymbol,
-        activeChainStoreSymbol: environmentProps.activeChainStoreSymbol,
-        activeChainStakingSymbol: environmentProps.activeChainStakingSymbol,
+        currencySettlement: environmentProps.currencySettlement,
+        currencyStore: environmentProps.currencyStore,
+        currencyStaking: environmentProps.currencyStaking,
+        getCurrencySettlement,
+        getCurrencyStore,
         getCurrencySymbolByAddress,
         environmentCleanup,
         insertEnvironment,

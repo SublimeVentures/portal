@@ -8,7 +8,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import '@/styles/globals.scss'
 
 import Gtag from "@/components/gtag";
-import {EnvironmentProvider} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {EnvironmentProvider} from "@/lib/context/EnvironmentContext";
 
 import {isBased} from "@/lib/utils";
 
