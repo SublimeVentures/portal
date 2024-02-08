@@ -14,9 +14,9 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
 import {PremiumItemsENUM} from "@/lib/enum/store";
-import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
+
 import { processServerSideData} from "@/lib/serverSideHelpers";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 
@@ -101,9 +101,7 @@ export default function AppUpgrades({session}) {
             <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${isBased ? "" : "font-accent"}`}>
                 {renderPage()}
             </div>
-            <BlockchainProvider>
-                <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps}/>
-            </BlockchainProvider>
+            <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps}/>
         </>
 
 

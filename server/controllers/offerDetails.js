@@ -32,11 +32,6 @@ async function getParamOfferDetails(user, req) {
         url_web: offer.url_web,
         media: offer.media,
         isAccelerator: offer.isAccelerator,
-        isPaused: offer.isPaused,
-        isSettled: offer.isSettled,
-        vault: offer.vault,
-        alloRaised: offer.alloRaised,
-        alloTotal: offer.alloTotal,
         //per limits
         alloMin: offer.alloMin,
         alloMax: offer.alloMax,
@@ -57,7 +52,11 @@ async function getOfferAllocation(req) {
         return {
             alloRes: allocation.alloRes,
             alloFilled: allocation.alloFilled + allocation.alloFilledInjected,
-            alloGuaranteed: allocation.alloGuaranteed + allocation.alloGuaranteedInjected
+            alloGuaranteed: allocation.alloGuaranteed + allocation.alloGuaranteedInjected,
+            alloTotal: allocation.alloTotal,
+            isPaused: allocation.isPaused,
+            isSettled: allocation.isSettled,
+            isRefund: allocation.isRefund,
         }
 
     } catch (error) {
@@ -66,7 +65,11 @@ async function getOfferAllocation(req) {
         return {
             alloRes: 0,
             alloFilled: 0,
-            alloGuaranteed: 0
+            alloGuaranteed: 0,
+            alloTotal: 0,
+            isPaused: false,
+            isSettled: false,
+            isRefund: false,
         }
     }
 

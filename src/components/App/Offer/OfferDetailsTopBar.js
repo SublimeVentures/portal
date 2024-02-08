@@ -2,7 +2,7 @@ import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import {isBased} from "@/lib/utils";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function OfferDetailsTopBar({paramsBar}) {
     const {cdn} = useEnvironmentContext();

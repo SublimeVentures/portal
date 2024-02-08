@@ -5,7 +5,6 @@ import IconInfo from "@/assets/svg/Info.svg";
 import {IconButton} from "@/components/Button/IconButton";
 import {useRouter} from 'next/router';
 import {isBased} from "@/lib/utils";
-import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
 import {timeUntilNextUnstakeWindow} from "@/components/App/Settings/helper";
 import dynamic from "next/dynamic";
 import {updateStaking} from "@/fetchers/settings.fetcher";
@@ -15,7 +14,7 @@ const UnStakingModal = dynamic(() => import('@/components/App/Settings/UnStaking
 
 
 export default function ExternalStaking({stakingProps}) {
-    const {session, currency, account, activeDiamond} = stakingProps
+    const {session, account} = stakingProps
     const router = useRouter();
 
     const [staked, setStaked] = useState(false);
@@ -50,9 +49,6 @@ export default function ExternalStaking({stakingProps}) {
     const stakingModalProps = {
         stakeReq: session.stakeReq,
         isS1: session.isS1,
-        account: account.address,
-        activeDiamond,
-        currency,
         refreshSession
     }
 
@@ -119,7 +115,6 @@ export default function ExternalStaking({stakingProps}) {
                 </div>
 
             </div>
-            <BlockchainProvider>
                 {!staked &&
                     <StakingModal stakingModalProps={stakingModalProps} model={stakingModal} setter={async () => {
                         setStakingModal(false)
@@ -127,12 +122,11 @@ export default function ExternalStaking({stakingProps}) {
                     }}/>
                 }
                 {unstake &&
-                    <UnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
+                    <UnStakingModal model={unstakingModal} setter={async () => {
                                               setUnStakingModal(false)
                                               await refreshSession(true)
                                           }}/>
                 }
-            </BlockchainProvider>
         </div>
     )
 }

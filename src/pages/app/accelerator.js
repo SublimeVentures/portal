@@ -11,7 +11,7 @@ import routes from "@/routes";
 import {isBased} from "@/lib/utils";
 import {getCopy} from "@/lib/seoConfig";
 import { processServerSideData} from "@/lib/serverSideHelpers";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function AppAccelerator({session}) {
     const {cdn} = useEnvironmentContext();

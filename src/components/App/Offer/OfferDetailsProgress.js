@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import VanillaTilt from "vanilla-tilt";
 import {isBased} from "@/lib/utils";
 
-export default function OfferDetailsProgress({alloTotal, allocations, isSoldOut}) {
+export default function OfferDetailsProgress({allocations, isSoldOut}) {
     const tilt = useRef(null);
     useEffect(() => {
         VanillaTilt.init(tilt.current, {scale: 1.05, speed: 1000, max: isBased ? 5 : 0.2});
@@ -13,9 +13,9 @@ export default function OfferDetailsProgress({alloTotal, allocations, isSoldOut}
     const amt_res = allocations?.alloRes ? allocations?.alloRes : 0
     const amt_guaranteed = allocations?.alloGuaranteed ? allocations?.alloGuaranteed : 0
 
-    const filled_base = Math.round(amt_filled/alloTotal * 100)
-    const filled_res = Math.round(amt_res/alloTotal * 100)
-    const filled_guaranteed = Math.round(amt_guaranteed/alloTotal * 100)
+    const filled_base = Math.round(amt_filled/allocations?.alloTotal * 100)
+    const filled_res = Math.round(amt_res/allocations?.alloTotal * 100)
+    const filled_guaranteed = Math.round(amt_guaranteed/allocations?.alloTotal * 100)
 
     const progress = isSoldOut ? 100 : filled_base
 

@@ -7,7 +7,7 @@ import PAGE from "@/routes";
 import Link from "next/link";
 import {parseVesting} from "@/lib/vesting";
 import {isBased} from "@/lib/utils";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function VaultItem({item}) {
     const {cdn} = useEnvironmentContext();

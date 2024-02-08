@@ -1,19 +1,17 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
-import {
-    INTERACTION_TYPE
-} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 import Dropdown from "@/components/App/Dropdown";
-import BlockchainSteps from "@/components/App/BlockchainSteps";
-import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
+import {METHOD} from "@/components/BlockchainSteps/utils";
+import useGetToken from "@/lib/hooks/useGetToken";
+import BlockchainSteps from "@/components/BlockchainSteps";
 
 export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
     const {
@@ -21,19 +19,23 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
         setOrder,
     } = buyModalProps
     const router = useRouter()
-    const {insertConfiguration, blockchainCleanup, blockchainProps} = useBlockchainContext();
 
-    const {activeChainStoreSymbol: currencyNames, account, activeDiamond, network} = useEnvironmentContext();
-    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
-    const [currencySymbol, setCurrencySymbol] = useState(0)
+    const {account, activeDiamond, network, getCurrencyStore} = useEnvironmentContext();
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false)
 
-    const selectedCurrency = currencyNames[currencySymbol]
+    const [selectedCurrency, setSelectedCurrency] = useState({})
+    const dropdownCurrencyOptions = getCurrencyStore()
+
+
+    useEffect(() => {
+        setSelectedCurrency(dropdownCurrencyOptions[0])
+    }, [network.chainId])
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
             setOrder(null)
-            blockchainCleanup()
+            setTransactionSuccessful(false)
         }, 400);
     }
 
@@ -43,38 +45,37 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
         })
     }
 
+    const token = useGetToken(selectedCurrency?.contract)
 
-    useEffect(() => {
-        if (!model || !selectedCurrency) return;
-
-        insertConfiguration({
-            data: {
-                account: account.address,
-                requiredNetwork: 1,
-                amount: 1,
-                liquidity: order.price,
-                allowance: order.price,
-                currency: selectedCurrency,
-                contract: activeDiamond,
-                buttonText: "Buy",
-                transactionType: INTERACTION_TYPE.MYSTERYBOX,
-            },
+    const blockchainInteractionData = useMemo(() => {
+        return {
             steps: {
                 network: !isBased,
                 liquidity: true,
                 allowance: true,
                 transaction: true,
             },
-        });
+            params: {
+                requiredNetwork: 1,
+                account: account.address,
+                buttonText: "Buy",
+                liquidity: Number(order.price),
+                allowance: Number(order.price),
+                amount: 1,
+                spender: activeDiamond,
+                contract: activeDiamond,
+                transactionType: METHOD.MYSTERYBOX,
+            },
+            token,
+            setTransactionSuccessful
+        }
     }, [
         model,
         activeDiamond,
-        selectedCurrency
-    ]);
+        order.price,
+        selectedCurrency?.contract
+    ])
 
-    useEffect(() => {
-        setCurrencySymbol(0)
-    }, [network.chainId])
 
     const title = () => {
         return (
@@ -120,13 +121,11 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                         <hr className={"spacer"}/>
                         <div className="font-bold text-gold flex items-center">
                             <span className={"mr-2"}>{order.price}</span>
-                            {isBased ? <Dropdown options={currencyNames} propSelected={setCurrencySymbol} position={currencySymbol}
-                                                 isSmall={true}/> : <>BYTES</>}
+                            {isBased ? <Dropdown options={dropdownCurrencyOptions} selector={"symbol"} propSelected={setSelectedCurrency} isSmall={true}/> : <>BYTES</>}
                         </div>
                     </div>
                 </div>
-                <BlockchainSteps/>
-
+                { model &&  <BlockchainSteps data={blockchainInteractionData}/>}
             </div>
         )
     }

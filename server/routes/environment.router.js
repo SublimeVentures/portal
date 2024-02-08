@@ -5,6 +5,7 @@ const {serializeError} = require("serialize-error");
 const {envCache} = require("../controllers/envionment");
 const axios = require("axios");
 const {verifyID} = require("../../src/lib/authHelpers");
+const {buildCookie, authTokenName, refreshTokenName} = require("../../src/lib/authHelpers");
 
 //GET USER ENVIRONMENT DATA
 router.get('/', async (req, res) => {
@@ -21,7 +22,12 @@ router.get('/', async (req, res) => {
         return res.status(200).json({...environment});
     } catch (error) {
         logger.error(`ERROR :: GET ENV DATA`, {error: serializeError(error)});
-        return res.status(401).json({});
+        //todo: temporary added
+        const accessCookie = buildCookie(authTokenName, null, -1)
+        const refreshCookie = buildCookie(refreshTokenName, null, -1)
+        const cookie = [accessCookie, refreshCookie]
+        res.setHeader("Set-Cookie", cookie);
+        return res.status(401).json({ok: false});
     }
 });
 
@@ -33,12 +39,11 @@ async function refreshPartnerEnvironment (user, res) {
             }
         });
         const result = environment.data
-        if (!result?.otcFee) return res.status(401).json({});
-
+        if (!result?.ok) return res.status(401).json({...result});
         return res.status(200).json({...result});
     } catch (error) {
         logger.error(`ERROR :: GET ENV DATA`, {error: serializeError(error)});
-        return res.status(401).json({});
+        return res.status(401).json({ok: false});
     }
 }
 

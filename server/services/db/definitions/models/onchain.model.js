@@ -22,16 +22,16 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'onchainType', 
-                key: 'id',       
+                model: 'onchainType',
+                key: 'id',
             }
         },
         chainId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'network', 
-                key: 'chainId',       
+                model: 'network',
+                key: 'chainId',
             }
         },
         tenant: {
@@ -39,6 +39,14 @@ module.exports = (sequelize) => {
             allowNull: true,
             references: {
                 model: 'partner',
+                key: 'id',
+            }
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'user',
                 key: 'id',
             }
         },
@@ -53,15 +61,7 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
-        isRegisteredExecuted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        },
-        isConfirmedExecuted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        },
-        isRevertedExecuted: {
+        isRegistered: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },

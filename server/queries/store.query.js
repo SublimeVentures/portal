@@ -9,10 +9,6 @@ async function getStore(partnerId, tenantId) {
             where: {
                 enabled: true,
                 tenantId: tenantId
-                // [Op.or]: [
-                //     { tenantId: partnerId },
-                //     { tenantId: tenantId },
-                // ],
             },
             include: [{
                 model: models.store,
@@ -20,7 +16,10 @@ async function getStore(partnerId, tenantId) {
                 attributes: []
             }],
             attributes: [
-                'availability',
+                [
+                    db.literal('CASE WHEN "availability" < 0 THEN 0 ELSE "availability" END'),
+                    'availability'
+                ],
                 'price',
                 'img',
                 [db.literal('"store"."id"'), 'id'],

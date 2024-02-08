@@ -13,12 +13,11 @@ import Loader from "@/components/App/Loader";
 import MakeOfferModal from "@/components/App/Otc/MakeOfferModal";
 import CancelOfferModal from "@/components/App/Otc/CancelOfferModal";
 import {isBased, NETWORKS} from "@/lib/utils";
-import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
 import DynamicIcon from "@/components/Icon";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import {Tooltiper, TooltipType} from "@/components/Tooltip";
+import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 
 
 export default function OtcOffers({propOffers}) {
@@ -124,7 +123,7 @@ export default function OtcOffers({propOffers}) {
                     <td className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
                         data-label="ALLOCATION">${el.amount.toLocaleString()}</td>
                     <td className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
-                        data-label="PRICE">${el.price.toLocaleString()}</td>
+                        data-label="PRICE"><span className={"text-ellipsis overflow-hidden block"}>${el.price.toLocaleString()}</span></td>
                     <td className="text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
                         data-label="MULTIPLIER"><span
                         className="text-app-success">{Number(el.price / el.amount).toFixed(2)}x</span>
@@ -269,7 +268,6 @@ export default function OtcOffers({propOffers}) {
                         <Loader/> : (showHistory ? renderOfferHistoryTable() : renderOfferTable())}
                 </div>
             </div>
-            <BlockchainProvider>
                 <MakeOfferModal model={isMakeOfferModal} setter={() => {
                     setIsMakeOfferModal(false)
                 }} props={{...makeOfferProps}}/>
@@ -279,7 +277,6 @@ export default function OtcOffers({propOffers}) {
                 <TakeOfferModal model={isTakeOfferModal} setter={() => {
                     setIsTakeOfferModal(false)
                 }} props={{...interactOfferProps}}/>
-            </BlockchainProvider>
         </>
 
     )

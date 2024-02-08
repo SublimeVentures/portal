@@ -1,29 +1,14 @@
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
 import {isBased} from "@/lib/utils";
-import DynamicIcon from "@/components/Icon";
-import {ICONS} from "@/lib/icons";
-import {Tooltiper, TooltipType} from "@/components/Tooltip";
-
-function toLocaleStringWithPrecision(number) {
-    const numberAsString = number.toString();
-
-    const decimalPointIndex = numberAsString.indexOf('.');
-    const numberOfDecimalPlaces = decimalPointIndex === -1 ? 0 : numberAsString.length - decimalPointIndex - 1;
-
-    return number.toLocaleString(undefined, {
-        minimumFractionDigits: numberOfDecimalPlaces,
-        maximumFractionDigits: numberOfDecimalPlaces
-    });
-}
 
 export const OfferDetailsParams = ({paramsParams}) => {
     const {offer, allocation, userInvested, phaseIsClosed} = paramsParams
-    let {ticker, ppu, tge, t_cliff, t_vesting, alloTotal} = offer
-    let {booked, invested} = userInvested
-
-    const normalized_ppu = toLocaleStringWithPrecision(ppu)
-    const normalized_tge = tge ? toLocaleStringWithPrecision(tge) : 0
-    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {maximumFractionDigits: 2})
+    let {ticker, ppu, tge, t_cliff, t_vesting} = offer
+    let {alloTotal} = allocation
+    let { booked, invested} = userInvested
+    const normalized_ppu = Number(ppu)?.toLocaleString()
+    const normalized_tge = Number(tge)?.toLocaleString()
+    const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
     const normalized_total = Number(alloTotal)?.toLocaleString()
     const normalized_invested = Number(invested)?.toLocaleString()
     const normalized_booked = Number(booked)?.toLocaleString()
@@ -38,13 +23,10 @@ export const OfferDetailsParams = ({paramsParams}) => {
                     <div className={`text-5xl font-bold flex flex-1 glow font-light ${isBased ? "py-1" : "py-2 font-light"}`}>${normalized_total}</div>
 
                     <div className={"py-2"}>
-                        <OfferDetailsProgress alloTotal={alloTotal} allocations={allocation} isSoldOut={isSoldOut}/>
+                        <OfferDetailsProgress allocations={allocation} isSoldOut={isSoldOut}/>
                     </div>
                     <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
-                        {booked > 0 && <div className={"detailRow text-warn"}><p>My Bookings</p><hr className={"spacer"}/><div >
-                            <Tooltiper wrapper={<div onClick={() => {}}><DynamicIcon name={ICONS.ALERT} style={"w-5 mr-1"}/></div>} text={`Click here to cancel all pending bookings`} type={TooltipType.Error}/>
-                            ${normalized_booked}
-                        </div></div>}
+                        {booked > 0 && <div className={"detailRow text-app-error"}><p>Reserved</p><hr className={"spacer"}/><p>${normalized_booked}</p></div>}
                         {invested > 0 && <div className={"detailRow text-app-success"}><p>My Investment</p><hr className={"spacer"}/><p>${normalized_invested}</p></div>}
                         <div className={"detailRow"}><p>Ticker</p><hr className={"spacer"}/><p>${ticker}</p></div>
                         <div className={"detailRow"}><p>Price</p><hr className={"spacer"}/><p>{ppu === 0 ? "TBA" : `$${normalized_ppu}`}</p></div>

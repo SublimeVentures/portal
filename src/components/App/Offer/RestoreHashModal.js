@@ -8,7 +8,7 @@ import {useInvestContext} from "@/components/App/Offer/InvestContext";
 export default function RestoreHashModal({model, setter, restoreModalProps}) {
     const { allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew} = restoreModalProps
     const {
-        hashData,
+        bookingDetails,
     } = useInvestContext();
     const title = () => {
         return (
@@ -34,7 +34,7 @@ export default function RestoreHashModal({model, setter, restoreModalProps}) {
                     <FlipClockCountdown
                         className="flip-clock"
                         onComplete={()=> bookingExpire()}
-                        to={moment.unix(hashData?.expires)}
+                        to={moment.unix(bookingDetails?.expires)}
                         labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
                         labelStyle={{fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color: 'white'}}
                     />

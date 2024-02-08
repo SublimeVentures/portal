@@ -2,19 +2,20 @@ import {useRef, useState} from "react";
 import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 import {useEffect} from "react";
 
-export default function Dropdown({options, classes, propSelected, position, isSmall}) {
+// export default function Dropdown({options, classes, propSelected, position, isSmall}) {
+export default function Dropdown({options, selector, classes, propSelected, isSmall}) {
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState(0)
     const [direction, setDirection] = useState(0)
     const [moved, setMoved] = useState(0)
     const ref = useRef();
 
-    const changeOption = (index) => {
+    const changeOption = (selected, index) => {
 
         setMoved(index * (isSmall ? -35 : -62))
         let _selected = selected
         setSelected(index)
-        propSelected(index)
+        propSelected(selected)
         setDirection(_selected < index ? -1 : 1)
         setTimeout(() => {
             setDirection(0)
@@ -24,9 +25,9 @@ export default function Dropdown({options, classes, propSelected, position, isSm
 
     useOnClickOutside(ref, () => setIsOpen(false));
 
-    useEffect(() => {
-        if (position !== selected) changeOption(0)
-    }, [position])
+    // useEffect(() => {
+    //     if (position !== selected) changeOption(0)
+    // }, [position])
 
     return (
         <div
@@ -38,7 +39,7 @@ export default function Dropdown({options, classes, propSelected, position, isSm
         >
             <select data-menu="">
                 {options.map((el, i) => {
-                    return <option key={i} defaultValue={i === selected ? 'selected' : ''}>{el}</option>
+                    return <option key={i} defaultValue={el.contract === selected.contract ? 'selected' : ''}>{el[selector]}</option>
                 })}
 
             </select>
@@ -46,7 +47,7 @@ export default function Dropdown({options, classes, propSelected, position, isSm
                 <em></em>
                 <ul style={{transform: `translateY(${moved}px)`}}>
                     {options.map((el, i) => {
-                        return <li key={i}>{el}</li>
+                        return <li key={i}>{el[selector]}</li>
                     })}
 
                 </ul>
@@ -54,8 +55,8 @@ export default function Dropdown({options, classes, propSelected, position, isSm
             <ul style={{transform: `translateY(${moved}px)`}}>
                 {options.map((el, i) => {
                     return <li key={i} onClick={() => {
-                        changeOption(i)
-                    }}>{el}</li>
+                        changeOption(el, i)
+                    }}>{el[selector]}</li>
                 })
                 }
             </ul>

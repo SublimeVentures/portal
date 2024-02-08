@@ -8,6 +8,7 @@ const query_getUserVault = `
         SELECT
             "vault"."invested",
             "vault"."locked",
+            "vault"."createdAt",
             -- Add other vault columns as needed
             "offer"."slug",
             "offer"."name",

@@ -114,7 +114,7 @@ export const AppOfferDetails = ({session}) => {
 
     const feedPhases = () => {
         if (!offerData?.id) return
-        const {isClosed, phaseCurrent, phaseNext} = phases(offerData)
+        const {isClosed, phaseCurrent, phaseNext} = phases({...offerData, ...allocation})
         setPhaseIsClosed(isClosed)
         setPhaseCurrent(phaseCurrent)
         setPhaseNext(phaseNext)
@@ -180,7 +180,7 @@ export const AppOfferDetails = ({session}) => {
             router.push(routes.Opportunities)
         }
         feedPhases()
-    }, [offerData])
+    }, [offerData, allocation?.isSettled, allocation?.isPaused])
 
     const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${getCopy("NAME")}`
     return (
@@ -206,7 +206,12 @@ export const getServerSideProps = async ({req, res, resolvedUrl, query}) => {
                 staleTime: 15 * 60 * 1000,
             })
             const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
+            console.log("offerDetails",offerDetails, slug, query)
             const offerId = offerDetails.id;
+
+            if(!offerId) {
+                throw Error("Offer not specified")
+            }
 
             await queryClient.prefetchQuery({
                 queryKey: ["offerAllocation", offerId],

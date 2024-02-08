@@ -4,7 +4,7 @@ import {getCopy} from "@/lib/seoConfig";
 import {isBased} from "@/lib/utils";
 import Head from "next/head";
 import {processServerSideData} from "@/lib/serverSideHelpers";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import ExternalStaking from "@/components/App/Settings/ExternalStaking";
 import BasedStaking from "@/components/App/Settings/BasedStaking";
 import {queryClient} from "@/lib/queryCache";
@@ -14,8 +14,8 @@ import ManageWallets from "@/components/App/Settings/ManageWallets";
 
 
 export default function AppSettings({session}) {
-    const {currencies, account, activeDiamond} = useEnvironmentContext();
-    const stakingEnabled = currencies.find(el=> el.isStaking)
+    const {currencyStaking, account} = useEnvironmentContext();
+    const stakingEnabled = currencyStaking?.isStaking && session.stakingEnabled
     const userId = session?.userId;
 
 
@@ -29,9 +29,7 @@ export default function AppSettings({session}) {
 
     const stakingProps = {
         session,
-        currency: stakingEnabled,
         account,
-        activeDiamond
     }
 
     const walletProps = {

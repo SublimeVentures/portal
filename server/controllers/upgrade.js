@@ -29,12 +29,11 @@ async function useGuaranteed(offerId, user, transaction) {
 
     const offer = await getOfferWithLimits(offerId)
     const offerLimit = offer.offerLimits.find(el => el.partnerId === partnerId) || offer.offerLimits.find(el => el.partnerId === tenantId);
-    const {allocationUser_max} = getUserAllocationMax(user, {...offer, ...offerLimit}, upgradeIncreased)
-
+    const {allocationUser_max} = getUserAllocationMax(user, {...offer, ...offerLimit}, offer.offerFundraise, upgradeIncreased)
 
     const maxAllocation = roundAmount(allocationUser_max)
     const amount = maxAllocation < PremiumItemsParamENUM.Guaranteed ? maxAllocation : PremiumItemsParamENUM.Guaranteed
-    const increaseGuaranteedReservations = await bookAllocationGuaranteed(offerId, amount, offer.alloTotal, transaction)
+    const increaseGuaranteedReservations = await bookAllocationGuaranteed(offerId, amount, offer.offerFundraise.alloTotal, transaction)
 
     if (!increaseGuaranteedReservations.ok) {
         return {

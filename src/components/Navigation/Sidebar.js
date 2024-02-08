@@ -19,7 +19,7 @@ import PAGE, {ExternalLinks} from "@/routes";
 import dynamic from "next/dynamic";
 import {isBased} from "@/lib/utils";
 import Logo from "@/assets/svg/logo.svg";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import ChangeNetwork  from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress  from "@/components/Navigation/ChangeAddress";
 const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))

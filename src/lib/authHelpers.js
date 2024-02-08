@@ -50,7 +50,7 @@ const refreshTokens = async (refreshToken) => {
             });
 
             const result = response.data;
-            if (!result?.ok) throw new Error("Bad AUTHER response");
+            if (!result?.ok) throw Error(`AUTH err: ${result.error}`);
 
             return result
         } catch (error) {
@@ -59,10 +59,8 @@ const refreshTokens = async (refreshToken) => {
         }
 }
 
-const ACLs = {}
 
 module.exports = {
-    ACLs,
     domain,
     JWT_REFRESH_SECRET_encode,
     JWT_ACCESS_SECRET_encode,

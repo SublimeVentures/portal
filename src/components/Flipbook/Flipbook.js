@@ -70,7 +70,7 @@ const Flipbook = ({
     const viewportRef = useRef(null)
 
     const pageUrl = (page, hiRes = false) => {
-        console.log("FLIP page url", page, hiRes, pagesHiRes[page], pages[page])
+        // console.log("FLIP page url", page, hiRes, pagesHiRes[page], pages[page])
         if (hiRes && zoom > 1 && !zooming) {
             const url = pagesHiRes[page]
             if (url) return url;
@@ -469,7 +469,7 @@ const Flipbook = ({
 
     const pageUrlLoading = (page, hiRes = false) => {
         const url = pageUrl(page, hiRes)
-        console.log("FLIP pageUrlLoading url", url, hiRes, page)
+        // console.log("FLIP pageUrlLoading url", url, hiRes, page)
         // High-res image doesn't use 'loading'
         if (hiRes && zoom > 1 && !zooming) {
             return url;
@@ -679,7 +679,7 @@ const Flipbook = ({
     };
 
     const didLoadImage = (ev) => {
-        console.log("FLIP didLoadImage")
+        // console.log("FLIP didLoadImage")
         if (imageWidth === null) {
             const image = ev.target || ev.path[0];
             setImageWidth(image.naturalWidth)
@@ -772,7 +772,7 @@ const Flipbook = ({
         animate();
 
         if (end > 1) {
-            console.log("FLIP animate - preloadImage")
+            // console.log("FLIP animate - preloadImage")
             preloadImages(true);
         }
     }
@@ -955,9 +955,9 @@ const Flipbook = ({
     };
 
     const preloadImages = (hiRes = false) => {
-        console.log("FLIP preload")
+        // console.log("FLIP preload")
         for (let i = currentPage - 3; i <= currentPage + 3; i++) {
-            console.log("FLIP preload", i)
+            // console.log("FLIP preload", i)
 
             pageUrlLoading(i); // this preloads image
         }
@@ -1002,8 +1002,8 @@ const Flipbook = ({
             if (loadedImages[url]) {
                 return url;
             } else {
-                console.log("FLIP MAGA url",url)
-                //todo: uncomment and fix
+                // console.log("FLIP MAGA url",url)
+                // //todo: uncomment and fix
                 // const img = new Image();
                 // img.onload = () => {
                 //     setLoadedImages({ ...loadedImages, [url]: true });
@@ -1107,7 +1107,7 @@ const Flipbook = ({
         };
     }, []);
 
-    console.log("FLIP RENDER")
+    // console.log("FLIP RENDER")
     return (
         <div
             className={`viewport ${zooming || zoom > 1 ? 'zoom' : ''} ${dragToScroll ? 'drag-to-scroll' : ''}`}

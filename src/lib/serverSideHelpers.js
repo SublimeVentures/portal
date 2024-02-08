@@ -22,6 +22,15 @@ async function processServerSideData(req, res, route, customLogicCallback) {
         if (redirect) return redirect;
 
         const env = await fetchEnvironment(req.cookies[authTokenName], authTokenName)
+        if(!env.ok) {
+            console.log("ERROR - filed env refetch")
+            return {
+                redirect: {
+                    permanent: true,
+                    destination: `/login?callbackUrl=${route}`,
+                },
+            };
+        }
         return {
             props: {
                 environmentData: env,
@@ -37,15 +46,16 @@ async function processServerSideData(req, res, route, customLogicCallback) {
             accessToken = newSession.token.accessToken;
             accountData = newSession.data.user
 
-            const { additionalProps, redirect } = await handleCustomLogic(accountData, accessToken, customLogicCallback);
-            if (redirect) return redirect;
+            const customResult = await handleCustomLogic(accountData, accessToken, customLogicCallback);
+            console.log("customResult",customResult)
+            if (!!customResult.redirect) return customResult;
 
             const env = await fetchEnvironment(newSession.token.accessToken, authTokenName)
             return {
                 props: {
                     environmentData: env,
                     session: accountData,
-                    ...additionalProps,
+                    ...customResult.additionalProps,
                 },
             };
         } else {
