@@ -5,7 +5,9 @@ import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
 
 
-export default function CitCapStakingModal({model, setter}) {
+export default function CitCapStakingModal({model, setter, stakingModalProps}) {
+    const {stakeSize} = stakingModalProps
+
     const [transactionSuccessful, setTransactionSuccessful] = useState(false)
     const {currencyStaking, account, activeDiamond} = useEnvironmentContext();
 
@@ -60,7 +62,7 @@ export default function CitCapStakingModal({model, setter}) {
                        To partake in Citadel's investments, every Citizen must stake BYTES.
                    </div>
                     <div className={"my-5"}>
-                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSze} BYTES</p></div>
+                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSize} BYTES</p></div>
                     </div>
                     {model && <BlockchainSteps data={blockchainInteractionData}/>}
 

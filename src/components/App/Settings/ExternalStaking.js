@@ -48,6 +48,7 @@ export default function ExternalStaking({stakingProps}) {
 
     const stakingModalProps = {
         stakeReq: session.stakeReq,
+        stakeSize: session.stakeSize,
         isS1: session.isS1,
         refreshSession
     }
@@ -122,7 +123,7 @@ export default function ExternalStaking({stakingProps}) {
                     }}/>
                 }
                 {unstake &&
-                    <UnStakingModal model={unstakingModal} setter={async () => {
+                    <UnStakingModal stakingModalProps={stakingModalProps} model={unstakingModal} setter={async () => {
                                               setUnStakingModal(false)
                                               await refreshSession(true)
                                           }}/>
