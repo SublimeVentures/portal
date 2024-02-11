@@ -20,6 +20,8 @@ const {router: otcRoute} = require("./server/routes/otc.router.js");
 const {router: mysteryboxRoute} = require("./server/routes/mysterybox.router");
 const {router: storeRoute} = require("./server/routes/store.router.js");
 const {router: settingsRoute} = require("./server/routes/settings.router.js");
+const {router: payoutRoute} = require("./server/routes/payout.router.js");
+const {router: claimRoute} = require("./server/routes/claim.router.js");
 
 
 const port = process.env.PORT || 3000
@@ -47,6 +49,8 @@ nextApp.prepare().then(async () => {
     server.use('/api/mysterybox', mysteryboxRoute);
     server.use('/api/store', storeRoute);
     server.use('/api/settings', settingsRoute);
+    server.use('/api/payout', payoutRoute);
+    server.use('/api/claim', claimRoute);
 
     // Default catch-all renders Next app
     server.all('*', (req, res) => {

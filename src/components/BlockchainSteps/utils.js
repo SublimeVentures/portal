@@ -2,10 +2,12 @@ import { isAddress } from 'web3-validator';
 import {BigNumber} from "bignumber.js";
 import {blockchainPrerequisite as prerequisite_otcMakeOffer} from "@/components/App/Otc/MakeOfferModal";
 import {blockchainPrerequisite as prerequisite_otcTakeOffer} from "@/components/App/Otc/TakeOfferModal";
+import {blockchainPrerequisite as prerequisite_claimPayout} from "@/components/App/Vault/ClaimPayoutModal";
 import otcAbi from "../../../abi/otcFacet.abi.json";
 import investAbi from "../../../abi/investFacet.abi.json";
 import mysteryboxAbi from "../../../abi/MysteryBoxFacet.json";
 import upgradeAbi from "../../../abi/UpgradeFacet.json";
+import claimAbi from "../../../abi/ClaimFacet.json";
 import CitCapStakingAbi from "../../../abi/citcapStaking.abi.json";
 import {isBased} from "@/lib/utils";
 export const ETH_USDT = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
@@ -20,7 +22,8 @@ export const METHOD = {
     UPGRADE: 6,
     STAKE: 7,
     UNSTAKE: 8,
-    ALLOWANCE:9
+    ALLOWANCE:9,
+    CLAIM:10
 }
 
 const validAddress = (address) => {
@@ -284,6 +287,35 @@ export const getMethod = (type, token, params) => {
                 error: "Validation failed"
             }
         }
+        case METHOD.CLAIM: {
+            const isValid = validAddress(params?.contract) &&
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.amount) &&
+                validNumber(params?.offerId) &&
+                validNumber(params?.payoutId) &&
+                validNumber(params?.claimId)
+            console.log("validation CLAIMER", params, isValid, validHash(params?.prerequisite?.signature))
+
+            return isValid ? {
+                ok: true,
+                method: {
+                    name: 'claimPayout',
+                    inputs: [
+                        params.offerId,
+                        params.payoutId,
+                        params.claimId,
+                        params.amount,
+                        params.prerequisite.signature
+                    ],
+                    abi: claimAbi,
+                    confirmations: 2,
+                    contract: params.contract
+                }
+            } : {
+                ok: false,
+                error: "Validation failed"
+            }
+        }
     }
 }
 
@@ -297,6 +329,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.OTC_TAKE: {
             return await prerequisite_otcTakeOffer(params)
+        }
+        case METHOD.CLAIM: {
+            return await prerequisite_claimPayout(params)
         }
         default: {
             return {ok:true, data: {}}

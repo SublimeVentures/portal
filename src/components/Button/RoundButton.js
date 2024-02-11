@@ -12,6 +12,8 @@ export const ButtonIconSize = {
     small: "w-8",
     vsmall: "w-6 -ml-2 -mr-2",
     clicks: "w-5",
+    clicksLow: "w-[18px] mt-[1px] mr-1",
+    clicks2: "w-3",
     invest: "w-9 mr-5",
 }
 

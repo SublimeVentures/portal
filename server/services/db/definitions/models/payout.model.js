@@ -1,20 +1,12 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('vault', {
+    sequelize.define('payout', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
-        },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'user',
-                key: 'id',
-            }
         },
         offerId: {
             type: DataTypes.INTEGER,
@@ -24,34 +16,46 @@ module.exports = (sequelize) => {
                 key: 'id',
             }
         },
-        invested: {
+        offerPayout: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1,
+        },
+        totalAmount: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        refund: {
+        snapshotDate: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        refundState: {
+        claimDate: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
         },
-        locked: {
+        chainId: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
+            allowNull: false,
+            references: {
+                model: 'network',
+                key: 'chainId',
+            }
+        },
+        currency: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
-        claimed: {
-            type: DataTypes.FLOAT,
-            defaultValue: 0,
+        precision: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-        }
+            defaultValue: 0,
+        },
     }, {
         indexes: [
-            {unique: true, fields: ['userId', 'offerId']},
+            {unique: false, fields: ['offerId']},
         ],
         freezeTableName: true,
         timestamps: true
