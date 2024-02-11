@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('vault', {
+    sequelize.define('claim', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -24,34 +24,30 @@ module.exports = (sequelize) => {
                 key: 'id',
             }
         },
-        invested: {
+        payoutId: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
             allowNull: false,
+            references: {
+                model: 'payout',
+                key: 'id',
+            }
         },
-        refund: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        refundState: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        locked: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        claimed: {
+        amount: {
             type: DataTypes.FLOAT,
             defaultValue: 0,
+            allowNull: false,
+        },
+        isClaimed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
             allowNull: false,
         }
     }, {
         indexes: [
-            {unique: true, fields: ['userId', 'offerId']},
+            {unique: false, fields: ['userId']},
+            {unique: false, fields: ['offerId']},
+            {unique: false, fields: ['offerId', 'userId']},
+            {unique: true, fields: ['offerId', 'userId', 'payoutId']},
         ],
         freezeTableName: true,
         timestamps: true

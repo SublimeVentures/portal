@@ -10,14 +10,19 @@ import {getCopy} from "@/lib/seoConfig";
 import { processServerSideData} from "@/lib/serverSideHelpers";
 import routes from "@/routes";
 import {fetchStoreItemsOwned} from "@/fetchers/store.fetcher";
+import DetailsSidebar from "@/components/App/Vault/DetailsSidebar";
+import {useState} from "react";
 
 const UserSummary = dynamic(() => import('@/components/App/Vault/UserSummary'), {ssr: false})
 
 export default function AppVault({session}) {
     const userId = session.userId
     const tenantId = session.tenantId
+    const [claimModal, setClaimModal] = useState(false)
+    const [claimModalDetails, setClaimModalDetails] = useState({})
 
-    const {isSuccess: isSuccessDataFeed, data: vault} = useQuery({
+    console.log("claimModalDetails",claimModalDetails)
+    const {isSuccess: isSuccessDataFeed, data: vault, refetch: refetchVault} = useQuery({
             queryKey: ["userVault", userId],
             queryFn: fetchVault,
             refetchOnMount: true,
@@ -37,16 +42,33 @@ export default function AppVault({session}) {
         }
     );
 
+    const closeClaimModal = () =>{
+        setClaimModal(false)
+        setTimeout(() => {
+            setClaimModalDetails({})
+        }, 400);
+    }
+    const openClaimModal = (data) =>{
+        setClaimModalDetails(data)
+        setClaimModal(true)
+    }
+
     const renderList = () => {
         if (!vault) return
         return vault.map((el, i) => {
-            return <VaultItem item={el} key={el.name}/>
+            return <VaultItem item={el} key={el.name} passData={openClaimModal}/>
         })
     }
 
     const placeHolder = () => {
         if (!isSuccessDataFeed || vault === undefined) return <Loader/>
         if (vault.length === 0) return <div className="flex flex-1 flex-col justify-center"><EmptyVault/></div>
+    }
+
+    const claimModalProps = {
+        ...claimModalDetails,
+        refetchVault,
+        vaultData: vault
     }
 
     const title = `Vault - ${getCopy("NAME")}`
@@ -62,6 +84,7 @@ export default function AppVault({session}) {
             <div className="col-span-12 text-center contents">
                 {placeHolder()}
             </div>
+            <DetailsSidebar model={claimModal} setter={closeClaimModal} claimModalProps={claimModalProps} userId={userId}/>
         </>
     )
 }

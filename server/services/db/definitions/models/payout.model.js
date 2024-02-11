@@ -1,20 +1,12 @@
 const {DataTypes} = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('vault', {
+    sequelize.define('payout', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
             unique: true
-        },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'user',
-                key: 'id',
-            }
         },
         offerId: {
             type: DataTypes.INTEGER,
@@ -24,34 +16,48 @@ module.exports = (sequelize) => {
                 key: 'id',
             }
         },
-        invested: {
+        offerPayout: {
             type: DataTypes.INTEGER,
-            defaultValue: 0,
             allowNull: false,
+            defaultValue: 1,
         },
-        refund: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        refundState: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        locked: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        claimed: {
+        totalAmount: {
             type: DataTypes.FLOAT,
             defaultValue: 0,
             allowNull: false,
-        }
+        },
+        snapshotDate: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
+        claimDate: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false,
+        },
+        chainId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'network',
+                key: 'chainId',
+            }
+        },
+        currency: {
+            type: DataTypes.STRING,
+        },
+        currencySymbol: {
+            type: DataTypes.STRING,
+        },
+        precision: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
     }, {
         indexes: [
-            {unique: true, fields: ['userId', 'offerId']},
+            {unique: false, fields: ['offerId']},
         ],
         freezeTableName: true,
         timestamps: true
