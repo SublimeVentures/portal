@@ -10,7 +10,9 @@ async function signUserClaim(user, req) {
 
         if(claimId && isUserWallet) {
             const token = req.cookies[authTokenName]
-
+            console.log("CHECK WHAT HAPPENS", `${process.env.AUTHER}/claim/sign`, {
+                claimId, wallet: req.body.wallet, token
+            })
             const signature = await axios.post(`${process.env.AUTHER}/claim/sign`, {
                 claimId, wallet: req.body.wallet, token
             }, {
