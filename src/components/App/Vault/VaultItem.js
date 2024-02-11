@@ -55,7 +55,7 @@ export default function VaultItem({item, passData}) {
                 <div className={"detailRow "}><p>Invested</p><hr className={"spacer"}/><p>${normalized_invested}</p></div>
                 <div className={"detailRow "}><p>Vested</p><hr className={"spacer"}/><p>{vestedPercentage}%</p></div>
                 {isManaged ?
-                    <div className={"detailRow "}><p>Performance</p><hr className={"spacer"}/><p className={""}><span className={`${tgeParsed !== 'TBA' ? 'text-app-success' : ' text-white'}`}>+{Number(performance).toLocaleString(undefined, {minimumFractionDigits: 2})}%</span></p></div> :
+                    <div className={"detailRow "}><p>Performance</p><hr className={"spacer"}/><p className={""}><span className={`${tgeParsed !== 'TBA' && performance>0 ? 'text-app-success' : ' text-white'}`}>{performance>0 ? `+${Number(performance).toLocaleString(undefined, {minimumFractionDigits: 0})}%` : "TBA"}</span></p></div> :
                     <div className={"detailRow disabled"}><p>ATH profit</p><hr className={"spacer"}/><p><span>soon</span></p></div>
                 }
                  <div className={"detailRow "}><p>Next unlock</p><hr className={"spacer"}/><p>{nextClaim !== 0 ? nextClaim : "TBA"}</p></div>
