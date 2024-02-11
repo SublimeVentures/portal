@@ -12,16 +12,14 @@ import {useState} from "react";
 
 
 export default function DetailsSidebar({model, setter, claimModalProps, userId}) {
-    const {cdn, currencies} = useEnvironmentContext();
+    const {cdn} = useEnvironmentContext();
     const [payoutClaimOpen, setPayoutClaimOpen] = useState(false)
 
     const {
         id: offerId,
         name,
         slug,
-        isSoon,
         participated,
-        normalized_invested,
         tgeParsed,
         vestedPercentage,
         nextSnapshot,
@@ -30,7 +28,8 @@ export default function DetailsSidebar({model, setter, claimModalProps, userId})
         isManaged,
         ticker,
         refetchVault,
-        vaultData
+        vaultData,
+        invested,
     } = claimModalProps
 
     const {isSuccess: isSuccessPayouts, data: payouts, refetch: refetchPayouts} = useQuery({
@@ -44,13 +43,15 @@ export default function DetailsSidebar({model, setter, claimModalProps, userId})
         }
     );
 
-
     const availablePayouts = isSuccessPayouts ? payouts.reduce((acc, obj) => acc + obj.amount, 0) : 0
     const isNextPayout = isSuccessPayouts && payouts.length>0
     const nextPayout = isNextPayout  ? payouts[0] : {}
-    const currency = {symbol: ticker, precision: nextPayout.precision, chainId: nextPayout.chainId}
+    console.log("nextPayout",nextPayout)
+    const symbol = isNextPayout ? nextPayout.currencySymbol : (isManaged ? "USD" : ticker)
+    const currency = {symbol: symbol , precision: nextPayout.precision, chainId: nextPayout.chainId}
 
     const claimed = offerId>0 ? vaultData.find(el => el.id === offerId)?.claimed : 0
+    const performance = claimed / invested * 100
 
     const payoutClaimProps = {
         ...claimModalProps,
@@ -101,8 +102,8 @@ export default function DetailsSidebar({model, setter, claimModalProps, userId})
             <div className={`flex flex-1 flex-col`}>
                 <div className={`${isBased ? "" : "font-accent"} text-md pt-2`}>
                     <div className={"flex pt-5 pb-2 text-xl font-bold"}>Status</div>
-                    <div className={"detailRow "}><p>Invested</p><hr className={"spacer"}/><p className={"font-mono"}>${normalized_invested}</p></div>
                     <div className={"detailRow "}><p>Progress</p><hr className={"spacer"}/><p className={"font-mono"}>{vestedPercentage}%</p></div>
+                    <div className={"detailRow "}><p>Invested</p><hr className={"spacer"}/><p className={"font-mono"}>{Number(invested).toLocaleString(undefined, {minimumFractionDigits: 2})} USD</p></div>
                     <div className={"detailRow "}><p>Vested</p><hr className={"spacer"}/><p className={"font-mono"}>{Number(claimed).toLocaleString(undefined, {minimumFractionDigits: 2})} {currency?.symbol}</p></div>
                     {availablePayouts > 0 && <div className={"detailRow text-app-success"}><p className={"font-mono"}>Available payout</p><hr className={"spacer"}/>
                         <p className={"flex gap-1 h-[18px] font-mono"}>
@@ -113,8 +114,12 @@ export default function DetailsSidebar({model, setter, claimModalProps, userId})
 
 
                     <div className={"flex pt-5 pb-2 text-xl font-bold"}>Performance</div>
-                    <div className={"detailRow "}><p>TGE profit</p><hr className={"spacer"}/><p className={"font-mono"}><span className={`${tgeParsed !== 'TBA' ? 'text-app-success' : ' text-white'}`}>{tgeParsed}</span></p></div>
-                    <div className={"detailRow disabled"}><p>ATH profit</p><hr className={"spacer"}/><p><span>soon</span></p></div>
+                    <div className={"detailRow "}><p>TGE gain</p><hr className={"spacer"}/><p className={"font-mono"}><span className={`${tgeParsed !== 'TBA' ? 'text-app-success' : ' text-white'}`}>{tgeParsed}</span></p></div>
+                    {isManaged ?
+                        <div className={"detailRow "}><p>Return</p><hr className={"spacer"}/><p className={"font-mono"}><span className={`${tgeParsed !== 'TBA' ? 'text-app-success' : ' text-white'}`}>+{Number(performance).toLocaleString(undefined, {minimumFractionDigits: 2})}%</span></p></div> :
+                        <div className={"detailRow disabled"}><p>ATH profit</p><hr className={"spacer"}/><p><span>soon</span></p></div>
+                    }
+
 
 
                     <div className={"flex pt-5 pb-2 text-xl font-bold"}>Dates</div>

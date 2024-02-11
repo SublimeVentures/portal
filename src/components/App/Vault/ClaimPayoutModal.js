@@ -34,7 +34,7 @@ export const blockchainPrerequisite = async (params) => {
 }
 
 export default function ClaimPayoutModal({model, setter, props}) {
-    const {name, currency, nextPayout, refetchVault, refetchPayouts} = props
+    const {name, currency, nextPayout, refetchVault} = props
     const {
         getCurrencySettlement,
         account,
@@ -43,7 +43,7 @@ export default function ClaimPayoutModal({model, setter, props}) {
     } = useEnvironmentContext();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false)
 
-
+    console.log("propsprops",props)
     const chainDesired = network.chains.find(el => el.id === currency?.chainId)
     const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract)
 

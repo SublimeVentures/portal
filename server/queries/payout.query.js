@@ -16,7 +16,8 @@ const query_getPendingPayouts = `
             p."claimDate", 
             p."chainId", 
             p."currency", 
-            p."precision"
+            p."precision",
+            p."currencySymbol"
         FROM 
             claim c
         JOIN 

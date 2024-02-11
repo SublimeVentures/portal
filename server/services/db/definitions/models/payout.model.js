@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
             defaultValue: 1,
         },
         totalAmount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             defaultValue: 0,
             allowNull: false,
         },
@@ -46,7 +46,9 @@ module.exports = (sequelize) => {
         },
         currency: {
             type: DataTypes.STRING,
-            allowNull: false,
+        },
+        currencySymbol: {
+            type: DataTypes.STRING,
         },
         precision: {
             type: DataTypes.INTEGER,
