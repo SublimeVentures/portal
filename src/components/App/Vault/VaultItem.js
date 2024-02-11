@@ -11,7 +11,7 @@ import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function VaultItem({item, passData}) {
     const {cdn} = useEnvironmentContext();
-    const {createdAt, invested, tge, ppu, claimed} = item;
+    const {createdAt, invested, tge, ppu, claimed, isManaged} = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD")
     const normalized_tgeDiff = Number(100*(tge - ppu)/ppu)?.toLocaleString(undefined, {minimumFractionDigits: 2})
@@ -22,8 +22,9 @@ export default function VaultItem({item, passData}) {
     const {vestedPercentage, nextUnlock, nextSnapshot, nextClaim, isInstant, isSoon, claimStage, payoutId} = parseVesting(item.t_unlock)
     const test = parseVesting(item.t_unlock)
     const awaitngClaim = claimed === 0 && payoutId > 0
+    const performance = claimed / invested * 100
 
-    console.log("parseVesting - result", test, awaitngClaim)
+    console.log("parseVesting - result", test, awaitngClaim, item)
 
     const setPassData = () => {
         return {
@@ -52,12 +53,12 @@ export default function VaultItem({item, passData}) {
 
             <div className={`${isBased ? "" : "font-accent"} text-md pt-2`}>
                 <div className={"detailRow "}><p>Invested</p><hr className={"spacer"}/><p>${normalized_invested}</p></div>
-                <div className={"detailRow "}><p>TGE profit</p><hr className={"spacer"}/><p><span className={`${tgeParsed !== 'TBA' ? 'text-app-success' : ' text-white'}`}>{tgeParsed}</span></p></div>
-                <div className={"detailRow disabled"}><p>ATH profit</p><hr className={"spacer"}/><p><span>soon</span></p></div>
                 <div className={"detailRow "}><p>Vested</p><hr className={"spacer"}/><p>{vestedPercentage}%</p></div>
-                {(STAGES.UNLOCK === claimStage || nextSnapshot === 0) && <div className={"detailRow "}><p>Next unlock</p><hr className={"spacer"}/><p>{nextUnlock !== 0 ? nextUnlock : "TBA"}</p></div>}
-                {(STAGES.SNAPSHOT === claimStage && nextSnapshot !== 0) && <div className={"detailRow "}><p>Allocation snapshot</p><hr className={"spacer"}/><p>{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</p></div>}
-                {(STAGES.CLAIM === claimStage && nextClaim !== 0) && <div className={"detailRow "}><p>Claim date</p><hr className={"spacer"}/><p>{nextClaim !== 0 ? nextClaim : "TBA"}</p></div>}
+                {isManaged ?
+                    <div className={"detailRow "}><p>Performance</p><hr className={"spacer"}/><p className={""}><span className={`${tgeParsed !== 'TBA' ? 'text-app-success' : ' text-white'}`}>+{Number(performance).toLocaleString(undefined, {minimumFractionDigits: 2})}%</span></p></div> :
+                    <div className={"detailRow disabled"}><p>ATH profit</p><hr className={"spacer"}/><p><span>soon</span></p></div>
+                }
+                 <div className={"detailRow "}><p>Next unlock</p><hr className={"spacer"}/><p>{nextClaim !== 0 ? nextClaim : "TBA"}</p></div>
             </div>
 
             <div
