@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
             }
         });
         const result = auth.data
-        if (!result?.ok) throw Error("Bad AUTHER response")
+        if (!result?.ok) throw Error(result?.error)
 
         envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
 

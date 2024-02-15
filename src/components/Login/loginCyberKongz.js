@@ -38,7 +38,8 @@ export default function LoginCyberKongz({}) {
 
                 </div>
                 <div className={"hidden lg:flex  items-center md:justify-end"}>
-                    <IconNT className={"w-[280px] text-white"}/>
+                    <img src={"https://cdn.basedvc.fund/webapp/logo_alt_14.png"} className={"w-[280px]"}/>
+
                 </div>
 
             </div>

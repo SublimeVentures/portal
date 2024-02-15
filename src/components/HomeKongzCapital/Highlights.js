@@ -13,7 +13,7 @@ export default function Highlights() {
             <div>Exclusive</div>
           </div>
             <div className={"-mb-10"}>
-                <img src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/logo_alt_14.png"} />
+                <img src={"https://cdn.basedvc.fund/webapp/logo_alt_14.png"} />
             </div>
         </div>
       </div>
