@@ -11,7 +11,7 @@ export default function LayoutApp({ children }) {
     return (
         <>
             {stakingEnabled && !isStaked && <div className={"sticky top-0 bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 py-2"}>
-                Investments are blocked! <u><Link href={routes.Settings}>Stake {stakingCurrency.symbol} to unlock</Link></u>.
+                Investments are blocked! <u><Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link></u>.
             </div> }
 
             <div className="flex flex-col collap:flex-row bg-app-bg min-h-screen">
