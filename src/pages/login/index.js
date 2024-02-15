@@ -12,7 +12,7 @@ import {TENANT} from "@/lib/tenantHelper";
 import dynamic from "next/dynamic";
 const LoginBased = dynamic(() => import('@/components/Login/loginGlobal'), {ssr: true,})
 const LoginCitCap = dynamic(() => import('@/components/Login/loginCitCap'), {ssr: true,})
-const LoginCyberKongz = dynamic(() => import('@/components/Login/LoginCyberKongz'), {ssr: true,})
+const LoginCyberKongz = dynamic(() => import('@/components/Login/loginCyberKongz'), {ssr: true,})
 
 
 
