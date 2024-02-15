@@ -24,7 +24,6 @@ export default function VaultItem({item, passData}) {
     const awaitngClaim = claimed === 0 && payoutId > 0
     const performance = claimed / invested * 100
 
-    console.log("parseVesting - result", test, awaitngClaim, item)
 
     const setPassData = () => {
         return {

@@ -27,10 +27,8 @@ export function parseVesting(offerVesting) {
         let claimStage = STAGES.UNLOCK;
 
         for(let i=0; i<offerVesting.length;i++){
-            console.log("parseVesting - loop ", now, offerVesting[i])
             if(offerVesting[i].c === 0) break;
             if(offerVesting[i].c > now) {
-                console.log("parseVesting - larger", offerVesting[i])
                 const unlockDateUnix = moment(offerVesting[i].u, "YYYY-MM-DD").unix();
                 isSoon = (offerVesting[i].c - now <= SOON_DATE) || (offerVesting[i].s - now <= SOON_DATE) || (unlockDateUnix - now <= SOON_DATE)
                 nextUnlock = offerVesting[i].u

@@ -8,7 +8,6 @@ export default function LayoutApp({ children }) {
     const stakingEnabled = children.props?.session.stakingEnabled
     const isStaked = children.props?.session.isStaked
     const stakingCurrency = !!activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0]
-    console.log("stake", children.props?.session)
     return (
         <>
             {stakingEnabled && !isStaked && <div className={"sticky top-0 bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 py-2"}>
