@@ -97,7 +97,7 @@ export default function AppOtc({session}) {
     const renderPage = () => {
         if (!otcIsSuccess) return <Loader/>
         if (!otcIsSuccess || !vaultIsSuccess) return <Loader/>
-        if (otc?.length === 0) return <Empty/>
+        if (otc?.length === 0) return  <div className="col-span-12 max-h-[40vh]"><Empty/></div>
         return <div className="col-span-12">
             <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 lg:col-span-4 flex flex-1">

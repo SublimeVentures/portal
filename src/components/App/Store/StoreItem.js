@@ -6,11 +6,11 @@ import ReadIcon from "@/assets/svg/Read.svg";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 
 
-export default function StoreItem({item, cdn, setOrder}) {
+export default function StoreItem({item, cdn, setOrder, currency}) {
     let {id, name, description, price, availability, img} = item
 
     const status = !availability ? "closed disabled" : "inprogress"
-
+    console.log("currency",currency)
     return (
         <div
             className={`
@@ -29,7 +29,7 @@ export default function StoreItem({item, cdn, setOrder}) {
                     <div className={"flex flex-1 items-end text-sm pb-5 "}>
                         <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color"}>
                             <div>{id === 1 ? "Non-stackable" : "Stackable"}</div>
-                            <div>Price: {price} {isBased ? "USD" : "BYTES"}</div>
+                            <div>Price: {price} {isBased ? "USD" : currency.symbol}</div>
                         </div>
                     </div>
                 </div>

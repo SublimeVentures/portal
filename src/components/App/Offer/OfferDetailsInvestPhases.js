@@ -135,7 +135,9 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
             allocationData.allocationUser_max > 0 &&
             allocationData.allocationUser_min > 0 &&
             allocationData.allocationUser_left > 0 &&
-            investmentAmount <= allocationData.allocationUser_left
+            investmentAmount <= allocationData.allocationUser_left ||
+            userInvested?.invested.total - userInvested?.invested.invested >0
+
         ) {
             setButtonLoading(true)
             console.log("BOOOKING_DETAILS", offer.id, investmentAmount, selectedCurrency?.contract, network.chainId)
@@ -180,7 +182,6 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
 
     const makeInvestment = async () => {
         const test = getSavedBooking()
-        console.log("summary",test)
         if (getSavedBooking().ok) {
             await processExistingSession()
         } else {
@@ -253,11 +254,11 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
         setAllocationData({...allocations})
         const {allocation: allocationIsValid, message} = tooltipInvestState(offer, allocations, investmentAmount)
         setIsError({state: !allocationIsValid, msg: message})
-
+        console.log("MAX_SUMMARY", allocations, session, offer, phaseCurrent, upgradesUse, userInvested?.invested, allocation)
         const {
             isDisabled,
             text
-        } = buttonInvestState(allocation ? allocation : {}, phaseCurrent, investmentAmount, allocationIsValid, allocations, isStakeLock)
+        } = buttonInvestState(allocation ? allocation : {}, phaseCurrent, investmentAmount, allocationIsValid, allocations, isStakeLock, userInvested?.invested)
 
         setInvestButtonDisabled(isDisabled)
         setInvestButtonText(text)
@@ -395,6 +396,16 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                         size={'text-sm sm'} icon={getInvestmentButtonIcon()}
                     />
                 </div>
+                {investmentLocked && userInvested?.invested.total - userInvested?.invested.invested >0 &&   <UniButton
+                    type={ButtonTypes.BASE}
+                    text={"Restore"}
+                    isPrimary={true}
+                    state={"success"}
+                    showParticles={true}
+                    isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
+                    handler={debouncedMakeInvestment}
+                    size={'text-sm sm'} icon={getInvestmentButtonIcon()}
+                />}
             </div>
 
 

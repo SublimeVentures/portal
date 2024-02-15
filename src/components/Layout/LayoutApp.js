@@ -1,14 +1,18 @@
 import Sidebar from "@/components/Navigation/Sidebar";
 import routes from "@/routes";
 import Link from "next/link";
-import {isBased} from "@/lib/utils";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function LayoutApp({ children }) {
-    const notStaked = !children.props?.session?.isStaked
+    const {currencyStaking, activeCurrencyStaking} = useEnvironmentContext();
+    const stakingEnabled = children.props?.session.stakingEnabled
+    const isStaked = children.props?.session.isStaked
+    const stakingCurrency = !!activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0]
+    console.log("stake", children.props?.session)
     return (
         <>
-            {!isBased && notStaked && <div className={"sticky top-0 bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 py-2"}>
-                Investments are blocked! <u><Link href={routes.Settings}>Stake BYTES to unlock</Link></u>.
+            {stakingEnabled && !isStaked && <div className={"sticky top-0 bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 py-2"}>
+                Investments are blocked! <u><Link href={routes.Settings}>Stake {stakingCurrency.symbol} to unlock</Link></u>.
             </div> }
 
             <div className="flex flex-col collap:flex-row bg-app-bg min-h-screen">

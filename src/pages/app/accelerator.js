@@ -82,7 +82,7 @@ export default function AppAccelerator({session}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>Due Diligence</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span className="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, {isBased ? "Investors" :"Citizens"} must DYOR.
+                        As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are <span className={"font-bold text-app-error"}>outside</span> of our traditional investment stream, <span className="text-app-error font-bold">{getCopy("NAME")} cannot make any representations regarding the suitability of projects that are part of the accelerator</span>. As always, investors must DYOR.
 
                     </div>
                 </div>
@@ -94,7 +94,7 @@ export default function AppAccelerator({session}) {
                         <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>{getCopy("ACCELERATOR")}</div>
                     </div>
                     <div className={"font-light text-sm"}>
-                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {isBased ? "web3" : "NeoTokyo"}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span className="text-app-error font-bold">best {isBased ? "projects" :"NeoTokyo Projects"}</span>.
+                        {getCopy("NAME")}’s mission is to <span className="text-app-error font-bold">empower the builders of {getCopy("COMMUNITY")}</span>. We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support top-tier projects and provide a trusted, compliant way to invest in the <span className="text-app-error font-bold">best {getCopy("COMMUNITY")} projects</span>.
 
                     </div>
                 </div>

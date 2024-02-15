@@ -5,10 +5,12 @@ import moment from "moment";
 import {v4 as uuidv4} from 'uuid';
 import {logIn} from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
+import {TENANT} from "@/lib/tenantHelper";
 
 const SIGNING_MESSAGE = {
-    1: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
-    6: "INVEST EARLY\nINVEST WITH THE CITADEL",
+    [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
+    [TENANT.NeoTokyo]: "INVEST EARLY\nINVEST WITH THE CITADEL",
+    [TENANT.CyberKongz]: "INVEST EARLY\nINVEST WITH THE KONG",
 }
 
 const LOGIN_TYPE = {
@@ -46,7 +48,7 @@ export default function useLoginFlow() {
         try {
             const time = moment.utc().unix();
             const nonce = uuidv4();
-            const message = `${SIGNING_MESSAGE[1]}\n\nDOMAIN: ${window.location.host.replace("www.", "")}\nTIME: ${time}\nNONCE: ${nonce}`;
+            const message = `${SIGNING_MESSAGE[process.env.NEXT_PUBLIC_TENANT]}\n\nDOMAIN: ${window.location.host.replace("www.", "")}\nTIME: ${time}\nNONCE: ${nonce}\n\nI herby accept Privacy Policy and Terms of Use available https://${window.location.host.replace("www.", "")}/terms and https://${window.location.host.replace("www.", "")}/privacy`;
             const signature = await signMessageFn({message});
 
             const callbackUrl = router.query.callbackUrl;

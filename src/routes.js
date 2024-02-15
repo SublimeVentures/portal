@@ -1,4 +1,4 @@
-import {isBased} from "@/lib/utils";
+import {TENANT} from "@/lib/tenantHelper";
 
 
 const PAGE = {
@@ -7,6 +7,8 @@ const PAGE = {
     Login: "/login",
     Investments: "/investments",
     Tokenomics: "/tokenomics",
+    ToS: "/terms",
+    Privacy: "/privacy",
     App: "/app",
     Opportunities: "/app/offer",
     Accelerator: "/app/accelerator",
@@ -35,6 +37,7 @@ export const API = {
     environment: "/api/environment",
     publicPartners: "/api/public/partners",
     publicNeoTokyoEnvs: "/api/public/nt-calculator",
+    publicKongzEnvs: "/api/public/kongz-calculator",
 }
 
 const ExternalLinksBased = {
@@ -81,6 +84,41 @@ const ExternalLinksCitCap = {
 
 }
 
-export const ExternalLinks = isBased ? ExternalLinksBased : ExternalLinksCitCap
+const ExternalLinksCyberKongz = {
+    WIKI: "#",
+    DISCORD: "https://discord.com/invite/cyberkongz",
+    TWITTER:"https://twitter.com/KongzCapital",
+    GET_BANANA_ETH: "https://app.uniswap.org/#/swap?outputCurrency=0x94e496474f1725f1c1824cb5bdb92d7691a4f03a",
+    GET_BANANA_MATIC: "https://app.uniswap.org/swap?outputCurrency=0xbc91347e80886453f3f8bbd6d7ac07c122d87735&chain=polygon",
+    BOOKING_SYSTEM: "#",
+    OFFER_PHASES: "#",
+    AFTER_INVESTMENT: "#",
+    SUPPORTED_NETWORKS: "#",
+    UPGRADES: "#",
+    LOOTBOX: "#",
+    HOW_TO_ACCESS: "#",
+    DELEGATED_ACCESS: "#",
+    VAULT: "#",
+    OTC: "#",
+    OTC_ANNOUNCE: "#",
+    STAKING: "#",
+
+}
+
+function getTenantLinks () {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return ExternalLinksBased
+        }
+        case TENANT.NeoTokyo: {
+            return ExternalLinksCitCap
+        }
+        case TENANT.CyberKongz: {
+            return ExternalLinksCyberKongz
+        }
+    }
+}
+
+export const ExternalLinks = getTenantLinks()
 
 export default PAGE;

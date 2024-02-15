@@ -5,12 +5,30 @@ import {queryClient} from '@/lib/queryCache'
 import {NextSeo} from "next-seo";
 import {seoConfig} from "@/lib/seoConfig";
 import {verifyID} from "@/lib/authHelpers";
-import LoginCitCap from "@/components/Login/loginCitCap";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {isBased} from "@/lib/utils";
-import LoginGlobal from "@/components/Login/loginGlobal";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
+import {TENANT} from "@/lib/tenantHelper";
+import dynamic from "next/dynamic";
+const LoginBased = dynamic(() => import('@/components/Login/loginGlobal'), {ssr: true,})
+const LoginCitCap = dynamic(() => import('@/components/Login/loginCitCap'), {ssr: true,})
+const LoginCyberKongz = dynamic(() => import('@/components/Login/LoginCyberKongz'), {ssr: true,})
+
+
+
+const TENANTS_LOGIN = (data) =>{
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return <LoginBased ssrData={data}/>
+        }
+        case TENANT.NeoTokyo: {
+            return <LoginCitCap/>
+        }
+        case TENANT.CyberKongz: {
+            return <LoginCyberKongz/>
+        }
+    }
+}
 
 export default function Login({isAuthenticated}) {
     let [errorModal, setErrorModal] = useState(false)
@@ -52,7 +70,7 @@ export default function Login({isAuthenticated}) {
                 openGraph={seo.og}
                 twitter={seo.twitter}
             />
-            {isBased ? <LoginGlobal ssrData={data}/> : <LoginCitCap/>}
+            {TENANTS_LOGIN(data)}
             <ErrorModal model={errorModal} setter={() => {
                 setErrorModal(false)
             }}/>

@@ -56,7 +56,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                 transaction: true,
             },
             params: {
-                requiredNetwork: 1,
+                requiredNetwork: selectedCurrency.chainId,
                 account: account.address,
                 buttonText: "Buy",
                 liquidity: Number(order.price),
@@ -121,7 +121,7 @@ export default function BuyMysteryBoxModal({model, setter, buyModalProps}) {
                         <hr className={"spacer"}/>
                         <div className="font-bold text-gold flex items-center">
                             <span className={"mr-2"}>{order.price}</span>
-                            {isBased ? <Dropdown options={dropdownCurrencyOptions} selector={"symbol"} propSelected={setSelectedCurrency} isSmall={true}/> : <>BYTES</>}
+                            {dropdownCurrencyOptions.length>1 ? <Dropdown options={dropdownCurrencyOptions} selector={"symbol"}  propSelected={setSelectedCurrency} isSmall={true}/> : <>{dropdownCurrencyOptions[0].symbol}</>}
                         </div>
                     </div>
                 </div>
