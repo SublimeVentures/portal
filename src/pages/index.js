@@ -2,9 +2,27 @@ import { NextSeo } from 'next-seo';
 import {seoConfig} from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import {verifyID} from "@/lib/authHelpers";
-import HomeBased from "@/components/Home";
-import HomeCitCap from "@/components/HomeCitCap";
-import {isBased} from "@/lib/utils";
+import dynamic from "next/dynamic";
+import {TENANT} from "@/lib/tenantHelper";
+
+const HomeBased = dynamic(() => import('@/components/Home'), {ssr: true})
+const HomeCitCap = dynamic(() => import('@/components/HomeCitCap'), {ssr: true,})
+const HomeKongz = dynamic(() => import('@/components/HomeKongzCapital'), {ssr: true,})
+
+
+const renderLanding = (account) => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return <HomeBased account={account}/>
+        }
+        case TENANT.NeoTokyo: {
+            return <HomeCitCap account={account}/>
+        }
+        case TENANT.CyberKongz: {
+            return <HomeKongz account={account}/>
+        }
+    }
+}
 
 export default function Home({account}) {
   const seo = seoConfig(PAGE.Landing)
@@ -18,7 +36,7 @@ export default function Home({account}) {
             twitter={seo.twitter}
         />
 
-        {isBased ? <HomeBased account={account}/> : <HomeCitCap account={account}/>}
+        {renderLanding(account)}
     </>
   )
 }

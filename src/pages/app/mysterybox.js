@@ -15,11 +15,38 @@ import {claimMysterybox} from "@/fetchers/mysterbox.fetcher";
 import dynamic from "next/dynamic";
 import {PremiumItemsENUM} from "@/lib/enum/store";
 import {processServerSideData} from "@/lib/serverSideHelpers";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
+import {useRouter} from "next/router";
+import {TENANT} from "@/lib/tenantHelper";
 const ErrorModal = dynamic(() => import('@/components/App/MysteryBox/ClaimErrorModal'), {ssr: false})
 const ClaimMysteryBoxModal = dynamic(() => import('@/components/App/MysteryBox/ClaimMysteryBoxModal'), {ssr: false})
 
 
+const TENANT_MYSTERYBOX = () => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return <div className={"video-wrapper"}>
+                <video loop autoPlay muted playsInline className="">
+                    <source src="https://cdn.basedvc.fund/webapp/1.mp4" type="video/mp4"/>
+                </video>
+            </div>
+        }
+        case TENANT.NeoTokyo: {
+            return <IconMysteryBox className="w-[250px] sm:w-[450px] text-white"/>
+
+        }
+        case TENANT.CyberKongz: {
+            return <img src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/store/0_14.png"} className={"max-w-[350px]"} />
+
+        }
+    }
+}
+
 export default function AppLootbox({session}) {
+    const router = useRouter();
+
+    const {settings} = useEnvironmentContext();
+
     const {userId, tenantId} = session
     const imageTilt = useRef(null);
     const [isBuyModal, setBuyModal] = useState(false)
@@ -83,7 +110,12 @@ export default function AppLootbox({session}) {
     }
 
     useEffect(() => {
-        VanillaTilt.init(imageTilt.current, {scale: 1.1, speed: 1000, max: 0.2});
+        if(settings.isMysteryboxEnabled === false) {
+            router.replace(routes.App);
+        }
+        if(TENANT.basedVC !== Number(process.env.NEXT_PUBLIC_TENANT)) {
+            VanillaTilt.init(imageTilt.current, {scale: 1.1, speed: 1000, max: 0.2});
+        }
     }, []);
 
     useEffect(() => {
@@ -108,17 +140,10 @@ export default function AppLootbox({session}) {
             </Head>
             <div className={`mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative ${isBased ? "" : "font-accent"}`}>
                 {mysteryBoxOwnedAmount > 0 && <div className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[50px] text-center collap:top-[50px]"} flex absolute top-5 glowNormal pb-5 z-10`}>You have {mysteryBoxOwnedAmount} unopened MysteryBox!</div>}
+                <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
+                    {TENANT_MYSTERYBOX()}
 
-                {isBased ? <div className={"video-wrapper"}>
-                        <video loop autoPlay muted playsInline className="">
-                            <source src="https://cdn.basedvc.fund/webapp/1.mp4" type="video/mp4"/>
-                        </video>
-                        </div> :
-                        <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
-                                <IconMysteryBox className="w-[250px] sm:w-[450px] text-white"/>
-                        </div>
-                }
-
+                </div>
 
                 <div className={`flex gap-5 mt-5 z-10 ${isBased ? "absolute bottom-10": ""}`}>
                     <UniButton type={ButtonTypes.BASE}
@@ -155,6 +180,7 @@ export default function AppLootbox({session}) {
 }
 
 export const getServerSideProps = async({ req, res }) => {
+    //todo: ssr redirect if mysteryboxes not enabled
     return await processServerSideData(req, res, routes.Mysterybox);
 }
 

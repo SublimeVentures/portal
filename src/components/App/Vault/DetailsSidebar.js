@@ -46,7 +46,6 @@ export default function DetailsSidebar({model, setter, claimModalProps, userId})
     const availablePayouts = isSuccessPayouts ? payouts.reduce((acc, obj) => acc + obj.amount, 0) : 0
     const isNextPayout = isSuccessPayouts && payouts.length>0
     const nextPayout = isNextPayout  ? payouts[0] : {}
-    console.log("nextPayout",nextPayout)
     const symbol = isNextPayout ? nextPayout.currencySymbol : (isManaged ? "USD" : ticker)
     const currency = {symbol: symbol , precision: nextPayout.precision, chainId: nextPayout.chainId}
 
