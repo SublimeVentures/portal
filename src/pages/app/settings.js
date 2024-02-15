@@ -47,7 +47,7 @@ export default function AppSettings({session}) {
         }
     );
 
-    const stakingCurrency = !!activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0]
+    const stakingCurrency =activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0]
 
     const stakingProps = {
         session,

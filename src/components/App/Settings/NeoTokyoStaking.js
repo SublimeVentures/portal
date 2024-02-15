@@ -13,7 +13,7 @@ const UnStakingModal = dynamic(() => import('@/components/App/Settings/UnStaking
 
 
 export default function NeoTokyoStaking({stakingProps}) {
-    const {session, account} = stakingProps
+    const {session, account, stakingCurrency} = stakingProps
     const router = useRouter();
 
     const [staked, setStaked] = useState(false);
@@ -49,6 +49,7 @@ export default function NeoTokyoStaking({stakingProps}) {
         stakeReq: session.stakeReq,
         stakeSize: session.stakeSize,
         isS1: session.isS1,
+        stakingCurrency,
         refreshSession
     }
 
