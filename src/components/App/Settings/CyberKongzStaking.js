@@ -84,10 +84,9 @@ export default function CyberKongzStaking({stakingProps}) {
                     <p>{session.isS1 ? "Genesis" : "Baby"}</p>
                 </div>
                 <div className={"detailRow"}>
-                    <p>ALLOCATION BASE</p>
+                    <p>ALLOCATION MAX</p>
                     <hr className={"spacer"}/>
-                    <p>$500</p>
-                    {/*    todo: dodaj odpowiednia ilosc*/}
+                    <p>${session.stakeSize}</p>
                 </div>
                 <div className={`detailRow ${staked ? "text-app-success" : "text-app-error"}`}>
                     <p>Staked</p>
