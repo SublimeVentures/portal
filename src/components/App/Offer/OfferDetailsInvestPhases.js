@@ -75,7 +75,7 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
     const isStakeLock = session?.stakingEnabled ? !session.isStaked : false
     const investmentLocked = investButtonDisabled || isStakeLock
 
-    const displayGuaranteed = !!upgradesUse.guaranteedUsed && phaseCurrent.phase === PhaseId.FCFS && upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax
+    const displayGuaranteed = !!upgradesUse.guaranteedUsed && (phaseCurrent.phase === PhaseId.FCFS && phaseCurrent.phase === PhaseId.Pending) && upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax
 
 
     const [selectedCurrency, setSelectedCurrency] = useState({})
