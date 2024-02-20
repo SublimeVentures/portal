@@ -16,9 +16,7 @@ import IconPremium from "@/assets/svg/Premium.svg";
 import IconNT from "@/assets/svg/NT.svg";
 import IconGrowth from "@/assets/svg/Seed.svg";
 import PAGE, {ExternalLinks} from "@/routes";
-import dynamic from "next/dynamic";
 import {isBased} from "@/lib/utils";
-// import Logo from "@/assets/svg/logo.svg";
 import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import ChangeNetwork  from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress  from "@/components/Navigation/ChangeAddress";
@@ -142,7 +140,6 @@ export default function Sidebar({session}) {
                     <Link href={PAGE.App}  className={`absolute top-[4px]`}>
                         <div className="flex items-center">
                             {TENANT_LOGO()}
-                            {/*{isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 text-white"}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}*/}
                         </div>
                     </Link>
                     <div className="flex flex-1 justify-end hamburger items-center">
