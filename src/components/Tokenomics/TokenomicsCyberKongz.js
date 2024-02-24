@@ -23,7 +23,7 @@ export default function TokenomicsCitCap({}) {
         }
     );
 
-    const minStake = isSuccess ? Number(data.find(el=> el.name === 'stakeRequired').value) : 1000
+    const minStake = isSuccess ? Number(data.find(el=> el.name === 'stakeRequired').value) : 500
     const divider = isSuccess ? Number(data.find(el=> el.name === 'stakeMulti').value) : 500
 
     const recalculate = () => {
@@ -53,7 +53,7 @@ export default function TokenomicsCitCap({}) {
                         <div className={'pt-[50px] max-w-[350px] '}>
                             <Input type={'number'}
                                    placeholder={'Staked in KongzCapital'}
-                                   initialValue={1000}
+                                   initialValue={500}
                                    setStatus={()=>{}}
                                    setInput={setBananaStaked}
                                    input={bananaStaked}
