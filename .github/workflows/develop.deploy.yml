@@ -34,16 +34,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Extract segment from PR title
+        id: extract_segment
         run: |
-          PR_TITLE="test7"
+          PR_TITLE="test7" # Assuming this is for demonstration; in actual use, it should be ${{ github.event.pull_request.title }}
+          SEGMENT=$(echo "$PR_TITLE" | grep -oP '\[\K[^]]+(?=])' || echo "based")
           echo "PR Title: $PR_TITLE"
-          SEGMENT=$(echo "$PR_TITLE" | grep -oP '\[\K[^]]+(?=])' || echo "grep failed")
           echo "Segment after grep: $SEGMENT"
-          if [ -z "$SEGMENT" ]; then
+          if [ -z "$SEGMENT" ] || [ "$SEGMENT" = "based" ]; then
             SEGMENT="based"
+            echo "No segment found in PR title, defaulting to 'based'."
           fi
           echo "Final Segment: $SEGMENT"
           echo "SEGMENT=$SEGMENT" >> $GITHUB_ENV
+
 
       - name: Fetch secrets and create kubeconfig file
         run: |
