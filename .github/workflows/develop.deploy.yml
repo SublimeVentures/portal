@@ -13,7 +13,9 @@ on:
 name: DEVELOPMENT - deploy on ECS
 
 env:
-  AWS_REGION: us-east-2
+  AWS_REGION_SECRETS: us-east-1
+  AWS_REGION_ECR: us-east-2
+  AWS_REGION_CLUSTER: us-east-2
   ENV: prod
   PROJECT_NAMESPACE: webapp-prod
   ECS_SERVICE: service-webapp-prod
@@ -55,7 +57,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_REGION: ${{ env.AWS_REGION_SECRETS }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -65,7 +67,7 @@ jobs:
         run: |
           IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
           echo "Building and pushing image with tag: $IMAGE_TAG"
-          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_REGION }} -t ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG .
+          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_REGION_ECR }} -t ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG .
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG
           echo "IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG" >> $GITHUB_ENV
 
