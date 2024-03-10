@@ -15,7 +15,7 @@ name: DEVELOPMENT - deploy on ECS
 env:
   AWS_REGION_SECRETS: us-east-1
   AWS_REGION_ECR: us-east-2
-  AWS_REGION_CLUSTER: us-east-2
+  AWS_REGION: us-west-1
   ENV: prod
   PROJECT_NAMESPACE: webapp-prod
   ECS_SERVICE: service-webapp-prod
