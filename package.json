@@ -6,11 +6,9 @@
     ".next/cache"
   ],
   "scripts": {
-    "preinstall": "npm i -g pm2",
     "dev": "node index.js",
     "test": "cross-env NODE_ENV=test node index.js",
     "production": "cross-env NODE_ENV=production node index.js",
-    "start": "pm2-runtime start ecosystem.config.js --env production",
     "build": "next build",
     "build:dev": "cross-env NODE_ENV=development next build",
     "start:dev": "cross-env NODE_ENV=development next start",
