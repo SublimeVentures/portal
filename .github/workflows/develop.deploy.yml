@@ -1,7 +1,14 @@
+#on:
+#  pull_request:
+#    branches:
+#      - test1
+
 on:
   pull_request:
+    types: [opened]
     branches:
-      - test1
+      - develop
+
 
 name: DEVELOPMENT - deploy on ECS
 
@@ -20,7 +27,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-#    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
 
     steps:
       - name: Checkout code
