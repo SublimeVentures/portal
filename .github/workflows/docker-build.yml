@@ -1,17 +1,17 @@
-#name: Docker Image Pre-Merge CI
-#
-#on:
-#  pull_request:
-#    branches: '*'
-#
-#jobs:
-#  build:
-#    name: Build Docker Image
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
+name: Docker Image Pre-Merge CI
+
+on:
+  pull_request:
+    branches: '*'
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 #
 #      - name: Create Placeholder .env file
 #        run: |
