@@ -13,7 +13,7 @@ on:
 name: DEVELOPMENT - deploy on ECS
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   ENV: prod
   PROJECT_NAMESPACE: webapp-prod
   ECS_SERVICE: service-webapp-prod
@@ -48,7 +48,7 @@ jobs:
           echo "SEGMENT=$SEGMENT" >> $GITHUB_ENV
 
 
-      - name: Fetch secrets and create kubeconfig file
+      - name: Fetch secrets
         run: |
           aws secretsmanager get-secret-value --secret-id ${{ env.ENV }}/${{ env.SEGMENT }}/webapp --query SecretString --output text > .env
           cat .env
