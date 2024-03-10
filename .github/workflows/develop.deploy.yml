@@ -1,8 +1,15 @@
+#on:
+#  pull_request:
+#    branches:
+#      - test1
+
+
 on:
-  pull_request:
+  push:
     branches:
       - test1
-#    types: [closed]
+
+
 
 name: DEVELOPMENT - deploy on ECS
 
