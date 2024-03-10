@@ -51,6 +51,7 @@ jobs:
       - name: Fetch secrets and create kubeconfig file
         run: |
           aws secretsmanager get-secret-value --secret-id ${{ env.ENV }}/${{ env.SEGMENT }}/webapp --query SecretString --output text > .env
+          cat .env
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
