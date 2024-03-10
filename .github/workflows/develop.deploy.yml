@@ -1,0 +1,100 @@
+on:
+  pull_request:
+    branches:
+      - test1
+#    types: [closed]
+
+name: DEVELOPMENT - deploy on ECS
+
+env:
+  AWS_REGION: us-east-1
+  ENV: prod
+  PROJECT_NAMESPACE: webapp-prod
+  ECS_SERVICE: binarite-development-api-service
+  ECS_CLUSTER: binarite-development-api-cluster
+  CONTAINER_NAME: binarite-development-api-container
+  ECS_TASK_DEFINITION: .aws/development-task-definition.json
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Extract segment from PR title
+        id: extract_segment
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          SEGMENT=$(echo "$PR_TITLE" | grep -oP '\[\K[^]]+(?=])')
+          if [ -z "$SEGMENT" ]; then
+            SEGMENT="based"
+          fi
+          echo "SEGMENT=$SEGMENT" >> $GITHUB_ENV
+
+      - name: Fetch secrets and create kubeconfig file
+        run: |
+          aws secretsmanager get-secret-value --secret-id ${{ env.ENV }}/${{ env.SEGMENT }}/webapp --query SecretString --output text > .env
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "Building and pushing image with tag: $IMAGE_TAG"
+          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_REGION }} -t ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG .
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG
+          echo "IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.PROJECT_NAMESPACE }}-${{ env.SEGMENT }}:$IMAGE_TAG" >> $GITHUB_ENV
+
+#      - name: Update ECS Task Definition File
+#        uses: restackio/update-json-file-action@v2.0
+#        with:
+#          file: ${{ env.ECS_TASK_DEFINITION }}
+#          fields: |
+#            {"containerDefinitions[0].name": "${{ env.CONTAINER_NAME }}",
+#             "containerDefinitions[0].image": "${{ env.IMAGE_URI }}"}
+#
+#      - name: Update ECS Task Definition File
+#        run: |
+#          cp ${{ env.ECS_TASK_DEFINITION }} ./updated-task-definition.json
+#          cat ./updated-task-definition.json
+#          aws ecs register-task-definition --family ${{ env.PROJECT_NAMESPACE }} --cli-input-json file://updated-task-definition.json
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
+#
+#      - name: Update ECS Service Desired Count
+#        run: |
+#          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --desired-count 0
+#          aws ecs wait services-stable --cluster ${{ env.ECS_CLUSTER }} --services ${{ env.ECS_SERVICE }}
+#          cp ${{ env.ECS_TASK_DEFINITION }} ./updated-task-definition.json
+#          revision=$(aws ecs register-task-definition --family ${{ env.PROJECT_NAMESPACE }} --cli-input-json file://updated-task-definition.json | jq -r '.taskDefinition.revision')
+#          echo "New Task Definition Revision: $revision"
+#          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --task-definition "${{ env.PROJECT_NAMESPACE }}:${revision}" --desired-count 1 --force-new-deployment
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}

@@ -19,8 +19,8 @@
 *.pem
 newrelic_agent.log
 ./newrelic_agent.log
-
-
+.idea
+/.idea/
 # debug
 npm-debug.log*
 yarn-debug.log*

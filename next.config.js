@@ -1,4 +1,4 @@
-const {withSentryConfig} = require("@sentry/nextjs");
+// const {withSentryConfig} = require("@sentry/nextjs");
 const path = require('path');
 
 /** @type {import('next').NextConfig} */
@@ -30,7 +30,7 @@ const nextConfig = {
         ]
     },
     env: {
-        SENTRY_DSN: process.env.SENTRY_DSN,
+        SENTRY_DSN: "https://143737f08c9a42a680f90d8fa23dcce0@o4504865409007616.ingest.us.sentry.io/4505294581465088",
         DOMAIN: process.env.DOMAIN,
         JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
         NEXT_PUBLIC_ENV: process.env.ENV
@@ -39,40 +39,40 @@ const nextConfig = {
 
 module.exports = nextConfig
 
-
-// Injected content via Sentry wizard below
-if(process.env.ENV === "production" && !process.env.FORCE_DEV) {
-    module.exports = withSentryConfig(
-        module.exports,
-        {
-            // For all available options, see:
-            // https://github.com/getsentry/sentry-webpack-plugin#options
-
-            // Suppresses source map uploading logs during build
-            silent: true,
-
-            org: process.env.SENTRY_ORG,
-            project: process.env.SENTRY_PROJECT,
-        },
-        {
-            // For all available options, see:
-            // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-            // Upload a larger set of source maps for prettier stack traces (increases build time)
-            widenClientFileUpload: true,
-
-            // Transpiles SDK to be compatible with IE11 (increases bundle size)
-            transpileClientSDK: true,
-
-            // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-            tunnelRoute: "/monitoring",
-
-            // Hides source maps from generated client bundles
-            hideSourceMaps: true,
-
-            // Automatically tree-shake Sentry logger statements to reduce bundle size
-            disableLogger: true,
-        }
-    );
-
-}
+//
+// // Injected content via Sentry wizard below
+// if(process.env.ENV === "production2") {
+//     module.exports = withSentryConfig(
+//         module.exports,
+//         {
+//             // For all available options, see:
+//             // https://github.com/getsentry/sentry-webpack-plugin#options
+//
+//             // Suppresses source map uploading logs during build
+//             silent: true,
+//
+//             org: process.env.SENTRY_ORG,
+//             project: process.env.SENTRY_PROJECT,
+//         },
+//         {
+//             // For all available options, see:
+//             // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+//
+//             // Upload a larger set of source maps for prettier stack traces (increases build time)
+//             widenClientFileUpload: true,
+//
+//             // Transpiles SDK to be compatible with IE11 (increases bundle size)
+//             transpileClientSDK: true,
+//
+//             // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+//             tunnelRoute: "/monitoring",
+//
+//             // Hides source maps from generated client bundles
+//             hideSourceMaps: true,
+//
+//             // Automatically tree-shake Sentry logger statements to reduce bundle size
+//             disableLogger: true,
+//         }
+//     );
+//
+// }
