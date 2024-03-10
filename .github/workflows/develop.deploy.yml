@@ -1,15 +1,7 @@
-#on:
-#  pull_request:
-#    branches:
-#      - test1
-
-
 on:
-  push:
+  pull_request:
     branches:
       - test1
-
-
 
 name: DEVELOPMENT - deploy on ECS
 
@@ -17,9 +9,9 @@ env:
   AWS_REGION: us-east-1
   ENV: prod
   PROJECT_NAMESPACE: webapp-prod
-  ECS_SERVICE: binarite-development-api-service
-  ECS_CLUSTER: binarite-development-api-cluster
-  CONTAINER_NAME: binarite-development-api-container
+  ECS_SERVICE: service-webapp-prod
+  ECS_CLUSTER: cluster-webapp-prod
+  CONTAINER_NAME: container-webapp-prod
   ECS_TASK_DEFINITION: .aws/development-task-definition.json
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -33,17 +25,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
 
       - name: Extract segment from PR title
         id: extract_segment
