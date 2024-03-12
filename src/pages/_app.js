@@ -10,12 +10,22 @@ import '@/styles/globals.scss'
 import Gtag from "@/components/gtag";
 import {EnvironmentProvider} from "@/lib/context/EnvironmentContext";
 
-import {isBased} from "@/lib/utils";
+import {TENANT} from "@/lib/tenantHelper";
 
-if (isBased) {
-    import('@/styles/tenants/basedVC.scss')
-} else {
-    import('@/styles/tenants/citcap.scss')
+
+switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+    case TENANT.basedVC: {
+        import('@/styles/tenants/basedVC.scss')
+        break;
+    }
+    case TENANT.NeoTokyo: {
+        import('@/styles/tenants/citcap.scss')
+        break;
+    }
+    case TENANT.CyberKongz: {
+         import('@/styles/tenants/cyberkongz.scss')
+        break;
+    }
 }
 
 export default function App({Component, pageProps: {...pageProps}}) {

@@ -2,12 +2,24 @@ import { isAddress } from 'web3-validator';
 import {BigNumber} from "bignumber.js";
 import {blockchainPrerequisite as prerequisite_otcMakeOffer} from "@/components/App/Otc/MakeOfferModal";
 import {blockchainPrerequisite as prerequisite_otcTakeOffer} from "@/components/App/Otc/TakeOfferModal";
-import otcAbi from "../../../abi/otcFacet.abi.json";
-import investAbi from "../../../abi/investFacet.abi.json";
-import mysteryboxAbi from "../../../abi/MysteryBoxFacet.json";
-import upgradeAbi from "../../../abi/UpgradeFacet.json";
-import CitCapStakingAbi from "../../../abi/citcapStaking.abi.json";
-import {isBased} from "@/lib/utils";
+import {blockchainPrerequisite as prerequisite_claimPayout} from "@/components/App/Vault/ClaimPayoutModal";
+
+import abi_claim from "../../../abi/ClaimFacet.json";
+import abi_otc from "../../../abi/OtcFacet.abi.json";
+import abi_invest from "../../../abi/InvestFacet.abi.json";
+
+import abi_staking_neotokyo from "../../../abi/citcapStaking.abi.json";
+import abi_staking_generic from "../../../abi/genericStaking.abi.json";
+
+import abi_upgrade_generic from "../../../abi/genericUpgrade.abi.json";
+import abi_upgrade_neotokyo from "../../../abi/neoTokyoUpgrade.abi.json";
+import abi_upgrade_based from "../../../abi/UpgradeFacet.json";
+
+import abi_mb_generic from "../../../abi/genericMysteryBox.abi.json";
+import abi_mb_based from "../../../abi/basedMysteryBox.abi.json";
+import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
+
+import {TENANT} from "@/lib/tenantHelper";
 export const ETH_USDT = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
 
 export const METHOD = {
@@ -20,7 +32,120 @@ export const METHOD = {
     UPGRADE: 6,
     STAKE: 7,
     UNSTAKE: 8,
-    ALLOWANCE:9
+    ALLOWANCE:9,
+    CLAIM:10
+}
+
+const TENANT_STAKE = (params) => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.NeoTokyo: {
+            return {
+                name: 'stake',
+                inputs: [],
+                abi: abi_staking_neotokyo,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+        case TENANT.CyberKongz: {
+
+            return {
+                name: 'stakeNoGuards',
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.allowance],
+                abi: abi_staking_generic,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+    }
+}
+
+const TENANT_UNSTAKE = (params) => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.NeoTokyo: {
+            return {
+                name: 'unstake',
+                inputs: [],
+                abi: abi_staking_neotokyo,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+        default: {
+            return {
+                name: 'unstake',
+                inputs: [process.env.NEXT_PUBLIC_TENANT],
+                abi: abi_staking_generic,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+    }
+}
+
+
+const TENANT_UPGRADE = (params, token) => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.NeoTokyo: {
+            return {
+                name: 'buyUpgrade',
+                inputs: [params.amount, params.upgradeId],
+                abi: abi_upgrade_neotokyo,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+        case TENANT.CyberKongz: {
+            return {
+                name: 'buyUpgrade',
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.amount, params.upgradeId, token.contract],
+                abi: abi_upgrade_generic,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+        default: {
+            return {
+                name: 'buyUpgrade',
+                inputs: [params.amount, params.upgradeId, token.contract],
+                abi: abi_upgrade_based,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+    }
+}
+
+const TENANT_MYSTERYBOX = (params, token) => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.NeoTokyo: {
+            return {
+                name: 'buyMysteryBox',
+                inputs: [params.amount],
+                abi: abi_mb_neotokyo,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+        case TENANT.CyberKongz: {
+            return {
+                name: 'buyMysteryBox',
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.amount, token.contract],
+                abi: abi_mb_generic,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+        default: {
+            return {
+                name: 'buyMysteryBox',
+                inputs: [params.amount, token.contract],
+                abi: abi_mb_based,
+                confirmations: 2,
+                contract: params.contract
+            }
+        }
+    }
 }
 
 const validAddress = (address) => {
@@ -69,7 +194,7 @@ export const getMethod = (type, token, params) => {
                         token.contract,
                         params.booking.signature,
                     ],
-                    abi: investAbi,
+                    abi: abi_invest,
                     confirmations: 2,
                     contract: params.spender
                 }
@@ -121,7 +246,7 @@ export const getMethod = (type, token, params) => {
                         token.contract,
                         params.isSeller
                     ],
-                    abi: otcAbi,
+                    abi: abi_otc,
                     confirmations: 2,
                     contract: params.contract
                 }
@@ -144,7 +269,7 @@ export const getMethod = (type, token, params) => {
                         params?.otcId,
                         params.dealId,
                     ],
-                    abi: otcAbi,
+                    abi: abi_otc,
                     confirmations: 2,
                     contract: params.contract
                 }
@@ -181,7 +306,7 @@ export const getMethod = (type, token, params) => {
                         expiry,
                         hash,
                     ],
-                    abi: otcAbi,
+                    abi: abi_otc,
                     confirmations: 2,
                     contract: params.contract
                 }
@@ -194,23 +319,10 @@ export const getMethod = (type, token, params) => {
             const isValid =
                 validNumber(params?.amount) &&
                 validAddress(params?.contract)
-
+            const method = TENANT_MYSTERYBOX(params, token)
             return isValid ? {
                 ok: true,
-                method: {
-                    name: 'buyMysteryBox',
-                    inputs: isBased ? [
-                        params.amount,
-                        token.contract,
-                    ] : [
-                        params.amount,
-                        token.contract,
-                        params.tenantId
-                    ],
-                    abi: mysteryboxAbi,
-                    confirmations: 2,
-                    contract: params.contract
-                }
+                method
             } : {
                 ok: false,
                 error: "Validation failed"
@@ -220,27 +332,11 @@ export const getMethod = (type, token, params) => {
             const isValid =
                 validNumber(params?.amount) &&
                 validNumber(params?.upgradeId) &&
-                validAddress(params?.contract) &&
-                validAddress(token?.contract)
-
+                validAddress(params?.contract)
+            const method = TENANT_UPGRADE(params, token)
             return isValid ? {
                 ok: true,
-                method: {
-                    name: 'buyUpgrade',
-                    inputs: isBased ? [
-                        params.amount,
-                        params.upgradeId,
-                        token.contract,
-                    ] : [
-                        params.amount,
-                        params.upgradeId,
-                        token.contract,
-                        params.tenantId
-                    ],
-                    abi: upgradeAbi,
-                    confirmations: 2,
-                    contract: params.contract
-                }
+                method
             } : {
                 ok: false,
                 error: "Validation failed"
@@ -252,16 +348,10 @@ export const getMethod = (type, token, params) => {
                 validNumber(params?.liquidity) &&
                 validAddress(params?.contract) &&
                 validAddress(token?.contract)
-
+            const method = TENANT_STAKE(params)
             return isValid ? {
                 ok: true,
-                method: {
-                    name: 'stake',
-                    inputs: [],
-                    abi: CitCapStakingAbi,
-                    confirmations: 2,
-                    contract: params.contract
-                }
+                method
             } : {
                 ok: false,
                 error: "Validation failed"
@@ -269,13 +359,36 @@ export const getMethod = (type, token, params) => {
         }
         case METHOD.UNSTAKE: {
             const isValid = validAddress(params?.contract)
+            const method = TENANT_UNSTAKE(params)
+            return isValid ? {
+                ok: true,
+                method
+            } : {
+                ok: false,
+                error: "Validation failed"
+            }
+        }
+        case METHOD.CLAIM: {
+            const isValid = validAddress(params?.contract) &&
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.amount) &&
+                validNumber(params?.offerId) &&
+                validNumber(params?.payoutId) &&
+                validNumber(params?.claimId)
+            console.log("validation CLAIMER", params, isValid, validHash(params?.prerequisite?.signature))
 
             return isValid ? {
                 ok: true,
                 method: {
-                    name: 'unstake',
-                    inputs: [],
-                    abi: CitCapStakingAbi,
+                    name: 'claimPayout',
+                    inputs: [
+                        params.offerId,
+                        params.payoutId,
+                        params.claimId,
+                        params.amount,
+                        params.prerequisite.signature
+                    ],
+                    abi: abi_claim,
                     confirmations: 2,
                     contract: params.contract
                 }
@@ -297,6 +410,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.OTC_TAKE: {
             return await prerequisite_otcTakeOffer(params)
+        }
+        case METHOD.CLAIM: {
+            return await prerequisite_claimPayout(params)
         }
         default: {
             return {ok:true, data: {}}

@@ -9,7 +9,7 @@ export default function ChangeAddress({session}) {
 
     const userAddress = account?.address
     const isAddressSupported = Boolean(walletGuard && (userAddress !== undefined && wallets.find(el=> el === userAddress)))
-    console.log("wallet change",session, userAddress, wallets)
+    console.log("wallet change", userAddress, wallets)
 
     const title = () => {
         return (

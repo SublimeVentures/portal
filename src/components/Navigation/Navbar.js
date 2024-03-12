@@ -4,25 +4,43 @@ import useScrollPosition from "@/lib/hooks/useScrollPosition";
 import {isBased} from "@/lib/utils";
 import {ExternalLinks} from "@/routes";
 import {CitCapGlitchButton} from "@/components/Button/CitCapGlitchButton";
-import Logo from "@/assets/svg/logo.svg";
+// import Logo from "@/assets/svg/logo.svg";
 import dynamic from "next/dynamic";
-const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
+import {TENANT} from "@/lib/tenantHelper";
+import DynamicIcon from "@/components/Icon";
+// const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
 
 
+const TENANT_MENU = ()=> {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return [
+                {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
+                {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
+                {name: 'INVESTMENTS', link: 'investments'},
+            ]
+        }
+        case TENANT.NeoTokyo: {
+            return [
+                {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
+                {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
+                {name: 'TOKENOMICS', link: 'tokenomics'},
+            ]
+        }
+        case TENANT.CyberKongz: {
+            return [
+                {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
+                {name: 'TOKENOMICS', link: 'tokenomics'},
+            ]
+        }
+    }
+}
 
 export default function Navbar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false)
     const [isOnTop, setIsOnTop] = useState(false)
     const scrollPosition = useScrollPosition();
-    const menu = isBased ? [
-        {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
-        {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
-        {name: 'INVESTMENTS', link: 'investments'},
-    ] : [
-        {name: 'APPLY', link: ExternalLinks.APPLY, isExternal: true},
-        {name: 'DOCS', link: ExternalLinks.WIKI, isExternal: true},
-        {name: 'TOKENOMICS', link: 'tokenomics'},
-    ]
+
 
     const toggleMobile = (e) => {
         e.preventDefault();
@@ -64,11 +82,12 @@ export default function Navbar() {
                 flex flex-row items-center w-full  px-10 navShadow `}>
                 <Link href="/" onClick={disableMobile} className={`${isBased ? "absolute" : ""} z-20`}>
                     <div className={`flex`}>
-                        {isBased ? <Logo  className={"w-17 text-white "}/> : <LogoCitCap className={"w-17"}/>}
+                        <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"}/>
+
                     </div>
                 </Link>
                 <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>
-                    {menu.map((el, i) => {
+                    {TENANT_MENU().map((el, i) => {
                         return buildLinks(el,i)
                     })}
                 </div>
@@ -89,7 +108,7 @@ export default function Navbar() {
 
             </div>
             {isMobileOpen && <div className={`absolute ${isBased ? "blurred2" : "blurredBgColor gap-5"} flex flex-col w-full left-0 text-center py-5`}>
-                {menu.map((el, i) => {
+                {TENANT_MENU().map((el, i) => {
                     return buildLinks(el,i)
                 })}
             </div>

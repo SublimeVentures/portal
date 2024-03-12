@@ -1,7 +1,6 @@
 import Slider from "react-slick";
 import Multicoin from '@/assets/svg/logo/Multicoin.svg?component'
 import Binance from '@/assets/svg/logo/BinanceLabs.svg?component'
-import CitCap from '@/assets/svg/logo/CitCap.svg?component'
 import CryptoCom from '@/assets/svg/logo/CryptoCom.svg?component'
 import Coinbase from '@/assets/svg/logo/Coinbase.svg?component'
 import A16z from '@/assets/svg/logo/A16z.svg?component'
@@ -9,7 +8,8 @@ import Animoca from '@/assets/svg/logo/Animoca.svg?component'
 import Qcp from '@/assets/svg/logo/Qcp.svg?component'
 import Sequoia from '@/assets/svg/logo/Sequoia.svg?component'
 import {isBased} from "@/lib/utils";
-import Logo from "@/assets/svg/logo.svg";
+import DynamicIcon from "@/components/Icon";
+import {TENANT} from "@/lib/tenantHelper";
 
 export default function Investors() {
 
@@ -61,7 +61,8 @@ export default function Investors() {
                     </div>
                     <div>
                          <div className="customSlide justify-center flex min-h-[250px]">
-                             {isBased ?<CitCap className="!w-[280px] max-h-[220px]"/> : <Logo className="!w-[280px] max-h-[220px]"/>}
+                             {isBased ? <DynamicIcon name={`logo_${TENANT.NeoTokyo}`} style={"!w-[280px] max-h-[220px]"}/>
+                                 : <DynamicIcon name={`logo_${TENANT.basedVC}`} style={"!w-[280px] max-h-[220px]"}/>}
                          </div>
                     </div>
                     <div>

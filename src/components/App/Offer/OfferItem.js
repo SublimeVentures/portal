@@ -6,7 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {PhaseId, phases} from "@/lib/phases";
 import {isBased} from "@/lib/utils";
-import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export const OfferStatus = {
     PENDING: "pending",

@@ -21,10 +21,9 @@ export const config = createConfig({
     cacheTime: 0, //default: 4_000
     pollingInterval: 4_000,
     connectors: [
-        // metaMask(),
-        // walletConnect({
-        //     projectId: WALLET_CONNECT_ID,
-        // }),
+        walletConnect({
+            projectId: WALLET_CONNECT_ID,
+        }),
         coinbaseWallet({
             appName: 'Venture Capital',
         }),

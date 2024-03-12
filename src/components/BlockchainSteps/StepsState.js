@@ -44,7 +44,7 @@ const stepNetwork = (state, data) => {
             content: "Network check",
         }
     }
-    result.icon = data.params.requiredNetwork === 1 ? ICONS.ETH_MONO : (data.requiredNetwork === 137 ? ICONS.MATIC_MONO : ICONS.BSC_MONO)
+    result.icon = data.params.requiredNetwork === 1 ? ICONS.ETH_MONO : (data.params.requiredNetwork === 137 ? ICONS.MATIC_MONO : ICONS.BSC_MONO)
     result.iconPadding = iconPadding
 
     return result

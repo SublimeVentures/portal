@@ -21,8 +21,10 @@ const DEFAULT_STATE = {
     },
     diamonds: {},
     currencies: {},
-    currencyStaking: {},
+    currencyStaking: [],
+    activeCurrencyStaking: {},
     sharedContracts: {},
+    settings: {},
     activeDiamond: "",
 }
 
@@ -47,7 +49,7 @@ export const useEnvironmentContext = () => useContext(EnvironmentContext);
 export const EnvironmentProvider = ({children, initialData}) => {
     const router = useRouter();
     const [environmentProps, setEnvironmentProps] = useState(DEFAULT_STATE);
-    const {network: networkProp, account: accountProp, diamonds, currencies, sharedContracts} = environmentProps
+    const {network: networkProp, account: accountProp, diamonds, currencies, sharedContracts, currencyStaking} = environmentProps
 
     const {isConnected: accountIsConnected, address: accountAddress, chain} = useAccount()
 
@@ -63,7 +65,7 @@ export const EnvironmentProvider = ({children, initialData}) => {
         console.log("EC :: context pass init",environmentProps.isClean && initialData?.cdn, environmentProps.isClean, !!initialData?.cdn, initialData, environmentProps)
         if (environmentProps.isClean && initialData?.cdn) {
             const currencyAvailable = {};
-            let currencyStaking = {};
+            let currencyStaking = [];
 
             for (const currency of initialData.currencies) {
                 currencyAvailable[currency.contract] = {
@@ -77,7 +79,7 @@ export const EnvironmentProvider = ({children, initialData}) => {
                     isStaking: currency.isStaking,
                 };
                 if(currency.isStaking) {
-                    currencyStaking = currencyAvailable[currency.contract]
+                    currencyStaking.push(currencyAvailable[currency.contract])
                 }
             }
 
@@ -89,6 +91,7 @@ export const EnvironmentProvider = ({children, initialData}) => {
                 {path: 'currencyStaking', value: currencyStaking},
                 {path: 'sharedContracts', value: initialData.sharedContracts},
                 {path: 'otcFee', value: initialData.otcFee},
+                {path: 'settings', value: initialData.setup},
                 {path: 'cdn', value: initialData.cdn},
                 {path: 'isClean', value: false},
             ], "saved environment")
@@ -111,6 +114,7 @@ export const EnvironmentProvider = ({children, initialData}) => {
             {path: 'activeDiamond', value: diamonds[chain?.id ? chain.id : 1]},
             {path: 'activeOtcContract', value: sharedContracts[chain?.id ? chain.id : 1]},
             {path: 'activeInvestContract', value: sharedContracts[chain?.id ? chain.id : 1]},
+            {path: 'activeCurrencyStaking', value: currencyStaking.find(el=> el.chainId === chain?.id)},
 
         ], "set network and account environment")
     }, [
@@ -148,7 +152,9 @@ export const EnvironmentProvider = ({children, initialData}) => {
     const getCurrencyStore = () => {
         if(Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) return getCurrencySettlement()
         if(networkProp.isSupported) {
-            return Object.values(currencies).filter(currency => currency.chainId === networkProp?.chainId && currency.isStore);
+            const preferred = Object.values(currencies).filter(currency => currency.chainId === networkProp?.chainId && currency.isStore) ;
+            const fallback =  Object.values(currencies).filter(currency => currency.isStore);
+            return preferred.length>0 ? preferred : fallback
         } else {
             return [{symbol: "..."}]
         }
@@ -175,7 +181,6 @@ export const EnvironmentProvider = ({children, initialData}) => {
                 _.set(newState, update.path, update.value);
             });
             console.log("EC :: update props:", newState, source);
-
             return newState;
         });
     };
@@ -199,10 +204,12 @@ export const EnvironmentProvider = ({children, initialData}) => {
         activeDiamond: environmentProps.activeDiamond,
         activeOtcContract: environmentProps.activeOtcContract,
         activeInvestContract: environmentProps.activeInvestContract,
+        activeCurrencyStaking: environmentProps.activeCurrencyStaking,
         currencies: environmentProps.currencies,
         currencySettlement: environmentProps.currencySettlement,
         currencyStore: environmentProps.currencyStore,
         currencyStaking: environmentProps.currencyStaking,
+        settings: environmentProps.settings,
         getCurrencySettlement,
         getCurrencyStore,
         getCurrencySymbolByAddress,

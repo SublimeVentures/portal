@@ -2,8 +2,8 @@ const {PremiumItemsParamENUM} = require("./enum/store");
 const {PhaseId} = require("./phases");
 const {TENANT} = require("../../src/lib/tenantHelper");
 
-const MIN_DIVISIBLE = 1 //50
-const MIN_ALLOCATION = 1 //100
+const MIN_DIVISIBLE = 50 //50
+const MIN_ALLOCATION = 100 //100
 
 function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
@@ -14,7 +14,6 @@ function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedU
     switch(account.tenantId) {
         case TENANT.basedVC: {
             allocationUser_base = account.multi * offer.alloMax
-            // console.log("allocationUser_max - tylek", allocationUser_base)
             allocationUser_min = offer.alloMin
             break;
         }
@@ -22,6 +21,11 @@ function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedU
             allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus
             if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
             allocationUser_min = MIN_ALLOCATION
+            break;
+        }
+        case TENANT.CyberKongz: {
+            allocationUser_base = offer.alloMax * Math.ceil(account.stakeSize / offer.alloMax)
+            allocationUser_min = offer.alloMin
             break;
         }
     }
@@ -201,7 +205,13 @@ function tooltipInvestState(offer, allocationData, investmentAmount) {
 }
 
 
-function buttonInvestIsDisabled(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock) {
+function buttonInvestIsDisabled(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock, userInvestmentState) {
+    console.log("buttonInvestIsDisabledV1", allocationOffer?.isPaused ||
+        offerPhaseCurrent?.controlsDisabled ||
+        isStakeLock ||
+        !investmentAmount ||
+        !isAllocationOk, isAllocationOk
+    )
     return allocationOffer?.isPaused ||
         offerPhaseCurrent?.controlsDisabled ||
         isStakeLock ||
@@ -217,10 +227,10 @@ function buttonInvestText(allocationOffer, allocationData, defaultText) {
     else return defaultText
 }
 
-function buttonInvestState(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock) {
+function buttonInvestState(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock, userInvestmentState) {
     return {
         text: buttonInvestText(allocationOffer, allocationData, offerPhaseCurrent.button),
-        isDisabled: buttonInvestIsDisabled(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock)
+        isDisabled: buttonInvestIsDisabled(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock, userInvestmentState)
     }
 }
 

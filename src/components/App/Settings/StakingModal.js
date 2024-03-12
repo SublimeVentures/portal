@@ -4,10 +4,13 @@ import BlockchainSteps from "@/components/BlockchainSteps";
 import {METHOD} from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
+import {getCopy} from "@/lib/seoConfig";
+import {TENANTS_STAKIMG} from "@/components/App/Settings/helper";
+
 
 export default function StakingModal({model, setter, stakingModalProps}) {
-    const {stakeReq, isS1} = stakingModalProps
-    const {currencyStaking, account, activeDiamond} = useEnvironmentContext();
+    const {stakeReq, isS1, stakeMulti, isStaked, stakingCurrency} = stakingModalProps
+    const { account, activeDiamond} = useEnvironmentContext();
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false)
 
@@ -21,9 +24,8 @@ export default function StakingModal({model, setter, stakingModalProps}) {
     }
 
 
-    const token = useGetToken(currencyStaking?.contract)
-    console.log("selectedCurrency?.contract",currencyStaking?.contract, token)
-
+    const token = useGetToken(stakingCurrency?.contract)
+    const stakeSize = isStaked ? stakeMulti : stakeReq
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
@@ -33,10 +35,10 @@ export default function StakingModal({model, setter, stakingModalProps}) {
                 transaction: true,
             },
             params: {
-                requiredNetwork: currencyStaking.chainId,
+                requiredNetwork: stakingCurrency.chainId,
                 account: account.address,
-                allowance: stakeReq,
-                liquidity: stakeReq,
+                allowance: stakeSize,
+                liquidity: stakeSize,
                 buttonText: "Stake",
                 contract: activeDiamond,
                 spender: activeDiamond,
@@ -46,7 +48,7 @@ export default function StakingModal({model, setter, stakingModalProps}) {
             setTransactionSuccessful
         }
     }, [
-        currencyStaking?.contract,
+        stakingCurrency?.contract,
         activeDiamond,
         model,
     ])
@@ -57,7 +59,7 @@ export default function StakingModal({model, setter, stakingModalProps}) {
     const title = () => {
         return (
             <>
-                Stake <span className="text-app-error">{currencyStaking.name}</span>
+                Stake <span className="text-app-error">{stakingCurrency.name}</span>
             </>
         )
     }
@@ -67,15 +69,15 @@ export default function StakingModal({model, setter, stakingModalProps}) {
         return (
             <div className={"min-w-[300px]"}>
                 <div>
-                    To partake in Citadel's investments, every Citizen must stake BYTES.
+                    To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span> investments, every investor must stake <span className={"text-app-success"}>${stakingCurrency.symbol}</span> token.
                 </div>
                 <div className={"my-5"}>
-                    <div className={"detailRow"}><p>Detected Citizen</p>
+                    <div className={"detailRow"}><p>Detected NFT</p>
                         <hr className={"spacer"}/>
-                        <p>{isS1 ? "S1" : "S2"}</p></div>
-                    <div className={"detailRow"}><p>Required Stake</p>
+                        <p>{TENANTS_STAKIMG()[isS1 ? 0 : 1]}</p></div>
+                    <div className={"detailRow"}><p>{isStaked? "Add" : "Required"} Stake</p>
                         <hr className={"spacer"}/>
-                        <p>{stakeReq} {currencyStaking.name}</p></div>
+                        <p>{stakeSize} {stakingCurrency.name}</p></div>
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData}/>}
 
@@ -87,14 +89,10 @@ export default function StakingModal({model, setter, stakingModalProps}) {
         return (
             <div className={"min-w-[300px]"}>
                 <div className={"text-app-success"}>
-                    {currencyStaking.name} staked successfully.
+                    {stakingCurrency.name} staked successfully.
                 </div>
                 <div className={"text-gold"}>
-                    Welcome to Citizen Capital.
-                </div>
-                <div className={"my-5"}>
-                    <img src="https://cdn.citizencapital.fund/webapp/staked.gif" className={"rounded-md"}
-                         alt={"staked"}/>
+                    Welcome to {getCopy("NAME")}.
                 </div>
 
             </div>

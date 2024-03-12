@@ -1,5 +1,19 @@
 import {Html, Head, Main, NextScript} from 'next/document'
-import {isBased} from "@/lib/utils";
+import {TENANT} from "@/lib/tenantHelper";
+
+const TENANT_FAVICON = () => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return "/favicon.svg"
+        }
+        case TENANT.NeoTokyo: {
+            return "/img/favicon.png"
+        }
+        case TENANT.CyberKongz: {
+            return "/favicon_14.png"
+        }
+    }
+}
 
 export default function Document() {
     return (
@@ -7,7 +21,7 @@ export default function Document() {
             <Head>
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
-                <link rel="icon" href={isBased ? "/favicon.svg" : "/img/favicon.png"} sizes="any" />
+                <link rel="icon" href={TENANT_FAVICON()} sizes="any" />
             </Head>
             <body>
             <Main/>

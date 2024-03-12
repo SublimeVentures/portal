@@ -45,3 +45,18 @@ export const fetchNeoTokyoEnvs = async () => {
 
 }
 
+
+export const fetchCyberKongzEnvs = async () => {
+    try {
+        const {data} = await axiosPublic.get(API.publicKongzEnvs)
+        return data
+    } catch(e) {
+
+        if(e?.status && e.status !== 401) {
+            Sentry.captureException({location: "fetchCyberKongzEnvs", e});
+        }
+    }
+    return []
+
+}
+

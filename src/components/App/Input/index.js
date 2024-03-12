@@ -3,7 +3,7 @@ import {Fragment, useEffect, useState} from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import { isAddress } from 'web3-validator';
 
-export default function Input({type, placeholder, max, min, setStatus, input, setInput, after, light, full, dividable, customClear, initialValue, customCss}) {
+export default function Input({type, placeholder, max, min, setStatus, input, setInput, after, light, full, dividable, customClear, initialValue, customCss, extraCurrency}) {
     const [inputFormatted, setInputFormatted] = useState("")
     const [showInfo, setShowInfo] = useState(false)
     const [showClean, setShowClean] = useState(false)
@@ -77,10 +77,10 @@ export default function Input({type, placeholder, max, min, setStatus, input, se
         if(type === "number") {
             if (min && input < min) {
                 setStatus(true)
-                return setIsError({state: true, msg: `Minimum amount: $${min.toLocaleString()}`})
+                return setIsError({state: true, msg: `Minimum amount: ${extraCurrency ? "" : "$"}${min.toLocaleString()}${extraCurrency ? ` ${extraCurrency}` : ""}`})
             } else if (max && input > max) {
                 setStatus(true)
-                return setIsError({state: true, msg: `Maximum amount: $${max.toLocaleString()}`})
+                return setIsError({state: true, msg: `Maximum amount: ${extraCurrency ? "" : "$"}${max.toLocaleString()}${extraCurrency ? ` ${extraCurrency}` : ""}`})
             } else {
                 if(dividable && input % dividable > 0) {
                     setStatus(true)

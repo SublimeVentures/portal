@@ -43,6 +43,11 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             defaultValue: 0,
             allowNull: false,
+        },
+        claimed: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+            allowNull: false,
         }
     }, {
         indexes: [

@@ -34,7 +34,7 @@ export default function TokenomicsCitCap({}) {
     const [allocationTotal, setAllocationTotal] = useState("")
 
     const { isLoading, data, isError, isSuccess } = useQuery({
-            queryKey: ["publicInvestment"],
+            queryKey: ["ntTokenomics"],
             queryFn: fetchNeoTokyoEnvs,
             cacheTime: 180 * 60 * 1000,
             staleTime: 90 * 60 * 1000,

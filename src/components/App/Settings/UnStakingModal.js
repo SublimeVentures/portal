@@ -3,11 +3,14 @@ import {useMemo, useState} from "react";
 import {METHOD} from "@/components/BlockchainSteps/utils";
 import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
+import {getCopy} from "@/lib/seoConfig";
 
 
-export default function CitCapStakingModal({model, setter}) {
+export default function CitCapStakingModal({model, setter, stakingModalProps}) {
+    const {stakeSize, stakingCurrency} = stakingModalProps
+
     const [transactionSuccessful, setTransactionSuccessful] = useState(false)
-    const {currencyStaking, account, activeDiamond} = useEnvironmentContext();
+    const { account, activeDiamond} = useEnvironmentContext();
 
     const closeModal = () => {
         setter()
@@ -16,7 +19,7 @@ export default function CitCapStakingModal({model, setter}) {
         }, 400);
     }
 
-    console.log("currencyStaking",currencyStaking)
+    console.log("currencyStaking",stakingCurrency)
     console.log("activeDiamond",activeDiamond)
 
 
@@ -27,7 +30,7 @@ export default function CitCapStakingModal({model, setter}) {
                 transaction: true,
             },
             params: {
-                requiredNetwork: currencyStaking.chainId,
+                requiredNetwork: stakingCurrency.chainId,
                 account: account.address,
                 buttonText: "UnStake",
                 contract: activeDiamond,
@@ -36,7 +39,7 @@ export default function CitCapStakingModal({model, setter}) {
             setTransactionSuccessful
         }
     }, [
-        currencyStaking?.contract,
+        stakingCurrency?.contract,
         activeDiamond,
         model,
     ])
@@ -47,7 +50,7 @@ export default function CitCapStakingModal({model, setter}) {
     const title = () => {
         return (
             <>
-                <span className="text-app-error">UnStake</span> BYTES
+                <span className="text-app-error">UnStake</span> {stakingCurrency.symbol}
             </>
         )
     }
@@ -57,10 +60,10 @@ export default function CitCapStakingModal({model, setter}) {
         return (
             <div className={"min-w-[300px]"}>
                    <div>
-                       To partake in Citadel's investments, every Citizen must stake BYTES.
+                       To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span> investments, every investor must stake {stakingCurrency.symbol}.
                    </div>
                     <div className={"my-5"}>
-                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSze} BYTES</p></div>
+                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSize} {stakingCurrency.symbol}</p></div>
                     </div>
                     {model && <BlockchainSteps data={blockchainInteractionData}/>}
 
@@ -72,7 +75,7 @@ export default function CitCapStakingModal({model, setter}) {
         return (
             <div className={"min-w-[300px]"}>
                    <div className={"text-app-success"}>
-                       BYTES unstaked successfully.
+                       {stakingCurrency.symbol} unstaked successfully.
                    </div>
 
             </div>

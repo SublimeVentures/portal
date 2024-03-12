@@ -1,16 +1,12 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import {ExternalLinks} from "@/routes";
-import {isBased} from "@/lib/utils";
+import {TENANT} from "@/lib/tenantHelper";
 
-export default function ErrorModal({model, setter}) {
-
-    const title = () => {
-        return (<>Login <span className="text-app-error">error</span></>)
-    }
-
-    const contentBased = () => {
-        return (<>
+const TENANTS_ERROR = () => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return <>
 
                 <div className="mb-5">
                     Connected account does not hold any:
@@ -23,27 +19,42 @@ export default function ErrorModal({model, setter}) {
                     <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
 
                 </div>
-                </>
-        )
+            </>
+        }
+        case TENANT.NeoTokyo: {
+            return<>
+                <div className="mb-5">
+                    You were stopped by <strong>THE FIREWALL</strong>.<br/>
+                    <i>You filthy meatbag, only chosen ones can pass!</i><br/><br/>
+                    <div className={"text-app-error"}>Neo Tokyo Citizen NFT not detected...</div>
+                </div>
+                <div>
+                    <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
+                </div>
+            </>
+        }
+        case TENANT.CyberKongz: {
+            return<>
+                <div className="mb-5">
+                    You were stopped by <strong>THE KONG</strong>.<br/>
+                    <div className={"text-app-error"}>CyberKongz NFT not detected...</div>
+                </div>
+                <div>
+                    <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
+                </div>
+            </>
+        }
+
     }
-    const contentCitCap = () => {
-        return (<>
-                    <div className="mb-5">
-                        You were stopped by <strong>THE FIREWALL</strong>.<br/>
-                        <i>You filthy meatbag, only chosen ones can pass!</i><br/><br/>
-                        <div className={"text-app-error"}>Neo Tokyo Citizen NFT not detected...</div>
-                    </div>
-                    <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS}/>
-                    </div>
-                </>
-        )
+}
+
+export default function ErrorModal({model, setter}) {
+
+    const title = () => {
+        return (<>Login <span className="text-app-error">error</span></>)
     }
 
-    const content = () => {
-        return isBased ? contentBased() : contentCitCap()
-    }
 
-  return (<GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />)
+  return (<GenericModal isOpen={model} closeModal={setter} title={title()} content={TENANTS_ERROR()} />)
 }
 
