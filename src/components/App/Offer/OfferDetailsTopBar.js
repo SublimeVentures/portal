@@ -2,7 +2,7 @@ import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import {isBased} from "@/lib/utils";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function OfferDetailsTopBar({paramsBar}) {
     const {cdn} = useEnvironmentContext();
@@ -16,7 +16,7 @@ export default function OfferDetailsTopBar({paramsBar}) {
                     <Image src={`${cdn}/research/${slug}/icon.jpg`}  className={'p-1 rounded-full boxshadow'} alt={slug} width={100} height={100}/>
                 </div>
                 <div>
-                    <div className="text-4xl font-bold flex flex-1 glow">{name}</div>
+                    <div className="text-4xl font-bold flex flex-1 glow select-none">{name}</div>
                     <div className={`text-xl flex flex-1 mt-1 ${isBased ? "text-outline" : "font-accent"}`}>#{genre}</div>
                 </div>
             </div>

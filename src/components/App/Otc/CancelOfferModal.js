@@ -1,15 +1,13 @@
-import {useEffect} from "react";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import BlockchainSteps from "@/components/App/BlockchainSteps";
-import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
-import {INTERACTION_TYPE} from "@/components/App/BlockchainSteps/config";
 import DynamicIcon from "@/components/Icon";
 import {NETWORKS} from "@/lib/utils";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-
+import BlockchainSteps from "@/components/BlockchainSteps";
+import {useState, useMemo} from "react";
+import {METHOD} from "@/components/BlockchainSteps/utils";
 
 export default function CancelOfferModal({model, setter, props}) {
     const {
@@ -18,43 +16,38 @@ export default function CancelOfferModal({model, setter, props}) {
         refetchVault,
         refetchOffers,
     } = props
-    const {
-        insertConfiguration,
-        blockchainCleanup,
-        blockchainProps,
-    } = useBlockchainContext();
-    const {getCurrencySymbolByAddress, network, account, activeOtcContract} = useEnvironmentContext();
 
-    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
+    const {getCurrencySymbolByAddress, network, account, activeOtcContract} = useEnvironmentContext();
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false)
+
 
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString()
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString()
 
-
-
-    useEffect(() => {
-        if (!model  || !offerDetails?.dealId || !offerDetails?.otcId) return;
-
-        insertConfiguration({
-            data: {
-                account: account.address,
-                requiredNetwork: offerDetails?.chainId,
-                buttonText: "Cancel Offer",
-                transactionType: INTERACTION_TYPE.OTC_CANCEL,
-                dealId: offerDetails.dealId,
-                otcId: currentMarket.otc,
-                contract: activeOtcContract,
-            },
+    const blockchainInteractionData = useMemo(() => {
+        return {
             steps: {
                 network: true,
                 transaction: true,
-            }
-        });
+            },
+            params: {
+                requiredNetwork: offerDetails?.chainId,
+                account: account.address,
+                buttonText: "Cancel Offer",
+                contract: activeOtcContract,
+                dealId: offerDetails?.dealId,
+                otcId: currentMarket?.otc,
+                transactionType: METHOD.OTC_CANCEL,
+            },
+            setTransactionSuccessful
+        }
     }, [
+        account,
+        activeOtcContract,
+        offerDetails?.dealId,
+        currentMarket?.otc,
         model,
-    ]);
-
-    if (!currentMarket?.name || !offerDetails?.currency) return
+    ])
 
 
     const closeModal = async () => {
@@ -64,12 +57,12 @@ export default function CancelOfferModal({model, setter, props}) {
         }
         setter()
         setTimeout(() => {
-            blockchainCleanup()
+            setTransactionSuccessful(false)
         }, 400);
     }
 
 
-    const chainDesired = network.chains.find(el => el.id === offerDetails?.chainId)
+    const chainDesired = network?.chains?.find(el => el.id === offerDetails?.chainId)
 
     const title = () => {
         return (
@@ -89,10 +82,10 @@ export default function CancelOfferModal({model, setter, props}) {
                 <div>Are you sure you want to cancel this offer?</div>
                 <div className="grid gap-1 grid-cols-2 my-10">
                     <div className="font-bold">MARKET</div>
-                    <div className={"text-right text-app-success"}>{currentMarket.name}</div>
+                    <div className={"text-right text-app-success"}>{currentMarket?.name}</div>
                     <div className="font-bold">TYPE</div>
                     <div
-                        className={`text-right ${offerDetails.isSell ? 'text-app-error' : 'text-app-success'} `}>{offerDetails.isSell ? "SELL" : "BUY"}</div>
+                        className={`text-right ${offerDetails?.isSell ? 'text-app-error' : 'text-app-success'} `}>{offerDetails?.isSell ? "SELL" : "BUY"}</div>
                     <div className="font-bold">BLOCKCHAIN</div>
                     <div className="flex flex-row justify-end items-center overflow-hidden whitespace-nowrap">
                         <DynamicIcon name={NETWORKS[chainDesired?.id]} style={ButtonIconSize.hero4}/>
@@ -103,16 +96,17 @@ export default function CancelOfferModal({model, setter, props}) {
                     <div className={"text-right"}>${cancelOfferAmount_parsed}</div>
                     <div className="font-bold">PRICE</div>
                     <div className={"text-right"}>${cancelOfferPrice_parsed}</div>
-                    {!offerDetails.isSell && <>
+                    {!offerDetails?.isSell && <>
                         <div className="font-bold text-gold">FUNDS RETURNED</div>
                         <div
                             className={"flex justify-end text-gold"}>
-                            <DynamicIcon name={getCurrencySymbolByAddress(offerDetails.currency)} style={ButtonIconSize.hero4}/>
+                            <DynamicIcon name={getCurrencySymbolByAddress(offerDetails?.currency)} style={ButtonIconSize.hero4}/>
                             <span className={"ml-2"}>${cancelOfferPrice_parsed}</span></div>
                     </>}
 
                 </div>
-                <BlockchainSteps/>
+                {model && <BlockchainSteps data={blockchainInteractionData}/>}
+
             </div>
         )
     }
@@ -132,7 +126,7 @@ export default function CancelOfferModal({model, setter, props}) {
     }
 
     const content = () => {
-        return transactionSuccessful ? contentSuccess() : contentQuery()
+        return model ? (transactionSuccessful ? contentSuccess() : contentQuery()) : <></>
     }
 
     return (<GenericRightModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()}/>)

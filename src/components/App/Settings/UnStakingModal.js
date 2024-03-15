@@ -1,51 +1,56 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useEffect } from "react";
-import {
-     INTERACTION_TYPE
-} from "@/components/App/BlockchainSteps/config";
-import BlockchainSteps from "@/components/App/BlockchainSteps";
-import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
+import {useMemo, useState} from "react";
+import {METHOD} from "@/components/BlockchainSteps/utils";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
+import BlockchainSteps from "@/components/BlockchainSteps";
+import {getCopy} from "@/lib/seoConfig";
+
 
 export default function CitCapStakingModal({model, setter, stakingModalProps}) {
-    const { account, currency, activeDiamond, session} = stakingModalProps
-    const { insertConfiguration, blockchainCleanup, blockchainProps } = useBlockchainContext();
-    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
+    const {stakeSize, stakingCurrency} = stakingModalProps
+
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false)
+    const { account, activeDiamond} = useEnvironmentContext();
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
-            blockchainCleanup()
+            setTransactionSuccessful(false)
         }, 400);
     }
 
+    console.log("currencyStaking",stakingCurrency)
+    console.log("activeDiamond",activeDiamond)
 
-    useEffect(() => {
-        if(!model || !currency?.address) return;
 
-
-        insertConfiguration({
-            data: {
-                account: account,
-                requiredNetwork: currency.chainId,
-                contract: activeDiamond,
-                currency: currency?.symbol,
-                buttonText: "UnStake",
-                transactionType: INTERACTION_TYPE.UNSTAKE
-            },
+    const blockchainInteractionData = useMemo(() => {
+        return {
             steps: {
-                network:true,
-                transaction:true,
-            }
-        });
+                network: true,
+                transaction: true,
+            },
+            params: {
+                requiredNetwork: stakingCurrency.chainId,
+                account: account.address,
+                buttonText: "UnStake",
+                contract: activeDiamond,
+                transactionType: METHOD.UNSTAKE,
+            },
+            setTransactionSuccessful
+        }
     }, [
-        currency?.address,
-        model
-    ]);
+        stakingCurrency?.contract,
+        activeDiamond,
+        model,
+    ])
+
+
+
 
     const title = () => {
         return (
             <>
-                <span className="text-app-error">UnStake</span> BYTES
+                <span className="text-app-error">UnStake</span> {stakingCurrency.symbol}
             </>
         )
     }
@@ -55,12 +60,12 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         return (
             <div className={"min-w-[300px]"}>
                    <div>
-                       To partake in Citadel's investments, every Citizen must stake BYTES.
+                       To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span> investments, every investor must stake {stakingCurrency.symbol}.
                    </div>
                     <div className={"my-5"}>
-                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{session.stakeSize} BYTES</p></div>
+                        <div className={"detailRow"}><p>Current Stake</p><hr className={"spacer"}/><p>{stakeSize} {stakingCurrency.symbol}</p></div>
                     </div>
-                     <BlockchainSteps/>
+                    {model && <BlockchainSteps data={blockchainInteractionData}/>}
 
             </div>
         )
@@ -70,7 +75,7 @@ export default function CitCapStakingModal({model, setter, stakingModalProps}) {
         return (
             <div className={"min-w-[300px]"}>
                    <div className={"text-app-success"}>
-                       BYTES unstaked successfully.
+                       {stakingCurrency.symbol} unstaked successfully.
                    </div>
 
             </div>

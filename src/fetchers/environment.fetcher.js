@@ -12,5 +12,5 @@ export const fetchEnvironment = async (token, authTokenName) => {
     } catch (e) {
         console.log("ERRROR!fetch env failed")
     }
-    return false
+    return {ok:false}
 }

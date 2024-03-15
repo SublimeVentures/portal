@@ -1,4 +1,5 @@
 const {Sequelize} = require("sequelize");
+const logger = require('../../logger');
 const {defineParticipantModel} = require("./models/participant.model");
 
 let connection = {
@@ -25,6 +26,7 @@ if (!process.env.IS_LOCAL_DB) {
     connection.logging = false
     // connection.logging = logger.info.bind(console.log)
 }
+
 
 const sequelize = new Sequelize(process.env.DATABASE, connection)
 
@@ -56,6 +58,8 @@ const modelDefiners = [
     require('./models/storePartner.model'),
     require('./models/storeUser.model'),
     require('./models/upgrade.model'),
+    require('./models/payout.model'),
+    require('./models/claim.model'),
 ];
 
 // We define all models according to their files.
@@ -108,7 +112,9 @@ function applyExtraSetup(sequelize) {
         storeUser,
         storePartner,
         upgrade,
-        offerLimit
+        offerLimit,
+        payout,
+        claim
     } = sequelize.models;
 
     //environment model
@@ -186,6 +192,9 @@ function applyExtraSetup(sequelize) {
     onchainType.hasMany(onchain, {foreignKey: 'typeId'});
     onchain.belongsTo(onchainType, {foreignKey: 'typeId'});
 
+    user.hasMany(onchain, {foreignKey: 'userId'});
+    onchain.belongsTo(user, {foreignKey: 'userId'});
+
     network.hasMany(onchain, {foreignKey: 'chainId'});
     onchain.belongsTo(network, {foreignKey: 'chainId'});
 
@@ -258,8 +267,22 @@ function applyExtraSetup(sequelize) {
     storeMysterybox.belongsTo(partner, {foreignKey: 'tenantId'});
 
 
+    //claim model
+    user.hasMany(claim, {foreignKey: 'userId'});
+    claim.belongsTo(user, {foreignKey: 'userId'});
 
+    offer.hasMany(claim, {foreignKey: 'offerId'});
+    claim.belongsTo(offer, {foreignKey: 'offerId'});
 
+    payout.hasMany(claim, {foreignKey: 'payoutId'});
+    claim.belongsTo(payout, {foreignKey: 'payoutId'});
+
+    //claim model
+    offer.hasMany(payout, {foreignKey: 'offerId'});
+    payout.belongsTo(offer, {foreignKey: 'offerId'});
+
+    network.hasMany(payout, {foreignKey: 'chainId'});
+    payout.belongsTo(network, {foreignKey: 'chainId'});
 
 
     for (let i = 1; i < 100; i++) {

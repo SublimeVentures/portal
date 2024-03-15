@@ -1,3 +1,19 @@
+import {TENANT} from "../../../lib/tenantHelper";
+
+export function TENANTS_STAKIMG () {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return []
+        }
+        case TENANT.NeoTokyo: {
+            return ["S1", "S2"]
+        }
+        case TENANT.CyberKongz: {
+            return ["Genesis Kong", "Baby Kong"]
+        }
+    }
+}
+
 export function timeUntilNextUnstakeWindow(stakedAt, staked) {
     if (!staked) return {
         unstake: false

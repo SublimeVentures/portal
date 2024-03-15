@@ -1,35 +1,36 @@
 import GenericModal from "@/components/Modal/GenericModal";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo} from "react";
 import PAGE, {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
-import {
-    INTERACTION_TYPE
-} from "@/components/App/BlockchainSteps/config";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {isBased} from "@/lib/utils";
 import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import {useRouter} from "next/router";
 import Dropdown from "@/components/App/Dropdown";
-import BlockchainSteps from "@/components/App/BlockchainSteps";
-import {useBlockchainContext} from "@/components/App/BlockchainSteps/BlockchainContext";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
+import BlockchainSteps from "@/components/BlockchainSteps";
+import useGetToken from "@/lib/hooks/useGetToken";
+import {METHOD} from "@/components/BlockchainSteps/utils";
 
 export default function BuyStoreItemModal({model, setter, buyModalProps}) {
     const {order, setOrder} = buyModalProps
     const router = useRouter()
-    const {activeChainStoreSymbol: currencyNames, account, activeDiamond, network} = useEnvironmentContext();
-    const {insertConfiguration, blockchainCleanup, blockchainProps} = useBlockchainContext();
-    const transactionSuccessful = blockchainProps.result.transaction?.confirmation_data
-    const [currencySymbol, setCurrencySymbol] = useState(0)
+    const {getCurrencyStore, account, activeDiamond, network} = useEnvironmentContext();
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false)
 
-    const selectedCurrency = currencyNames[currencySymbol]
+    const [selectedCurrency, setSelectedCurrency] = useState({})
+    const dropdownCurrencyOptions = getCurrencyStore()
+
+    useEffect(() => {
+        setSelectedCurrency(dropdownCurrencyOptions[0])
+    }, [network.chainId])
 
     const closeModal = () => {
         setter()
         setTimeout(() => {
             setOrder(null)
-            blockchainCleanup()
+            setTransactionSuccessful(false)
         }, 400);
     }
 
@@ -39,38 +40,37 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
         })
     }
 
+    const token = useGetToken(selectedCurrency?.contract)
 
-    useEffect(() => {
-        if (!model || !selectedCurrency) return;
-        insertConfiguration({
-            data: {
-                account: account.address,
-                requiredNetwork: 1,
-                allowance: order.price,
-                liquidity: order.price,
-                currency: selectedCurrency,
-                contract: activeDiamond,
-                buttonText: "Buy",
-                transactionType: INTERACTION_TYPE.UPGRADE,
-                amount: 1,
-                upgradeId: order.id
-            },
+    const blockchainInteractionData = useMemo(() => {
+        return {
             steps: {
                 network: !isBased,
                 liquidity: true,
                 allowance: true,
                 transaction: true,
             },
-        });
+            params: {
+                requiredNetwork: selectedCurrency.chainId,
+                account: account.address,
+                buttonText: "Buy",
+                liquidity: Number(order.price),
+                allowance: Number(order.price),
+                amount: 1,
+                upgradeId: order.id,
+                spender: activeDiamond,
+                contract: activeDiamond,
+                transactionType: METHOD.UPGRADE,
+            },
+            token,
+            setTransactionSuccessful
+        }
     }, [
         model,
-        selectedCurrency
-    ]);
-
-    useEffect(() => {
-        setCurrencySymbol(0)
-    }, [network.chainId])
-
+        token?.contract,
+        activeDiamond,
+        selectedCurrency?.contract
+    ])
 
     const title = () => {
         return (
@@ -116,12 +116,12 @@ export default function BuyStoreItemModal({model, setter, buyModalProps}) {
                         <hr className={"spacer"}/>
                         <div className="font-bold text-gold flex items-center">
                             <span className={"mr-2"}>{order.price}</span>
-                            {isBased ? <Dropdown options={currencyNames} propSelected={setCurrencySymbol} position={currencySymbol}
-                                                 isSmall={true}/> : <>BYTES</>}
+                            {dropdownCurrencyOptions.length>1 ? <Dropdown options={dropdownCurrencyOptions} selector={"symbol"}  propSelected={setSelectedCurrency} isSmall={true}/> : <>{dropdownCurrencyOptions[0].symbol}</>}
                         </div>
                     </div>
                 </div>
-                <BlockchainSteps/>
+                { model &&  <BlockchainSteps data={blockchainInteractionData}/>}
+
             </div>
         )
     }

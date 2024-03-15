@@ -9,19 +9,23 @@ function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
 }
 
-function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
+function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min
     switch(account.tenantId) {
         case TENANT.basedVC: {
-            allocationUser_base = account.multi * offer.alloMin
-            // console.log("allocationUser_max - tylek", allocationUser_base)
+            allocationUser_base = account.multi * offer.alloMax
             allocationUser_min = offer.alloMin
             break;
         }
         case TENANT.NeoTokyo: {
-            allocationUser_base = account.multi * offer.alloTotal + account.allocationBonus
+            allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus
             if(allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION
             allocationUser_min = MIN_ALLOCATION
+            break;
+        }
+        case TENANT.CyberKongz: {
+            allocationUser_base = offer.alloMax * Math.ceil(account.stakeSize / offer.alloMax)
+            allocationUser_min = offer.alloMin
             break;
         }
     }
@@ -46,7 +50,10 @@ function getUserAllocationGuaranteed(guaranteedUsed) {
             total: guaranteedUsed.alloMax
         }
     } else {
-        return 0
+        return {
+            left: 0,
+            total: 0,
+        }
     }
 }
 
@@ -54,17 +61,6 @@ function getAllocationLeft(allocationOffer_left, allocationUser_left) {
     return allocationOffer_left < allocationUser_left ? allocationOffer_left : allocationUser_left
 }
 
-function allocationParseCapped(params) {
-    const {
-        offer,
-        allocationOffer_left
-    } = params
-
-    params.output.allocationUser_max = params.output.allocationUser_max <= offer.alloMax ? params.output.allocationUser_max : offer.alloMax
-    params.output.allocationUser_left = getAllocationLeft(allocationOffer_left, params.output.allocationUser_max)
-
-    return params
-}
 
 function allocationParseUnlimited(params) {
     const {allocationOffer_left} = params
@@ -74,10 +70,10 @@ function allocationParseUnlimited(params) {
 
 function allocationParseFCFS(params) {
     const {allocationOffer_left, allocationUser_invested, output} = params
-    const {allocationUser_guaranteed, allocationUser_max} = output
+    const {allocationUser_guaranteed, allocationUser_max, allocationUser_min} = output
 
     let allocationUser_left
-    if (allocationUser_guaranteed.total > 0) {
+    if (allocationUser_guaranteed.total > 0 && allocationUser_guaranteed.left>=allocationUser_min) {
         allocationUser_left = allocationUser_guaranteed.left
     } else {
         allocationUser_left = getAllocationLeft(allocationOffer_left, (allocationUser_max - allocationUser_invested))
@@ -88,11 +84,9 @@ function allocationParseFCFS(params) {
 }
 
 function allocationPhaseAdjust(params) {
-    const {offerPhaseCurrent, offer} = params
+    const {offerPhaseCurrent} = params
 
-    if (offer.alloMax) {
-        return allocationParseCapped(params)
-    } else if (
+  if (
         offerPhaseCurrent.phase === PhaseId.Open ||
         offerPhaseCurrent.phase === PhaseId.Unlimited
     ) {
@@ -107,7 +101,7 @@ function allocationUserBuild(params) {
         allocationUser_base,
         allocationUser_max,
         allocationUser_min
-    } = getUserAllocationMax(params.account, params.offer, params.upgradesUse?.increasedUsed?.amount || 0)
+    } = getUserAllocationMax(params.account, params.offer, params.allocationOffer, params.upgradesUse?.increasedUsed?.amount || 0)
     params.output.allocationUser_guaranteed = getUserAllocationGuaranteed(params.upgradesUse?.guaranteedUsed)
     params.output.allocationUser_base = allocationUser_base
     params.output.allocationUser_max = allocationUser_max
@@ -118,8 +112,11 @@ function allocationUserBuild(params) {
 
 function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, allocationUser_invested = 0, allocationOffer) {
     const allocationOfferGuaranteed_left = allocationOffer?.alloGuaranteed || 0
-    const allocationOffer_left = offer.alloTotal - (allocationOffer?.alloFilled || 0) - (allocationOffer?.alloRes || 0) - (allocationOffer?.alloGuaranteed || 0)
-    console.log("allocationOffer_left",allocationOffer_left, offer.alloTotal,allocationOffer )
+    const allocationOffer_left = allocationOffer?.alloTotal - (allocationOffer?.alloFilled || 0) - (allocationOffer?.alloRes || 0) - (allocationOffer?.alloGuaranteed || 0)
+    console.log("allocationOffer_left",
+        allocationOffer_left,
+        allocationOffer?.alloTotal,
+        allocationOffer )
     let build = {
         account,
         offer,
@@ -156,8 +153,8 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
         allocationUser_guaranteed_raw: allocationUser_guaranteed,
         allocationUser_invested,
         allocationOffer_left,
-        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
-        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
+        offer_isProcessing: allocationOffer_left - 50 <= 0 && (allocationOffer?.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+        offer_isSettled:    allocationOffer_left - 50 <= 0 && (allocationOffer?.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
     })
 
     return {
@@ -167,8 +164,8 @@ function userInvestmentState(account, offer, offerPhaseCurrent, upgradesUse, all
         allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
         allocationUser_invested,
         allocationOffer_left,
-        offer_isProcessing: allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled + 50 > 0),
-        offer_isSettled:    allocationOffer_left - 50 <= 0 && (offer.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
+        offer_isProcessing: allocationOffer_left - 50 <= 0 && (allocationOffer?.alloTotal - allocationOffer?.alloFilled + 50 > 0),
+        offer_isSettled:    allocationOffer_left - 50 <= 0 && (allocationOffer?.alloTotal - allocationOffer?.alloFilled - 50 <= 0)
     }
 }
 
@@ -208,8 +205,14 @@ function tooltipInvestState(offer, allocationData, investmentAmount) {
 }
 
 
-function buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock) {
-    return offer.isPaused ||
+function buttonInvestIsDisabled(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock, userInvestmentState) {
+    console.log("buttonInvestIsDisabledV1", allocationOffer?.isPaused ||
+        offerPhaseCurrent?.controlsDisabled ||
+        isStakeLock ||
+        !investmentAmount ||
+        !isAllocationOk, isAllocationOk
+    )
+    return allocationOffer?.isPaused ||
         offerPhaseCurrent?.controlsDisabled ||
         isStakeLock ||
         !investmentAmount ||
@@ -217,17 +220,17 @@ function buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAl
         ((allocationData.offer_isProcessing || allocationData.offer_isSettled) && !(allocationData.allocationUser_left > 0))
 }
 
-function buttonInvestText(offer, allocationData, defaultText) {
-    if (offer.isPaused) return "Investment Paused"
-    else if (offer.isSettled) return "Filled"
+function buttonInvestText(allocationOffer, allocationData, defaultText) {
+    if (allocationOffer?.isPaused) return "Investment Paused"
+    else if (allocationOffer?.isSettled) return "Filled"
     else if (allocationData.offer_isSettled) return "Filled"
     else return defaultText
 }
 
-function buttonInvestState(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock) {
+function buttonInvestState(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock, userInvestmentState) {
     return {
-        text: buttonInvestText(offer, allocationData, offerPhaseCurrent.button),
-        isDisabled: buttonInvestIsDisabled(offer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock)
+        text: buttonInvestText(allocationOffer, allocationData, offerPhaseCurrent.button),
+        isDisabled: buttonInvestIsDisabled(allocationOffer, offerPhaseCurrent, investmentAmount, isAllocationOk, allocationData, isStakeLock, userInvestmentState)
     }
 }
 

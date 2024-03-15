@@ -23,27 +23,12 @@ module.exports = (sequelize) => {
             defaultValue: 0,
             allowNull: false,
         },
-        alloRaised: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0,
-            allowNull: false,
-        },
-        isPaused: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true,
-            allowNull: false,
-        },
-        isSettled: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false,
-        },
-        isRefund: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false,
-        },
         isAccelerator: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
+        isManaged: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
@@ -109,14 +94,7 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
-        },
-        vault: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        alloTotal: {
-            type: DataTypes.INTEGER,
-        },
+        }
     }, {
         indexes: [
             {unique: true, fields: ['slug']},

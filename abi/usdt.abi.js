@@ -184,4 +184,29 @@ export const usdtAbi = [
       },
     ],
   },
+  {
+    type: 'function',
+    name: 'ABI_USDT',
+    stateMutability: 'nonpayable',
+    inputs: [
+      {
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+      },
+    ],
+  }
 ]

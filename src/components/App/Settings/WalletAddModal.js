@@ -1,12 +1,15 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {useState} from "react";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import {addUserWallet} from "@/fetchers/settings.fetcher";
 import {isBased} from "@/lib/utils";
 import {useSignMessage} from "wagmi";
+import { useRouter } from 'next/router';
 
 export default function WalletAddModal({model, setter, addProps}) {
+    const router = useRouter();
+
     const {wallets, maxWallets, refetchUserWallets} = addProps
     const {account} = useEnvironmentContext();
     const [processing, setProcessing] = useState(false);
@@ -18,10 +21,14 @@ export default function WalletAddModal({model, setter, addProps}) {
     const {error: signMessageError, signMessageAsync: signMessageFn} = useSignMessage();
 
     const closeModal = () => {
-        setter()
-        setTimeout(() => {
-            setSuccess(false)
-        }, 400);
+        if(success) {
+            router.reload();
+        } else {
+            setter()
+            setTimeout(() => {
+                setSuccess(false)
+            }, 400);
+        }
     }
 
     const addWallet = async () => {

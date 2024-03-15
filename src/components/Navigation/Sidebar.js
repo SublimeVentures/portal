@@ -16,17 +16,32 @@ import IconPremium from "@/assets/svg/Premium.svg";
 import IconNT from "@/assets/svg/NT.svg";
 import IconGrowth from "@/assets/svg/Seed.svg";
 import PAGE, {ExternalLinks} from "@/routes";
-import dynamic from "next/dynamic";
 import {isBased} from "@/lib/utils";
-import Logo from "@/assets/svg/logo.svg";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import ChangeNetwork  from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress  from "@/components/Navigation/ChangeAddress";
-const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
+import {TENANT} from "@/lib/tenantHelper";
+import DynamicIcon from "@/components/Icon";
+import {getCopy} from "@/lib/seoConfig";
+
+
+const TENANT_LOGO = () => {
+    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC:{
+            return <><DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"}/> <div className={"text-2xl ml-2"}>{getCopy("NAME")}</div></>
+        }
+        case TENANT.NeoTokyo:{
+            return <><DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"}/> <div className={"font-accent text-sm ml-3"}>{getCopy("NAME")}</div></>
+        }
+        case TENANT.CyberKongz:{
+            return <><img src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"} className={"max-w-[210px]"}/></>
+        }
+    }
+}
 
 
 export default function Sidebar({session}) {
-    const {environmentCleanup} = useEnvironmentContext();
+    const {environmentCleanup, settings} = useEnvironmentContext();
 
     let [isMobileOpen, setIsMobileOpen] = useState(false)
     const router = useRouter();
@@ -61,7 +76,6 @@ export default function Sidebar({session}) {
             {name: 'Opportunities', link: PAGE.Opportunities, icon: <IconLight className="w-8 mr-3"/>},
             {name: 'Accelerator', link: PAGE.Accelerator, icon: isBased ? <IconGrowth className="w-7 mr-4"/> : <IconNT className="w-8 mr-[0.91rem]"/>},
             {name: 'OTC', link: PAGE.OTC, icon: <IconExchange className="w-8 mr-3"/>},
-            {name: 'MysteryBox', link: PAGE.Mysterybox, icon: <IconMysteryBox className="w-8 mr-3"/>},
             {name: 'Upgrades', link: PAGE.Upgrades, icon: <IconPremium className="w-8 mr-3"/>},
             {name: 'Notifications', link: PAGE.Notifs, disabled: true, icon: <IconBell className="w-8 mr-3"/>},
         ],
@@ -73,6 +87,14 @@ export default function Sidebar({session}) {
             {name: 'Settings', link: PAGE.Settings, icon: <IconSetting className="w-8 mr-3"/>},
             {name: 'Log out', icon: <IconLogout className="w-8 mr-3"/>, action: true, handler: logout},
         ]
+    }
+
+    if (settings.isMysteryboxEnabled) {
+
+        const upgradeIndex = menu.groupUser.findIndex(item => item.name === 'Upgrades');
+        if (upgradeIndex !== -1) {
+            menu.groupUser.splice(upgradeIndex, 0, {name: 'MysteryBox', link: PAGE.Mysterybox, icon: <IconMysteryBox className="w-8 mr-3"/>});
+        }
     }
 
 
@@ -93,7 +115,7 @@ export default function Sidebar({session}) {
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">
-                            {isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 top-2 "}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}
+                            {TENANT_LOGO()}
                         </div>
                     </Link>
                     <ChangeNetwork/>
@@ -117,7 +139,7 @@ export default function Sidebar({session}) {
                 <div className=" flex flex-row flex-1">
                     <Link href={PAGE.App}  className={`absolute top-[4px]`}>
                         <div className="flex items-center">
-                            {isBased ? <><Logo  className={"w-17 text-white"}/><div className={"text-2xl ml-2"}>based</div></> : <><LogoCitCap className={"w-17 text-white"}/> <div className={"font-accent text-sm ml-3"}>Citizen Capital</div></>}
+                            {TENANT_LOGO()}
                         </div>
                     </Link>
                     <div className="flex flex-1 justify-end hamburger items-center">

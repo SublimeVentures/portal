@@ -7,14 +7,18 @@ const {serializeError} = require("serialize-error");
 const query_getUserVault = `
         SELECT
             "vault"."invested",
+            "vault"."claimed",
             "vault"."locked",
+            "vault"."createdAt",
             -- Add other vault columns as needed
             "offer"."slug",
             "offer"."name",
             "offer"."tge",
             "offer"."id",
             "offer"."ppu",
-            "offer"."t_unlock"
+            "offer"."ticker",
+            "offer"."t_unlock",
+            "offer"."isManaged"
             -- Add other offer columns as needed
         FROM
             "vault"

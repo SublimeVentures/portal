@@ -1,0 +1,86 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offerId_",
+        "type": "uint256"
+      }
+    ],
+    "name": "offerCancel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "hash_",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "currency_",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "isSell_",
+        "type": "bool"
+      }
+    ],
+    "name": "offerMake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "market_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offerId_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nonce_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expire_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature_",
+        "type": "bytes"
+      }
+    ],
+    "name": "offerTake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

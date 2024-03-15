@@ -1,6 +1,6 @@
 import {http, createConfig, fallback } from 'wagmi'
 import { mainnet, polygon, bsc } from 'wagmi/chains'
-import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
+// import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
 import {RPCs, WALLET_CONNECT_ID} from "@/lib/blockchain";
 
 const retryOptions = {
@@ -21,13 +21,12 @@ export const config = createConfig({
     cacheTime: 0, //default: 4_000
     pollingInterval: 4_000,
     connectors: [
-        // metaMask(),
-        walletConnect({
-            projectId: WALLET_CONNECT_ID,
-        }),
-        coinbaseWallet({
-            appName: 'Venture Capital',
-        }),
+        // walletConnect({
+        //     projectId: WALLET_CONNECT_ID,
+        // }),
+        // coinbaseWallet({
+        //     appName: 'Venture Capital',
+        // }),
     ],
     transports: {
         [mainnet.id]: fallback([

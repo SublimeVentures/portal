@@ -1,9 +1,7 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 import {isBased} from "@/lib/utils";
-import {ExternalLinks} from "@/routes";
-import Linker from "@/components/link";
 
 export default function ChangeAddress({session}) {
     const {wallets} = session
@@ -11,7 +9,7 @@ export default function ChangeAddress({session}) {
 
     const userAddress = account?.address
     const isAddressSupported = Boolean(walletGuard && (userAddress !== undefined && wallets.find(el=> el === userAddress)))
-
+    console.log("wallet change", userAddress, wallets)
 
     const title = () => {
         return (
@@ -21,7 +19,7 @@ export default function ChangeAddress({session}) {
         )
     }
 
-    const content = () => {
+    const contentWrongWallet = () => {
         return (
             <div className={"flex flex-1 flex-col"}>
                 You've changed the wallet account. <br/>
@@ -45,6 +43,16 @@ export default function ChangeAddress({session}) {
             </div>
         )
     }
+   const contentWalletDisconnected = () => {
+        return (
+            <div className={"flex flex-1 flex-col"}>
+                Your wallet is disconnected.
+            </div>
+        )
+    }
+
+
+    const content = () => !!userAddress ? contentWrongWallet() : contentWalletDisconnected()
 
     return (
         <GenericModal isOpen={!isAddressSupported} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>

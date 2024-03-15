@@ -16,8 +16,9 @@ router.post('/login', async (req, res) => {
                 'content-type': 'application/json'
             }
         });
+
         const result = auth.data
-        if (!result?.ok) throw Error("Bad AUTHER response")
+        if (!result?.ok) throw Error(result?.error)
 
         envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
 
@@ -26,9 +27,10 @@ router.post('/login', async (req, res) => {
         delete result.cookie
         delete result.token
         delete result.env
+
         return res.status(200).json(result);
     } catch (error) {
-        logger.error(`ERROR :: LOGIN USER`, {error: serializeError(error), body: req.body});
+        logger.info(`LOGIN USER`, {error: serializeError(error), body: req.body});
         return res.status(400).json({});
     }
 });
@@ -89,28 +91,6 @@ router.put('/login', async (req, res) => {
         const cookies = [accessCookie, refreshCookie]
         res.setHeader("Set-Cookie", cookies);
         return res.status(400).json({ok: false});
-    }
-});
-
-//GET USER DATA
-router.get('/login', async (req, res) => {
-    const token = req.headers[refreshTokenName]
-    if (!token) return res.status(401).json({});
-
-    try {
-        const auth = await axios.post(`${process.env.AUTHER}/auth/login/data`, {token}, {
-            headers: {
-                'content-type': 'application/json'
-            }
-        });
-        const result = auth.data
-        console.log("GET USER DATA - result", result)
-        if (!result?.id) return res.status(401).json({});
-
-        return res.status(200).json({...result});
-    } catch (error) {
-        logger.error(`ERROR :: GET LOGIN DATA`, {error: serializeError(error), token});
-        return res.status(401).json({});
     }
 });
 

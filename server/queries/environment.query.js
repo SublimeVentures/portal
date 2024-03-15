@@ -1,4 +1,7 @@
 const {models} = require('../services/db/definitions/db.init');
+const db = require('../services/db/definitions/db.init');
+const {TENANT} = require("../../src/lib/tenantHelper");
+const {QueryTypes} = require("sequelize");
 
 async function getEnvironment() {
     //initialize environment
@@ -64,9 +67,34 @@ async function getEnvironment() {
     const partners = await models.partner.findAll({where: {isEnabled: true, isPartner:true}, raw: true});
     environment.stats.partners = partners.length;
     //-- PARAM :: `stats.funded`
-    const offers = await models.offer.findAll({raw: true});
-    const funded = offers.map(item => item.alloRaised).reduce((prev, next) => prev + next);
-    environment.stats.funded = funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
+
+    const query_funded = `
+            SELECT
+                o.*,
+                array_agg(ol."partnerId") AS offerLimits,
+                ofr."alloRaised"
+            FROM
+                offer o
+            LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
+            LEFT JOIN "offerFundraise" ofr ON o.id = ofr."offerId"
+            GROUP BY
+                o.id, ofr."alloRaised"
+`
+
+    const offers = await db.query(query_funded, { type: QueryTypes.SELECT });
+
+    let funded = 0;
+    const TENANT_ID = Number(process.env.NEXT_PUBLIC_TENANT)
+    if (TENANT_ID === TENANT.basedVC) {
+        funded = offers.map(item => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
+    } else {
+        const filteredOffers = offers.filter(offer =>
+            Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID))
+        );
+
+        funded = filteredOffers.map(item => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
+    }
+    environment.stats.funded = TENANT_ID === TENANT.basedVC ? funded + Number(environment?.investedInjected ? environment?.investedInjected : 0) : funded
 
 
     return environment

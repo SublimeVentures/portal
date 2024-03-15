@@ -1,10 +1,10 @@
 const moment = require('moment');
-const {getOfferWithLimits, getOfferById} = require("../queries/offers.query");
+const {getOfferWithLimits} = require("../queries/offers.query");
 const {getEnv} = require("../services/db");
 const {
     expireAllocation,
     investIncreaseAllocationReserved,
-    investUpsertParticipantReservation, expireAllocationAll
+    investUpsertParticipantReservation
 } = require("../queries/invest.query");
 const {createHash} = require("./helpers");
 const {fetchUpgradeUsed} = require("../queries/upgrade.query");
@@ -16,8 +16,11 @@ const {sumAmountForUserAndTenant} = require("../queries/participants.query");
 const {phases} = require("../../src/lib/phases");
 const {userInvestmentState} = require("../../src/lib/investment");
 const db = require("../services/db/definitions/db.init");
+const axios = require("axios");
+const {authTokenName} = require("../../src/lib/authHelpers");
 
 let CACHE = {}
+
 
 async function processBooking(
     offer,
@@ -27,12 +30,15 @@ async function processBooking(
 ) {
     const {userId, tenantId, partnerId} = user
 
-    const {phaseCurrent} = phases(offerLimit)
-
+    const {phaseCurrent} = phases({...offer, ...offerLimit})
+    console.log("phaseCurrent",phaseCurrent)
     const [vault, upgrades] = await Promise.all([
         sumAmountForUserAndTenant(offer.id, userId, tenantId),
         fetchUpgradeUsed(userId, offer.id, tenantId)
     ]);
+    console.log("vault",vault)
+    console.log("upgrades",upgrades)
+    console.log("offer",offer)
 
     const upgradeGuaranteed = upgrades.find(el => el.id === PremiumItemsENUM.Guaranteed)
     const upgradeIncreased = upgrades.find(el => el.id === PremiumItemsENUM.Increased)
@@ -56,7 +62,8 @@ async function processBooking(
 
         //generate hash
         const now = moment.utc().unix()
-        const expires = now + 15 * 60 //15min validity
+        const expires = now + 10 * 60 //15min validity
+        // const expires = now + 15 * 60 //15min validity
         const hash = createHash(`${userId}` + `${now}`)
 
         console.log("hash", hash)
@@ -88,12 +95,19 @@ async function processBooking(
             {
                 alloRes: increaseReserved.data.alloRes,
                 alloFilled: increaseReserved.data.alloFilled + increaseReserved.data.alloFilledInjected,
-                alloGuaranteed: increaseReserved.data.alloGuaranteed + increaseReserved.data.alloGuaranteedInjected
+                alloGuaranteed: increaseReserved.data.alloGuaranteed + increaseReserved.data.alloGuaranteedInjected,
+                alloRaised: increaseReserved.data.alloRaised,
+                alloTotal: increaseReserved.data.alloTotal,
+                isPaused: increaseReserved.data.isPaused,
+                isSettled: increaseReserved.data.isSettled,
             }
         )
 
         if (userAllocation.allocationUser_left < amount || userAllocation.offer_isProcessing) {
             throw Error(BookingErrorsENUM.Overallocated)
+        }
+        if (userAllocation.allocationUser_min > amount) {
+            throw Error(BookingErrorsENUM.AmountTooLow)
         }
         if (userAllocation.offer_isSettled) {
             throw Error(BookingErrorsENUM.NotOpen)
@@ -151,7 +165,7 @@ async function processReservation(queryParams, user) {
             const allocation = await getOfferWithLimits(_offerId)
             CACHE[_offerId] = {...allocation, ...{expire: moment.utc().unix() + 3 * 60}}
         }
-
+        console.log("CACHE[_offerId]",CACHE[_offerId])
         const currency = getEnv().currencies[_chain][_currency]
         if (!currency || !currency.isSettlement || (currency.partnerId && currency.partnerId !== tenantId)) {
             return {
@@ -159,11 +173,15 @@ async function processReservation(queryParams, user) {
                 code: BookingErrorsENUM.BadCurrency
             }
         }
+        console.log("currency",currency)
 
         const offerLimit = CACHE[_offerId].offerLimits.find(el => el.partnerId === partnerId) || CACHE[_offerId].offerLimits.find(el => el.partnerId === tenantId);
+        console.log("offerLimit",offerLimit)
 
         //test if offer's ready
         const checkIsReadyForStart = checkInvestmentStateConditions(userId, tenantId, CACHE[_offerId], offerLimit)
+        console.log("checkIsReadyForStart",checkIsReadyForStart)
+
         if (!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
         //check conditions and book
@@ -173,6 +191,8 @@ async function processReservation(queryParams, user) {
             user,
             _amount,
         )
+        console.log("isBooked",isBooked)
+
         if (!isBooked.ok) {
             return {
                 ok: false,
@@ -206,8 +226,8 @@ function checkReserveSpotQueryParams(req) {
         _currency = req.query.currency
         _chain = req.query.chain
 
-        if (_amount < 50) {
-            throw Error("Amount too small")
+        if (_offerId < 1) {
+            throw Error("Offer ID not valid")
         }
 
         return {
@@ -236,19 +256,67 @@ function checkReserveSpotQueryParams(req) {
     }
 }
 
+async function obtainSignature(offerId, amount, hash, expires, token) {
+        const signature = await axios.post(`${process.env.AUTHER}/invest/sign`, {
+            offerId, amount, hash, expires, token
+        }, {
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+        if(!signature?.data?.ok){
+            return {
+                ok: false,
+                code: BookingErrorsENUM.BAD_SIGNATURE,
+            }
+        }
+
+        return {
+            ok:true,
+            data: signature.data.data
+        }
+
+}
+
 async function reserveSpot(user, req) {
     try {
         const queryParams = checkReserveSpotQueryParams(req)
         if (!queryParams.ok) return queryParams
 
+        console.log("queryParams",queryParams)
         const reservation = await processReservation(queryParams.data, user)
+        console.log("reservation",reservation)
+
         if (!reservation.ok) return reservation
+
+        console.log("reservation",reservation)
+        const token = req.cookies[authTokenName]
+        const signature = await obtainSignature(
+            queryParams.data._offerId,
+            reservation.data.amount,
+            reservation.data.hash,
+            reservation.data.expires,
+            token
+        )
+
+        if(!signature.ok) {
+            console.log("expore",  queryParams.data._offerId,
+                user.userId,
+                reservation.data.hash)
+            await expireAllocation(
+                queryParams.data._offerId,
+                user.userId,
+                reservation.data.hash
+            )
+            return signature
+        }
 
         return {
             ok: true,
             hash: reservation.data.hash,
             expires: reservation.data.expires,
             amount: reservation.data.amount,
+            signature: signature.data,
         }
     } catch (error) {
         logger.error(`ERROR :: [reserveSpot]`, {
@@ -259,51 +327,4 @@ async function reserveSpot(user, req) {
 
 }
 
-async function reserveExpire(user, req) {
-    try {
-        const {userId} = user
-        const offerId = Number(req.query.id)
-
-        if (req.query.hash?.length < 8) {
-            await expireAllocation(offerId, userId, req.query.hash)
-        } else {
-            throw Error("Invalid expiry hash")
-        }
-
-        return {
-            ok: true
-        }
-    } catch (e) {
-        logger.error(`ERROR :: [reserveExpire]`, {
-            reqQuery: req.query, user
-        });
-        return {
-            ok: false
-        }
-    }
-}
-
-async function reserveExpireAll(user, req) {
-    try {
-        const {userId, tenantId} = user
-        const offerId = Number(req.query.id)
-
-        const offer = await getOfferById(offerId)
-        if(!offer.isSettled && !offer.alloRaised>0) {
-            await expireAllocationAll(offerId, userId, tenantId)
-        }
-
-        return {
-            ok: true
-        }
-    } catch (e) {
-        logger.error(`ERROR :: [reserveExpireAll]`, {
-            reqQuery: req.query, user
-        });
-        return {
-            ok: false
-        }
-    }
-}
-
-module.exports = {reserveSpot, reserveExpire, reserveExpireAll}
+module.exports = {reserveSpot}

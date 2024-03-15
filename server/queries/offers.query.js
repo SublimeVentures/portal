@@ -22,7 +22,6 @@ async function getOffersPublic() {
     return []
 }
 
-
 const query_getOfferList = `
     SELECT
         o.slug,
@@ -31,11 +30,13 @@ const query_getOfferList = `
         o.otc,
         o.ticker,
         o."isAccelerator",
-        -- Add other offer columns as needed
         ol.d_open,
         ol.d_close,
-        ol."offerId"
-        -- Add other offerLimit columns as needed
+        ol."offerId",
+        ofr."alloRaised",
+        ofr."alloTotal",
+        ofr."isPaused",
+        ofr."isSettled"
     FROM
         "offer" o
             LEFT JOIN LATERAL (
@@ -43,7 +44,6 @@ const query_getOfferList = `
                 ol1.d_open,
                 ol1.d_close,
                 ol1."offerId"
-                -- Add other offerLimit columns as needed
             FROM
                 "offerLimit" ol1
             WHERE
@@ -55,14 +55,16 @@ const query_getOfferList = `
                     WHEN ol1."partnerId" = :tenantId THEN 2
                     ELSE 3
                     END
-                LIMIT 1
-) ol ON true
+            LIMIT 1
+            ) ol ON true
+            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
     WHERE
         o.display = true AND
         ol."offerId" IS NOT NULL
     ORDER BY
         ol.d_open DESC;
 `;
+
 
 const query_getOfferListOtc = `
     SELECT
@@ -72,11 +74,9 @@ const query_getOfferListOtc = `
         o.otc,
         o.ticker,
         o."isAccelerator",
-        -- Add other offer columns as needed
         ol.d_open,
         ol.d_close,
         ol."offerId"
-        -- Add other offerLimit columns as needed
     FROM
         "offer" o
             LEFT JOIN LATERAL (
@@ -84,7 +84,6 @@ const query_getOfferListOtc = `
                 ol1.d_open,
                 ol1.d_close,
                 ol1."offerId"
-                -- Add other offerLimit columns as needed
             FROM
                 "offerLimit" ol1
             WHERE
@@ -96,8 +95,8 @@ const query_getOfferListOtc = `
                     WHEN ol1."partnerId" = :tenantId THEN 2
                     ELSE 3
                     END
-                LIMIT 1
-) ol ON true
+            LIMIT 1
+            ) ol ON true
     WHERE
         o.display = true AND
         o.otc != 0 AND
@@ -186,7 +185,11 @@ async function getOfferWithLimits(offerId) {
             include: [{
                 model: models.offerLimit,
                 as: 'offerLimits'
-            }],
+            },
+                {
+                    model: models.offerFundraise,
+                    as: 'offerFundraise'
+                }],
 
         });
 

@@ -14,20 +14,19 @@ import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";
 import {PremiumItemsENUM} from "@/lib/enum/store";
-import {BlockchainProvider} from "@/components/App/BlockchainSteps/BlockchainContext";
+
 import { processServerSideData} from "@/lib/serverSideHelpers";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 const BuyStoreItemModal = dynamic(() => import('@/components/App/Store/BuyStoreItemModal'), {ssr: false})
 
 
 export default function AppUpgrades({session}) {
     const { tenantId} = session
-    const {cdn, network} = useEnvironmentContext();
+    const {cdn, network, getCurrencyStore} = useEnvironmentContext();
 
     const [isBuyModal, setBuyModal] = useState(false)
     const [order, setOrder] = useState(null)
-    const [currency, setCurrency] = useState(0)
 
 
     const {isLoading, data: response, refetch} = useQuery({
@@ -40,8 +39,7 @@ export default function AppUpgrades({session}) {
     );
 
     const storeData = response?.filter(el => el.id !== PremiumItemsENUM.MysteryBox)
-
-    console.log("storeData",storeData )
+    const currency = getCurrencyStore()[0]
 
     const renderPage = () => {
         if(isLoading) return <Loader/>
@@ -50,7 +48,7 @@ export default function AppUpgrades({session}) {
         return (
             <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                 {!!storeData && storeData.map(el =>
-                    <StoreItem item={el} key={el.id} cdn={cdn} setOrder={setOrder}/>
+                    <StoreItem item={el} key={el.id} cdn={cdn} setOrder={setOrder} currency={currency}/>
                 )}
             </div>
         )
@@ -62,9 +60,7 @@ export default function AppUpgrades({session}) {
         }
     }, [order]);
 
-    useEffect(() => {
-        setCurrency(0)
-    }, [network.chainId])
+
 
     const closeBuy = () => {
         setBuyModal(false);
@@ -101,9 +97,7 @@ export default function AppUpgrades({session}) {
             <div className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${isBased ? "" : "font-accent"}`}>
                 {renderPage()}
             </div>
-            <BlockchainProvider>
-                <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps}/>
-            </BlockchainProvider>
+            <BuyStoreItemModal model={isBuyModal} setter={() => { closeBuy() }} buyModalProps={buyModalProps}/>
         </>
 
 

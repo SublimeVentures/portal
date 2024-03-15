@@ -14,7 +14,13 @@ axios.interceptors.response.use(
         if (error?.response?.status === 401 && !config?.sent) {
             console.log("token expired, refreshing client")
             config.sent = true;
-            await memoizedRefreshToken();
+            const refresh = await memoizedRefreshToken();
+            if(!refresh) {
+                const logoutEvent = new CustomEvent('logoutEvent');
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(logoutEvent);
+                }
+            }
             return axios(config);
         }
         return Promise.reject(error);

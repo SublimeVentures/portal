@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import {useState} from "react";
 import useWidth from "@/lib/hooks/useScreenWidth";
-import {useEnvironmentContext} from "@/components/App/BlockchainSteps/EnvironmentContext";
+import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 const MEDIA_TYPE = {
     IMAGE: 0,
