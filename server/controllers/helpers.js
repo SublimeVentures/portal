@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 
 const createHash = (data) => {
     return crypto.createHash("shake256", {outputLength: 3})
