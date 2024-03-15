@@ -40,9 +40,7 @@ export default function Investors() {
         <div className="investorGradient flex flex-col justify-center text-white pt-10 uppercase pb-10">
             <div className="px-10 py-25 flex flex-col gap-10 flex-1">
                 <div className="flex flex-col text-white font-medium  text-center pb-10">
-                    <div className="font-accent text-xs ml-1">
-                        WHO WE WORK with
-                    </div>
+                    <div className="font-accent text-xs ml-1">WHO WE WORK with</div>
                     <div className="leading-snug text-3xl">Co-Investors</div>
                 </div>
                 <div></div>
@@ -60,15 +58,9 @@ export default function Investors() {
                     <div>
                         <div className="customSlide justify-center flex min-h-[250px]">
                             {isBased ? (
-                                <DynamicIcon
-                                    name={`logo_${TENANT.NeoTokyo}`}
-                                    style={"!w-[280px] max-h-[220px]"}
-                                />
+                                <DynamicIcon name={`logo_${TENANT.NeoTokyo}`} style={"!w-[280px] max-h-[220px]"} />
                             ) : (
-                                <DynamicIcon
-                                    name={`logo_${TENANT.basedVC}`}
-                                    style={"!w-[280px] max-h-[220px]"}
-                                />
+                                <DynamicIcon name={`logo_${TENANT.basedVC}`} style={"!w-[280px] max-h-[220px]"} />
                             )}
                         </div>
                     </div>

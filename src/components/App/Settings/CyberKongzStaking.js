@@ -8,14 +8,8 @@ import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import dynamic from "next/dynamic";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 
-const StakingModal = dynamic(
-    () => import("@/components/App/Settings/StakingModal"),
-    { ssr: true },
-);
-const UnStakingModal = dynamic(
-    () => import("@/components/App/Settings/UnStakingModal"),
-    { ssr: true },
-);
+const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
+const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
 export default function CyberKongzStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
@@ -29,10 +23,7 @@ export default function CyberKongzStaking({ stakingProps }) {
     const isElite = session.isElite;
 
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
-    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(
-        unstakeDate,
-        staked,
-    );
+    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(unstakeDate, staked);
 
     const refreshSession = async (force) => {
         console.log("refreshSession");
@@ -68,28 +59,13 @@ export default function CyberKongzStaking({ stakingProps }) {
 
     return (
         <div className={`relative offerWrap flex flex-1 max-w-[600px]`}>
-            <div
-                className={
-                    "bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"
-                }
-            >
-                <div
-                    className={
-                        "flex flex-row items-center pb-5 justify-between "
-                    }
-                >
-                    <div
-                        className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}
-                    >
+            <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
+                <div className={"flex flex-row items-center pb-5 justify-between "}>
+                    <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>
                         IDENTITY
                     </div>
                     <a href={ExternalLinks.STAKING} target={"_blank"}>
-                        <IconButton
-                            zoom={1.1}
-                            size={"w-8"}
-                            icon={<IconInfo />}
-                            noBorder={true}
-                        />
+                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                     </a>
                 </div>
                 <div className={"detailRow"}>
@@ -107,15 +83,12 @@ export default function CyberKongzStaking({ stakingProps }) {
                     <hr className={"spacer"} />
                     <p>${session.stakeSize}</p>
                 </div>
-                <div
-                    className={`detailRow ${staked ? "text-app-success" : "text-app-error"}`}
-                >
+                <div className={`detailRow ${staked ? "text-app-success" : "text-app-error"}`}>
                     <p>Staked</p>
                     <hr className={"spacer"} />
                     {staked ? (
                         <p>
-                            ({session.stakeSize ? session.stakeSize : stakeReq}{" "}
-                            {stakingCurrency.symbol}) TRUE
+                            ({session.stakeSize ? session.stakeSize : stakeReq} {stakingCurrency.symbol}) TRUE
                         </p>
                     ) : (
                         <p>

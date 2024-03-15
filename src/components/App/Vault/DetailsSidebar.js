@@ -10,12 +10,7 @@ import { ButtonIconSize } from "@/components/Button/RoundButton";
 import ClaimPayoutModal from "@/components/App/Vault/ClaimPayoutModal";
 import { useState } from "react";
 
-export default function DetailsSidebar({
-    model,
-    setter,
-    claimModalProps,
-    userId,
-}) {
+export default function DetailsSidebar({ model, setter, claimModalProps, userId }) {
     const { cdn } = useEnvironmentContext();
     const [payoutClaimOpen, setPayoutClaimOpen] = useState(false);
 
@@ -50,24 +45,17 @@ export default function DetailsSidebar({
         enabled: offerId > 0,
     });
 
-    const availablePayouts = isSuccessPayouts
-        ? payouts.reduce((acc, obj) => acc + obj.amount, 0)
-        : 0;
+    const availablePayouts = isSuccessPayouts ? payouts.reduce((acc, obj) => acc + obj.amount, 0) : 0;
     const isNextPayout = isSuccessPayouts && payouts.length > 0;
     const nextPayout = isNextPayout ? payouts[0] : {};
-    const symbol = isNextPayout
-        ? nextPayout.currencySymbol
-        : isManaged
-          ? "USD"
-          : ticker;
+    const symbol = isNextPayout ? nextPayout.currencySymbol : isManaged ? "USD" : ticker;
     const currency = {
         symbol: symbol,
         precision: nextPayout.precision,
         chainId: nextPayout.chainId,
     };
 
-    const claimed =
-        offerId > 0 ? vaultData.find((el) => el.id === offerId)?.claimed : 0;
+    const claimed = offerId > 0 ? vaultData.find((el) => el.id === offerId)?.claimed : 0;
     const performance = (claimed / invested) * 100;
 
     const payoutClaimProps = {
@@ -98,11 +86,7 @@ export default function DetailsSidebar({
 
     const title = () => {
         return (
-            <div
-                className={
-                    "flex flex-row gap-5 flex-1 items-center select-none"
-                }
-            >
+            <div className={"flex flex-row gap-5 flex-1 items-center select-none"}>
                 <div className={"rounded-lg "}>
                     <Image
                         src={`${cdn}/research/${slug}/icon.jpg`}
@@ -113,9 +97,7 @@ export default function DetailsSidebar({
                     />
                 </div>
                 <div>
-                    <div className="text-4xl font-bold flex flex-1 glow">
-                        {name}
-                    </div>
+                    <div className="text-4xl font-bold flex flex-1 glow">{name}</div>
                 </div>
             </div>
         );
@@ -125,9 +107,7 @@ export default function DetailsSidebar({
         return (
             <div className={`flex flex-1 flex-col`}>
                 <div className={`${isBased ? "" : "font-accent"} text-md pt-2`}>
-                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>
-                        Status
-                    </div>
+                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>Status</div>
                     <div className={"detailRow "}>
                         <p>Progress</p>
                         <hr className={"spacer"} />
@@ -158,26 +138,18 @@ export default function DetailsSidebar({
                             <p className={"font-mono"}>Available payout</p>
                             <hr className={"spacer"} />
                             <p className={"flex gap-1 h-[18px] font-mono"}>
-                                <DynamicIcon
-                                    name={NETWORKS[currency?.chainId]}
-                                    style={ButtonIconSize.clicksLow}
-                                />
-                                {Number(availablePayouts).toLocaleString()}{" "}
-                                {currency?.symbol}
+                                <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />
+                                {Number(availablePayouts).toLocaleString()} {currency?.symbol}
                             </p>
                         </div>
                     )}
 
-                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>
-                        Performance
-                    </div>
+                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>Performance</div>
                     <div className={"detailRow "}>
                         <p>TGE gain</p>
                         <hr className={"spacer"} />
                         <p className={"font-mono"}>
-                            <span
-                                className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}
-                            >
+                            <span className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}>
                                 {tgeParsed}
                             </span>
                         </p>
@@ -187,15 +159,8 @@ export default function DetailsSidebar({
                             <p>Return</p>
                             <hr className={"spacer"} />
                             <p className={"font-mono"}>
-                                <span
-                                    className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}
-                                >
-                                    +
-                                    {Number(performance).toLocaleString(
-                                        undefined,
-                                        { minimumFractionDigits: 2 },
-                                    )}
-                                    %
+                                <span className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}>
+                                    +{Number(performance).toLocaleString(undefined, { minimumFractionDigits: 2 })}%
                                 </span>
                             </p>
                         </div>
@@ -209,9 +174,7 @@ export default function DetailsSidebar({
                         </div>
                     )}
 
-                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>
-                        Dates
-                    </div>
+                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>Dates</div>
                     <div className={"detailRow mb-2"}>
                         <p>Participated</p>
                         <hr className={"spacer"} />
@@ -220,29 +183,21 @@ export default function DetailsSidebar({
                     <div className={"detailRow "}>
                         <p>Next unlock</p>
                         <hr className={"spacer"} />
-                        <p className={"font-mono"}>
-                            {nextUnlock !== 0 ? nextUnlock : "TBA"}
-                        </p>
+                        <p className={"font-mono"}>{nextUnlock !== 0 ? nextUnlock : "TBA"}</p>
                     </div>
                     <div className={"detailRow "}>
                         <p>Allocation snapshot</p>
                         <hr className={"spacer"} />
-                        <p className={"font-mono"}>
-                            {nextSnapshot !== 0 ? nextSnapshot : "TBA"}
-                        </p>
+                        <p className={"font-mono"}>{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</p>
                     </div>
                     <div className={"detailRow "}>
                         <p>Claim date</p>
                         <hr className={"spacer"} />
-                        <p className={"font-mono"}>
-                            {nextClaim !== 0 ? nextClaim : "TBA"}
-                        </p>
+                        <p className={"font-mono"}>{nextClaim !== 0 ? nextClaim : "TBA"}</p>
                     </div>
                 </div>
 
-                <div
-                    className={`mt-auto ${isBased ? "fullWidth" : " w-full fullBtn"}`}
-                >
+                <div className={`mt-auto ${isBased ? "fullWidth" : " w-full fullBtn"}`}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         isWide={true}

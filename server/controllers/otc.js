@@ -62,24 +62,13 @@ async function createOffer(user, req) {
         const amount = Number(req.body.amount);
         const price = Number(req.body.price);
         const networkChainId = Number(req.body.networkChainId);
-        if (
-            !wallets.includes(req.body.account) &&
-            !isAddress(req.body.account)
-        ) {
+        if (!wallets.includes(req.body.account) && !isAddress(req.body.account)) {
             throw Error("Account not assigned to user");
         }
 
         const now = moment.utc().unix();
         const hash = createHash(`${userId}` + `${now}`);
-        const saved = await saveOtcHash(
-            req.body.account,
-            networkChainId,
-            offerId,
-            hash,
-            price,
-            amount,
-            isSell,
-        );
+        const saved = await saveOtcHash(req.body.account, networkChainId, offerId, hash, price, amount, isSell);
 
         if (!saved.ok)
             return {
@@ -121,20 +110,10 @@ async function signOffer(user, req) {
 
         transaction = await db.transaction();
 
-        const deal = await checkDealBeforeSigning(
-            offerId,
-            networkChainId,
-            otcId,
-            dealId,
-            transaction,
-        );
+        const deal = await checkDealBeforeSigning(offerId, networkChainId, otcId, dealId, transaction);
         if (!deal.ok) return deal;
 
-        const isBuyLockup = await processSellOtcDeal(
-            userId,
-            deal.data,
-            transaction,
-        );
+        const isBuyLockup = await processSellOtcDeal(userId, deal.data, transaction);
         if (!isBuyLockup.ok) return isBuyLockup;
 
         await saveOtcLock(userId, wallet, deal.data, expireDate, transaction);

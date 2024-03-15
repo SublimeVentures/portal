@@ -44,12 +44,7 @@ async function getStoreItemsOwned(userId, tenantId) {
     return [];
 }
 
-async function getStoreItemsOwnedByUser(
-    userId,
-    tenantId,
-    storeId,
-    transaction,
-) {
+async function getStoreItemsOwnedByUser(userId, tenantId, storeId, transaction) {
     const result = await models.storeUser.findOne({
         where: {
             userId,
@@ -85,12 +80,7 @@ async function getStoreItemsOwnedByUser(
     };
 }
 
-async function updateUserUpgradeAmount(
-    userId,
-    storePartnerId,
-    amount,
-    transaction,
-) {
+async function updateUserUpgradeAmount(userId, storePartnerId, amount, transaction) {
     const result = await models.storeUser.increment(
         { amount },
         { where: { userId, storePartnerId }, raw: true, transaction },

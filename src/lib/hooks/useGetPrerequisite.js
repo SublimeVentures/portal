@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    getMethod,
-    getPrerequisite,
-    METHOD,
-} from "@/components/BlockchainSteps/utils";
+import { getMethod, getPrerequisite, METHOD } from "@/components/BlockchainSteps/utils";
 
 const DEFAULT_STATE = {
     isError: false,
@@ -25,26 +21,17 @@ function useGetPrerequisite(isEnabled, params, globalState, token) {
     useEffect(() => {
         if (isEnabled && !globalState.prerequisite.isFinished) {
             updateState({ isLoading: true });
-            console.log(
-                `BIX :: AVECO PREREQUISITE - SET - should run: ${isEnabled}`,
-            );
+            console.log(`BIX :: AVECO PREREQUISITE - SET - should run: ${isEnabled}`);
 
             getPrerequisite(params.transactionType, { ...params, globalState })
                 .then((result) => {
-                    console.log(
-                        `BIX :: AVECO PREREQUISITE - SET - results for ${params.transactionType}`,
-                        result,
-                    );
+                    console.log(`BIX :: AVECO PREREQUISITE - SET - results for ${params.transactionType}`, result);
                     if (result.ok) {
-                        const transaction_method = getMethod(
-                            params.transactionType,
-                            token,
-                            { ...params, prerequisite: result.data },
-                        );
-                        console.log(
-                            `BIX :: AVECO PREREQUISITE - SET - transaction method`,
-                            transaction_method,
-                        );
+                        const transaction_method = getMethod(params.transactionType, token, {
+                            ...params,
+                            prerequisite: result.data,
+                        });
+                        console.log(`BIX :: AVECO PREREQUISITE - SET - transaction method`, transaction_method);
                         updateState({
                             isLoading: false,
                             method: transaction_method.method || null,

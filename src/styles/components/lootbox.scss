@@ -54,8 +54,7 @@
             width: 550px;
             height: 550px;
             max-width: 90vw;
-            filter: drop-shadow(0 0 6px rgba(0, 255, 128, 1))
-                drop-shadow(0 0 16px rgba(0, 255, 128, 0.75))
+            filter: drop-shadow(0 0 6px rgba(0, 255, 128, 1)) drop-shadow(0 0 16px rgba(0, 255, 128, 0.75))
                 drop-shadow(0 0 32px rgba(0, 255, 128, 0.5));
             @media only screen and (max-width: 768px) {
                 width: 80vw;
@@ -191,14 +190,12 @@
     .modal.is-in {
         .rewards-container {
             > * {
-                animation: scale-in-center 0.5s
-                    cubic-bezier(0.165, 0.84, 0.44, 1) both;
+                animation: scale-in-center 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;
 
                 .reward-image {
                     background-size: 90% auto;
                     > img {
-                        animation: scale-in-center 0.5s
-                            cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+                        animation: scale-in-center 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
                     }
                 }
                 .reward-text {
@@ -267,12 +264,7 @@
         cursor: pointer;
         display: inline-flex;
         background-size: 200% auto;
-        background-image: linear-gradient(
-            to right,
-            #00a6fb 0%,
-            #00fddc 50%,
-            #00a6fb 100%
-        );
+        background-image: linear-gradient(to right, #00a6fb 0%, #00fddc 50%, #00a6fb 100%);
         background-position: left center;
         transition: all 0.4s ease-out;
         border-radius: 0.5rem;
@@ -532,12 +524,7 @@
         width: 100px;
         height: 150px;
         border-radius: 800px;
-        background: radial-gradient(
-            95.76% 95.76% at 71.44% 4.3%,
-            #ff00c7 0%,
-            #009cff 28.65%,
-            #00ffa3 100%
-        );
+        background: radial-gradient(95.76% 95.76% at 71.44% 4.3%, #ff00c7 0%, #009cff 28.65%, #00ffa3 100%);
         filter: blur(100px);
     }
     .glow-1 {
@@ -688,12 +675,7 @@
             border-radius: 1000px;
             filter: blur(40px);
             opacity: 0.25;
-            background: radial-gradient(
-                234.48% 232.94% at 71.44% 4.3%,
-                #ff00c7 0,
-                #009cff 28.65%,
-                #00ffa3 100%
-            );
+            background: radial-gradient(234.48% 232.94% at 71.44% 4.3%, #ff00c7 0, #009cff 28.65%, #00ffa3 100%);
             animation: glow 5s ease-in infinite both;
         }
         &.token {
@@ -721,25 +703,13 @@
         &.is-sm {
             > img {
                 filter: drop-shadow(0px 109px 63px rgba(0, 0, 0, 0.13))
-                    drop-shadow(
-                        0px 54.5532px 31.5308px rgba(0, 0, 0, 0.0988432)
-                    )
-                    drop-shadow(
-                        0px 32.8603px 18.9927px rgba(0, 0, 0, 0.0847066)
-                    )
-                    drop-shadow(
-                        0px 21.0586px 12.1715px rgba(0, 0, 0, 0.0742163)
-                    )
+                    drop-shadow(0px 54.5532px 31.5308px rgba(0, 0, 0, 0.0988432))
+                    drop-shadow(0px 32.8603px 18.9927px rgba(0, 0, 0, 0.0847066))
+                    drop-shadow(0px 21.0586px 12.1715px rgba(0, 0, 0, 0.0742163))
                     drop-shadow(0px 13.6485px 7.88858px rgba(0, 0, 0, 0.065))
-                    drop-shadow(
-                        0px 8.59157px 4.96577px rgba(0, 0, 0, 0.0557837)
-                    )
-                    drop-shadow(
-                        0px 4.93639px 2.85314px rgba(0, 0, 0, 0.0452935)
-                    )
-                    drop-shadow(
-                        0px 2.17263px 1.25574px rgba(0, 0, 0, 0.0311568)
-                    );
+                    drop-shadow(0px 8.59157px 4.96577px rgba(0, 0, 0, 0.0557837))
+                    drop-shadow(0px 4.93639px 2.85314px rgba(0, 0, 0, 0.0452935))
+                    drop-shadow(0px 2.17263px 1.25574px rgba(0, 0, 0, 0.0311568));
             }
             &::after {
                 filter: blur(20px);
@@ -789,18 +759,14 @@
         0%,
         50%,
         100% {
-            filter: blur(0px) brightness(120%)
-                drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.1))
-                drop-shadow(0 0 5px rgba(255, 255, 255, 0.075))
-                drop-shadow(0 0 7.5px rgba(255, 255, 255, 0.045))
+            filter: blur(0px) brightness(120%) drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.1))
+                drop-shadow(0 0 5px rgba(255, 255, 255, 0.075)) drop-shadow(0 0 7.5px rgba(255, 255, 255, 0.045))
                 drop-shadow(0 0 10px rgba(255, 255, 255, 0.025));
         }
         25%,
         75% {
-            filter: blur(1px) brightness(50%)
-                drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.1))
-                drop-shadow(0 0 5px rgba(255, 255, 255, 0.075))
-                drop-shadow(0 0 7.5px rgba(255, 255, 255, 0.045))
+            filter: blur(1px) brightness(50%) drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.1))
+                drop-shadow(0 0 5px rgba(255, 255, 255, 0.075)) drop-shadow(0 0 7.5px rgba(255, 255, 255, 0.045))
                 drop-shadow(0 0 10px rgba(255, 255, 255, 0.025));
         }
     }

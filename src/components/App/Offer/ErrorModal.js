@@ -19,20 +19,13 @@ const renderError = (code) => {
         case BookingErrorsENUM.Overallocated: {
             return (
                 <>
-                    There are some{" "}
-                    <span className="text-gold contents">
-                        pending transactions
-                    </span>{" "}
-                    that booked the remaining allocation.
+                    There are some <span className="text-gold contents">pending transactions</span> that booked the
+                    remaining allocation.
                     <br />
                     <br />
                     <div className="font-bold">There is still a chance!</div>
                     <div>
-                        Bookings are{" "}
-                        <span className={"text-app-error contents"}>
-                            expiring after 15 minutes
-                        </span>
-                        .
+                        Bookings are <span className={"text-app-error contents"}>expiring after 15 minutes</span>.
                     </div>
                     <br />
                     Please wait for button to enable back again!
@@ -45,8 +38,7 @@ const renderError = (code) => {
         case BookingErrorsENUM.IsPaused: {
             return (
                 <>
-                    Investment is{" "}
-                    <span className="text-gold contents">currently paused</span>
+                    Investment is <span className="text-gold contents">currently paused</span>
                     .
                     <br />
                     <br />
@@ -60,8 +52,7 @@ const renderError = (code) => {
         case BookingErrorsENUM.NotOpen: {
             return (
                 <>
-                    Investment is{" "}
-                    <span className="text-gold contents">not yet open</span>.
+                    Investment is <span className="text-gold contents">not yet open</span>.
                     <br />
                     <br />
                     Don't cheat the timer!
@@ -91,12 +82,5 @@ export default function ErrorModal({ model, setter, errorModalProps }) {
         return <div className={""}>{renderError(code)}</div>;
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={setter}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
 }

@@ -17,13 +17,7 @@ import useGetToken from "@/lib/hooks/useGetToken";
 
 export default function InvestModal({ model, setter, investModalProps }) {
     const router = useRouter();
-    const {
-        investmentAmount,
-        offer,
-        selectedCurrency,
-        bookingExpire,
-        afterInvestmentCleanup,
-    } = investModalProps;
+    const { investmentAmount, offer, selectedCurrency, bookingExpire, afterInvestmentCleanup } = investModalProps;
 
     const { account, activeInvestContract } = useEnvironmentContext();
 
@@ -53,11 +47,7 @@ export default function InvestModal({ model, setter, investModalProps }) {
     }, [transactionSuccessful]);
 
     const token = useGetToken(selectedCurrency?.contract);
-    console.log(
-        "HIXKFHERYDDDD [InvestModal] - refresh invest details",
-        token,
-        activeInvestContract,
-    );
+    console.log("HIXKFHERYDDDD [InvestModal] - refresh invest details", token, activeInvestContract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -84,27 +74,18 @@ export default function InvestModal({ model, setter, investModalProps }) {
             token,
             setTransactionSuccessful,
         };
-    }, [
-        investmentAmount,
-        account,
-        token?.contract,
-        bookingDetails?.code,
-        model,
-        activeInvestContract,
-    ]);
+    }, [investmentAmount, account, token?.contract, bookingDetails?.code, model, activeInvestContract]);
 
     const title = () => {
         return (
             <>
                 {transactionSuccessful ? (
                     <>
-                        Investment{" "}
-                        <span className="text-app-success">successful</span>
+                        Investment <span className="text-app-success">successful</span>
                     </>
                 ) : (
                     <>
-                        Booking{" "}
-                        <span className="text-app-success">success</span>
+                        Booking <span className="text-app-success">success</span>
                     </>
                 )}
             </>
@@ -116,14 +97,8 @@ export default function InvestModal({ model, setter, investModalProps }) {
             <div className=" flex flex-col flex-1">
                 <div>
                     Congratulations! You have successfully invested{" "}
-                    <span className="text-app-success font-bold">
-                        ${amountLocale}
-                    </span>{" "}
-                    in{" "}
-                    <span className="font-bold text-app-success">
-                        {offer.name}
-                    </span>
-                    .
+                    <span className="text-app-success font-bold">${amountLocale}</span> in{" "}
+                    <span className="font-bold text-app-success">{offer.name}</span>.
                 </div>
                 <Lottie
                     animationData={lottieSuccess}
@@ -160,12 +135,8 @@ export default function InvestModal({ model, setter, investModalProps }) {
         return (
             <div className={`flex flex-1 flex-col`}>
                 <div>
-                    You have successfully booked{" "}
-                    <span className="text-gold font-medium">
-                        ${amountLocale}
-                    </span>{" "}
-                    allocation in{" "}
-                    <span className="font-bold text-gold ">{offer.name}</span>.
+                    You have successfully booked <span className="text-gold font-medium">${amountLocale}</span>{" "}
+                    allocation in <span className="font-bold text-gold ">{offer.name}</span>.
                 </div>
                 <div className="pt-10 pb-5 flex flex-col items-center">
                     <div className="pb-2">Complete transfer in the next</div>
@@ -185,8 +156,8 @@ export default function InvestModal({ model, setter, investModalProps }) {
 
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
                 <div>
-                    Booked allocation will be released when the timer runs to
-                    zero. <Linker url={ExternalLinks.BOOKING_SYSTEM} />
+                    Booked allocation will be released when the timer runs to zero.{" "}
+                    <Linker url={ExternalLinks.BOOKING_SYSTEM} />
                 </div>
             </div>
         );

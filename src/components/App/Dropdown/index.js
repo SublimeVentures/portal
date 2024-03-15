@@ -3,13 +3,7 @@ import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 import { useEffect } from "react";
 
 // export default function Dropdown({options, classes, propSelected, position, isSmall}) {
-export default function Dropdown({
-    options,
-    selector,
-    classes,
-    propSelected,
-    isSmall,
-}) {
+export default function Dropdown({ options, selector, classes, propSelected, isSmall }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -45,22 +39,13 @@ export default function Dropdown({
             <select data-menu="">
                 {options.map((el, i) => {
                     return (
-                        <option
-                            key={i}
-                            defaultValue={
-                                el.contract === selected.contract
-                                    ? "selected"
-                                    : ""
-                            }
-                        >
+                        <option key={i} defaultValue={el.contract === selected.contract ? "selected" : ""}>
                             {el[selector]}
                         </option>
                     );
                 })}
             </select>
-            <div
-                className={`button ${options.length === 1 ? "disableDropdown" : ""}`}
-            >
+            <div className={`button ${options.length === 1 ? "disableDropdown" : ""}`}>
                 <em></em>
                 <ul style={{ transform: `translateY(${moved}px)` }}>
                     {options.map((el, i) => {

@@ -5,18 +5,9 @@ function useGetNetwork(isEnabled, requiredNetwork) {
     const { network } = useEnvironmentContext();
     const isValid = network?.chainId === requiredNetwork;
 
-    console.log(
-        "BIX :: NETWORK_CHECK - render",
-        isValid,
-        network?.chainId,
-        requiredNetwork,
-    );
+    console.log("BIX :: NETWORK_CHECK - render", isValid, network?.chainId, requiredNetwork);
     useEffect(() => {
-        console.log(
-            "BIX :: NETWORK_CHECK - switch chain ",
-            !isValid,
-            isEnabled,
-        );
+        console.log("BIX :: NETWORK_CHECK - switch chain ", !isValid, isEnabled);
         if (!isValid && isEnabled) {
             network?.switchChain({ chainId: requiredNetwork });
         }

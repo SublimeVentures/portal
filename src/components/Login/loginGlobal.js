@@ -7,9 +7,7 @@ const CustomOption = (props) => {
     return (
         <div className={"relative"} id={"aa"}>
             <components.Option {...props}>
-                <div
-                    className={`flex flex-row items-center relative ${props.data.isDisabled ? "text-white" : ""} `}
-                >
+                <div className={`flex flex-row items-center relative ${props.data.isDisabled ? "text-white" : ""} `}>
                     <div>
                         <img
                             src={props.data.logo}
@@ -23,20 +21,14 @@ const CustomOption = (props) => {
                     </div>
                     <div className={"pl-1"}>{props.data.label}</div>
                     {props.data.isNew && (
-                        <div
-                            className={
-                                "right-2 absolute rounded-xl bg-outline px-2 py-1 text-xxs !text-white"
-                            }
-                        >
+                        <div className={"right-2 absolute rounded-xl bg-outline px-2 py-1 text-xxs !text-white"}>
                             NEW
                         </div>
                     )}
                 </div>
                 {props.data.value === 1 && (
                     <div className="absolute top-0 bottom-0 right-0 left-0 bg-black bg-opacity-50 flex justify-end items-center">
-                        <div className="rounded-xl bg-app-success px-2 py-1 text-xxs text-black mr-5">
-                            SALE SOON
-                        </div>
+                        <div className="rounded-xl bg-app-success px-2 py-1 text-xxs text-black mr-5">SALE SOON</div>
                     </div>
                 )}
             </components.Option>
@@ -48,11 +40,7 @@ const CustomSingleValue = (props) => {
         <components.SingleValue {...props}>
             <div className={"flex flex-row items-center"}>
                 <div>
-                    <img
-                        src={props.data.logo}
-                        style={{ width: 25, height: "auto", marginRight: 8 }}
-                        alt=""
-                    />
+                    <img src={props.data.logo} style={{ width: 25, height: "auto", marginRight: 8 }} alt="" />
                 </div>
                 <div className={"pl-1"}> {props.data.label}</div>
             </div>
@@ -61,8 +49,7 @@ const CustomSingleValue = (props) => {
 };
 
 export default function LoginGlobal({ ssrData }) {
-    const { isLoginLoading, handleConnect, setPartner, loginData } =
-        useLoginFlow();
+    const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
     const dataSorted = ssrData.sort((a, b) => a.displayOrder - b.displayOrder);
     const loginOptions = dataSorted.map((el) => {
         return {
@@ -89,10 +76,7 @@ export default function LoginGlobal({ ssrData }) {
                     <div className={"p-10 flex flex-col justify-center"}>
                         <div className=" flex flex-col p-10 blurred glareBg  w-full sm:w-auto min-w-[340px]">
                             <div className="text-3xl font-bold">
-                                <span className={"text-app-success"}>
-                                    Login
-                                </span>{" "}
-                                with
+                                <span className={"text-app-success"}>Login</span> with
                             </div>
                             <div className={"mt-10 relative select"}>
                                 <Select
@@ -105,21 +89,11 @@ export default function LoginGlobal({ ssrData }) {
                                     onChange={handlePartnerChange}
                                     components={{
                                         Input: (props) => (
-                                            <components.Input
-                                                {...props}
-                                                aria-activedescendant={
-                                                    undefined
-                                                }
-                                            />
+                                            <components.Input {...props} aria-activedescendant={undefined} />
                                         ),
                                         Option: CustomOption,
                                         SingleValue: CustomSingleValue,
-                                        Menu: (props) => (
-                                            <components.Menu
-                                                {...props}
-                                                className="menu"
-                                            />
-                                        ),
+                                        Menu: (props) => <components.Menu {...props} className="menu" />,
                                     }}
                                     styles={{
                                         menu: (provided, state) => ({
@@ -141,19 +115,13 @@ export default function LoginGlobal({ ssrData }) {
                                             "&:hover": {
                                                 boxShadow: "none",
                                             },
-                                            boxShadow: state.isFocused
-                                                ? "none"
-                                                : provided.boxShadow,
-                                            borderColor: state.isFocused
-                                                ? "#c0c0c0"
-                                                : "#c0c0c0",
+                                            boxShadow: state.isFocused ? "none" : provided.boxShadow,
+                                            borderColor: state.isFocused ? "#c0c0c0" : "#c0c0c0",
                                         }),
                                         option: (provided, state) => ({
                                             ...provided,
                                             borderBottom: "1px solid #12151e",
-                                            color: state.isSelected
-                                                ? "#b1e365"
-                                                : "white", // Color for selected and other options
+                                            color: state.isSelected ? "#b1e365" : "white", // Color for selected and other options
                                             background: state.isFocused
                                                 ? "#12151e"
                                                 : state.isSelected

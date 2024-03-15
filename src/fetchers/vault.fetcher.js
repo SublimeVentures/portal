@@ -6,9 +6,7 @@ import { axiosPublic } from "@/lib/axios/axiosPublic";
 
 export const fetchUserInvestment = async (offerId) => {
     try {
-        const { data } = await axiosPrivate.get(
-            `${API.offerDetails}${offerId}/state`,
-        );
+        const { data } = await axiosPrivate.get(`${API.offerDetails}${offerId}/state`);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -20,14 +18,11 @@ export const fetchUserInvestment = async (offerId) => {
 
 export const fetchUserInvestmentSsr = async (offerId, token) => {
     try {
-        const { data } = await axiosPublic.get(
-            `${API.offerDetails}${offerId}/state`,
-            {
-                headers: {
-                    Cookie: `${authTokenName}=${token}`,
-                },
+        const { data } = await axiosPublic.get(`${API.offerDetails}${offerId}/state`, {
+            headers: {
+                Cookie: `${authTokenName}=${token}`,
             },
-        );
+        });
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {

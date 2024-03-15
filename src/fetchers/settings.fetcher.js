@@ -48,10 +48,7 @@ export const addUserWallet = async (signature) => {
 
 export const removeUserWallet = async (signature) => {
     try {
-        const { data } = await axiosPrivate.post(
-            `${API.settingsWallet}remove`,
-            { signature },
-        );
+        const { data } = await axiosPrivate.post(`${API.settingsWallet}remove`, { signature });
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {

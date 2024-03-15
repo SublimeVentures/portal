@@ -1,9 +1,6 @@
 import Linker from "@/components/link";
 import PAGE, { ExternalLinks } from "@/routes";
-import {
-    ButtonCitCapIconSize,
-    CitCapButton,
-} from "@/components/Button/CitCapButton";
+import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import PlayIcon from "@/assets/svg/Play.svg";
 import Link from "next/link";
 import Input from "@/components/App/Input";
@@ -25,12 +22,8 @@ export default function TokenomicsCitCap({}) {
         refetchOnWindowFocus: false,
     });
 
-    const minStake = isSuccess
-        ? Number(data.find((el) => el.name === "stakeRequired").value)
-        : 500;
-    const divider = isSuccess
-        ? Number(data.find((el) => el.name === "stakeMulti").value)
-        : 500;
+    const minStake = isSuccess ? Number(data.find((el) => el.name === "stakeRequired").value) : 500;
+    const divider = isSuccess ? Number(data.find((el) => el.name === "stakeMulti").value) : 500;
 
     const recalculate = () => {
         const allocation = divider * Math.ceil(bananaStaked / divider);
@@ -42,17 +35,10 @@ export default function TokenomicsCitCap({}) {
     }, [bananaStaked, minStake, divider]);
 
     return (
-        <div
-            className={
-                "flex flex-1 justify-between flex-wrap gap-10 max-w-[1000px]"
-            }
-        >
+        <div className={"flex flex-1 justify-between flex-wrap gap-10 max-w-[1000px]"}>
             <div className="flex flex-col p-10 sm:p-20 w-full  font-accent blurred glareBg bg-black">
                 <div className="flex flex-col flex-1 ">
-                    <div className={"pb-2 text-center"}>
-                        Use the calculator below to check your maximum
-                        allocation.
-                    </div>
+                    <div className={"pb-2 text-center"}>Use the calculator below to check your maximum allocation.</div>
                 </div>
                 <div className=" flex flex-1 flex-col gap-5 custom:flex-row">
                     <div className="flex flex-1 flex-col justify-center items-center">
@@ -75,37 +61,21 @@ export default function TokenomicsCitCap({}) {
                 </div>
                 <div className={"mt-10 text-center text-xl"}>
                     <span className={""}>Maximum allocation </span>
-                    <span className={"font-bold text-gold"}>
-                        ${allocationTotal || 0}
-                    </span>
+                    <span className={"font-bold text-gold"}>${allocationTotal || 0}</span>
                 </div>
-                <div
-                    className={
-                        "flex flex-col gap-0 md:flex-row md:gap-10 justify-center mt-10"
-                    }
-                >
+                <div className={"flex flex-col gap-0 md:flex-row md:gap-10 justify-center mt-10"}>
                     <div className={"flex"}>
-                        <Link
-                            href={PAGE.Login}
-                            className={"flex min-w-[200px] "}
-                        >
+                        <Link href={PAGE.Login} className={"flex min-w-[200px] "}>
                             <CitCapButton
                                 text={"LOGIN"}
                                 isWhite={true}
-                                icon={
-                                    <PlayIcon
-                                        className={ButtonCitCapIconSize.hero}
-                                    />
-                                }
+                                icon={<PlayIcon className={ButtonCitCapIconSize.hero} />}
                             />
                         </Link>
                     </div>
                     <div className={"flex justify-center items-center"}>
                         <div className={""}>
-                            <Linker
-                                url={ExternalLinks.GET_BANANA_ETH}
-                                text={"Get BANANA"}
-                            />
+                            <Linker url={ExternalLinks.GET_BANANA_ETH} text={"Get BANANA"} />
                         </div>
                     </div>
                 </div>

@@ -44,8 +44,7 @@ export default function Scramble({ text, isUnderline, trigger }) {
 
                 let k = i + 1;
                 for (k; k < animated.length; k++) {
-                    animated[k] =
-                        ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+                    animated[k] = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
                 }
 
                 setDisplay(animated.join(""));
@@ -68,7 +67,5 @@ export default function Scramble({ text, isUnderline, trigger }) {
         setDisplay(text);
     }, []);
 
-    return (
-        <span className={isUnderline ? "underlineHover" : ""}>{display}</span>
-    );
+    return <span className={isUnderline ? "underlineHover" : ""}>{display}</span>;
 }

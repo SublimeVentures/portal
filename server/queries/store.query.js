@@ -18,12 +18,7 @@ async function getStore(partnerId, tenantId) {
                 },
             ],
             attributes: [
-                [
-                    db.literal(
-                        'CASE WHEN "availability" < 0 THEN 0 ELSE "availability" END',
-                    ),
-                    "availability",
-                ],
+                [db.literal('CASE WHEN "availability" < 0 THEN 0 ELSE "availability" END'), "availability"],
                 "price",
                 "img",
                 [db.literal('"store"."id"'), "id"],

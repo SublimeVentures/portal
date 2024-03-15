@@ -10,9 +10,7 @@ export default function RoundSpacer({ title, subtitle, action }) {
                    `}
         >
             <div className={"flex flex-col"}>
-                <div
-                    className={`text-3xl font-bold mb-2 mt-2 ${isBased ? "" : "font-accent uppercase font-light"}`}
-                >
+                <div className={`text-3xl font-bold mb-2 mt-2 ${isBased ? "" : "font-accent uppercase font-light"}`}>
                     {title}
                 </div>
                 <div>{subtitle}</div>

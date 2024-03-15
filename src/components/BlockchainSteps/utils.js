@@ -96,12 +96,7 @@ const TENANT_UPGRADE = (params, token) => {
         case TENANT.CyberKongz: {
             return {
                 name: "buyUpgrade",
-                inputs: [
-                    process.env.NEXT_PUBLIC_TENANT,
-                    params.amount,
-                    params.upgradeId,
-                    token.contract,
-                ],
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.amount, params.upgradeId, token.contract],
                 abi: abi_upgrade_generic,
                 confirmations: 2,
                 contract: params.contract,
@@ -133,11 +128,7 @@ const TENANT_MYSTERYBOX = (params, token) => {
         case TENANT.CyberKongz: {
             return {
                 name: "buyMysteryBox",
-                inputs: [
-                    process.env.NEXT_PUBLIC_TENANT,
-                    params.amount,
-                    token.contract,
-                ],
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.amount, token.contract],
                 abi: abi_mb_generic,
                 confirmations: 2,
                 contract: params.contract,
@@ -215,9 +206,7 @@ export const getMethod = (type, token, params) => {
         }
         case METHOD.ALLOWANCE: {
             const isValid =
-                validAddress(token?.contract) &&
-                validAddress(params?.spender) &&
-                validAllowance(params?.allowance);
+                validAddress(token?.contract) && validAddress(params?.spender) && validAllowance(params?.allowance);
             const amount = getTokenInWei(params.allowance, token);
             const confirmations = params.chainId === 1 ? 2 : 5;
             console.log("METHOD.ALLOWANCE", type, token, params, isValid);
@@ -273,10 +262,7 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.OTC_CANCEL: {
-            const isValid =
-                validNumber(params?.otcId) &&
-                validNumber(params?.dealId) &&
-                validAddress(params?.contract);
+            const isValid = validNumber(params?.otcId) && validNumber(params?.dealId) && validAddress(params?.contract);
             console.log("CHECK PARAMS", params, isValid);
             return isValid
                 ? {
@@ -316,13 +302,7 @@ export const getMethod = (type, token, params) => {
                       ok: true,
                       method: {
                           name: "offerTake",
-                          inputs: [
-                              params.offerDetails.otcId,
-                              params.offerDetails.dealId,
-                              nonce,
-                              expiry,
-                              hash,
-                          ],
+                          inputs: [params.offerDetails.otcId, params.offerDetails.dealId, nonce, expiry, hash],
                           abi: abi_otc,
                           confirmations: 2,
                           contract: params.contract,
@@ -334,8 +314,7 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.MYSTERYBOX: {
-            const isValid =
-                validNumber(params?.amount) && validAddress(params?.contract);
+            const isValid = validNumber(params?.amount) && validAddress(params?.contract);
             const method = TENANT_MYSTERYBOX(params, token);
             return isValid
                 ? {
@@ -349,9 +328,7 @@ export const getMethod = (type, token, params) => {
         }
         case METHOD.UPGRADE: {
             const isValid =
-                validNumber(params?.amount) &&
-                validNumber(params?.upgradeId) &&
-                validAddress(params?.contract);
+                validNumber(params?.amount) && validNumber(params?.upgradeId) && validAddress(params?.contract);
             const method = TENANT_UPGRADE(params, token);
             return isValid
                 ? {
@@ -401,12 +378,7 @@ export const getMethod = (type, token, params) => {
                 validNumber(params?.offerId) &&
                 validNumber(params?.payoutId) &&
                 validNumber(params?.claimId);
-            console.log(
-                "validation CLAIMER",
-                params,
-                isValid,
-                validHash(params?.prerequisite?.signature),
-            );
+            console.log("validation CLAIMER", params, isValid, validHash(params?.prerequisite?.signature));
 
             return isValid
                 ? {

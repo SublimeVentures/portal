@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-    getParamOfferDetails,
-    getOfferAllocation,
-} = require("../controllers/offerDetails");
+const { getParamOfferDetails, getOfferAllocation } = require("../controllers/offerDetails");
 const { getParamOfferList } = require("../controllers/offerList");
 const { verifyID } = require("../../src/lib/authHelpers");
 const { useUpgrade } = require("../controllers/upgrade");

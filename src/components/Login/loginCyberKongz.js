@@ -3,17 +3,13 @@ import HeroBg from "@/components/Home/HeroBg";
 import { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
 import IconNT from "@/assets/svg/NT.svg";
-import {
-    ButtonCitCapIconSize,
-    CitCapButton,
-} from "@/components/Button/CitCapButton";
+import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import PlayIcon from "@/assets/svg/Play.svg";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 
 export default function LoginCyberKongz({}) {
-    const { isLoginLoading, handleConnect, setPartner, loginData } =
-        useLoginFlow();
+    const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
 
     useEffect(() => {
         setPartner(Number(process.env.NEXT_PUBLIC_TENANT));
@@ -26,10 +22,7 @@ export default function LoginCyberKongz({}) {
                     <div className="flex flex-col flex-1 ">
                         <div className={"pb-2"}>Login with CyberKongz NFT</div>
                         <div className={"pb-10"}>
-                            <Linker
-                                url={ExternalLinks.DELEGATED_ACCESS}
-                                text={"Delegated access?"}
-                            />
+                            <Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
                         </div>
                         <div className="flex flex-col gap-5 justify-end flex-1 mt-10 lg:mt-0">
                             <CitCapButton
@@ -39,20 +32,13 @@ export default function LoginCyberKongz({}) {
                                     handleConnect();
                                 }}
                                 isWhite={true}
-                                icon={
-                                    <PlayIcon
-                                        className={ButtonCitCapIconSize.hero}
-                                    />
-                                }
+                                icon={<PlayIcon className={ButtonCitCapIconSize.hero} />}
                             />
                         </div>
                     </div>
                 </div>
                 <div className={"hidden lg:flex  items-center md:justify-end"}>
-                    <img
-                        src={"https://cdn.basedvc.fund/webapp/logo_alt_14.png"}
-                        className={"w-[280px]"}
-                    />
+                    <img src={"https://cdn.basedvc.fund/webapp/logo_alt_14.png"} className={"w-[280px]"} />
                 </div>
             </div>
         );
@@ -60,11 +46,7 @@ export default function LoginCyberKongz({}) {
 
     return (
         <>
-            <HeroBg
-                subtitle={"Welcome to"}
-                title={"KongzCapital"}
-                content={renderOptions()}
-            />
+            <HeroBg subtitle={"Welcome to"} title={"KongzCapital"} content={renderOptions()} />
             <LoginModal loginModalProps={loginData} />
         </>
     );

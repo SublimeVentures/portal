@@ -14,24 +14,17 @@ export default function OfferDetailsProgress({ allocations, isSoldOut }) {
 
     const amt_filled = allocations?.alloFilled ? allocations?.alloFilled : 0;
     const amt_res = allocations?.alloRes ? allocations?.alloRes : 0;
-    const amt_guaranteed = allocations?.alloGuaranteed
-        ? allocations?.alloGuaranteed
-        : 0;
+    const amt_guaranteed = allocations?.alloGuaranteed ? allocations?.alloGuaranteed : 0;
 
     const filled_base = Math.round((amt_filled / allocations?.alloTotal) * 100);
     const filled_res = Math.round((amt_res / allocations?.alloTotal) * 100);
-    const filled_guaranteed = Math.round(
-        (amt_guaranteed / allocations?.alloTotal) * 100,
-    );
+    const filled_guaranteed = Math.round((amt_guaranteed / allocations?.alloTotal) * 100);
 
     const progress = isSoldOut ? 100 : filled_base;
 
     return (
         <>
-            <div
-                className="rounded-2xl h-[50px]  w-full flex flex-row items-center relative select-none"
-                ref={tilt}
-            >
+            <div className="rounded-2xl h-[50px]  w-full flex flex-row items-center relative select-none" ref={tilt}>
                 <div className="os-progress-bar rounded-xl  relative">
                     <span className="os-progress-bar--meter rounded-tl-xl rounded-bl-xl flex flex-1 "></span>
                     <span
@@ -41,14 +34,8 @@ export default function OfferDetailsProgress({ allocations, isSoldOut }) {
                 </div>
 
                 <div className="absolute h-full w-full flex -right-1">
-                    <div
-                        className="opacity-100 rounded-l-xl  h-full"
-                        style={{ width: `${filled_base}%` }}
-                    ></div>
-                    <div
-                        className={`opacity-10 bg-app-error h-full`}
-                        style={{ width: `${filled_res}%` }}
-                    ></div>
+                    <div className="opacity-100 rounded-l-xl  h-full" style={{ width: `${filled_base}%` }}></div>
+                    <div className={`opacity-10 bg-app-error h-full`} style={{ width: `${filled_res}%` }}></div>
                 </div>
 
                 <div className="absolute h-full w-full flex -right-1">
@@ -56,16 +43,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut }) {
                         className="opacity-100 rounded-l-xl  h-full"
                         style={{ width: `${filled_base + filled_res}%` }}
                     ></div>
-                    <div
-                        className={`opacity-10 bg-gold h-full`}
-                        style={{ width: `${filled_guaranteed}%` }}
-                    ></div>
+                    <div className={`opacity-10 bg-gold h-full`} style={{ width: `${filled_guaranteed}%` }}></div>
                 </div>
 
                 <div className="absolute right-1 ">
-                    <div className="mr-1">
-                        Filled {Number(progress).toFixed(0)}%
-                    </div>
+                    <div className="mr-1">Filled {Number(progress).toFixed(0)}%</div>
                 </div>
             </div>
         </>

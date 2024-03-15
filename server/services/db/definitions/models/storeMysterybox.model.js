@@ -64,12 +64,7 @@ module.exports = (sequelize) => {
                 allowNull: true,
             },
             type: {
-                type: DataTypes.ENUM(
-                    "allocation",
-                    "upgrade",
-                    "discount",
-                    "NFT",
-                ),
+                type: DataTypes.ENUM("allocation", "upgrade", "discount", "NFT"),
                 allowNull: false,
             },
         },

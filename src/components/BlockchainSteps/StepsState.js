@@ -17,8 +17,7 @@ export const STEP_STATE = {
 
 const stepNetwork = (state, data) => {
     console.log("BIX :: NETWORK :: step state", state, data);
-    const iconPadding =
-        data.params.requiredNetwork === 137 ? "p-[6px]" : "p-[3px]";
+    const iconPadding = data.params.requiredNetwork === 137 ? "p-[6px]" : "p-[3px]";
 
     let result = {};
     if (state.isFinished) {
@@ -126,10 +125,7 @@ const stepAllowance = (state, data) => {
                 state: STEP_STATE.SUCCESS,
                 content: "Allowance approved",
             };
-        } else if (
-            data.allowance_set_reset.isLoading ||
-            data.allowance_set.isLoading
-        ) {
+        } else if (data.allowance_set_reset.isLoading || data.allowance_set.isLoading) {
             result = {
                 state: STEP_STATE.PROCESSING,
                 content: `Approving new allowance (${data.token.isSettlement ? `$${data.params.allowance}` : `${data.params.allowance} ${data.token.symbol}`})`,
@@ -139,19 +135,12 @@ const stepAllowance = (state, data) => {
                 state: STEP_STATE.PROCESSING,
                 content: "Checking allowance",
             };
-        } else if (
-            data.allowance_set_reset.isError ||
-            data.allowance_set.isError ||
-            !!data.allowance_method_error
-        ) {
+        } else if (data.allowance_set_reset.isError || data.allowance_set.isError || !!data.allowance_method_error) {
             result = {
                 state: STEP_STATE.ERROR,
                 content: `Error on setting allowance`,
                 error: {
-                    text:
-                        data.allowance_set_reset.error ||
-                        data.allowance_set.error ||
-                        data.allowance_method_error,
+                    text: data.allowance_set_reset.error || data.allowance_set.error || data.allowance_method_error,
                     action: data.refetch,
                 },
             };
@@ -192,29 +181,23 @@ const stepPrerequisite = (state, data) => {
     if (!data.prerequisite_isReady) {
         result = {
             state: STEP_STATE.PENDING,
-            content:
-                data.params.prerequisiteTextWaiting || "Validate transaction",
+            content: data.params.prerequisiteTextWaiting || "Validate transaction",
         };
     } else {
         if (state.isFinished) {
             result = {
                 state: STEP_STATE.SUCCESS,
-                content:
-                    data.params.prerequisiteTextSuccess ||
-                    "Validation successful",
+                content: data.params.prerequisiteTextSuccess || "Validation successful",
             };
         } else if (data.isLoading) {
             result = {
                 state: STEP_STATE.PROCESSING,
-                content:
-                    data.params.prerequisiteTextProcessing ||
-                    "Validation processing",
+                content: data.params.prerequisiteTextProcessing || "Validation processing",
             };
         } else if (data.isError) {
             result = {
                 state: STEP_STATE.ERROR,
-                content:
-                    data.params.prerequisiteTextError || "Validation failed",
+                content: data.params.prerequisiteTextError || "Validation failed",
                 error: {
                     text: data?.error,
                     // action: data.refetch
@@ -223,9 +206,7 @@ const stepPrerequisite = (state, data) => {
         } else {
             result = {
                 state: STEP_STATE.PENDING,
-                content:
-                    data.params.prerequisiteTextWaiting ||
-                    "Validate transaction",
+                content: data.params.prerequisiteTextWaiting || "Validate transaction",
             };
         }
     }

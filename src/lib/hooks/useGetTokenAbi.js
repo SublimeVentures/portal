@@ -15,13 +15,9 @@ function useGetTokenAbi(token, forceChainId) {
                 "TOKEN_STTING",
                 contract,
                 ETH_USDT,
-                contract.toLowerCase() === ETH_USDT.toLowerCase()
-                    ? "USDT abi"
-                    : "regular erc20abi",
+                contract.toLowerCase() === ETH_USDT.toLowerCase() ? "USDT abi" : "regular erc20abi",
             );
-            return contract.toLowerCase() === ETH_USDT.toLowerCase()
-                ? usdtAbi
-                : erc20Abi;
+            return contract.toLowerCase() === ETH_USDT.toLowerCase() ? usdtAbi : erc20Abi;
         }
         return erc20Abi;
     }, [contract, finalChainId]);

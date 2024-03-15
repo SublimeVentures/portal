@@ -16,10 +16,7 @@ const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
 const LoginCitCap = dynamic(() => import("@/components/Login/loginCitCap"), {
     ssr: true,
 });
-const LoginCyberKongz = dynamic(
-    () => import("@/components/Login/loginCyberKongz"),
-    { ssr: true },
-);
+const LoginCyberKongz = dynamic(() => import("@/components/Login/loginCyberKongz"), { ssr: true });
 
 const TENANTS_LOGIN = (data) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {

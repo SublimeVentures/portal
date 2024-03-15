@@ -100,9 +100,7 @@ export default function OfferItem({ offer, cdn }) {
                     </div>
                 </div>
                 <div className={"flex flex-row ml-3 -mt-10 z-10 "}>
-                    <div
-                        className={`${isBased ? "rounded-lg bg-navy-accent" : ""} `}
-                    >
+                    <div className={`${isBased ? "rounded-lg bg-navy-accent" : ""} `}>
                         <Image
                             src={`${cdn}/research/${slug}/icon.jpg`}
                             className={`p-1 ${isBased ? "rounded-lg" : "bg-slides"} `}
@@ -112,23 +110,15 @@ export default function OfferItem({ offer, cdn }) {
                         />
                     </div>
                     <div className={"flex flex-1 items-end text-sm pb-5 "}>
-                        <div
-                            className={
-                                "offerTime w-full px-5 flex justify-between h-8 items-center color pt-[2px]"
-                            }
-                        >
+                        <div className={"offerTime w-full px-5 flex justify-between h-8 items-center color pt-[2px]"}>
                             {showDate(status, starts, ends)}
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-1 flex-col text-left ">
                     <div className={"px-10 pt-5"}>
-                        <div className="text-3xl font-bold flex flex-1 glow">
-                            {name}
-                        </div>
-                        <div className="text-md flex flex-1 mt-1 pb-5 color">
-                            #{genre}
-                        </div>
+                        <div className="text-3xl font-bold flex flex-1 glow">{name}</div>
+                        <div className="text-md flex flex-1 mt-1 pb-5 color">#{genre}</div>
                     </div>
 
                     <div

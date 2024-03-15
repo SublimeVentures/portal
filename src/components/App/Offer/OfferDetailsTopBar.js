@@ -6,13 +6,7 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function OfferDetailsTopBar({ paramsBar }) {
     const { cdn } = useEnvironmentContext();
-    let {
-        offer,
-        phaseCurrent,
-        phaseNext,
-        refreshInvestmentPhase,
-        phaseIsClosed,
-    } = paramsBar;
+    let { offer, phaseCurrent, phaseNext, refreshInvestmentPhase, phaseIsClosed } = paramsBar;
     let { name, genre, slug } = offer;
 
     return (
@@ -28,12 +22,8 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                     />
                 </div>
                 <div>
-                    <div className="text-4xl font-bold flex flex-1 glow select-none">
-                        {name}
-                    </div>
-                    <div
-                        className={`text-xl flex flex-1 mt-1 ${isBased ? "text-outline" : "font-accent"}`}
-                    >
+                    <div className="text-4xl font-bold flex flex-1 glow select-none">{name}</div>
+                    <div className={`text-xl flex flex-1 mt-1 ${isBased ? "text-outline" : "font-accent"}`}>
                         #{genre}
                     </div>
                 </div>

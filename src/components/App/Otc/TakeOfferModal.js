@@ -19,17 +19,11 @@ export const blockchainPrerequisite = async (params) => {
     console.log(
         "TAK_OFFER_VALID2",
         signature,
-        signature?.expiry &&
-            signature.expiry > moment.utc().unix() &&
-            !offerDetails.isSell,
+        signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell,
         offerDetails.isSell,
     );
 
-    if (
-        signature?.expiry &&
-        signature.expiry > moment.utc().unix() &&
-        !offerDetails.isSell
-    ) {
+    if (signature?.expiry && signature.expiry > moment.utc().unix() && !offerDetails.isSell) {
         return {
             ok: true,
             data: { signature },
@@ -63,8 +57,7 @@ export const blockchainPrerequisite = async (params) => {
 };
 
 export default function TakeOfferModal({ model, setter, props }) {
-    const { vault, currentMarket, offerDetails, refetchVault, refetchOffers } =
-        props;
+    const { vault, currentMarket, offerDetails, refetchVault, refetchOffers } = props;
     const {
         getCurrencySymbolByAddress,
         getCurrencySettlement,
@@ -76,35 +69,22 @@ export default function TakeOfferModal({ model, setter, props }) {
     } = useEnvironmentContext();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
-    const selectedCurrency = offerDetails
-        ? currencies[offerDetails.currency]
-        : {};
+    const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};
     const userAllocation =
-        currentMarket && vault?.length > 0
-            ? vault.find((el) => el.id === currentMarket.offerId)
-            : {};
-    const ownedAllocation = userAllocation?.invested
-        ? userAllocation.invested - userAllocation.locked
-        : 0;
-    const haveEnoughAllocation = offerDetails.isSell
-        ? true
-        : ownedAllocation >= offerDetails.amount;
-    const totalPayment = offerDetails.isSell
-        ? offerDetails.price + otcFee
-        : otcFee;
+        currentMarket && vault?.length > 0 ? vault.find((el) => el.id === currentMarket.offerId) : {};
+    const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
+    const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
+    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee;
 
     const customLocks = () => {
-        if (!haveEnoughAllocation)
-            return { lock: true, text: "Not enough allocation" };
+        if (!haveEnoughAllocation) return { lock: true, text: "Not enough allocation" };
         else return { lock: false };
     };
 
     const { lock, text } = customLocks();
 
     console.log("selectedCurrency", selectedCurrency, offerDetails);
-    const token = useGetToken(
-        selectedCurrency?.contract || getCurrencySettlement()[0].contract,
-    );
+    const token = useGetToken(selectedCurrency?.contract || getCurrencySettlement()[0].contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -150,9 +130,7 @@ export default function TakeOfferModal({ model, setter, props }) {
 
     if (!currentMarket?.name || !offerDetails?.currency) return;
 
-    const chainDesired = network.chains.find(
-        (el) => el.id === offerDetails?.chainId,
-    );
+    const chainDesired = network.chains.find((el) => el.id === offerDetails?.chainId);
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString();
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString();
 
@@ -172,8 +150,7 @@ export default function TakeOfferModal({ model, setter, props }) {
             <>
                 {transactionSuccessful ? (
                     <>
-                        OTC offer{" "}
-                        <span className="text-app-success">filled</span>
+                        OTC offer <span className="text-app-success">filled</span>
                     </>
                 ) : (
                     <>
@@ -194,53 +171,27 @@ export default function TakeOfferModal({ model, setter, props }) {
                 </div>
                 <div className="grid gap-1 grid-cols-2 my-10 mb-0">
                     <div className="font-bold">MARKET</div>
-                    <div className={"text-right text-app-success"}>
-                        {currentMarket.name}
-                    </div>
+                    <div className={"text-right text-app-success"}>{currentMarket.name}</div>
                     <div className="font-bold">TYPE</div>
-                    <div
-                        className={`text-right ${offerDetails.isSell ? "text-app-error" : "text-app-success"} `}
-                    >
+                    <div className={`text-right ${offerDetails.isSell ? "text-app-error" : "text-app-success"} `}>
                         {offerDetails.isSell ? "SELL" : "BUY"}
                     </div>
                     <div className="font-bold">BLOCKCHAIN</div>
                     <div className={"text-right flex flex-row justify-end"}>
-                        <DynamicIcon
-                            name={NETWORKS[chainDesired?.id]}
-                            style={ButtonIconSize.hero4}
-                        />
+                        <DynamicIcon name={NETWORKS[chainDesired?.id]} style={ButtonIconSize.hero4} />
                         <span className={"truncate"}>{chainDesired?.name}</span>
                     </div>
                     <div className="font-bold">AMOUNT</div>
-                    <div
-                        className={
-                            "text-right text-ellipsis overflow-hidden block "
-                        }
-                    >
-                        ${cancelOfferAmount_parsed}
-                    </div>
+                    <div className={"text-right text-ellipsis overflow-hidden block "}>${cancelOfferAmount_parsed}</div>
                     <div className="font-bold">PRICE</div>
-                    <div
-                        className={
-                            "text-right text-ellipsis overflow-hidden block"
-                        }
-                    >
-                        ${cancelOfferPrice_parsed}
-                    </div>
+                    <div className={"text-right text-ellipsis overflow-hidden block"}>${cancelOfferPrice_parsed}</div>
                     <div className="font-bold">FEES</div>
                     <div className={"text-right"}>${otcFee}</div>
                     <hr />
                     <hr />
-                    <div className="font-bold text-gold pt-2">
-                        TOTAL PAYMENT
-                    </div>
+                    <div className="font-bold text-gold pt-2">TOTAL PAYMENT</div>
                     <div className={"flex justify-end text-gold pt-2"}>
-                        <DynamicIcon
-                            name={getCurrencySymbolByAddress(
-                                offerDetails.currency,
-                            )}
-                            style={"w-6"}
-                        />
+                        <DynamicIcon name={getCurrencySymbolByAddress(offerDetails.currency)} style={"w-6"} />
                         <span className={"ml-2"}>${totalPayment}</span>
                     </div>
                 </div>
@@ -252,14 +203,8 @@ export default function TakeOfferModal({ model, setter, props }) {
     const contentSuccess = () => {
         return (
             <div className=" flex flex-col flex-1">
-                <div
-                    className={
-                        "flex flex-1 flex-col justify-center items-center"
-                    }
-                >
-                    <div className={"-mt-10"}>
-                        You have successfully filled OTC offer.
-                    </div>
+                <div className={"flex flex-1 flex-col justify-center items-center"}>
+                    <div className={"-mt-10"}>You have successfully filled OTC offer.</div>
                     <Lottie
                         animationData={lottieSuccess}
                         loop={true}
@@ -275,12 +220,5 @@ export default function TakeOfferModal({ model, setter, props }) {
         return transactionSuccessful ? contentSuccess() : contentQuery();
     };
 
-    return (
-        <GenericRightModal
-            isOpen={model}
-            closeModal={() => closeModal()}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericRightModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />;
 }

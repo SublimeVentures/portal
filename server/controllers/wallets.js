@@ -17,10 +17,10 @@ async function getUserWallets(user) {
 async function addUserWallet(user, req) {
     try {
         const token = req.cookies[authTokenName];
-        const session = await axios.post(
-            `${process.env.AUTHER}/session/addWallet`,
-            { token, signature: req.body.signature },
-        );
+        const session = await axios.post(`${process.env.AUTHER}/session/addWallet`, {
+            token,
+            signature: req.body.signature,
+        });
         return session.data;
     } catch (error) {
         logger.error("addUserWallet", { error: serializeError(error) });
@@ -31,10 +31,10 @@ async function addUserWallet(user, req) {
 async function removeUserWallet(user, req) {
     try {
         const token = req.cookies[authTokenName];
-        const session = await axios.post(
-            `${process.env.AUTHER}/session/removeWallet`,
-            { token, signature: req.body.signature },
-        );
+        const session = await axios.post(`${process.env.AUTHER}/session/removeWallet`, {
+            token,
+            signature: req.body.signature,
+        });
         return session.data;
     } catch (error) {
         logger.error("removeUserWallet", { error: serializeError(error) });
@@ -45,10 +45,7 @@ async function removeUserWallet(user, req) {
 async function refreshStaking(req, address) {
     try {
         const token = req.cookies[authTokenName];
-        const session = await axios.post(
-            `${process.env.AUTHER}/session/stake`,
-            { token, address },
-        );
+        const session = await axios.post(`${process.env.AUTHER}/session/stake`, { token, address });
         return session.data;
     } catch (error) {
         logger.error("refreshStaking", { error: serializeError(error) });

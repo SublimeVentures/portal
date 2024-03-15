@@ -17,9 +17,7 @@ export default function Investors() {
                             isWide={true}
                             zoom={1.1}
                             size={"text-sm sm"}
-                            icon={
-                                <DiscordIcon className={ButtonIconSize.hero} />
-                            }
+                            icon={<DiscordIcon className={ButtonIconSize.hero} />}
                         />
                     </a>
 
@@ -33,9 +31,7 @@ export default function Investors() {
                             isWide={true}
                             zoom={1.1}
                             size={"text-sm sm"}
-                            icon={
-                                <TwitterIcon className={ButtonIconSize.hero} />
-                            }
+                            icon={<TwitterIcon className={ButtonIconSize.hero} />}
                         />
                     </a>
                 </div>

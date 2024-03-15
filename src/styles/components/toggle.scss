@@ -16,8 +16,8 @@
     --c-default-dark: #c7cbdf;
     --c-black: #1b1b22;
     display: table;
-    border-radius: var(--border-radius, 12px) var(--border-radius-corner, 12px)
-        var(--border-radius, 12px) var(--border-radius, 12px);
+    border-radius: var(--border-radius, 12px) var(--border-radius-corner, 12px) var(--border-radius, 12px)
+        var(--border-radius, 12px);
     position: relative;
     input {
         appearance: none;
@@ -77,8 +77,7 @@
             --top-s-y: 1;
             .top {
                 transform-origin: 12px -12px;
-                transform: translateY(var(--top-y))
-                    scale(var(--top-s-x), var(--top-s-y)) translateZ(0);
+                transform: translateY(var(--top-y)) scale(var(--top-s-x), var(--top-s-y)) translateZ(0);
             }
             .dot {
                 transform: translateY(var(--dot-y)) translateZ(0);
@@ -121,8 +120,7 @@
             }
             .dot {
                 transform-origin: 10.5px 15.5px;
-                transform: translate(var(--dot-x), var(--dot-y))
-                    scale(var(--dot-s)) translateZ(0);
+                transform: translate(var(--dot-x), var(--dot-y)) scale(var(--dot-s)) translateZ(0);
             }
             .drop {
                 transform-origin: 25px -1px;
@@ -155,8 +153,7 @@
     }
     .default {
         transform-origin: 12px 12px;
-        transform: translateX(var(--default-x)) scale(var(--default-s))
-            translateZ(0);
+        transform: translateX(var(--default-x)) scale(var(--default-s)) translateZ(0);
     }
     .dot {
         transform-origin: 26px 12px;

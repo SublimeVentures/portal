@@ -5,15 +5,8 @@ const {
     processMBUpgrade,
 } = require("../queries/mysterybox.query");
 const db = require("../services/db/definitions/db.init");
-const {
-    MYSTERYBOX_CLAIM_ERRORS,
-    PremiumItemsENUM,
-    MYSTERY_TYPES,
-} = require("../../src/lib/enum/store");
-const {
-    getStoreItemsOwnedByUser,
-    updateUserUpgradeAmount,
-} = require("../queries/storeUser.query");
+const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES } = require("../../src/lib/enum/store");
+const { getStoreItemsOwnedByUser, updateUserUpgradeAmount } = require("../queries/storeUser.query");
 const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
 const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
@@ -42,12 +35,7 @@ async function claim(user) {
     try {
         transaction = await db.transaction();
 
-        const isUserOwnMB = await getStoreItemsOwnedByUser(
-            userId,
-            tenantId,
-            PremiumItemsENUM.MysteryBox,
-            transaction,
-        );
+        const isUserOwnMB = await getStoreItemsOwnedByUser(userId, tenantId, PremiumItemsENUM.MysteryBox, transaction);
         if (!isUserOwnMB.ok || !(isUserOwnMB?.data?.amount > 0)) {
             await transaction.rollback();
             return {
@@ -66,11 +54,7 @@ async function claim(user) {
             };
         }
 
-        const assign = await assignMysteryBox(
-            userId,
-            selectedMysteryBox.data.id,
-            transaction,
-        );
+        const assign = await assignMysteryBox(userId, selectedMysteryBox.data.id, transaction);
         if (!assign.ok) {
             await transaction.rollback();
             return {
@@ -79,12 +63,7 @@ async function claim(user) {
             };
         }
 
-        const deduct = await updateUserUpgradeAmount(
-            userId,
-            isUserOwnMB.data.storePartnerId,
-            -1,
-            transaction,
-        );
+        const deduct = await updateUserUpgradeAmount(userId, isUserOwnMB.data.storePartnerId, -1, transaction);
 
         if (!deduct.ok) {
             await transaction.rollback();
@@ -94,11 +73,7 @@ async function claim(user) {
             };
         }
 
-        const final = await processMysteryBox(
-            userId,
-            selectedMysteryBox.data,
-            transaction,
-        );
+        const final = await processMysteryBox(userId, selectedMysteryBox.data, transaction);
         if (!final.ok) {
             await transaction.rollback();
             return { ok: false, error: final.error };

@@ -7,9 +7,7 @@ export default function LayoutApp({ children }) {
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
     const stakingEnabled = children.props?.session.stakingEnabled;
     const isStaked = children.props?.session.isStaked;
-    const stakingCurrency = !!activeCurrencyStaking
-        ? activeCurrencyStaking
-        : currencyStaking[0];
+    const stakingCurrency = !!activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
     return (
         <>
             {stakingEnabled && !isStaked && (
@@ -20,9 +18,7 @@ export default function LayoutApp({ children }) {
                 >
                     Investments are blocked!{" "}
                     <u>
-                        <Link href={routes.Settings}>
-                            Stake {stakingCurrency?.symbol} to unlock
-                        </Link>
+                        <Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link>
                     </u>
                     .
                 </div>

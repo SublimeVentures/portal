@@ -26,21 +26,17 @@ export default function ClaimMysteryBoxModal({ model, setter, claimData }) {
             case MYSTERY_TYPES.NFT: {
                 return (
                     <div>
-                        To redeem your NFT, all you need to do is head over to{" "}
-                        <br />
+                        To redeem your NFT, all you need to do is head over to <br />
                         our Discord and <Linker text={"create a ticket."} />
                         <br />
                         <span className={"text-app-error"}>
-                            Make sure to include your redeem code in the ticket
-                            message!
+                            Make sure to include your redeem code in the ticket message!
                         </span>
                         <br />
-                        It's a one-time-use code to claim your shiny new NFT, so
-                        don't share it with anyone - you risk losing your prize.{" "}
-                        <br />
+                        It's a one-time-use code to claim your shiny new NFT, so don't share it with anyone - you risk
+                        losing your prize. <br />
                         <span className={"text-app-error"}>
-                            The redeem code won't appear again, save it before
-                            closing!
+                            The redeem code won't appear again, save it before closing!
                         </span>
                     </div>
                 );
@@ -48,22 +44,17 @@ export default function ClaimMysteryBoxModal({ model, setter, claimData }) {
             case MYSTERY_TYPES.Discount: {
                 return (
                     <div>
-                        To redeem your discount, all you need to do is head over
-                        to <br />
+                        To redeem your discount, all you need to do is head over to <br />
                         our Discord and <Linker text={"create a ticket."} />
                         <br />
                         <span className={"text-app-error"}>
-                            Make sure to include your redeem code in the ticket
-                            message!
+                            Make sure to include your redeem code in the ticket message!
                         </span>
                         <br />
-                        It's a one-time-use code that ensures {item.discount}%
-                        discount on floor price of the {item.item}, so don't
-                        share it with anyone - you risk losing your prize.{" "}
-                        <br />
+                        It's a one-time-use code that ensures {item.discount}% discount on floor price of the{" "}
+                        {item.item}, so don't share it with anyone - you risk losing your prize. <br />
                         <span className={"text-app-error"}>
-                            The redeem code won't appear again, save it before
-                            closing!
+                            The redeem code won't appear again, save it before closing!
                         </span>
                     </div>
                 );
@@ -102,9 +93,7 @@ export default function ClaimMysteryBoxModal({ model, setter, claimData }) {
                                 <div className="rewards-container">
                                     <div className="card">
                                         <div className="card-content p-10 flex flex-col items-center">
-                                            <div
-                                                className={`spinningasset  ${claimData.type}`}
-                                            >
+                                            <div className={`spinningasset  ${claimData.type}`}>
                                                 <div>
                                                     <div></div>
                                                     <i></i>
@@ -125,22 +114,13 @@ export default function ClaimMysteryBoxModal({ model, setter, claimData }) {
                                             </div>
 
                                             <div className="reward-text mt-10 flex flex-col">
-                                                <div
-                                                    className={
-                                                        "text-xl text-app-success uppercase"
-                                                    }
-                                                >
+                                                <div className={"text-xl text-app-success uppercase"}>
                                                     {claimData.type}
                                                 </div>
                                                 <div>{claimData.name}</div>
                                                 {claimData?.code && (
-                                                    <div
-                                                        className={
-                                                            "text-app-success font-bold"
-                                                        }
-                                                    >
-                                                        REDEEM CODE: #
-                                                        {claimData.code}
+                                                    <div className={"text-app-success font-bold"}>
+                                                        REDEEM CODE: #{claimData.code}
                                                     </div>
                                                 )}
                                             </div>
@@ -149,9 +129,7 @@ export default function ClaimMysteryBoxModal({ model, setter, claimData }) {
                                 </div>
 
                                 <div className="reward-comments p-5">
-                                    <div
-                                        className={`text-3xl font-accent tracking-widest font-md colorText pb-5`}
-                                    >
+                                    <div className={`text-3xl font-accent tracking-widest font-md colorText pb-5`}>
                                         Congratulations
                                     </div>
                                     <div className={"text-app-white text-sm"}>

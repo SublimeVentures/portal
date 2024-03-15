@@ -5,13 +5,7 @@ const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
 
 async function fetchUpgradeUsed(userId, offerId, tenantId, transaction) {
     return await models.upgrade.findAll({
-        attributes: [
-            "amount",
-            "alloUsed",
-            "alloMax",
-            "isExpired",
-            [db.col("storePartner.storeId"), "id"],
-        ],
+        attributes: ["amount", "alloUsed", "alloMax", "isExpired", [db.col("storePartner.storeId"), "id"]],
         include: [
             {
                 model: models.storePartner,
@@ -35,14 +29,7 @@ async function fetchUpgradeUsed(userId, offerId, tenantId, transaction) {
     });
 }
 
-async function saveUpgradeUse(
-    userId,
-    storePartnerId,
-    offerId,
-    amount,
-    allocation,
-    transaction,
-) {
+async function saveUpgradeUse(userId, storePartnerId, offerId, amount, allocation, transaction) {
     const query = `
         INSERT INTO public."upgrade" ("userId", "storePartnerId", "offerId", "amount",  "alloMax", "createdAt", "updatedAt")
         VALUES (${userId}, ${storePartnerId}, ${offerId}, ${amount}, ${allocation ? allocation : 0}, now(), now())

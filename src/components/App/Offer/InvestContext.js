@@ -72,9 +72,5 @@ export const InvestProvider = ({ children, initialData }) => {
         getSavedBooking,
     };
 
-    return (
-        <InvestContext.Provider value={value}>
-            {children}
-        </InvestContext.Provider>
-    );
+    return <InvestContext.Provider value={value}>{children}</InvestContext.Provider>;
 };

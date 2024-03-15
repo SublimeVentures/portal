@@ -160,12 +160,7 @@ const seoCyberKongz = (page) => {
             );
         }
         case PAGE.Tokenomics: {
-            return generateSeo(
-                "KongzCapital - tokenomics",
-                "How it works",
-                template_CyberKongz,
-                page,
-            );
+            return generateSeo("KongzCapital - tokenomics", "How it works", template_CyberKongz, page);
         }
         case PAGE.ToS: {
             return generateSeo(

@@ -138,9 +138,7 @@ export default function AppOtc({ session }) {
                                 isWide={true}
                                 size={"text-sm sm"}
                                 handler={openGuide}
-                                icon={
-                                    <ReadIcon className={ButtonIconSize.hero} />
-                                }
+                                icon={<ReadIcon className={ButtonIconSize.hero} />}
                             />
                         }
                     />

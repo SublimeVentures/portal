@@ -11,12 +11,8 @@ const TENANTS_ERROR = () => {
                     <div className="mb-5">
                         Connected account does not hold any:
                         <ul className={"list-disc ml-5"}>
-                            <li className={"text-app-success font-bold"}>
-                                basedVC Whale ID
-                            </li>
-                            <li className={"text-app-success"}>
-                                basedVC Partner's NFT
-                            </li>
+                            <li className={"text-app-success font-bold"}>basedVC Whale ID</li>
+                            <li className={"text-app-success"}>basedVC Partner's NFT</li>
                         </ul>
                     </div>
                     <div>
@@ -33,9 +29,7 @@ const TENANTS_ERROR = () => {
                         <i>You filthy meatbag, only chosen ones can pass!</i>
                         <br />
                         <br />
-                        <div className={"text-app-error"}>
-                            Neo Tokyo Citizen NFT not detected...
-                        </div>
+                        <div className={"text-app-error"}>Neo Tokyo Citizen NFT not detected...</div>
                     </div>
                     <div>
                         <Linker url={ExternalLinks.HOW_TO_ACCESS} />
@@ -48,9 +42,7 @@ const TENANTS_ERROR = () => {
                 <>
                     <div className="mb-5">
                         You were stopped by <strong>THE KONG</strong>.<br />
-                        <div className={"text-app-error"}>
-                            CyberKongz NFT not detected...
-                        </div>
+                        <div className={"text-app-error"}>CyberKongz NFT not detected...</div>
                     </div>
                     <div>
                         <Linker url={ExternalLinks.HOW_TO_ACCESS} />
@@ -70,12 +62,5 @@ export default function ErrorModal({ model, setter }) {
         );
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={setter}
-            title={title()}
-            content={TENANTS_ERROR()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={TENANTS_ERROR()} />;
 }

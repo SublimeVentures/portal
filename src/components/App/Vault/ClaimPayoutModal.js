@@ -33,17 +33,12 @@ export const blockchainPrerequisite = async (params) => {
 
 export default function ClaimPayoutModal({ model, setter, props }) {
     const { name, currency, nextPayout, refetchVault } = props;
-    const { getCurrencySettlement, account, network, activeInvestContract } =
-        useEnvironmentContext();
+    const { getCurrencySettlement, account, network, activeInvestContract } = useEnvironmentContext();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     console.log("propsprops", props);
-    const chainDesired = network.chains.find(
-        (el) => el.id === currency?.chainId,
-    );
-    const token = useGetToken(
-        currency?.contract || getCurrencySettlement()[0].contract,
-    );
+    const chainDesired = network.chains.find((el) => el.id === currency?.chainId);
+    const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -108,18 +103,14 @@ export default function ClaimPayoutModal({ model, setter, props }) {
         return (
             <div className="flex flex-col flex-1">
                 <div>
-                    Confirm payout claim for{" "}
-                    <span className={"font-bold text-gold"}>{name}</span>.
+                    Confirm payout claim for <span className={"font-bold text-gold"}>{name}</span>.
                 </div>
                 <div className={"flex flex-1 flex-col py-5"}>
                     <div className={"detailRow"}>
                         <p className={"font-bold"}>NETWORK</p>
                         <hr className={"spacer"} />
                         <p className={"flex gap-1 h-[18px] font-mono"}>
-                            <DynamicIcon
-                                name={NETWORKS[currency?.chainId]}
-                                style={ButtonIconSize.clicksLow}
-                            />
+                            <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />
                             {chainDesired.name}
                         </p>
                     </div>
@@ -127,10 +118,7 @@ export default function ClaimPayoutModal({ model, setter, props }) {
                         <p>CLAIM</p>
                         <hr className={"spacer"} />
                         <p className={"font-mono"}>
-                            {Number(nextPayout?.amount).toLocaleString(
-                                undefined,
-                                { minimumFractionDigits: 2 },
-                            )}{" "}
+                            {Number(nextPayout?.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}{" "}
                             {currency?.symbol}
                         </p>
                     </div>
@@ -143,17 +131,9 @@ export default function ClaimPayoutModal({ model, setter, props }) {
     const contentSuccess = () => {
         return (
             <div className="flex flex-col flex-1">
-                <div
-                    className={
-                        "flex flex-1 flex-col justify-center items-center"
-                    }
-                >
+                <div className={"flex flex-1 flex-col justify-center items-center"}>
                     <div className={""}>
-                        Thank you for investing with{" "}
-                        <span className={"font-bold text-gold"}>
-                            {getCopy("NAME")}
-                        </span>
-                        .
+                        Thank you for investing with <span className={"font-bold text-gold"}>{getCopy("NAME")}</span>.
                     </div>
                     <Lottie
                         animationData={lottieSuccess}
@@ -170,12 +150,5 @@ export default function ClaimPayoutModal({ model, setter, props }) {
         return transactionSuccessful ? contentSuccess() : contentQuery();
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={() => closeModal()}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />;
 }

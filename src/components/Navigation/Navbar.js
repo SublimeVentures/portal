@@ -51,44 +51,26 @@ export default function Navbar() {
         if (isBased) {
             if (!el.isExternal)
                 return (
-                    <Link
-                        href={el.link}
-                        key={i}
-                        className="mx-5 cursor-pointer underlineHover"
-                    >
+                    <Link href={el.link} key={i} className="mx-5 cursor-pointer underlineHover">
                         {el.name}
                     </Link>
                 );
             else
                 return (
-                    <a
-                        href={el.link}
-                        key={i}
-                        target="_blank"
-                        className="mx-5 cursor-pointer underlineHover"
-                    >
+                    <a href={el.link} key={i} target="_blank" className="mx-5 cursor-pointer underlineHover">
                         {el.name}
                     </a>
                 );
         } else {
             if (!el.isExternal)
                 return (
-                    <Link
-                        href={el.link}
-                        key={i}
-                        className="mx-3 cursor-pointer "
-                    >
+                    <Link href={el.link} key={i} className="mx-3 cursor-pointer ">
                         <CitCapGlitchButton text={`_${el.name}`} />
                     </Link>
                 );
             else
                 return (
-                    <a
-                        href={el.link}
-                        key={i}
-                        target="_blank"
-                        className="mx-3 cursor-pointer "
-                    >
+                    <a href={el.link} key={i} target="_blank" className="mx-3 cursor-pointer ">
                         <CitCapGlitchButton text={`_${el.name}`} />
                     </a>
                 );
@@ -107,21 +89,12 @@ export default function Navbar() {
                 ${!isOnTop || isMobileOpen ? "blurredBG" : ""} 
                 flex flex-row items-center w-full  px-10 navShadow `}
             >
-                <Link
-                    href="/"
-                    onClick={disableMobile}
-                    className={`${isBased ? "absolute" : ""} z-20`}
-                >
+                <Link href="/" onClick={disableMobile} className={`${isBased ? "absolute" : ""} z-20`}>
                     <div className={`flex`}>
-                        <DynamicIcon
-                            name={`logo_${process.env.NEXT_PUBLIC_TENANT}`}
-                            style={"w-17 text-white"}
-                        />
+                        <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />
                     </div>
                 </Link>
-                <div
-                    className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}
-                >
+                <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
                     })}
@@ -133,11 +106,7 @@ export default function Navbar() {
                             <div></div>
                         </div>
                         <label>
-                            <input
-                                type="checkbox"
-                                id="check"
-                                defaultChecked={isMobileOpen}
-                            />
+                            <input type="checkbox" id="check" defaultChecked={isMobileOpen} />
                             <span></span>
                             <span></span>
                             <span></span>

@@ -34,9 +34,7 @@ export default function InvestmentsPublic() {
                                     className="tile-primary-content bgFit"
                                     style={{
                                         backgroundImage:
-                                            "url(https://cdn.basedvc.fund/research/" +
-                                            el.slug +
-                                            "/logo.jpg)",
+                                            "url(https://cdn.basedvc.fund/research/" + el.slug + "/logo.jpg)",
                                     }}
                                 ></div>
                                 <div className="tile-secondary-content">

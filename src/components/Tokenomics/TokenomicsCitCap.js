@@ -1,9 +1,6 @@
 import Linker from "@/components/link";
 import PAGE, { ExternalLinks } from "@/routes";
-import {
-    ButtonCitCapIconSize,
-    CitCapButton,
-} from "@/components/Button/CitCapButton";
+import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import PlayIcon from "@/assets/svg/Play.svg";
 import Link from "next/link";
 import Input from "@/components/App/Input";
@@ -75,13 +72,11 @@ export default function TokenomicsCitCap({}) {
             }));
             setStakeLengthLabel(stakeLength_final);
 
-            const allocationBase_final = Object.keys(allocationBase).map(
-                (key) => ({
-                    label: `${CITIZENS_NAME[key]}`,
-                    key: allocationBase[key],
-                    value: CITIZENS[key],
-                }),
-            );
+            const allocationBase_final = Object.keys(allocationBase).map((key) => ({
+                label: `${CITIZENS_NAME[key]}`,
+                key: allocationBase[key],
+                value: CITIZENS[key],
+            }));
             setCitizenTypeLabel(allocationBase_final);
         }
     };
@@ -93,23 +88,14 @@ export default function TokenomicsCitCap({}) {
         // console.log("calc - stake length",stakeLength)
         // console.log("calc - bytes Held",bytesHeld)
         // console.log("calc - bytes staked",bytesStaked)
-        const allocationBase = Math.ceil(
-            (citizenType?.key * 10000 * investmentAllocation) / 10000,
-        );
-        const nft =
-            citizenType?.value > CITIZENS.S1 ? alloTrait?.key : rewardRate?.key;
+        const allocationBase = Math.ceil((citizenType?.key * 10000 * investmentAllocation) / 10000);
+        const nft = citizenType?.value > CITIZENS.S1 ? alloTrait?.key : rewardRate?.key;
         const allocationBonus =
-            ((stakeLength?.key * Number(bytesStaked) +
-                200 +
-                Number(bytesHeld) * 0.25) *
-                (nft * 10)) /
-            10;
+            ((stakeLength?.key * Number(bytesStaked) + 200 + Number(bytesHeld) * 0.25) * (nft * 10)) / 10;
         // console.log("calc - BYTES STAKED", (stakeLength?.key * Number(bytesStaked)))
         setAllocationBase(Number(allocationBase).toLocaleString());
         setAllocationBonus(Number(allocationBonus).toLocaleString());
-        const total =
-            Math.floor((allocationBonus + allocationBase) / MIN_DIVISIBLE) *
-            MIN_DIVISIBLE;
+        const total = Math.floor((allocationBonus + allocationBase) / MIN_DIVISIBLE) * MIN_DIVISIBLE;
         setAllocationTotal(Number(total).toLocaleString());
         // console.log("============")
         // console.log("calc - allocationBase",allocationBase)
@@ -135,50 +121,27 @@ export default function TokenomicsCitCap({}) {
     ]);
 
     return (
-        <div
-            className={
-                "flex flex-1 justify-between flex-wrap gap-10 max-w-[1000px]"
-            }
-        >
+        <div className={"flex flex-1 justify-between flex-wrap gap-10 max-w-[1000px]"}>
             <div className="flex flex-col p-10 sm:p-20 w-full  font-accent blurred glareBg bg-black">
                 <div className="flex flex-col flex-1 ">
-                    <div className={"pb-2"}>
-                        Use the calculator below to check your maximum
-                        allocation.
-                    </div>
+                    <div className={"pb-2"}>Use the calculator below to check your maximum allocation.</div>
                 </div>
                 <div className=" flex flex-1 flex-col gap-5 custom:flex-row">
                     <div className=" flex flex-1 flex-col mt-[1px]">
                         <div className={"pt-10"}>
-                            <Select
-                                options={citizenTypeLabel}
-                                setter={setCitizenType}
-                                label={"Citizen"}
-                            />
+                            <Select options={citizenTypeLabel} setter={setCitizenType} label={"Citizen"} />
                         </div>
                         {citizenType?.value < CITIZENS.S2 ? (
                             <div className={"pt-10"}>
-                                <Select
-                                    options={rewardRateLabel}
-                                    setter={setRewardRate}
-                                    label={"Reward rate"}
-                                />
+                                <Select options={rewardRateLabel} setter={setRewardRate} label={"Reward rate"} />
                             </div>
                         ) : (
                             <div className={"pt-10"}>
-                                <Select
-                                    options={alloTraitLabel}
-                                    setter={setAlloTrait}
-                                    label={"Allocation trait"}
-                                />
+                                <Select options={alloTraitLabel} setter={setAlloTrait} label={"Allocation trait"} />
                             </div>
                         )}
                         <div className={"pt-10"}>
-                            <Select
-                                options={stakeLengthLabel}
-                                setter={setStakeLength}
-                                label={"Citizen stake period"}
-                            />
+                            <Select options={stakeLengthLabel} setter={setStakeLength} label={"Citizen stake period"} />
                         </div>
                     </div>
                     <div className=" flex flex-1 flex-col">
@@ -225,43 +188,24 @@ export default function TokenomicsCitCap({}) {
                 </div>
                 <div className={"mt-10 text-center text-xl"}>
                     <span className={""}>Maximum allocation </span>
-                    <span className={"font-bold text-gold"}>
-                        ${allocationTotal || 0}
-                    </span>
+                    <span className={"font-bold text-gold"}>${allocationTotal || 0}</span>
                 </div>
-                <div
-                    className={
-                        "flex flex-col gap-0 md:flex-row md:gap-10 justify-center mt-10"
-                    }
-                >
+                <div className={"flex flex-col gap-0 md:flex-row md:gap-10 justify-center mt-10"}>
                     <div className={"flex"}>
-                        <Link
-                            href={PAGE.Login}
-                            className={"flex min-w-[200px] "}
-                        >
+                        <Link href={PAGE.Login} className={"flex min-w-[200px] "}>
                             <CitCapButton
                                 text={"LOGIN"}
                                 isWhite={true}
-                                icon={
-                                    <PlayIcon
-                                        className={ButtonCitCapIconSize.hero}
-                                    />
-                                }
+                                icon={<PlayIcon className={ButtonCitCapIconSize.hero} />}
                             />
                         </Link>
                     </div>
                     <div className={""}>
                         <div className={""}>
-                            <Linker
-                                url={ExternalLinks.GETBYTES}
-                                text={"Get BYTES"}
-                            />
+                            <Linker url={ExternalLinks.GETBYTES} text={"Get BYTES"} />
                         </div>
                         <div className={""}>
-                            <Linker
-                                url={ExternalLinks.STAKE_NT}
-                                text={"Stake in Bank of Neo Tokyo"}
-                            />
+                            <Linker url={ExternalLinks.STAKE_NT} text={"Stake in Bank of Neo Tokyo"} />
                         </div>
                     </div>
                 </div>

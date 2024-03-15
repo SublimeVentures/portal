@@ -234,13 +234,7 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(
-                circle at center,
-                transparent 0%,
-                transparent 60%,
-                #0e1118 70%,
-                #0e1118 100%
-            ),
+        background: radial-gradient(circle at center, transparent 0%, transparent 60%, #0e1118 70%, #0e1118 100%),
             linear-gradient(transparent, transparent);
         z-index: 1;
     }

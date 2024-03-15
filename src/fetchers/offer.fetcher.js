@@ -78,9 +78,7 @@ export const fetchOfferAllocationSsr = async (id, token) => {
 export const useUpgrade = async (offerId, upgradeId) => {
     if (!offerId || !upgradeId) return {};
     try {
-        const { data } = await axiosPrivate.get(
-            `${API.offerList}/${offerId}/upgrade/${upgradeId}`,
-        );
+        const { data } = await axiosPrivate.get(`${API.offerList}/${offerId}/upgrade/${upgradeId}`);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {

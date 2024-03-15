@@ -15,46 +15,31 @@ function useBlockchainButton(steps, state, params, extraState) {
                 lock: params.buttonCustomLock,
             };
         }
-        if (
-            steps.network &&
-            extraState?.stepNetwork?.state === STEP_STATE.PROCESSING
-        ) {
+        if (steps.network && extraState?.stepNetwork?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Processing.",
                 lock: true,
             };
         }
-        if (
-            steps.liquidity &&
-            extraState?.stepLiquidity?.state === STEP_STATE.PROCESSING
-        ) {
+        if (steps.liquidity && extraState?.stepLiquidity?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Processing..",
                 lock: true,
             };
         }
-        if (
-            steps.allowance &&
-            extraState?.stepAllowance?.state === STEP_STATE.PROCESSING
-        ) {
+        if (steps.allowance && extraState?.stepAllowance?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Processing...",
                 lock: true,
             };
         }
-        if (
-            steps.prerequisite &&
-            extraState?.stepPrerequisite?.state === STEP_STATE.PROCESSING
-        ) {
+        if (steps.prerequisite && extraState?.stepPrerequisite?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Processing....",
                 lock: true,
             };
         }
-        if (
-            steps.transaction &&
-            extraState?.stepTransaction?.state === STEP_STATE.PROCESSING
-        ) {
+        if (steps.transaction && extraState?.stepTransaction?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Processing....",
                 lock: true,

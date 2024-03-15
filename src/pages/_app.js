@@ -29,8 +29,7 @@ switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
 
 export default function App({ Component, pageProps: { ...pageProps } }) {
     const { environmentData } = pageProps;
-    const renderWithLayout =
-        Component.getLayout || ((page) => <Layout>{page}</Layout>);
+    const renderWithLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
     return (
         <>

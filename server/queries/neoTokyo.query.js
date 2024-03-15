@@ -10,12 +10,7 @@ async function getNeoTokyoEnvs() {
             attributes: ["valueJSON"],
             where: {
                 name: {
-                    [Op.in]: [
-                        "rewardRate",
-                        "allocationTrait",
-                        "stakingTimelock",
-                        "allocationBase",
-                    ],
+                    [Op.in]: ["rewardRate", "allocationTrait", "stakingTimelock", "allocationBase"],
                 },
                 partnerId: TENANT.NeoTokyo,
             },

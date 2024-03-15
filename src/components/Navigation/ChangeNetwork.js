@@ -23,10 +23,7 @@ export default function ChangeNetwork() {
     const content = () => {
         return (
             <div>
-                Currently our platform{" "}
-                <span className="text-gold">
-                    supports {chains?.length} chains
-                </span>
+                Currently our platform <span className="text-gold">supports {chains?.length} chains</span>
                 .<br />
                 Please switch to one of these to continue.
                 <div className="flex flex-col mt-10 gap-5 fullWidth items-center fullWidthButton">
@@ -42,18 +39,11 @@ export default function ChangeNetwork() {
                             zoom={1.05}
                             size={"text-sm sm"}
                             isDisabled={isLoading && !error}
-                            icon={
-                                <DynamicIcon
-                                    name={NETWORKS[x?.id]}
-                                    style={ButtonIconSize.hero4}
-                                />
-                            }
+                            icon={<DynamicIcon name={NETWORKS[x?.id]} style={ButtonIconSize.hero4} />}
                         />
                     ))}
                 </div>
-                <div className="text-app-error text-center h-[26px]">
-                    {error && error.shortMessage}
-                </div>
+                <div className="text-app-error text-center h-[26px]">{error && error.shortMessage}</div>
             </div>
         );
     };

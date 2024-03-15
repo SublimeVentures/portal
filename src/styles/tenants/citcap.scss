@@ -95,26 +95,20 @@ body {
 
     &.pending {
         background:
-            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box
-                padding-box,
-            linear-gradient(rgb(42, 172, 198), rgba(42, 172, 198, 0.2))
-                border-box border-box;
+            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box,
+            linear-gradient(rgb(42, 172, 198), rgba(42, 172, 198, 0.2)) border-box border-box;
     }
 
     &.inprogress {
         background:
-            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box
-                padding-box,
-            linear-gradient(rgb(245, 164, 0), rgba(245, 164, 0, 0.2)) border-box
-                border-box;
+            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box,
+            linear-gradient(rgb(245, 164, 0), rgba(245, 164, 0, 0.2)) border-box border-box;
     }
 
     &.closed {
         background:
-            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box
-                padding-box,
-            linear-gradient(rgb(88, 104, 233), rgba(88, 104, 233, 0.2))
-                border-box border-box;
+            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box,
+            linear-gradient(rgb(88, 104, 233), rgba(88, 104, 233, 0.2)) border-box border-box;
     }
 }
 
@@ -137,11 +131,7 @@ body {
     .rewards {
         .rewards-container {
             .card-content {
-                background: linear-gradient(
-                    180deg,
-                    #242547 0%,
-                    rgba(0, 0, 0, 0.2) 100%
-                );
+                background: linear-gradient(180deg, #242547 0%, rgba(0, 0, 0, 0.2) 100%);
             }
         }
     }

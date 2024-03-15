@@ -21,14 +21,7 @@ import { METHOD } from "@/components/BlockchainSteps/utils";
 
 export const blockchainPrerequisite = async (params) => {
     const { market, price, amount, isSeller, account, network } = params;
-    const transaction = await saveTransaction(
-        market.offerId,
-        network?.chainId,
-        price,
-        amount,
-        isSeller,
-        account,
-    );
+    const transaction = await saveTransaction(market.offerId, network?.chainId, price, amount, isSeller, account);
     if (transaction.ok) {
         return {
             ok: true,
@@ -49,12 +42,9 @@ const TABS = {
 
 export default function MakeOfferModal({ model, setter, props }) {
     const { currentMarket, allocation, refetchVault, refetchOffers } = props;
-    const { getCurrencySettlement, account, activeOtcContract, network } =
-        useEnvironmentContext();
+    const { getCurrencySettlement, account, activeOtcContract, network } = useEnvironmentContext();
 
-    const allocationMax = allocation
-        ? allocation.invested - allocation.locked
-        : 0;
+    const allocationMax = allocation ? allocation.invested - allocation.locked : 0;
 
     const [selectedTab, setSelectedTab] = useState(TABS.BUY);
     const [selectedCurrency, setSelectedCurrency] = useState({});
@@ -130,15 +120,7 @@ export default function MakeOfferModal({ model, setter, props }) {
             token,
             setTransactionSuccessful,
         };
-    }, [
-        selectedCurrency?.contract,
-        price,
-        amount,
-        account,
-        activeOtcContract,
-        model,
-        text,
-    ]);
+    }, [selectedCurrency?.contract, price, amount, account, activeOtcContract, model, text]);
 
     const blockchainInteractionDataBUY = useMemo(() => {
         console.log("BIX :: BUTTON STATE locked - refresh");
@@ -170,15 +152,7 @@ export default function MakeOfferModal({ model, setter, props }) {
             token,
             setTransactionSuccessful,
         };
-    }, [
-        selectedCurrency?.contract,
-        price,
-        amount,
-        account,
-        activeOtcContract,
-        model,
-        text,
-    ]);
+    }, [selectedCurrency?.contract, price, amount, account, activeOtcContract, model, text]);
 
     const closeModal = async () => {
         refetchVault();
@@ -222,13 +196,11 @@ export default function MakeOfferModal({ model, setter, props }) {
             <>
                 {!!transactionSuccessful ? (
                     <>
-                        OTC offer{" "}
-                        <span className="text-app-success">created</span>
+                        OTC offer <span className="text-app-success">created</span>
                     </>
                 ) : (
                     <>
-                        <span className="text-app-success">Create</span> OTC
-                        offer
+                        <span className="text-app-success">Create</span> OTC offer
                     </>
                 )}
             </>
@@ -243,11 +215,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                     <span className="text-app-success font-bold">
                         {textCopy} ${amount}
                     </span>{" "}
-                    allocation in{" "}
-                    <span className="font-bold text-app-success">
-                        {currentMarket.name}
-                    </span>
-                    .
+                    allocation in <span className="font-bold text-app-success">{currentMarket.name}</span>.
                 </div>
                 <div className={"flex flex-1 justify-center items-center"}>
                     <Lottie
@@ -260,11 +228,7 @@ export default function MakeOfferModal({ model, setter, props }) {
 
                 <div className="mt-auto fullWidth pb-5">
                     <div className="flex flex-1 justify-center items-center ">
-                        <a
-                            href={ExternalLinks.OTC_ANNOUNCE}
-                            target={"_blank"}
-                            className={"w-full"}
-                        >
+                        <a href={ExternalLinks.OTC_ANNOUNCE} target={"_blank"} className={"w-full"}>
                             <RoundButton
                                 text={"Announce"}
                                 isLoading={false}
@@ -273,18 +237,13 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 isWide={true}
                                 zoom={1.1}
                                 size={"text-sm sm"}
-                                icon={
-                                    <IconDiscord
-                                        className={ButtonIconSize.hero}
-                                    />
-                                }
+                                icon={<IconDiscord className={ButtonIconSize.hero} />}
                             />
                         </a>
                     </div>
                 </div>
                 <div className="absolute -bottom-6 w-full text-center">
-                    <Linker url={ExternalLinks.OTC} />{" "}
-                    <span className={"ml-5"}>before creating an offer.</span>
+                    <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span>
                 </div>
             </div>
         );
@@ -333,11 +292,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 after={"USD"}
                             />
                         </div>
-                        <div
-                            className={
-                                "py-10 flex flex-row justify-center items-center select-none"
-                            }
-                        >
+                        <div className={"py-10 flex flex-row justify-center items-center select-none"}>
                             <IconButton
                                 zoom={1.1}
                                 size={""}
@@ -348,10 +303,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                             <div
                                 className={`px-6 font-bold tabular-nums transition-colors duration-300 text-2xl ${multiplier > 1 ? " text-app-success" : " text-app-error"}`}
                             >
-                                x
-                                <span className={"text-4xl"}>
-                                    {multiplierParsed}
-                                </span>
+                                x<span className={"text-4xl"}>{multiplierParsed}</span>
                             </div>
                             <IconButton
                                 zoom={1.1}
@@ -385,22 +337,13 @@ export default function MakeOfferModal({ model, setter, props }) {
                 </AnimatePresence>
                 {model && (
                     <div className={"flex flex-1 flex-col"}>
-                        {isSeller && (
-                            <BlockchainSteps
-                                data={blockchainInteractionDataSELL}
-                            />
-                        )}
-                        {!isSeller && (
-                            <BlockchainSteps
-                                data={blockchainInteractionDataBUY}
-                            />
-                        )}
+                        {isSeller && <BlockchainSteps data={blockchainInteractionDataSELL} />}
+                        {!isSeller && <BlockchainSteps data={blockchainInteractionDataBUY} />}
                     </div>
                 )}
 
                 <div className="absolute -bottom-6 w-full text-center">
-                    <Linker url={ExternalLinks.OTC} />{" "}
-                    <span className={"ml-5"}>before creating an offer.</span>
+                    <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span>
                 </div>
             </div>
         );

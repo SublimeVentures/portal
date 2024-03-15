@@ -29,22 +29,17 @@ export function timeUntilNextUnstakeWindow(stakedAt, staked) {
     let periodPosition = timeSinceStaked % PERIOD_LENGTH;
 
     if (periodPosition >= PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH) {
-        let timeUntilNextRestake =
-            (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
-        let timeUntilNextRestakeHours =
-            (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
+        let timeUntilNextRestake = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
+        let timeUntilNextRestakeHours = (PERIOD_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
         return {
             unstake: true,
             nextDate: timeUntilNextRestake.toFixed(0),
             nextDateH: timeUntilNextRestakeHours.toFixed(0),
         };
     } else {
-        let timeUntilUnstakeWindow =
-            (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) /
-            SECONDS_IN_A_DAY;
+        let timeUntilUnstakeWindow = (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
         let timeUntilUnstakeWindowHours =
-            (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) /
-            SECONDS_IN_A_HOUR;
+            (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
         return {
             unstake: false,
             nextDate: timeUntilUnstakeWindow.toFixed(0),

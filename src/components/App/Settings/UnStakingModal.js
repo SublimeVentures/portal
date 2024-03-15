@@ -5,11 +5,7 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import { getCopy } from "@/lib/seoConfig";
 
-export default function CitCapStakingModal({
-    model,
-    setter,
-    stakingModalProps,
-}) {
+export default function CitCapStakingModal({ model, setter, stakingModalProps }) {
     const { stakeSize, stakingCurrency } = stakingModalProps;
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
@@ -45,8 +41,7 @@ export default function CitCapStakingModal({
     const title = () => {
         return (
             <>
-                <span className="text-app-error">UnStake</span>{" "}
-                {stakingCurrency.symbol}
+                <span className="text-app-error">UnStake</span> {stakingCurrency.symbol}
             </>
         );
     };
@@ -55,12 +50,8 @@ export default function CitCapStakingModal({
         return (
             <div className={"min-w-[300px]"}>
                 <div>
-                    To partake in{" "}
-                    <span className={"inline-block text-app-success"}>
-                        {getCopy("NAME")}
-                    </span>{" "}
-                    investments, every investor must stake{" "}
-                    {stakingCurrency.symbol}.
+                    To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span>{" "}
+                    investments, every investor must stake {stakingCurrency.symbol}.
                 </div>
                 <div className={"my-5"}>
                     <div className={"detailRow"}>
@@ -79,9 +70,7 @@ export default function CitCapStakingModal({
     const contentSuccess = () => {
         return (
             <div className={"min-w-[300px]"}>
-                <div className={"text-app-success"}>
-                    {stakingCurrency.symbol} unstaked successfully.
-                </div>
+                <div className={"text-app-success"}>{stakingCurrency.symbol} unstaked successfully.</div>
             </div>
         );
     };
@@ -90,12 +79,5 @@ export default function CitCapStakingModal({
         return transactionSuccessful ? contentSuccess() : contentStake();
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={closeModal}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} />;
 }

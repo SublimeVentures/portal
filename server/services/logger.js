@@ -22,8 +22,7 @@ module.exports = createLogger({
                 utilFormatter(), // <-- this is what changed
                 format.colorize(),
                 format.printf(
-                    ({ level, message, label, timestamp }) =>
-                        `${timestamp} ${label || "-"} ${level}: ${message}`,
+                    ({ level, message, label, timestamp }) => `${timestamp} ${label || "-"} ${level}: ${message}`,
                 ),
             ),
         }),

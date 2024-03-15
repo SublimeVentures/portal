@@ -14,22 +14,14 @@ export default function VaultItem({ item, passData }) {
     const { createdAt, invested, tge, ppu, claimed, isManaged } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD");
-    const normalized_tgeDiff = Number(
-        (100 * (tge - ppu)) / ppu,
-    )?.toLocaleString(undefined, { minimumFractionDigits: 2 });
+    const normalized_tgeDiff = Number((100 * (tge - ppu)) / ppu)?.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+    });
     const normalized_invested = Number(invested).toLocaleString();
     const tgeParsed = tge > 0 ? `+${normalized_tgeDiff}%` : "TBA";
 
-    const {
-        vestedPercentage,
-        nextUnlock,
-        nextSnapshot,
-        nextClaim,
-        isInstant,
-        isSoon,
-        claimStage,
-        payoutId,
-    } = parseVesting(item.t_unlock);
+    const { vestedPercentage, nextUnlock, nextSnapshot, nextClaim, isInstant, isSoon, claimStage, payoutId } =
+        parseVesting(item.t_unlock);
     const test = parseVesting(item.t_unlock);
     const awaitngClaim = claimed === 0 && payoutId > 0;
     const performance = (claimed / invested) * 100;
@@ -77,9 +69,7 @@ export default function VaultItem({ item, passData }) {
                         </div>
                     )}
                 </div>
-                <div className="pt-1 text-xs text-gray text-left">
-                    Participated {participated}
-                </div>
+                <div className="pt-1 text-xs text-gray text-left">Participated {participated}</div>
 
                 <div className={`${isBased ? "" : "font-accent"} text-md pt-2`}>
                     <div className={"detailRow "}>
@@ -124,10 +114,7 @@ export default function VaultItem({ item, passData }) {
 
                 <div className="moreVault opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">
                     <div className="flex items-center justify-center moreVaultIcon">
-                        <div
-                            className="icon z-10 w-15 h-15 cursor-pointer"
-                            onClick={() => passData(setPassData())}
-                        >
+                        <div className="icon z-10 w-15 h-15 cursor-pointer" onClick={() => passData(setPassData())}>
                             <IconMore className="w-8" />
                         </div>
                     </div>

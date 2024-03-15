@@ -52,11 +52,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         currencyStaking,
     } = environmentProps;
 
-    const {
-        isConnected: accountIsConnected,
-        address: accountAddress,
-        chain,
-    } = useAccount();
+    const { isConnected: accountIsConnected, address: accountAddress, chain } = useAccount();
 
     const {
         error: networkError,
@@ -143,9 +139,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
                 },
                 {
                     path: "activeCurrencyStaking",
-                    value: currencyStaking.find(
-                        (el) => el.chainId === chain?.id,
-                    ),
+                    value: currencyStaking.find((el) => el.chainId === chain?.id),
                 },
             ],
             "set network and account environment",
@@ -180,9 +174,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
     const getCurrencySettlement = () => {
         if (networkProp.isSupported) {
             return Object.values(currencies).filter(
-                (currency) =>
-                    currency.chainId === networkProp?.chainId &&
-                    currency.isSettlement,
+                (currency) => currency.chainId === networkProp?.chainId && currency.isSettlement,
             );
         } else {
             return [{ symbol: "..." }];
@@ -190,17 +182,12 @@ export const EnvironmentProvider = ({ children, initialData }) => {
     };
 
     const getCurrencyStore = () => {
-        if (Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC)
-            return getCurrencySettlement();
+        if (Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) return getCurrencySettlement();
         if (networkProp.isSupported) {
             const preferred = Object.values(currencies).filter(
-                (currency) =>
-                    currency.chainId === networkProp?.chainId &&
-                    currency.isStore,
+                (currency) => currency.chainId === networkProp?.chainId && currency.isStore,
             );
-            const fallback = Object.values(currencies).filter(
-                (currency) => currency.isStore,
-            );
+            const fallback = Object.values(currencies).filter((currency) => currency.isStore);
             return preferred.length > 0 ? preferred : fallback;
         } else {
             return [{ symbol: "..." }];
@@ -264,9 +251,5 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         updateEnvironmentProps,
     };
 
-    return (
-        <EnvironmentContext.Provider value={value}>
-            {children}
-        </EnvironmentContext.Provider>
-    );
+    return <EnvironmentContext.Provider value={value}>{children}</EnvironmentContext.Provider>;
 };

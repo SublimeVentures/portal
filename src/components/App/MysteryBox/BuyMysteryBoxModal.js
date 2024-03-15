@@ -17,8 +17,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
     const router = useRouter();
 
-    const { account, activeDiamond, network, getCurrencyStore } =
-        useEnvironmentContext();
+    const { account, activeDiamond, network, getCurrencyStore } = useEnvironmentContext();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
@@ -73,8 +72,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
             <>
                 {transactionSuccessful ? (
                     <>
-                        Transaction{" "}
-                        <span className="text-app-success">successful</span>
+                        Transaction <span className="text-app-success">successful</span>
                     </>
                 ) : (
                     <>
@@ -90,10 +88,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
             <div className=" flex flex-col flex-1">
                 <div>
                     Congratulations! You have successfully bought{" "}
-                    <span className="text-app-success font-bold">
-                        {order.name}
-                    </span>
-                    .
+                    <span className="text-app-success font-bold">{order.name}</span>.
                 </div>
                 <Lottie
                     animationData={lottieSuccess}
@@ -104,9 +99,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
                     {/*<Link href={PAGE.Settings} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>*/}
-                    <div
-                        className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}
-                    >
+                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>
                         <UniButton
                             type={ButtonTypes.BASE}
                             text={"Check PROFILE"}
@@ -130,9 +123,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const contentSteps = () => {
         return (
             <div className={`flex flex-1 flex-col`}>
-                <div
-                    className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}
-                >
+                <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
                     <div className={"detailRow"}>
                         <p>Item</p>
                         <hr className={"spacer"} />
@@ -166,12 +157,6 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     };
 
     return (
-        <GenericModal
-            isOpen={model}
-            closeModal={closeModal}
-            title={title()}
-            content={content()}
-            persistent={true}
-        />
+        <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true} />
     );
 }

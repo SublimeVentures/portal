@@ -49,8 +49,7 @@ async function getOfferAllocation(req) {
         return {
             alloRes: allocation.alloRes,
             alloFilled: allocation.alloFilled + allocation.alloFilledInjected,
-            alloGuaranteed:
-                allocation.alloGuaranteed + allocation.alloGuaranteedInjected,
+            alloGuaranteed: allocation.alloGuaranteed + allocation.alloGuaranteedInjected,
             alloTotal: allocation.alloTotal,
             isPaused: allocation.isPaused,
             isSettled: allocation.isSettled,

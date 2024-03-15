@@ -7,15 +7,7 @@ const { serializeError } = require("serialize-error");
 async function getPublicPartners() {
     try {
         return await models.partner.findAll({
-            attributes: [
-                "logo",
-                "name",
-                "slug",
-                "id",
-                "acl",
-                "displayOrder",
-                "isNewLabel",
-            ],
+            attributes: ["logo", "name", "slug", "id", "acl", "displayOrder", "isNewLabel"],
             where: {
                 isVisible: true,
             },

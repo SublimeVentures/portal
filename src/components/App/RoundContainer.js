@@ -1,13 +1,6 @@
-export default function RoundContainer({
-    isSuccess,
-    icon,
-    content,
-    forcedClass,
-}) {
+export default function RoundContainer({ isSuccess, icon, content, forcedClass }) {
     return (
-        <div
-            className={`w-full ${isSuccess ? "text-black" : ""} ${forcedClass}`}
-        >
+        <div className={`w-full ${isSuccess ? "text-black" : ""} ${forcedClass}`}>
             <div
                 className={`rounded-xl bg-navy-accent flex flex-1 flex-col justify-center items-center relative h-full ${isSuccess ? "!bg-app-success" : ""}`}
             >

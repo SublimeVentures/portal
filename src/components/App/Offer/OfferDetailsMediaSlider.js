@@ -30,12 +30,8 @@ export default function OfferDetailsMediaSlider({ offer }) {
 
     return (
         <>
-            <div
-                className={`mt-5 flex flex-col xl:flex-row ${isVertical ? "max-h-[500px]" : ""}`}
-            >
-                <div
-                    className={`sliderMain ${isVertical ? "max-w-[80%]" : ""}`}
-                >
+            <div className={`mt-5 flex flex-col xl:flex-row ${isVertical ? "max-h-[500px]" : ""}`}>
+                <div className={`sliderMain ${isVertical ? "max-w-[80%]" : ""}`}>
                     <Swiper
                         style={{
                             "--swiper-navigation-color": "#fff",
@@ -54,10 +50,7 @@ export default function OfferDetailsMediaSlider({ offer }) {
                             return (
                                 <SwiperSlide key={i}>
                                     {el.type === MEDIA_TYPE.IMAGE ? (
-                                        <img
-                                            src={`${cdn}/research/${slug}/slide/${el.url}`}
-                                            alt={"img"}
-                                        />
+                                        <img src={`${cdn}/research/${slug}/slide/${el.url}`} alt={"img"} />
                                     ) : (
                                         <iframe
                                             width="100%"
@@ -76,9 +69,7 @@ export default function OfferDetailsMediaSlider({ offer }) {
                     </Swiper>
                 </div>
 
-                <div
-                    className={`sliderThumb -mt-[5px] ${isVertical ? "-mr-2 ml-2" : "mt-5"}`}
-                >
+                <div className={`sliderThumb -mt-[5px] ${isVertical ? "-mr-2 ml-2" : "mt-5"}`}>
                     <Swiper
                         onSwiper={setThumbsSwiper}
                         loop={true}

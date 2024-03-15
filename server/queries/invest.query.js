@@ -17,23 +17,16 @@ async function getOfferRaise(id) {
     return {};
 }
 
-async function investIncreaseAllocationReserved(
-    offer,
-    wantedAllocation,
-    upgradeGuaranteed,
-    transaction,
-) {
+async function investIncreaseAllocationReserved(offer, wantedAllocation, upgradeGuaranteed, transaction) {
     let effectiveAllocationReserved;
     let sumFilter = ` COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0)`;
 
     if (upgradeGuaranteed?.isExpired === false) {
-        const guaranteedAllocationLeft =
-            upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed;
+        const guaranteedAllocationLeft = upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed;
         let alloGuaranteed;
 
         if (wantedAllocation - guaranteedAllocationLeft > 0) {
-            effectiveAllocationReserved =
-                wantedAllocation - guaranteedAllocationLeft;
+            effectiveAllocationReserved = wantedAllocation - guaranteedAllocationLeft;
             alloGuaranteed = guaranteedAllocationLeft;
         } else {
             effectiveAllocationReserved = 0;
@@ -138,12 +131,7 @@ async function expireAllocation(offerId, userId, hash) {
     return true;
 }
 
-async function bookAllocationGuaranteed(
-    offerId,
-    amount,
-    totalAllocation,
-    transaction,
-) {
+async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transaction) {
     let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`;
 
     const booked = await models.offerFundraise.increment(

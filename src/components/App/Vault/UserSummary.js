@@ -19,9 +19,7 @@ function sum(prev, next) {
 }
 
 export default function UserSummary({ vault, session, premiumData }) {
-    const portfolio = Number(
-        vault?.length > 0 ? vault.map(amount).reduce(sum) : 0,
-    ).toLocaleString();
+    const portfolio = Number(vault?.length > 0 ? vault.map(amount).reduce(sum) : 0).toLocaleString();
     let glitch;
     if (!isBased) {
         glitch = useGlitch({
@@ -68,11 +66,7 @@ export default function UserSummary({ vault, session, premiumData }) {
                                             style={{ width: "400px" }}
                                         />
                                     </div>
-                                    <div
-                                        className={
-                                            "max-w-[15rem] flex rounded-full shadow-lg"
-                                        }
-                                    >
+                                    <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
                                         <FallbackImage
                                             src={session.img}
                                             fallbackSrc={session.img_fallback}
@@ -82,11 +76,7 @@ export default function UserSummary({ vault, session, premiumData }) {
                                 </>
                             ) : (
                                 <>
-                                    <div
-                                        className={
-                                            "max-w-[15rem] flex rounded-full shadow-lg"
-                                        }
-                                    >
+                                    <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
                                         {session.img ? (
                                             <img
                                                 className="flex rounded-full my-auto glitch"
@@ -96,11 +86,7 @@ export default function UserSummary({ vault, session, premiumData }) {
                                             />
                                         ) : (
                                             <div ref={glitch.ref}>
-                                                <IconNT
-                                                    className={
-                                                        "glitch w-full max-w-[15rem]"
-                                                    }
-                                                />
+                                                <IconNT className={"glitch w-full max-w-[15rem]"} />
                                             </div>
                                         )}
                                     </div>

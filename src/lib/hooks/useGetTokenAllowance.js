@@ -3,14 +3,7 @@ import { useReadContract, useWatchBlocks } from "wagmi";
 import BigNumber from "bignumber.js";
 import useGetTokenAbi from "@/lib/hooks/useGetTokenAbi";
 
-function useGetTokenAllowance(
-    isEnabled,
-    token,
-    owner,
-    spender,
-    chainId,
-    skipStep,
-) {
+function useGetTokenAllowance(isEnabled, token, owner, spender, chainId, skipStep) {
     if (!token || skipStep) return;
 
     const { contract, precision } = token;

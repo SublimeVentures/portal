@@ -16,9 +16,7 @@ async function getEnvironment() {
                 if (!partnerSpecific[item.name]) {
                     partnerSpecific[item.name] = {};
                 }
-                partnerSpecific[item.name][item.partnerId] = item.value
-                    ? item.value
-                    : item.valueJSON;
+                partnerSpecific[item.name][item.partnerId] = item.value ? item.value : item.valueJSON;
             }
         } else {
             environment[item.name] = item.value ? item.value : item.valueJSON;
@@ -101,30 +99,19 @@ async function getEnvironment() {
     let funded = 0;
     const TENANT_ID = Number(process.env.NEXT_PUBLIC_TENANT);
     if (TENANT_ID === TENANT.basedVC) {
-        funded = offers
-            .map((item) => item.alloRaised || 0)
-            .reduce((prev, next) => prev + next, 0);
+        funded = offers.map((item) => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
     } else {
         const filteredOffers = offers.filter(
-            (offer) =>
-                Array.isArray(offer.offerlimits) &&
-                offer.offerlimits.includes(parseInt(TENANT_ID)),
+            (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
         );
 
         console.log("filteredOffers", filteredOffers, TENANT_ID);
 
-        funded = filteredOffers
-            .map((item) => item.alloRaised || 0)
-            .reduce((prev, next) => prev + next, 0);
+        funded = filteredOffers.map((item) => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
     }
     environment.stats.funded =
         TENANT_ID === TENANT.basedVC
-            ? funded +
-              Number(
-                  environment?.investedInjected
-                      ? environment?.investedInjected
-                      : 0,
-              )
+            ? funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
             : funded;
 
     return environment;

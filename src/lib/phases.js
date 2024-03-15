@@ -77,9 +77,7 @@ function phases(offer) {
     if (offer.lengthFCFS) {
         phases.push(updatePhaseDate(Phases.FCFS, offer.d_open));
     }
-    phases.push(
-        updatePhaseDate(Phases.Unlimited, offer.d_open + offer.lengthFCFS),
-    );
+    phases.push(updatePhaseDate(Phases.Unlimited, offer.d_open + offer.lengthFCFS));
     phases.push(updatePhaseDate(Phases.Closed, offer.d_close));
 
     data = processPhases(phases, offer.isSettled);
@@ -87,9 +85,7 @@ function phases(offer) {
     return {
         isClosed: (!!data.phases && data.isLast) || offer.isSettled,
         phaseCurrent: data.phases[data.activeId],
-        phaseNext: data.isLast
-            ? data.phases[data.activeId]
-            : data.phases[data.activeId + 1],
+        phaseNext: data.isLast ? data.phases[data.activeId] : data.phases[data.activeId + 1],
     };
 }
 

@@ -9,16 +9,7 @@ export const ButtonIconSize = {
     invest: "w-9 mr-5",
 };
 
-export function IconButton({
-    isDisabled,
-    is3d,
-    isPrimary,
-    size,
-    zoom,
-    icon,
-    handler,
-    noBorder,
-}) {
+export function IconButton({ isDisabled, is3d, isPrimary, size, zoom, icon, handler, noBorder }) {
     const [isExecuting, setExecuting] = useState(false);
     const tilt = useRef(null);
 
@@ -48,14 +39,8 @@ export function IconButton({
               ${isDisabled || isExecuting ? "disabled" : ""}  
             `}
         >
-            <button
-                className={`btn ${noBorder ? "onlyIcon" : ""} ${size}`}
-                onClick={animate}
-                ref={tilt}
-            >
-                <div className={`flex items-center justify-center relative`}>
-                    {icon}
-                </div>
+            <button className={`btn ${noBorder ? "onlyIcon" : ""} ${size}`} onClick={animate} ref={tilt}>
+                <div className={`flex items-center justify-center relative`}>{icon}</div>
             </button>
         </div>
     );

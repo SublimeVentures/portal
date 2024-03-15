@@ -17,9 +17,7 @@ export default function Hero({ account }) {
         <div className="min-h-screen bg flex flex-col justify-center hero select-none">
             <div className="flex flex-col w-full md:max-w-[80%] md:mx-auto xl:max-w-[1200px]">
                 <div className="flex flex-col p-10 text-white font-medium md:max-w-[600px] md:justify-center">
-                    <div className={`font-accent ml-1 text-sm`}>
-                        INVEST GROUND FLOOR
-                    </div>
+                    <div className={`font-accent ml-1 text-sm`}>INVEST GROUND FLOOR</div>
                     <div className="text-hero">DON'T BE EXIT LIQUIDITY</div>
                 </div>
 

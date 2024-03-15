@@ -4,14 +4,7 @@ import { ButtonIconSize } from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
 import { isBased } from "@/lib/utils";
 
-export default function GenericModal({
-    isOpen,
-    closeModal,
-    title,
-    content,
-    persistent,
-    noClose,
-}) {
+export default function GenericModal({ isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false);
 
     const closeModalOnBg = () => {
@@ -26,11 +19,7 @@ export default function GenericModal({
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog
-                as="div"
-                className="relative z-30 "
-                onClose={() => closeModalOnBg()}
-            >
+            <Dialog as="div" className="relative z-30 " onClose={() => closeModalOnBg()}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -57,23 +46,14 @@ export default function GenericModal({
                             <Dialog.Panel
                                 className={`dialogWrap flex flex-col min-h-screen glareBg w-full sm:min-h-min sm:max-w-md transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-app-bg text-start transition-all ${isShake ? "shake" : ""} ${isBased ? "" : "font-accent"}`}
                             >
-                                <Dialog.Title
-                                    as="h3"
-                                    className="text-3xl font-bold pb-5 pt-5"
-                                >
-                                    <span
-                                        className={`${isBased ? "" : "font-light"}`}
-                                    >
-                                        {title}
-                                    </span>
+                                <Dialog.Title as="h3" className="text-3xl font-bold pb-5 pt-5">
+                                    <span className={`${isBased ? "" : "font-light"}`}>{title}</span>
                                     {!noClose && (
                                         <div
                                             className={`absolute top-[20px] right-[0px] cursor-pointer`}
                                             onClick={closeModal}
                                         >
-                                            <CancelIcon
-                                                className={ButtonIconSize.hero}
-                                            />
+                                            <CancelIcon className={ButtonIconSize.hero} />
                                         </div>
                                     )}
                                 </Dialog.Title>

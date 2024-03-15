@@ -16,17 +16,14 @@ const { router: offerRoute } = require("./server/routes/offer.router.js");
 const { router: investRoute } = require("./server/routes/invest.router.js");
 const { router: vaultRoute } = require("./server/routes/vault.router.js");
 const { router: otcRoute } = require("./server/routes/otc.router.js");
-const {
-    router: mysteryboxRoute,
-} = require("./server/routes/mysterybox.router");
+const { router: mysteryboxRoute } = require("./server/routes/mysterybox.router");
 const { router: storeRoute } = require("./server/routes/store.router.js");
 const { router: settingsRoute } = require("./server/routes/settings.router.js");
 const { router: payoutRoute } = require("./server/routes/payout.router.js");
 const { router: claimRoute } = require("./server/routes/claim.router.js");
 
 const port = process.env.PORT || 3000;
-const dev =
-    process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
+const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
 const hostname = process.env.HOSTNAME;
 
 const nextApp = next({ dir: ".", dev, hostname, port });

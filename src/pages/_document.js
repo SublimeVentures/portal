@@ -20,11 +20,7 @@ export default function Document() {
         <Html lang="en">
             <Head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link
-                    rel="preconnect"
-                    href="https://fonts.gstatic.com"
-                    crossOrigin="true"
-                />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link rel="icon" href={TENANT_FAVICON()} sizes="any" />
             </Head>
             <body>

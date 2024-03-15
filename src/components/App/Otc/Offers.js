@@ -20,15 +20,7 @@ import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 
 export default function OtcOffers({ propOffers }) {
-    const {
-        offers,
-        vault,
-        currentMarket,
-        session,
-        refetchOffers,
-        offersIsSuccess,
-        vaultIsSuccess,
-    } = propOffers;
+    const { offers, vault, currentMarket, session, refetchOffers, offersIsSuccess, vaultIsSuccess } = propOffers;
     const { wallets } = session;
 
     const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
@@ -41,10 +33,7 @@ export default function OtcOffers({ propOffers }) {
 
     const [showHistory, setShowHistory] = useState(false);
 
-    const haveAllocation =
-        vault && currentMarket
-            ? vault.find((el) => el.id === currentMarket.offerId)
-            : null;
+    const haveAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
 
     const { isSuccess: historyIsSuccess, data: history } = useQuery({
         queryKey: ["otcHistory", currentMarket?.offerId],
@@ -119,10 +108,7 @@ export default function OtcOffers({ propOffers }) {
                     {offers.length === 0 && (
                         <tr>
                             <td colSpan="6" className={"text-center pt-3"}>
-                                <Empty
-                                    text={"No offers on this market"}
-                                    maxSize={280}
-                                />
+                                <Empty text={"No offers on this market"} maxSize={280} />
                             </td>
                         </tr>
                     )}
@@ -130,10 +116,7 @@ export default function OtcOffers({ propOffers }) {
                         offers.map((el) => {
                             const ownership = isUserOffer(wallets, el.maker);
                             return (
-                                <tr
-                                    key={el.id}
-                                    className="hoverTable transition-all duration-300 hover:text-black"
-                                >
+                                <tr key={el.id} className="hoverTable transition-all duration-300 hover:text-black">
                                     <td
                                         className={`${el.isSell ? "text-app-error" : "text-app-success"} font-bold text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2`}
                                         data-label="TYPE"
@@ -150,11 +133,7 @@ export default function OtcOffers({ propOffers }) {
                                         className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
                                         data-label="PRICE"
                                     >
-                                        <span
-                                            className={
-                                                "text-ellipsis overflow-hidden block"
-                                            }
-                                        >
+                                        <span className={"text-ellipsis overflow-hidden block"}>
                                             ${el.price.toLocaleString()}
                                         </span>
                                     </td>
@@ -163,10 +142,7 @@ export default function OtcOffers({ propOffers }) {
                                         data-label="MULTIPLIER"
                                     >
                                         <span className="text-app-success">
-                                            {Number(
-                                                el.price / el.amount,
-                                            ).toFixed(2)}
-                                            x
+                                            {Number(el.price / el.amount).toFixed(2)}x
                                         </span>
                                     </td>
                                     <td
@@ -175,37 +151,24 @@ export default function OtcOffers({ propOffers }) {
                                     >
                                         <span className="flex flex-row flex-1 justify-center gap-2">
                                             <DynamicIcon
-                                                name={getCurrencySymbolByAddress(
-                                                    el.currency,
-                                                )}
+                                                name={getCurrencySymbolByAddress(el.currency)}
                                                 style={ButtonIconSize.hero3}
                                             />
-                                            <DynamicIcon
-                                                name={NETWORKS[el.chainId]}
-                                                style={ButtonIconSize.hero3}
-                                            />
+                                            <DynamicIcon name={NETWORKS[el.chainId]} style={ButtonIconSize.hero3} />
                                         </span>
                                     </td>
                                     <td
                                         className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                                         data-label="ACTION"
                                     >
-                                        <div
-                                            className={
-                                                "flex flex-row gap-1 justify-end sm:justify-center"
-                                            }
-                                        >
+                                        <div className={"flex flex-row gap-1 justify-end sm:justify-center"}>
                                             {ownership.ok &&
                                                 (ownership.isActive ? (
                                                     <div
                                                         className={` duration-300 hover:text-app-error cursor-pointer`}
-                                                        onClick={() =>
-                                                            openCancel(el)
-                                                        }
+                                                        onClick={() => openCancel(el)}
                                                     >
-                                                        <IconCancel
-                                                            className={"w-6"}
-                                                        />
+                                                        <IconCancel className={"w-6"} />
                                                     </div>
                                                 ) : (
                                                     <Tooltiper
@@ -214,11 +177,7 @@ export default function OtcOffers({ propOffers }) {
                                                                 className={`disabled duration-300 hover:text-app-error cursor-pointer`}
                                                                 onClick={() => {}}
                                                             >
-                                                                <IconCancel
-                                                                    className={
-                                                                        "w-6"
-                                                                    }
-                                                                />
+                                                                <IconCancel className={"w-6"} />
                                                             </div>
                                                         }
                                                         text={`Created from other wallet`}
@@ -227,14 +186,10 @@ export default function OtcOffers({ propOffers }) {
                                                 ))}
                                             {!ownership.ok && (
                                                 <div
-                                                    className={
-                                                        "duration-300 hover:text-app-error cursor-pointer"
-                                                    }
+                                                    className={"duration-300 hover:text-app-error cursor-pointer"}
                                                     onClick={() => openTake(el)}
                                                 >
-                                                    <IconCart
-                                                        className={"w-6"}
-                                                    />
+                                                    <IconCart className={"w-6"} />
                                                 </div>
                                             )}
                                         </div>
@@ -283,10 +238,7 @@ export default function OtcOffers({ propOffers }) {
                     {!!history && history.length === 0 && (
                         <tr>
                             <td colSpan="6" className={"text-center pt-3"}>
-                                <Empty
-                                    text={"No history on this market"}
-                                    maxSize={280}
-                                />
+                                <Empty text={"No history on this market"} maxSize={280} />
                             </td>
                         </tr>
                     )}
@@ -294,10 +246,7 @@ export default function OtcOffers({ propOffers }) {
                         history.length !== 0 &&
                         history.map((el) => {
                             return (
-                                <tr
-                                    key={el.id}
-                                    className="hoverTable transition-all duration-300 hover:text-black"
-                                >
+                                <tr key={el.id} className="hoverTable transition-all duration-300 hover:text-black">
                                     <td
                                         className={`${el.isSell ? "text-app-error" : "text-app-success"} font-bold text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2`}
                                         data-label="TYPE"
@@ -321,10 +270,7 @@ export default function OtcOffers({ propOffers }) {
                                         data-label="MULTIPLIER"
                                     >
                                         <span className="text-app-success">
-                                            {Number(
-                                                el.price / el.amount,
-                                            ).toFixed(2)}
-                                            x
+                                            {Number(el.price / el.amount).toFixed(2)}x
                                         </span>
                                     </td>
                                     <td
@@ -332,20 +278,14 @@ export default function OtcOffers({ propOffers }) {
                                         data-label="CHAIN"
                                     >
                                         <span className="flex flex-row flex-1 justify-center">
-                                            <DynamicIcon
-                                                name={NETWORKS[el.chainId]}
-                                                style={ButtonIconSize.hero3}
-                                            />
+                                            <DynamicIcon name={NETWORKS[el.chainId]} style={ButtonIconSize.hero3} />
                                         </span>
                                     </td>
                                     <td
                                         className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                                         data-label="ACTION"
                                     >
-                                        {moment(el.updatedAt)
-                                            .utc()
-                                            .local()
-                                            .format("YYYY-MM-DD")}
+                                        {moment(el.updatedAt).utc().local().format("YYYY-MM-DD")}
                                     </td>
                                 </tr>
                             );
@@ -357,12 +297,8 @@ export default function OtcOffers({ propOffers }) {
 
     return (
         <>
-            <div
-                className={`${isBased ? " rounded-xl " : ""} bg-navy-accent flex flex-1 offerWrap`}
-            >
-                <div
-                    className={`overflow-x-auto flex flex-col flex-1 bg-navy-accent ${isBased ? " rounded-xl " : ""}`}
-                >
+            <div className={`${isBased ? " rounded-xl " : ""} bg-navy-accent flex flex-1 offerWrap`}>
+                <div className={`overflow-x-auto flex flex-col flex-1 bg-navy-accent ${isBased ? " rounded-xl " : ""}`}>
                     <div
                         className={`p-5 flex flex-row relative  ${isBased ? " rounded-tl-xl rounded-tr-xl bg-navy" : "bg-black"}`}
                     >
@@ -379,32 +315,20 @@ export default function OtcOffers({ propOffers }) {
                                 size={"text-sm xs"}
                                 zoom={1.1}
                                 handler={() => setIsMakeOfferModal(true)}
-                                icon={
-                                    <IconCart className={ButtonIconSize.hero} />
-                                }
+                                icon={<IconCart className={ButtonIconSize.hero} />}
                             />
                             <div>
                                 <IconButton
                                     zoom={1.1}
                                     size={"p-3"}
                                     noBorder={!isBased}
-                                    icon={
-                                        <IconHistory
-                                            className={
-                                                isBased ? "w-5" : "w-15 p-2"
-                                            }
-                                        />
-                                    }
-                                    handler={() =>
-                                        setShowHistory((current) => !current)
-                                    }
+                                    icon={<IconHistory className={isBased ? "w-5" : "w-15 p-2"} />}
+                                    handler={() => setShowHistory((current) => !current)}
                                 />
                             </div>
                         </div>
                     </div>
-                    {!offersIsSuccess ||
-                    !vaultIsSuccess ||
-                    (!historyIsSuccess && showHistory) ? (
+                    {!offersIsSuccess || !vaultIsSuccess || (!historyIsSuccess && showHistory) ? (
                         <Loader />
                     ) : showHistory ? (
                         renderOfferHistoryTable()

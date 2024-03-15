@@ -22,8 +22,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
     const seo = seoConfig(PAGE.Login);
     const router = useRouter();
     const tilt = useRef(null);
-    const { isLoginLoading, handleConnect, setPartner, loginData } =
-        useLoginFlow();
+    const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {
@@ -44,28 +43,18 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
 
     const renderOptions = () => {
         return (
-            <div
-                className={
-                    "flex justify-between flex-wrap gap-10 w-full  md:w-2/3"
-                }
-            >
+            <div className={"flex justify-between flex-wrap gap-10 w-full  md:w-2/3"}>
                 <div className="flex flex-1 flex-col p-10 sm:p-10 sm:w-max font-accent blurred glareBg bg-black lg:flex-row ">
                     <div className="flex flex-col">
                         <div className="text-3xl font-bold">
-                            <span className={"text-app-success"}>Partner</span>{" "}
-                            Login
+                            <span className={"text-app-success"}>Partner</span> Login
                         </div>
                         <div className="pt-3">
                             <div>
-                                Unlock exclusive partner privileges by
-                                connecting a wallet with your Partner NFT.
-                                Ensure you hold the NFT or have been granted
-                                delegated access to journey forward.
+                                Unlock exclusive partner privileges by connecting a wallet with your Partner NFT. Ensure
+                                you hold the NFT or have been granted delegated access to journey forward.
                             </div>
-                            <Linker
-                                url={ExternalLinks.DELEGATED_ACCESS}
-                                text={"Delegated access?"}
-                            />
+                            <Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
                         </div>
                         <div className="flex flex-col gap-5 justify-end flex-1 pt-10 lg:mt-0">
                             <RoundButton
@@ -75,11 +64,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
                                 isWide={true}
                                 zoom={1.1}
                                 size={"text-sm sm"}
-                                icon={
-                                    <WalletIcon
-                                        className={ButtonIconSize.hero}
-                                    />
-                                }
+                                icon={<WalletIcon className={ButtonIconSize.hero} />}
                                 handler={() => {
                                     handleConnect();
                                 }}
@@ -95,13 +80,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
         return (
             <div className={"flex flex-row items-center"}>
                 <div className={"w-[60px] h-[60px] relative mr-2"}>
-                    <Image
-                        src={selectedPartner.logo}
-                        layout="fill"
-                        objectFit="contain"
-                        alt="logo"
-                        ref={tilt}
-                    />
+                    <Image src={selectedPartner.logo} layout="fill" objectFit="contain" alt="logo" ref={tilt} />
                 </div>
                 <div>{selectedPartner.name}</div>
             </div>
@@ -117,11 +96,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
                 openGraph={seo.og}
                 twitter={seo.twitter}
             />
-            <HeroBg
-                subtitle={"powered by basedVC"}
-                title={logo()}
-                content={renderOptions()}
-            />
+            <HeroBg subtitle={"powered by basedVC"} title={logo()} content={renderOptions()} />
             <LoginModal loginModalProps={loginData} />
         </>
     );
@@ -143,10 +118,7 @@ export const getServerSideProps = async (context) => {
     const partnersData = queryClient.getQueryData(["partnerList"]);
     const selectedPartner = partnersData?.find((el) => el.slug === slug);
 
-    if (
-        !selectedPartner ||
-        Number(process.env.NEXT_PUBLIC_TENANT) !== TENANT.basedVC
-    ) {
+    if (!selectedPartner || Number(process.env.NEXT_PUBLIC_TENANT) !== TENANT.basedVC) {
         return {
             redirect: {
                 permanent: false,

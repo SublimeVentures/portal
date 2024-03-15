@@ -37,12 +37,8 @@ export default function ManageWallets({ walletProps }) {
 
     return (
         <>
-            <div
-                className={`${isBased ? "rounded-xl" : ""} boxshadow relative offerWrap flex flex-1 max-w-[600px]`}
-            >
-                <div
-                    className={`${isBased ? "rounded-xl" : ""} relative bg-navy-accent flex flex-1 flex-col `}
-                >
+            <div className={`${isBased ? "rounded-xl" : ""} boxshadow relative offerWrap flex flex-1 max-w-[600px]`}>
+                <div className={`${isBased ? "rounded-xl" : ""} relative bg-navy-accent flex flex-1 flex-col `}>
                     <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
                         <div
                             className={`flex flex-1 ${isBased ? "" : "text-app-error font-accent glowRed  font-light text-2xl flex glowNormal"} `}
@@ -50,19 +46,12 @@ export default function ManageWallets({ walletProps }) {
                             WALLETS
                         </div>
                         <a href={ExternalLinks.STAKING} target={"_blank"}>
-                            <IconButton
-                                zoom={1.1}
-                                size={"w-8"}
-                                icon={<IconInfo />}
-                                noBorder={true}
-                            />
+                            <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                         </a>
                     </div>
                     <div>
                         <table>
-                            <thead
-                                className={`${isBased ? "bg-navy-2" : "bg-slides"}`}
-                            >
+                            <thead className={`${isBased ? "bg-navy-2" : "bg-slides"}`}>
                                 <tr>
                                     <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
                                         <label>WALLET</label>
@@ -95,9 +84,7 @@ export default function ManageWallets({ walletProps }) {
                                                 {el.isStaking ? (
                                                     <DynamicIcon
                                                         name={ICONS.SUCCESS}
-                                                        style={
-                                                            ButtonIconSize.hero3center
-                                                        }
+                                                        style={ButtonIconSize.hero3center}
                                                     />
                                                 ) : (
                                                     <>-</>
@@ -110,9 +97,7 @@ export default function ManageWallets({ walletProps }) {
                                                 {el.isDelegate ? (
                                                     <DynamicIcon
                                                         name={ICONS.SUCCESS}
-                                                        style={
-                                                            ButtonIconSize.hero3center
-                                                        }
+                                                        style={ButtonIconSize.hero3center}
                                                     />
                                                 ) : (
                                                     <>-</>
@@ -158,9 +143,7 @@ export default function ManageWallets({ walletProps }) {
                 model={walletAdd}
                 setter={async () => {
                     setWalletAdd(false);
-                    updateEnvironmentProps([
-                        { path: "walletGuard", value: true },
-                    ]);
+                    updateEnvironmentProps([{ path: "walletGuard", value: true }]);
                     // await refreshSession()
                 }}
             />
@@ -169,9 +152,7 @@ export default function ManageWallets({ walletProps }) {
                 model={walletRemove}
                 setter={async () => {
                     setWalletRemove(false);
-                    updateEnvironmentProps([
-                        { path: "walletGuard", value: true },
-                    ]);
+                    updateEnvironmentProps([{ path: "walletGuard", value: true }]);
                     // await refreshSession()
                 }}
             />

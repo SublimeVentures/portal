@@ -7,10 +7,7 @@ import {
 } from "@/fetchers/offer.fetcher";
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import {
-    fetchUserInvestment,
-    fetchUserInvestmentSsr,
-} from "@/fetchers/vault.fetcher";
+import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import { NextSeo } from "next-seo";
@@ -137,12 +134,8 @@ export const AppOfferDetails = ({ session }) => {
         refreshInvestmentPhase: feedPhases,
     };
 
-    const guaranteedUsed = userAllocation?.upgrades?.find(
-        (el) => el.id === PremiumItemsENUM.Guaranteed,
-    );
-    const increasedUsed = userAllocation?.upgrades?.find(
-        (el) => el.id === PremiumItemsENUM.Increased,
-    );
+    const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
 
     const paramsInvest = {
         offer: offerData,
@@ -167,15 +160,8 @@ export const AppOfferDetails = ({ session }) => {
     };
 
     const renderPage = () => {
-        if (
-            !offerDetailsState ||
-            !offerAllocationState ||
-            !userAllocationState ||
-            !phaseNext
-        )
-            return <Loader />;
-        if (!offerData?.id || Object.keys(offerData).length === 0)
-            return <Empty />;
+        if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader />;
+        if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty />;
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar} />
@@ -183,9 +169,7 @@ export const AppOfferDetails = ({ session }) => {
                     className={`${isBased ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}
                 >
                     {!phaseIsClosed ? (
-                        <OfferDetailsInvestPhases
-                            paramsInvestPhase={paramsInvest}
-                        />
+                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
                     ) : (
                         <OfferDetailsInvestClosed />
                     )}
@@ -211,9 +195,7 @@ export const AppOfferDetails = ({ session }) => {
     return (
         <>
             <NextSeo title={pageTitle} />
-            <InvestProvider initialData={offerId}>
-                {renderPage()}
-            </InvestProvider>
+            <InvestProvider initialData={offerId}>{renderPage()}</InvestProvider>
         </>
     );
 };
@@ -229,10 +211,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 cacheTime: 30 * 60 * 1000,
                 staleTime: 15 * 60 * 1000,
             });
-            const offerDetails = queryClient.getQueryData([
-                "offerDetails",
-                slug,
-            ]);
+            const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
             console.log("offerDetails", offerDetails, slug, query);
             const offerId = offerDetails.id;
 
@@ -250,20 +229,10 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 queryFn: () => fetchUserInvestmentSsr(offerId, token),
             });
 
-            const offerAllocation = queryClient.getQueryData([
-                "offerAllocation",
-                offerId,
-            ]);
-            const userAllocation = queryClient.getQueryData([
-                "userAllocation",
-                offerId,
-                userId,
-            ]);
+            const offerAllocation = queryClient.getQueryData(["offerAllocation", offerId]);
+            const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
 
-            if (
-                !(offerAllocation.alloFilled >= 0) ||
-                !(userAllocation.invested.booked >= 0)
-            ) {
+            if (!(offerAllocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
                 throw Error("Data not fetched");
             }
         } catch (error) {
@@ -283,12 +252,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
         };
     };
 
-    return await processServerSideData(
-        req,
-        res,
-        resolvedUrl,
-        customLogicCallback,
-    );
+    return await processServerSideData(req, res, resolvedUrl, customLogicCallback);
 };
 
 AppOfferDetails.getLayout = function (page) {

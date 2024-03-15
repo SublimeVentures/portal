@@ -34,9 +34,7 @@ export default function AppOffer({ session }) {
     });
 
     const offerList = response?.offers;
-    const offerListRender = offerList
-        ? offerList.filter((el) => !el.isAccelerator)
-        : [];
+    const offerListRender = offerList ? offerList.filter((el) => !el.isAccelerator) : [];
     const stats = response?.stats;
     const partners = stats ? stats.partners : 0;
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
@@ -46,10 +44,7 @@ export default function AppOffer({ session }) {
         if (!offerListRender || offerListRender.length === 0) return <Empty />;
         return (
             <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
-                {!!offerList &&
-                    offerListRender.map((el) => (
-                        <OfferItem offer={el} cdn={cdn} key={el.slug} />
-                    ))}
+                {!!offerList && offerListRender.map((el) => <OfferItem offer={el} cdn={cdn} key={el.slug} />)}
             </div>
         );
     };
@@ -67,11 +62,7 @@ export default function AppOffer({ session }) {
                     >
                         Funded Projects
                     </div>
-                    <div
-                        className={
-                            "text-outline text-md mt-2 white min-w-[250px]"
-                        }
-                    >
+                    <div className={"text-outline text-md mt-2 white min-w-[250px]"}>
                         We bring new industry giants to our community
                     </div>
                 </div>
@@ -91,12 +82,7 @@ export default function AppOffer({ session }) {
                                 icon={<IconNetwork className={"w-7"} />}
                             />
                         )}
-                        <Stat
-                            color={"blue"}
-                            title={"Raised"}
-                            value={funded}
-                            icon={<IconMoney className={"w-7"} />}
-                        />
+                        <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7"} />} />
                     </div>
                 </div>
             </div>

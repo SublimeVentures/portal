@@ -1,35 +1,21 @@
-import {
-    useSimulateContract,
-    useWaitForTransactionReceipt,
-    useWriteContract,
-} from "wagmi";
+import { useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useEffect } from "react";
 
 function processError(...errors) {
     for (const error of errors) {
-        if (
-            error &&
-            error.shortMessage &&
-            error.shortMessage.includes("reason:\n")
-        ) {
+        if (error && error.shortMessage && error.shortMessage.includes("reason:\n")) {
             // Extract the reason after "reason:\n" if found
             return extractReason(error.shortMessage);
         }
     }
     // If "reason:\n" is not found in any error, return the original message
-    return (
-        errors[0]?.shortMessage ||
-        errors[1]?.shortMessage ||
-        errors[2]?.shortMessage
-    );
+    return errors[0]?.shortMessage || errors[1]?.shortMessage || errors[2]?.shortMessage;
 }
 
 function extractReason(errorMessage) {
     const index = errorMessage.indexOf("reason:\n");
     if (index !== -1) {
-        const reason = errorMessage
-            .substring(index + "reason:\n".length)
-            .trim();
+        const reason = errorMessage.substring(index + "reason:\n".length).trim();
         return reason;
     }
     return null;
@@ -109,12 +95,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
             !confirm.isFetching,
             isEnabled,
         );
-        if (
-            simulate.isSuccess &&
-            !write.isPending &&
-            !(confirm.isLoading || confirm.isFetching) &&
-            isEnabled
-        ) {
+        if (simulate.isSuccess && !write.isPending && !(confirm.isLoading || confirm.isFetching) && isEnabled) {
             write.writeContract(simulate.data?.request);
         }
     }, [simulate.isSuccess, isEnabled]);

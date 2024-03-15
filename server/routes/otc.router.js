@@ -1,12 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-    getMarkets,
-    getOffers,
-    getHistory,
-    createOffer,
-    signOffer,
-} = require("../controllers/otc");
+const { getMarkets, getOffers, getHistory, createOffer, signOffer } = require("../controllers/otc");
 const { verifyID } = require("../../src/lib/authHelpers");
 
 router.get("/markets", async (req, res) => {

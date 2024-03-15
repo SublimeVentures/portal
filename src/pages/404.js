@@ -27,10 +27,7 @@ export default function FourOhFour() {
                 style={{ width: "100%", margin: "5px auto" }}
             />
             ;
-            <Link
-                href={PAGE.Landing}
-                className="absolute top-10 left-0 right-0"
-            >
+            <Link href={PAGE.Landing} className="absolute top-10 left-0 right-0">
                 <RoundButton
                     text={"HOME"}
                     is3d={true}

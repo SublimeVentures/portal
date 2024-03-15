@@ -33,9 +33,7 @@ export default function AppAccelerator({ session }) {
     });
 
     const offerList = response?.offers;
-    const acceleratorList = !!offerList
-        ? offerList.filter((el) => el.isAccelerator)
-        : [];
+    const acceleratorList = !!offerList ? offerList.filter((el) => el.isAccelerator) : [];
     const accelerator = acceleratorList.length;
 
     const renderPage = () => {
@@ -65,21 +63,12 @@ export default function AppAccelerator({ session }) {
                     >
                         Accelerator
                     </div>
-                    <div
-                        className={
-                            "text-outline text-md mt-2 white min-w-[250px]"
-                        }
-                    >
-                        Hyper-promising projects that are outside of{" "}
-                        {getCopy("NAME")} investment thesis.
+                    <div className={"text-outline text-md mt-2 white min-w-[250px]"}>
+                        Hyper-promising projects that are outside of {getCopy("NAME")} investment thesis.
                     </div>
                 </div>
                 <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
-                    <div
-                        className={
-                            "w-full flex gap-5 flex-col md:flex-row xl:max-w-[300px] xl:ml-auto"
-                        }
-                    >
+                    <div className={"w-full flex gap-5 flex-col md:flex-row xl:max-w-[300px] xl:ml-auto"}>
                         <Stat
                             color={"gold"}
                             title={"Projects"}
@@ -91,84 +80,43 @@ export default function AppAccelerator({ session }) {
             </div>
             <div className={"flex flex-col gap-5 xl:flex-row"}>
                 <div className={`relative offerWrap flex flex-1`}>
-                    <div
-                        className={
-                            "bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"
-                        }
-                    >
-                        <div
-                            className={
-                                "flex flex-row items-center pb-5 justify-between "
-                            }
-                        >
-                            <div
-                                className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}
-                            >
+                    <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
+                        <div className={"flex flex-row items-center pb-5 justify-between "}>
+                            <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>
                                 Our involvement
                             </div>
                         </div>
                         <div className={"font-light text-sm"}>
-                            <span className="font-bold text-app-error">
-                                {getCopy("NAME")}
-                            </span>{" "}
-                            will provide leading projects strategic advisory, a
-                            compliant investment structure and a trusted
-                            platform to grow and seek investment. Projects will
-                            be responsible for providing information, promotion,
+                            <span className="font-bold text-app-error">{getCopy("NAME")}</span> will provide leading
+                            projects strategic advisory, a compliant investment structure and a trusted platform to grow
+                            and seek investment. Projects will be responsible for providing information, promotion,
                             AMAs, pitch decks and answering questions.
                         </div>
                     </div>
                 </div>
                 <div className={`relative offerWrap flex flex-1`}>
-                    <div
-                        className={
-                            "bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"
-                        }
-                    >
-                        <div
-                            className={
-                                "flex flex-row items-center pb-5 justify-between "
-                            }
-                        >
-                            <div
-                                className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}
-                            >
+                    <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
+                        <div className={"flex flex-row items-center pb-5 justify-between "}>
+                            <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>
                                 Due Diligence
                             </div>
                         </div>
                         <div className={"font-light text-sm"}>
-                            As{" "}
+                            As <span className="text-app-error font-bold">{getCopy("ACCELERATOR")}</span> projects are{" "}
+                            <span className={"font-bold text-app-error"}>outside</span> of our traditional investment
+                            stream,{" "}
                             <span className="text-app-error font-bold">
-                                {getCopy("ACCELERATOR")}
-                            </span>{" "}
-                            projects are{" "}
-                            <span className={"font-bold text-app-error"}>
-                                outside
-                            </span>{" "}
-                            of our traditional investment stream,{" "}
-                            <span className="text-app-error font-bold">
-                                {getCopy("NAME")} cannot make any
-                                representations regarding the suitability of
-                                projects that are part of the accelerator
+                                {getCopy("NAME")} cannot make any representations regarding the suitability of projects
+                                that are part of the accelerator
                             </span>
                             . As always, investors must DYOR.
                         </div>
                     </div>
                 </div>
                 <div className={`relative offerWrap flex flex-1`}>
-                    <div
-                        className={
-                            "bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"
-                        }
-                    >
-                        <div
-                            className={
-                                "flex flex-row items-center pb-5 justify-between "
-                            }
-                        >
-                            <div
-                                className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}
-                            >
+                    <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
+                        <div className={"flex flex-row items-center pb-5 justify-between "}>
+                            <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>
                                 {getCopy("ACCELERATOR")}
                             </div>
                         </div>
@@ -177,14 +125,9 @@ export default function AppAccelerator({ session }) {
                             <span className="text-app-error font-bold">
                                 empower the builders of {getCopy("COMMUNITY")}
                             </span>
-                            . We are constantly innovating and are launching{" "}
-                            {getCopy("ACCELERATOR")} to support top-tier
-                            projects and provide a trusted, compliant way to
-                            invest in the{" "}
-                            <span className="text-app-error font-bold">
-                                best {getCopy("COMMUNITY")} projects
-                            </span>
-                            .
+                            . We are constantly innovating and are launching {getCopy("ACCELERATOR")} to support
+                            top-tier projects and provide a trusted, compliant way to invest in the{" "}
+                            <span className="text-app-error font-bold">best {getCopy("COMMUNITY")} projects</span>.
                         </div>
                     </div>
                 </div>

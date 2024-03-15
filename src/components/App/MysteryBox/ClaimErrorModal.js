@@ -22,12 +22,5 @@ export default function ClaimErrorModal({ model, setter, errorMessage }) {
         );
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={setter}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
 }

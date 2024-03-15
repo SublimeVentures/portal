@@ -14,12 +14,8 @@ const description = (type, maximumGuaranteedBooking, length) => {
         case PremiumItemsENUM.Guaranteed: {
             return (
                 <>
-                    Books{" "}
-                    <span className={"text-gold glow"}>
-                        ${maximumGuaranteedBooking}
-                    </span>{" "}
-                    allocation for first {(length / 3600).toFixed(0)}h of the
-                    investment.
+                    Books <span className={"text-gold glow"}>${maximumGuaranteedBooking}</span> allocation for first{" "}
+                    {(length / 3600).toFixed(0)}h of the investment.
                 </>
             );
         }
@@ -27,10 +23,7 @@ const description = (type, maximumGuaranteedBooking, length) => {
             return (
                 <>
                     Increases maximum allocation by{" "}
-                    <span className={"text-gold glow"}>
-                        ${PremiumItemsParamENUM.Increased.toLocaleString()}
-                    </span>
-                    .
+                    <span className={"text-gold glow"}>${PremiumItemsParamENUM.Increased.toLocaleString()}</span>.
                 </>
             );
         }
@@ -70,9 +63,7 @@ export default function UpgradesModal({ model, setter, upgradesModalProps }) {
     const applicable = premiumData?.filter((el) => el.id !== 0);
     const isStageEnabled = phaseCurrent?.phase === PhaseId.Pending;
     const maximumGuaranteedBooking =
-        allocationUserLeft > PremiumItemsParamENUM.Guaranteed
-            ? PremiumItemsParamENUM.Guaranteed
-            : allocationUserLeft;
+        allocationUserLeft > PremiumItemsParamENUM.Guaranteed ? PremiumItemsParamENUM.Guaranteed : allocationUserLeft;
 
     const setSelectedUpgrade = (type) => {
         if (selected === type) {
@@ -121,9 +112,7 @@ export default function UpgradesModal({ model, setter, upgradesModalProps }) {
 
     const content = () => {
         return (
-            <div
-                className={`flex flex-1 flex-col gap-5 pt-5 relative ${userAllocationState ? "" : "disabled"}`}
-            >
+            <div className={`flex flex-1 flex-col gap-5 pt-5 relative ${userAllocationState ? "" : "disabled"}`}>
                 {isError && (
                     <div
                         className={
@@ -161,28 +150,18 @@ export default function UpgradesModal({ model, setter, upgradesModalProps }) {
                                     key={el.id}
                                     itemType={el.id}
                                     name={el.name}
-                                    description={description(
-                                        el.id,
-                                        maximumGuaranteedBooking,
-                                        lengthGuaranteed,
-                                    )}
+                                    description={description(el.id, maximumGuaranteedBooking, lengthGuaranteed)}
                                     selected={selected}
                                     setSelectedUpgrade={setSelectedUpgrade}
                                     owned={el.amount}
                                     used={used(el.id, upgradesUse)}
                                     image={el.img}
-                                    isRightPhase={
-                                        el.id === PremiumItemsENUM.Guaranteed
-                                            ? isStageEnabled
-                                            : true
-                                    }
+                                    isRightPhase={el.id === PremiumItemsENUM.Guaranteed ? isStageEnabled : true}
                                 />
                             );
                         })
                     ) : (
-                        <div className={"w-full text-center"}>
-                            No upgrades detected.
-                        </div>
+                        <div className={"w-full text-center"}>No upgrades detected.</div>
                     )}
                 </div>
 

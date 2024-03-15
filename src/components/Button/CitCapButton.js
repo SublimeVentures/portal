@@ -10,15 +10,7 @@ export const ButtonCitCapIconSize = {
     invest: "w-9 mr-5",
 };
 
-export function CitCapButton({
-    text,
-    isWhite,
-    isLoading,
-    isDisabled,
-    isLoadingWithIcon,
-    icon,
-    handler,
-}) {
+export function CitCapButton({ text, isWhite, isLoading, isDisabled, isLoadingWithIcon, icon, handler }) {
     const [isExecuting, setExecuting] = useState(false);
     const [isHover, setIsHover] = useState(false);
 
@@ -49,11 +41,7 @@ export function CitCapButton({
             ) : (
                 <>
                     {icon}
-                    <Scramble
-                        text={text}
-                        trigger={isHover}
-                        isUnderline={true}
-                    />
+                    <Scramble text={text} trigger={isHover} isUnderline={true} />
                 </>
             )}
         </div>

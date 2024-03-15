@@ -13,10 +13,7 @@ import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import DetailsSidebar from "@/components/App/Vault/DetailsSidebar";
 import { useState } from "react";
 
-const UserSummary = dynamic(
-    () => import("@/components/App/Vault/UserSummary"),
-    { ssr: false },
-);
+const UserSummary = dynamic(() => import("@/components/App/Vault/UserSummary"), { ssr: false });
 
 export default function AppVault({ session }) {
     const userId = session.userId;
@@ -61,9 +58,7 @@ export default function AppVault({ session }) {
     const renderList = () => {
         if (!vault) return;
         return vault.map((el, i) => {
-            return (
-                <VaultItem item={el} key={el.name} passData={openClaimModal} />
-            );
+            return <VaultItem item={el} key={el.name} passData={openClaimModal} />;
         });
     };
 
@@ -89,17 +84,9 @@ export default function AppVault({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <UserSummary
-                vault={vault}
-                session={session}
-                premiumData={premiumData}
-            />
-            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                {renderList()}
-            </div>
-            <div className="col-span-12 text-center contents">
-                {placeHolder()}
-            </div>
+            <UserSummary vault={vault} session={session} premiumData={premiumData} />
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">{renderList()}</div>
+            <div className="col-span-12 text-center contents">{placeHolder()}</div>
             <DetailsSidebar
                 model={claimModal}
                 setter={closeClaimModal}

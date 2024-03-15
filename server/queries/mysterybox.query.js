@@ -1,10 +1,7 @@
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const { Op, Sequelize, QueryTypes } = require("sequelize");
-const {
-    MYSTERYBOX_CLAIM_ERRORS,
-    PremiumItemsENUM,
-} = require("../../src/lib/enum/store");
+const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM } = require("../../src/lib/enum/store");
 
 async function pickMysteryBox(tenantId, transaction) {
     const rolledMysterybox = await models.storeMysterybox.findOne({

@@ -40,12 +40,7 @@ export default function Terms() {
                 openGraph={seo.og}
                 twitter={seo.twitter}
             />
-            <HeroBg
-                subtitle={""}
-                title={"Terms of Service"}
-                content={TENANT_TOS()}
-                extraClass={"listWithStyle"}
-            />
+            <HeroBg subtitle={""} title={"Terms of Service"} content={TENANT_TOS()} extraClass={"listWithStyle"} />
         </>
     );
 }

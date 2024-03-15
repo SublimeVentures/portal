@@ -46,17 +46,15 @@ export default function LoginModal({ loginModalProps }) {
     };
 
     const title = () => {
-        return (
-            <span className={!isBased && `text-app-error`}>Connect Wallet</span>
-        );
+        return <span className={!isBased && `text-app-error`}>Connect Wallet</span>;
     };
 
     const content = () => {
         return (
             <>
                 <div className="pb-10 font-accent">
-                    Don't want to connect your cold wallet? You can delegate
-                    access! <Linker url={ExternalLinks.DELEGATED_ACCESS} />
+                    Don't want to connect your cold wallet? You can delegate access!{" "}
+                    <Linker url={ExternalLinks.DELEGATED_ACCESS} />
                 </div>
                 <div className="flex flex-col gap-5 fullWidth">
                     {connectors
@@ -78,11 +76,7 @@ export default function LoginModal({ loginModalProps }) {
                                 state={"min-w-[300px] mx-auto"}
                                 size={"text-sm sm"}
                                 isLoadingWithIcon={true}
-                                isDisabled={
-                                    accountIsConnecting ||
-                                    isSigningMessage ||
-                                    isLoginLoading
-                                }
+                                isDisabled={accountIsConnecting || isSigningMessage || isLoginLoading}
                                 icon={
                                     <Image
                                         src={`/img/login/${getConnectorImage(connector.name)}`}
@@ -98,9 +92,7 @@ export default function LoginModal({ loginModalProps }) {
                 <div className="-mb-2 mt-2 text-center text-app-error h-[10px]">
                     {signErrorMsg?.length > 0
                         ? signErrorMsg
-                        : accountIsConnecting ||
-                            isSigningMessage ||
-                            isLoginLoading
+                        : accountIsConnecting || isSigningMessage || isLoginLoading
                           ? "Confirm action in wallet"
                           : ""}
                 </div>

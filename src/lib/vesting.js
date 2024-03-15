@@ -29,25 +29,14 @@ export function parseVesting(offerVesting) {
         for (let i = 0; i < offerVesting.length; i++) {
             if (offerVesting[i].c === 0) break;
             if (offerVesting[i].c > now) {
-                const unlockDateUnix = moment(
-                    offerVesting[i].u,
-                    "YYYY-MM-DD",
-                ).unix();
+                const unlockDateUnix = moment(offerVesting[i].u, "YYYY-MM-DD").unix();
                 isSoon =
                     offerVesting[i].c - now <= SOON_DATE ||
                     offerVesting[i].s - now <= SOON_DATE ||
                     unlockDateUnix - now <= SOON_DATE;
                 nextUnlock = offerVesting[i].u;
-                nextSnapshot = moment
-                    .unix(offerVesting[i].s)
-                    .utc()
-                    .local()
-                    .format("YYYY-MM-DD mm:SS");
-                nextClaim = moment
-                    .unix(offerVesting[i].c)
-                    .utc()
-                    .local()
-                    .format("YYYY-MM-DD mm:SS");
+                nextSnapshot = moment.unix(offerVesting[i].s).utc().local().format("YYYY-MM-DD mm:SS");
+                nextClaim = moment.unix(offerVesting[i].c).utc().local().format("YYYY-MM-DD mm:SS");
 
                 if (now > unlockDateUnix && offerVesting[i].s !== 0) {
                     claimStage = STAGES.SNAPSHOT;

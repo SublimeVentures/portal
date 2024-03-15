@@ -85,9 +85,7 @@ const Flipbook = ({
         if (ambient < 1) {
             const blackness = 1 - ambient;
             const diffuse = lightingPoints.map(
-                (d) =>
-                    (1 - Math.cos(((rot - dRotate * d) / 180) * Math.PI)) *
-                    blackness,
+                (d) => (1 - Math.cos(((rot - dRotate * d) / 180) * Math.PI)) * blackness,
             );
             gradients.push(
                 `linear-gradient(to right, rgba(0, 0, 0, ${diffuse[0]}), rgba(0, 0, 0, ${diffuse[1]}) 25%, rgba(0, 0, 0, ${diffuse[2]}) 50%, rgba(0, 0, 0, ${diffuse[3]}) 75%, rgba(0, 0, 0, ${diffuse[4]}))`,
@@ -99,14 +97,8 @@ const Flipbook = ({
             const POW = 200;
             const specular = lightingPoints.map((d) =>
                 Math.max(
-                    Math.pow(
-                        Math.cos(((rot + DEG - dRotate * d) / 180) * Math.PI),
-                        POW,
-                    ),
-                    Math.pow(
-                        Math.cos(((rot - DEG - dRotate * d) / 180) * Math.PI),
-                        POW,
-                    ),
+                    Math.pow(Math.cos(((rot + DEG - dRotate * d) / 180) * Math.PI), POW),
+                    Math.pow(Math.cos(((rot - DEG - dRotate * d) / 180) * Math.PI), POW),
                 ),
             );
             gradients.push(
@@ -132,10 +124,7 @@ const Flipbook = ({
 
         setFlip((currentFlip) => ({
             ...currentFlip,
-            opacity:
-                displayedPages === 1 && progress > 0.7
-                    ? 1 - (progress - 0.7) / 0.3
-                    : 1,
+            opacity: displayedPages === 1 && progress > 0.7 ? 1 - (progress - 0.7) / 0.3 : 1,
         }));
 
         let image = face === "front" ? flip.frontImage : flip.backImage;
@@ -264,24 +253,14 @@ const Flipbook = ({
 
             radian += dRadian;
             rotate += dRotate;
-            polygons.push([
-                `${face}${i}`,
-                image,
-                lighting,
-                bgPos,
-                m.toString(),
-                Math.abs(Math.round(z)),
-            ]);
+            polygons.push([`${face}${i}`, image, lighting, bgPos, m.toString(), Math.abs(Math.round(z))]);
         }
 
         return polygons;
     };
 
     const IE = useMemo(() => {
-        return (
-            typeof navigator !== "undefined" &&
-            /Trident/.test(navigator.userAgent)
-        );
+        return typeof navigator !== "undefined" && /Trident/.test(navigator.userAgent);
     }, []);
 
     const zooms_ = useMemo(() => {
@@ -293,11 +272,7 @@ const Flipbook = ({
     }, [flip, currentPage, pages, displayedPages]);
 
     const canGoBack = useMemo(() => {
-        return (
-            !flip.direction &&
-            currentPage >= displayedPages &&
-            !(displayedPages === 1 && !pageUrl(firstPage - 1))
-        );
+        return !flip.direction && currentPage >= displayedPages && !(displayedPages === 1 && !pageUrl(firstPage - 1));
     }, [flip, currentPage, displayedPages, firstPage]);
 
     const canFlipLeft = useMemo(() => {
@@ -373,23 +348,11 @@ const Flipbook = ({
         return scale < 1 ? scale : 1;
     }, [viewWidth, displayedPages, imageWidth, viewHeight, imageHeight]);
 
-    const pageWidth = useMemo(
-        () => Math.round(imageWidth * pageScale),
-        [imageWidth, pageScale],
-    );
-    const pageHeight = useMemo(
-        () => Math.round(imageHeight * pageScale),
-        [imageHeight, pageScale],
-    );
+    const pageWidth = useMemo(() => Math.round(imageWidth * pageScale), [imageWidth, pageScale]);
+    const pageHeight = useMemo(() => Math.round(imageHeight * pageScale), [imageHeight, pageScale]);
 
-    const xMargin = useMemo(
-        () => (viewWidth - pageWidth * displayedPages) / 2,
-        [viewWidth, pageWidth, displayedPages],
-    );
-    const yMargin = useMemo(
-        () => (viewHeight - pageHeight) / 2,
-        [viewHeight, pageHeight],
-    );
+    const xMargin = useMemo(() => (viewWidth - pageWidth * displayedPages) / 2, [viewWidth, pageWidth, displayedPages]);
+    const yMargin = useMemo(() => (viewHeight - pageHeight) / 2, [viewHeight, pageHeight]);
 
     const polygonWidth = useMemo(() => {
         let w = pageWidth / nPolygons;
@@ -398,15 +361,9 @@ const Flipbook = ({
     }, [pageWidth, nPolygons, zoom]);
 
     const polygonHeight = useMemo(() => `${pageHeight}px`, [pageHeight]);
-    const polygonBgSize = useMemo(
-        () => `${pageWidth}px ${pageHeight}px`,
-        [pageWidth, pageHeight],
-    );
+    const polygonBgSize = useMemo(() => `${pageWidth}px ${pageHeight}px`, [pageWidth, pageHeight]);
 
-    const polygonArray = useMemo(
-        () => makePolygonArray("front").concat(makePolygonArray("back")),
-        [flip.progress],
-    );
+    const polygonArray = useMemo(() => makePolygonArray("front").concat(makePolygonArray("back")), [flip.progress]);
 
     const boundingLeft = useMemo(() => {
         if (displayedPages === 1) {
@@ -427,21 +384,12 @@ const Flipbook = ({
     }, [displayedPages, xMargin, maxX, rightPage, viewWidth]);
 
     const centerOffset = useMemo(() => {
-        let retval = centering
-            ? Math.round(viewWidth / 2 - (boundingLeft + boundingRight) / 2)
-            : 0;
+        let retval = centering ? Math.round(viewWidth / 2 - (boundingLeft + boundingRight) / 2) : 0;
         if (currentCenterOffset === null && imageWidth !== null) {
             setCurrentCenterOffset(retval);
         }
         return retval;
-    }, [
-        centering,
-        currentCenterOffset,
-        boundingLeft,
-        boundingRight,
-        imageWidth,
-        viewWidth,
-    ]);
+    }, [centering, currentCenterOffset, boundingLeft, boundingRight, imageWidth, viewWidth]);
 
     const centerOffsetSmoothed = useMemo(() => {
         Math.round(currentCenterOffset);
@@ -452,10 +400,7 @@ const Flipbook = ({
     const calculateScroll = (isMax) => {
         const w = (boundingRight - boundingLeft) * zoom;
         if (w < viewWidth) {
-            return (
-                (boundingLeft + centerOffsetSmoothed) * zoom -
-                (viewWidth - w) / 2
-            );
+            return (boundingLeft + centerOffsetSmoothed) * zoom - (viewWidth - w) / 2;
         } else {
             return isMax
                 ? (boundingRight + centerOffsetSmoothed) * zoom - viewWidth
@@ -517,21 +462,14 @@ const Flipbook = ({
         setViewWidth(viewWidth);
         setViewHeight(viewHeight);
         setDisplayedPages(displayedPages);
-        setCurrentPage((curPage) =>
-            displayedPages === 2 ? currentPage & ~1 : curPage,
-        );
+        setCurrentPage((curPage) => (displayedPages === 2 ? currentPage & ~1 : curPage));
         fixFirstPage();
         setMinX(Infinity);
         setMaxX(-Infinity);
     };
 
     const fixFirstPage = () => {
-        if (
-            displayedPages == 1 &&
-            currentPage == 0 &&
-            pages.length &&
-            !pageUrl(0)
-        ) {
+        if (displayedPages == 1 && currentPage == 0 && pages.length && !pageUrl(0)) {
             setCurrentPage(currentPage + 1);
         }
     };
@@ -664,10 +602,7 @@ const Flipbook = ({
                         if (onFlipRightEnd) onFlipRightEnd();
                     }
 
-                    if (
-                        displayedPages === 1 &&
-                        flip.direction === forwardDirection
-                    ) {
+                    if (displayedPages === 1 && flip.direction === forwardDirection) {
                         setFlip((currentFlip) => ({
                             ...currentFlip,
                             direction: null,
@@ -718,15 +653,11 @@ const Flipbook = ({
                     setFirstPage(currentPage);
                     setSecondPage(currentPage + 1);
 
-                    if (
-                        displayedPages === 1 &&
-                        flip.direction !== forwardDirection
-                    ) {
+                    if (displayedPages === 1 && flip.direction !== forwardDirection) {
                         setFlip((currentFlip) => ({
                             ...currentFlip,
                             direction:
-                                displayedPages === 1 &&
-                                currentFlip.direction !== forwardDirection
+                                displayedPages === 1 && currentFlip.direction !== forwardDirection
                                     ? null
                                     : currentFlip.direction,
                         }));
@@ -1109,9 +1040,7 @@ const Flipbook = ({
                 setCurrentCenterOffset(centerOffset);
                 setAnimatingCenter(false);
             } else {
-                setCurrentCenterOffset(
-                    (prevOffset) => prevOffset + diff * rate,
-                );
+                setCurrentCenterOffset((prevOffset) => prevOffset + diff * rate);
                 animationFrameId = requestAnimationFrame(animate);
             }
         };
@@ -1199,10 +1128,7 @@ const Flipbook = ({
             onMouseUp={onMouseUp}
             onWheel={onWheel}
         >
-            <div
-                className="flipbook-container"
-                style={{ transform: `scale(${zoom})` }}
-            >
+            <div className="flipbook-container" style={{ transform: `scale(${zoom})` }}>
                 <div
                     className="click-to-flip left"
                     style={{ cursor: canFlipLeft ? "pointer" : "auto" }}
@@ -1248,34 +1174,30 @@ const Flipbook = ({
                     )}
 
                     <div style={{ opacity: flip.opacity }}>
-                        {polygonArray.map(
-                            ([key, bgImage, lighting, bgPos, transform, z]) => (
-                                <div
-                                    key={key}
-                                    className={`polygon ${!bgImage ? "blank" : ""}`}
-                                    style={{
-                                        backgroundImage:
-                                            bgImage &&
-                                            `url(${loadImage(bgImage)})`,
-                                        backgroundSize: polygonBgSize,
-                                        backgroundPosition: bgPos,
-                                        width: polygonWidth,
-                                        height: polygonHeight,
-                                        transform: transform,
-                                        zIndex: z,
-                                    }}
-                                >
-                                    {lighting.length > 0 && (
-                                        <div
-                                            className="lighting"
-                                            style={{
-                                                backgroundImage: lighting,
-                                            }}
-                                        />
-                                    )}
-                                </div>
-                            ),
-                        )}
+                        {polygonArray.map(([key, bgImage, lighting, bgPos, transform, z]) => (
+                            <div
+                                key={key}
+                                className={`polygon ${!bgImage ? "blank" : ""}`}
+                                style={{
+                                    backgroundImage: bgImage && `url(${loadImage(bgImage)})`,
+                                    backgroundSize: polygonBgSize,
+                                    backgroundPosition: bgPos,
+                                    width: polygonWidth,
+                                    height: polygonHeight,
+                                    transform: transform,
+                                    zIndex: z,
+                                }}
+                            >
+                                {lighting.length > 0 && (
+                                    <div
+                                        className="lighting"
+                                        style={{
+                                            backgroundImage: lighting,
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        ))}
                     </div>
                     <div
                         className="bounding-box"

@@ -34,12 +34,8 @@ async function processBooking(offer, offerLimit, user, amount) {
     console.log("upgrades", upgrades);
     console.log("offer", offer);
 
-    const upgradeGuaranteed = upgrades.find(
-        (el) => el.id === PremiumItemsENUM.Guaranteed,
-    );
-    const upgradeIncreased = upgrades.find(
-        (el) => el.id === PremiumItemsENUM.Increased,
-    );
+    const upgradeGuaranteed = upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const upgradeIncreased = upgrades.find((el) => el.id === PremiumItemsENUM.Increased);
 
     let transaction;
 
@@ -47,12 +43,7 @@ async function processBooking(offer, offerLimit, user, amount) {
         transaction = await db.transaction();
 
         //increase reservation and ensure no overbooking
-        const increaseReserved = await investIncreaseAllocationReserved(
-            offer,
-            amount,
-            upgradeGuaranteed,
-            transaction,
-        );
+        const increaseReserved = await investIncreaseAllocationReserved(offer, amount, upgradeGuaranteed, transaction);
         console.log("increaseReserved", increaseReserved);
 
         if (!increaseReserved.ok) throw Error(BookingErrorsENUM.Overallocated);
@@ -91,12 +82,8 @@ async function processBooking(offer, offerLimit, user, amount) {
             vault.total,
             {
                 alloRes: increaseReserved.data.alloRes,
-                alloFilled:
-                    increaseReserved.data.alloFilled +
-                    increaseReserved.data.alloFilledInjected,
-                alloGuaranteed:
-                    increaseReserved.data.alloGuaranteed +
-                    increaseReserved.data.alloGuaranteedInjected,
+                alloFilled: increaseReserved.data.alloFilled + increaseReserved.data.alloFilledInjected,
+                alloGuaranteed: increaseReserved.data.alloGuaranteed + increaseReserved.data.alloGuaranteedInjected,
                 alloRaised: increaseReserved.data.alloRaised,
                 alloTotal: increaseReserved.data.alloTotal,
                 isPaused: increaseReserved.data.isPaused,
@@ -104,10 +91,7 @@ async function processBooking(offer, offerLimit, user, amount) {
             },
         );
 
-        if (
-            userAllocation.allocationUser_left < amount ||
-            userAllocation.offer_isProcessing
-        ) {
+        if (userAllocation.allocationUser_left < amount || userAllocation.offer_isProcessing) {
             throw Error(BookingErrorsENUM.Overallocated);
         }
         if (userAllocation.allocationUser_min > amount) {
@@ -164,10 +148,7 @@ async function processReservation(queryParams, user) {
     const { _offerId, _amount, _currency, _chain } = queryParams;
 
     try {
-        if (
-            !CACHE[_offerId]?.expire ||
-            CACHE[_offerId].expire < moment.utc().unix()
-        ) {
+        if (!CACHE[_offerId]?.expire || CACHE[_offerId].expire < moment.utc().unix()) {
             const allocation = await getOfferWithLimits(_offerId);
             CACHE[_offerId] = {
                 ...allocation,
@@ -176,11 +157,7 @@ async function processReservation(queryParams, user) {
         }
         console.log("CACHE[_offerId]", CACHE[_offerId]);
         const currency = getEnv().currencies[_chain][_currency];
-        if (
-            !currency ||
-            !currency.isSettlement ||
-            (currency.partnerId && currency.partnerId !== tenantId)
-        ) {
+        if (!currency || !currency.isSettlement || (currency.partnerId && currency.partnerId !== tenantId)) {
             return {
                 ok: false,
                 code: BookingErrorsENUM.BadCurrency,
@@ -189,30 +166,18 @@ async function processReservation(queryParams, user) {
         console.log("currency", currency);
 
         const offerLimit =
-            CACHE[_offerId].offerLimits.find(
-                (el) => el.partnerId === partnerId,
-            ) ||
+            CACHE[_offerId].offerLimits.find((el) => el.partnerId === partnerId) ||
             CACHE[_offerId].offerLimits.find((el) => el.partnerId === tenantId);
         console.log("offerLimit", offerLimit);
 
         //test if offer's ready
-        const checkIsReadyForStart = checkInvestmentStateConditions(
-            userId,
-            tenantId,
-            CACHE[_offerId],
-            offerLimit,
-        );
+        const checkIsReadyForStart = checkInvestmentStateConditions(userId, tenantId, CACHE[_offerId], offerLimit);
         console.log("checkIsReadyForStart", checkIsReadyForStart);
 
         if (!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
         //check conditions and book
-        const isBooked = await processBooking(
-            CACHE[_offerId],
-            offerLimit,
-            user,
-            _amount,
-        );
+        const isBooked = await processBooking(CACHE[_offerId], offerLimit, user, _amount);
         console.log("isBooked", isBooked);
 
         if (!isBooked.ok) {
@@ -330,17 +295,8 @@ async function reserveSpot(user, req) {
         );
 
         if (!signature.ok) {
-            console.log(
-                "expore",
-                queryParams.data._offerId,
-                user.userId,
-                reservation.data.hash,
-            );
-            await expireAllocation(
-                queryParams.data._offerId,
-                user.userId,
-                reservation.data.hash,
-            );
+            console.log("expore", queryParams.data._offerId, user.userId, reservation.data.hash);
+            await expireAllocation(queryParams.data._offerId, user.userId, reservation.data.hash);
             return signature;
         }
 

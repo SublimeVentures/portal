@@ -72,11 +72,7 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
                         after={"USD"}
                     />
                 </div>
-                <div
-                    className={
-                        "py-10 flex flex-row justify-center items-center select-none"
-                    }
-                >
+                <div className={"py-10 flex flex-row justify-center items-center select-none"}>
                     <IconButton
                         zoom={1.1}
                         size={""}
@@ -117,12 +113,5 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
         );
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={setter}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
 }

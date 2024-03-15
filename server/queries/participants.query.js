@@ -1,8 +1,6 @@
 const db = require("../services/db/definitions/db.init");
 
-const {
-    defineParticipantModel,
-} = require("../services/db/definitions/models/participant.model");
+const { defineParticipantModel } = require("../services/db/definitions/models/participant.model");
 
 async function sumAmountForUserAndTenant(offerId, userId, tenantId) {
     const ParticipantModel = defineParticipantModel(db, offerId);

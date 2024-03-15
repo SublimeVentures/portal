@@ -141,9 +141,7 @@ export default function Input({
             className={`currency-input-group relative ${light ? "light" : ""} ${full ? "full" : ""} ${customCss && customCss}`}
         >
             <div className={`relative centr  ${isActive() ? "active" : ""}`}>
-                <label className="absolute text-accent block">
-                    {placeholder}
-                </label>
+                <label className="absolute text-accent block">{placeholder}</label>
                 <input
                     tabIndex="0"
                     type={type === "password" ? type : ""}
@@ -165,10 +163,7 @@ export default function Input({
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div
-                            className="absolute top-5 right-5 cursor-pointer"
-                            onClick={() => clearInput()}
-                        >
+                        <div className="absolute top-5 right-5 cursor-pointer" onClick={() => clearInput()}>
                             <IconCancel className="w-6 opacity-70" />
                         </div>
                     </Transition.Child>

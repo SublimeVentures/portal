@@ -74,15 +74,7 @@ async function getUserPendingOffers(wallet) {
 ///////////
 ///events
 //////////
-async function saveOtcHash(
-    address,
-    chainId,
-    offerId,
-    hash,
-    price,
-    amount,
-    isSell,
-) {
+async function saveOtcHash(address, chainId, offerId, hash, price, amount, isSell) {
     const newOtcDeal = await models.otcDeal.create({
         offerId,
         price,
@@ -97,13 +89,7 @@ async function saveOtcHash(
         ok: !!newOtcDeal,
     };
 }
-async function checkDealBeforeSigning(
-    offerId,
-    chainId,
-    otcId,
-    dealId,
-    transaction,
-) {
+async function checkDealBeforeSigning(offerId, chainId, otcId, dealId, transaction) {
     const deal = await models.otcDeal.findOne({
         where: {
             offerId,
@@ -138,10 +124,7 @@ async function checkDealBeforeSigning(
         };
     }
 
-    if (
-        deal.otcId !== deal["offer.otc"] ||
-        deal["onchain.chainId"] !== chainId
-    ) {
+    if (deal.otcId !== deal["offer.otc"] || deal["onchain.chainId"] !== chainId) {
         await transaction.rollback();
         return {
             ok: false,

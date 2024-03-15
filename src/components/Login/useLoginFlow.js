@@ -32,8 +32,7 @@ export default function useLoginFlow() {
         isConnecting: accountIsConnecting,
         connector: connectorActive,
     } = useAccount();
-    const { error: signMessageError, signMessageAsync: signMessageFn } =
-        useSignMessage();
+    const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
     const {
         connectors,
         connectAsync: connect,

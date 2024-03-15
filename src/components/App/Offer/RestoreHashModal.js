@@ -6,13 +6,7 @@ import { isBased } from "@/lib/utils";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
 
 export default function RestoreHashModal({ model, setter, restoreModalProps }) {
-    const {
-        allocationOld,
-        investmentAmount,
-        bookingExpire,
-        bookingRestore,
-        bookingCreateNew,
-    } = restoreModalProps;
+    const { allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew } = restoreModalProps;
     const { bookingDetails } = useInvestContext();
     const title = () => {
         return (
@@ -30,21 +24,13 @@ export default function RestoreHashModal({ model, setter, restoreModalProps }) {
                 <div className="flex flex-col gap-5 pb-5">
                     <div>
                         You have active booking for{" "}
-                        <span className={"text-gold"}>
-                            ${allocationOldLocal} allocation
-                        </span>
-                        , but you are trying to change the investment size.
+                        <span className={"text-gold"}>${allocationOldLocal} allocation</span>, but you are trying to
+                        change the investment size.
                     </div>
                     <div>
                         Would you like to{" "}
-                        <span className={"text-app-success"}>
-                            restore existing booking (${allocationOldLocal})
-                        </span>{" "}
-                        or{" "}
-                        <span className={"text-app-error"}>
-                            make new one (${allocationNewLocal})
-                        </span>
-                        ?
+                        <span className={"text-app-success"}>restore existing booking (${allocationOldLocal})</span> or{" "}
+                        <span className={"text-app-error"}>make new one (${allocationNewLocal})</span>?
                     </div>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-2">
@@ -63,9 +49,7 @@ export default function RestoreHashModal({ model, setter, restoreModalProps }) {
                     />
                 </div>
 
-                <div
-                    className={`flex ${isBased ? "" : "items-center"} flex-col gap-5 flex-1 mt-10  fullWidth`}
-                >
+                <div className={`flex ${isBased ? "" : "items-center"} flex-col gap-5 flex-1 mt-10  fullWidth`}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={"Restore"}
@@ -90,12 +74,5 @@ export default function RestoreHashModal({ model, setter, restoreModalProps }) {
         );
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={setter}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
 }

@@ -18,10 +18,7 @@ import { PremiumItemsENUM } from "@/lib/enum/store";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
-const BuyStoreItemModal = dynamic(
-    () => import("@/components/App/Store/BuyStoreItemModal"),
-    { ssr: false },
-);
+const BuyStoreItemModal = dynamic(() => import("@/components/App/Store/BuyStoreItemModal"), { ssr: false });
 
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
@@ -42,9 +39,7 @@ export default function AppUpgrades({ session }) {
         cacheTime: 0,
     });
 
-    const storeData = response?.filter(
-        (el) => el.id !== PremiumItemsENUM.MysteryBox,
-    );
+    const storeData = response?.filter((el) => el.id !== PremiumItemsENUM.MysteryBox);
     const currency = getCurrencyStore()[0];
 
     const renderPage = () => {
@@ -55,13 +50,7 @@ export default function AppUpgrades({ session }) {
             <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                 {!!storeData &&
                     storeData.map((el) => (
-                        <StoreItem
-                            item={el}
-                            key={el.id}
-                            cdn={cdn}
-                            setOrder={setOrder}
-                            currency={currency}
-                        />
+                        <StoreItem item={el} key={el.id} cdn={cdn} setOrder={setOrder} currency={currency} />
                     ))}
             </div>
         );
@@ -96,13 +85,7 @@ export default function AppUpgrades({ session }) {
                     >
                         UPGRADES
                     </div>
-                    <div
-                        className={
-                            "text-outline text-md mt-2 white min-w-[250px]"
-                        }
-                    >
-                        Supercharge your investments.
-                    </div>
+                    <div className={"text-outline text-md mt-2 white min-w-[250px]"}>Supercharge your investments.</div>
                 </div>
                 <div className={"mx-auto flex items-center sm:ml-auto sm:mr-0"}>
                     <div>

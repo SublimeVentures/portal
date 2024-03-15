@@ -1,47 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const {
-    refreshTokenName,
-    authTokenName,
-} = require("../../src/lib/authHelpers");
+const { refreshTokenName, authTokenName } = require("../../src/lib/authHelpers");
 const axios = require("axios");
 const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
 const { envCache } = require("../controllers/envionment");
-const {
-    verifyID,
-    buildCookie,
-    refreshTokens,
-} = require("../../src/lib/authHelpers");
+const { verifyID, buildCookie, refreshTokens } = require("../../src/lib/authHelpers");
 
 //LOGIN USER
 router.post("/login", async (req, res) => {
-    if (
-        !req.body?.message ||
-        !req.body?.signature ||
-        !req.body?.tenant ||
-        !req.body?.partner
-    )
+    if (!req.body?.message || !req.body?.signature || !req.body?.tenant || !req.body?.partner)
         return res.status(400).json({});
     try {
-        const auth = await axios.post(
-            `${process.env.AUTHER}/auth/login`,
-            req.body,
-            {
-                headers: {
-                    "content-type": "application/json",
-                },
+        const auth = await axios.post(`${process.env.AUTHER}/auth/login`, req.body, {
+            headers: {
+                "content-type": "application/json",
             },
-        );
+        });
         const result = auth.data;
         if (!result?.ok) throw Error(result?.error);
 
         envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
 
-        const cookies = [
-            result.cookie.refreshCookie,
-            result.cookie.accessCookie,
-        ];
+        const cookies = [result.cookie.refreshCookie, result.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
         delete result.cookie;
         delete result.token;
@@ -68,10 +49,7 @@ router.delete("/login", async (req, res) => {
         });
         const result = auth.data;
         if (!result?.ok) throw Error("Bad AUTHER response");
-        const cookies = [
-            result.cookie.refreshCookie,
-            result.cookie.accessCookie,
-        ];
+        const cookies = [result.cookie.refreshCookie, result.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
         return res.status(200).json({ ok: true });
     } catch (error) {
@@ -98,10 +76,7 @@ router.put("/login", async (req, res) => {
 
         if (!refresh?.ok) throw Error("Bad AUTHER response");
 
-        const cookies = [
-            refresh.cookie.refreshCookie,
-            refresh.cookie.accessCookie,
-        ];
+        const cookies = [refresh.cookie.refreshCookie, refresh.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
         delete refresh.data.user;
         delete refresh.token;

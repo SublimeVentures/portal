@@ -4,9 +4,7 @@ export default function NotificationsSetting({}) {
     return (
         <>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1">
-                <div className="text-xl uppercase font-medium text-outline mb-2">
-                    CHANNELS
-                </div>
+                <div className="text-xl uppercase font-medium text-outline mb-2">CHANNELS</div>
 
                 <div className="flex ">
                     <div className="flex-1 ">E-MAIL</div>
@@ -27,9 +25,7 @@ export default function NotificationsSetting({}) {
                 </div>
             </div>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1 ">
-                <div className="text-xl uppercase font-medium text-outline mb-2">
-                    NOTIFICATIONS
-                </div>
+                <div className="text-xl uppercase font-medium text-outline mb-2">NOTIFICATIONS</div>
 
                 <div className="flex ">
                     <div className="flex-1 ">ANNOUNCEMENTS</div>

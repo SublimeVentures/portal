@@ -15,12 +15,9 @@ export default function WalletAddModal({ model, setter, addProps }) {
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
-    const newWallet =
-        !wallets.find((el) => el.wallet === account?.address) &&
-        !!account?.address;
+    const newWallet = !wallets.find((el) => el.wallet === account?.address) && !!account?.address;
 
-    const { error: signMessageError, signMessageAsync: signMessageFn } =
-        useSignMessage();
+    const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
 
     const closeModal = () => {
         if (success) {
@@ -76,14 +73,10 @@ export default function WalletAddModal({ model, setter, addProps }) {
             <div className={"min-w-[300px]"}>
                 <div>
                     You can add up to{" "}
-                    <span className={"text-app-success font-bold"}>
-                        {maxWallets - wallets.length}
-                    </span>{" "}
-                    more wallets to your account.
+                    <span className={"text-app-success font-bold"}>{maxWallets - wallets.length}</span> more wallets to
+                    your account.
                     <br />
-                    <span className={"text-app-error"}>
-                        Wallet can be assigned only to one account!
-                    </span>
+                    <span className={"text-app-error"}>Wallet can be assigned only to one account!</span>
                     <br />
                     <br />
                     Switch to wallet you want to add, and sign message.
@@ -92,13 +85,7 @@ export default function WalletAddModal({ model, setter, addProps }) {
                     <div className={" h-[60px]"}>
                         {newWallet && (
                             <div>
-                                <div
-                                    className={
-                                        "glowNormal font-bold pb-2 w-full text-center"
-                                    }
-                                >
-                                    New wallet
-                                </div>
+                                <div className={"glowNormal font-bold pb-2 w-full text-center"}>New wallet</div>
                                 <div
                                     className={`text-xs p-2 bg-app-accent2 text-center ${isBased ? "rounded-xl" : ""}`}
                                 >
@@ -106,11 +93,7 @@ export default function WalletAddModal({ model, setter, addProps }) {
                                 </div>
                             </div>
                         )}
-                        <div
-                            className={"pt-2 w-full text-center text-app-error"}
-                        >
-                            {error}
-                        </div>
+                        <div className={"pt-2 w-full text-center text-app-error"}>{error}</div>
                     </div>
                 </div>
 
@@ -135,9 +118,7 @@ export default function WalletAddModal({ model, setter, addProps }) {
     const contentSuccess = () => {
         return (
             <div className={"min-w-[300px]"}>
-                <div className={"text-app-success"}>
-                    Wallet added successfully.
-                </div>
+                <div className={"text-app-success"}>Wallet added successfully.</div>
             </div>
         );
     };
@@ -146,12 +127,5 @@ export default function WalletAddModal({ model, setter, addProps }) {
         return success ? contentSuccess() : contentStake();
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={closeModal}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} />;
 }

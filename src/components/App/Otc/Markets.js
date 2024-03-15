@@ -8,9 +8,7 @@ export default function OtcMarkets({ propMarkets }) {
     let { otc, changeMarket, currentMarket } = propMarkets;
 
     return (
-        <div
-            className={`${isBased ? "rounded-xl" : ""} offerWrap  flex flex-1 maxHeight`}
-        >
+        <div className={`${isBased ? "rounded-xl" : ""} offerWrap  flex flex-1 maxHeight`}>
             <div
                 className={`overflow-x-auto flex flex-col bg-navy-accent ${isBased ? " rounded-tl-xl rounded-tr-xl" : ""}`}
             >
@@ -36,9 +34,7 @@ export default function OtcMarkets({ propMarkets }) {
                                                 "absolute right-2 -mt-[5px] opacity-0 group-hover:opacity-100 transition duration-300"
                                             }
                                         >
-                                            <Link
-                                                href={`${PAGE.Opportunities}/${el.slug}`}
-                                            >
+                                            <Link href={`${PAGE.Opportunities}/${el.slug}`}>
                                                 <IconButton
                                                     zoom={1.1}
                                                     size={"w-8"}

@@ -8,8 +8,7 @@ import { getCopy } from "@/lib/seoConfig";
 import { TENANTS_STAKIMG } from "@/components/App/Settings/helper";
 
 export default function StakingModal({ model, setter, stakingModalProps }) {
-    const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } =
-        stakingModalProps;
+    const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
     const { account, activeDiamond } = useEnvironmentContext();
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
@@ -50,8 +49,7 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
     const title = () => {
         return (
             <>
-                Stake{" "}
-                <span className="text-app-error">{stakingCurrency.name}</span>
+                Stake <span className="text-app-error">{stakingCurrency.name}</span>
             </>
         );
     };
@@ -60,15 +58,9 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
         return (
             <div className={"min-w-[300px]"}>
                 <div>
-                    To partake in{" "}
-                    <span className={"inline-block text-app-success"}>
-                        {getCopy("NAME")}
-                    </span>{" "}
+                    To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span>{" "}
                     investments, every investor must stake{" "}
-                    <span className={"text-app-success"}>
-                        ${stakingCurrency.symbol}
-                    </span>{" "}
-                    token.
+                    <span className={"text-app-success"}>${stakingCurrency.symbol}</span> token.
                 </div>
                 <div className={"my-5"}>
                     <div className={"detailRow"}>
@@ -92,9 +84,7 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
     const contentSuccess = () => {
         return (
             <div className={"min-w-[300px]"}>
-                <div className={"text-app-success"}>
-                    {stakingCurrency.name} staked successfully.
-                </div>
+                <div className={"text-app-success"}>{stakingCurrency.name} staked successfully.</div>
                 <div className={"text-gold"}>Welcome to {getCopy("NAME")}.</div>
             </div>
         );
@@ -104,12 +94,5 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
         return transactionSuccessful ? contentSuccess() : contentStake();
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={closeModal}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} />;
 }

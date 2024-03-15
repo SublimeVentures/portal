@@ -29,10 +29,7 @@ const TENANT_LOGO = () => {
         case TENANT.basedVC: {
             return (
                 <>
-                    <DynamicIcon
-                        name={`logo_${process.env.NEXT_PUBLIC_TENANT}`}
-                        style={"w-17 text-white"}
-                    />{" "}
+                    <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />{" "}
                     <div className={"text-2xl ml-2"}>{getCopy("NAME")}</div>
                 </>
             );
@@ -40,13 +37,8 @@ const TENANT_LOGO = () => {
         case TENANT.NeoTokyo: {
             return (
                 <>
-                    <DynamicIcon
-                        name={`logo_${process.env.NEXT_PUBLIC_TENANT}`}
-                        style={"w-17 text-white"}
-                    />{" "}
-                    <div className={"font-accent text-sm ml-3"}>
-                        {getCopy("NAME")}
-                    </div>
+                    <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />{" "}
+                    <div className={"font-accent text-sm ml-3"}>{getCopy("NAME")}</div>
                 </>
             );
         }
@@ -54,9 +46,7 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <img
-                        src={
-                            "https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"
-                        }
+                        src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"}
                         className={"max-w-[210px]"}
                     />
                 </>
@@ -110,11 +100,7 @@ export default function Sidebar({ session }) {
             {
                 name: "Accelerator",
                 link: PAGE.Accelerator,
-                icon: isBased ? (
-                    <IconGrowth className="w-7 mr-4" />
-                ) : (
-                    <IconNT className="w-8 mr-[0.91rem]" />
-                ),
+                icon: isBased ? <IconGrowth className="w-7 mr-4" /> : <IconNT className="w-8 mr-[0.91rem]" />,
             },
             {
                 name: "OTC",
@@ -163,9 +149,7 @@ export default function Sidebar({ session }) {
     };
 
     if (settings.isMysteryboxEnabled) {
-        const upgradeIndex = menu.groupUser.findIndex(
-            (item) => item.name === "Upgrades",
-        );
+        const upgradeIndex = menu.groupUser.findIndex((item) => item.name === "Upgrades");
         if (upgradeIndex !== -1) {
             menu.groupUser.splice(upgradeIndex, 0, {
                 name: "MysteryBox",
@@ -215,18 +199,10 @@ export default function Sidebar({ session }) {
                     <ChangeNetwork />
                     <ChangeAddress session={session} />
                 </div>
-                <nav
-                    className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}
-                >
-                    <div className="flex flex-col gap-2">
-                        {generateLink(menu.groupUser)}
-                    </div>
-                    <div className="flex flex-col gap-2 mt-auto">
-                        {generateLink(menu.groupHelp)}
-                    </div>
-                    <div className="flex flex-col gap-2 mt-12">
-                        {generateLink(menu.groupProfile)}
-                    </div>
+                <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}>
+                    <div className="flex flex-col gap-2">{generateLink(menu.groupUser)}</div>
+                    <div className="flex flex-col gap-2 mt-auto">{generateLink(menu.groupHelp)}</div>
+                    <div className="flex flex-col gap-2 mt-12">{generateLink(menu.groupProfile)}</div>
                 </nav>
             </div>
             <div
@@ -238,17 +214,11 @@ export default function Sidebar({ session }) {
                     </Link>
                     <div className="flex flex-1 justify-end hamburger items-center">
                         <div onClick={toggleMobile}>
-                            <div
-                                className={` burger ${isMobileOpen && "opened"}`}
-                            >
+                            <div className={` burger ${isMobileOpen && "opened"}`}>
                                 <div></div>
                             </div>
                             <label>
-                                <input
-                                    type="checkbox"
-                                    id="check"
-                                    defaultChecked={isMobileOpen}
-                                />
+                                <input type="checkbox" id="check" defaultChecked={isMobileOpen} />
                                 <span></span>
                                 <span></span>
                                 <span></span>
@@ -270,15 +240,9 @@ export default function Sidebar({ session }) {
                     <div
                         className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-app-bg flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${isBased ? "font-medium" : ""}`}
                     >
-                        <div className="flex flex-col gap-2">
-                            {generateLink(menu.groupUser)}
-                        </div>
-                        <div className="flex flex-col gap-2 mt-5">
-                            {generateLink(menu.groupHelp)}
-                        </div>
-                        <div className="flex flex-col gap-2 mt-5">
-                            {generateLink(menu.groupProfile)}
-                        </div>
+                        <div className="flex flex-col gap-2">{generateLink(menu.groupUser)}</div>
+                        <div className="flex flex-col gap-2 mt-5">{generateLink(menu.groupHelp)}</div>
+                        <div className="flex flex-col gap-2 mt-5">{generateLink(menu.groupProfile)}</div>
                     </div>
                 </Transition.Child>
             </Transition>

@@ -42,9 +42,7 @@ const BlockchainStep = ({ data }) => {
                         transition={{ duration: 0.5 }}
                         className={"flex flex-1 gap-3 items-center"}
                     >
-                        <div
-                            className={`blob relative ${state === STEP_STATE.PROCESSING ? "active" : ""}`}
-                        >
+                        <div className={`blob relative ${state === STEP_STATE.PROCESSING ? "active" : ""}`}>
                             <DynamicIcon name={icon} style={iconPadding} />
                         </div>
 
@@ -52,10 +50,7 @@ const BlockchainStep = ({ data }) => {
 
                         {state === STEP_STATE.SUCCESS && (
                             <div className={"rightIcon "}>
-                                <DynamicIcon
-                                    name={ICONS.CHECKMARK}
-                                    style={"p-[2px]"}
-                                />
+                                <DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"} />
                             </div>
                         )}
                         {state === STEP_STATE.ERROR && (
@@ -66,12 +61,7 @@ const BlockchainStep = ({ data }) => {
                                 }}
                             >
                                 <Tooltiper
-                                    wrapper={
-                                        <DynamicIcon
-                                            name={ICONS.ALERT}
-                                            style={""}
-                                        />
-                                    }
+                                    wrapper={<DynamicIcon name={ICONS.ALERT} style={""} />}
                                     text={`${error?.text}`}
                                     type={TooltipType.Error}
                                 />

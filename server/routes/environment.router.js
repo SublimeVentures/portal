@@ -5,11 +5,7 @@ const { serializeError } = require("serialize-error");
 const { envCache } = require("../controllers/envionment");
 const axios = require("axios");
 const { verifyID } = require("../../src/lib/authHelpers");
-const {
-    buildCookie,
-    authTokenName,
-    refreshTokenName,
-} = require("../../src/lib/authHelpers");
+const { buildCookie, authTokenName, refreshTokenName } = require("../../src/lib/authHelpers");
 
 //GET USER ENVIRONMENT DATA
 router.get("/", async (req, res) => {

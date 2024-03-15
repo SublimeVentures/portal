@@ -25,10 +25,7 @@ export default function EmptyVault() {
             />
 
             <div className="text-2xl -mt-5 sm:-mt-10 uppercase text-hero font-medium !text-3xl tracking-wider ">
-                <Link
-                    href={PAGE.Opportunities}
-                    className={"flex justify-center"}
-                >
+                <Link href={PAGE.Opportunities} className={"flex justify-center"}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={"Invest to unlock"}

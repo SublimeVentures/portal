@@ -12,12 +12,9 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
     const [processing, setProcessing] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
-    const existingWallet =
-        wallets.find((el) => el.wallet === account?.address) &&
-        !!account?.address;
+    const existingWallet = wallets.find((el) => el.wallet === account?.address) && !!account?.address;
 
-    const { error: signMessageError, signMessageAsync: signMessageFn } =
-        useSignMessage();
+    const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
 
     const closeModal = () => {
         setter();
@@ -68,19 +65,13 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
                 <div>
                     Switch to wallet you want to remove, and sign message.
                     <br />
-                    <span className={"text-app-error"}>
-                        You need to have at least one wallet assigned!
-                    </span>
+                    <span className={"text-app-error"}>You need to have at least one wallet assigned!</span>
                 </div>
                 <div className={"py-5"}>
                     <div className={"h-[60px]"}>
                         {existingWallet && (
                             <div>
-                                <div
-                                    className={
-                                        "glowNormal font-bold pb-2 w-full text-center"
-                                    }
-                                >
+                                <div className={"glowNormal font-bold pb-2 w-full text-center"}>
                                     Wallet to be removed
                                 </div>
                                 <div
@@ -90,11 +81,7 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
                                 </div>
                             </div>
                         )}
-                        <div
-                            className={"pt-2 w-full text-center text-app-error"}
-                        >
-                            {error}
-                        </div>
+                        <div className={"pt-2 w-full text-center text-app-error"}>{error}</div>
                     </div>
                 </div>
 
@@ -119,9 +106,7 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
     const contentSuccess = () => {
         return (
             <div className={"min-w-[300px]"}>
-                <div className={"text-app-success"}>
-                    Wallet removed successfully.
-                </div>
+                <div className={"text-app-success"}>Wallet removed successfully.</div>
             </div>
         );
     };
@@ -130,12 +115,5 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
         return success ? contentSuccess() : contentStake();
     };
 
-    return (
-        <GenericModal
-            isOpen={model}
-            closeModal={closeModal}
-            title={title()}
-            content={content()}
-        />
-    );
+    return <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} />;
 }

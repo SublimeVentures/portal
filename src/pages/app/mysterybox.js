@@ -18,14 +18,8 @@ import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useRouter } from "next/router";
 import { TENANT } from "@/lib/tenantHelper";
-const ErrorModal = dynamic(
-    () => import("@/components/App/MysteryBox/ClaimErrorModal"),
-    { ssr: false },
-);
-const ClaimMysteryBoxModal = dynamic(
-    () => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"),
-    { ssr: false },
-);
+const ErrorModal = dynamic(() => import("@/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
+const ClaimMysteryBoxModal = dynamic(() => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"), { ssr: false });
 
 const TENANT_MYSTERYBOX = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -33,25 +27,18 @@ const TENANT_MYSTERYBOX = () => {
             return (
                 <div className={"video-wrapper"}>
                     <video loop autoPlay muted playsInline className="">
-                        <source
-                            src="https://cdn.basedvc.fund/webapp/1.mp4"
-                            type="video/mp4"
-                        />
+                        <source src="https://cdn.basedvc.fund/webapp/1.mp4" type="video/mp4" />
                     </video>
                 </div>
             );
         }
         case TENANT.NeoTokyo: {
-            return (
-                <IconMysteryBox className="w-[250px] sm:w-[450px] text-white" />
-            );
+            return <IconMysteryBox className="w-[250px] sm:w-[450px] text-white" />;
         }
         case TENANT.CyberKongz: {
             return (
                 <img
-                    src={
-                        "https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/store/0_14.png"
-                    }
+                    src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/store/0_14.png"}
                     className={"max-w-[350px]"}
                 />
             );
@@ -90,14 +77,10 @@ export default function AppLootbox({ session }) {
         cacheTime: 15 * 1000,
     });
 
-    const mysteryBox = storeData?.find(
-        (el) => el.id === PremiumItemsENUM.MysteryBox,
-    );
+    const mysteryBox = storeData?.find((el) => el.id === PremiumItemsENUM.MysteryBox);
     const storeAvailable = mysteryBox ? mysteryBox.availability : 0;
 
-    const mysteryBoxOwned = premiumData?.find(
-        (el) => el.id === PremiumItemsENUM.MysteryBox,
-    );
+    const mysteryBoxOwned = premiumData?.find((el) => el.id === PremiumItemsENUM.MysteryBox);
     const mysteryBoxOwnedAmount = mysteryBoxOwned ? mysteryBoxOwned.amount : 0;
 
     const closeBuy = () => {
@@ -168,16 +151,12 @@ export default function AppLootbox({ session }) {
                     {TENANT_MYSTERYBOX()}
                 </div>
 
-                <div
-                    className={`flex gap-5 mt-5 z-10 ${isBased ? "absolute bottom-10" : ""}`}
-                >
+                <div className={`flex gap-5 mt-5 z-10 ${isBased ? "absolute bottom-10" : ""}`}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={"OPEN"}
                         state={"success"}
-                        isDisabled={
-                            mysteryBoxOwnedAmount < 1 || claimProcessing
-                        }
+                        isDisabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
                         isPrimary={true}
                         isWide={true}
                         zoom={1.05}
