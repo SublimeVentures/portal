@@ -1,7 +1,7 @@
 import {isBased} from "@/lib/utils";
 import PAGE from "@/routes";
 import {IconButton} from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import Link from "next/link";
 
 

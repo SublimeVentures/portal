@@ -1,6 +1,6 @@
 import LayoutFullscreen from "@/components/Layout/LayoutFullscreen";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import IconDashboard from "@/assets/svg/Home.svg";
+import { IoHomeOutline as IconDashboard } from "react-icons/io5";
 import Link from "next/link";
 import PAGE from "@/routes";
 import {NextSeo} from "next-seo";

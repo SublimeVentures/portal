@@ -1,7 +1,7 @@
 import LayoutApp from '@/components/Layout/LayoutApp';
 import RoundBanner from "@/components/App/RoundBanner";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import ReadIcon from "@/assets/svg/Read.svg";
+import { AiOutlineRead as ReadIcon } from "react-icons/ai";
 import Head from "next/head";
 import {useQuery} from "@tanstack/react-query";
 import {fetchMarkets, fetchOffers} from "@/fetchers/otc.fetcher";

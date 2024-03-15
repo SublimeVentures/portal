@@ -1,4 +1,4 @@
-import IconMore from "@/assets/svg/More.svg";
+import { IoEllipsisHorizontalOutline as IconMore } from "react-icons/io5";
 import VanillaTilt from "vanilla-tilt";
 import {useEffect, useRef} from "react";
 import moment from "moment";

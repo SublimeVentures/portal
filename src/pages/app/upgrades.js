@@ -9,7 +9,7 @@ import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import StoreItem from "@/components/App/Store/StoreItem";
 import {fetchStore} from "@/fetchers/store.fetcher";
-import ReadIcon from "@/assets/svg/Read.svg";
+import { AiOutlineRead as ReadIcon } from "react-icons/ai";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {useState, useEffect} from "react";
 import dynamic from "next/dynamic";

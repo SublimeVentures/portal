@@ -3,9 +3,11 @@ import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
 import {ExternalLinks} from "@/routes";
 import Input from "@/components/App/Input";
 import {IconButton} from "@/components/Button/IconButton";
-import IconPlus from "@/assets/svg/PlusZ.svg";
-import IconMinus from "@/assets/svg/MinusZ.svg";
-import IconDiscord from "@/assets/svg/Discord.svg";
+import {
+    IoAddCircleOutline as IconPlus,
+    IoRemoveCircleOutline as IconMinus,
+    IoLogoDiscord as IconDiscord
+} from "react-icons/io5";
 import Dropdown from "@/components/App/Dropdown";
 import Lottie from "lottie-react";
 import lottieOtc from "@/assets/lottie/otc.json";
@@ -100,7 +102,7 @@ export default function MakeOfferModal({model, setter, props}) {
     const {lock, text} = customLocks()
 
     const token = useGetToken(selectedCurrency?.contract)
-    console.log("selectedCurrency?.contract",selectedCurrency?.contract)
+    console.log("selectedCurrency?.contract", selectedCurrency?.contract)
     const blockchainInteractionDataSELL = useMemo(() => {
         console.log("BIX :: BUTTON STATE locked - refresh")
         return {
@@ -155,7 +157,7 @@ export default function MakeOfferModal({model, setter, props}) {
                 market: currentMarket,
                 isSeller: false,
                 prerequisiteTextWaiting: "Generate hash",
-                prerequisiteTextProcessing:  "Generating hash",
+                prerequisiteTextProcessing: "Generating hash",
                 prerequisiteTextSuccess: "Hash obtained",
                 prerequisiteTextError: "Couldn't generate hash",
                 transactionType: METHOD.OTC_MAKE
@@ -172,7 +174,6 @@ export default function MakeOfferModal({model, setter, props}) {
         model,
         text,
     ])
-
 
 
     const closeModal = async () => {
@@ -314,14 +315,15 @@ export default function MakeOfferModal({model, setter, props}) {
                                    full={true}
                                    customCss={"flex-1"}
                             />
-                            <Dropdown options={dropdownCurrencyOptions} selector={"symbol"}  classes={'!text-inherit blended'}
+                            <Dropdown options={dropdownCurrencyOptions} selector={"symbol"}
+                                      classes={'!text-inherit blended'}
                                       propSelected={setSelectedCurrency}/>
                         </div>
                     </motion.div>
                 </AnimatePresence>
                 {model && <div className={"flex flex-1 flex-col"}>
-                    { isSeller &&  <BlockchainSteps data={blockchainInteractionDataSELL}/>}
-                    { !isSeller &&  <BlockchainSteps data={blockchainInteractionDataBUY}/>}
+                    {isSeller && <BlockchainSteps data={blockchainInteractionDataSELL}/>}
+                    {!isSeller && <BlockchainSteps data={blockchainInteractionDataBUY}/>}
                 </div>}
 
                 <div className="absolute -bottom-6 w-full text-center"><Linker url={ExternalLinks.OTC}/> <span

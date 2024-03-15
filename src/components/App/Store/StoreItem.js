@@ -1,10 +1,6 @@
 import Image from "next/image";
 import {isBased} from "@/lib/utils";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
-import {ExternalLinks} from "@/routes";
-import ReadIcon from "@/assets/svg/Read.svg";
-import {ButtonIconSize} from "@/components/Button/RoundButton";
-
 
 export default function StoreItem({item, cdn, setOrder, currency}) {
     let {id, name, description, price, availability, img} = item

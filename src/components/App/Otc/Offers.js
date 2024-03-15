@@ -1,7 +1,9 @@
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import IconCart from "@/assets/svg/Cart.svg";
-import IconCancel from "@/assets/svg/Cancel.svg";
-import IconHistory from "@/assets/svg/History.svg";
+import {
+    IoCartOutline as IconCart,
+    IoCloseCircleOutline as IconCancel
+} from "react-icons/io5";
+import { GoHistory as IconHistory } from "react-icons/go";
 import {useState} from "react";
 import {useEffect} from "react";
 import Empty from "@/components/App/Empty";

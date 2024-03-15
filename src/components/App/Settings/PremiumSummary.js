@@ -3,7 +3,7 @@ import routes from "@/routes";
 import {isBased} from "@/lib/utils";
 import {ButtonIconSize} from "@/components/Button/RoundButton";
 import {PremiumItemsENUM} from "@/lib/enum/store";
-import IconPremium from "@/assets/svg/Premium.svg";
+import { IoDiamondOutline as IconPremium } from "react-icons/io5";
 import {useRouter} from "next/router";
 
 export default function PremiumSummary({data}) {

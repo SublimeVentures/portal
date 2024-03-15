@@ -1,5 +1,5 @@
 import {ButtonIconSize} from "@/components/Button/RoundButton";
-import IconLight from "@/assets/svg/Light.svg";
+import { BsLightningCharge as IconLight } from "react-icons/bs";
 import PAGE from "@/routes";
 import Link from "next/link";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";

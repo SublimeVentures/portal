@@ -1,7 +1,7 @@
 import {RoundButton, ButtonIconSize} from '@/components/Button/RoundButton';
 import {useRouter} from 'next/router'
 import PAGE from "@/routes";
-import PlayIcon from "@/assets/svg/Play.svg";
+import { IoPlay as PlayIcon } from "react-icons/io5";
 
 export default function Hero({account}) {
     const router = useRouter()

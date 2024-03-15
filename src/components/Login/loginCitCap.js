@@ -4,7 +4,7 @@ import {ExternalLinks} from "@/routes";
 import Linker from "@/components/link";
 import IconNT from "@/assets/svg/NT.svg";
 import {ButtonCitCapIconSize, CitCapButton} from "@/components/Button/CitCapButton";
-import PlayIcon from "@/assets/svg/Play.svg";
+import { IoPlay as PlayIcon} from "react-icons/io5";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 

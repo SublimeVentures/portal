@@ -1,7 +1,7 @@
-import IconMoney from "@/assets/svg/Money.svg";
+import { BiMoneyWithdraw as IconMoney } from "react-icons/bi";
+import { IoTimeOutline as IconClock } from "react-icons/io5";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
-import IconClock from "@/assets/svg/Clock.svg";
 import IconNT from "@/assets/svg/NT.svg";
 import {isBased} from "@/lib/utils";
 import Lottie from "lottie-react";

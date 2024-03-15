@@ -1,7 +1,7 @@
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {ExternalLinks} from "@/routes";
 import {useState, useEffect} from "react";
-import IconInfo from "@/assets/svg/Info.svg";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import {IconButton} from "@/components/Button/IconButton";
 import {useRouter} from 'next/router';
 import {timeUntilNextUnstakeWindow} from "@/components/App/Settings/helper";

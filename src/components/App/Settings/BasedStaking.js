@@ -1,6 +1,6 @@
 import {ExternalLinks} from "@/routes";
 import {IconButton} from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 
 export default function BasedStaking({account}) {
 

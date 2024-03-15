@@ -1,7 +1,7 @@
 import Linker from "@/components/link";
 import PAGE, {ExternalLinks} from "@/routes";
 import {ButtonCitCapIconSize, CitCapButton} from "@/components/Button/CitCapButton";
-import PlayIcon from "@/assets/svg/Play.svg";
+import { IoPlay as PlayIcon } from "react-icons/io5";
 import Link from "next/link";
 import Input from "@/components/App/Input";
 import {CITIZENS, CITIZENS_NAME} from "@/lib/utils";

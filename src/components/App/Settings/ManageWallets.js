@@ -8,7 +8,7 @@ import {ICONS} from "@/lib/icons";
 import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
 import {ExternalLinks} from "@/routes";
 import {IconButton} from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
 
 export default function ManageWallets({walletProps}) {

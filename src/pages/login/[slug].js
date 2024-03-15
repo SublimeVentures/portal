@@ -1,7 +1,7 @@
 import { useEffect, useRef} from "react";
 import HeroBg from "@/components/Home/HeroBg";
 import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import WalletIcon from "@/assets/svg/Wallet.svg";
+import { IoWalletOutline as WalletIcon } from "react-icons/io5";
 import Image from "next/image";
 import {verifyID} from "@/lib/authHelpers";
 import {queryClient} from "@/lib/queryCache";

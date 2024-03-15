@@ -1,7 +1,9 @@
-import IconDownload from "@/assets/svg/Download.svg";
-import IconDiscord from "@/assets/svg/Discord.svg";
-import IconWebsite from "@/assets/svg/Website.svg";
-import IconTwitter from "@/assets/svg/Twitter.svg";
+import {
+    IoCloudDownloadOutline as IconDownload,
+    IoLogoDiscord as IconDiscord,
+    IoOpenOutline as IconWebsite,
+    IoLogoTwitter as IconTwitter
+} from "react-icons/io5";
 import {IconButton} from "@/components/Button/IconButton";
 import {isBased} from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";

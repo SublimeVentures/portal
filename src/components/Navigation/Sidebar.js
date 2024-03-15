@@ -3,18 +3,22 @@ import {Fragment} from "react";
 import {Transition} from '@headlessui/react'
 import {useState} from "react";
 import { useRouter } from "next/router";
-import IconVault from "@/assets/svg/Vault.svg";
-import IconLight from "@/assets/svg/Light.svg";
-import IconExchange from "@/assets/svg/Exchange.svg";
-import IconBell from "@/assets/svg/Bell.svg";
-import IconDiscord from "@/assets/svg/Discord.svg";
-import IconWiki from "@/assets/svg/Wiki.svg";
-import IconLogout from "@/assets/svg/Logout.svg";
-import IconSetting from "@/assets/svg/Setting.svg";
+import {
+    BsLightningCharge as IconLight,
+    BsSafe as IconVault
+} from "react-icons/bs";
+import { MdOutlineCurrencyExchange as IconExchange } from "react-icons/md";
+import {
+    IoLogoDiscord as IconDiscord,
+    IoNotificationsOutline as IconBell,
+    IoBookOutline as IconWiki,
+    IoLogOutOutline as IconLogout,
+    IoSettingsOutline as IconSetting,
+    IoDiamondOutline as IconPremium
+} from "react-icons/io5";
+import { PiPlantFill as IconGrowth } from "react-icons/pi";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
-import IconPremium from "@/assets/svg/Premium.svg";
 import IconNT from "@/assets/svg/NT.svg";
-import IconGrowth from "@/assets/svg/Seed.svg";
 import PAGE, {ExternalLinks} from "@/routes";
 import {isBased} from "@/lib/utils";
 import {useEnvironmentContext} from "@/lib/context/EnvironmentContext";
@@ -23,7 +27,6 @@ import ChangeAddress  from "@/components/Navigation/ChangeAddress";
 import {TENANT} from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 import {getCopy} from "@/lib/seoConfig";
-
 
 const TENANT_LOGO = () => {
     switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -111,7 +114,7 @@ export default function Sidebar({session}) {
     return (
         <aside className="flex sticky top-0 z-20 collap:relative">
             <div
-                className="p-7 flex flex-col border-r border-app-bg-split  boxshadow text-app-white max-h-screen sticky top-0 hidden collap:flex">
+                className="p-7 flex flex-col border-r border-app-bg-split boxshadow text-app-white sticky top-0 hidden collap:flex overflow-y-auto">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">

@@ -11,7 +11,7 @@ import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
 import {Transition} from "@headlessui/react";
 import {Fragment} from "react";
-import IconCancel from "@/assets/svg/Cancel.svg";
+import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import Dropdown from "@/components/App/Dropdown";
 import {ButtonTypes, UniButton} from "@/components/Button/UniButton";
 import {checkIfNumberKey, isBased} from "@/lib/utils";
