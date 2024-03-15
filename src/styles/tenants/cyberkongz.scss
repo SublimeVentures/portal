@@ -2,158 +2,168 @@
 //@tailwind components;
 //@tailwind utilities;
 
-@import '../components/hero';
-@import '../components/buttonNeon';
+@import "../components/hero";
+@import "../components/buttonNeon";
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;300;400;500;600;700&family=Inter:wght@100;300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;300;400;500;600;700&family=Inter:wght@100;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap");
 
 .accentFont {
-  font-family: "Open Sans", sans-serif;
-  font-style: normal;
+    font-family: "Open Sans", sans-serif;
+    font-style: normal;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .bg {
-  background-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 160px), url('https://cdn.basedvc.fund/webapp/bg_14.jpg');
-
-
+    background-image: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0) 160px
+        ),
+        url("https://cdn.basedvc.fund/webapp/bg_14.jpg");
 }
-
-
 
 .blurredBG {
-  backdrop-filter: blur(10px)!important;
-  color: white;
-  background: rgba(0, 0, 0, 0.65) !important;
+    backdrop-filter: blur(10px) !important;
+    color: white;
+    background: rgba(0, 0, 0, 0.65) !important;
 }
 
-.highlightGradient, .investorGradient, .aboutGradient, .calloutGradient, .bg-footer {
-  background: black!important;
+.highlightGradient,
+.investorGradient,
+.aboutGradient,
+.calloutGradient,
+.bg-footer {
+    background: black !important;
 }
 
 .customSlide {
-  background: #0e0e0e !important;
+    background: #0e0e0e !important;
 }
 
 .link {
-  &:after {
-    content: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Arrow / Arrow_Up_Right_MD'%3E%3Cpath id='Vector' d='M7 17L17 7M17 7H9M17 7V15' stroke='%2300c853' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
-  }
+    &:after {
+        content: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Arrow / Arrow_Up_Right_MD'%3E%3Cpath id='Vector' d='M7 17L17 7M17 7H9M17 7V15' stroke='%2300c853' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+    }
 }
 
-.dialogWrap{
-  border-radius: 0!important;
-  background: black;
+.dialogWrap {
+    border-radius: 0 !important;
+    background: black;
 }
 
 .banner {
-  background-image: linear-gradient(
-                  rgba(0, 0, 0, 0.6),
-                  rgba(0, 0, 0, 0.7)
-  ),  url('https://cdn.basedvc.fund/webapp/bg_14.jpg');
-
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)),
+        url("https://cdn.basedvc.fund/webapp/bg_14.jpg");
 }
 
-
 .offerBottom {
-  border-bottom-right-radius: 0!important;
-  border-bottom-left-radius: 0!important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
 }
 
 .offerWrap {
-  border:1px solid #273031;
-  box-shadow: rgba(231, 231, 231, 0.15) 0px 0px 40px;
-  //background: linear-gradient(rgb(87, 87, 87), rgb(161, 161, 161)) padding-box padding-box, linear-gradient(rgb(218, 218, 218), rgb(255, 255, 255)) border-box border-box;
-  background: black;
+    border: 1px solid #273031;
+    box-shadow: rgba(231, 231, 231, 0.15) 0px 0px 40px;
+    //background: linear-gradient(rgb(87, 87, 87), rgb(161, 161, 161)) padding-box padding-box, linear-gradient(rgb(218, 218, 218), rgb(255, 255, 255)) border-box border-box;
+    background: black;
 }
 
 .cleanWrap {
-  border:1px solid #273031;
-  box-shadow: rgba(231, 231, 231, 0.15) 0px 0px 40px;
+    border: 1px solid #273031;
+    box-shadow: rgba(231, 231, 231, 0.15) 0px 0px 40px;
 }
 
 .glowRed {
-  text-shadow: rgb(211, 28, 91) 0px 0px 12px;
-  white-space: normal;
+    text-shadow: rgb(211, 28, 91) 0px 0px 12px;
+    white-space: normal;
 }
 
-.onlyIcon{
-  box-shadow: none!important;
-  &:hover {
-    color: #D31C5B
-  }
+.onlyIcon {
+    box-shadow: none !important;
+    &:hover {
+        color: #d31c5b;
+    }
 }
 
 .vaultItem {
-  border:1px solid #273031;
-  box-shadow: rgba(88, 104, 233, 0.15) 0px 0px 40px;
-  background: black;
-
+    border: 1px solid #273031;
+    box-shadow: rgba(88, 104, 233, 0.15) 0px 0px 40px;
+    background: black;
 }
-
 
 .offerItem {
-  .offerBottom {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+    .offerBottom {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
 
-  &.pending {
-    background: linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box, linear-gradient(rgb(42, 172, 198), rgba(42, 172, 198, 0.2)) border-box border-box;
-  }
+    &.pending {
+        background:
+            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box
+                padding-box,
+            linear-gradient(rgb(42, 172, 198), rgba(42, 172, 198, 0.2))
+                border-box border-box;
+    }
 
-  &.inprogress {
-    background: linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box, linear-gradient(rgb(245, 164, 0), rgba(245, 164, 0, 0.2)) border-box border-box;
-  }
+    &.inprogress {
+        background:
+            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box
+                padding-box,
+            linear-gradient(rgb(245, 164, 0), rgba(245, 164, 0, 0.2)) border-box
+                border-box;
+    }
 
-  &.closed {
-    background: linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box padding-box, linear-gradient(rgb(88, 104, 233), rgba(88, 104, 233, 0.2)) border-box border-box;
-
-  }
+    &.closed {
+        background:
+            linear-gradient(rgb(27, 35, 50), rgb(0, 0, 0)) padding-box
+                padding-box,
+            linear-gradient(rgb(88, 104, 233), rgba(88, 104, 233, 0.2))
+                border-box border-box;
+    }
 }
 
-
 .select-menu {
-  --background: #000000;
-  --text: #fff;
-  --icon: #fff;
-  --icon-active: #3F4656;
-  --list: rgba(0,0,0,0.9);
-  --list-text: rgba(255,255,255,0.8);
-  --list-text-hover: #00c853;
+    --background: #000000;
+    --text: #fff;
+    --icon: #fff;
+    --icon-active: #3f4656;
+    --list: rgba(0, 0, 0, 0.9);
+    --list-text: rgba(255, 255, 255, 0.8);
+    --list-text-hover: #00c853;
 
-  &.blended {
-    --background: #101d2d;
-    --list: #1c2b3b;
-  }
+    &.blended {
+        --background: #101d2d;
+        --list: #1c2b3b;
+    }
 }
 
 .loot {
-  .rewards {
-    .rewards-container {
-      .card-content {
-        background: linear-gradient(180deg, #242547 0%, rgba(0,0,0,0.2) 100%);
-      }
+    .rewards {
+        .rewards-container {
+            .card-content {
+                background: linear-gradient(
+                    180deg,
+                    #242547 0%,
+                    rgba(0, 0, 0, 0.2) 100%
+                );
+            }
+        }
     }
-  }
 }
 
 .fullBtn {
-  .shakeBtn{
-    margin:0 auto;
-  }
+    .shakeBtn {
+        margin: 0 auto;
+    }
 }
-
 
 .kongzNeon {
-  color: #fff;
-  text-shadow:
-          0 0 5px #fff,
-          0 0 10px #fff;
-
+    color: #fff;
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff;
 }
-

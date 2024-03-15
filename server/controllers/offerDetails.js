@@ -1,15 +1,14 @@
-const {getOfferDetails} = require("../queries/offers.query");
-const {getOfferRaise} = require("../queries/invest.query");
+const { getOfferDetails } = require("../queries/offers.query");
+const { getOfferRaise } = require("../queries/invest.query");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
-
+const { serializeError } = require("serialize-error");
 
 async function getParamOfferDetails(user, req) {
-    const {partnerId, tenantId} = user
+    const { partnerId, tenantId } = user;
 
     const results = await getOfferDetails(req.params.slug, partnerId, tenantId);
-    const offer = results[0]
-    if (!offer) return {ok: false}
+    const offer = results[0];
+    if (!offer) return { ok: false };
     //todo: lengthWale, lengthRaffle
 
     return {
@@ -39,28 +38,29 @@ async function getParamOfferDetails(user, req) {
         d_close: offer.d_close,
         lengthFCFS: offer.lengthFCFS,
         lengthGuaranteed: offer.lengthGuaranteed,
-    }
-
+    };
 }
-
 
 async function getOfferAllocation(req) {
     try {
-        const data = await getOfferRaise(Number(req.params.id))
-        const allocation = data.get({plain: true})
+        const data = await getOfferRaise(Number(req.params.id));
+        const allocation = data.get({ plain: true });
 
         return {
             alloRes: allocation.alloRes,
             alloFilled: allocation.alloFilled + allocation.alloFilledInjected,
-            alloGuaranteed: allocation.alloGuaranteed + allocation.alloGuaranteedInjected,
+            alloGuaranteed:
+                allocation.alloGuaranteed + allocation.alloGuaranteedInjected,
             alloTotal: allocation.alloTotal,
             isPaused: allocation.isPaused,
             isSettled: allocation.isSettled,
             isRefund: allocation.isRefund,
-        }
-
+        };
     } catch (error) {
-        logger.error(`Can't fetch offerFundraise`, {error: serializeError(error), params: req.params});
+        logger.error(`Can't fetch offerFundraise`, {
+            error: serializeError(error),
+            params: req.params,
+        });
 
         return {
             alloRes: 0,
@@ -70,10 +70,8 @@ async function getOfferAllocation(req) {
             isPaused: false,
             isSettled: false,
             isRefund: false,
-        }
+        };
     }
-
 }
 
-
-module.exports = {getParamOfferDetails, getOfferAllocation}
+module.exports = { getParamOfferDetails, getOfferAllocation };

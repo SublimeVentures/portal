@@ -1,21 +1,21 @@
-import {useState, useCallback, useEffect} from 'react';
-import {useRouter} from 'next/router';
-import {useAccount, useConnect, useSignMessage} from "wagmi";
+import { useState, useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useAccount, useConnect, useSignMessage } from "wagmi";
 import moment from "moment";
-import {v4 as uuidv4} from 'uuid';
-import {logIn} from "@/fetchers/auth.fetcher";
+import { v4 as uuidv4 } from "uuid";
+import { logIn } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
-import {TENANT} from "@/lib/tenantHelper";
+import { TENANT } from "@/lib/tenantHelper";
 
 const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
     [TENANT.NeoTokyo]: "INVEST EARLY\nINVEST WITH THE CITADEL",
     [TENANT.CyberKongz]: "INVEST EARLY\nINVEST WITH THE KONG",
-}
+};
 
 const LOGIN_TYPE = {
-    WEB3: 1
-}
+    WEB3: 1,
+};
 
 export default function useLoginFlow() {
     const router = useRouter();
@@ -30,16 +30,17 @@ export default function useLoginFlow() {
         address: accountAddress,
         isConnected: accountIsConnected,
         isConnecting: accountIsConnecting,
-        connector: connectorActive
+        connector: connectorActive,
     } = useAccount();
-    const {error: signMessageError, signMessageAsync: signMessageFn} = useSignMessage();
+    const { error: signMessageError, signMessageAsync: signMessageFn } =
+        useSignMessage();
     const {
         connectors,
         connectAsync: connect,
         error: connectorError,
         isLoading: connectorIsLoading,
-        variables: connectVariables
-    } = useConnect()
+        variables: connectVariables,
+    } = useConnect();
 
     const signMessage = useCallback(async () => {
         setErrorMsg("");
@@ -49,16 +50,22 @@ export default function useLoginFlow() {
             const time = moment.utc().unix();
             const nonce = uuidv4();
             const message = `${SIGNING_MESSAGE[process.env.NEXT_PUBLIC_TENANT]}\n\nDOMAIN: ${window.location.host.replace("www.", "")}\nTIME: ${time}\nNONCE: ${nonce}\n\nI herby accept Privacy Policy and Terms of Use available https://${window.location.host.replace("www.", "")}/terms and https://${window.location.host.replace("www.", "")}/privacy`;
-            const signature = await signMessageFn({message});
+            const signature = await signMessageFn({ message });
 
             const callbackUrl = router.query.callbackUrl;
-            const isAuth = await logIn(message, signature, Number(process.env.NEXT_PUBLIC_TENANT), partner, LOGIN_TYPE.WEB3);
+            const isAuth = await logIn(
+                message,
+                signature,
+                Number(process.env.NEXT_PUBLIC_TENANT),
+                partner,
+                LOGIN_TYPE.WEB3,
+            );
             if (isAuth?.ok) {
                 router.replace(callbackUrl ? callbackUrl : routes.App);
             } else {
                 router.push({
                     pathname: routes.Login,
-                    query: {error: "CredentialsSignin"}
+                    query: { error: "CredentialsSignin" },
                 });
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
@@ -70,7 +77,6 @@ export default function useLoginFlow() {
         }
     }, [signMessageFn, router, accountAddress, accountIsConnected, partner]);
 
-
     const handleConnect = useCallback(async () => {
         if (isLoginLoading) return;
 
@@ -81,7 +87,6 @@ export default function useLoginFlow() {
             } catch (error) {
                 setErrorMsg(error.shortMessage);
             }
-
         }
 
         setModalOpen(true);
@@ -91,7 +96,7 @@ export default function useLoginFlow() {
         if (modalOpen) {
             setErrorMsg("");
         }
-    }, [modalOpen])
+    }, [modalOpen]);
 
     const loginData = {
         connectors,
@@ -105,13 +110,13 @@ export default function useLoginFlow() {
         setErrorMsg,
         accountIsConnecting,
         isSigningMessage,
-        isLoginLoading
-    }
+        isLoginLoading,
+    };
 
     return {
         loginData,
         isLoginLoading,
         setPartner,
-        handleConnect
+        handleConnect,
     };
 }

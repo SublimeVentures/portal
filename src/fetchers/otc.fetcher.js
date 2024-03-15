@@ -1,93 +1,97 @@
 import * as Sentry from "@sentry/nextjs";
-import {axiosPrivate} from "@/lib/axios/axiosPrivate";
+import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 
 export const fetchMarkets = async () => {
     try {
-        const url = `/api/otc/markets`
-        const {data} = await axiosPrivate.get(url)
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "fetchMarkets", e});
+        const url = `/api/otc/markets`;
+        const { data } = await axiosPrivate.get(url);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchMarkets", e });
         }
     }
-    return {}
-}
-
+    return {};
+};
 
 export const fetchOffers = async (otcId) => {
-    if(!otcId) return []
+    if (!otcId) return [];
     try {
-        const url = `/api/otc/offers/${otcId}`
-        const {data} = await axiosPrivate.get(url)
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "fetchOffers", e});
+        const url = `/api/otc/offers/${otcId}`;
+        const { data } = await axiosPrivate.get(url);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchOffers", e });
         }
     }
-    return []
-}
+    return [];
+};
 
 export const fetchHistory = async (offerId) => {
     try {
-        const url = `/api/otc/history/${offerId}`
-        const {data} = await axiosPrivate.get(url)
-        return data
-    } catch(e) {
-
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "fetchHistory", e});
+        const url = `/api/otc/history/${offerId}`;
+        const { data } = await axiosPrivate.get(url);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchHistory", e });
         }
     }
-    return {}
-}
+    return {};
+};
 
-export const saveTransaction = async (offerId, networkChainId, price, amount, isSell, account) => {
+export const saveTransaction = async (
+    offerId,
+    networkChainId,
+    price,
+    amount,
+    isSell,
+    account,
+) => {
     try {
-        const {data} = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
+        const { data } = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
             networkChainId,
             price,
             amount,
             isSell,
-            account
-        })
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "saveTransaction", e});
+            account,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "saveTransaction", e });
         }
     }
-    return {}
-}
+    return {};
+};
 export const getSignature = async (offerId, chainId, otcId, dealId, wallet) => {
     try {
-        const {data} = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {
+        const { data } = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {
             chainId,
             otcId,
             dealId,
-            wallet
-        })
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "getSignature", e});
+            wallet,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "getSignature", e });
         }
     }
-    return {}
-}
+    return {};
+};
 
 export const removeTransaction = async (offerId, hash) => {
     try {
-        const {data} = await axiosPrivate.post(`/api/otc/${offerId}/remove`, {
-            hash
-        })
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "removeTransaction", e});
+        const { data } = await axiosPrivate.post(`/api/otc/${offerId}/remove`, {
+            hash,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "removeTransaction", e });
         }
     }
-    return {}
-}
-
+    return {};
+};

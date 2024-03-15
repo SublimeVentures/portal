@@ -17,4 +17,4 @@ export const ICONS = {
     SUCCESS: "success-outline",
     INFO: "Info",
     TICKET: "ticket",
-}
+};

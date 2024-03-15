@@ -1,45 +1,38 @@
 .timeline {
-  .moreVault {
-    transition: all 1s cubic-bezier(0.03,0.98,0.52,0.99);
-
-  }
-
-  &:hover {
     .moreVault {
-      opacity: 1;
+        transition: all 1s cubic-bezier(0.03, 0.98, 0.52, 0.99);
     }
-  }
 
+    &:hover {
+        .moreVault {
+            opacity: 1;
+        }
+    }
 }
 
 .moreVaultIcon {
-  position: relative;
+    position: relative;
 
-  .icon {
-    border-radius: 9999px;
-    -moz-border-radius: 9999px;
-    -webkit-border-radius: 9999px;
-    box-shadow: 0 0 40px -10px theme('colors.outline');
-    //background: transparent;
-    border: 1px solid white;
-    background: #0b0d12;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-  }
-
-
-  .active {
     .icon {
-      box-shadow: 0 0 40px -10px theme('colors.app-success') !important;
-      background: theme('colors.app-success') !important;
-      border:0;
-      color: black;
-
+        border-radius: 9999px;
+        -moz-border-radius: 9999px;
+        -webkit-border-radius: 9999px;
+        box-shadow: 0 0 40px -10px theme("colors.outline");
+        //background: transparent;
+        border: 1px solid white;
+        background: #0b0d12;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-  }
+
+    .active {
+        .icon {
+            box-shadow: 0 0 40px -10px theme("colors.app-success") !important;
+            background: theme("colors.app-success") !important;
+            border: 0;
+            color: black;
+        }
+    }
 }
-
-

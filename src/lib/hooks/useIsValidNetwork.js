@@ -1,11 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 function useIsValidNetwork(value) {
-
-
     useEffect(() => {
         // Your code that should run when 'value' changes
-        console.log('Value has changed:', value);
+        console.log("Value has changed:", value);
 
         // Optional cleanup function
         return () => {

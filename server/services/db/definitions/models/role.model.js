@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
     sequelize.define(
-        'role',
+        "role",
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -20,12 +20,12 @@ module.exports = (sequelize) => {
             },
             permissions: {
                 type: DataTypes.ARRAY(DataTypes.INTEGER),
-                defaultValue: []
-            }
+                defaultValue: [],
+            },
         },
         {
             freezeTableName: true,
             timestamps: true,
-        }
+        },
     );
 };

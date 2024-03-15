@@ -1,25 +1,25 @@
-const {models} = require('../services/db/definitions/db.init');
+const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
+const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
-const {QueryTypes} = require("sequelize");
+const { QueryTypes } = require("sequelize");
 
 async function getOffersPublic() {
     try {
         return models.offer.findAll({
-            attributes: ['name', 'genre', 'url_web', 'slug'],
+            attributes: ["name", "genre", "url_web", "slug"],
             where: {
-                displayPublic: true
+                displayPublic: true,
             },
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-            raw: true
+            order: [["createdAt", "DESC"]],
+            raw: true,
         });
     } catch (error) {
-        logger.error('QUERY :: [getOffersPublic]', {error: serializeError(error)});
+        logger.error("QUERY :: [getOffersPublic]", {
+            error: serializeError(error),
+        });
     }
-    return []
+    return [];
 }
 
 const query_getOfferList = `
@@ -65,7 +65,6 @@ const query_getOfferList = `
         ol.d_open DESC;
 `;
 
-
 const query_getOfferListOtc = `
     SELECT
         o.slug,
@@ -105,20 +104,20 @@ const query_getOfferListOtc = `
         ol.d_open DESC;
 `;
 
-
 async function getOfferList(partnerId, tenantId, isOtc) {
     try {
-        const query = isOtc ? query_getOfferListOtc : query_getOfferList
+        const query = isOtc ? query_getOfferListOtc : query_getOfferList;
         return await db.query(query, {
             type: QueryTypes.SELECT,
             replacements: { partnerId, tenantId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getOfferList]', {error: serializeError(error)});
+        logger.error("QUERY :: [getOfferList]", {
+            error: serializeError(error),
+        });
     }
-    return []
+    return [];
 }
-
 
 const query_getOfferDetails = `
     SELECT
@@ -152,7 +151,6 @@ const query_getOfferDetails = `
     LIMIT 1;
 `;
 
-
 async function getOfferDetails(slug, partnerId, tenantId) {
     try {
         return await db.query(query_getOfferDetails, {
@@ -160,46 +158,56 @@ async function getOfferDetails(slug, partnerId, tenantId) {
             replacements: { slug, partnerId, tenantId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getOfferDetails]', {error: serializeError(error), slug, });
+        logger.error("QUERY :: [getOfferDetails]", {
+            error: serializeError(error),
+            slug,
+        });
     }
-    return {}
+    return {};
 }
-
 
 async function getOfferById(id) {
     try {
         return models.offer.findOne({
-            where: {id},
-            raw: true
-        })
+            where: { id },
+            raw: true,
+        });
     } catch (error) {
-        logger.error('QUERY :: [getOfferById]', {error: serializeError(error), id});
+        logger.error("QUERY :: [getOfferById]", {
+            error: serializeError(error),
+            id,
+        });
     }
-    return {}
+    return {};
 }
 
 async function getOfferWithLimits(offerId) {
     try {
         const offer = await models.offer.findOne({
             where: { id: offerId },
-            include: [{
-                model: models.offerLimit,
-                as: 'offerLimits'
-            },
+            include: [
+                {
+                    model: models.offerLimit,
+                    as: "offerLimits",
+                },
                 {
                     model: models.offerFundraise,
-                    as: 'offerFundraise'
-                }],
-
+                    as: "offerFundraise",
+                },
+            ],
         });
 
         return offer ? offer.get({ plain: true }) : null;
     } catch (error) {
-        console.error('Error fetching offer with limits:', error);
+        console.error("Error fetching offer with limits:", error);
         return null;
     }
 }
 
-
-
-module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferById, getOfferWithLimits}
+module.exports = {
+    getOffersPublic,
+    getOfferList,
+    getOfferDetails,
+    getOfferById,
+    getOfferWithLimits,
+};

@@ -1,33 +1,33 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import Matrix from "./Matrix"
+import Matrix from "./Matrix";
 import DynamicIcon from "@/components/Icon";
 
 const Flipbook = ({
-                      pages,
-                      pagesHiRes = [],
-                      flipDuration = 1000,
-                      zoomDuration = 500,
-                      zooms = [1, 2, 4],
-                      perspective = 2400,
-                      nPolygons = 10,
-                      ambient = 0.4,
-                      gloss = 0.6,
-                      swipeMin = 3,
-                      singlePage = false,
-                      forwardDirection = "right",
-                      centering = true,
-                      startPage = null,
-                      loadingImage = <DynamicIcon name={'spinner'}/>,
-                      clickToZoom = true,
-                      dragToFlip = true,
-                      wheel = "scroll",
-                      onFlipLeftStart,
-                      onFlipRightStart,
-                      onFlipLeftEnd,
-                      onFlipRightEnd,
-                      onZoomStart,
-                      onZoomEnd
-                  }) => {
+    pages,
+    pagesHiRes = [],
+    flipDuration = 1000,
+    zoomDuration = 500,
+    zooms = [1, 2, 4],
+    perspective = 2400,
+    nPolygons = 10,
+    ambient = 0.4,
+    gloss = 0.6,
+    swipeMin = 3,
+    singlePage = false,
+    forwardDirection = "right",
+    centering = true,
+    startPage = null,
+    loadingImage = <DynamicIcon name={"spinner"} />,
+    clickToZoom = true,
+    dragToFlip = true,
+    wheel = "scroll",
+    onFlipLeftStart,
+    onFlipRightStart,
+    onFlipLeftEnd,
+    onFlipRightEnd,
+    onZoomStart,
+    onZoomEnd,
+}) => {
     const [viewWidth, setViewWidth] = useState(0);
     const [viewHeight, setViewHeight] = useState(0);
     const [imageWidth, setImageWidth] = useState(600);
@@ -67,15 +67,15 @@ const Flipbook = ({
     const [scrollTop, setScrollTop] = useState(0);
     const [loadedImages, setLoadedImages] = useState({});
 
-    const viewportRef = useRef(null)
+    const viewportRef = useRef(null);
 
     const pageUrl = (page, hiRes = false) => {
         // console.log("FLIP page url", page, hiRes, pagesHiRes[page], pages[page])
         if (hiRes && zoom > 1 && !zooming) {
-            const url = pagesHiRes[page]
+            const url = pagesHiRes[page];
             if (url) return url;
         }
-        return pages[page] || null
+        return pages[page] || null;
     };
 
     const computeLighting = (rot, dRotate) => {
@@ -84,104 +84,119 @@ const Flipbook = ({
 
         if (ambient < 1) {
             const blackness = 1 - ambient;
-            const diffuse = lightingPoints.map(d =>
-                (1 - Math.cos((rot - dRotate * d) / 180 * Math.PI)) * blackness
+            const diffuse = lightingPoints.map(
+                (d) =>
+                    (1 - Math.cos(((rot - dRotate * d) / 180) * Math.PI)) *
+                    blackness,
             );
-            gradients.push(`linear-gradient(to right, rgba(0, 0, 0, ${diffuse[0]}), rgba(0, 0, 0, ${diffuse[1]}) 25%, rgba(0, 0, 0, ${diffuse[2]}) 50%, rgba(0, 0, 0, ${diffuse[3]}) 75%, rgba(0, 0, 0, ${diffuse[4]}))`);
+            gradients.push(
+                `linear-gradient(to right, rgba(0, 0, 0, ${diffuse[0]}), rgba(0, 0, 0, ${diffuse[1]}) 25%, rgba(0, 0, 0, ${diffuse[2]}) 50%, rgba(0, 0, 0, ${diffuse[3]}) 75%, rgba(0, 0, 0, ${diffuse[4]}))`,
+            );
         }
 
         if (gloss > 0 && !IE) {
             const DEG = 30;
             const POW = 200;
-            const specular = lightingPoints.map(d =>
+            const specular = lightingPoints.map((d) =>
                 Math.max(
-                    Math.pow(Math.cos((rot + DEG - dRotate * d) / 180 * Math.PI), POW),
-                    Math.pow(Math.cos((rot - DEG - dRotate * d) / 180 * Math.PI), POW)
-                )
+                    Math.pow(
+                        Math.cos(((rot + DEG - dRotate * d) / 180) * Math.PI),
+                        POW,
+                    ),
+                    Math.pow(
+                        Math.cos(((rot - DEG - dRotate * d) / 180) * Math.PI),
+                        POW,
+                    ),
+                ),
             );
-            gradients.push(`linear-gradient(to right, rgba(255, 255, 255, ${specular[0] * gloss}), rgba(255, 255, 255, ${specular[1] * gloss}) 25%, rgba(255, 255, 255, ${specular[2] * gloss}) 50%, rgba(255, 255, 255, ${specular[3] * gloss}) 75%, rgba(255, 255, 255, ${specular[4] * gloss}))`);
+            gradients.push(
+                `linear-gradient(to right, rgba(255, 255, 255, ${specular[0] * gloss}), rgba(255, 255, 255, ${specular[1] * gloss}) 25%, rgba(255, 255, 255, ${specular[2] * gloss}) 50%, rgba(255, 255, 255, ${specular[3] * gloss}) 75%, rgba(255, 255, 255, ${specular[4] * gloss}))`,
+            );
         }
 
-        return gradients.join(',');
-    }
+        return gradients.join(",");
+    };
 
     const makePolygonArray = (face) => {
         if (!flip.direction) {
-            return []
+            return [];
         }
 
-        let progress = flip.progress
-        let direction = flip.direction
+        let progress = flip.progress;
+        let direction = flip.direction;
 
         if (displayedPages === 1 && direction !== forwardDirection) {
-            progress = 1 - progress
-            direction = forwardDirection
+            progress = 1 - progress;
+            direction = forwardDirection;
         }
 
-        setFlip(currentFlip => ({
+        setFlip((currentFlip) => ({
             ...currentFlip,
-            opacity: (displayedPages === 1 && progress > .7) ? 1 - (progress - .7) / .3 : 1
-        }))
+            opacity:
+                displayedPages === 1 && progress > 0.7
+                    ? 1 - (progress - 0.7) / 0.3
+                    : 1,
+        }));
 
-        let image = face === 'front' ? flip.frontImage : flip.backImage
+        let image = face === "front" ? flip.frontImage : flip.backImage;
 
-        let polygonWidth = pageWidth / nPolygons
+        let polygonWidth = pageWidth / nPolygons;
 
-        let pageX = xMargin
-        let originRight = false
+        let pageX = xMargin;
+        let originRight = false;
 
         if (displayedPages === 1) {
-            if (forwardDirection === 'right') {
-                if (face === 'back') {
-                    originRight = true
-                    pageX = xMargin - pageWidth
+            if (forwardDirection === "right") {
+                if (face === "back") {
+                    originRight = true;
+                    pageX = xMargin - pageWidth;
                 }
             } else {
-                if (direction === 'left') {
-                    if (face === 'back') {
-                        pageX = pageWidth - xMargin
+                if (direction === "left") {
+                    if (face === "back") {
+                        pageX = pageWidth - xMargin;
                     } else {
-                        originRight = true
+                        originRight = true;
                     }
                 } else {
-                    if (face === 'front') {
-                        pageX = pageWidth - xMargin
+                    if (face === "front") {
+                        pageX = pageWidth - xMargin;
                     } else {
-                        originRight = true
+                        originRight = true;
                     }
                 }
             }
         } else {
-            if (direction === 'left') {
-                if (face === 'back') {
-                    pageX = viewWidth / 2
+            if (direction === "left") {
+                if (face === "back") {
+                    pageX = viewWidth / 2;
                 } else {
-                    originRight = true
+                    originRight = true;
                 }
             } else {
-                if (face === 'front') {
-                    pageX = viewWidth / 2
+                if (face === "front") {
+                    pageX = viewWidth / 2;
                 } else {
-                    originRight = true
+                    originRight = true;
                 }
             }
         }
 
-        let pageMatrix = new Matrix()
-        pageMatrix.translate(viewWidth / 2)
-        pageMatrix.perspective(perspective)
-        pageMatrix.translate(-viewWidth / 2)
-        pageMatrix.translate(pageX, yMargin)
+        let pageMatrix = new Matrix();
+        pageMatrix.translate(viewWidth / 2);
+        pageMatrix.perspective(perspective);
+        pageMatrix.translate(-viewWidth / 2);
+        pageMatrix.translate(pageX, yMargin);
 
-        let pageRotation = 0
+        let pageRotation = 0;
         if (progress > 0.5) {
-            pageRotation = -(progress - 0.5) * 2 * 180
+            pageRotation = -(progress - 0.5) * 2 * 180;
         }
-        if (direction === 'left') {
-            pageRotation = -pageRotation
+        if (direction === "left") {
+            pageRotation = -pageRotation;
         }
-        if (face == 'back') {
-            pageRotation += 180
+        if (face == "back") {
+            pageRotation += 180;
         }
 
         if (pageRotation) {
@@ -207,14 +222,14 @@ const Flipbook = ({
 
         let radian = 0;
         let dRadian = theta / nPolygons;
-        let rotate = dRadian / 2 / Math.PI * 180;
-        let dRotate = dRadian / Math.PI * 180;
+        let rotate = (dRadian / 2 / Math.PI) * 180;
+        let dRotate = (dRadian / Math.PI) * 180;
 
         if (originRight) {
-            rotate = -theta / Math.PI * 180 + dRotate / 2;
+            rotate = (-theta / Math.PI) * 180 + dRotate / 2;
         }
 
-        if (face === 'back') {
+        if (face === "back") {
             rotate = -rotate;
             dRotate = -dRotate;
         }
@@ -232,7 +247,7 @@ const Flipbook = ({
                 x = pageWidth - x;
             }
             let z = (1 - Math.cos(rad)) * radius;
-            if (face === 'back') {
+            if (face === "back") {
                 z = -z;
             }
 
@@ -242,21 +257,31 @@ const Flipbook = ({
             const x0 = m.transformX(0);
             const x1 = m.transformX(polygonWidth);
 
-            setMaxX(curMaxX => Math.max(x0, x1, curMaxX));
-            setMinX(curMinX => Math.min(x0, x1, curMinX));
+            setMaxX((curMaxX) => Math.max(x0, x1, curMaxX));
+            setMinX((curMinX) => Math.min(x0, x1, curMinX));
 
             const lighting = computeLighting(pageRotation - rotate, dRotate);
 
             radian += dRadian;
             rotate += dRotate;
-            polygons.push([`${face}${i}`, image, lighting, bgPos, m.toString(), Math.abs(Math.round(z))]);
+            polygons.push([
+                `${face}${i}`,
+                image,
+                lighting,
+                bgPos,
+                m.toString(),
+                Math.abs(Math.round(z)),
+            ]);
         }
 
         return polygons;
     };
 
     const IE = useMemo(() => {
-        return typeof navigator !== 'undefined' && /Trident/.test(navigator.userAgent);
+        return (
+            typeof navigator !== "undefined" &&
+            /Trident/.test(navigator.userAgent)
+        );
     }, []);
 
     const zooms_ = useMemo(() => {
@@ -268,21 +293,24 @@ const Flipbook = ({
     }, [flip, currentPage, pages, displayedPages]);
 
     const canGoBack = useMemo(() => {
-        return !flip.direction && currentPage >= displayedPages &&
-            !(displayedPages === 1 && !pageUrl(firstPage - 1));
+        return (
+            !flip.direction &&
+            currentPage >= displayedPages &&
+            !(displayedPages === 1 && !pageUrl(firstPage - 1))
+        );
     }, [flip, currentPage, displayedPages, firstPage]);
 
     const canFlipLeft = useMemo(() => {
-        return forwardDirection === 'left' ? canGoForward : canGoBack;
+        return forwardDirection === "left" ? canGoForward : canGoBack;
     }, [forwardDirection, canGoForward, canGoBack]);
 
     const canFlipRight = useMemo(() => {
-        return forwardDirection === 'right' ? canGoForward : canGoBack;
+        return forwardDirection === "right" ? canGoForward : canGoBack;
     }, [forwardDirection, canGoForward, canGoBack]);
 
     // Idk why I reverted this but it works
     const canZoomOut = useMemo(() => {
-        return !zooming && zoomIndex < (zooms_.length - 1);
+        return !zooming && zoomIndex < zooms_.length - 1;
     }, [zooming, zoomIndex]);
 
     const canZoomIn = useMemo(() => {
@@ -301,10 +329,8 @@ const Flipbook = ({
         }
     }, [pages, currentPage]);
 
-
-
     const leftPage = useMemo(() => {
-        if (forwardDirection === 'right' || displayedPages === 1) {
+        if (forwardDirection === "right" || displayedPages === 1) {
             return firstPage;
         } else {
             return secondPage;
@@ -312,7 +338,7 @@ const Flipbook = ({
     }, [forwardDirection, displayedPages, firstPage, secondPage]);
 
     const rightPage = useMemo(() => {
-        return forwardDirection === 'left' ? firstPage : secondPage;
+        return forwardDirection === "left" ? firstPage : secondPage;
     }, [forwardDirection, firstPage, secondPage]);
 
     const showLeftPage = useMemo(() => {
@@ -327,15 +353,15 @@ const Flipbook = ({
         if (activeCursor) {
             return activeCursor;
         } else if (IE) {
-            return 'auto';
+            return "auto";
         } else if (clickToZoom && canZoomIn) {
-            return 'zoom-in';
+            return "zoom-in";
         } else if (clickToZoom && canZoomOut) {
-            return 'zoom-out';
+            return "zoom-out";
         } else if (dragToFlip) {
-            return 'grab';
+            return "grab";
         } else {
-            return 'auto';
+            return "auto";
         }
     }, [activeCursor, IE, clickToZoom, canZoomIn, canZoomOut, dragToFlip]);
 
@@ -347,22 +373,40 @@ const Flipbook = ({
         return scale < 1 ? scale : 1;
     }, [viewWidth, displayedPages, imageWidth, viewHeight, imageHeight]);
 
-    const pageWidth = useMemo(() => Math.round(imageWidth * pageScale), [imageWidth, pageScale]);
-    const pageHeight = useMemo(() => Math.round(imageHeight * pageScale), [imageHeight, pageScale]);
+    const pageWidth = useMemo(
+        () => Math.round(imageWidth * pageScale),
+        [imageWidth, pageScale],
+    );
+    const pageHeight = useMemo(
+        () => Math.round(imageHeight * pageScale),
+        [imageHeight, pageScale],
+    );
 
-    const xMargin = useMemo(() => (viewWidth - pageWidth * displayedPages) / 2, [viewWidth, pageWidth, displayedPages]);
-    const yMargin = useMemo(() => (viewHeight - pageHeight) / 2, [viewHeight, pageHeight]);
+    const xMargin = useMemo(
+        () => (viewWidth - pageWidth * displayedPages) / 2,
+        [viewWidth, pageWidth, displayedPages],
+    );
+    const yMargin = useMemo(
+        () => (viewHeight - pageHeight) / 2,
+        [viewHeight, pageHeight],
+    );
 
     const polygonWidth = useMemo(() => {
         let w = pageWidth / nPolygons;
         w = Math.ceil(w + 1 / zoom);
-        return w + 'px';
+        return w + "px";
     }, [pageWidth, nPolygons, zoom]);
 
     const polygonHeight = useMemo(() => `${pageHeight}px`, [pageHeight]);
-    const polygonBgSize = useMemo(() => `${pageWidth}px ${pageHeight}px`, [pageWidth, pageHeight]);
+    const polygonBgSize = useMemo(
+        () => `${pageWidth}px ${pageHeight}px`,
+        [pageWidth, pageHeight],
+    );
 
-    const polygonArray = useMemo(() => makePolygonArray('front').concat(makePolygonArray('back')), [flip.progress]);
+    const polygonArray = useMemo(
+        () => makePolygonArray("front").concat(makePolygonArray("back")),
+        [flip.progress],
+    );
 
     const boundingLeft = useMemo(() => {
         if (displayedPages === 1) {
@@ -383,15 +427,24 @@ const Flipbook = ({
     }, [displayedPages, xMargin, maxX, rightPage, viewWidth]);
 
     const centerOffset = useMemo(() => {
-        let retval = centering ? Math.round(viewWidth / 2 - (boundingLeft + boundingRight) / 2) : 0;
+        let retval = centering
+            ? Math.round(viewWidth / 2 - (boundingLeft + boundingRight) / 2)
+            : 0;
         if (currentCenterOffset === null && imageWidth !== null) {
             setCurrentCenterOffset(retval);
         }
-        return retval
-    }, [centering, currentCenterOffset, boundingLeft, boundingRight, imageWidth, viewWidth]);
+        return retval;
+    }, [
+        centering,
+        currentCenterOffset,
+        boundingLeft,
+        boundingRight,
+        imageWidth,
+        viewWidth,
+    ]);
 
     const centerOffsetSmoothed = useMemo(() => {
-        Math.round(currentCenterOffset)
+        Math.round(currentCenterOffset);
     }, [currentCenterOffset]);
 
     const dragToScroll = useMemo(() => !hasTouchEvents, [hasTouchEvents]);
@@ -399,19 +452,22 @@ const Flipbook = ({
     const calculateScroll = (isMax) => {
         const w = (boundingRight - boundingLeft) * zoom;
         if (w < viewWidth) {
-            return (boundingLeft + centerOffsetSmoothed) * zoom - (viewWidth - w) / 2;
+            return (
+                (boundingLeft + centerOffsetSmoothed) * zoom -
+                (viewWidth - w) / 2
+            );
         } else {
-            return isMax ?
-                (boundingRight + centerOffsetSmoothed) * zoom - viewWidth :
-                (boundingLeft + centerOffsetSmoothed) * zoom;
+            return isMax
+                ? (boundingRight + centerOffsetSmoothed) * zoom - viewWidth
+                : (boundingLeft + centerOffsetSmoothed) * zoom;
         }
     };
 
     const scrollLeftMin = useMemo(() => {
-        calculateScroll(false)
+        calculateScroll(false);
     }, [boundingLeft, boundingRight, zoom, centerOffsetSmoothed, viewWidth]);
     const scrollLeftMax = useMemo(() => {
-        calculateScroll(true)
+        calculateScroll(true);
     }, [boundingLeft, boundingRight, zoom, centerOffsetSmoothed, viewWidth]);
 
     const scrollTopMin = useMemo(() => {
@@ -432,18 +488,24 @@ const Flipbook = ({
         }
     }, [pageHeight, zoom, viewHeight, yMargin]);
 
-    const scrollLeftLimited = useMemo(() => Math.min(scrollLeftMax, Math.max(scrollLeftMin, scrollLeft)), [scrollLeftMax, scrollLeftMin, scrollLeft]);
-    const scrollTopLimited = useMemo(() => Math.min(scrollTopMax, Math.max(scrollTopMin, scrollTop)), [scrollTopMax, scrollTopMin, scrollTop]);
+    const scrollLeftLimited = useMemo(
+        () => Math.min(scrollLeftMax, Math.max(scrollLeftMin, scrollLeft)),
+        [scrollLeftMax, scrollLeftMin, scrollLeft],
+    );
+    const scrollTopLimited = useMemo(
+        () => Math.min(scrollTopMax, Math.max(scrollTopMin, scrollTop)),
+        [scrollTopMax, scrollTopMin, scrollTop],
+    );
 
-    const easeIn = (x) => Math.pow(x, 2)
-    const easeOut = (x) => 1 - easeIn(1 - x)
+    const easeIn = (x) => Math.pow(x, 2);
+    const easeOut = (x) => 1 - easeIn(1 - x);
     const easeInOut = (x) => {
         if (x < 0.5) {
-            return easeIn(x * 2) / 2
+            return easeIn(x * 2) / 2;
         } else {
-            return 0.5 + easeOut((x - 0.5) * 2) / 2
+            return 0.5 + easeOut((x - 0.5) * 2) / 2;
         }
-    }
+    };
 
     const onResize = () => {
         const viewport = viewportRef.current;
@@ -452,23 +514,30 @@ const Flipbook = ({
         const viewHeight = viewport.clientHeight;
         const displayedPages = viewWidth > viewHeight && !singlePage ? 2 : 1;
 
-        setViewWidth(viewWidth)
-        setViewHeight(viewHeight)
-        setDisplayedPages(displayedPages)
-        setCurrentPage(curPage => displayedPages === 2 ? currentPage & ~1 : curPage)
+        setViewWidth(viewWidth);
+        setViewHeight(viewHeight);
+        setDisplayedPages(displayedPages);
+        setCurrentPage((curPage) =>
+            displayedPages === 2 ? currentPage & ~1 : curPage,
+        );
         fixFirstPage();
-        setMinX(Infinity)
-        setMaxX(-Infinity)
+        setMinX(Infinity);
+        setMaxX(-Infinity);
     };
 
     const fixFirstPage = () => {
-        if (displayedPages == 1 && currentPage == 0 && pages.length && !pageUrl(0)) {
-            setCurrentPage(currentPage + 1)
+        if (
+            displayedPages == 1 &&
+            currentPage == 0 &&
+            pages.length &&
+            !pageUrl(0)
+        ) {
+            setCurrentPage(currentPage + 1);
         }
     };
 
     const pageUrlLoading = (page, hiRes = false) => {
-        const url = pageUrl(page, hiRes)
+        const url = pageUrl(page, hiRes);
         // console.log("FLIP pageUrlLoading url", url, hiRes, page)
         // High-res image doesn't use 'loading'
         if (hiRes && zoom > 1 && !zooming) {
@@ -481,54 +550,52 @@ const Flipbook = ({
         if (!canFlipLeft) {
             return;
         }
-        flipStart('left', true)
+        flipStart("left", true);
     };
 
     const flipRight = () => {
         if (!canFlipRight) {
             return;
         }
-        flipStart('right', true)
+        flipStart("right", true);
     };
-
 
     const flipStart = (direction, auto) => {
         if (direction !== forwardDirection) {
             if (displayedPages === 1) {
-                setFlip(currentFlip => ({
+                setFlip((currentFlip) => ({
                     ...currentFlip,
                     frontImage: pageUrl(currentPage - 1),
-                    backImage: null
-                }))
+                    backImage: null,
+                }));
             } else {
-                setFlip(currentFlip => ({
+                setFlip((currentFlip) => ({
                     ...currentFlip,
                     frontImage: pageUrl(firstPage),
-                    backImage: pageUrl(currentPage - displayedPages + 1)
-                }))
+                    backImage: pageUrl(currentPage - displayedPages + 1),
+                }));
             }
         } else {
             if (displayedPages === 1) {
-                setFlip(currentFlip => ({
+                setFlip((currentFlip) => ({
                     ...currentFlip,
                     frontImage: pageUrl(currentPage),
-                    backImage: null
-                }))
-
+                    backImage: null,
+                }));
             } else {
-                setFlip(currentFlip => ({
+                setFlip((currentFlip) => ({
                     ...currentFlip,
                     frontImage: pageUrl(secondPage),
-                    backImage: pageUrl(currentPage + displayedPages)
-                }))
+                    backImage: pageUrl(currentPage + displayedPages),
+                }));
             }
         }
 
-        setFlip(currentFlip => ({
+        setFlip((currentFlip) => ({
             ...currentFlip,
             direction: direction,
-            progress: 0
-        }))
+            progress: 0,
+        }));
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
@@ -549,22 +616,22 @@ const Flipbook = ({
                 }
             });
         });
-    }
+    };
 
     const flipAuto = (ease) => {
         const t0 = Date.now();
         const duration = flipDuration * (1 - flip.progress);
         const startRatio = flip.progress;
 
-        setFlip(currentFlip => ({
+        setFlip((currentFlip) => ({
             ...currentFlip,
-            auto: true
-        }))
+            auto: true,
+        }));
 
-        if (flip.direction === 'left') {
-            if (onFlipLeftStart) onFlipLeftStart()
-        } else if (flip.direction === 'right') {
-            if (onFlipRightStart) onFlipRightStart()
+        if (flip.direction === "left") {
+            if (onFlipLeftStart) onFlipLeftStart();
+        } else if (flip.direction === "right") {
+            if (onFlipRightStart) onFlipRightStart();
         }
 
         const animate = () => {
@@ -573,10 +640,10 @@ const Flipbook = ({
                 let ratio = startRatio + t / duration;
                 ratio = ratio > 1 ? 1 : ratio;
 
-                setFlip(currentFlip => ({
+                setFlip((currentFlip) => ({
                     ...currentFlip,
-                    progress: ease ? easeInOut(ratio) : ratio
-                }))
+                    progress: ease ? easeInOut(ratio) : ratio,
+                }));
 
                 if (ratio < 1) {
                     requestAnimationFrame(animate);
@@ -591,99 +658,109 @@ const Flipbook = ({
                     setCurrentPage(newCurrentPage);
 
                     // Emitting flip-end event
-                    if (flip.direction === 'left') {
-                        if (onFlipLeftEnd) onFlipLeftEnd()
-                    } else if (flip.direction === 'right') {
-                        if (onFlipRightEnd) onFlipRightEnd()
+                    if (flip.direction === "left") {
+                        if (onFlipLeftEnd) onFlipLeftEnd();
+                    } else if (flip.direction === "right") {
+                        if (onFlipRightEnd) onFlipRightEnd();
                     }
 
-                    if (displayedPages === 1 && flip.direction === forwardDirection) {
-                        setFlip(currentFlip => ({
+                    if (
+                        displayedPages === 1 &&
+                        flip.direction === forwardDirection
+                    ) {
+                        setFlip((currentFlip) => ({
                             ...currentFlip,
-                            direction: null
-                        }))
+                            direction: null,
+                        }));
                     } else {
                         onImageLoad(1, () => {
-                            setFlip(currentFlip => ({
+                            setFlip((currentFlip) => ({
                                 ...currentFlip,
-                                direction: null
-                            }))
-                        })
+                                direction: null,
+                            }));
+                        });
                     }
-                    setFlip(currentFlip => ({
+                    setFlip((currentFlip) => ({
                         ...currentFlip,
-                        auto: false
-                    }))
+                        auto: false,
+                    }));
                 }
             });
         };
 
         animate();
-    }
+    };
 
     const flipRevert = () => {
         const t0 = Date.now();
         const duration = flipDuration * flip.progress;
         const startRatio = flip.progress;
 
-        setFlip(currentFlip => ({
+        setFlip((currentFlip) => ({
             ...currentFlip,
-            auto: true
-        }))
+            auto: true,
+        }));
 
         const animate = () => {
             requestAnimationFrame(() => {
                 const t = Date.now() - t0;
-                let ratio = startRatio - startRatio * t / duration;
+                let ratio = startRatio - (startRatio * t) / duration;
                 ratio = ratio < 0 ? 0 : ratio;
 
-                setFlip(currentFlip => ({
+                setFlip((currentFlip) => ({
                     ...currentFlip,
-                    progress: ratio
-                }))
+                    progress: ratio,
+                }));
 
                 if (ratio > 0) {
                     requestAnimationFrame(animate);
                 } else {
-                    setFirstPage(currentPage)
-                    setSecondPage(currentPage + 1)
+                    setFirstPage(currentPage);
+                    setSecondPage(currentPage + 1);
 
-                    if (displayedPages === 1 && flip.direction !== forwardDirection) {
-                        setFlip(currentFlip => ({
+                    if (
+                        displayedPages === 1 &&
+                        flip.direction !== forwardDirection
+                    ) {
+                        setFlip((currentFlip) => ({
                             ...currentFlip,
-                            direction: displayedPages === 1 && currentFlip.direction !== forwardDirection ? null : currentFlip.direction,
-                        }))
+                            direction:
+                                displayedPages === 1 &&
+                                currentFlip.direction !== forwardDirection
+                                    ? null
+                                    : currentFlip.direction,
+                        }));
                     } else {
                         onImageLoad(1, () => {
-                            setFlip(currentFlip => ({
+                            setFlip((currentFlip) => ({
                                 ...currentFlip,
-                                direction: null
-                            }))
+                                direction: null,
+                            }));
                         });
                     }
-                    setFlip(currentFlip => ({
+                    setFlip((currentFlip) => ({
                         ...currentFlip,
-                        auto: false
-                    }))
+                        auto: false,
+                    }));
                 }
             });
         };
 
         animate();
-    }
+    };
 
     const onImageLoad = (trigger, cb) => {
-        setNImageLoad(0)
-        setNImageLoadTrigger(trigger)
-        setImageLoadCallback(cb)
+        setNImageLoad(0);
+        setNImageLoadTrigger(trigger);
+        setImageLoadCallback(cb);
     };
 
     const didLoadImage = (ev) => {
         // console.log("FLIP didLoadImage")
         if (imageWidth === null) {
             const image = ev.target || ev.path[0];
-            setImageWidth(image.naturalWidth)
-            setImageHeight(image.naturalHeight)
+            setImageWidth(image.naturalWidth);
+            setImageHeight(image.naturalHeight);
             preloadImages();
         }
 
@@ -691,34 +768,32 @@ const Flipbook = ({
             return;
         }
 
-        setNImageLoad(curVal => curVal + 1)
+        setNImageLoad((curVal) => curVal + 1);
 
         if (nImageLoad >= nImageLoadTrigger) {
             imageLoadCallback();
-            setImageLoadCallback(null)
+            setImageLoadCallback(null);
         }
-
-    }
+    };
 
     const zoomIn = (zoomAt = null) => {
         if (!canZoomIn) {
             return;
         }
-        setZoomIndex(curVal => curVal + 1)
+        setZoomIndex((curVal) => curVal + 1);
         zoomTo(zooms_[zoomIndex], zoomAt);
-    }
+    };
 
     const zoomOut = (zoomAt = null) => {
         if (!canZoomOut) {
             return;
         }
 
-        setZoomIndex(curVal => curVal - 1)
+        setZoomIndex((curVal) => curVal - 1);
         zoomTo(zooms_[zoomIndex], zoomAt);
-    }
+    };
 
     const zoomTo = (_zoom, zoomAt = null) => {
-
         const viewport = viewportRef.current;
         let fixedX, fixedY;
 
@@ -737,13 +812,13 @@ const Flipbook = ({
         const startY = viewport.scrollTop;
         const containerFixedX = fixedX + startX;
         const containerFixedY = fixedY + startY;
-        const endX = containerFixedX / start * end - fixedX;
-        const endY = containerFixedY / start * end - fixedY;
+        const endX = (containerFixedX / start) * end - fixedX;
+        const endY = (containerFixedY / start) * end - fixedY;
 
         const t0 = Date.now();
-        setZooming(true)
+        setZooming(true);
 
-        if (onZoomStart) onZoomStart()
+        if (onZoomStart) onZoomStart();
 
         const animate = () => {
             requestAnimationFrame(() => {
@@ -752,19 +827,19 @@ const Flipbook = ({
                 if (ratio > 1 || IE) ratio = 1;
                 ratio = easeInOut(ratio);
 
-                setZoom(start + (end - start) * ratio)
-                setScrollLeft(startX + (endX - startX) * ratio)
-                setScrollTop(startY + (endY - startY) * ratio)
+                setZoom(start + (end - start) * ratio);
+                setScrollLeft(startX + (endX - startX) * ratio);
+                setScrollTop(startY + (endY - startY) * ratio);
 
                 if (t < zoomDuration) {
                     requestAnimationFrame(animate);
                 } else {
                     // Emitting zoom-end event
-                    if (onZoomEnd) onZoomEnd()
-                    setZooming(false)
-                    setZoom(_zoom)
-                    setScrollLeft(endX)
-                    setScrollTop(endY)
+                    if (onZoomEnd) onZoomEnd();
+                    setZooming(false);
+                    setZoom(_zoom);
+                    setScrollLeft(endX);
+                    setScrollTop(endY);
                 }
             });
         };
@@ -775,26 +850,26 @@ const Flipbook = ({
             // console.log("FLIP animate - preloadImage")
             preloadImages(true);
         }
-    }
+    };
 
     const zoomAt = (zoomAt) => {
-        setZoomIndex(curVal => (curVal + 1) % zooms_.length)
-        zoomTo(zooms_[zoomIndex], zoomAt)
+        setZoomIndex((curVal) => (curVal + 1) % zooms_.length);
+        zoomTo(zooms_[zoomIndex], zoomAt);
     };
 
     const swipeStart = (touch) => {
-        setTouchStartX(touch.pageX)
-        setTouchStartY(touch.pageY)
-        setMaxMove(0)
+        setTouchStartX(touch.pageX);
+        setTouchStartY(touch.pageY);
+        setMaxMove(0);
         if (zoom <= 1) {
             if (dragToFlip) {
-                setActiveCursor('grab')
+                setActiveCursor("grab");
             }
         } else {
-            const viewport = viewportRef.current
-            setStartScrollLeft(viewport.scrollLeft)
-            setStartScrollTop(viewport.scrollTop)
-            setActiveCursor('all-scroll')
+            const viewport = viewportRef.current;
+            setStartScrollLeft(viewport.scrollLeft);
+            setStartScrollTop(viewport.scrollTop);
+            setActiveCursor("all-scroll");
         }
     };
 
@@ -806,33 +881,33 @@ const Flipbook = ({
 
         if (zoom > 1) {
             if (dragToScroll) {
-                dragScroll(x, y)
+                dragScroll(x, y);
             }
             return;
         }
 
         if (!dragToFlip || Math.abs(y) > Math.abs(x)) return;
 
-        setActiveCursor('grabbing');
+        setActiveCursor("grabbing");
 
         if (x > 0) {
             if (flip.direction === null && canFlipLeft && x >= swipeMin) {
-                flipStart('left', false);
+                flipStart("left", false);
             }
-            if (flip.direction === 'left') {
-                setFlip(currentFlip => ({
+            if (flip.direction === "left") {
+                setFlip((currentFlip) => ({
                     ...currentFlip,
-                    progress: Math.min(1, x / pageWidth)
+                    progress: Math.min(1, x / pageWidth),
                 }));
             }
         } else {
             if (flip.direction === null && canFlipRight && x <= -swipeMin) {
-                flipStart('right', false);
+                flipStart("right", false);
             }
-            if (flip.direction === 'right') {
-                setFlip(currentFlip => ({
+            if (flip.direction === "right") {
+                setFlip((currentFlip) => ({
                     ...currentFlip,
-                    progress: Math.min(1, -x / pageWidth)
+                    progress: Math.min(1, -x / pageWidth),
                 }));
             }
         }
@@ -842,7 +917,7 @@ const Flipbook = ({
 
     const swipeEnd = (touch) => {
         if (!touchStartX) {
-            return
+            return;
         }
 
         if (clickToZoom && maxMove < swipeMin) {
@@ -862,20 +937,20 @@ const Flipbook = ({
     };
 
     const onTouchStart = (ev) => {
-        setHasTouchEvents(true)
-        swipeStart(ev.changedTouches[0])
+        setHasTouchEvents(true);
+        swipeStart(ev.changedTouches[0]);
     };
 
     const onTouchMove = (ev) => {
         if (swipeMove(ev.changedTouches[0])) {
             if (ev.cancelable) {
-                ev.preventDefault()
+                ev.preventDefault();
             }
         }
     };
 
     const onTouchEnd = (ev) => {
-        swipeEnd(ev.changedTouches[0])
+        swipeEnd(ev.changedTouches[0]);
     };
 
     const onPointerDown = (ev) => {
@@ -888,51 +963,51 @@ const Flipbook = ({
         try {
             ev.target.setPointerCapture(ev.pointerId);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
 
     const onPointerMove = (ev) => {
         if (!hasTouchEvents) {
-            swipeMove(ev)
+            swipeMove(ev);
         }
     };
 
     const onPointerUp = (ev) => {
         if (hasTouchEvents) return;
-        swipeEnd(ev)
+        swipeEnd(ev);
         try {
-            ev.target.releasePointerCapture(ev.pointerId)
+            ev.target.releasePointerCapture(ev.pointerId);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
 
     const onMouseDown = (ev) => {
-        if (hasTouchEvents || hasPointerEvents) return
-        if (ev.which && ev.which != 1) return // Ignore right-click
-        swipeStart(ev)
+        if (hasTouchEvents || hasPointerEvents) return;
+        if (ev.which && ev.which != 1) return; // Ignore right-click
+        swipeStart(ev);
     };
 
     const onMouseMove = (ev) => {
         if (!hasTouchEvents && !hasPointerEvents) {
-            swipeMove(ev)
+            swipeMove(ev);
         }
     };
 
     const onMouseUp = (ev) => {
         if (!hasTouchEvents && !hasPointerEvents) {
-            swipeEnd(ev)
+            swipeEnd(ev);
         }
     };
 
     const dragScroll = (x, y) => {
-        setScrollLeft(startScrollLeft - x)
-        setScrollTop(startScrollTop - y)
+        setScrollLeft(startScrollLeft - x);
+        setScrollTop(startScrollTop - y);
     };
 
     const onWheel = (ev) => {
-        if (wheel === 'scroll' && zoom > 1 && dragToScroll) {
+        if (wheel === "scroll" && zoom > 1 && dragToScroll) {
             const newScrollLeft = viewportRef.current.scrollLeft + ev.deltaX;
             const newScrollTop = viewportRef.current.scrollTop + ev.deltaY;
             setScrollLeft(newScrollLeft);
@@ -943,7 +1018,7 @@ const Flipbook = ({
             }
         }
 
-        if (wheel === 'zoom') {
+        if (wheel === "zoom") {
             if (ev.deltaY >= 100) {
                 zoomOut(ev);
                 ev.preventDefault();
@@ -974,7 +1049,7 @@ const Flipbook = ({
     };
 
     const goToPage = (p) => {
-        if (p === null || p === page) return
+        if (p === null || p === page) return;
         let newCurrentPage;
 
         if (pages[0] === null) {
@@ -990,7 +1065,7 @@ const Flipbook = ({
         setCurrentPage(newCurrentPage);
         setMinX(Infinity);
         setMaxX(-Infinity);
-        setCurrentCenterOffset(centerOffset)
+        setCurrentCenterOffset(centerOffset);
     };
 
     const loadImage = (url) => {
@@ -1011,7 +1086,6 @@ const Flipbook = ({
                 // img.src = url;
                 // return loadingImage;
                 return url;
-
             }
         }
     };
@@ -1035,7 +1109,9 @@ const Flipbook = ({
                 setCurrentCenterOffset(centerOffset);
                 setAnimatingCenter(false);
             } else {
-                setCurrentCenterOffset(prevOffset => prevOffset + diff * rate);
+                setCurrentCenterOffset(
+                    (prevOffset) => prevOffset + diff * rate,
+                );
                 animationFrameId = requestAnimationFrame(animate);
             }
         };
@@ -1084,7 +1160,7 @@ const Flipbook = ({
         if (pages && pages.length > 0) {
             if (!startPage || startPage > 1) {
                 if (pages[0] === null) {
-                    setCurrentPage(prevPage => prevPage + 1);
+                    setCurrentPage((prevPage) => prevPage + 1);
                 }
             }
         }
@@ -1097,22 +1173,22 @@ const Flipbook = ({
     // Lifecycle methods using useEffect
     useEffect(() => {
         // ComponentDidMount logic...
-        window.addEventListener('resize', onResize, { passive: true });
+        window.addEventListener("resize", onResize, { passive: true });
         onResize();
         setZoom(zooms_[0]);
         goToPage(startPage);
         return () => {
             // ComponentWillUnmount logic...
-            window.removeEventListener('resize', onResize, { passive: true });
+            window.removeEventListener("resize", onResize, { passive: true });
         };
     }, []);
 
     // console.log("FLIP RENDER")
     return (
         <div
-            className={`viewport ${zooming || zoom > 1 ? 'zoom' : ''} ${dragToScroll ? 'drag-to-scroll' : ''}`}
+            className={`viewport ${zooming || zoom > 1 ? "zoom" : ""} ${dragToScroll ? "drag-to-scroll" : ""}`}
             ref={viewportRef}
-            style={{ cursor: cursor === 'grabbing' ? 'grabbing' : 'auto' }}
+            style={{ cursor: cursor === "grabbing" ? "grabbing" : "auto" }}
             onTouchMove={onTouchMove}
             onPointerMove={onPointerMove}
             onMouseMove={onMouseMove}
@@ -1123,18 +1199,25 @@ const Flipbook = ({
             onMouseUp={onMouseUp}
             onWheel={onWheel}
         >
-            <div className="flipbook-container" style={{ transform: `scale(${zoom})` }}>
+            <div
+                className="flipbook-container"
+                style={{ transform: `scale(${zoom})` }}
+            >
                 <div
                     className="click-to-flip left"
-                    style={{ cursor: canFlipLeft ? 'pointer' : 'auto' }}
+                    style={{ cursor: canFlipLeft ? "pointer" : "auto" }}
                     onClick={flipLeft}
                 />
                 <div
                     className="click-to-flip right"
-                    style={{ cursor: canFlipRight ? 'pointer' : 'auto' }}
+                    style={{ cursor: canFlipRight ? "pointer" : "auto" }}
                     onClick={flipRight}
                 />
-                <div style={{ transform: `translateX(${centerOffsetSmoothed}px)` }}>
+                <div
+                    style={{
+                        transform: `translateX(${centerOffsetSmoothed}px)`,
+                    }}
+                >
                     {showLeftPage && (
                         <img
                             className="page fixed"
@@ -1165,28 +1248,34 @@ const Flipbook = ({
                     )}
 
                     <div style={{ opacity: flip.opacity }}>
-                        {polygonArray.map(([key, bgImage, lighting, bgPos, transform, z]) => (
-                            <div
-                                key={key}
-                                className={`polygon ${!bgImage ? 'blank' : ''}`}
-                                style={{
-                                    backgroundImage: bgImage && `url(${loadImage(bgImage)})`,
-                                    backgroundSize: polygonBgSize,
-                                    backgroundPosition: bgPos,
-                                    width: polygonWidth,
-                                    height: polygonHeight,
-                                    transform: transform,
-                                    zIndex: z,
-                                }}
-                            >
-                                {lighting.length > 0 && (
-                                    <div
-                                        className="lighting"
-                                        style={{ backgroundImage: lighting }}
-                                    />
-                                )}
-                            </div>
-                        ))}
+                        {polygonArray.map(
+                            ([key, bgImage, lighting, bgPos, transform, z]) => (
+                                <div
+                                    key={key}
+                                    className={`polygon ${!bgImage ? "blank" : ""}`}
+                                    style={{
+                                        backgroundImage:
+                                            bgImage &&
+                                            `url(${loadImage(bgImage)})`,
+                                        backgroundSize: polygonBgSize,
+                                        backgroundPosition: bgPos,
+                                        width: polygonWidth,
+                                        height: polygonHeight,
+                                        transform: transform,
+                                        zIndex: z,
+                                    }}
+                                >
+                                    {lighting.length > 0 && (
+                                        <div
+                                            className="lighting"
+                                            style={{
+                                                backgroundImage: lighting,
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                            ),
+                        )}
                     </div>
                     <div
                         className="bounding-box"

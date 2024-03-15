@@ -1,29 +1,28 @@
-const {DataTypes} = require("sequelize");
+const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define('network', {
-        chainId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
+    sequelize.define(
+        "network",
+        {
+            chainId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            isDev: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+            },
         },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        {
+            indexes: [{ unique: false, fields: ["isDev"] }],
+            freezeTableName: true,
+            timestamps: true,
         },
-        isDev: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true
-        },
-    }, {
-        indexes: [
-            {unique: false, fields: ['isDev']},
-        ],
-        freezeTableName: true,
-        timestamps: true
-    });
-
-
+    );
 };
-

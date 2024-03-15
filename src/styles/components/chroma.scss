@@ -1,83 +1,116 @@
-
 .os-loading-bar {
-  position: absolute;
-  background-color: transparent;
-  -webkit-animation-name: os-loading-bar;
-  -moz-animation-name: os-loading-bar;
-  animation-name: os-loading-bar;
-  -webkit-animation-duration: 1.5s;
-  -moz-animation-duration: 1.5s;
-  animation-duration: 1.5s;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-direction: normal;
-  -moz-animation-direction: normal;
-  animation-direction: normal;
-  -webkit-transform: scale(0.3);
-  -moz-transform: scale(0.3);
-  -ms-transform: scale(0.3);
-  -o-transform: scale(0.3);
-  transform: scale(0.3);
+    position: absolute;
+    background-color: transparent;
+    -webkit-animation-name: os-loading-bar;
+    -moz-animation-name: os-loading-bar;
+    animation-name: os-loading-bar;
+    -webkit-animation-duration: 1.5s;
+    -moz-animation-duration: 1.5s;
+    animation-duration: 1.5s;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-direction: normal;
+    -moz-animation-direction: normal;
+    animation-direction: normal;
+    -webkit-transform: scale(0.3);
+    -moz-transform: scale(0.3);
+    -ms-transform: scale(0.3);
+    -o-transform: scale(0.3);
+    transform: scale(0.3);
 }
 
 .os-progress-bar {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 .os-progress-bar--meter {
-  -webkit-animation: progress 0.7s linear infinite;
-  -moz-animation: progress 0.7s linear infinite;
-  animation: progress 0.7s linear infinite;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  //background-color: #f58220;
-  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%);
-  background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%);
-  background-size: 4.5em 4.5em;
-  background-repeat: repeat-x;
+    -webkit-animation: progress 0.7s linear infinite;
+    -moz-animation: progress 0.7s linear infinite;
+    animation: progress 0.7s linear infinite;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    //background-color: #f58220;
+    background-image: -webkit-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%
+    );
+    background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%
+    );
+    background-size: 4.5em 4.5em;
+    background-repeat: repeat-x;
 
-  display: block;
-  height: 100%;
-  position:relative;
-  border-radius: 0.75rem;
-  &:after{
-    content: '';
     display: block;
-    position: absolute;
-    width: 100%;
     height: 100%;
-    background: -moz-linear-gradient(left,  #00c853 0%, #eff957 32%, #ffb600 65%, #e91e63 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left,  #00c853 0%,#eff957 32%,#ffb600 65%,#e91e63 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right,  #00c853 0%,#eff957 32%,#ffb600 65%,#e91e63 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00c853', endColorstr='#e91e63',GradientType=1 ); /* IE6-9 */
-    opacity: 0.8;
+    position: relative;
     border-radius: 0.75rem;
-  }
+    &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: -moz-linear-gradient(
+            left,
+            #00c853 0%,
+            #eff957 32%,
+            #ffb600 65%,
+            #e91e63 100%
+        ); /* FF3.6-15 */
+        background: -webkit-linear-gradient(
+            left,
+            #00c853 0%,
+            #eff957 32%,
+            #ffb600 65%,
+            #e91e63 100%
+        ); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(
+            to right,
+            #00c853 0%,
+            #eff957 32%,
+            #ffb600 65%,
+            #e91e63 100%
+        ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00c853', endColorstr='#e91e63',GradientType=1 ); /* IE6-9 */
+        opacity: 0.8;
+        border-radius: 0.75rem;
+    }
 }
 
 @-webkit-keyframes progress {
-  0% {
-    background-position: 0px 0px;
-  }
-  100% {
-    background-position: 4.5em 0px;
-  }
+    0% {
+        background-position: 0px 0px;
+    }
+    100% {
+        background-position: 4.5em 0px;
+    }
 }
 @-moz-keyframes progress {
-  0% {
-    background-position: 0px 0px;
-  }
-  100% {
-    background-position: 4.5em 0px;
-  }
+    0% {
+        background-position: 0px 0px;
+    }
+    100% {
+        background-position: 4.5em 0px;
+    }
 }
 @keyframes progress {
-  0% {
-    background-position: 0px 0px;
-  }
-  100% {
-    background-position: 4.5em 0px;
-  }
+    0% {
+        background-position: 0px 0px;
+    }
+    100% {
+        background-position: 4.5em 0px;
+    }
 }

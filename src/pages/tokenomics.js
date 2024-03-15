@@ -1,29 +1,34 @@
 import HeroBg from "@/components/Home/HeroBg";
-import {NextSeo} from "next-seo";
-import {seoConfig} from "@/lib/seoConfig";
+import { NextSeo } from "next-seo";
+import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import dynamic from "next/dynamic";
-import {TENANT} from "@/lib/tenantHelper";
-const TokenomicNeoTokyo = dynamic(() => import('@/components/Tokenomics/TokenomicsCitCap'), {ssr: true,})
-const TokenomicKongzCapital = dynamic(() => import('@/components/Tokenomics/TokenomicsCyberKongz'), {ssr: true,})
+import { TENANT } from "@/lib/tenantHelper";
+const TokenomicNeoTokyo = dynamic(
+    () => import("@/components/Tokenomics/TokenomicsCitCap"),
+    { ssr: true },
+);
+const TokenomicKongzCapital = dynamic(
+    () => import("@/components/Tokenomics/TokenomicsCyberKongz"),
+    { ssr: true },
+);
 
 const TENANT_TOKENOMICS = () => {
-    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+    switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.NeoTokyo: {
-            return <TokenomicNeoTokyo/>
+            return <TokenomicNeoTokyo />;
         }
         case TENANT.CyberKongz: {
-            return <TokenomicKongzCapital/>
+            return <TokenomicKongzCapital />;
         }
         default: {
-            return <></>
+            return <></>;
         }
     }
-}
+};
 
 export default function InvestmentsPublic() {
-    const seo = seoConfig(PAGE.Tokenomics)
-
+    const seo = seoConfig(PAGE.Tokenomics);
 
     return (
         <>
@@ -34,8 +39,12 @@ export default function InvestmentsPublic() {
                 openGraph={seo.og}
                 twitter={seo.twitter}
             />
-            <HeroBg subtitle={'our tokenomics'} title={'how it works'} content={TENANT_TOKENOMICS()} extraClass={"investmentsPublic"}/>
+            <HeroBg
+                subtitle={"our tokenomics"}
+                title={"how it works"}
+                content={TENANT_TOKENOMICS()}
+                extraClass={"investmentsPublic"}
+            />
         </>
-    )
+    );
 }
-
