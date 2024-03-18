@@ -1,4 +1,1 @@
-
-
-module.exports = { PremiumItemsENUM, PremiumItemsParamENUM, MYSTERY_TYPES }
-
+module.exports = { PremiumItemsENUM, PremiumItemsParamENUM, MYSTERY_TYPES };

@@ -1,45 +1,43 @@
-const {models} = require('../services/db/definitions/db.init');
-const db = require('../services/db/definitions/db.init');
-const {Op, QueryTypes} = require("sequelize");
+const { models } = require("../services/db/definitions/db.init");
+const db = require("../services/db/definitions/db.init");
+const { Op, QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
+const { serializeError } = require("serialize-error");
 
 async function getOfferRaise(id) {
     try {
         return await models.offerFundraise.findOne({
-            where: {offerId: id}
-        })
+            where: { offerId: id },
+        });
     } catch (error) {
         logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
             error: serializeError(error),
         });
     }
-    return {}
+    return {};
 }
 
 async function investIncreaseAllocationReserved(offer, wantedAllocation, upgradeGuaranteed, transaction) {
-    let effectiveAllocationReserved
-    let sumFilter = ` COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0)`
+    let effectiveAllocationReserved;
+    let sumFilter = ` COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0)`;
 
     if (upgradeGuaranteed?.isExpired === false) {
-        const guaranteedAllocationLeft = upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed
+        const guaranteedAllocationLeft = upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed;
         let alloGuaranteed;
 
         if (wantedAllocation - guaranteedAllocationLeft > 0) {
-            effectiveAllocationReserved = wantedAllocation - guaranteedAllocationLeft
-            alloGuaranteed = guaranteedAllocationLeft
+            effectiveAllocationReserved = wantedAllocation - guaranteedAllocationLeft;
+            alloGuaranteed = guaranteedAllocationLeft;
         } else {
-            effectiveAllocationReserved = 0
-            alloGuaranteed = wantedAllocation
+            effectiveAllocationReserved = 0;
+            alloGuaranteed = wantedAllocation;
         }
 
-        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerFundraise?.alloTotal}`
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerFundraise?.alloTotal}`;
     } else {
-        effectiveAllocationReserved = wantedAllocation
-        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerFundraise?.alloTotal}`
+        effectiveAllocationReserved = wantedAllocation;
+        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerFundraise?.alloTotal}`;
     }
-
-
 
     const updateQuery = `
         UPDATE "offerFundraise"
@@ -51,19 +49,27 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
 
     const result = await db.query(updateQuery, {
         type: QueryTypes.UPDATE,
-        transaction
+        transaction,
     });
 
-    console.log("investIncreaseAllocationReserved",result, updateQuery)
+    console.log("investIncreaseAllocationReserved", result, updateQuery);
 
     return {
-        ok: result[0].length ===1,
-        data: result[0][0]
-    }
+        ok: result[0].length === 1,
+        data: result[0][0],
+    };
 }
 
-
-async function investUpsertParticipantReservation(offer, userId, partnerId, tenantId, amount, hash, upgradeGuaranteed, transaction) {
+async function investUpsertParticipantReservation(
+    offer,
+    userId,
+    partnerId,
+    tenantId,
+    amount,
+    hash,
+    upgradeGuaranteed,
+    transaction,
+) {
     const participantsQuery = `
             INSERT INTO public.z_participant_${offer.id} ("userId", "partnerId", "tenantId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
             VALUES (:userId, :partnerId, :tenantId, :amount, :hash, :isGuaranteed, NOW(), NOW())
@@ -75,24 +81,27 @@ async function investUpsertParticipantReservation(offer, userId, partnerId, tena
     // Execute the query using a raw query execution
     const result = await db.query(participantsQuery, {
         replacements: {
-            userId, partnerId, tenantId, amount, hash,
-            isGuaranteed: upgradeGuaranteed?.isExpired === false
+            userId,
+            partnerId,
+            tenantId,
+            amount,
+            hash,
+            isGuaranteed: upgradeGuaranteed?.isExpired === false,
         },
         type: QueryTypes.RAW,
-        transaction
+        transaction,
     });
 
-
-    if(result[1] !== 1) return {
-        ok:false
-    }
+    if (result[1] !== 1)
+        return {
+            ok: false,
+        };
 
     return {
         ok: result[1],
-        data: result[0][0]
-    }
+        data: result[0][0],
+    };
 }
-
 
 async function expireAllocation(offerId, userId, hash) {
     try {
@@ -108,43 +117,42 @@ async function expireAllocation(offerId, userId, hash) {
         return await db.query(participantsQuery, {
             replacements: {
                 userId,
-                hash
+                hash,
             },
-            type: QueryTypes.UPDATE
+            type: QueryTypes.UPDATE,
         });
     } catch (e) {
         logger.error(`ERROR :: [expireAllocation] for ${offerId} `, {
-            offerId, userId, hash
+            offerId,
+            userId,
+            hash,
         });
     }
-    return true
+    return true;
 }
 
-
 async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transaction) {
-    let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`
+    let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`;
 
-
-    const booked = await models.offerFundraise.increment({alloGuaranteed: amount}, {
-        where: {
-            [Op.and]: [
-                db.literal(sumFilter)
-            ]
+    const booked = await models.offerFundraise.increment(
+        { alloGuaranteed: amount },
+        {
+            where: {
+                [Op.and]: [db.literal(sumFilter)],
+            },
+            transaction,
         },
-        transaction
-    });
-
+    );
 
     return {
         ok: booked[0][1],
-    }
+    };
 }
-
 
 module.exports = {
     getOfferRaise,
     bookAllocationGuaranteed,
     expireAllocation,
     investIncreaseAllocationReserved,
-    investUpsertParticipantReservation
-}
+    investUpsertParticipantReservation,
+};

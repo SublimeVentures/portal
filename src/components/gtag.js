@@ -1,21 +1,21 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import Script from 'next/script'
-import { useEffect } from 'react'
-import * as gtag from '../lib/gtagConfig'
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Script from "next/script";
+import { useEffect } from "react";
+import * as gtag from "../lib/gtagConfig";
 
 export default function Gtag() {
-    const router = useRouter()
+    const router = useRouter();
 
     useEffect(() => {
         const handleRouteChange = (url) => {
-            gtag.pageview(url)
-        }
-        router.events.on('routeChangeComplete', handleRouteChange)
+            gtag.pageview(url);
+        };
+        router.events.on("routeChangeComplete", handleRouteChange);
         return () => {
-            router.events.off('routeChangeComplete', handleRouteChange)
-        }
-    }, [router.events])
+            router.events.off("routeChangeComplete", handleRouteChange);
+        };
+    }, [router.events]);
 
     return (
         <>
@@ -40,6 +40,5 @@ export default function Gtag() {
                 src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
             />
         </>
-    )
+    );
 }
-

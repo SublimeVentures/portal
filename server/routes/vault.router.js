@@ -1,14 +1,13 @@
-const express = require('express')
+const express = require("express");
 const router = express.Router();
-const { userVault} = require("../controllers/vault");
-const {verifyID} = require("../../src/lib/authHelpers");
+const { userVault } = require("../controllers/vault");
+const { verifyID } = require("../../src/lib/authHelpers");
 
-router.get('/all', async (req, res) => {
-    const {auth, user} = await verifyID(req)
-    if(!auth)  return res.status(401).json({});
+router.get("/all", async (req, res) => {
+    const { auth, user } = await verifyID(req);
+    if (!auth) return res.status(401).json({});
 
-    return res.status(200).json(await userVault(user, req))
+    return res.status(200).json(await userVault(user, req));
 });
 
-
-module.exports = {router}
+module.exports = { router };

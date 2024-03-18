@@ -1,8 +1,8 @@
-const db = require('../services/db/definitions/db.init');
+const db = require("../services/db/definitions/db.init");
 
-const {defineParticipantModel} = require("../services/db/definitions/models/participant.model");
+const { defineParticipantModel } = require("../services/db/definitions/models/participant.model");
 
-async function sumAmountForUserAndTenant( offerId, userId, tenantId) {
+async function sumAmountForUserAndTenant(offerId, userId, tenantId) {
     const ParticipantModel = defineParticipantModel(db, offerId);
 
     try {
@@ -13,14 +13,14 @@ async function sumAmountForUserAndTenant( offerId, userId, tenantId) {
                 tenantId,
                 isExpired: false,
             },
-            raw: true
+            raw: true,
         });
 
         let booked = 0;
         let invested = 0;
         let total = 0;
 
-        result.forEach(item => {
+        result.forEach((item) => {
             if (item.isConfirmedInitial) {
                 invested += item.amount;
             } else {
@@ -32,16 +32,16 @@ async function sumAmountForUserAndTenant( offerId, userId, tenantId) {
         return {
             booked,
             invested,
-            total
-        }
+            total,
+        };
     } catch (error) {
-        console.error('Error in sumAmountForUserAndTenant:', error);
+        console.error("Error in sumAmountForUserAndTenant:", error);
         return {
-            booked:0,
-            invested:0,
-            total:0
+            booked: 0,
+            invested: 0,
+            total: 0,
         };
     }
 }
 
-module.exports = {sumAmountForUserAndTenant}
+module.exports = { sumAmountForUserAndTenant };

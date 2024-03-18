@@ -1,0 +1,10 @@
+{
+    "tabWidth": 4,
+    "arrowParens": "always",
+    "bracketSameLine": false,
+    "htmlWhitespaceSensitivity": "ignore",
+    "semi": true,
+    "quoteProps": "as-needed",
+    "bracketSpacing": true,
+    "printWidth": 120
+}

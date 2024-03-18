@@ -1,16 +1,16 @@
-const {getEnv} = require("../services/db");
-const {getOfferList} = require("../queries/offers.query");
+const { getEnv } = require("../services/db");
+const { getOfferList } = require("../queries/offers.query");
 
 async function getPermittedOfferList(user, isOtc) {
-    const {tenantId, partnerId} = user
-    return await getOfferList(partnerId, tenantId, isOtc)
+    const { tenantId, partnerId } = user;
+    return await getOfferList(partnerId, tenantId, isOtc);
 }
 
 async function getParamOfferList(user) {
     return {
         stats: getEnv().stats,
-        offers: await getPermittedOfferList(user)
-    }
+        offers: await getPermittedOfferList(user),
+    };
 }
 
-module.exports = {getParamOfferList, getPermittedOfferList}
+module.exports = { getParamOfferList, getPermittedOfferList };

@@ -1,21 +1,26 @@
-import {useMemo} from 'react';
-import {useChainId} from 'wagmi'
-import {usdtAbi} from "../../../abi/usdt.abi";
-import {erc20Abi} from 'viem'
-import {ETH_USDT} from "@/components/BlockchainSteps/utils";
+import { useMemo } from "react";
+import { useChainId } from "wagmi";
+import { usdtAbi } from "../../../abi/usdt.abi";
+import { erc20Abi } from "viem";
+import { ETH_USDT } from "@/components/BlockchainSteps/utils";
 
 function useGetTokenAbi(token, forceChainId) {
-    const chainId = useChainId()
-    const {contract} = token
-    const finalChainId = forceChainId || chainId
+    const chainId = useChainId();
+    const { contract } = token;
+    const finalChainId = forceChainId || chainId;
 
     return useMemo(() => {
-            if (!!token) {
-                console.log("TOKEN_STTING",contract,ETH_USDT,  contract.toLowerCase() === ETH_USDT.toLowerCase() ? "USDT abi" : "regular erc20abi")
-               return contract.toLowerCase() === ETH_USDT.toLowerCase() ? usdtAbi : erc20Abi
-            }
-            return erc20Abi
-        }, [contract, finalChainId])
+        if (!!token) {
+            console.log(
+                "TOKEN_STTING",
+                contract,
+                ETH_USDT,
+                contract.toLowerCase() === ETH_USDT.toLowerCase() ? "USDT abi" : "regular erc20abi",
+            );
+            return contract.toLowerCase() === ETH_USDT.toLowerCase() ? usdtAbi : erc20Abi;
+        }
+        return erc20Abi;
+    }, [contract, finalChainId]);
 }
 
 export default useGetTokenAbi;
