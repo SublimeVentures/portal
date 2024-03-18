@@ -1,5 +1,5 @@
-import { http, createConfig, fallback } from 'wagmi'
-import { mainnet, polygon, bsc } from 'wagmi/chains'
+import { http, createConfig, fallback } from "wagmi";
+import { mainnet, polygon, bsc } from "wagmi/chains";
 // import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
 import { RPCs, WALLET_CONNECT_ID } from "@/lib/blockchain";
 
