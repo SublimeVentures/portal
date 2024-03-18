@@ -18,7 +18,7 @@
         "build:test": "cross-env NODE_ENV=test next build",
         "lint": "next lint",
         "prettier": "prettier -w .",
-        "prepare": "node .husky/install.mjs"
+        "prepare": "node ./.husky/install.mjs"
     },
     "dependencies": {
         "@headlessui/react": "1.7.13",
