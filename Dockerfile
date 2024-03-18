@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY yarn.lock ./
 COPY .env ./
+COPY .husky ./
 
 RUN yarn install
 
