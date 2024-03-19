@@ -2,7 +2,7 @@ import {
     IoCloudDownloadOutline as IconDownload,
     IoLogoDiscord as IconDiscord,
     IoOpenOutline as IconWebsite,
-    IoLogoTwitter as IconTwitter
+    IoLogoTwitter as IconTwitter,
 } from "react-icons/io5";
 import { IconButton } from "@/components/Button/IconButton";
 import { isBased } from "@/lib/utils";

@@ -6,7 +6,7 @@ import { IconButton } from "@/components/Button/IconButton";
 import {
     IoAddCircleOutline as IconPlus,
     IoRemoveCircleOutline as IconMinus,
-    IoLogoDiscord as IconDiscord
+    IoLogoDiscord as IconDiscord,
 } from "react-icons/io5";
 import Dropdown from "@/components/App/Dropdown";
 import Lottie from "lottie-react";
@@ -155,7 +155,6 @@ export default function MakeOfferModal({ model, setter, props }) {
             setTransactionSuccessful,
         };
     }, [selectedCurrency?.contract, price, amount, account, activeOtcContract, model, text]);
-
 
     const closeModal = async () => {
         refetchVault();
@@ -329,8 +328,10 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 full={true}
                                 customCss={"flex-1"}
                             />
-                            <Dropdown options={dropdownCurrencyOptions} selector={"symbol"}
-                                      classes={"!text-inherit blended"}
+                            <Dropdown
+                                options={dropdownCurrencyOptions}
+                                selector={"symbol"}
+                                classes={"!text-inherit blended"}
                                 propSelected={setSelectedCurrency}
                             />
                         </div>

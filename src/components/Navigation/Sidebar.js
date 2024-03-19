@@ -3,10 +3,7 @@ import { Fragment } from "react";
 import { Transition } from "@headlessui/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import {
-    BsLightningCharge as IconLight,
-    BsSafe as IconVault
-} from "react-icons/bs";
+import { BsLightningCharge as IconLight, BsSafe as IconVault } from "react-icons/bs";
 import { MdOutlineCurrencyExchange as IconExchange } from "react-icons/md";
 import {
     IoLogoDiscord as IconDiscord,
@@ -14,7 +11,7 @@ import {
     IoBookOutline as IconWiki,
     IoLogOutOutline as IconLogout,
     IoSettingsOutline as IconSetting,
-    IoDiamondOutline as IconPremium
+    IoDiamondOutline as IconPremium,
 } from "react-icons/io5";
 import { PiPlantFill as IconGrowth } from "react-icons/pi";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";

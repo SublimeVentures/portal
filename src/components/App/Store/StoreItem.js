@@ -2,8 +2,8 @@ import Image from "next/image";
 import { isBased } from "@/lib/utils";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 
-export default function StoreItem({item, cdn, setOrder, currency}) {
-    let {id, name, description, price, availability, img} = item;
+export default function StoreItem({ item, cdn, setOrder, currency }) {
+    let { id, name, description, price, availability, img } = item;
 
     const status = !availability ? "closed disabled" : "inprogress";
     console.log("currency", currency);

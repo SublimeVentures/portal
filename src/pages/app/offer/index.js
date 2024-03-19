@@ -7,10 +7,7 @@ import Empty from "@/components/App/Empty";
 import Head from "next/head";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
-import {
-    BiMoneyWithdraw as IconMoney,
-    BiNetworkChart as IconNetwork
-} from "react-icons/bi";
+import { BiMoneyWithdraw as IconMoney, BiNetworkChart as IconNetwork } from "react-icons/bi";
 import { getCopy } from "@/lib/seoConfig";
 import { isBased } from "@/lib/utils";
 import { processServerSideData } from "@/lib/serverSideHelpers";

@@ -2,10 +2,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import { useState } from "react";
 import Input from "@/components/App/Input";
 import { IconButton } from "@/components/Button/IconButton";
-import {
-    IoRemoveCircleOutline as IconMinus,
-    IoAddCircleOutline as IconPlus
-} from "react-icons/io5";
+import { IoRemoveCircleOutline as IconMinus, IoAddCircleOutline as IconPlus } from "react-icons/io5";
 
 export default function CalculateModal({ model, setter, calculateModalProps }) {
     const { allocationData } = calculateModalProps;
