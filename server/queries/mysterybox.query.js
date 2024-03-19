@@ -1,9 +1,7 @@
-const {models} = require('../services/db/definitions/db.init');
+const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const {Op, Sequelize, QueryTypes} = require("sequelize");
-const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM} = require("../../src/lib/enum/store");
-
-
+const { Op, Sequelize, QueryTypes } = require("sequelize");
+const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM } = require("../../src/lib/enum/store");
 
 async function pickMysteryBox(tenantId, transaction) {
     const rolledMysterybox = await models.storeMysterybox.findOne({
@@ -11,51 +9,47 @@ async function pickMysteryBox(tenantId, transaction) {
             userId: {
                 [Op.eq]: null,
             },
-            tenantId
+            tenantId,
         },
-        order: [
-            Sequelize.fn('random'),
-        ],
+        order: [Sequelize.fn("random")],
         raw: true,
-        transaction
+        transaction,
     });
 
     if (!rolledMysterybox) {
         return {
             ok: false,
-        }
+        };
     }
     return {
         ok: true,
-        data: rolledMysterybox
-    }
+        data: rolledMysterybox,
+    };
 }
-
-
 
 async function assignMysteryBox(userId, mbId, transaction) {
     const assignClaim = await models.storeMysterybox.update(
         {
-            userId
+            userId,
         },
         {
             where: {
-                id: mbId
-            }
-        }, {transaction}
-    )
+                id: mbId,
+            },
+        },
+        { transaction },
+    );
 
     if (!assignClaim) {
         return {
             ok: false,
-        }
+        };
     }
     return {
         ok: true,
-        data: assignClaim
-    }
+        data: assignClaim,
+    };
 }
-
 
 //todo: to be tested
 
@@ -66,23 +60,25 @@ async function processMBAllocation(transaction, claim, userId) {
             ON CONFLICT ("userId", "offerId") DO
         UPDATE SET "invested" = vault."invested" + EXCLUDED.invested, "updatedAt" = now();
 
-    `
+    `;
 
-    const upsert = await db.query(query, {type: QueryTypes.UPSERT, transaction})
+    const upsert = await db.query(query, {
+        type: QueryTypes.UPSERT,
+        transaction,
+    });
 
     if (upsert[0] === undefined && upsert[1] === null) {
         return {
             ok: true,
-            data: upsert
-        }
+            data: upsert,
+        };
     } else {
         return {
             ok: false,
-            error: MYSTERYBOX_CLAIM_ERRORS.AllocationAssignment
-        }
+            error: MYSTERYBOX_CLAIM_ERRORS.AllocationAssignment,
+        };
     }
 }
-
 
 async function processMBUpgrade(transaction, claim, userId) {
     const query = `
@@ -91,22 +87,28 @@ async function processMBUpgrade(transaction, claim, userId) {
             ON CONFLICT ("userId", "storePartnerId") DO
         UPDATE SET "amount" = "storeUser"."amount" + EXCLUDED.amount, "updatedAt" = now();
 
-    `
+    `;
 
-    const upsert = await db.query(query, {type: QueryTypes.UPSERT, transaction})
+    const upsert = await db.query(query, {
+        type: QueryTypes.UPSERT,
+        transaction,
+    });
     if (upsert[0] === undefined && upsert[1] === null) {
         return {
             ok: true,
-            data: upsert
-        }
+            data: upsert,
+        };
     } else {
         return {
             ok: false,
-            error: MYSTERYBOX_CLAIM_ERRORS.UpgradeAssignment
-        }
+            error: MYSTERYBOX_CLAIM_ERRORS.UpgradeAssignment,
+        };
     }
 }
 
-
-
-module.exports = {pickMysteryBox, assignMysteryBox, processMBAllocation, processMBUpgrade}
+module.exports = {
+    pickMysteryBox,
+    assignMysteryBox,
+    processMBAllocation,
+    processMBUpgrade,
+};

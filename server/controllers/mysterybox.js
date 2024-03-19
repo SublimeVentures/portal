@@ -1,78 +1,82 @@
-const { pickMysteryBox, assignMysteryBox,  processMBAllocation, processMBUpgrade} = require("../queries/mysterybox.query");
+const {
+    pickMysteryBox,
+    assignMysteryBox,
+    processMBAllocation,
+    processMBUpgrade,
+} = require("../queries/mysterybox.query");
 const db = require("../services/db/definitions/db.init");
-const {MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES} = require("../../src/lib/enum/store");
-const {getStoreItemsOwnedByUser, updateUserUpgradeAmount} = require("../queries/storeUser.query");
+const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES } = require("../../src/lib/enum/store");
+const { getStoreItemsOwnedByUser, updateUserUpgradeAmount } = require("../queries/storeUser.query");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
-const {UPGRADE_ERRORS} = require("../enum/UpgradeErrors");
+const { serializeError } = require("serialize-error");
+const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
 
 async function processMysteryBox(userId, claim, transaction) {
-    switch(claim.type) {
+    switch (claim.type) {
         case MYSTERY_TYPES.Allocation: {
-            return await processMBAllocation(transaction, claim, userId)
+            return await processMBAllocation(transaction, claim, userId);
         }
         case MYSTERY_TYPES.Upgrade: {
-            return await processMBUpgrade(transaction, claim, userId)
+            return await processMBUpgrade(transaction, claim, userId);
         }
         case MYSTERY_TYPES.Discount: {
-            return {ok:true}
+            return { ok: true };
         }
         case MYSTERY_TYPES.NFT: {
-            return {ok:true}
+            return { ok: true };
         }
     }
 }
 
 async function claim(user) {
-    const {userId, tenantId} = user
+    const { userId, tenantId } = user;
 
     let transaction;
     try {
         transaction = await db.transaction();
 
-        const isUserOwnMB = await getStoreItemsOwnedByUser(userId, tenantId, PremiumItemsENUM.MysteryBox, transaction)
-        if(!isUserOwnMB.ok || !(isUserOwnMB?.data?.amount>0)) {
+        const isUserOwnMB = await getStoreItemsOwnedByUser(userId, tenantId, PremiumItemsENUM.MysteryBox, transaction);
+        if (!isUserOwnMB.ok || !(isUserOwnMB?.data?.amount > 0)) {
             await transaction.rollback();
             return {
                 ok: false,
-                error: MYSTERYBOX_CLAIM_ERRORS.UserNoBoxes
-            }
+                error: MYSTERYBOX_CLAIM_ERRORS.UserNoBoxes,
+            };
         }
 
-        const selectedMysteryBox = await pickMysteryBox(tenantId, transaction)
+        const selectedMysteryBox = await pickMysteryBox(tenantId, transaction);
 
-        if(!selectedMysteryBox.ok) {
+        if (!selectedMysteryBox.ok) {
             await transaction.rollback();
             return {
                 ok: false,
-                error: MYSTERYBOX_CLAIM_ERRORS.NotEnoughBoxes
-            }
+                error: MYSTERYBOX_CLAIM_ERRORS.NotEnoughBoxes,
+            };
         }
 
-
-        const assign = await assignMysteryBox(userId, selectedMysteryBox.data.id, transaction)
-        if(!assign.ok) {
+        const assign = await assignMysteryBox(userId, selectedMysteryBox.data.id, transaction);
+        if (!assign.ok) {
             await transaction.rollback();
             return {
                 ok: false,
-                error: MYSTERYBOX_CLAIM_ERRORS.AssignBox
-            }
+                error: MYSTERYBOX_CLAIM_ERRORS.AssignBox,
+            };
         }
 
-        const deduct = await updateUserUpgradeAmount(userId, isUserOwnMB.data.storePartnerId,  -1, transaction)
+        const deduct = await updateUserUpgradeAmount(userId, isUserOwnMB.data.storePartnerId, -1, transaction);
 
-        if(!deduct.ok) {
+        if (!deduct.ok) {
             await transaction.rollback();
             return {
                 ok: false,
-                error: UPGRADE_ERRORS.Deduction
-            }
+                error: UPGRADE_ERRORS.Deduction,
+            };
         }
 
-        const final = await processMysteryBox(userId, selectedMysteryBox.data, transaction)
-        if(!final.ok) {
+        const final = await processMysteryBox(userId, selectedMysteryBox.data, transaction);
+        if (!final.ok) {
             await transaction.rollback();
-            return {ok:false, error: final.error}
+            return { ok: false, error: final.error };
         }
 
         await transaction.commit();
@@ -85,24 +89,20 @@ async function claim(user) {
             relatedInvestment: selectedMysteryBox.data.offerId,
             discount: selectedMysteryBox.data.discount,
             code: selectedMysteryBox.data.code,
-        }
-
+        };
     } catch (error) {
-        if(transaction) {
+        if (transaction) {
             await transaction.rollback();
         }
         logger.error("ERROR :: [claimMysterybox]", {
             error: serializeError(error),
-            user
-        })
+            user,
+        });
         return {
             ok: false,
-            error: MYSTERYBOX_CLAIM_ERRORS.Unexpected
-        }
+            error: MYSTERYBOX_CLAIM_ERRORS.Unexpected,
+        };
     }
-
 }
 
-
-
-module.exports = {claim}
+module.exports = { claim };

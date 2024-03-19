@@ -1,0 +1,86 @@
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
+name: DEVELOPMENT - deploy on ECS
+
+env:
+  AWS_REGION: eu-west-1
+  SECRETS: template
+  APP: webapp
+  ENV: dev
+  ECS_TASK_DEFINITION: .aws/development-task-definition.json
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  HUSKY: 0
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    strategy:
+      matrix:
+        tenant: [ based, citcap, generic ]
+        include:
+          - tenant: based
+            cluster: based-dev-webapp-cluster
+            service: based-dev-webapp-service
+            tenant_id: 1
+          - tenant: citcap
+            cluster: citcap-dev-webapp-cluster
+            service: citcap-dev-webapp-service
+            tenant_id: 6
+          - tenant: generic
+            cluster: generic-dev-webapp-cluster
+            service: generic-dev-webapp-service
+            tenant_id: 14
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Fetch secrets
+        run: |
+          aws secretsmanager get-secret-value --secret-id ${{ env.SECRETS }}/${{ env.ENV }}/${{ env.APP }} --query SecretString --output text > .env
+          echo NEXT_PUBLIC_TENANT=${{ matrix.tenant_id }} >> .env
+          echo DOMAIN=https://${{ matrix.tenant }}.${{ env.ENV }}.sublime-test.link >> .env
+          cat .env
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
+          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_REGION }} -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
+
+      - name: Make Python Script Executable [gen. task def]
+        run: chmod +x .github/scripts/update_task_definition.py
+
+      - name: Update ECS Task Definition File
+        run: |
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}
+
+      - name: Deploy new code
+        run: |
+          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-development-task-definition.json"
+          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "Registered Task Definition: $revision"
+          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+          echo "Service updated to use new task definition revision"
+          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ env.AWS_REGION }}

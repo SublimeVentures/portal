@@ -1,4 +1,4 @@
-const {withSentryConfig} = require("@sentry/nextjs");
+const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -6,41 +6,39 @@ const nextConfig = {
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/,
-            use: ["@svgr/webpack"]
+            use: ["@svgr/webpack"],
         });
-
 
         return config;
     },
     images: {
         remotePatterns: [
             {
-                protocol: 'https',
-                hostname: 'cdn.basedvc.fund',
-                port: '',
-                pathname: '/**'
+                protocol: "https",
+                hostname: "cdn.basedvc.fund",
+                port: "",
+                pathname: "/**",
             },
             {
-                protocol: 'https',
-                hostname: 'cdn.citizencapital.fund',
-                port: '',
-                pathname: '/**'
-            }
-        ]
+                protocol: "https",
+                hostname: "cdn.citizencapital.fund",
+                port: "",
+                pathname: "/**",
+            },
+        ],
     },
     env: {
         SENTRY_DSN: process.env.SENTRY_DSN,
         DOMAIN: process.env.DOMAIN,
         JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-        NEXT_PUBLIC_ENV: process.env.ENV
-    }
-}
+        NEXT_PUBLIC_ENV: process.env.ENV,
+    },
+};
 
-module.exports = nextConfig
-
+module.exports = nextConfig;
 
 // Injected content via Sentry wizard below
-if(process.env.ENV === "production" && !process.env.FORCE_DEV) {
+if (process.env.ENV === "production" && !process.env.FORCE_DEV) {
     module.exports = withSentryConfig(
         module.exports,
         {
@@ -71,7 +69,6 @@ if(process.env.ENV === "production" && !process.env.FORCE_DEV) {
 
             // Automatically tree-shake Sentry logger statements to reduce bundle size
             disableLogger: true,
-        }
+        },
     );
-
 }
