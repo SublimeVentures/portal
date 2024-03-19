@@ -1,5 +1,8 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import debounce from "lodash/debounce";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import "@leenguyen/react-flip-clock-countdown/dist/index.css";
 import { PhaseId } from "@/lib/phases";
@@ -9,8 +12,6 @@ import UpgradesModal from "@/components/App/Offer/UpgradesModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
-import { Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
@@ -24,7 +25,6 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
-import debounce from "lodash/debounce";
 
 export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const {

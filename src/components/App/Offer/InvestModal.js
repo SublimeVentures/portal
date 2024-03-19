@@ -1,14 +1,14 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import { useMemo, useState, useEffect } from "react";
+import Lottie from "lottie-react";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import PAGE, { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased } from "@/lib/utils";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-import { useRouter } from "next/router";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
 import BlockchainSteps from "@/components/BlockchainSteps";

@@ -1,5 +1,5 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useState } from "react";
+import GenericModal from "@/components/Modal/GenericModal";
 import Input from "@/components/App/Input";
 import { IconButton } from "@/components/Button/IconButton";
 import IconMinus from "@/assets/svg/MinusZ.svg";

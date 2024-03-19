@@ -1,6 +1,6 @@
+import Image from "next/image";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import GenericModal from "@/components/Modal/GenericModal";
-import Image from "next/image";
 import Linker from "@/components/link";
 import { ExternalLinks } from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";

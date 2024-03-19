@@ -1,4 +1,6 @@
 import React, { useReducer, useEffect, useCallback } from "react";
+import debounce from "lodash/debounce";
+import { useChainId } from "wagmi";
 import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
 import { initialState, reducer } from "@/components/BlockchainSteps/reducer";
 import { STEP_STATE, STEPS, StepsState } from "@/components/BlockchainSteps/StepsState";
@@ -10,9 +12,7 @@ import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased } from "@/lib/utils";
-import debounce from "lodash/debounce";
 import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
-import { useChainId } from "wagmi";
 
 const BlockchainSteps = ({ data }) => {
     const chainId = useChainId();

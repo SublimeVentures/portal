@@ -1,11 +1,11 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useState } from "react";
+import { useSignMessage } from "wagmi";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { addUserWallet } from "@/fetchers/settings.fetcher";
 import { isBased } from "@/lib/utils";
-import { useSignMessage } from "wagmi";
-import { useRouter } from "next/router";
 
 export default function WalletAddModal({ model, setter, addProps }) {
     const router = useRouter();

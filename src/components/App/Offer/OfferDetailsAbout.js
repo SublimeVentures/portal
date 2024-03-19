@@ -1,3 +1,4 @@
+import { useEffect, useState, useMemo } from "react";
 import IconDownload from "@/assets/svg/Download.svg";
 import IconDiscord from "@/assets/svg/Discord.svg";
 import IconWebsite from "@/assets/svg/Website.svg";
@@ -5,7 +6,6 @@ import IconTwitter from "@/assets/svg/Twitter.svg";
 import { IconButton } from "@/components/Button/IconButton";
 import { isBased } from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
-import { useEffect, useState, useMemo } from "react";
 const Flipbook = dynamic(() => import("@/components/Flipbook/Flipbook"), {
     ssr: false,
 });

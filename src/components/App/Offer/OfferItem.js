@@ -1,9 +1,9 @@
 import VanillaTilt from "vanilla-tilt";
 import moment from "moment";
 import { useEffect, useRef } from "react";
-import PAGE from "@/routes";
 import Link from "next/link";
 import Image from "next/image";
+import PAGE from "@/routes";
 import { PhaseId, phases } from "@/lib/phases";
 import { isBased } from "@/lib/utils";
 

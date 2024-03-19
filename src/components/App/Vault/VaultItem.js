@@ -1,10 +1,10 @@
-import IconMore from "@/assets/svg/More.svg";
 import VanillaTilt from "vanilla-tilt";
 import { useEffect, useRef } from "react";
 import moment from "moment";
 import Image from "next/image";
-import PAGE from "@/routes";
 import Link from "next/link";
+import PAGE from "@/routes";
+import IconMore from "@/assets/svg/More.svg";
 import { parseVesting, STAGES } from "@/lib/vesting";
 import { isBased } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";

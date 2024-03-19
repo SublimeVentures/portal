@@ -1,7 +1,7 @@
 import { Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-import IconCancel from "@/assets/svg/Cancel.svg";
 import { isAddress } from "web3-validator";
+import IconCancel from "@/assets/svg/Cancel.svg";
 
 export default function Input({
     type,

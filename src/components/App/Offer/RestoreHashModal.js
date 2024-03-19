@@ -1,6 +1,6 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import moment from "moment";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
+import GenericModal from "@/components/Modal/GenericModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased } from "@/lib/utils";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";

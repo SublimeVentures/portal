@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import useScrollPosition from "@/lib/hooks/useScrollPosition";
 import { isBased } from "@/lib/utils";
 import { ExternalLinks } from "@/routes";
 import { CitCapGlitchButton } from "@/components/Button/CitCapGlitchButton";
 // import Logo from "@/assets/svg/logo.svg";
-import dynamic from "next/dynamic";
 import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 // const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))

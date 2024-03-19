@@ -1,5 +1,5 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useMemo, useState } from "react";
+import GenericModal from "@/components/Modal/GenericModal";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";

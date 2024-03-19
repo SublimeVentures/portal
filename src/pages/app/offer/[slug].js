@@ -1,3 +1,7 @@
+import { dehydrate, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { NextSeo } from "next-seo";
+import { useState, useEffect } from "react";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import {
     fetchOfferAllocation,
@@ -5,14 +9,10 @@ import {
     fetchOfferDetails,
     fetchOfferDetailsSsr,
 } from "@/fetchers/offer.fetcher";
-import { dehydrate, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
-import { NextSeo } from "next-seo";
 import { phases } from "@/lib/phases";
-import { useState, useEffect } from "react";
 import routes from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
 import { isBased } from "@/lib/utils";

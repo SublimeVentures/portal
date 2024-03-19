@@ -2,10 +2,10 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import _ from "lodash";
 import merge from "lodash/merge";
 import { useAccount, useSwitchChain } from "wagmi";
+import { useRouter } from "next/router";
 import { TENANT } from "@/lib/tenantHelper";
 import { logOut } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
-import { useRouter } from "next/router";
 
 const DEFAULT_STATE = {
     isClean: true,

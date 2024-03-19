@@ -1,14 +1,14 @@
+import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased, NETWORKS } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
-import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
 import { fetchInvestmentPayout } from "@/fetchers/payout.fetcher";
 import DynamicIcon from "@/components/Icon";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import ClaimPayoutModal from "@/components/App/Vault/ClaimPayoutModal";
-import { useState } from "react";
 
 export default function DetailsSidebar({ model, setter, claimModalProps, userId }) {
     const { cdn } = useEnvironmentContext();

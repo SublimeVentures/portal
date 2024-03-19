@@ -1,10 +1,10 @@
+import { useRouter } from "next/router";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import routes from "@/routes";
 import { isBased } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import IconPremium from "@/assets/svg/Premium.svg";
-import { useRouter } from "next/router";
 
 export default function PremiumSummary({ data }) {
     const router = useRouter();

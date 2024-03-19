@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 import PAGE from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
-import Link from "next/link";
 
 export default function Navbar() {
     const { pathname } = useRouter();

@@ -1,12 +1,12 @@
+import Lottie from "lottie-react";
+import { useGlitch } from "react-powerglitch";
 import IconMoney from "@/assets/svg/Money.svg";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
 import IconClock from "@/assets/svg/Clock.svg";
 import IconNT from "@/assets/svg/NT.svg";
 import { isBased } from "@/lib/utils";
-import Lottie from "lottie-react";
 import lottieAvatar from "@/assets/lottie/avatar.json";
-import { useGlitch } from "react-powerglitch";
 import FallbackImage from "@/components/App/Vault/FallbackImage";
 import PremiumSummary from "@/components/App/Settings/PremiumSummary";
 

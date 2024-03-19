@@ -1,9 +1,9 @@
+import { useState } from "react";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import WalletAddModal from "@/components/App/Settings/WalletAddModal";
 import DynamicIcon from "@/components/Icon";
-import { useState } from "react";
 import { ICONS } from "@/lib/icons";
 import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
 import { ExternalLinks } from "@/routes";

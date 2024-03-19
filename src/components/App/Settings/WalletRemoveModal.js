@@ -1,10 +1,10 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useState } from "react";
+import { useSignMessage } from "wagmi";
+import GenericModal from "@/components/Modal/GenericModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { removeUserWallet } from "@/fetchers/settings.fetcher";
 import { isBased } from "@/lib/utils";
-import { useSignMessage } from "wagmi";
 
 export default function WalletRemoveModal({ model, setter, addProps }) {
     const { wallets, refetchUserWallets } = addProps;

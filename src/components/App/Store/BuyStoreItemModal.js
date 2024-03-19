@@ -1,12 +1,12 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useEffect, useState, useMemo } from "react";
+import Lottie from "lottie-react";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import PAGE, { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased } from "@/lib/utils";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-import { useRouter } from "next/router";
 import Dropdown from "@/components/App/Dropdown";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";

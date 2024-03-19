@@ -1,16 +1,15 @@
-import LayoutApp from "@/components/Layout/LayoutApp";
-import OfferItem from "@/components/App/Offer/OfferItem";
-import { useQuery } from "@tanstack/react-query";
-import { fetchOfferList } from "@/fetchers/offer.fetcher";
-import Loader from "@/components/App/Loader";
-import Empty from "@/components/App/Empty";
 import Head from "next/head";
-import Stat from "@/components/Stat";
+import { useQuery } from "@tanstack/react-query";
+import Empty from "@/components/App/Empty";
 import IconStars from "@/assets/svg/Stars.svg";
-import routes from "@/routes";
-import { isBased } from "@/lib/utils";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import Loader from "@/components/App/Loader";
+import OfferItem from "@/components/App/Offer/OfferItem";
+import Stat from "@/components/Stat";
+import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
+import routes from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function AppAccelerator({ session }) {
@@ -56,19 +55,19 @@ export default function AppAccelerator({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
-                <div className={"flex flex-col justify-center"}>
+            <div className="flex flex-col justify-between gap-7 xl:flex-row">
+                <div className="flex flex-col justify-center">
                     <div
-                        className={`glow font-extrabold text-3xl ${isBased ? "" : "font-accent uppercase font-light"}`}
+                        className="glow text-3xl page-header-text"
                     >
                         Accelerator
                     </div>
-                    <div className={"text-outline text-md mt-2 white min-w-[250px]"}>
+                    <div className="text-outline text-md mt-2 white min-w-[250px]">
                         Hyper-promising projects that are outside of {getCopy("NAME")} investment thesis.
                     </div>
                 </div>
-                <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
-                    <div className={"w-full flex gap-5 flex-col md:flex-row xl:max-w-[300px] xl:ml-auto"}>
+                <div className="flex flex-1 2xl:max-w-[900px] w-full">
+                    <div className="w-full flex gap-5 flex-col md:flex-row xl:max-w-[300px] xl:ml-auto">
                         <Stat
                             color={"gold"}
                             title={"Projects"}
@@ -113,7 +112,7 @@ export default function AppAccelerator({ session }) {
                         </div>
                     </div>
                 </div>
-                <div className={`relative offerWrap flex flex-1`}>
+                <div className="relative offerWrap flex flex-1">
                     <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>
                         <div className={"flex flex-row items-center pb-5 justify-between "}>
                             <div className={`text-app-error font-accent glowRed  font-light text-xl flex glowNormal`}>

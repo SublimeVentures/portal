@@ -1,8 +1,8 @@
+import Link from "next/link";
 import { isBased } from "@/lib/utils";
 import PAGE from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import IconInfo from "@/assets/svg/Info.svg";
-import Link from "next/link";
 
 export default function OtcMarkets({ propMarkets }) {
     let { otc, changeMarket, currentMarket } = propMarkets;
