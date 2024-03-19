@@ -7,7 +7,7 @@ module.exports = {
         Sentry.captureException(error);
     },
     error: (message, data) => {
-        console.log(`ERROR :: ${message}`, data)
+        console.log(`ERROR :: ${message}`, data);
         Sentry.withScope((scope) => {
             scope.setLevel("error");
             scope.setExtras(data);
@@ -15,7 +15,7 @@ module.exports = {
         });
     },
     warn: (message, data) => {
-        console.log(`WARN :: ${message}`, data)
+        console.log(`WARN :: ${message}`, data);
 
         Sentry.withScope((scope) => {
             scope.setLevel("warning");
@@ -24,7 +24,7 @@ module.exports = {
         });
     },
     info: (message, data) => {
-        console.log(`INFO :: ${message}`, data)
+        console.log(`INFO :: ${message}`, data);
 
         Sentry.withScope((scope) => {
             scope.setLevel("info");

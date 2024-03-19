@@ -1,73 +1,73 @@
-import * as Sentry from '@sentry/nextjs'
-import {axiosPrivate} from "@/lib/axios/axiosPrivate";
-import {API} from "@/routes";
-import {axiosPublic} from "@/lib/axios/axiosPublic";
-import {authTokenName, refreshTokenName} from "@/lib/authHelpers";
-
+import * as Sentry from "@sentry/nextjs";
+import { axiosPrivate } from "@/lib/axios/axiosPrivate";
+import { API } from "@/routes";
+import { axiosPublic } from "@/lib/axios/axiosPublic";
+import { authTokenName, refreshTokenName } from "@/lib/authHelpers";
 
 export const fetchUserWallets = async () => {
     try {
-        const {data} = await axiosPrivate.get(API.fetchWallets)
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "fetchUserWallets", e});
+        const { data } = await axiosPrivate.get(API.fetchWallets);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchUserWallets", e });
         }
     }
-    return {}
-}
+    return {};
+};
 
 export const fetchUserWalletsSsr = async (token) => {
     try {
-        const {data} = await axiosPublic.get(API.fetchWallets, {
+        const { data } = await axiosPublic.get(API.fetchWallets, {
             headers: {
-                Cookie: `${authTokenName}=${token}`
-            }
-        })
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "fetchUserWalletsSsr", e});
+                Cookie: `${authTokenName}=${token}`,
+            },
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchUserWalletsSsr", e });
         }
     }
-    return {}
-}
-
-
+    return {};
+};
 
 export const addUserWallet = async (signature) => {
     try {
-        const {data} = await axiosPrivate.post(`${API.settingsWallet}add`, {signature})
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "addUserWallet", e});
+        const { data } = await axiosPrivate.post(`${API.settingsWallet}add`, {
+            signature,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "addUserWallet", e });
         }
     }
-    return {}
-}
-
+    return {};
+};
 
 export const removeUserWallet = async (signature) => {
     try {
-        const {data} = await axiosPrivate.post(`${API.settingsWallet}remove`, {signature})
-        return data
-    } catch(e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "removeUserWallet", e});
+        const { data } = await axiosPrivate.post(`${API.settingsWallet}remove`, { signature });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "removeUserWallet", e });
         }
     }
-    return {}
-}
+    return {};
+};
 
 export const updateStaking = async (address) => {
     try {
-        const {data} = await axiosPrivate.post(API.settingsStake, {address})
-        return data
+        const { data } = await axiosPrivate.post(API.settingsStake, {
+            address,
+        });
+        return data;
     } catch (e) {
-        if(e?.status && e.status !== 401) {
-            Sentry.captureException({location: "updateStaking", e});
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "updateStaking", e });
         }
     }
-    return {}
-}
+    return {};
+};

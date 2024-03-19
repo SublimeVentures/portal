@@ -1,4 +1,3 @@
-
 .shakeBtn {
     display: block;
     position: relative;
@@ -27,15 +26,13 @@
     padding: 4px 15px 4px 20px;
 }
 
-
-
 .shakeBtn.inverted {
     background: white;
     color: #000;
 }
 .shakeBtn.inverted.primary {
-    background: #D31C5B;
-    border: 1px solid #D31C5B;
+    background: #d31c5b;
+    border: 1px solid #d31c5b;
     color: white;
 }
 .shakeBtn.inverted.secondary {
@@ -50,21 +47,20 @@
     font-size: 0.75em;
     padding: 6px 20px 6px 25px;
     width: fit-content;
-    letter-spacing: 0.30em;
+    letter-spacing: 0.3em;
 }
-
-
 
 .shakeBtn.danger {
-    border: 1px solid #D31C5B;
-    color: #D31C5B;
+    border: 1px solid #d31c5b;
+    color: #d31c5b;
 }
 .shakeBtn.danger:hover {
-    background: #D31C5B;
+    background: #d31c5b;
     color: white;
 }
 
-.shakeBtn.danger:before, .shakeBtn.danger:after {
+.shakeBtn.danger:before,
+.shakeBtn.danger:after {
     position: absolute;
     top: 0;
     left: 0;
@@ -72,26 +68,26 @@
     width: 100%;
     -webkit-clip: rect(0px, 0px, 0px, 0px);
     clip: rect(0px, 0px, 0px, 0px);
-    background: #D31C5B;
+    background: #d31c5b;
     color: white;
 }
 
 .shakeBtn.danger:before {
     left: -3px;
     top: -2px;
-    text-shadow: 2px 0 #D31C5B;
-    box-shadow: 2px 0 #D31C5B;
+    text-shadow: 2px 0 #d31c5b;
+    box-shadow: 2px 0 #d31c5b;
 }
 
 .shakeBtn.danger:after {
     left: 2px;
     bottom: -2px;
-    text-shadow: -1px 0 #D31C5B;
-    box-shadow: -1px 0 #D31C5B;
+    text-shadow: -1px 0 #d31c5b;
+    box-shadow: -1px 0 #d31c5b;
 }
 
 .shakeBtn.danger:hover {
-    background: #D31C5B;
+    background: #d31c5b;
     color: white;
 }
 /*green*/
@@ -104,7 +100,8 @@
     color: white;
 }
 
-.shakeBtn.success:before, .shakeBtn.success:after {
+.shakeBtn.success:before,
+.shakeBtn.success:after {
     position: absolute;
     top: 0;
     left: 0;
@@ -135,20 +132,18 @@
     color: white;
 }
 
-
 .shakeBtn.disabled {
     opacity: 0.5;
     pointer-events: none;
 }
-
-
 
 .shakeBtn.active {
     background: white;
     color: #000;
 }
 
-.shakeBtn:before, .shakeBtn:after {
+.shakeBtn:before,
+.shakeBtn:after {
     content: " ";
 
     position: absolute;

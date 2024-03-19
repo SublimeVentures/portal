@@ -1,29 +1,29 @@
 import HeroBg from "@/components/Home/HeroBg";
-import {NextSeo} from "next-seo";
-import {seoConfig} from "@/lib/seoConfig";
+import { NextSeo } from "next-seo";
+import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import dynamic from "next/dynamic";
-import {TENANT} from "@/lib/tenantHelper";
-const Privacy_based = dynamic(() => import('@/components/Legal/Privacy_based'), {ssr: true,})
-const Privacy_kongz = dynamic(() => import('@/components/Legal/Privacy_kongz'), {ssr: true,})
-const Privacy_neotokyo = dynamic(() => import('@/components/Legal/Privacy_neotokyo'), {ssr: true,})
+import { TENANT } from "@/lib/tenantHelper";
+const Privacy_based = dynamic(() => import("@/components/Legal/Privacy_based"), { ssr: true });
+const Privacy_kongz = dynamic(() => import("@/components/Legal/Privacy_kongz"), { ssr: true });
+const Privacy_neotokyo = dynamic(() => import("@/components/Legal/Privacy_neotokyo"), { ssr: true });
 
 const TENANT_PRIAVCY = () => {
-    switch(Number(process.env.NEXT_PUBLIC_TENANT)) {
+    switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.NeoTokyo: {
-            return <Privacy_neotokyo/>
+            return <Privacy_neotokyo />;
         }
         case TENANT.CyberKongz: {
-            return <Privacy_kongz/>
+            return <Privacy_kongz />;
         }
         default: {
-            return <Privacy_based/>
+            return <Privacy_based />;
         }
     }
-}
+};
 
 export default function Privacy() {
-    const seo = seoConfig(PAGE.Privacy)
+    const seo = seoConfig(PAGE.Privacy);
 
     return (
         <>
@@ -34,8 +34,7 @@ export default function Privacy() {
                 openGraph={seo.og}
                 twitter={seo.twitter}
             />
-            <HeroBg subtitle={''} title={'Privacy Policy'} content={TENANT_PRIAVCY()} extraClass={"listWithStyle"}/>
+            <HeroBg subtitle={""} title={"Privacy Policy"} content={TENANT_PRIAVCY()} extraClass={"listWithStyle"} />
         </>
-    )
+    );
 }
-

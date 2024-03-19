@@ -5,8 +5,8 @@ import {
     translate,
     translate3d,
     rotateY,
-    toString as rematrixToString
-} from 'rematrix';
+    toString as rematrixToString,
+} from "rematrix";
 
 export default class Matrix {
     constructor(arg) {

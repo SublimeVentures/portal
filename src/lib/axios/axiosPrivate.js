@@ -12,19 +12,19 @@ axios.interceptors.response.use(
     async (error) => {
         const config = error?.config;
         if (error?.response?.status === 401 && !config?.sent) {
-            console.log("token expired, refreshing client")
+            console.log("token expired, refreshing client");
             config.sent = true;
             const refresh = await memoizedRefreshToken();
-            if(!refresh) {
-                const logoutEvent = new CustomEvent('logoutEvent');
-                if (typeof window !== 'undefined') {
+            if (!refresh) {
+                const logoutEvent = new CustomEvent("logoutEvent");
+                if (typeof window !== "undefined") {
                     window.dispatchEvent(logoutEvent);
                 }
             }
             return axios(config);
         }
         return Promise.reject(error);
-    }
+    },
 );
 
 export const axiosPrivate = axios;

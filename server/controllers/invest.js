@@ -1,47 +1,41 @@
-const moment = require('moment');
-const {getOfferWithLimits} = require("../queries/offers.query");
-const {getEnv} = require("../services/db");
+const moment = require("moment");
+const { getOfferWithLimits } = require("../queries/offers.query");
+const { getEnv } = require("../services/db");
 const {
     expireAllocation,
     investIncreaseAllocationReserved,
-    investUpsertParticipantReservation
+    investUpsertParticipantReservation,
 } = require("../queries/invest.query");
-const {createHash} = require("./helpers");
-const {fetchUpgradeUsed} = require("../queries/upgrade.query");
-const {PremiumItemsENUM} = require("../../src/lib/enum/store");
-const {BookingErrorsENUM} = require("../../src/lib/enum/invest");
+const { createHash } = require("./helpers");
+const { fetchUpgradeUsed } = require("../queries/upgrade.query");
+const { PremiumItemsENUM } = require("../../src/lib/enum/store");
+const { BookingErrorsENUM } = require("../../src/lib/enum/invest");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
-const {sumAmountForUserAndTenant} = require("../queries/participants.query");
-const {phases} = require("../../src/lib/phases");
-const {userInvestmentState} = require("../../src/lib/investment");
+const { serializeError } = require("serialize-error");
+const { sumAmountForUserAndTenant } = require("../queries/participants.query");
+const { phases } = require("../../src/lib/phases");
+const { userInvestmentState } = require("../../src/lib/investment");
 const db = require("../services/db/definitions/db.init");
 const axios = require("axios");
-const {authTokenName} = require("../../src/lib/authHelpers");
+const { authTokenName } = require("../../src/lib/authHelpers");
 
-let CACHE = {}
+let CACHE = {};
 
+async function processBooking(offer, offerLimit, user, amount) {
+    const { userId, tenantId, partnerId } = user;
 
-async function processBooking(
-    offer,
-    offerLimit,
-    user,
-    amount,
-) {
-    const {userId, tenantId, partnerId} = user
-
-    const {phaseCurrent} = phases({...offer, ...offerLimit})
-    console.log("phaseCurrent",phaseCurrent)
+    const { phaseCurrent } = phases({ ...offer, ...offerLimit });
+    console.log("phaseCurrent", phaseCurrent);
     const [vault, upgrades] = await Promise.all([
         sumAmountForUserAndTenant(offer.id, userId, tenantId),
-        fetchUpgradeUsed(userId, offer.id, tenantId)
+        fetchUpgradeUsed(userId, offer.id, tenantId),
     ]);
-    console.log("vault",vault)
-    console.log("upgrades",upgrades)
-    console.log("offer",offer)
+    console.log("vault", vault);
+    console.log("upgrades", upgrades);
+    console.log("offer", offer);
 
-    const upgradeGuaranteed = upgrades.find(el => el.id === PremiumItemsENUM.Guaranteed)
-    const upgradeIncreased = upgrades.find(el => el.id === PremiumItemsENUM.Increased)
+    const upgradeGuaranteed = upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const upgradeIncreased = upgrades.find((el) => el.id === PremiumItemsENUM.Increased);
 
     let transaction;
 
@@ -49,24 +43,18 @@ async function processBooking(
         transaction = await db.transaction();
 
         //increase reservation and ensure no overbooking
-        const increaseReserved = await investIncreaseAllocationReserved(
-            offer,
-            amount,
-            upgradeGuaranteed,
-            transaction
-        )
-        console.log("increaseReserved",increaseReserved)
+        const increaseReserved = await investIncreaseAllocationReserved(offer, amount, upgradeGuaranteed, transaction);
+        console.log("increaseReserved", increaseReserved);
 
-        if (!increaseReserved.ok) throw Error(BookingErrorsENUM.Overallocated)
-
+        if (!increaseReserved.ok) throw Error(BookingErrorsENUM.Overallocated);
 
         //generate hash
-        const now = moment.utc().unix()
-        const expires = now + 10 * 60 //15min validity
+        const now = moment.utc().unix();
+        const expires = now + 10 * 60; //15min validity
         // const expires = now + 15 * 60 //15min validity
-        const hash = createHash(`${userId}` + `${now}`)
+        const hash = createHash(`${userId}` + `${now}`);
 
-        console.log("hash", hash)
+        console.log("hash", hash);
 
         //upsert booking
         const upsertReservation = await investUpsertParticipantReservation(
@@ -77,19 +65,19 @@ async function processBooking(
             amount,
             hash,
             upgradeGuaranteed,
-            transaction
-        )
-        if (!upsertReservation.ok || !(upsertReservation.data.hash?.length > 3)) throw Error(BookingErrorsENUM.ProcessingError)
-
+            transaction,
+        );
+        if (!upsertReservation.ok || !(upsertReservation.data.hash?.length > 3))
+            throw Error(BookingErrorsENUM.ProcessingError);
 
         //confirm enough allocation
         const userAllocation = userInvestmentState(
             user,
-            {...offer, ...offerLimit},
+            { ...offer, ...offerLimit },
             phaseCurrent,
             {
                 guaranteedUsed: upgradeGuaranteed,
-                increasedUsed: upgradeIncreased
+                increasedUsed: upgradeIncreased,
             },
             vault.total,
             {
@@ -100,17 +88,17 @@ async function processBooking(
                 alloTotal: increaseReserved.data.alloTotal,
                 isPaused: increaseReserved.data.isPaused,
                 isSettled: increaseReserved.data.isSettled,
-            }
-        )
+            },
+        );
 
         if (userAllocation.allocationUser_left < amount || userAllocation.offer_isProcessing) {
-            throw Error(BookingErrorsENUM.Overallocated)
+            throw Error(BookingErrorsENUM.Overallocated);
         }
         if (userAllocation.allocationUser_min > amount) {
-            throw Error(BookingErrorsENUM.AmountTooLow)
+            throw Error(BookingErrorsENUM.AmountTooLow);
         }
         if (userAllocation.offer_isSettled) {
-            throw Error(BookingErrorsENUM.NotOpen)
+            throw Error(BookingErrorsENUM.NotOpen);
         }
 
         await transaction.commit();
@@ -120,100 +108,101 @@ async function processBooking(
                 expires,
                 hash: upsertReservation.data.hash,
                 amount,
-                phase: phaseCurrent.phase
+                phase: phaseCurrent.phase,
             },
-            ok: true
-        }
+            ok: true,
+        };
     } catch (error) {
         if (transaction) {
             await transaction.rollback();
         }
         return {
             ok: false,
-            code: error?.shortMessage || serializeError(error).message
-        }
+            code: error?.shortMessage || serializeError(error).message,
+        };
     }
 }
 
-
 function checkInvestmentStateConditions(userId, tenantId, offer, offerLimit) {
-    if (offer.isPaused) return {
-        ok: false,
-        code: BookingErrorsENUM.IsPaused
-    }
+    if (offer.isPaused)
+        return {
+            ok: false,
+            code: BookingErrorsENUM.IsPaused,
+        };
 
-    const now = moment.utc().unix()
-    if (now < offerLimit.d_open || now > offerLimit.d_close) return {
-        ok: false,
-        code: BookingErrorsENUM.NotOpen
-    }
+    const now = moment.utc().unix();
+    if (now < offerLimit.d_open || now > offerLimit.d_close)
+        return {
+            ok: false,
+            code: BookingErrorsENUM.NotOpen,
+        };
 
     return {
         ok: true,
-        code: BookingErrorsENUM.Open
-    }
+        code: BookingErrorsENUM.Open,
+    };
 }
 
-
 async function processReservation(queryParams, user) {
-    const {userId, tenantId, partnerId} = user
-    const {_offerId, _amount, _currency, _chain} = queryParams
-
+    const { userId, tenantId, partnerId } = user;
+    const { _offerId, _amount, _currency, _chain } = queryParams;
 
     try {
         if (!CACHE[_offerId]?.expire || CACHE[_offerId].expire < moment.utc().unix()) {
-            const allocation = await getOfferWithLimits(_offerId)
-            CACHE[_offerId] = {...allocation, ...{expire: moment.utc().unix() + 3 * 60}}
+            const allocation = await getOfferWithLimits(_offerId);
+            CACHE[_offerId] = {
+                ...allocation,
+                ...{ expire: moment.utc().unix() + 3 * 60 },
+            };
         }
-        console.log("CACHE[_offerId]",CACHE[_offerId])
-        const currency = getEnv().currencies[_chain][_currency]
+        console.log("CACHE[_offerId]", CACHE[_offerId]);
+        const currency = getEnv().currencies[_chain][_currency];
         if (!currency || !currency.isSettlement || (currency.partnerId && currency.partnerId !== tenantId)) {
             return {
                 ok: false,
-                code: BookingErrorsENUM.BadCurrency
-            }
+                code: BookingErrorsENUM.BadCurrency,
+            };
         }
-        console.log("currency",currency)
+        console.log("currency", currency);
 
-        const offerLimit = CACHE[_offerId].offerLimits.find(el => el.partnerId === partnerId) || CACHE[_offerId].offerLimits.find(el => el.partnerId === tenantId);
-        console.log("offerLimit",offerLimit)
+        const offerLimit =
+            CACHE[_offerId].offerLimits.find((el) => el.partnerId === partnerId) ||
+            CACHE[_offerId].offerLimits.find((el) => el.partnerId === tenantId);
+        console.log("offerLimit", offerLimit);
 
         //test if offer's ready
-        const checkIsReadyForStart = checkInvestmentStateConditions(userId, tenantId, CACHE[_offerId], offerLimit)
-        console.log("checkIsReadyForStart",checkIsReadyForStart)
+        const checkIsReadyForStart = checkInvestmentStateConditions(userId, tenantId, CACHE[_offerId], offerLimit);
+        console.log("checkIsReadyForStart", checkIsReadyForStart);
 
         if (!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
         //check conditions and book
-        const isBooked = await processBooking(
-            CACHE[_offerId],
-            offerLimit,
-            user,
-            _amount,
-        )
-        console.log("isBooked",isBooked)
+        const isBooked = await processBooking(CACHE[_offerId], offerLimit, user, _amount);
+        console.log("isBooked", isBooked);
 
         if (!isBooked.ok) {
             return {
                 ok: false,
                 code: isBooked.code,
-            }
+            };
         }
-
 
         return {
             ok: true,
             data: {
-                ...isBooked.data
-            }
-        }
-
+                ...isBooked.data,
+            },
+        };
     } catch (error) {
-        logger.error('ERROR :: [processReservation]', {error: serializeError(error), queryParams, user});
+        logger.error("ERROR :: [processReservation]", {
+            error: serializeError(error),
+            queryParams,
+            user,
+        });
         return {
             ok: false,
             code: BookingErrorsENUM.ProcessingError,
-        }
+        };
     }
 }
 
@@ -221,13 +210,13 @@ function checkReserveSpotQueryParams(req) {
     let _offerId, _amount, _currency, _chain;
 
     try {
-        _offerId = Number(req.query.id)
-        _amount = Number(req.query.amount)
-        _currency = req.query.currency
-        _chain = req.query.chain
+        _offerId = Number(req.query.id);
+        _amount = Number(req.query.amount);
+        _currency = req.query.currency;
+        _chain = req.query.chain;
 
         if (_offerId < 1) {
-            throw Error("Offer ID not valid")
+            throw Error("Offer ID not valid");
         }
 
         return {
@@ -237,78 +226,78 @@ function checkReserveSpotQueryParams(req) {
                 _amount,
                 _currency,
                 _chain,
-            }
-        }
-
+            },
+        };
     } catch (error) {
-        logger.error('ERROR :: [checkReserveSpotQueryParams]', {
+        logger.error("ERROR :: [checkReserveSpotQueryParams]", {
             error: serializeError(error),
             _offerId,
             _amount,
             _currency,
             _chain,
-            params: req.query
+            params: req.query,
         });
         return {
             ok: false,
             code: BookingErrorsENUM.VerificationFailed,
-        }
+        };
     }
 }
 
 async function obtainSignature(offerId, amount, hash, expires, token) {
-        const signature = await axios.post(`${process.env.AUTHER}/invest/sign`, {
-            offerId, amount, hash, expires, token
-        }, {
+    const signature = await axios.post(
+        `${process.env.AUTHER}/invest/sign`,
+        {
+            offerId,
+            amount,
+            hash,
+            expires,
+            token,
+        },
+        {
             headers: {
-                'content-type': 'application/json'
-            }
-        });
-        if(!signature?.data?.ok){
-            return {
-                ok: false,
-                code: BookingErrorsENUM.BAD_SIGNATURE,
-            }
-        }
-
+                "content-type": "application/json",
+            },
+        },
+    );
+    if (!signature?.data?.ok) {
         return {
-            ok:true,
-            data: signature.data.data
-        }
+            ok: false,
+            code: BookingErrorsENUM.BAD_SIGNATURE,
+        };
+    }
 
+    return {
+        ok: true,
+        data: signature.data.data,
+    };
 }
 
 async function reserveSpot(user, req) {
     try {
-        const queryParams = checkReserveSpotQueryParams(req)
-        if (!queryParams.ok) return queryParams
+        const queryParams = checkReserveSpotQueryParams(req);
+        if (!queryParams.ok) return queryParams;
 
-        console.log("queryParams",queryParams)
-        const reservation = await processReservation(queryParams.data, user)
-        console.log("reservation",reservation)
+        console.log("queryParams", queryParams);
+        const reservation = await processReservation(queryParams.data, user);
+        console.log("reservation", reservation);
 
-        if (!reservation.ok) return reservation
+        if (!reservation.ok) return reservation;
 
-        console.log("reservation",reservation)
-        const token = req.cookies[authTokenName]
+        console.log("reservation", reservation);
+        const token = req.cookies[authTokenName];
         const signature = await obtainSignature(
             queryParams.data._offerId,
             reservation.data.amount,
             reservation.data.hash,
             reservation.data.expires,
-            token
-        )
+            token,
+        );
 
-        if(!signature.ok) {
-            console.log("expore",  queryParams.data._offerId,
-                user.userId,
-                reservation.data.hash)
-            await expireAllocation(
-                queryParams.data._offerId,
-                user.userId,
-                reservation.data.hash
-            )
-            return signature
+        if (!signature.ok) {
+            console.log("expore", queryParams.data._offerId, user.userId, reservation.data.hash);
+            await expireAllocation(queryParams.data._offerId, user.userId, reservation.data.hash);
+            return signature;
         }
 
         return {
@@ -317,14 +306,15 @@ async function reserveSpot(user, req) {
             expires: reservation.data.expires,
             amount: reservation.data.amount,
             signature: signature.data,
-        }
+        };
     } catch (error) {
         logger.error(`ERROR :: [reserveSpot]`, {
-            reqQuery: req.query, user, error: serializeError(error)
+            reqQuery: req.query,
+            user,
+            error: serializeError(error),
         });
-        return { ok: false }
+        return { ok: false };
     }
-
 }
 
-module.exports = {reserveSpot}
+module.exports = { reserveSpot };

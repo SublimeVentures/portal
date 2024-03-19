@@ -1,27 +1,26 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import {ExternalLinks} from "@/routes";
+import { ExternalLinks } from "@/routes";
 
-export default function ClaimErrorModal({model, setter, errorMessage}) {
-
+export default function ClaimErrorModal({ model, setter, errorMessage }) {
     const title = () => {
-        return (<>Claim <span className="text-app-error">error</span></>)
-    }
+        return (
+            <>
+                Claim <span className="text-app-error">error</span>
+            </>
+        );
+    };
 
     const content = () => {
-        return (<>
-
-                <div className="mb-5">
-                    {errorMessage}.
-                </div>
+        return (
+            <>
+                <div className="mb-5">{errorMessage}.</div>
                 <div>
-                    <Linker url={ExternalLinks.LOOTBOX}/>
+                    <Linker url={ExternalLinks.LOOTBOX} />
                 </div>
-                </>
-        )
-    }
+            </>
+        );
+    };
 
-
-  return (<GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />)
+    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
 }
-

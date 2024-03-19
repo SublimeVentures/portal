@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
     sequelize.define(
-        'userRole',
+        "userRole",
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -12,24 +12,24 @@ module.exports = (sequelize) => {
             },
             roleId: {
                 type: DataTypes.INTEGER,
-                    allowNull: false,
-                    references: {
-                        model: 'role', // This is a reference to another model
-                        key: 'id',       // This is the column name of the referenced model
-                    }
+                allowNull: false,
+                references: {
+                    model: "role", // This is a reference to another model
+                    key: "id", // This is the column name of the referenced model
+                },
             },
             userId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'user', // This is a reference to another model
-                    key: 'id',       // This is the column name of the referenced model
-                }
+                    model: "user", // This is a reference to another model
+                    key: "id", // This is the column name of the referenced model
+                },
             },
         },
         {
             freezeTableName: true,
             timestamps: true,
-        }
+        },
     );
 };

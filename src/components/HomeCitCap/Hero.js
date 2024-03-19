@@ -1,21 +1,18 @@
-import {ButtonCitCapIconSize, CitCapButton} from "@/components/Button/CitCapButton";
+import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import dynamic from "next/dynamic";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import DynamicIcon from "@/components/Icon";
-const LoginModal = dynamic(() => import('@/components/SignupFlow/LoginModal'), {ssr: false})
+const LoginModal = dynamic(() => import("@/components/SignupFlow/LoginModal"), {
+    ssr: false,
+});
 
 export default function Hero({}) {
-    const {
-        isLoginLoading,
-        handleConnect,
-        setPartner,
-        loginData
-    } = useLoginFlow();
+    const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
 
     useEffect(() => {
         setPartner(Number(process.env.NEXT_PUBLIC_TENANT));
-    },[])
+    }, []);
 
     return (
         <div className="min-h-screen bg flex flex-col justify-center hero select-none">
@@ -29,16 +26,21 @@ export default function Hero({}) {
                     </div>
                 </div>
 
-                <div
-                    className="flex mx-auto mt-10 md:mt-0 md:items-center md:p-10 md:left-0 md:right-0 md:absolute md:bottom-20 md:mx-auto md:justify-center">
-                        <div className={"w-[300px] flex flex-col"}>
-
-                            <CitCapButton text={'CONNECT'}  isLoading={isLoginLoading }  handler={() => { handleConnect()}} isWhite={true} icon={<DynamicIcon name={"Play"} style={ButtonCitCapIconSize.hero}/>}/>
-                        </div>
+                <div className="flex mx-auto mt-10 md:mt-0 md:items-center md:p-10 md:left-0 md:right-0 md:absolute md:bottom-20 md:mx-auto md:justify-center">
+                    <div className={"w-[300px] flex flex-col"}>
+                        <CitCapButton
+                            text={"CONNECT"}
+                            isLoading={isLoginLoading}
+                            handler={() => {
+                                handleConnect();
+                            }}
+                            isWhite={true}
+                            icon={<DynamicIcon name={"Play"} style={ButtonCitCapIconSize.hero} />}
+                        />
+                    </div>
                 </div>
             </div>
-            <LoginModal loginModalProps={loginData}/>
-
-        </div>)
-
+            <LoginModal loginModalProps={loginData} />
+        </div>
+    );
 }
