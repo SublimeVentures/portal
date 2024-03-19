@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-RUN apk add --no-cache python3 py3-pip make g++
+RUN apk add -q --no-cache python3 py3-pip make g++
 
 WORKDIR /usr/src/app
 
@@ -8,9 +8,8 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY yarn.lock ./
 COPY .env ./
-COPY .husky ./
 
-RUN yarn install
+RUN yarn install --frozen-lockfile --silent --non-interactive
 
 COPY . .
 
