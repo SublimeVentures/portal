@@ -2,7 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import debounce from "lodash/debounce";
+import debounce from "lodash.debounce";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import "@leenguyen/react-flip-clock-countdown/dist/index.css";
 import { PhaseId } from "@/lib/phases";

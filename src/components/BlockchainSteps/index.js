@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useCallback } from "react";
-import debounce from "lodash/debounce";
+import debounce from "lodash.debounce";
 import { useChainId } from "wagmi";
 import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
 import { initialState, reducer } from "@/components/BlockchainSteps/reducer";
