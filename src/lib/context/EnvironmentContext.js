@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import _ from "lodash";
-import merge from "lodash/merge";
+import merge from "lodash.merge";
+import cloneDeep from "lodash.clonedeep";
+import set from "lodash.set";
 import { useAccount, useSwitchChain } from "wagmi";
 import { TENANT } from "@/lib/tenantHelper";
 import { logOut } from "@/fetchers/auth.fetcher";
@@ -209,9 +210,9 @@ export const EnvironmentProvider = ({ children, initialData }) => {
 
     const updateEnvironmentProps = (updates, source) => {
         setEnvironmentProps((prevProps) => {
-            const newState = _.cloneDeep(prevProps);
+            const newState = cloneDeep(prevProps);
             updates.forEach((update) => {
-                _.set(newState, update.path, update.value);
+                set(newState, update.path, update.value);
             });
             console.log("EC :: update props:", newState, source);
             return newState;
