@@ -4,8 +4,6 @@ function sleeper(ms) {
 
 const tenantIndex = Number(process.env.NEXT_PUBLIC_TENANT) || 1;
 
-const isBased = process.env.NEXT_PUBLIC_TENANT === "1";
-
 const NETWORKS = {
     1: "eth",
     137: "matic",
@@ -35,7 +33,6 @@ const CITIZENS_NAME = {
 
 module.exports = {
     sleeper,
-    isBased,
     NETWORKS,
     checkIfNumberKey,
     CITIZENS,

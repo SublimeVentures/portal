@@ -11,14 +11,12 @@ import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
 import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
 
 const BlockchainSteps = ({ data }) => {
     const chainId = useChainId();
     const { steps, token, params, setTransactionSuccessful } = data;
     const [state, dispatch] = useReducer(reducer, initialState);
-    console.log("BIX :: INIAITL:", data, token, state);
 
     useEffect(() => {
         console.log("BIX :: PARAM CHANGED HIXKFHERYDDDD [reset] - ", state, params);
@@ -64,13 +62,10 @@ const BlockchainSteps = ({ data }) => {
 
     const liquidity_isReady = steps.liquidity && (steps.network ? state.network.isFinished : !state.liquidity.lock);
     const liquidity_shouldRun = !state.liquidity.isFinished && liquidity_isReady;
-    console.log("BIX :: LIQUIDITY - shouldRun / isReady", liquidity_shouldRun, liquidity_isReady);
-    console.log("BIX :: LIQUIDITY - shouldRun split", state.liquidity.isFinished, liquidity_isReady);
-    console.log("BIX :: LIQUIDITY - isReady split", state.liquidity.isFinished, liquidity_isReady);
 
     const liquidity_balance = useGetTokenBalance(liquidity_shouldRun, token, chainId, params.account, !steps.liquidity);
     const liquidity_isFinished = params.liquidity <= liquidity_balance?.balance;
-    console.log(`BIX :: LIQUIDITY - RUN ${liquidity_shouldRun}`, liquidity_balance?.balance, liquidity_isFinished);
+
     useEffect(() => {
         if (liquidity_shouldRun) {
             console.log(
@@ -373,8 +368,6 @@ const BlockchainSteps = ({ data }) => {
 
     const { buttonIcon, buttonLock, buttonText } = useBlockchainButton(steps, state, params, extraState);
 
-    console.log(`BIX :: RENDER STATE`, extraState);
-
     return (
         <>
             <div className="flex flex-col flex-1 pb-5 justify-content text-sm">
@@ -387,12 +380,12 @@ const BlockchainSteps = ({ data }) => {
                 {steps.transaction && <BlockchainStep data={stepPrerequisite} />}
                 {steps.transaction && <BlockchainStep data={stepTransaction} />}
             </div>
-            <div className={` pb-5 ${isBased ? "fullWidth" : " w-full fullBtn"}`}>
+            <div className="pb-5 button-container">
                 <UniButton
                     type={ButtonTypes.BASE}
                     isWide={true}
-                    size={"text-sm sm"}
-                    state={"danger"}
+                    size="text-sm sm"
+                    state="danger"
                     icon={buttonIcon}
                     isDisabled={buttonLock}
                     text={buttonText}

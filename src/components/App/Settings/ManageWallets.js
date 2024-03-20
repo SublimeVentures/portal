@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import WalletAddModal from "@/components/App/Settings/WalletAddModal";
 import DynamicIcon from "@/components/Icon";
@@ -37,11 +36,11 @@ export default function ManageWallets({ walletProps }) {
 
     return (
         <>
-            <div className={`${isBased ? "rounded-xl" : ""} boxshadow relative offerWrap flex flex-1 max-w-[600px]`}>
-                <div className={`${isBased ? "rounded-xl" : ""} relative bg-navy-accent flex flex-1 flex-col `}>
+            <div className="bordered-container boxshadow relative offerWrap flex flex-1 max-w-[600px]">
+                <div className="relative bg-navy-accent flex flex-1 flex-col">
                     <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
                         <div
-                            className={`flex flex-1 ${isBased ? "" : "text-app-error font-accent glowRed  font-light text-2xl flex glowNormal"} `}
+                            className="flex flex-1 card-content-dedicated"
                         >
                             WALLETS
                         </div>
@@ -51,7 +50,7 @@ export default function ManageWallets({ walletProps }) {
                     </div>
                     <div>
                         <table>
-                            <thead className={`${isBased ? "bg-navy-2" : "bg-slides"}`}>
+                            <thead className="card-table-header">
                                 <tr>
                                     <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
                                         <label>WALLET</label>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased, NETWORKS } from "@/lib/utils";
+import { NETWORKS } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
 import { fetchInvestmentPayout } from "@/fetchers/payout.fetcher";
@@ -87,10 +87,10 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
     const title = () => {
         return (
             <div className={"flex flex-row gap-5 flex-1 items-center select-none"}>
-                <div className={"rounded-lg "}>
+                <div className="rounded-lg">
                     <Image
                         src={`${cdn}/research/${slug}/icon.jpg`}
-                        className={"p-1 rounded-full boxshadow"}
+                        className="p-1 rounded-full boxshadow"
                         alt={slug}
                         width={100}
                         height={100}
@@ -105,28 +105,28 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
 
     const content = () => {
         return (
-            <div className={`flex flex-1 flex-col`}>
-                <div className={`${isBased ? "" : "font-accent"} text-md pt-2`}>
-                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>Status</div>
-                    <div className={"detailRow "}>
+            <div className="flex flex-1 flex-col">
+                <div className="card-content-description text-md pt-2">
+                    <div className="flex pt-5 pb-2 text-xl font-bold">Status</div>
+                    <div className="detailRow">
                         <p>Progress</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>{vestedPercentage}%</p>
+                        <hr className="spacer" />
+                        <p className="font-mono">{vestedPercentage}%</p>
                     </div>
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Invested</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>
+                        <hr className="spacer"/>
+                        <p className="font-mono">
                             {Number(invested).toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
                             })}{" "}
                             USD
                         </p>
                     </div>
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Vested</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>
+                        <hr className="spacer" />
+                        <p className="font-mono">
                             {Number(claimed).toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
                             })}{" "}
@@ -134,77 +134,77 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                         </p>
                     </div>
                     {availablePayouts > 0 && (
-                        <div className={"detailRow text-app-success"}>
-                            <p className={"font-mono"}>Available payout</p>
-                            <hr className={"spacer"} />
-                            <p className={"flex gap-1 h-[18px] font-mono"}>
+                        <div className="detailRow text-app-success">
+                            <p className="font-mono">Available payout</p>
+                            <hr className="spacer" />
+                            <p className="flex gap-1 h-[18px] font-mono">
                                 <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />
                                 {Number(availablePayouts).toLocaleString()} {currency?.symbol}
                             </p>
                         </div>
                     )}
 
-                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>Performance</div>
-                    <div className={"detailRow "}>
+                    <div className="flex pt-5 pb-2 text-xl font-bold">Performance</div>
+                    <div className="detailRow">
                         <p>TGE gain</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>
+                        <hr className="spacer"/>
+                        <p className="font-mono">
                             <span className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}>
                                 {tgeParsed}
                             </span>
                         </p>
                     </div>
                     {isManaged ? (
-                        <div className={"detailRow "}>
+                        <div className="detailRow">
                             <p>Return</p>
-                            <hr className={"spacer"} />
-                            <p className={"font-mono"}>
+                            <hr className="spacer" />
+                            <p className="font-mono">
                                 <span className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}>
                                     +{Number(performance).toLocaleString(undefined, { minimumFractionDigits: 2 })}%
                                 </span>
                             </p>
                         </div>
                     ) : (
-                        <div className={"detailRow disabled"}>
+                        <div className="detailRow disabled">
                             <p>ATH profit</p>
-                            <hr className={"spacer"} />
+                            <hr className="spacer"/>
                             <p>
                                 <span>soon</span>
                             </p>
                         </div>
                     )}
 
-                    <div className={"flex pt-5 pb-2 text-xl font-bold"}>Dates</div>
-                    <div className={"detailRow mb-2"}>
+                    <div className="flex pt-5 pb-2 text-xl font-bold">Dates</div>
+                    <div className="detailRow mb-2">
                         <p>Participated</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>{participated}</p>
+                        <hr className="spacer"/>
+                        <p className="font-mono">{participated}</p>
                     </div>
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Next unlock</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>{nextUnlock !== 0 ? nextUnlock : "TBA"}</p>
+                        <hr className="spacer"/>
+                        <p className="font-mono">{nextUnlock !== 0 ? nextUnlock : "TBA"}</p>
                     </div>
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Allocation snapshot</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</p>
+                        <hr className="spacer"/>
+                        <p className="font-mono">{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</p>
                     </div>
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Claim date</p>
-                        <hr className={"spacer"} />
-                        <p className={"font-mono"}>{nextClaim !== 0 ? nextClaim : "TBA"}</p>
+                        <hr className="spacer" />
+                        <p className="font-mono">{nextClaim !== 0 ? nextClaim : "TBA"}</p>
                     </div>
                 </div>
 
-                <div className={`mt-auto ${isBased ? "fullWidth" : " w-full fullBtn"}`}>
+                <div className="mt-auto fullWidth">
                     <UniButton
                         type={ButtonTypes.BASE}
                         isWide={true}
                         isDisabled={!isNextPayout}
-                        size={"text-sm sm"}
-                        state={"danger"}
-                        text={"Payout"}
+                        size="text-sm sm"
+                        state="danger"
+                        text="Payout"
                         handler={() => {
                             openPayoutClaim();
                         }}

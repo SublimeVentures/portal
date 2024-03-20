@@ -12,11 +12,13 @@ import { queryClient } from "@/lib/queryCache";
 import { fetchPartners } from "@/fetchers/public.fecher";
 import { seoConfig } from "@/lib/seoConfig";
 import PAGE, { ExternalLinks } from "@/routes";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import Linker from "@/components/link";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 import { TENANT } from "@/lib/tenantHelper";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function LoginPartner({ selectedPartner, isAuthenticated }) {
     const seo = seoConfig(PAGE.Login);
@@ -28,7 +30,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
         VanillaTilt.init(tilt.current, {
             scale: 1.05,
             speed: 1000,
-            max: isBased ? 5 : 0.2,
+            max: isBaseVCTenant ? 5 : 0.2,
         });
     }, []);
 
@@ -37,7 +39,6 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
             router.replace("/app");
         }
 
-        console.log("selectedPartner.id", selectedPartner.id);
         setPartner(selectedPartner.id);
     }, []);
 

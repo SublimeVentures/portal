@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { isBased } from "@/lib/utils";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { getCurrency } from "@/components/App/Store/helper";
 

@@ -11,7 +11,6 @@ import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
 import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
 
 const BlockchainSteps = ({ data }) => {
@@ -21,7 +20,6 @@ const BlockchainSteps = ({ data }) => {
     console.log("BIX :: INIAITL:", data, token, state);
 
     useEffect(() => {
-        console.log("BIX :: PARAM CHANGED HIXKFHERYDDDD [reset] - ", state, params);
         dispatch({ type: "RESET" });
         resetState();
     }, [
@@ -93,14 +91,6 @@ const BlockchainSteps = ({ data }) => {
           : true;
     const allowance_shouldRun =
         steps.allowance && !state.allowance.isFinished && !state.allowance.lock && allowance_isReady;
-    console.log("BIX :: ALLOWANCE - shouldRun / isReady", allowance_shouldRun, allowance_isReady);
-    console.log(
-        "BIX :: ALLOWANCE - shouldRun split",
-        steps.allowance,
-        !state.allowance.isFinished,
-        !state.allowance.lock,
-        allowance_isReady,
-    );
 
     const allowance_current = useGetTokenAllowance(
         allowance_shouldRun,
@@ -111,18 +101,9 @@ const BlockchainSteps = ({ data }) => {
         !steps.allowance,
     );
     const allowance_isFinished = params.allowance <= allowance_current?.allowance;
-    console.log(
-        `BIX :: ALLOWANCE CHECK - RUN ${allowance_shouldRun}`,
-        allowance_current?.allowance,
-        allowance_isFinished,
-    );
 
     useEffect(() => {
-        console.log("BIX :: ALLOWANCE CHECK - DETECTED", allowance_current?.allowance);
         if (allowance_shouldRun) {
-            console.log(
-                `BIX :: ALLOWANCE CHECK - SET - isFinished: ${allowance_isFinished} | ALLOWANCE: ${params.allowance} | ALLOWANCE CURRENT: ${allowance_current?.allowance}`,
-            );
             dispatch({
                 type: "SET_ALLOWANCE",
                 payload: {
@@ -286,7 +267,6 @@ const BlockchainSteps = ({ data }) => {
     });
 
     const resetState = () => {
-        console.log("BIX :: PARAM CHANGED - reset writers");
         allowance_set_reset.write?.reset();
         allowance_set.write?.reset();
         transaction.write?.reset();
@@ -306,14 +286,6 @@ const BlockchainSteps = ({ data }) => {
     );
 
     useEffect(() => {
-        console.log(
-            `BIX :: RESET STATE`,
-            stepNetwork.state,
-            stepLiquidity.state,
-            stepAllowance.state,
-            stepTransaction.state,
-        );
-
         if (steps.network && stepNetwork.state === STEP_STATE.ERROR) {
             dispatch({ type: "RESET_NETWORK" });
         }
@@ -343,7 +315,6 @@ const BlockchainSteps = ({ data }) => {
 
     useEffect(() => {
         if (!!transaction_isFinished) {
-            console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(transaction_isFinished);
         }
     }, [transaction_isFinished]);
@@ -358,8 +329,6 @@ const BlockchainSteps = ({ data }) => {
 
     const { buttonIcon, buttonLock, buttonText } = useBlockchainButton(steps, state, params, extraState);
 
-    console.log(`BIX :: RENDER STATE`, extraState);
-
     return (
         <>
             <div className="flex flex-col flex-1 pb-5 justify-content text-sm">
@@ -372,7 +341,7 @@ const BlockchainSteps = ({ data }) => {
                 {steps.transaction && <BlockchainStep data={stepPrerequisite} />}
                 {steps.transaction && <BlockchainStep data={stepTransaction} />}
             </div>
-            <div className={` pb-5 ${isBased ? "fullWidth" : " w-full fullBtn"}`}>
+            <div className="pb-5 button-container">
                 <UniButton
                     type={ButtonTypes.BASE}
                     isWide={true}

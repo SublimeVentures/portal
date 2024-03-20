@@ -4,7 +4,6 @@ import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import { ExternalLinks } from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
 import { KNOWN_CONNECTORS } from "@/lib/blockchain";
 
 function getConnectorImage(connectorName) {
@@ -46,7 +45,7 @@ export default function LoginModal({ loginModalProps }) {
     };
 
     const title = () => {
-        return <span className={!isBased && `text-app-error`}>Connect Wallet</span>;
+        return <span className="card-table-header">Connect Wallet</span>;
     };
 
     const content = () => {

@@ -22,6 +22,14 @@ module.exports = {
                     "text-transform": "uppercase",
                     "font-size": "1.5rem"
                 },
+                ".card-table-header": {
+                    "font-family": "Work Sans, sans-serif",
+                    color: "rgb(185 37 81)",
+                    "font-weight": 300,
+                    "font-size": "1.5rem",
+                    "background-color": "rgb(0 0 0)",
+                    "text-transform": "uppercase"
+                },
                 ".card-content-description": {
                     "font-weight": 300,
                     "font-family": "Work Sans, sans-serif",

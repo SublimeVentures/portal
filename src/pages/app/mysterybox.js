@@ -144,7 +144,7 @@ export default function AppLootbox({ session }) {
                         You have {mysteryBoxOwnedAmount} unopened MysteryBox!
                     </div>
                 )}
-                <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
+                <div className="mt-[150px] sm:mt-0" ref={imageTilt}>
                     {TENANT_MYSTERYBOX()}
                 </div>
 
@@ -168,15 +168,15 @@ export default function AppLootbox({ session }) {
                         isDisabled={storeAvailable <= 0}
                         isWide={true}
                         zoom={1.05}
-                        size={"text-sm xs"}
+                        size="text-sm xs"
                         handler={() => {
                             setOrder(mysteryBox);
                         }}
                     />
                 </div>
 
-                <div className={"absolute bottom-0 z-10"}>
-                    <Linker url={ExternalLinks.LOOTBOX} text={"Learn more"} />
+                <div className="absolute bottom-0 z-10">
+                    <Linker url={ExternalLinks.LOOTBOX} text="Learn more" />
                 </div>
             </div>
             <BuyMysteryBoxModal

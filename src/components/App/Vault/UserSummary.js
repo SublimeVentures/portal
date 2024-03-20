@@ -5,10 +5,11 @@ import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
 import IconClock from "@/assets/svg/Clock.svg";
 import IconNT from "@/assets/svg/NT.svg";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import lottieAvatar from "@/assets/lottie/avatar.json";
 import FallbackImage from "@/components/App/Vault/FallbackImage";
 import PremiumSummary from "@/components/App/Settings/PremiumSummary";
+import { TENANT } from "@/lib/tenantHelper";
 
 function amount(item) {
     return item.invested;
@@ -18,10 +19,12 @@ function sum(prev, next) {
     return prev + next;
 }
 
+const isBaseVCTenant = tenantIndex === TENANT.basedVC
+
 export default function UserSummary({ vault, session, premiumData }) {
     const portfolio = Number(vault?.length > 0 ? vault.map(amount).reduce(sum) : 0).toLocaleString();
     let glitch;
-    if (!isBased) {
+    if (!isBaseVCTenant) {
         glitch = useGlitch({
             playMode: "always",
             createContainers: true,
@@ -50,8 +53,8 @@ export default function UserSummary({ vault, session, premiumData }) {
             <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex custom:col-span-4">
                     <div className="flex flex-1 flex-col justify-center items-center">
-                        <div className="relative  px-10 sm:-ml-10 custom:ml-0">
-                            {isBased ? (
+                        <div className="relative px-10 sm:-ml-10 custom:ml-0">
+                            {isBaseVCTenant ? (
                                 <>
                                     <div
                                         className="absolute avatarAnim"
@@ -116,6 +119,7 @@ export default function UserSummary({ vault, session, premiumData }) {
                             icon={<IconMoney className={"w-7"} />}
                         />
                     </div>
+
                     <PremiumSummary data={premiumData} />
                 </div>
             </div>

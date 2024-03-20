@@ -12,7 +12,7 @@ import { fetchHistory } from "@/fetchers/otc.fetcher";
 import Loader from "@/components/App/Loader";
 import MakeOfferModal from "@/components/App/Otc/MakeOfferModal";
 import CancelOfferModal from "@/components/App/Otc/CancelOfferModal";
-import { isBased, NETWORKS } from "@/lib/utils";
+import { NETWORKS } from "@/lib/utils";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import DynamicIcon from "@/components/Icon";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";

@@ -21,7 +21,6 @@ export default function AppVault({ session }) {
     const [claimModal, setClaimModal] = useState(false);
     const [claimModalDetails, setClaimModalDetails] = useState({});
 
-    console.log("claimModalDetails", claimModalDetails);
     const {
         isSuccess: isSuccessDataFeed,
         data: vault,

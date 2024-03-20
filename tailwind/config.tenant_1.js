@@ -30,9 +30,17 @@ module.exports = {
             // text-[1.7rem] - font-size: 1.7rem
 
             const newUtilities = {
+                ".button-container": {
+
+                },
                 ".card-content-dedicated": {
                     'font-weight': 500,
                     'font-size': '1.7rem'
+                },
+                ".card-table-header": {
+                    "font-weight": 500,
+                    "font-size": "1.7rem",
+                    "background-color": "rgb(14 16 24)"
                 },
                 ".card-content-description": {
                     'font-weight': 500
@@ -42,6 +50,9 @@ module.exports = {
                 },
                 ".header-text-dedicated": {
                     'font-weight': 500,
+                },
+                ".navbar-item": {
+                    "font-weight": 500,
                 },
                 ".page-header-text": {
                     "font-weight": 800,

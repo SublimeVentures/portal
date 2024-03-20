@@ -48,7 +48,7 @@ export default function RestoreHashModal({ model, setter, restoreModalProps }) {
                     />
                 </div>
 
-                <div className={`flex flex-col gap-5 flex-1 mt-10 fullWidth`}>
+                <div className={`flex flex-col gap-5 flex-1 mt-10 button-container`}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text="Restore"
