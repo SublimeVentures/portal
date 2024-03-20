@@ -79,9 +79,7 @@ export default function AppUpgrades({ session }) {
             </Head>
             <div className="flex flex-col justify-between gap-7 sm:flex-row">
                 <div className="flex flex-col justify-center">
-                    <div className="glow text-3xl page-header-text">
-                        UPGRADES
-                    </div>
+                    <div className="glow text-3xl page-header-text">UPGRADES</div>
                     <div className="text-outline text-md mt-2 white min-w-[250px]">Supercharge your investments.</div>
                 </div>
                 <div className="mx-auto flex items-center sm:ml-auto sm:mr-0">
@@ -99,9 +97,7 @@ export default function AppUpgrades({ session }) {
                     </div>
                 </div>
             </div>
-            <div
-                className="flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 page-content-text"
-            >
+            <div className="flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 page-content-text">
                 {renderPage()}
             </div>
             <BuyStoreItemModal

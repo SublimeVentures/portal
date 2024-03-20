@@ -20,36 +20,34 @@ module.exports = {
             },
             fontWeight: {
                 bold: 500,
-                'extra-bold': 800,
+                "extra-bold": 800,
             },
         },
     },
     plugins: [
-        function({ addUtilities }) {
+        function ({ addUtilities }) {
             // font-medium - 'font-weight': 500
             // text-[1.7rem] - font-size: 1.7rem
 
             const newUtilities = {
-                ".button-container": {
-
-                },
+                ".button-container": {},
                 ".card-content-dedicated": {
-                    'font-weight': 500,
-                    'font-size': '1.7rem'
+                    "font-weight": 500,
+                    "font-size": "1.7rem",
                 },
                 ".card-table-header": {
                     "font-weight": 500,
                     "font-size": "1.7rem",
-                    "background-color": "rgb(14 16 24)"
+                    "background-color": "rgb(14 16 24)",
                 },
                 ".card-content-description": {
-                    'font-weight': 500
+                    "font-weight": 500,
                 },
                 ".glow-normal": {
                     "text-shadow": "rgba(255, 255, 255, 0.3) 0px 0px 12px",
                 },
                 ".header-text-dedicated": {
-                    'font-weight': 500,
+                    "font-weight": 500,
                 },
                 ".navbar-item": {
                     "font-weight": 500,
@@ -59,21 +57,21 @@ module.exports = {
                 },
                 ".bordered-container": {
                     "border-radius": "0.75rem",
-                    overflow: "hidden"
+                    overflow: "hidden",
                 },
                 ".page-table-header": {
                     "font-weight": 500,
                     "font-size": "1.7rem",
-                    "background-color": "rgb(18 21 30)"
+                    "background-color": "rgb(18 21 30)",
                 },
                 ".background-text-dedicated": {
-                    color: "rgb(245 164 0)"
+                    color: "rgb(245 164 0)",
                 },
                 ".background-text-description": {
-                    color: "rgb(114 157 176)"
+                    color: "rgb(114 157 176)",
                 },
-            }
+            };
             addUtilities(newUtilities);
-        }
+        },
     ],
 };

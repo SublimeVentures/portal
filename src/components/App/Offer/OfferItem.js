@@ -14,7 +14,7 @@ export const OfferStatus = {
     CLOSED: "closed",
 };
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const getStatus = (phaseCurrent) => {
     if (phaseCurrent.phase === PhaseId.Closed) return OfferStatus.CLOSED;
@@ -77,10 +77,7 @@ export default function OfferItem({ offer, cdn }) {
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
             ref={imageTilt}
         >
-            <Link
-                href={`${PAGE.Opportunities}/${slug}`}
-                className="flex flex-1 flex-col bg-navy-accent"
-            >
+            <Link href={`${PAGE.Opportunities}/${slug}`} className="flex flex-1 flex-col bg-navy-accent">
                 <div className="bg-center relative min-h-[300px]">
                     <div className="image-container min-h-[300px]">
                         <Image
@@ -114,9 +111,7 @@ export default function OfferItem({ offer, cdn }) {
                         <div className="text-md flex flex-1 mt-1 pb-5 color">#{genre}</div>
                     </div>
 
-                    <div
-                        className="color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto bordered-container"
-                    >
+                    <div className="color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto bordered-container">
                         {state}
                     </div>
                 </div>

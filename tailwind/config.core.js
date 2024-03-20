@@ -44,9 +44,7 @@ module.exports = {
                 invest: "1420px",
                 "3xl": "1820px",
             },
-            fontWeight: {
-
-            },
+            fontWeight: {},
             margin: {
                 15: "3.75rem",
             },

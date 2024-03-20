@@ -42,7 +42,7 @@ export default function UpgradesModalItem({
                         {itemType === PremiumItemsENUM.Increased && used > 0 && (
                             <div className="detailRow mt-auto">
                                 <p>Used</p>
-                                <hr className="spacer"/>
+                                <hr className="spacer" />
                                 <p>{used ? used : 0}</p>
                             </div>
                         )}

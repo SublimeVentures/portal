@@ -70,12 +70,8 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
                     <div className="h-[60px]">
                         {existingWallet && (
                             <div>
-                                <div className="glowNormal font-bold pb-2 w-full text-center">
-                                    Wallet to be removed
-                                </div>
-                                <div
-                                    className="text-xs p-2 bg-app-accent2 text-center bordered-container"
-                                >
+                                <div className="glowNormal font-bold pb-2 w-full text-center">Wallet to be removed</div>
+                                <div className="text-xs p-2 bg-app-accent2 text-center bordered-container">
                                     {account?.address}
                                 </div>
                             </div>

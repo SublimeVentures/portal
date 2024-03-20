@@ -9,7 +9,7 @@ export const ButtonTypes = {
     CITCAP_FULL: 2,
 };
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export function UniButton({
     isLarge,

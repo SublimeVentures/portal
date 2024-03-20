@@ -23,15 +23,11 @@ export default function ChangeAddress({ session }) {
         return (
             <div className="flex flex-1 flex-col">
                 You've changed the wallet account. <br />
-                You can only use wallets approved in the <span className="contents text-app-success">
-                    Setting
-                </span>{" "}
+                You can only use wallets approved in the <span className="contents text-app-success">Setting</span>{" "}
                 page.
                 <div className="my-10">
                     <div className="glowNormal font-bold pb-2 w-full text-center">Unknown Wallet</div>
-                    <div className="text-xs p-2 bg-slides text-center bordered-container">
-                        {userAddress}
-                    </div>
+                    <div className="text-xs p-2 bg-slides text-center bordered-container">{userAddress}</div>
                 </div>
                 <div className="mt-auto w-full">
                     <div className="w-full fullWidth">

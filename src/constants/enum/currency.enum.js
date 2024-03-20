@@ -1,3 +1,3 @@
 export const CURRENCY = {
-    USD: 'USD',
-}
+    USD: "USD",
+};

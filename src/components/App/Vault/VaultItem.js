@@ -51,18 +51,12 @@ export default function VaultItem({ item, passData }) {
     }, []);
 
     return (
-        <div
-            className="bordered-container boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4"
-        >
-            <div
-                className={`relative bg-navy-accent flex flex-1 flex-col p-5 `}
-            >
+        <div className="bordered-container boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4">
+            <div className={`relative bg-navy-accent flex flex-1 flex-col p-5 `}>
                 <div className="font-bold text-2xl flex items-center glowNormal">
                     <div className="flex flex-1">{item.name}</div>
                     {(isSoon || awaitngClaim) && (
-                        <div
-                            className="bordered-container text-sm text-black bg-app-success px-3 py-1 rounded-xl select-none"
-                        >
+                        <div className="bordered-container text-sm text-black bg-app-success px-3 py-1 rounded-xl select-none">
                             {" "}
                             {awaitngClaim ? "CLAIM" : "UNLOCK SOON"}
                         </div>
@@ -120,10 +114,7 @@ export default function VaultItem({ item, passData }) {
                 </div>
             </div>
 
-            <div
-                className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex`}
-                ref={tilt}
-            >
+            <div className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex`} ref={tilt}>
                 <Link href={`${PAGE.Opportunities}/${item.slug}`}>
                     <Image
                         src={`${cdn}/research/${item.slug}/logo.jpg`}

@@ -37,5 +37,5 @@ module.exports = {
     checkIfNumberKey,
     CITIZENS,
     CITIZENS_NAME,
-    tenantIndex
+    tenantIndex,
 };

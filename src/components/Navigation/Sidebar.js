@@ -24,7 +24,7 @@ import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 import { getCopy } from "@/lib/seoConfig";
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {

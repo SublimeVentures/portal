@@ -22,20 +22,14 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                 </div>
                 <div>
                     <div className="text-4xl font-bold flex flex-1 glow select-none">{name}</div>
-                    <div className="text-xl flex flex-1 mt-1 background-text-description">
-                        #{genre}
-                    </div>
+                    <div className="text-xl flex flex-1 mt-1 background-text-description">#{genre}</div>
                 </div>
             </div>
-            <div
-                className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row background-text-description"
-            >
+            <div className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row background-text-description">
                 <div className="text-lg custom:-mt-5">
-                        <span
-                            className="uppercase font-[500] background-text-dedicated glow-normal"
-                        >
-                            {phaseCurrent.phaseName}
-                        </span>{" "}
+                    <span className="uppercase font-[500] background-text-dedicated glow-normal">
+                        {phaseCurrent.phaseName}
+                    </span>{" "}
                     ends in
                 </div>
                 <div>
@@ -50,13 +44,9 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                 </div>
             </div>
             {!phaseIsClosed && (
-                <div
-                    className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row background-text-description"
-                >
+                <div className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row background-text-description">
                     <div className="text-lg custom:-mt-5">
-                        <span
-                            className="uppercase font-[500] background-text-dedicated glow-normal"
-                        >
+                        <span className="uppercase font-[500] background-text-dedicated glow-normal">
                             {phaseCurrent.phaseName}
                         </span>{" "}
                         ends in

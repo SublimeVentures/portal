@@ -9,11 +9,7 @@ export default function OtcMarkets({ propMarkets }) {
     return (
         <div className="bordered-container offerWrap  flex flex-1 maxHeight">
             <div className="overflow-x-auto flex flex-col bg-navy-accent bordered-container">
-                <div
-                    className="page-table-header flex p-5 glowNormal header"
-                >
-                    Markets
-                </div>
+                <div className="page-table-header flex p-5 glowNormal header">Markets</div>
 
                 <table>
                     <tbody>
@@ -32,11 +28,7 @@ export default function OtcMarkets({ propMarkets }) {
                                             }
                                         >
                                             <Link href={`${PAGE.Opportunities}/${el.slug}`}>
-                                                <IconButton
-                                                    zoom={1.1}
-                                                    size={"w-8"}
-                                                    icon={<IconInfo />}
-                                                />
+                                                <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} />
                                             </Link>
                                         </span>
                                     </td>

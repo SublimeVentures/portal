@@ -115,7 +115,7 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                     </div>
                     <div className="detailRow">
                         <p>Invested</p>
-                        <hr className="spacer"/>
+                        <hr className="spacer" />
                         <p className="font-mono">
                             {Number(invested).toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
@@ -147,7 +147,7 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                     <div className="flex pt-5 pb-2 text-xl font-bold">Performance</div>
                     <div className="detailRow">
                         <p>TGE gain</p>
-                        <hr className="spacer"/>
+                        <hr className="spacer" />
                         <p className="font-mono">
                             <span className={`${tgeParsed !== "TBA" ? "text-app-success" : " text-white"}`}>
                                 {tgeParsed}
@@ -167,7 +167,7 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                     ) : (
                         <div className="detailRow disabled">
                             <p>ATH profit</p>
-                            <hr className="spacer"/>
+                            <hr className="spacer" />
                             <p>
                                 <span>soon</span>
                             </p>
@@ -177,17 +177,17 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                     <div className="flex pt-5 pb-2 text-xl font-bold">Dates</div>
                     <div className="detailRow mb-2">
                         <p>Participated</p>
-                        <hr className="spacer"/>
+                        <hr className="spacer" />
                         <p className="font-mono">{participated}</p>
                     </div>
                     <div className="detailRow">
                         <p>Next unlock</p>
-                        <hr className="spacer"/>
+                        <hr className="spacer" />
                         <p className="font-mono">{nextUnlock !== 0 ? nextUnlock : "TBA"}</p>
                     </div>
                     <div className="detailRow">
                         <p>Allocation snapshot</p>
-                        <hr className="spacer"/>
+                        <hr className="spacer" />
                         <p className="font-mono">{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</p>
                     </div>
                     <div className="detailRow">

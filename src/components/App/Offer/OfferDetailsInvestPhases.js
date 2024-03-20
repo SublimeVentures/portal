@@ -335,9 +335,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                             />
                         </div>
                     )}
-                    <div
-                        className="flex gap-2 flex-row justify-center align-center items-center"
-                    >
+                    <div className="flex gap-2 flex-row justify-center align-center items-center">
                         <IconButton
                             zoom={1.1}
                             size="w-12 p-3"

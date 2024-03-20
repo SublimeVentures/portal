@@ -19,7 +19,7 @@ function sum(prev, next) {
     return prev + next;
 }
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function UserSummary({ vault, session, premiumData }) {
     const portfolio = Number(vault?.length > 0 ? vault.map(amount).reduce(sum) : 0).toLocaleString();

@@ -7,7 +7,7 @@ import { CitCapGlitchButton } from "@/components/Button/CitCapGlitchButton";
 import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANT_MENU = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -113,9 +113,7 @@ export default function Navbar() {
                 </div>
             </div>
             {isMobileOpen && (
-                <div
-                    className="absolute flex flex-col w-full left-0 text-center py-5"
-                >
+                <div className="absolute flex flex-col w-full left-0 text-center py-5">
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
                     })}

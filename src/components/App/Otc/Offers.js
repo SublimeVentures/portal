@@ -299,14 +299,8 @@ export default function OtcOffers({ propOffers }) {
         <>
             <div className="bordered-container bg-navy-accent flex flex-1 offerWrap">
                 <div className="overflow-x-auto flex flex-col flex-1 bg-navy-accent">
-                    <div
-                        className="p-5 flex flex-row relative page-table-header"
-                    >
-                        <div
-                            className="flex glowNormal header"
-                        >
-                            Offers {showHistory && "History"}
-                        </div>
+                    <div className="p-5 flex flex-row relative page-table-header">
+                        <div className="flex glowNormal header">Offers {showHistory && "History"}</div>
                         <div className="absolute right-5 top-3 flex flex-row gap-5 items-center ">
                             <UniButton
                                 type={ButtonTypes.BASE}

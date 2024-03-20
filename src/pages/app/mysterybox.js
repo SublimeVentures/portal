@@ -136,9 +136,7 @@ export default function AppLootbox({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div
-                className="mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative"
-            >
+            <div className="mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative">
                 {mysteryBoxOwnedAmount > 0 && (
                     <div className="header-text-dedicated text-2xl flex absolute top-5 glow-normal pb-5 z-10">
                         You have {mysteryBoxOwnedAmount} unopened MysteryBox!

@@ -59,11 +59,7 @@ export default function AppOffer({ session }) {
             </Head>
             <div className="flex flex-col justify-between gap-7 xl:flex-row">
                 <div className="flex flex-col justify-center">
-                    <div
-                        className="glow text-3xl page-header-text"
-                    >
-                        Funded Projects
-                    </div>
+                    <div className="glow text-3xl page-header-text">Funded Projects</div>
                     <div className="text-outline text-md mt-2 white min-w-[250px]">
                         We bring new industry giants to our community
                     </div>

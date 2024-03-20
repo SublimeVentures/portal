@@ -57,11 +57,7 @@ export default function AppAccelerator({ session }) {
             </Head>
             <div className="flex flex-col justify-between gap-7 xl:flex-row">
                 <div className="flex flex-col justify-center">
-                    <div
-                        className="glow text-3xl page-header-text"
-                    >
-                        Accelerator
-                    </div>
+                    <div className="glow text-3xl page-header-text">Accelerator</div>
                     <div className="text-outline text-md mt-2 white min-w-[250px]">
                         Hyper-promising projects that are outside of {getCopy("NAME")} investment thesis.
                     </div>

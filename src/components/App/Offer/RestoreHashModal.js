@@ -22,9 +22,8 @@ export default function RestoreHashModal({ model, setter, restoreModalProps }) {
             <div>
                 <div className="flex flex-col gap-5 pb-5">
                     <div>
-                        You have active booking for{" "}
-                        <span className="text-gold">${allocationOldLocal} allocation</span>, but you are trying to
-                        change the investment size.
+                        You have active booking for <span className="text-gold">${allocationOldLocal} allocation</span>,
+                        but you are trying to change the investment size.
                     </div>
                     <div>
                         Would you like to{" "}

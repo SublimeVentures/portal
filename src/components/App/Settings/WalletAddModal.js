@@ -71,9 +71,8 @@ export default function WalletAddModal({ model, setter, addProps }) {
         return (
             <div className="min-w-[300px]">
                 <div>
-                    You can add up to{" "}
-                    <span className="text-app-success font-bold">{maxWallets - wallets.length}</span> more wallets to
-                    your account.
+                    You can add up to <span className="text-app-success font-bold">{maxWallets - wallets.length}</span>{" "}
+                    more wallets to your account.
                     <br />
                     <span className="text-app-error">Wallet can be assigned only to one account!</span>
                     <br />
@@ -85,9 +84,7 @@ export default function WalletAddModal({ model, setter, addProps }) {
                         {newWallet && (
                             <div>
                                 <div className="glowNormal font-bold pb-2 w-full text-center">New wallet</div>
-                                <div
-                                    className="text-xs p-2 bg-app-accent2 text-center bordered-container"
-                                >
+                                <div className="text-xs p-2 bg-app-accent2 text-center bordered-container">
                                     {account?.address}
                                 </div>
                             </div>

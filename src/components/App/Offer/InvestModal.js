@@ -106,10 +106,7 @@ export default function InvestModal({ model, setter, investModalProps }) {
                 />
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <div
-                        className="w-full fullWidth"
-                        onClick={() => closeModal(true)}
-                    >
+                    <div className="w-full fullWidth" onClick={() => closeModal(true)}>
                         <UniButton
                             type={ButtonTypes.BASE}
                             text="Check Vault"

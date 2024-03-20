@@ -11,7 +11,7 @@ import DynamicIcon from "@/components/Icon";
 import { TENANT } from "@/lib/tenantHelper";
 import { tenantIndex } from "@/lib/utils";
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function Investors() {
     const settings = {

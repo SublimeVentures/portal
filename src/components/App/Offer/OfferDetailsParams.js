@@ -28,11 +28,7 @@ export const OfferDetailsParams = ({ paramsParams }) => {
                             <div className={"text-sm text-outline"}>Fundraise goal</div>
                         )}
                     </div>
-                    <div
-                        className="text-5xl font-bold flex flex-1 glow font-light py-2"
-                    >
-                        ${normalized_total}
-                    </div>
+                    <div className="text-5xl font-bold flex flex-1 glow font-light py-2">${normalized_total}</div>
 
                     <div className="py-2">
                         <OfferDetailsProgress allocations={allocation} isSoldOut={isSoldOut} />
