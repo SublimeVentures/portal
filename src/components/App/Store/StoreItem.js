@@ -57,9 +57,7 @@ export default function StoreItem({ item, cdn, setOrder, currency }) {
                         </div>
                     </div>
 
-                    <div
-                        className="color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto bordered-container"
-                    >
+                    <div className="color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto bordered-container">
                         {availability ? `Available (${availability})` : "Sold out"}
                     </div>
                 </div>
