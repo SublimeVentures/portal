@@ -1,5 +1,4 @@
 import OfferDetailsProgress from "@/components/App/Offer/OfferDetailsProgress";
-import { isBased } from "@/lib/utils";
 
 export const OfferDetailsParams = ({ paramsParams }) => {
     const { offer, allocation, userInvested, phaseIsClosed } = paramsParams;
@@ -18,9 +17,9 @@ export const OfferDetailsParams = ({ paramsParams }) => {
 
     return (
         <>
-            <div className={`offerWrap ${isBased ? "rounded-xl" : "font-accent"}`}>
+            <div className="offerWrap bordered-container font-accent">
                 <div className="flex flex-col rounded-xl bg-navy-accent p-6 justify-start flex-1">
-                    <div className={`${isBased ? "" : "uppercase"}`}>
+                    <div className="uppercase">
                         {isSoldOut ? (
                             <div className={"text-sm bg-app-success w-fit px-2 py-1 rounded-xl text-app-bg"}>
                                 Sold out
@@ -30,15 +29,15 @@ export const OfferDetailsParams = ({ paramsParams }) => {
                         )}
                     </div>
                     <div
-                        className={`text-5xl font-bold flex flex-1 glow font-light ${isBased ? "py-1" : "py-2 font-light"}`}
+                        className="text-5xl font-bold flex flex-1 glow font-light py-2"
                     >
                         ${normalized_total}
                     </div>
 
-                    <div className={"py-2"}>
+                    <div className="py-2">
                         <OfferDetailsProgress allocations={allocation} isSoldOut={isSoldOut} />
                     </div>
-                    <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
+                    <div className="flex flex-col gap-2 mt-5">
                         {booked > 0 && (
                             <div className={"detailRow text-app-error"}>
                                 <p>Reserved</p>

@@ -5,13 +5,16 @@ import GenericModal from "@/components/Modal/GenericModal";
 import PAGE, { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import lottieSuccess from "@/assets/lottie/success.json";
 import Dropdown from "@/components/App/Dropdown";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import BlockchainSteps from "@/components/BlockchainSteps";
+import { TENANT } from "@/lib/tenantHelper";
+
+const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
 
 export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
@@ -46,7 +49,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
-                network: !isBased,
+                network: isNetworkAvailable,
                 liquidity: true,
                 allowance: true,
                 transaction: true,
@@ -85,7 +88,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
 
     const contentSuccess = () => {
         return (
-            <div className=" flex flex-col flex-1">
+            <div className="flex flex-col flex-1">
                 <div>
                     Congratulations! You have successfully bought{" "}
                     <span className="text-app-success font-bold">{order.name}</span>.
@@ -98,12 +101,11 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                 />
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    {/*<Link href={PAGE.Settings} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>*/}
-                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>
+                    <div className="w-full fullWidth">
                         <UniButton
                             type={ButtonTypes.BASE}
-                            text={"Check PROFILE"}
-                            state={"danger"}
+                            text="Check PROFILE"
+                            state="danger"
                             isLoading={false}
                             isDisabled={false}
                             is3d={false}
@@ -122,22 +124,22 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     };
     const contentSteps = () => {
         return (
-            <div className={`flex flex-1 flex-col`}>
-                <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
-                    <div className={"detailRow"}>
+            <div className="flex flex-1 flex-col">
+                <div className="flex flex-col gap-2 mt-5 page-content-text">
+                    <div className="detailRow">
                         <p>Item</p>
-                        <hr className={"spacer"} />
+                        <hr className="spacer" />
                         <p>{order.name}</p>
                     </div>
-                    <div className={"detailRow"}>
+                    <div className="detailRow">
                         <p>Total Cost</p>
-                        <hr className={"spacer"} />
+                        <hr className="spacer" />
                         <div className="font-bold text-gold flex items-center">
-                            <span className={"mr-2"}>{order.price}</span>
+                            <span className="mr-2">{order.price}</span>
                             {dropdownCurrencyOptions.length > 1 ? (
                                 <Dropdown
                                     options={dropdownCurrencyOptions}
-                                    selector={"symbol"}
+                                    selector="symbol"
                                     propSelected={setSelectedCurrency}
                                     isSmall={true}
                                 />

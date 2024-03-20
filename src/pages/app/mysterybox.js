@@ -10,7 +10,6 @@ import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import Linker from "@/components/link";
 import { getCopy } from "@/lib/seoConfig";
-import { isBased } from "@/lib/utils";
 import { fetchStore, fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
 import { claimMysterybox } from "@/fetchers/mysterbox.fetcher";
@@ -138,12 +137,10 @@ export default function AppLootbox({ session }) {
                 <title>{title}</title>
             </Head>
             <div
-                className={`mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative ${isBased ? "" : "font-accent"}`}
+                className="mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative"
             >
                 {mysteryBoxOwnedAmount > 0 && (
-                    <div
-                        className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[50px] text-center collap:top-[50px]"} flex absolute top-5 glowNormal pb-5 z-10`}
-                    >
+                    <div className="header-text-dedicated text-2xl flex absolute top-5 glow-normal pb-5 z-10">
                         You have {mysteryBoxOwnedAmount} unopened MysteryBox!
                     </div>
                 )}
@@ -151,16 +148,16 @@ export default function AppLootbox({ session }) {
                     {TENANT_MYSTERYBOX()}
                 </div>
 
-                <div className={`flex gap-5 mt-5 z-10 ${isBased ? "absolute bottom-10" : ""}`}>
+                <div className="flex gap-5 mt-5 z-10 absolute bottom-10">
                     <UniButton
                         type={ButtonTypes.BASE}
-                        text={"OPEN"}
-                        state={"success"}
+                        text="OPEN"
+                        state="success"
                         isDisabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
                         isPrimary={true}
                         isWide={true}
                         zoom={1.05}
-                        size={"text-sm xs"}
+                        size="text-sm xs"
                         handler={() => {
                             openMysteryBox();
                         }}

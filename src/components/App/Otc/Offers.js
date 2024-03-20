@@ -297,22 +297,22 @@ export default function OtcOffers({ propOffers }) {
 
     return (
         <>
-            <div className={`${isBased ? " rounded-xl " : ""} bg-navy-accent flex flex-1 offerWrap`}>
-                <div className={`overflow-x-auto flex flex-col flex-1 bg-navy-accent ${isBased ? " rounded-xl " : ""}`}>
+            <div className="bordered-container bg-navy-accent flex flex-1 offerWrap">
+                <div className="overflow-x-auto flex flex-col flex-1 bg-navy-accent">
                     <div
-                        className={`p-5 flex flex-row relative  ${isBased ? " rounded-tl-xl rounded-tr-xl bg-navy" : "bg-black"}`}
+                        className="p-5 flex flex-row relative page-table-header"
                     >
                         <div
-                            className={`${isBased ? " font-medium text-[1.7rem] " : "text-app-error font-accent glowRed uppercase font-light text-2xl"} flex glowNormal   header`}
+                            className="flex glowNormal header"
                         >
                             Offers {showHistory && "History"}
                         </div>
                         <div className="absolute right-5 top-3 flex flex-row gap-5 items-center ">
                             <UniButton
                                 type={ButtonTypes.BASE}
-                                text={"MAKE OFFER"}
+                                text="MAKE OFFER"
                                 isWide={true}
-                                size={"text-sm xs"}
+                                size="text-sm xs"
                                 zoom={1.1}
                                 handler={() => setIsMakeOfferModal(true)}
                                 icon={<IconCart className={ButtonIconSize.hero} />}
@@ -320,9 +320,8 @@ export default function OtcOffers({ propOffers }) {
                             <div>
                                 <IconButton
                                     zoom={1.1}
-                                    size={"p-3"}
-                                    noBorder={!isBased}
-                                    icon={<IconHistory className={isBased ? "w-5" : "w-15 p-2"} />}
+                                    size="p-3"
+                                    icon={<IconHistory className="w-5" />}
                                     handler={() => setShowHistory((current) => !current)}
                                 />
                             </div>

@@ -15,7 +15,6 @@ import Empty from "@/components/App/Empty";
 import { phases } from "@/lib/phases";
 import routes from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
-import { isBased } from "@/lib/utils";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { queryClient } from "@/lib/queryCache";
 import { processServerSideData } from "@/lib/serverSideHelpers";
@@ -162,11 +161,12 @@ export const AppOfferDetails = ({ session }) => {
     const renderPage = () => {
         if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader />;
         if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty />;
+
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar} />
                 <div
-                    className={`${isBased ? "rounded-xl" : "cleanWrap"} bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8`}
+                    className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8"
                 >
                     {!phaseIsClosed ? (
                         <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
@@ -236,7 +236,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 throw Error("Data not fetched");
             }
         } catch (error) {
-            console.log("Error", error);
+            console.error("Error", error);
             return {
                 redirect: {
                     permanent: true,

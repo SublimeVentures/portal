@@ -11,10 +11,11 @@ import OfferItem from "@/components/App/Offer/OfferItem";
 import Stat from "@/components/Stat";
 import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { getCopy } from "@/lib/seoConfig";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { TENANT } from "@/lib/tenantHelper";
 
 export default function AppOffer({ session }) {
     const TENANT_ID = session.tenantId;
@@ -75,12 +76,12 @@ export default function AppOffer({ session }) {
                             value={offerListRender.length}
                             icon={<IconStars className={"w-9"} />}
                         />
-                        {isBased && (
+                        {tenantIndex === TENANT.basedVC && (
                             <Stat
                                 color="teal"
                                 title="Partners"
                                 value={partners}
-                                icon={<IconNetwork className={"w-7"} />}
+                                icon={<IconNetwork className="w-7" />}
                             />
                         )}
                         <Stat color="blue" title="Raised" value={funded} icon={<IconMoney className="w-7" />} />

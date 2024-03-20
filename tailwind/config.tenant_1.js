@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+//
 module.exports = {
     theme: {
         extend: {
@@ -18,18 +19,49 @@ module.exports = {
                 hero: ["48px", { lineHeight: "1.375" }],
             },
             fontWeight: {
-                // extrabold: '800',
+                bold: 500,
+                'extra-bold': 800,
             },
         },
     },
     plugins: [
         function({ addUtilities }) {
+            // font-medium - 'font-weight': 500
+            // text-[1.7rem] - font-size: 1.7rem
+
             const newUtilities = {
+                ".card-content-dedicated": {
+                    'font-weight': 500,
+                    'font-size': '1.7rem'
+                },
+                ".card-content-description": {
+                    'font-weight': 500
+                },
+                ".glow-normal": {
+                    "text-shadow": "rgba(255, 255, 255, 0.3) 0px 0px 12px",
+                },
+                ".header-text-dedicated": {
+                    'font-weight': 500,
+                },
                 ".page-header-text": {
                     "font-weight": 800,
-                }
+                },
+                ".bordered-container": {
+                    "border-radius": "0.75rem",
+                    overflow: "hidden"
+                },
+                ".page-table-header": {
+                    "font-weight": 500,
+                    "font-size": "1.7rem",
+                    "background-color": "rgb(18 21 30)"
+                },
+                ".background-text-dedicated": {
+                    color: "rgb(245 164 0)"
+                },
+                ".background-text-description": {
+                    color: "rgb(114 157 176)"
+                },
             }
-
             addUtilities(newUtilities);
         }
     ],

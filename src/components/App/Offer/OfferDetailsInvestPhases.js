@@ -15,7 +15,7 @@ import CalculateModal from "@/components/App/Offer/CalculateModal";
 import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { checkIfNumberKey, isBased } from "@/lib/utils";
+import { checkIfNumberKey } from "@/lib/utils";
 import { IconButton } from "@/components/Button/IconButton";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/lib/investment";
@@ -131,7 +131,6 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     };
 
     const startInvestmentProcess = async () => {
-        console.log("allocakassd", investmentAmount, allocationData);
         if (
             (investmentAmount > 0 &&
                 allocationData.allocationUser_max > 0 &&
@@ -141,7 +140,6 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
             userInvested?.invested.total - userInvested?.invested.invested > 0
         ) {
             setButtonLoading(true);
-            console.log("BOOOKING_DETAILS", offer.id, investmentAmount, selectedCurrency?.contract, network.chainId);
             const response = await fetchHash(offer.id, investmentAmount, selectedCurrency?.contract, network.chainId);
             if (!response.ok) {
                 await clearBooking();
@@ -324,10 +322,8 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         afterInvestmentCleanup,
     };
 
-    console.log("phaseCurrent", phaseCurrent);
-
     return (
-        <div className={`flex flex-1 flex-col items-center justify-center relative ${isBased ? "" : "font-accent"}`}>
+        <div className="flex flex-1 flex-col items-center justify-center relative">
             <div className={"absolute right-5 top-5"}>
                 <div className={"flex flex-row items-center text-gold"}>
                     {displayGuaranteed && (
@@ -340,20 +336,18 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                         </div>
                     )}
                     <div
-                        className={`flex gap-2 flex-row justify-center align-center items-center ${isBased ? "" : "fill-gold"}`}
+                        className="flex gap-2 flex-row justify-center align-center items-center"
                     >
                         <IconButton
                             zoom={1.1}
-                            size={"w-12 p-3"}
+                            size="w-12 p-3"
                             icon={<DynamicIcon name={ICONS.CALCULATOR} />}
-                            noBorder={!isBased}
                             handler={() => setCalculateModal(true)}
                         />
                         <IconButton
                             zoom={1.1}
-                            size={"w-12 p-3"}
-                            icon={<DynamicIcon name={ICONS.DIAMOND} className={"text-gold"} />}
-                            noBorder={!isBased}
+                            size="w-12 p-3"
+                            icon={<DynamicIcon name={ICONS.DIAMOND} className="text-gold" />}
                             handler={() => setUpgradeModal(true)}
                         />
                     </div>

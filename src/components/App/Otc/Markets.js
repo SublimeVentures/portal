@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { isBased } from "@/lib/utils";
 import PAGE from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import IconInfo from "@/assets/svg/Info.svg";
@@ -8,12 +7,10 @@ export default function OtcMarkets({ propMarkets }) {
     let { otc, changeMarket, currentMarket } = propMarkets;
 
     return (
-        <div className={`${isBased ? "rounded-xl" : ""} offerWrap  flex flex-1 maxHeight`}>
-            <div
-                className={`overflow-x-auto flex flex-col bg-navy-accent ${isBased ? " rounded-tl-xl rounded-tr-xl" : ""}`}
-            >
+        <div className="bordered-container offerWrap  flex flex-1 maxHeight">
+            <div className="overflow-x-auto flex flex-col bg-navy-accent bordered-container">
                 <div
-                    className={`${isBased ? " font-medium text-[1.7rem] rounded-tl-xl rounded-tr-xl bg-navy" : "text-app-error font-accent glowRed uppercase font-light text-2xl bg-black"} flex p-5 glowNormal   header`}
+                    className="page-table-header flex p-5 glowNormal header"
                 >
                     Markets
                 </div>
@@ -39,7 +36,6 @@ export default function OtcMarkets({ propMarkets }) {
                                                     zoom={1.1}
                                                     size={"w-8"}
                                                     icon={<IconInfo />}
-                                                    noBorder={isBased}
                                                 />
                                             </Link>
                                         </span>

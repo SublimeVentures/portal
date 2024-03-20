@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PAGE from "@/routes";
 import IconMore from "@/assets/svg/More.svg";
-import { parseVesting, STAGES } from "@/lib/vesting";
-import { isBased } from "@/lib/utils";
+import { parseVesting } from "@/lib/vesting";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function VaultItem({ item, passData }) {
@@ -45,7 +44,7 @@ export default function VaultItem({ item, passData }) {
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {
-            scale: isBased ? 1.05 : 1,
+            scale: 1,
             speed: 1000,
             max: 1,
         });
@@ -53,16 +52,16 @@ export default function VaultItem({ item, passData }) {
 
     return (
         <div
-            className={`${isBased ? "rounded-xl" : ""} boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4`}
+            className="bordered-container boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4"
         >
             <div
-                className={`${isBased ? "rounded-tl-xl rounded-bl-xl rounded-tr-xl rounded-br-xl sm:rounded-tr-none sm:rounded-br-none lg:!rounded-tr-xl lg:!rounded-br-xl xl:!rounded-tr-none xl:!rounded-br-none" : ""} relative bg-navy-accent flex flex-1 flex-col p-5 `}
+                className={`relative bg-navy-accent flex flex-1 flex-col p-5 `}
             >
                 <div className="font-bold text-2xl flex items-center glowNormal">
-                    <div className={"flex flex-1"}>{item.name}</div>
+                    <div className="flex flex-1">{item.name}</div>
                     {(isSoon || awaitngClaim) && (
                         <div
-                            className={`${isBased ? "rounded-xl" : ""} text-sm text-black bg-app-success px-3 py-1 rounded-xl select-none `}
+                            className="bordered-container text-sm text-black bg-app-success px-3 py-1 rounded-xl select-none"
                         >
                             {" "}
                             {awaitngClaim ? "CLAIM" : "UNLOCK SOON"}
@@ -71,7 +70,7 @@ export default function VaultItem({ item, passData }) {
                 </div>
                 <div className="pt-1 text-xs text-gray text-left">Participated {participated}</div>
 
-                <div className={`${isBased ? "" : "font-accent"} text-md pt-2`}>
+                <div className={`card-content-description text-md pt-2`}>
                     <div className={"detailRow "}>
                         <p>Invested</p>
                         <hr className={"spacer"} />
@@ -112,7 +111,7 @@ export default function VaultItem({ item, passData }) {
                     </div>
                 </div>
 
-                <div className="moreVault opacity-0 absolute -bottom-5 mx-auto left-0 right-0 text-center">
+                <div className="moreVault opacity-0 text-center">
                     <div className="flex items-center justify-center moreVaultIcon">
                         <div className="icon z-10 w-15 h-15 cursor-pointer" onClick={() => passData(setPassData())}>
                             <IconMore className="w-8" />
@@ -122,14 +121,14 @@ export default function VaultItem({ item, passData }) {
             </div>
 
             <div
-                className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex ${isBased ? "" : "border-l border-app-bg-split"} `}
+                className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex`}
                 ref={tilt}
             >
                 <Link href={`${PAGE.Opportunities}/${item.slug}`}>
                     <Image
                         src={`${cdn}/research/${item.slug}/logo.jpg`}
                         fill
-                        className={`${isBased ? "rounded-tr-xl rounded-br-xl" : ""} imageOfferList  bg-cover `}
+                        className={` imageOfferList  bg-cover `}
                         alt={item.slug}
                         sizes="(max-width: 2000px) 200px"
                     />
