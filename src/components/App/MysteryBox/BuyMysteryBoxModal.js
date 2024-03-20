@@ -27,7 +27,9 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const dropdownCurrencyOptions = getCurrencyStore();
 
     useEffect(() => {
-        setSelectedCurrency(dropdownCurrencyOptions[0]);
+        if (dropdownCurrencyOptions[0]) {
+            setSelectedCurrency(dropdownCurrencyOptions[0]);
+        }
     }, [network.chainId]);
 
     const closeModal = () => {
@@ -144,7 +146,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                                     isSmall={true}
                                 />
                             ) : (
-                                <>{dropdownCurrencyOptions[0].symbol}</>
+                                <>{dropdownCurrencyOptions[0]?.symbol}</>
                             )}
                         </div>
                     </div>

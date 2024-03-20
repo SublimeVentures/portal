@@ -32,7 +32,7 @@ export default function StoreItem({ item, cdn, setOrder, currency }) {
                         <div className="offerTime w-full px-5 flex justify-between h-8 items-center color">
                             <div>{id === 1 ? "Non-stackable" : "Stackable"}</div>
                             <div>
-                                Price: {price} {getCurrency(currency.symbol)}
+                                Price: {price} {currency && getCurrency(currency.symbol)}
                             </div>
                         </div>
                     </div>

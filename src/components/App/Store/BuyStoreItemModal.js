@@ -144,7 +144,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                                     isSmall={true}
                                 />
                             ) : (
-                                <>{dropdownCurrencyOptions[0].symbol}</>
+                                <>{dropdownCurrencyOptions[0]?.symbol}</>
                             )}
                         </div>
                     </div>

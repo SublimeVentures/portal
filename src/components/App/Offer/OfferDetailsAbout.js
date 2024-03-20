@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import IconDownload from "@/assets/svg/Download.svg";
 import IconDiscord from "@/assets/svg/Discord.svg";
 import IconWebsite from "@/assets/svg/Website.svg";
@@ -6,13 +7,12 @@ import IconTwitter from "@/assets/svg/Twitter.svg";
 import { IconButton } from "@/components/Button/IconButton";
 import { tenantIndex } from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { TENANT } from "@/lib/tenantHelper";
+
 const Flipbook = dynamic(() => import("@/components/Flipbook/Flipbook"), {
     ssr: false,
 });
-
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import dynamic from "next/dynamic";
-import { TENANT } from "@/lib/tenantHelper";
 
 const isIconsBordered = tenantIndex !== TENANT.basedVC;
 
