@@ -340,14 +340,6 @@ const BlockchainSteps = ({ data }) => {
         }
         if (steps.transaction && stepTransaction.state === STEP_STATE.ERROR) {
             dispatch({ type: "RESET_TRANSACTION" });
-            // if(
-            //     stepTransaction.error.text == 'Signature expired' ||
-            //     stepTransaction.error.text == 'Invalid signature'
-            // ) {
-            //     console.log("bad sign")
-            //     dispatch({ type: 'RESET_PREREQUISITE'});
-            //     transaction.write?.reset()
-            // }
         }
     }, [stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepPrerequisite.state, stepTransaction.state]);
 
