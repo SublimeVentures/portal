@@ -24,7 +24,7 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
-import debounce from "lodash/debounce";
+import debounce from "lodash.debounce";
 
 export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const {
