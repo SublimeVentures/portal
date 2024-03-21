@@ -13610,9 +13610,6 @@ __metadata:
   version: 4.4.1
   resolution: "zustand@npm:4.4.1"
   dependencies:
-<<<<<<< HEAD
-    use-sync-external-store "1.2.0"
-=======
     use-sync-external-store: "npm:1.2.0"
   peerDependencies:
     "@types/react": ">=16.8"
@@ -13628,4 +13625,3 @@ __metadata:
   checksum: 10c0/c119273886e5cdbd7a9f80c9e0fee8a2c736bb6428e283b25c6dfd428789a95e10b6ed6b18553c955ce0d5dd62e2f4a84af3e2a41f31fdb34fd25462d2b19a8c
   languageName: node
   linkType: hard
->>>>>>> c3e2fab687d92a9f2ea4bc0912d50c7184dc4349
