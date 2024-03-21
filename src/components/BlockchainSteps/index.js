@@ -10,7 +10,7 @@ import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { isBased } from "@/lib/utils";
-import debounce from "lodash/debounce";
+import debounce from "lodash.debounce";
 import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
 import { useChainId } from "wagmi";
 
