@@ -101,19 +101,19 @@ export default function UserSummary({ vault, session, premiumData }) {
                             color={"gold"}
                             title={"Projects Invested"}
                             value={vault ? vault.length : 0}
-                            icon={<IconStars className={"w-9"} />}
+                            icon={<IconStars className={"w-9 text-2xl"} />}
                         />
                         <Stat
                             color={"teal"}
                             title={"Nearest Unlock"}
                             value={"TBA"}
-                            icon={<IconClock className={"w-7"} />}
+                            icon={<IconClock className={"w-7 text-2xl"} />}
                         />
                         <Stat
                             color={"blue"}
                             title={"Portfolio Size"}
                             value={`$${portfolio}`}
-                            icon={<IconMoney className={"w-7"} />}
+                            icon={<IconMoney className={"w-7 text-2xl"} />}
                         />
                     </div>
                     <PremiumSummary data={premiumData} />

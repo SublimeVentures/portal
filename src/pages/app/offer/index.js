@@ -71,17 +71,17 @@ export default function AppOffer({ session }) {
                             color={"gold"}
                             title={"Investments"}
                             value={offerListRender.length}
-                            icon={<IconStars className={"w-9"} />}
+                            icon={<IconStars className={"w-9 text-2xl"} />}
                         />
                         {isBased && (
                             <Stat
                                 color={"teal"}
                                 title={"Partners"}
                                 value={partners}
-                                icon={<IconNetwork className={"w-7"} />}
+                                icon={<IconNetwork className={"w-7 text-2xl"} />}
                             />
                         )}
-                        <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7"} />} />
+                        <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7 text-2xl"} />} />
                     </div>
                 </div>
             </div>

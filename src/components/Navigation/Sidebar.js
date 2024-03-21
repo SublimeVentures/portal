@@ -91,45 +91,45 @@ export default function Sidebar({ session }) {
             {
                 name: "Vault",
                 link: PAGE.App,
-                icon: <IconVault className="w-8 mr-3" />,
+                icon: <IconVault className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Opportunities",
                 link: PAGE.Opportunities,
-                icon: <IconLight className="w-8 mr-3" />,
+                icon: <IconLight className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Accelerator",
                 link: PAGE.Accelerator,
-                icon: isBased ? <IconGrowth className="w-7 mr-4" /> : <IconNT className="w-8 mr-[0.91rem]" />,
+                icon: isBased ? <IconGrowth className="w-7 mr-4 text-2xl" /> : <IconNT className="w-8 mr-[0.91rem] text-2xl" />,
             },
             {
                 name: "OTC",
                 link: PAGE.OTC,
-                icon: <IconExchange className="w-8 mr-3" />,
+                icon: <IconExchange className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Upgrades",
                 link: PAGE.Upgrades,
-                icon: <IconPremium className="w-8 mr-3" />,
+                icon: <IconPremium className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Notifications",
                 link: PAGE.Notifs,
                 disabled: true,
-                icon: <IconBell className="w-8 mr-3" />,
+                icon: <IconBell className="w-8 mr-3 text-2xl" />,
             },
         ],
         groupHelp: [
             {
                 name: "Community",
-                icon: <IconDiscord className="w-6 ml-1 mr-3" />,
+                icon: <IconDiscord className="w-6 ml-1 mr-3 text-2xl" />,
                 action: true,
                 handler: openDiscord,
             },
             {
                 name: "Wiki",
-                icon: <IconWiki className="w-6 ml-1 mr-3" />,
+                icon: <IconWiki className="w-6 ml-1 mr-3 text-2xl" />,
                 action: true,
                 handler: openNotion,
             },
@@ -138,11 +138,11 @@ export default function Sidebar({ session }) {
             {
                 name: "Settings",
                 link: PAGE.Settings,
-                icon: <IconSetting className="w-8 mr-3" />,
+                icon: <IconSetting className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Log out",
-                icon: <IconLogout className="w-8 mr-3" />,
+                icon: <IconLogout className="w-8 mr-3 text-2xl" />,
                 action: true,
                 handler: logout,
             },
