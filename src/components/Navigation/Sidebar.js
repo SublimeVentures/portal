@@ -101,7 +101,11 @@ export default function Sidebar({ session }) {
             {
                 name: "Accelerator",
                 link: PAGE.Accelerator,
-                icon: isBased ? <IconGrowth className="w-7 mr-4 text-2xl" /> : <IconNT className="w-8 mr-[0.91rem] text-2xl" />,
+                icon: isBased ? (
+                    <IconGrowth className="w-7 mr-4 text-2xl" />
+                ) : (
+                    <IconNT className="w-8 mr-[0.91rem] text-2xl" />
+                ),
             },
             {
                 name: "OTC",

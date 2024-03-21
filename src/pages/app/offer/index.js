@@ -81,7 +81,12 @@ export default function AppOffer({ session }) {
                                 icon={<IconNetwork className={"w-7 text-2xl"} />}
                             />
                         )}
-                        <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7 text-2xl"} />} />
+                        <Stat
+                            color={"blue"}
+                            title={"Raised"}
+                            value={funded}
+                            icon={<IconMoney className={"w-7 text-2xl"} />}
+                        />
                     </div>
                 </div>
             </div>
