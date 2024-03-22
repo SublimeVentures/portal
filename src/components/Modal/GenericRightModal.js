@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import CancelIcon from "@/assets/svg/Cancel.svg";
-import { isBased } from "@/lib/utils";
 
 export default function GenericRightModal({ isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false);
@@ -62,10 +61,10 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
                             leaveTo="opacity-0 scale-95"
                         >
                             <Dialog.Panel
-                                className={`dialogWrap flex flex-col min-h-screen glareBg w-full min-h-full sm:max-w-md transform overflow-hidden  glareBg text-white p-10 bg-app-bg text-start transition-all ${isShake ? "shake" : ""} ${isBased ? "" : "font-accent"}`}
+                                className={`dialogWrap flex flex-col min-h-screen glareBg w-full min-h-full sm:max-w-md transform overflow-hidden  glareBg text-white p-10 bg-app-bg text-start transition-all ${isShake ? "shake" : ""}`}
                             >
                                 <Dialog.Title as="h3" className="text-3xl font-bold pb-5 pt-5">
-                                    <span className={`${isBased ? "" : "font-light"}`}>{title}</span>
+                                    <span>{title}</span>
                                     {!noClose && (
                                         <div
                                             className={`absolute top-[20px] right-[0px] cursor-pointer`}

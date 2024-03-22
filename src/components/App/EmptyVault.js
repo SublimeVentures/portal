@@ -1,10 +1,10 @@
+import Link from "next/link";
+import Lottie from "lottie-react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import IconLight from "@/assets/svg/Light.svg";
 import PAGE from "@/routes";
-import Link from "next/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 
-import Lottie from "lottie-react";
 import lottieVault from "@/assets/lottie/vault.json";
 
 export default function EmptyVault() {

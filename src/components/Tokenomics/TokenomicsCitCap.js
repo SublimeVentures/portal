@@ -1,12 +1,12 @@
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Linker from "@/components/link";
 import PAGE, { ExternalLinks } from "@/routes";
 import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import PlayIcon from "@/assets/svg/Play.svg";
-import Link from "next/link";
 import Input from "@/components/App/Input";
 import { CITIZENS, CITIZENS_NAME } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { fetchNeoTokyoEnvs } from "@/fetchers/public.fecher";
 import Select from "@/components/App/Select";
 import { MIN_DIVISIBLE } from "@/lib/investment";

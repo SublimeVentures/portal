@@ -1,5 +1,5 @@
-import { RoundButton, ButtonIconSize } from "@/components/Button/RoundButton";
 import { useRouter } from "next/router";
+import { RoundButton, ButtonIconSize } from "@/components/Button/RoundButton";
 import PAGE from "@/routes";
 import PlayIcon from "@/assets/svg/Play.svg";
 

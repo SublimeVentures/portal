@@ -1,11 +1,11 @@
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { ExternalLinks } from "@/routes";
-import { useState, useEffect } from "react";
 import IconInfo from "@/assets/svg/Info.svg";
 import { IconButton } from "@/components/Button/IconButton";
-import { useRouter } from "next/router";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
-import dynamic from "next/dynamic";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });

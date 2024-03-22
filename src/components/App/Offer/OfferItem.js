@@ -1,17 +1,20 @@
 import VanillaTilt from "vanilla-tilt";
 import moment from "moment";
 import { useEffect, useRef } from "react";
-import PAGE from "@/routes";
 import Link from "next/link";
 import Image from "next/image";
+import PAGE from "@/routes";
 import { PhaseId, phases } from "@/lib/phases";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
+import { TENANT } from "@/lib/tenantHelper";
 
 export const OfferStatus = {
     PENDING: "pending",
     IN_PROGRESS: "inprogress",
     CLOSED: "closed",
 };
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const getStatus = (phaseCurrent) => {
     if (phaseCurrent.phase === PhaseId.Closed) return OfferStatus.CLOSED;
@@ -56,54 +59,41 @@ export default function OfferItem({ offer, cdn }) {
         VanillaTilt.init(imageTilt.current, {
             scale: 1.02,
             speed: 1000,
-            max: isBased ? 5 : 0.2,
+            max: isBaseVCTenant ? 5 : 0.2,
         });
     }, []);
-
-    console.log("offer", offer);
 
     const { phaseCurrent } = phases(offer);
     const state = phaseCurrent?.phaseName;
 
     const status = getStatus(phaseCurrent);
-    // console.log("====================")
-    // console.log("offer",offer)
-    // console.log("active",active)
-    // console.log("phase",phase)
-    // console.log("isLast",isLast)
-    // console.log("status",status)
-    // console.log("state",state)
-    // console.log("====================")
 
     return (
         <div
             className={`
-            ${isBased ? "rounded-xl" : ""}
+            bordered-container
             bg-navy-accent flex flex-col text-center !cursor-pointer col-span-12
             border-transparent border offerItem ${status} 
             md:col-span-6 collap:col-span-12 lg:!col-span-6 xl:!col-span-4`}
             ref={imageTilt}
         >
-            <Link
-                href={`${PAGE.Opportunities}/${slug}`}
-                className={`flex flex-1 flex-col bg-navy-accent ${isBased ? "rounded-xl" : ""}`}
-            >
+            <Link href={`${PAGE.Opportunities}/${slug}`} className="flex flex-1 flex-col bg-navy-accent">
                 <div className="bg-center relative min-h-[300px]">
-                    <div className={"image-container min-h-[300px]"}>
+                    <div className="image-container min-h-[300px]">
                         <Image
                             src={`${cdn}/research/${slug}/bg.jpg`}
                             fill
-                            className={`imageOfferList ${isBased ? "rounded-tl-xl rounded-tr-xl" : ""}  `}
+                            className="imageOfferList"
                             alt={slug}
                             sizes="(max-width: 768px) 100vw"
                         />
                     </div>
                 </div>
-                <div className={"flex flex-row ml-3 -mt-10 z-10 "}>
-                    <div className={`${isBased ? "rounded-lg bg-navy-accent" : ""} `}>
+                <div className="flex flex-row ml-3 -mt-10 z-10">
+                    <div className="bg-navy-accent bordered-container">
                         <Image
                             src={`${cdn}/research/${slug}/icon.jpg`}
-                            className={`p-1 ${isBased ? "rounded-lg" : "bg-slides"} `}
+                            className="p-1 bordered-container"
                             alt={slug}
                             width={90}
                             height={90}
@@ -121,9 +111,7 @@ export default function OfferItem({ offer, cdn }) {
                         <div className="text-md flex flex-1 mt-1 pb-5 color">#{genre}</div>
                     </div>
 
-                    <div
-                        className={`color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto  ${isBased ? "border-b-xl" : ""}`}
-                    >
+                    <div className="color uppercase font-bold offerBottom text-center py-2 text-xs w-full mt-auto bordered-container">
                         {state}
                     </div>
                 </div>

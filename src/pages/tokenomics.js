@@ -1,8 +1,8 @@
-import HeroBg from "@/components/Home/HeroBg";
 import { NextSeo } from "next-seo";
+import dynamic from "next/dynamic";
+import HeroBg from "@/components/Home/HeroBg";
 import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
-import dynamic from "next/dynamic";
 import { TENANT } from "@/lib/tenantHelper";
 const TokenomicNeoTokyo = dynamic(() => import("@/components/Tokenomics/TokenomicsCitCap"), { ssr: true });
 const TokenomicKongzCapital = dynamic(() => import("@/components/Tokenomics/TokenomicsCyberKongz"), { ssr: true });

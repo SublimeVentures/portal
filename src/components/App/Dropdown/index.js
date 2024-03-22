@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 import { useEffect } from "react";
+import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 
 // export default function Dropdown({options, classes, propSelected, position, isSmall}) {
 export default function Dropdown({ options, selector, classes, propSelected, isSmall }) {

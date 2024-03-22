@@ -1,11 +1,10 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useState } from "react";
+import { useSignMessage } from "wagmi";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { addUserWallet } from "@/fetchers/settings.fetcher";
-import { isBased } from "@/lib/utils";
-import { useSignMessage } from "wagmi";
-import { useRouter } from "next/router";
 
 export default function WalletAddModal({ model, setter, addProps }) {
     const router = useRouter();
@@ -70,42 +69,39 @@ export default function WalletAddModal({ model, setter, addProps }) {
 
     const contentStake = () => {
         return (
-            <div className={"min-w-[300px]"}>
+            <div className="min-w-[300px]">
                 <div>
-                    You can add up to{" "}
-                    <span className={"text-app-success font-bold"}>{maxWallets - wallets.length}</span> more wallets to
-                    your account.
+                    You can add up to <span className="text-app-success font-bold">{maxWallets - wallets.length}</span>{" "}
+                    more wallets to your account.
                     <br />
-                    <span className={"text-app-error"}>Wallet can be assigned only to one account!</span>
+                    <span className="text-app-error">Wallet can be assigned only to one account!</span>
                     <br />
                     <br />
                     Switch to wallet you want to add, and sign message.
                 </div>
-                <div className={"py-5"}>
-                    <div className={" h-[60px]"}>
+                <div className="py-5">
+                    <div className="h-[60px]">
                         {newWallet && (
                             <div>
-                                <div className={"glowNormal font-bold pb-2 w-full text-center"}>New wallet</div>
-                                <div
-                                    className={`text-xs p-2 bg-app-accent2 text-center ${isBased ? "rounded-xl" : ""}`}
-                                >
+                                <div className="glowNormal font-bold pb-2 w-full text-center">New wallet</div>
+                                <div className="text-xs p-2 bg-app-accent2 text-center bordered-container">
                                     {account?.address}
                                 </div>
                             </div>
                         )}
-                        <div className={"pt-2 w-full text-center text-app-error"}>{error}</div>
+                        <div className="pt-2 w-full text-center text-app-error">{error}</div>
                     </div>
                 </div>
 
-                <div className={"fullWidth pt-5"}>
+                <div className="fullWidth pt-5">
                     <UniButton
                         type={ButtonTypes.BASE}
                         isWide={true}
-                        size={"text-sm sm"}
-                        state={"danger"}
+                        size="text-sm sm"
+                        state="danger"
                         isDisabled={!newWallet}
                         isLoading={processing}
-                        text={"Add wallet"}
+                        text="Add wallet"
                         handler={async () => {
                             await addWallet();
                         }}
@@ -117,8 +113,8 @@ export default function WalletAddModal({ model, setter, addProps }) {
 
     const contentSuccess = () => {
         return (
-            <div className={"min-w-[300px]"}>
-                <div className={"text-app-success"}>Wallet added successfully.</div>
+            <div className="min-w-[300px]">
+                <div className="text-app-success">Wallet added successfully.</div>
             </div>
         );
     };

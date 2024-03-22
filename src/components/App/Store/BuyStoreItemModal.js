@@ -1,17 +1,20 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import { useEffect, useState, useMemo } from "react";
+import Lottie from "lottie-react";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import PAGE, { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-import { useRouter } from "next/router";
 import Dropdown from "@/components/App/Dropdown";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
+import { tenantIndex } from "@/lib/utils";
+import { TENANT } from "@/lib/tenantHelper";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
@@ -45,7 +48,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
-                network: !isBased,
+                network: !isBaseVCTenant,
                 liquidity: true,
                 allowance: true,
                 transaction: true,
@@ -98,18 +101,17 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                 />
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    {/*<Link href={PAGE.Settings} className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>*/}
-                    <div className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}>
+                    <div className="w-full fullWidth">
                         <UniButton
                             type={ButtonTypes.BASE}
-                            text={"Check PROFILE"}
-                            state={"danger"}
+                            text="Check PROFILE"
+                            state="danger"
                             isLoading={false}
                             isDisabled={false}
                             is3d={false}
                             isWide={true}
                             zoom={1.1}
-                            size={"text-sm sm"}
+                            size="text-sm sm"
                             handler={() => redirect()}
                         />
                     </div>
@@ -123,7 +125,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     const contentSteps = () => {
         return (
             <div className={`flex flex-1 flex-col`}>
-                <div className={`flex flex-col gap-2 mt-5 ${isBased ? "" : "font-accent"}`}>
+                <div className={`flex flex-col gap-2 mt-5 card-content-description`}>
                     <div className={"detailRow"}>
                         <p>Item</p>
                         <hr className={"spacer"} />
@@ -142,7 +144,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                                     isSmall={true}
                                 />
                             ) : (
-                                <>{dropdownCurrencyOptions[0].symbol}</>
+                                <>{dropdownCurrencyOptions[0]?.symbol}</>
                             )}
                         </div>
                     </div>

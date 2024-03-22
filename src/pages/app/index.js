@@ -1,17 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
+import Head from "next/head";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import VaultItem from "@/components/App/Vault/VaultItem";
-import { useQuery } from "@tanstack/react-query";
 import { fetchVault } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
-import Head from "next/head";
-import dynamic from "next/dynamic";
 import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import DetailsSidebar from "@/components/App/Vault/DetailsSidebar";
-import { useState } from "react";
 
 const UserSummary = dynamic(() => import("@/components/App/Vault/UserSummary"), { ssr: false });
 
@@ -21,7 +21,6 @@ export default function AppVault({ session }) {
     const [claimModal, setClaimModal] = useState(false);
     const [claimModalDetails, setClaimModalDetails] = useState({});
 
-    console.log("claimModalDetails", claimModalDetails);
     const {
         isSuccess: isSuccessDataFeed,
         data: vault,
