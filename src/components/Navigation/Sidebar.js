@@ -29,7 +29,9 @@ const TENANT_LOGO = () => {
         case TENANT.basedVC: {
             return (
                 <>
-                    <DynamicIcon name={`logo_6`} style="p-1 w-17 text-white" />{" "}
+                    {/* <DynamicIcon name={`logo_6`} style="p-1 w-17 text-white" />{" "}
+                    <div className="font-accent text-sm ml-3">{getCopy("NAME")}</div> */}
+                    <DynamicIcon name={`logo_6`} style="w-17 text-white" />{" "}
                     <div className="font-accent text-sm ml-3">{getCopy("NAME")}</div>
                 </>
             );
@@ -48,7 +50,7 @@ const TENANT_LOGO = () => {
                     <img
                         src="https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"
                         className="max-w-[210px]"
-                        alt='Logo of Kongz Capital'
+                        alt="Logo of Kongz Capital"
                     />
                 </>
             );
