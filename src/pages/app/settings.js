@@ -1,14 +1,14 @@
+import Head from "next/head";
+import { dehydrate, useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import routes from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
-import Head from "next/head";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
-import { dehydrate, useQuery } from "@tanstack/react-query";
 import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetcher";
 import ManageWallets from "@/components/App/Settings/ManageWallets";
-import dynamic from "next/dynamic";
 import { TENANT } from "@/lib/tenantHelper";
 
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });

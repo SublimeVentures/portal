@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import VanillaTilt from "vanilla-tilt";
-import { isBased } from "@/lib/utils";
 
 export default function OfferDetailsProgress({ allocations, isSoldOut }) {
     const tilt = useRef(null);
@@ -8,7 +7,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut }) {
         VanillaTilt.init(tilt.current, {
             scale: 1.05,
             speed: 1000,
-            max: isBased ? 5 : 0.2,
+            max: 5,
         });
     }, []);
 

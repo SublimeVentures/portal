@@ -1,14 +1,13 @@
-import GenericModal from "@/components/Modal/GenericModal";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import { useMemo, useState, useEffect } from "react";
+import Lottie from "lottie-react";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import PAGE, { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-import { useRouter } from "next/router";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
@@ -47,7 +46,6 @@ export default function InvestModal({ model, setter, investModalProps }) {
     }, [transactionSuccessful]);
 
     const token = useGetToken(selectedCurrency?.contract);
-    console.log("HIXKFHERYDDDD [InvestModal] - refresh invest details", token, activeInvestContract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -94,7 +92,7 @@ export default function InvestModal({ model, setter, investModalProps }) {
 
     const contentSuccess = () => {
         return (
-            <div className=" flex flex-col flex-1">
+            <div className="flex flex-col flex-1">
                 <div>
                     Congratulations! You have successfully invested{" "}
                     <span className="text-app-success font-bold">${amountLocale}</span> in{" "}
@@ -108,20 +106,17 @@ export default function InvestModal({ model, setter, investModalProps }) {
                 />
 
                 <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <div
-                        className={` w-full fullWidth ${isBased ? "" : "flex flex-1 justify-center"}`}
-                        onClick={() => closeModal(true)}
-                    >
+                    <div className="w-full fullWidth" onClick={() => closeModal(true)}>
                         <UniButton
                             type={ButtonTypes.BASE}
-                            text={"Check Vault"}
-                            state={"danger"}
+                            text="Check Vault"
+                            state="danger"
                             isLoading={false}
                             isDisabled={false}
                             is3d={false}
                             isWide={true}
                             zoom={1.1}
-                            size={"text-sm sm"}
+                            size="text-sm sm"
                         />
                     </div>
                 </div>

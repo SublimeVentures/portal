@@ -1,6 +1,6 @@
+import Link from "next/link";
 import Sidebar from "@/components/Navigation/Sidebar";
 import routes from "@/routes";
-import Link from "next/link";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function LayoutApp({ children }) {

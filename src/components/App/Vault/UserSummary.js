@@ -1,14 +1,15 @@
-import IconMoney from "@/assets/svg/Money.svg";
+import Lottie from "lottie-react";
+import { useGlitch } from "react-powerglitch";
+import { BiMoneyWithdraw as IconMoney } from "react-icons/bi";
+import { IoTimeOutline as IconClock } from "react-icons/io5";
 import Stat from "@/components/Stat";
 import IconStars from "@/assets/svg/Stars.svg";
-import IconClock from "@/assets/svg/Clock.svg";
 import IconNT from "@/assets/svg/NT.svg";
-import { isBased } from "@/lib/utils";
-import Lottie from "lottie-react";
+import { tenantIndex } from "@/lib/utils";
 import lottieAvatar from "@/assets/lottie/avatar.json";
-import { useGlitch } from "react-powerglitch";
 import FallbackImage from "@/components/App/Vault/FallbackImage";
 import PremiumSummary from "@/components/App/Settings/PremiumSummary";
+import { TENANT } from "@/lib/tenantHelper";
 
 function amount(item) {
     return item.invested;
@@ -18,10 +19,12 @@ function sum(prev, next) {
     return prev + next;
 }
 
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
+
 export default function UserSummary({ vault, session, premiumData }) {
     const portfolio = Number(vault?.length > 0 ? vault.map(amount).reduce(sum) : 0).toLocaleString();
     let glitch;
-    if (!isBased) {
+    if (!isBaseVCTenant) {
         glitch = useGlitch({
             playMode: "always",
             createContainers: true,
@@ -50,8 +53,8 @@ export default function UserSummary({ vault, session, premiumData }) {
             <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex custom:col-span-4">
                     <div className="flex flex-1 flex-col justify-center items-center">
-                        <div className="relative  px-10 sm:-ml-10 custom:ml-0">
-                            {isBased ? (
+                        <div className="relative px-10 sm:-ml-10 custom:ml-0">
+                            {isBaseVCTenant ? (
                                 <>
                                     <div
                                         className="absolute avatarAnim"
@@ -101,21 +104,22 @@ export default function UserSummary({ vault, session, premiumData }) {
                             color={"gold"}
                             title={"Projects Invested"}
                             value={vault ? vault.length : 0}
-                            icon={<IconStars className={"w-9"} />}
+                            icon={<IconStars className={"w-9 text-2xl"} />}
                         />
                         <Stat
                             color={"teal"}
                             title={"Nearest Unlock"}
                             value={"TBA"}
-                            icon={<IconClock className={"w-7"} />}
+                            icon={<IconClock className={"w-7 text-2xl"} />}
                         />
                         <Stat
                             color={"blue"}
                             title={"Portfolio Size"}
                             value={`$${portfolio}`}
-                            icon={<IconMoney className={"w-7"} />}
+                            icon={<IconMoney className={"w-7 text-2xl"} />}
                         />
                     </div>
+
                     <PremiumSummary data={premiumData} />
                 </div>
             </div>

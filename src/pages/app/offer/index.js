@@ -1,19 +1,20 @@
-import LayoutApp from "@/components/Layout/LayoutApp";
-import OfferItem from "@/components/App/Offer/OfferItem";
-import { useQuery } from "@tanstack/react-query";
-import { fetchOfferList } from "@/fetchers/offer.fetcher";
-import Loader from "@/components/App/Loader";
-import Empty from "@/components/App/Empty";
 import Head from "next/head";
-import Stat from "@/components/Stat";
-import IconNetwork from "@/assets/svg/Network.svg";
+
+import { useQuery } from "@tanstack/react-query";
+import { BiMoneyWithdraw as IconMoney, BiNetworkChart as IconNetwork } from "react-icons/bi";
+import Empty from "@/components/App/Empty";
 import IconStars from "@/assets/svg/Stars.svg";
-import IconMoney from "@/assets/svg/Money.svg";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import Loader from "@/components/App/Loader";
+import OfferItem from "@/components/App/Offer/OfferItem";
+import Stat from "@/components/Stat";
+import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { getCopy } from "@/lib/seoConfig";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import { processServerSideData } from "@/lib/serverSideHelpers";
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import routes from "@/routes";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { TENANT } from "@/lib/tenantHelper";
 
 export default function AppOffer({ session }) {
     const TENANT_ID = session.tenantId;
@@ -55,34 +56,35 @@ export default function AppOffer({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className={"flex flex-col justify-between gap-7 xl:flex-row"}>
-                <div className={"flex flex-col justify-center"}>
-                    <div
-                        className={`glow font-extrabold text-3xl ${isBased ? "" : "font-accent uppercase font-light"}`}
-                    >
-                        Funded Projects
-                    </div>
-                    <div className={"text-outline text-md mt-2 white min-w-[250px]"}>
+            <div className="flex flex-col justify-between gap-7 xl:flex-row">
+                <div className="flex flex-col justify-center">
+                    <div className="glow text-3xl page-header-text">Funded Projects</div>
+                    <div className="text-outline text-md mt-2 white min-w-[250px]">
                         We bring new industry giants to our community
                     </div>
                 </div>
-                <div className={"flex flex-1 2xl:max-w-[900px] w-full"}>
-                    <div className={"w-full flex gap-5 flex-col md:flex-row"}>
+                <div className="flex flex-1 2xl:max-w-[900px] w-full">
+                    <div className="w-full flex gap-5 flex-col md:flex-row">
                         <Stat
-                            color={"gold"}
-                            title={"Investments"}
+                            color="gold"
+                            title="Investments"
                             value={offerListRender.length}
-                            icon={<IconStars className={"w-9"} />}
+                            icon={<IconStars className={"w-9 text-2xl"} />}
                         />
-                        {isBased && (
+                        {tenantIndex === TENANT.basedVC && (
                             <Stat
-                                color={"teal"}
-                                title={"Partners"}
+                                color="teal"
+                                title="Partners"
                                 value={partners}
-                                icon={<IconNetwork className={"w-7"} />}
+                                icon={<IconNetwork className="w-7 text-2xl" />}
                             />
                         )}
-                        <Stat color={"blue"} title={"Raised"} value={funded} icon={<IconMoney className={"w-7"} />} />
+                        <Stat
+                            color={"blue"}
+                            title={"Raised"}
+                            value={funded}
+                            icon={<IconMoney className={"w-7 text-2xl"} />}
+                        />
                     </div>
                 </div>
             </div>

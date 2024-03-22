@@ -1,22 +1,21 @@
+import { useEffect, useRef, useState } from "react";
+import VanillaTilt from "vanilla-tilt";
+import Head from "next/head";
+import { useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import routes, { ExternalLinks } from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import Linker from "@/components/link";
 import { getCopy } from "@/lib/seoConfig";
-import { isBased } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
-import VanillaTilt from "vanilla-tilt";
-import Head from "next/head";
-import { useQuery } from "@tanstack/react-query";
 import { fetchStore, fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
 import { claimMysterybox } from "@/fetchers/mysterbox.fetcher";
-import dynamic from "next/dynamic";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { useRouter } from "next/router";
 import { TENANT } from "@/lib/tenantHelper";
 const ErrorModal = dynamic(() => import("@/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
 const ClaimMysteryBoxModal = dynamic(() => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"), { ssr: false });
@@ -137,30 +136,26 @@ export default function AppLootbox({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div
-                className={`mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative ${isBased ? "" : "font-accent"}`}
-            >
+            <div className="mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative">
                 {mysteryBoxOwnedAmount > 0 && (
-                    <div
-                        className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl absolute top-[50px] text-center collap:top-[50px]"} flex absolute top-5 glowNormal pb-5 z-10`}
-                    >
+                    <div className="header-text-dedicated text-2xl flex absolute top-5 glow-normal pb-5 z-10">
                         You have {mysteryBoxOwnedAmount} unopened MysteryBox!
                     </div>
                 )}
-                <div className={"mt-[150px] sm:mt-0"} ref={imageTilt}>
+                <div className="mt-[150px] sm:mt-0" ref={imageTilt}>
                     {TENANT_MYSTERYBOX()}
                 </div>
 
-                <div className={`flex gap-5 mt-5 z-10 ${isBased ? "absolute bottom-10" : ""}`}>
+                <div className="flex gap-5 mt-5 z-10 absolute bottom-10">
                     <UniButton
                         type={ButtonTypes.BASE}
-                        text={"OPEN"}
-                        state={"success"}
+                        text="OPEN"
+                        state="success"
                         isDisabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
                         isPrimary={true}
                         isWide={true}
                         zoom={1.05}
-                        size={"text-sm xs"}
+                        size="text-sm xs"
                         handler={() => {
                             openMysteryBox();
                         }}
@@ -171,15 +166,15 @@ export default function AppLootbox({ session }) {
                         isDisabled={storeAvailable <= 0}
                         isWide={true}
                         zoom={1.05}
-                        size={"text-sm xs"}
+                        size="text-sm xs"
                         handler={() => {
                             setOrder(mysteryBox);
                         }}
                     />
                 </div>
 
-                <div className={"absolute bottom-0 z-10"}>
-                    <Linker url={ExternalLinks.LOOTBOX} text={"Learn more"} />
+                <div className="absolute bottom-0 z-10">
+                    <Linker url={ExternalLinks.LOOTBOX} text="Learn more" />
                 </div>
             </div>
             <BuyMysteryBoxModal

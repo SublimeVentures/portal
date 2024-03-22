@@ -1,6 +1,6 @@
 import { Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
-import IconCancel from "@/assets/svg/Cancel.svg";
+import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import { isAddress } from "web3-validator";
 
 export default function Input({

@@ -1,8 +1,8 @@
 import { NextSeo } from "next-seo";
+import dynamic from "next/dynamic";
 import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import { verifyID } from "@/lib/authHelpers";
-import dynamic from "next/dynamic";
 import { TENANT } from "@/lib/tenantHelper";
 
 const HomeBased = dynamic(() => import("@/components/Home"), { ssr: true });

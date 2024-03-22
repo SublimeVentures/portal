@@ -1,7 +1,7 @@
 import Lottie from "lottie-react";
-import lootboxLottie from "@/assets/lottie/lootbox.json";
 import { useRef } from "react";
 import { useEffect } from "react";
+import lootboxLottie from "@/assets/lottie/lootbox.json";
 import TransparentModal from "@/components/Modal/TransparentModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import Linker from "@/components/link";
