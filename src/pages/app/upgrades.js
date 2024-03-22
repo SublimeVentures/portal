@@ -1,20 +1,18 @@
-import LayoutApp from "@/components/Layout/LayoutApp";
-import routes, { ExternalLinks } from "@/routes";
-import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { getCopy } from "@/lib/seoConfig";
-import { isBased } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/App/Loader";
+import { AiOutlineRead as ReadIcon } from "react-icons/ai";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import routes, { ExternalLinks } from "@/routes";
+import { ButtonIconSize } from "@/components/Button/RoundButton";
 import Empty from "@/components/App/Empty";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import Loader from "@/components/App/Loader";
+import { PremiumItemsENUM } from "@/lib/enum/store";
 import StoreItem from "@/components/App/Store/StoreItem";
 import { fetchStore } from "@/fetchers/store.fetcher";
-import ReadIcon from "@/assets/svg/Read.svg";
-import { ButtonIconSize } from "@/components/Button/RoundButton";
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { PremiumItemsENUM } from "@/lib/enum/store";
-
+import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
@@ -47,7 +45,7 @@ export default function AppUpgrades({ session }) {
         if (!storeData || storeData.length === 0) return <Empty />;
 
         return (
-            <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
+            <div className="grid grid-cols-12 gap-y-8 mobile:gap-10">
                 {!!storeData &&
                     storeData.map((el) => (
                         <StoreItem item={el} key={el.id} cdn={cdn} setOrder={setOrder} currency={currency} />
@@ -73,27 +71,24 @@ export default function AppUpgrades({ session }) {
     };
 
     const title = `Upgrades - ${getCopy("NAME")}`;
+
     return (
         <>
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className={"flex flex-col justify-between gap-7 sm:flex-row"}>
-                <div className={"flex flex-col justify-center"}>
-                    <div
-                        className={`glow font-extrabold text-3xl ${isBased ? "" : "font-accent uppercase font-light"}`}
-                    >
-                        UPGRADES
-                    </div>
-                    <div className={"text-outline text-md mt-2 white min-w-[250px]"}>Supercharge your investments.</div>
+            <div className="flex flex-col justify-between gap-7 sm:flex-row">
+                <div className="flex flex-col justify-center">
+                    <div className="glow text-3xl page-header-text">UPGRADES</div>
+                    <div className="text-outline text-md mt-2 white min-w-[250px]">Supercharge your investments.</div>
                 </div>
-                <div className={"mx-auto flex items-center sm:ml-auto sm:mr-0"}>
+                <div className="mx-auto flex items-center sm:ml-auto sm:mr-0">
                     <div>
                         <UniButton
                             type={ButtonTypes.BASE}
-                            text={"Learn more"}
+                            text="Learn more"
                             isWide={true}
-                            size={"text-sm sm"}
+                            size="text-sm sm"
                             handler={() => {
                                 window.open(ExternalLinks.UPGRADES, "_blank");
                             }}
@@ -102,9 +97,7 @@ export default function AppUpgrades({ session }) {
                     </div>
                 </div>
             </div>
-            <div
-                className={`flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10  ${isBased ? "" : "font-accent"}`}
-            >
+            <div className="flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 page-content-text">
                 {renderPage()}
             </div>
             <BuyStoreItemModal

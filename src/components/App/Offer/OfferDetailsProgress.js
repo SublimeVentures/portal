@@ -60,7 +60,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
         VanillaTilt.init(tilt.current, {
             scale: 1.05,
             speed: 1000,
-            max: isBased ? 5 : 0.2,
+            max: 5,
         });
     }, []);
 

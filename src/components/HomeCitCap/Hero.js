@@ -1,6 +1,6 @@
-import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
+import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import DynamicIcon from "@/components/Icon";
 const LoginModal = dynamic(() => import("@/components/SignupFlow/LoginModal"), {

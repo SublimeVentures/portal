@@ -1,13 +1,13 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import PAGE, { ExternalLinks } from "@/routes";
-import { useState } from "react";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import UpgradesModalItem from "@/components/App/Offer/UpgradesModalItem";
 import { PremiumItemsENUM, PremiumItemsParamENUM } from "@/lib/enum/store";
 import { useUpgrade } from "@/fetchers/offer.fetcher";
 import { PhaseId } from "@/lib/phases";
-import { useRouter } from "next/router";
 
 const description = (type, maximumGuaranteedBooking, length) => {
     switch (type) {

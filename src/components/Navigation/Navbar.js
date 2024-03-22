@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import useScrollPosition from "@/lib/hooks/useScrollPosition";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import { ExternalLinks } from "@/routes";
 import { CitCapGlitchButton } from "@/components/Button/CitCapGlitchButton";
-// import Logo from "@/assets/svg/logo.svg";
-import dynamic from "next/dynamic";
 import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
-// const LogoCitCap = dynamic(() => import('@/assets/svg/logoCitCap.svg'))
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANT_MENU = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -48,7 +47,7 @@ export default function Navbar() {
     const disableMobile = () => setIsMobileOpen(false);
 
     const buildLinks = (el, i) => {
-        if (isBased) {
+        if (isBaseVCTenant) {
             if (!el.isExternal)
                 return (
                     <Link href={el.link} key={i} className="mx-5 cursor-pointer underlineHover">
@@ -85,11 +84,10 @@ export default function Navbar() {
         <div className="fixed w-full z-20 text-uppercase tracking-widest">
             <div
                 className={`
-                ${isBased ? "py-7" : "py-2"} 
                 ${!isOnTop || isMobileOpen ? "blurredBG" : ""} 
-                flex flex-row items-center w-full  px-10 navShadow `}
+                flex flex-row items-center w-full px-10 navShadow `}
             >
-                <Link href="/" onClick={disableMobile} className={`${isBased ? "absolute" : ""} z-20`}>
+                <Link href="/" onClick={disableMobile}>
                     <div className={`flex`}>
                         <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />
                     </div>
@@ -115,9 +113,7 @@ export default function Navbar() {
                 </div>
             </div>
             {isMobileOpen && (
-                <div
-                    className={`absolute ${isBased ? "blurred2" : "blurredBgColor gap-5"} flex flex-col w-full left-0 text-center py-5`}
-                >
+                <div className="absolute flex flex-col w-full left-0 text-center py-5">
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
                     })}

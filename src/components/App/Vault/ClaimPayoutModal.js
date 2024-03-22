@@ -1,11 +1,11 @@
+import Lottie from "lottie-react";
+import { useMemo, useState } from "react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { getSignature } from "@/fetchers/claim.fetcher";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { NETWORKS } from "@/lib/utils";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-import { useMemo, useState } from "react";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";

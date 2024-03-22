@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useChainId } from "wagmi";
-import { usdtAbi } from "../../../abi/usdt.abi";
 import { erc20Abi } from "viem";
+import { usdtAbi } from "../../../abi/usdt.abi";
 import { ETH_USDT } from "@/components/BlockchainSteps/utils";
 
 function useGetTokenAbi(token, forceChainId) {

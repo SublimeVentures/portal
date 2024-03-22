@@ -1,22 +1,24 @@
 import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { dehydrate } from "@tanstack/react-query";
+import { NextSeo } from "next-seo";
+import VanillaTilt from "vanilla-tilt";
+import { useRouter } from "next/router";
+import { IoWalletOutline as WalletIcon } from "react-icons/io5";
 import HeroBg from "@/components/Home/HeroBg";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import WalletIcon from "@/assets/svg/Wallet.svg";
-import Image from "next/image";
 import { verifyID } from "@/lib/authHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { fetchPartners } from "@/fetchers/public.fecher";
-import { dehydrate } from "@tanstack/react-query";
 import { seoConfig } from "@/lib/seoConfig";
 import PAGE, { ExternalLinks } from "@/routes";
-import { NextSeo } from "next-seo";
-import VanillaTilt from "vanilla-tilt";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import Linker from "@/components/link";
-import { useRouter } from "next/router";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 import { TENANT } from "@/lib/tenantHelper";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function LoginPartner({ selectedPartner, isAuthenticated }) {
     const seo = seoConfig(PAGE.Login);
@@ -28,7 +30,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
         VanillaTilt.init(tilt.current, {
             scale: 1.05,
             speed: 1000,
-            max: isBased ? 5 : 0.2,
+            max: isBaseVCTenant ? 5 : 0.2,
         });
     }, []);
 
@@ -37,7 +39,6 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
             router.replace("/app");
         }
 
-        console.log("selectedPartner.id", selectedPartner.id);
         setPartner(selectedPartner.id);
     }, []);
 

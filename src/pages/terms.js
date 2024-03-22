@@ -1,8 +1,8 @@
-import HeroBg from "@/components/Home/HeroBg";
 import { NextSeo } from "next-seo";
+import dynamic from "next/dynamic";
+import HeroBg from "@/components/Home/HeroBg";
 import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
-import dynamic from "next/dynamic";
 import { TENANT } from "@/lib/tenantHelper";
 const ToS_based = dynamic(() => import("@/components/Legal/ToS_based"), {
     ssr: true,
