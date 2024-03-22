@@ -41,6 +41,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+          token: ${{ secrets.ORG_PAT }}
+
+
+      - name: Checkout submodule to dev branch
+        run: |
+          cd ./server/services/db/definitions
+          git fetch
+          git checkout develop
+          git pull origin develop
+          cd -
 
       - name: Fetch secrets
         run: |
