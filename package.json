@@ -16,6 +16,7 @@
         "build:prod": "cross-env NODE_ENV=production next build",
         "build:test": "cross-env NODE_ENV=test next build",
         "lint": "next lint",
+        "lint:fix": "next lint --fix",
         "prettier": "prettier -w .",
         "prepare": "husky"
     },
