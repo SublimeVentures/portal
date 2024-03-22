@@ -1,0 +1,3 @@
+[submodule "server/services/db/definitions"]
+	path = server/services/db/definitions
+	url = git@github.com:SublimeVentures/db_schema.git
