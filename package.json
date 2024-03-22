@@ -64,7 +64,7 @@
         "serialize-error": "8.1.0",
         "slick-carousel": "1.8.1",
         "swiper": "11.0.7",
-        "tailwind-merge": "^2.2.2",
+        "tailwind-merge": "2.2.2",
         "typescript": "5.4.2",
         "url": "0.11.3",
         "uuid": "9.0.1",
