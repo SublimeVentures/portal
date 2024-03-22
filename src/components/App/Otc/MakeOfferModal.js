@@ -1,22 +1,22 @@
 import { useState, useMemo } from "react";
-import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import { ExternalLinks } from "@/routes";
-import Input from "@/components/App/Input";
-import { IconButton } from "@/components/Button/IconButton";
+import Lottie from "lottie-react";
+import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     IoAddCircleOutline as IconPlus,
     IoRemoveCircleOutline as IconMinus,
     IoLogoDiscord as IconDiscord,
 } from "react-icons/io5";
+import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
+import { ExternalLinks } from "@/routes";
+import Input from "@/components/App/Input";
+import { IconButton } from "@/components/Button/IconButton";
 import Dropdown from "@/components/App/Dropdown";
-import Lottie from "lottie-react";
 import lottieOtc from "@/assets/lottie/otc.json";
 import Linker from "@/components/link";
 import { saveTransaction } from "@/fetchers/otc.fetcher";
-import { useEffect } from "react";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
-import { motion, AnimatePresence } from "framer-motion";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";

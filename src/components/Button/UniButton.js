@@ -1,12 +1,15 @@
 import { RoundButton } from "@/components/Button/RoundButton";
 import { CitCapGlitchButton } from "@/components/Button/CitCapGlitchButton";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
+import { TENANT } from "@/lib/tenantHelper";
 
 export const ButtonTypes = {
     BASE: 0,
     CITCAP: 1,
     CITCAP_FULL: 2,
 };
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export function UniButton({
     isLarge,
@@ -32,7 +35,7 @@ export function UniButton({
     const parse = () => {
         switch (type) {
             case ButtonTypes.BASE: {
-                if (isBased) {
+                if (isBaseVCTenant) {
                     return (
                         <RoundButton
                             text={text}

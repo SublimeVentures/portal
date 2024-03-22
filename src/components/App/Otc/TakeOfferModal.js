@@ -1,13 +1,13 @@
+import moment from "moment";
+import Lottie from "lottie-react";
+import { useMemo, useState } from "react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { getSignature } from "@/fetchers/otc.fetcher";
-import moment from "moment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { NETWORKS } from "@/lib/utils";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
-import { useMemo, useState } from "react";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";

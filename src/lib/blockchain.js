@@ -1,4 +1,3 @@
-import { isBased } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
 
 const RPCs = {

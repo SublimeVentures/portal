@@ -3,10 +3,10 @@ import merge from "lodash.merge";
 import cloneDeep from "lodash.clonedeep";
 import set from "lodash.set";
 import { useAccount, useSwitchChain } from "wagmi";
+import { useRouter } from "next/router";
 import { TENANT } from "@/lib/tenantHelper";
 import { logOut } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
-import { useRouter } from "next/router";
 
 const DEFAULT_STATE = {
     isClean: true,

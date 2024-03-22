@@ -1,8 +1,7 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { IoCloseCircleOutline as CancelIcon } from "react-icons/io5";
-import { isBased } from "@/lib/utils";
+import { ButtonIconSize } from "@/components/Button/RoundButton";
 export default function TransparentModal({ isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false);
 
@@ -43,10 +42,10 @@ export default function TransparentModal({ isOpen, closeModal, title, content, p
                             leaveTo="opacity-0 scale-95"
                         >
                             <Dialog.Panel
-                                className={`dialogWrap flex flex-col min-h-screen glareBg w-full transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-app-bg text-start transition-all ${isShake ? "shake" : ""} ${isBased ? "" : "font-accent"}`}
+                                className={`dialogWrap flex flex-col min-h-screen glareBg w-full transform overflow-hidden  glareBg text-white p-10 sm:rounded-xl bg-app-bg text-start transition-all ${isShake ? "shake" : ""}`}
                             >
                                 <Dialog.Title as="h3" className="text-3xl font-bold pb-5 pt-5">
-                                    <span className={`${isBased ? "" : "font-light"}`}>{title}</span>
+                                    <span>{title}</span>
                                     {!noClose && (
                                         <div
                                             className={`absolute top-[20px] right-[0px] cursor-pointer`}

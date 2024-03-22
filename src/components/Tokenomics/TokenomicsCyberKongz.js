@@ -1,11 +1,11 @@
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { IoPlay as PlayIcon } from "react-icons/io5";
 import Linker from "@/components/link";
 import PAGE, { ExternalLinks } from "@/routes";
 import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
-import { IoPlay as PlayIcon } from "react-icons/io5";
-import Link from "next/link";
 import Input from "@/components/App/Input";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { fetchCyberKongzEnvs } from "@/fetchers/public.fecher";
 
 export default function TokenomicsCitCap({}) {

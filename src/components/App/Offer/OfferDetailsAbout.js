@@ -1,3 +1,5 @@
+import { useEffect, useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import {
     IoCloudDownloadOutline as IconDownload,
     IoLogoDiscord as IconDiscord,
@@ -5,15 +7,16 @@ import {
     IoLogoTwitter as IconTwitter,
 } from "react-icons/io5";
 import { IconButton } from "@/components/Button/IconButton";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
-import { useEffect, useState, useMemo } from "react";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { TENANT } from "@/lib/tenantHelper";
+
 const Flipbook = dynamic(() => import("@/components/Flipbook/Flipbook"), {
     ssr: false,
 });
 
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import dynamic from "next/dynamic";
+const isIconsBordered = tenantIndex !== TENANT.basedVC;
 
 export default function OfferDetailsAbout({ offer }) {
     const { cdn } = useEnvironmentContext();
@@ -47,15 +50,9 @@ export default function OfferDetailsAbout({ offer }) {
 
     return (
         <>
-            <div className={`${isBased ? "rounded-xl" : ""} relative offerWrap overflow-hidden`}>
-                <div
-                    className={`${isBased ? "rounded-xl" : ""} bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between `}
-                >
-                    <div
-                        className={`${isBased ? " font-medium text-[1.7rem]" : "text-app-error font-accent glowRed uppercase font-light text-2xl"} flex mx-10  glowNormal midcol:mr-0`}
-                    >
-                        About
-                    </div>
+            <div className="bordered-container relative offerWrap overflow-hidden">
+                <div className="bordered-container bg-navy-accent flex flex-wrap items-center justify-center py-5 gap-5 midcol:justify-between">
+                    <div className="card-content-dedicated flex mx-10 glowNormal midcol:mr-0">About</div>
                     <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
                         {url_web && (
                             <a href={`${url_web}`} target="_blank">
@@ -63,7 +60,7 @@ export default function OfferDetailsAbout({ offer }) {
                                     zoom={1.1}
                                     size={"w-12 p-3"}
                                     icon={<IconWebsite className="text-2xl" />}
-                                    noBorder={!isBased}
+                                    noBorder={isIconsBordered}
                                 />
                             </a>
                         )}
@@ -74,7 +71,7 @@ export default function OfferDetailsAbout({ offer }) {
                                     zoom={1.1}
                                     size={"w-12 p-3"}
                                     icon={<IconTwitter className="text-2xl" />}
-                                    noBorder={!isBased}
+                                    noBorder={isIconsBordered}
                                 />
                             </a>
                         )}
@@ -85,7 +82,7 @@ export default function OfferDetailsAbout({ offer }) {
                                     zoom={1.1}
                                     size={"w-12 p-3"}
                                     icon={<IconDiscord className="text-2xl" />}
-                                    noBorder={!isBased}
+                                    noBorder={isIconsBordered}
                                 />
                             </a>
                         )}
@@ -95,7 +92,7 @@ export default function OfferDetailsAbout({ offer }) {
                                 zoom={1.1}
                                 size={"w-17 p-3"}
                                 icon={<IconDownload className="text-2xl" />}
-                                noBorder={!isBased}
+                                noBorder={isIconsBordered}
                             />
                         </a>
                     </div>

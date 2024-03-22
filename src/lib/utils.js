@@ -2,7 +2,7 @@ function sleeper(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const isBased = process.env.NEXT_PUBLIC_TENANT === "1";
+const tenantIndex = Number(process.env.NEXT_PUBLIC_TENANT) || 1;
 
 const NETWORKS = {
     1: "eth",
@@ -33,9 +33,9 @@ const CITIZENS_NAME = {
 
 module.exports = {
     sleeper,
-    isBased,
     NETWORKS,
     checkIfNumberKey,
     CITIZENS,
     CITIZENS_NAME,
+    tenantIndex,
 };

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import { isBased } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function OfferDetailsTopBar({ paramsBar }) {
@@ -23,20 +22,31 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                 </div>
                 <div>
                     <div className="text-4xl font-bold flex flex-1 glow select-none">{name}</div>
-                    <div className={`text-xl flex flex-1 mt-1 ${isBased ? "text-outline" : "font-accent"}`}>
-                        #{genre}
-                    </div>
+                    <div className="text-xl flex flex-1 mt-1 background-text-description">#{genre}</div>
                 </div>
             </div>
-
+            <div className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row background-text-description">
+                <div className="text-lg custom:-mt-5">
+                    <span className="uppercase font-[500] background-text-dedicated glow-normal">
+                        {phaseCurrent.phaseName}
+                    </span>{" "}
+                    ends in
+                </div>
+                <div>
+                    <FlipClockCountdown
+                        className="flip-clock"
+                        onComplete={async () => {
+                            refreshInvestmentPhase();
+                        }}
+                        to={moment.unix(phaseNext.startDate + 1)}
+                        labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
+                    />
+                </div>
+            </div>
             {!phaseIsClosed && (
-                <div
-                    className={`flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row ${isBased ? "" : "font-accent"}`}
-                >
-                    <div className={`text-lg custom:-mt-5 `}>
-                        <span
-                            className={` uppercase font-[500] ${isBased ? "text-gold glow" : "text-app-error glowRed "}`}
-                        >
+                <div className="flex flex-col gap-5 flex-wrap justify-center items-center custom:flex-row background-text-description">
+                    <div className="text-lg custom:-mt-5">
+                        <span className="uppercase font-[500] background-text-dedicated glow-normal">
                             {phaseCurrent.phaseName}
                         </span>{" "}
                         ends in

@@ -1,8 +1,5 @@
 import { isAddress } from "web3-validator";
 import { BigNumber } from "bignumber.js";
-import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
-import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
-import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 
 import abi_claim from "../../../abi/ClaimFacet.json";
 import abi_otc from "../../../abi/OtcFacet.abi.json";
@@ -18,6 +15,9 @@ import abi_upgrade_based from "../../../abi/UpgradeFacet.json";
 import abi_mb_generic from "../../../abi/genericMysteryBox.abi.json";
 import abi_mb_based from "../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
+import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
+import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
+import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
 
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";

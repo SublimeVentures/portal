@@ -1,22 +1,15 @@
-import { isBased } from "@/lib/utils";
+import Link from "next/link";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import PAGE from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
-import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
-import Link from "next/link";
 
 export default function OtcMarkets({ propMarkets }) {
     let { otc, changeMarket, currentMarket } = propMarkets;
 
     return (
-        <div className={`${isBased ? "rounded-xl" : ""} offerWrap  flex flex-1 maxHeight`}>
-            <div
-                className={`overflow-x-auto flex flex-col bg-navy-accent ${isBased ? " rounded-tl-xl rounded-tr-xl" : ""}`}
-            >
-                <div
-                    className={`${isBased ? " font-medium text-[1.7rem] rounded-tl-xl rounded-tr-xl bg-navy" : "text-app-error font-accent glowRed uppercase font-light text-2xl bg-black"} flex p-5 glowNormal   header`}
-                >
-                    Markets
-                </div>
+        <div className="bordered-container offerWrap  flex flex-1 maxHeight">
+            <div className="overflow-x-auto flex flex-col bg-navy-accent bordered-container">
+                <div className="page-table-header flex p-5 glowNormal header">Markets</div>
 
                 <table>
                     <tbody>
@@ -35,12 +28,7 @@ export default function OtcMarkets({ propMarkets }) {
                                             }
                                         >
                                             <Link href={`${PAGE.Opportunities}/${el.slug}`}>
-                                                <IconButton
-                                                    zoom={1.1}
-                                                    size={"w-8"}
-                                                    icon={<IconInfo />}
-                                                    noBorder={isBased}
-                                                />
+                                                <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} />
                                             </Link>
                                         </span>
                                     </td>
