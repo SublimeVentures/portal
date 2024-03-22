@@ -29,7 +29,7 @@
         "axios": "1.6.8",
         "babel-eslint": "10.1.0",
         "bignumber.js": "9.1.2",
-        "clsx": "^2.1.0",
+        "clsx": "2.1.0",
         "cookie": "0.6.0",
         "cookie-parser": "1.4.6",
         "dotenv": "16.4.5",
