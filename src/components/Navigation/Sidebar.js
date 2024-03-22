@@ -29,16 +29,16 @@ const TENANT_LOGO = () => {
         case TENANT.basedVC: {
             return (
                 <>
-                    <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />{" "}
-                    <div className={"text-2xl ml-2"}>{getCopy("NAME")}</div>
+                    <DynamicIcon name={`logo_6`} style="p-1 w-17 text-white" />{" "}
+                    <div className="font-accent text-sm ml-3">{getCopy("NAME")}</div>
                 </>
             );
         }
         case TENANT.NeoTokyo: {
             return (
                 <>
-                    <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />{" "}
-                    <div className={"font-accent text-sm ml-3"}>{getCopy("NAME")}</div>
+                    <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style="p-1 w-17 text-white" />{" "}
+                    <div className="font-accent text-sm ml-3">{getCopy("NAME")}</div>
                 </>
             );
         }
@@ -46,8 +46,9 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <img
-                        src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"}
-                        className={"max-w-[210px]"}
+                        src="https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"
+                        className="max-w-[210px]"
+                        alt='Logo of Kongz Capital'
                     />
                 </>
             );
