@@ -1,7 +1,7 @@
 import Link from "next/link";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import PAGE from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
 
 export default function OtcMarkets({ propMarkets }) {
     let { otc, changeMarket, currentMarket } = propMarkets;

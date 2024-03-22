@@ -2,18 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import VanillaTilt from "vanilla-tilt";
 
 export const ButtonIconSize = {
-    hero: "w-8 mr-5",
-    hero5: "w-6 mr-5",
-    hero2: "w-6 mr-5",
-    hero4: "w-6 mr-2",
-    hero3: "w-6",
-    hero3center: "w-6 mx-auto",
-    small: "w-8",
-    vsmall: "w-6 -ml-2 -mr-2",
-    clicks: "w-5",
-    clicksLow: "w-[18px] mt-[1px] mr-1",
-    clicks2: "w-3",
-    invest: "w-9 mr-5",
+    hero: "w-8 mr-5 text-2xl",
+    hero5: "w-6 mr-5 text-xl",
+    hero2: "w-6 mr-5 text-xl",
+    hero4: "w-6 mr-2 text-xl",
+    hero3: "w-6 text-xl",
+    hero3center: "w-6 mx-auto text-xl",
+    small: "w-8 text-2xl",
+    vsmall: "w-6 -ml-2 -mr-2 text-xl",
+    clicks: "w-5 text-xl",
+    clicksLow: "w-[18px] mt-[1px] mr-1 text-xl",
+    clicks2: "w-3 text-xl",
+    invest: "w-9 mr-5 text-2xl",
 };
 
 export function RoundButton({

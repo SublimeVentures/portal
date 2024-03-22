@@ -1,7 +1,7 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import {
     fetchOfferAllocation,
@@ -14,6 +14,7 @@ import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
 import { phases } from "@/lib/phases";
 import routes from "@/routes";
+import PAGE from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { queryClient } from "@/lib/queryCache";
@@ -24,7 +25,6 @@ import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestP
 import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
 import { InvestProvider } from "@/components/App/Offer/InvestContext";
-import PAGE from "@/routes";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 
 export const AppOfferDetails = ({ session }) => {

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { IoPlay as PlayIcon } from "react-icons/io5";
 import Linker from "@/components/link";
 import PAGE, { ExternalLinks } from "@/routes";
 import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
-import PlayIcon from "@/assets/svg/Play.svg";
 import Input from "@/components/App/Input";
 import { CITIZENS, CITIZENS_NAME } from "@/lib/utils";
 import { fetchNeoTokyoEnvs } from "@/fetchers/public.fecher";

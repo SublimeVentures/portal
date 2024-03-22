@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { ExternalLinks } from "@/routes";
-import IconInfo from "@/assets/svg/Info.svg";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";

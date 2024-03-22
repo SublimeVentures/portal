@@ -1,9 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
-import IconDownload from "@/assets/svg/Download.svg";
-import IconDiscord from "@/assets/svg/Discord.svg";
-import IconWebsite from "@/assets/svg/Website.svg";
-import IconTwitter from "@/assets/svg/Twitter.svg";
+import {
+    IoCloudDownloadOutline as IconDownload,
+    IoLogoDiscord as IconDiscord,
+    IoOpenOutline as IconWebsite,
+    IoLogoTwitter as IconTwitter,
+} from "react-icons/io5";
 import { IconButton } from "@/components/Button/IconButton";
 import { tenantIndex } from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";
@@ -57,7 +59,7 @@ export default function OfferDetailsAbout({ offer }) {
                                 <IconButton
                                     zoom={1.1}
                                     size={"w-12 p-3"}
-                                    icon={<IconWebsite />}
+                                    icon={<IconWebsite className="text-2xl" />}
                                     noBorder={isIconsBordered}
                                 />
                             </a>
@@ -68,7 +70,7 @@ export default function OfferDetailsAbout({ offer }) {
                                 <IconButton
                                     zoom={1.1}
                                     size={"w-12 p-3"}
-                                    icon={<IconTwitter />}
+                                    icon={<IconTwitter className="text-2xl" />}
                                     noBorder={isIconsBordered}
                                 />
                             </a>
@@ -79,7 +81,7 @@ export default function OfferDetailsAbout({ offer }) {
                                 <IconButton
                                     zoom={1.1}
                                     size={"w-12 p-3"}
-                                    icon={<IconDiscord />}
+                                    icon={<IconDiscord className="text-2xl" />}
                                     noBorder={isIconsBordered}
                                 />
                             </a>
@@ -89,7 +91,7 @@ export default function OfferDetailsAbout({ offer }) {
                             <IconButton
                                 zoom={1.1}
                                 size={"w-17 p-3"}
-                                icon={<IconDownload />}
+                                icon={<IconDownload className="text-2xl" />}
                                 noBorder={isIconsBordered}
                             />
                         </a>

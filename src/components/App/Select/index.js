@@ -1,8 +1,8 @@
 import { useState, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { useEffect } from "react";
-import IconUpDown from "@/assets/svg/UpDown.svg";
-import IconSuccess from "@/assets/svg/Checkbox.svg";
+import { PiCaretUpDown as IconUpDown } from "react-icons/pi";
+import { IoCheckmark as IconSuccess } from "react-icons/io5";
 
 export default function Select({ label, options, setter }) {
     const [selected, setSelected] = useState({});

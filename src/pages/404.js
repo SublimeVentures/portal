@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { NextSeo } from "next-seo";
 import Lottie from "lottie-react";
+import { IoHomeOutline as IconDashboard } from "react-icons/io5";
 import LayoutFullscreen from "@/components/Layout/LayoutFullscreen";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import IconDashboard from "@/assets/svg/Home.svg";
 import PAGE from "@/routes";
 import { seoConfig } from "@/lib/seoConfig";
 import lottie404 from "@/assets/lottie/404v3.json";
