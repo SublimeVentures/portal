@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
+import { IoEllipsisHorizontalOutline as IconMore } from "react-icons/io5";
 import PAGE from "@/routes";
-import IconMore from "@/assets/svg/More.svg";
 import { parseVesting } from "@/lib/vesting";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 

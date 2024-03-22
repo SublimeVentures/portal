@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
+import { IoCloseCircleOutline as CancelIcon } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
-import CancelIcon from "@/assets/svg/Cancel.svg";
 
 export default function GenericModal({ isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false);

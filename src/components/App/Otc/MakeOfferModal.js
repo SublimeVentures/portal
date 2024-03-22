@@ -2,13 +2,15 @@ import { useState, useMemo } from "react";
 import Lottie from "lottie-react";
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+    IoAddCircleOutline as IconPlus,
+    IoRemoveCircleOutline as IconMinus,
+    IoLogoDiscord as IconDiscord,
+} from "react-icons/io5";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import { ExternalLinks } from "@/routes";
 import Input from "@/components/App/Input";
 import { IconButton } from "@/components/Button/IconButton";
-import IconPlus from "@/assets/svg/PlusZ.svg";
-import IconMinus from "@/assets/svg/MinusZ.svg";
-import IconDiscord from "@/assets/svg/Discord.svg";
 import Dropdown from "@/components/App/Dropdown";
 import lottieOtc from "@/assets/lottie/otc.json";
 import Linker from "@/components/link";

@@ -1,7 +1,9 @@
+import {
+    IoAddCircleOutline as PlusIcon,
+    IoLogoDiscord as DiscordIcon,
+    IoLogoTwitter as TwitterIcon,
+} from "react-icons/io5";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import PlusIcon from "@/assets/svg/Plus.svg";
-import DiscordIcon from "@/assets/svg/Discord.svg";
-import TwitterIcon from "@/assets/svg/Twitter.svg";
 import { ExternalLinks } from "@/routes";
 
 export default function Investors() {

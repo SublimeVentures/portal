@@ -1,8 +1,7 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { IoCloseCircleOutline as CancelIcon } from "react-icons/io5";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
-import CancelIcon from "@/assets/svg/Cancel.svg";
-
 export default function TransparentModal({ isOpen, closeModal, title, content, persistent, noClose }) {
     const [isShake, setShake] = useState(false);
 
