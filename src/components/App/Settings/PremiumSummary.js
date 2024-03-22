@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
+import { IoDiamondOutline as IconPremium } from "react-icons/io5";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import routes from "@/routes";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { PremiumItemsENUM } from "@/lib/enum/store";
-import IconPremium from "@/assets/svg/Premium.svg";
 
 export default function PremiumSummary({ data }) {
     const router = useRouter();

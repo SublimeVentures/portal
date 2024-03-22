@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import WalletAddModal from "@/components/App/Settings/WalletAddModal";
@@ -7,7 +8,6 @@ import { ICONS } from "@/lib/icons";
 import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
 import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function ManageWallets({ walletProps }) {
