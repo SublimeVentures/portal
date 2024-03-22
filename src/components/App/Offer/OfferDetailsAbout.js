@@ -59,24 +59,44 @@ export default function OfferDetailsAbout({ offer }) {
                     <div className="flex mx-10 gap-5 items-center justify-center midcol:ml-0">
                         {url_web && (
                             <a href={`${url_web}`} target="_blank">
-                                <IconButton zoom={1.1} size={"w-12 p-3"} icon={<IconWebsite />} noBorder={!isBased} />
+                                <IconButton
+                                    zoom={1.1}
+                                    size={"w-12 p-3"}
+                                    icon={<IconWebsite className="text-2xl" />}
+                                    noBorder={!isBased}
+                                />
                             </a>
                         )}
 
                         {url_twitter && (
                             <a href={`${url_twitter}`} target="_blank">
-                                <IconButton zoom={1.1} size={"w-12 p-3"} icon={<IconTwitter />} noBorder={!isBased} />
+                                <IconButton
+                                    zoom={1.1}
+                                    size={"w-12 p-3"}
+                                    icon={<IconTwitter className="text-2xl" />}
+                                    noBorder={!isBased}
+                                />
                             </a>
                         )}
 
                         {url_discord && (
                             <a href={`${url_discord}`} target="_blank">
-                                <IconButton zoom={1.1} size={"w-12 p-3"} icon={<IconDiscord />} noBorder={!isBased} />
+                                <IconButton
+                                    zoom={1.1}
+                                    size={"w-12 p-3"}
+                                    icon={<IconDiscord className="text-2xl" />}
+                                    noBorder={!isBased}
+                                />
                             </a>
                         )}
 
                         <a href={`${cdn}/research/${slug}/ResearchReport.pdf`} target="_blank">
-                            <IconButton zoom={1.1} size={"w-17 p-3"} icon={<IconDownload />} noBorder={!isBased} />
+                            <IconButton
+                                zoom={1.1}
+                                size={"w-17 p-3"}
+                                icon={<IconDownload className="text-2xl" />}
+                                noBorder={!isBased}
+                            />
                         </a>
                     </div>
                     {description && <div className="my-5 mx-10 w-full" dangerouslySetInnerHTML={createMarkup()} />}
