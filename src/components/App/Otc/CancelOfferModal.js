@@ -1,12 +1,12 @@
+import Lottie from "lottie-react";
+import { useState, useMemo } from "react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import DynamicIcon from "@/components/Icon";
 import { NETWORKS } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import GenericRightModal from "@/components/Modal/GenericRightModal";
-import Lottie from "lottie-react";
 import lottieSuccess from "@/assets/lottie/success.json";
 import BlockchainSteps from "@/components/BlockchainSteps";
-import { useState, useMemo } from "react";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 
 export default function CancelOfferModal({ model, setter, props }) {

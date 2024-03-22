@@ -1,14 +1,13 @@
+import { useState } from "react";
+import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { isBased } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import WalletAddModal from "@/components/App/Settings/WalletAddModal";
 import DynamicIcon from "@/components/Icon";
-import { useState } from "react";
 import { ICONS } from "@/lib/icons";
 import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
 import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
-import IconInfo from "@/assets/svg/Info.svg";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function ManageWallets({ walletProps }) {
@@ -37,21 +36,17 @@ export default function ManageWallets({ walletProps }) {
 
     return (
         <>
-            <div className={`${isBased ? "rounded-xl" : ""} boxshadow relative offerWrap flex flex-1 max-w-[600px]`}>
-                <div className={`${isBased ? "rounded-xl" : ""} relative bg-navy-accent flex flex-1 flex-col `}>
+            <div className="bordered-container boxshadow relative offerWrap flex flex-1 max-w-[600px]">
+                <div className="relative bg-navy-accent flex flex-1 flex-col">
                     <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
-                        <div
-                            className={`flex flex-1 ${isBased ? "" : "text-app-error font-accent glowRed  font-light text-2xl flex glowNormal"} `}
-                        >
-                            WALLETS
-                        </div>
+                        <div className="flex flex-1 card-content-dedicated">WALLETS</div>
                         <a href={ExternalLinks.STAKING} target={"_blank"}>
                             <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                         </a>
                     </div>
                     <div>
                         <table>
-                            <thead className={`${isBased ? "bg-navy-2" : "bg-slides"}`}>
+                            <thead className="card-table-header">
                                 <tr>
                                     <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
                                         <label>WALLET</label>

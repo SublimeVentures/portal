@@ -1,7 +1,7 @@
 import VanillaTilt from "vanilla-tilt";
 import { useEffect, useRef } from "react";
+import { IoRocket as RocketIcon } from "react-icons/io5";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import RocketIcon from "@/assets/svg/Rocket.svg";
 
 export default function LatestInvestment({ isSuccess, icon, content }) {
     const tiltAvatar = useRef(null);

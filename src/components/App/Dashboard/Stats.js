@@ -1,7 +1,5 @@
+import { IoKey as KeyIcon, IoLogoBitcoin as BitcoinIcon, IoStatsChartOutline as ChartIcon } from "react-icons/io5";
 import RoundContainer from "@/components/App/RoundContainer";
-import BitcoinIcon from "@/assets/svg/Bitcoin.svg";
-import KeyIcon from "@/assets/svg/Key.svg";
-import ChartIcon from "@/assets/svg/Chart.svg";
 
 export default function Stats() {
     const projectInvestedWidget = () => {

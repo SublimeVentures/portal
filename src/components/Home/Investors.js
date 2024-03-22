@@ -7,9 +7,11 @@ import A16z from "@/assets/svg/logo/A16z.svg?component";
 import Animoca from "@/assets/svg/logo/Animoca.svg?component";
 import Qcp from "@/assets/svg/logo/Qcp.svg?component";
 import Sequoia from "@/assets/svg/logo/Sequoia.svg?component";
-import { isBased } from "@/lib/utils";
 import DynamicIcon from "@/components/Icon";
 import { TENANT } from "@/lib/tenantHelper";
+import { tenantIndex } from "@/lib/utils";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function Investors() {
     const settings = {
@@ -57,7 +59,7 @@ export default function Investors() {
                     </div>
                     <div>
                         <div className="customSlide justify-center flex min-h-[250px]">
-                            {isBased ? (
+                            {isBaseVCTenant ? (
                                 <DynamicIcon name={`logo_${TENANT.NeoTokyo}`} style={"!w-[280px] max-h-[220px]"} />
                             ) : (
                                 <DynamicIcon name={`logo_${TENANT.basedVC}`} style={"!w-[280px] max-h-[220px]"} />

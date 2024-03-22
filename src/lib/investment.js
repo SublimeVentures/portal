@@ -1,6 +1,6 @@
+const { TENANT } = require("../../src/lib/tenantHelper");
 const { PremiumItemsParamENUM } = require("./enum/store");
 const { PhaseId } = require("./phases");
-const { TENANT } = require("../../src/lib/tenantHelper");
 
 const MIN_DIVISIBLE = 50; //50
 const MIN_ALLOCATION = 100; //100

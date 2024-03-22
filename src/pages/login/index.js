@@ -1,15 +1,15 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
+import { NextSeo } from "next-seo";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { fetchPartners } from "@/fetchers/public.fecher";
 import PAGE from "@/routes";
 import { queryClient } from "@/lib/queryCache";
-import { NextSeo } from "next-seo";
 import { seoConfig } from "@/lib/seoConfig";
 import { verifyID } from "@/lib/authHelpers";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
 import { TENANT } from "@/lib/tenantHelper";
-import dynamic from "next/dynamic";
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
     ssr: true,
 });

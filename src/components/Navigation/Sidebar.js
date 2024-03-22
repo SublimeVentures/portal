@@ -3,26 +3,29 @@ import { Fragment } from "react";
 import { Transition } from "@headlessui/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import IconVault from "@/assets/svg/Vault.svg";
-import IconLight from "@/assets/svg/Light.svg";
-import IconExchange from "@/assets/svg/Exchange.svg";
-import IconBell from "@/assets/svg/Bell.svg";
-import IconDiscord from "@/assets/svg/Discord.svg";
-import IconWiki from "@/assets/svg/Wiki.svg";
-import IconLogout from "@/assets/svg/Logout.svg";
-import IconSetting from "@/assets/svg/Setting.svg";
+import { BsLightningCharge as IconLight, BsSafe as IconVault } from "react-icons/bs";
+import { MdOutlineCurrencyExchange as IconExchange } from "react-icons/md";
+import {
+    IoLogoDiscord as IconDiscord,
+    IoNotificationsOutline as IconBell,
+    IoBookOutline as IconWiki,
+    IoLogOutOutline as IconLogout,
+    IoSettingsOutline as IconSetting,
+    IoDiamondOutline as IconPremium,
+} from "react-icons/io5";
+import { PiPlantFill as IconGrowth } from "react-icons/pi";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
-import IconPremium from "@/assets/svg/Premium.svg";
 import IconNT from "@/assets/svg/NT.svg";
-import IconGrowth from "@/assets/svg/Seed.svg";
 import PAGE, { ExternalLinks } from "@/routes";
-import { isBased } from "@/lib/utils";
+import { tenantIndex } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import ChangeNetwork from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress from "@/components/Navigation/ChangeAddress";
 import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 import { getCopy } from "@/lib/seoConfig";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -90,45 +93,49 @@ export default function Sidebar({ session }) {
             {
                 name: "Vault",
                 link: PAGE.App,
-                icon: <IconVault className="w-8 mr-3" />,
+                icon: <IconVault className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Opportunities",
                 link: PAGE.Opportunities,
-                icon: <IconLight className="w-8 mr-3" />,
+                icon: <IconLight className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Accelerator",
                 link: PAGE.Accelerator,
-                icon: isBased ? <IconGrowth className="w-7 mr-4" /> : <IconNT className="w-8 mr-[0.91rem]" />,
+                icon: isBaseVCTenant ? (
+                    <IconGrowth className="w-7 mr-4 text-2xl" />
+                ) : (
+                    <IconNT className="w-8 mr-[0.91rem] text-2xl" />
+                ),
             },
             {
                 name: "OTC",
                 link: PAGE.OTC,
-                icon: <IconExchange className="w-8 mr-3" />,
+                icon: <IconExchange className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Upgrades",
                 link: PAGE.Upgrades,
-                icon: <IconPremium className="w-8 mr-3" />,
+                icon: <IconPremium className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Notifications",
                 link: PAGE.Notifs,
                 disabled: true,
-                icon: <IconBell className="w-8 mr-3" />,
+                icon: <IconBell className="w-8 mr-3 text-2xl" />,
             },
         ],
         groupHelp: [
             {
                 name: "Community",
-                icon: <IconDiscord className="w-6 ml-1 mr-3" />,
+                icon: <IconDiscord className="w-6 ml-1 mr-3 text-2xl" />,
                 action: true,
                 handler: openDiscord,
             },
             {
                 name: "Wiki",
-                icon: <IconWiki className="w-6 ml-1 mr-3" />,
+                icon: <IconWiki className="w-6 ml-1 mr-3 text-2xl" />,
                 action: true,
                 handler: openNotion,
             },
@@ -137,11 +144,11 @@ export default function Sidebar({ session }) {
             {
                 name: "Settings",
                 link: PAGE.Settings,
-                icon: <IconSetting className="w-8 mr-3" />,
+                icon: <IconSetting className="w-8 mr-3 text-2xl" />,
             },
             {
                 name: "Log out",
-                icon: <IconLogout className="w-8 mr-3" />,
+                icon: <IconLogout className="w-8 mr-3 text-2xl" />,
                 action: true,
                 handler: logout,
             },
@@ -165,7 +172,7 @@ export default function Sidebar({ session }) {
                 return (
                     <div
                         key={el.name}
-                        className={`flex cursor-pointer items-center px-5 py-2 ${isBased ? "rounded-xl" : ""} sidebar-item select-none ${el.disabled ? "disabled" : ""}`}
+                        className={`flex cursor-pointer items-center px-5 py-2 bordered-container sidebar-item select-none ${el.disabled ? "disabled" : ""}`}
                         onClick={el.handler}
                     >
                         {el.icon}
@@ -180,7 +187,7 @@ export default function Sidebar({ session }) {
                         onClick={() => {
                             toggleMobile();
                         }}
-                        className={`flex items-center px-5 py-2  ${isBased ? "rounded-xl" : ""}  sidebar-item select-none ${el.disabled ? "disabled" : ""} ${router.asPath === el.link ? "arl" : ""}`}
+                        className={`flex items-center px-5 py-2  bordered-container  sidebar-item select-none ${el.disabled ? "disabled" : ""} ${router.asPath === el.link ? "arl" : ""}`}
                     >
                         {el.icon}
                         {el.name}
@@ -191,7 +198,7 @@ export default function Sidebar({ session }) {
 
     return (
         <aside className="flex sticky top-0 z-20 collap:relative">
-            <div className="p-7 flex flex-col border-r border-app-bg-split  boxshadow text-app-white max-h-screen sticky top-0 hidden collap:flex">
+            <div className="p-7 flex flex-col border-r border-app-bg-split boxshadow text-app-white sticky top-0 hidden collap:flex overflow-y-auto">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">{TENANT_LOGO()}</div>
@@ -199,7 +206,7 @@ export default function Sidebar({ session }) {
                     <ChangeNetwork />
                     <ChangeAddress session={session} />
                 </div>
-                <nav className={`flex flex-col pt-10 flex-1 font-accent text-md ${isBased ? "font-medium" : ""}`}>
+                <nav className="flex flex-col pt-10 flex-1 font-accent text-md navbar-item">
                     <div className="flex flex-col gap-2">{generateLink(menu.groupUser)}</div>
                     <div className="flex flex-col gap-2 mt-auto">{generateLink(menu.groupHelp)}</div>
                     <div className="flex flex-col gap-2 mt-12">{generateLink(menu.groupProfile)}</div>
@@ -208,13 +215,13 @@ export default function Sidebar({ session }) {
             <div
                 className={`p-5 flex blurredBgColor flex flex-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? "!bg-app-bg" : ""}`}
             >
-                <div className=" flex flex-row flex-1">
-                    <Link href={PAGE.App} className={`absolute top-[4px]`}>
+                <div className="flex flex-row flex-1">
+                    <Link href={PAGE.App} className="absolute top-[4px]">
                         <div className="flex items-center">{TENANT_LOGO()}</div>
                     </Link>
                     <div className="flex flex-1 justify-end hamburger items-center">
                         <div onClick={toggleMobile}>
-                            <div className={` burger ${isMobileOpen && "opened"}`}>
+                            <div className={`burger ${isMobileOpen && "opened"}`}>
                                 <div></div>
                             </div>
                             <label>
@@ -238,7 +245,7 @@ export default function Sidebar({ session }) {
                     leaveTo="opacity-0"
                 >
                     <div
-                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-app-bg flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent  ${isBased ? "font-medium" : ""}`}
+                        className={`blurredBgColor border-b border-app-bg-split absolute top-[72px] text-app-white bg-app-bg flex flex-col w-full left-0 text-center py-10 px-12 text-uppercase tracking-widest font-accent navbar-item}`}
                     >
                         <div className="flex flex-col gap-2">{generateLink(menu.groupUser)}</div>
                         <div className="flex flex-col gap-2 mt-5">{generateLink(menu.groupHelp)}</div>
