@@ -8,8 +8,14 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY yarn.lock ./
 COPY .env ./
+COPY .yarnrc.yml ./
 
-RUN yarn install --frozen-lockfile --silent --non-interactive
+# Replace legacy Yarn with modern one
+RUN npm uninstall -g yarn
+RUN corepack enable
+RUN corepack prepare --activate yarn@stable
+
+RUN yarn install --immutable
 
 COPY . .
 
