@@ -1,4 +1,4 @@
-import BaseInternalErrorPage from "src/components/ErrorPage/components/InternalServerErrorPage/components/BasedInternalErrorPage";
+import BasedInternalErrorPage from "@/components/ErrorPage/components/InternalServerErrorPage/components/BasedInternalErrorPage";
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
 import NeoTokyoInternalErrorPage from "@/components/ErrorPage/components/InternalServerErrorPage/components/NeoTokyoInternalErrorPage";
@@ -6,11 +6,11 @@ import NeoTokyoInternalErrorPage from "@/components/ErrorPage/components/Interna
 const InternalErrorPage = () => {
     switch (tenantIndex) {
         case TENANT.basedVC:
-            return <BaseInternalErrorPage />;
+            return <BasedInternalErrorPage />;
         case TENANT.NeoTokyo:
             return <NeoTokyoInternalErrorPage />;
         default:
-            return <BaseInternalErrorPage />;
+            return <BasedInternalErrorPage />;
     }
 };
 

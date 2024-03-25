@@ -1,4 +1,4 @@
-import BasedUnexpectedErrorPage from "src/components/ErrorPage/components/UnexpectedErrorPage/components/BasedUnexpectedErrorPage";
+import BasedUnexpectedErrorPage from "@/components/ErrorPage/components/UnexpectedErrorPage/components/BasedUnexpectedErrorPage";
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
 import NeoTokyoUnexpectedErrorPage from "@/components/ErrorPage/components/UnexpectedErrorPage/components/NeoTokyoUnexpectedErrorPage";
