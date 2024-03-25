@@ -196,7 +196,6 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                         <p className="font-mono">{nextClaim !== 0 ? nextClaim : "TBA"}</p>
                     </div>
                 </div>
-
                 <div className="mt-auto fullWidth">
                     <UniButton
                         type={ButtonTypes.BASE}

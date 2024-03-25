@@ -52,7 +52,7 @@ export default function GenericModal({ isOpen, closeModal, title, content, persi
                                             className={`absolute top-[20px] right-[0px] cursor-pointer`}
                                             onClick={closeModal}
                                         >
-                                            <CancelIcon className={ButtonIconSize.hero} />
+                                            <CancelIcon className={ButtonIconSize.default} />
                                         </div>
                                     )}
                                 </Dialog.Title>

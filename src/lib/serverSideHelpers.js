@@ -46,7 +46,7 @@ async function processServerSideData(req, res, route, customLogicCallback) {
             accountData = newSession.data.user;
 
             const customResult = await handleCustomLogic(accountData, accessToken, customLogicCallback);
-            console.log("customResult", customResult);
+
             if (!!customResult.redirect) return customResult;
 
             const env = await fetchEnvironment(newSession.token.accessToken, authTokenName);

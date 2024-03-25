@@ -49,7 +49,7 @@ const BlockchainStep = ({ data }) => {
                         <div className={"flex flex-1"}>{content}</div>
 
                         {state === STEP_STATE.SUCCESS && (
-                            <div className={"rightIcon "}>
+                            <div className="rightIcon">
                                 <DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"} />
                             </div>
                         )}
