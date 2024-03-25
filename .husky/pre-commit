@@ -1,3 +1,2 @@
 yarn lint --quiet
-yarn prettier
-git add .
+yarn lint-staged

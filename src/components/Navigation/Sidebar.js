@@ -49,6 +49,7 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <img
+                        alt=""
                         src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_14.png"}
                         className={"max-w-[210px]"}
                     />
@@ -198,7 +199,7 @@ export default function Sidebar({ session }) {
 
     return (
         <aside className="flex sticky top-0 z-20 collap:relative">
-            <div className="p-7 flex flex-col border-r border-app-bg-split boxshadow text-app-white sticky top-0 hidden collap:flex overflow-y-auto">
+            <div className="p-6 flex flex-col border-r border-app-bg-split boxshadow text-app-white max-h-screen sticky top-0 hidden collap:flex overflow-x-hidden overflow-y-auto">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">{TENANT_LOGO()}</div>
