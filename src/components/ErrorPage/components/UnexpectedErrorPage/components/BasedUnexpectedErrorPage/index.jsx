@@ -5,7 +5,7 @@ import PAGE from "@/routes";
 import error from "@/assets/lottie/error.json";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 
-const BaseUnexpectedErrorPage = () => {
+const BasedUnexpectedErrorPage = () => {
     return (
         <div className={"max-h-screen overflow-hidden"}>
             <Lottie animationData={error} loop={true} autoplay={true} style={{ width: "100%", margin: "5px auto" }} />
@@ -25,4 +25,4 @@ const BaseUnexpectedErrorPage = () => {
     );
 };
 
-export default BaseUnexpectedErrorPage;
+export default BasedUnexpectedErrorPage;

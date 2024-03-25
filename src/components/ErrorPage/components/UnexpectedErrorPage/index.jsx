@@ -1,16 +1,16 @@
+import BasedUnexpectedErrorPage from "src/components/ErrorPage/components/UnexpectedErrorPage/components/BasedUnexpectedErrorPage";
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
-import BaseUnexpectedErrorPage from "@/components/ErrorPage/components/UnexpectedErrorPage/components/BaseUnexpectedErrorPage";
 import NeoTokyoUnexpectedErrorPage from "@/components/ErrorPage/components/UnexpectedErrorPage/components/NeoTokyoUnexpectedErrorPage";
 
 const UnexpectedErrorPage = () => {
     switch (tenantIndex) {
         case TENANT.basedVC:
-            return <BaseUnexpectedErrorPage />;
+            return <BasedUnexpectedErrorPage />;
         case TENANT.NeoTokyo:
-            return <NeoTokyoUnexpectedErrorPage/>;
+            return <NeoTokyoUnexpectedErrorPage />;
         default:
-            return <BaseUnexpectedErrorPage />;
+            return <BasedUnexpectedErrorPage />;
     }
 };
 
