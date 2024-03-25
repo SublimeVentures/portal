@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Lottie from "lottie-react";
+import { GoHome } from "react-icons/go";
 import PAGE from "@/routes";
 import error from "@/assets/lottie/error.json";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import IconDashboard from "@/assets/svg/Home.svg";
 
 const BaseUnexpectedErrorPage = () => {
     return (
@@ -17,7 +17,7 @@ const BaseUnexpectedErrorPage = () => {
                     isWide={true}
                     zoom={1.1}
                     size={"text-sm sm"}
-                    icon={<IconDashboard className={ButtonIconSize.hero} />}
+                    icon={<GoHome className={ButtonIconSize.hero} />}
                 />
             </Link>
             <div className="background-text-dedicated absolute bottom-5 text-6xl">Something went wrong...</div>

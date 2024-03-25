@@ -2,18 +2,13 @@ import Link from "next/link";
 import Lottie from "lottie-react";
 import { GoHome } from "react-icons/go";
 import PAGE from "@/routes";
-import lottie404 from "@/assets/lottie/404v3.json";
+import error from "@/assets/lottie/error2.json";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 
-const BaseNotFoundPage = () => {
+const NeoTokyoUnexpectedErrorPage = () => {
     return (
         <div className={"max-h-screen overflow-hidden"}>
-            <Lottie
-                animationData={lottie404}
-                loop={true}
-                autoplay={true}
-                style={{ width: "100%", margin: "5px auto" }}
-            />
+            <Lottie animationData={error} loop={true} autoplay={true} style={{ width: "100%", margin: "5px auto" }} />
             <Link href={PAGE.App} className="absolute top-10 left-0 right-0">
                 <RoundButton
                     text={"HOME"}
@@ -25,8 +20,9 @@ const BaseNotFoundPage = () => {
                     icon={<GoHome className={ButtonIconSize.hero} />}
                 />
             </Link>
+            <div className="background-text-dedicated absolute bottom-5 text-6xl">Something went wrong...</div>
         </div>
     );
 };
 
-export default BaseNotFoundPage;
+export default NeoTokyoUnexpectedErrorPage;

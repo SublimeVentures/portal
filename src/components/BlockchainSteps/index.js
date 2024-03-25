@@ -19,7 +19,6 @@ const BlockchainSteps = ({ data }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        console.log("BIX :: PARAM CHANGED HIXKFHERYDDDD [reset] - ", state, params);
         dispatch({ type: "RESET" });
         resetState();
     }, [
@@ -40,15 +39,11 @@ const BlockchainSteps = ({ data }) => {
 
     const network_isReady = steps.network && !state.network.lock;
     const network_shouldRun = !state.network.isFinished && network_isReady;
-    console.log("BIX :: NETWORK_CHECK - shouldRun / isReady", network_shouldRun, network_isReady);
     const network_current = useGetNetwork(network_shouldRun, params.requiredNetwork);
     const network_isFinished = network_current.isValid;
-    console.log(`BIX :: NETWORK_CHECK - RUN ${network_shouldRun}`, network_current, network_isFinished);
+
     useEffect(() => {
         if (network_shouldRun) {
-            console.log(
-                `BIX :: NETWORK_CHECK - SET - isFinished: ${network_isFinished} | REQUIRED: ${params.requiredNetwork} | CURRENT: ${network_current.network}`,
-            );
             dispatch({
                 type: "SET_NETWORK",
                 payload: {
@@ -68,9 +63,6 @@ const BlockchainSteps = ({ data }) => {
 
     useEffect(() => {
         if (liquidity_shouldRun) {
-            console.log(
-                `BIX :: LIQUIDITY - SET - isFinished: ${liquidity_isFinished} | LIQUIDITY: ${params.liquidity} | BALANCE: ${liquidity_balance.balance}`,
-            );
             dispatch({
                 type: "SET_LIQUIDITY",
                 payload: {
@@ -88,14 +80,6 @@ const BlockchainSteps = ({ data }) => {
           : true;
     const allowance_shouldRun =
         steps.allowance && !state.allowance.isFinished && !state.allowance.lock && allowance_isReady;
-    console.log("BIX :: ALLOWANCE - shouldRun / isReady", allowance_shouldRun, allowance_isReady);
-    console.log(
-        "BIX :: ALLOWANCE - shouldRun split",
-        steps.allowance,
-        !state.allowance.isFinished,
-        !state.allowance.lock,
-        allowance_isReady,
-    );
 
     const allowance_current = useGetTokenAllowance(
         allowance_shouldRun,
@@ -121,10 +105,6 @@ const BlockchainSteps = ({ data }) => {
     const allowance_method_error =
         (!allowance_methodReset.ok ? allowance_methodReset?.error : false) ||
         (!allowance_method.ok ? allowance_method?.error : false);
-    console.log("METHOD VALIDATION HIXKFHERYDDDD", {
-        allowance_methodReset,
-        allowance_method,
-    });
 
     const allowance_needReset =
         allowance_mustRun &&
@@ -133,18 +113,10 @@ const BlockchainSteps = ({ data }) => {
         allowance_methodReset.ok;
     const allowance_needIncrease = !allowance_needReset && allowance_mustRun && allowance_method.ok;
     useEffect(() => {
-        console.log("BIX :: ALLOWANCE CHECK - DETECTED", allowance_current?.allowance);
         if (allowance_needIncrease) {
             dispatch({ type: "SET_ALLOWANCE_SET", payload: true });
         }
     }, [allowance_needIncrease]);
-    console.log(`BIX :: ALLOWANCE CHANGE - GUARDS useSendTransaction`, {
-        allowance_isReady,
-        allowance_shouldRun,
-        allowance_mustRun,
-        allowance_needReset,
-        allowance_needIncrease,
-    });
 
     const allowance_set_reset = useSendTransaction(
         allowance_needReset,
@@ -153,27 +125,12 @@ const BlockchainSteps = ({ data }) => {
         params.account,
     );
     const allowance_set = useSendTransaction(allowance_needIncrease, allowance_method.method, chainId, params.account);
-    console.log(`BIX :: HIXKFHERYDDDD ALLOWANCE CHANGE - HOOK STATE`, {
-        allowance_set_reset,
-        allowance_set,
-    });
     const allowance_isFinished =
         (!allowance_mustRun && !state.allowance.executing && params.allowance <= allowance_current?.allowance) ||
         (state.allowance.executing && allowance_set?.confirm?.data && params.allowance <= allowance_current?.allowance);
-    console.log(
-        `BIX :: HIXKFHERYDDDD ALLOWANCE CHECK - RUN ${allowance_shouldRun}`,
-        allowance_current?.allowance,
-        allowance_isFinished,
-        !allowance_mustRun && !state.allowance.executing && params.allowance <= allowance_current?.allowance,
-        state.allowance.executing && allowance_set?.confirm?.data && params.allowance <= allowance_current?.allowance,
-    );
 
     useEffect(() => {
-        console.log("BIX :: ALLOWANCE CHECK - DETECTED", allowance_current?.allowance);
         if (allowance_shouldRun) {
-            console.log(
-                `BIX :: ALLOWANCE CHECK - SET - isFinished: ${allowance_isFinished} | ALLOWANCE: ${params.allowance} | ALLOWANCE CURRENT: ${allowance_current?.allowance}`,
-            );
             dispatch({
                 type: "SET_ALLOWANCE",
                 payload: {

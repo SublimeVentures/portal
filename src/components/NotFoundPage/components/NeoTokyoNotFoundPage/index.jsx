@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Lottie from "lottie-react";
+import { GoHome } from "react-icons/go";
 import PAGE from "@/routes";
 import lottie404 from "@/assets/lottie/404.json";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import IconDashboard from "@/assets/svg/Home.svg";
 
 const NeoTokyoNotFoundPage = () => {
     return (
@@ -22,7 +22,7 @@ const NeoTokyoNotFoundPage = () => {
                     isWide={true}
                     zoom={1.1}
                     size={"text-sm sm"}
-                    icon={<IconDashboard className={ButtonIconSize.hero} />}
+                    icon={<GoHome className={ButtonIconSize.hero} />}
                 />
             </Link>
             <div className="background-text-dedicated absolute bottom-5 text-8xl">404</div>

@@ -16,7 +16,6 @@ export const STEP_STATE = {
 };
 
 const stepNetwork = (state, data) => {
-    console.log("BIX :: NETWORK :: step state", state, data);
     const iconPadding = data.params.requiredNetwork === 137 ? "p-[6px]" : "p-[3px]";
 
     let result = {};
@@ -56,16 +55,8 @@ const stepNetwork = (state, data) => {
 };
 
 const stepLiquidity = (state, data) => {
-    console.log("BIX :: LIQUIDITY :: step state", state, data);
-
     const iconPadding = "p-[7px]";
     let result = {};
-    // if (!data.liquidity_isReady) {
-    //     result = {
-    //         state: STEP_STATE.PENDING,
-    //         content: "Liquidity check",
-    //     }
-    // } else {
     if (state.isFinished) {
         result = {
             state: STEP_STATE.SUCCESS,
@@ -173,8 +164,6 @@ const stepAllowance = (state, data) => {
 };
 
 const stepPrerequisite = (state, data) => {
-    console.log("BIX :: PREREQUISITE :: step state", state, data);
-
     const iconPadding = "p-[7px]";
     let result = {};
 
@@ -218,8 +207,6 @@ const stepPrerequisite = (state, data) => {
 };
 
 const stepTransaction = (state, data) => {
-    console.log("BIX :: TRANSACTION :: step state", state, data);
-
     const iconPadding = "p-[7px]";
     let result = {};
 
@@ -245,7 +232,6 @@ const stepTransaction = (state, data) => {
                 content: `Error on sending transaction`,
                 error: {
                     text: data?.error,
-                    // action: data.refetch
                 },
             };
         } else {

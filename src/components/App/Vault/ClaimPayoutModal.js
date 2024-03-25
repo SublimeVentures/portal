@@ -36,7 +36,6 @@ export default function ClaimPayoutModal({ model, setter, props }) {
     const { getCurrencySettlement, account, network, activeInvestContract } = useEnvironmentContext();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
-    console.log("propsprops", props);
     const chainDesired = network.chains.find((el) => el.id === currency?.chainId);
     const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract);
 
@@ -111,7 +110,7 @@ export default function ClaimPayoutModal({ model, setter, props }) {
                         <hr className={"spacer"} />
                         <p className={"flex gap-1 h-[18px] font-mono"}>
                             <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />
-                            {chainDesired.name}
+                            {chainDesired?.name}
                         </p>
                     </div>
                     <div className={"detailRow font-bold"}>

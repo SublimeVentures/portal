@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Lottie from "lottie-react";
+import { GoHome } from "react-icons/go";
 import PAGE from "@/routes";
 import lottie500 from "@/assets/lottie/500v1.json";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import IconDashboard from "@/assets/svg/Home.svg";
 
 const BaseInternalErrorPage = () => {
     return (
@@ -22,7 +22,7 @@ const BaseInternalErrorPage = () => {
                     isWide={true}
                     zoom={1.1}
                     size={"text-sm sm"}
-                    icon={<IconDashboard className={ButtonIconSize.hero} />}
+                    icon={<GoHome className={ButtonIconSize.hero} />}
                 />
             </Link>
             <div className="background-text-dedicated absolute bottom-10 text-2xl">500 Internal Server Error</div>

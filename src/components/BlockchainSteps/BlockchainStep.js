@@ -27,6 +27,7 @@ const getStatusColor = (status) => {
 
 const BlockchainStep = ({ data }) => {
     const { state, content, icon, iconPadding, error, colorOverride } = data;
+    console.log(icon);
     return (
         <>
             <motion.div
@@ -49,7 +50,7 @@ const BlockchainStep = ({ data }) => {
                         <div className={"flex flex-1"}>{content}</div>
 
                         {state === STEP_STATE.SUCCESS && (
-                            <div className={"rightIcon "}>
+                            <div className="rightIcon">
                                 <DynamicIcon name={ICONS.CHECKMARK} style={"p-[2px]"} />
                             </div>
                         )}
