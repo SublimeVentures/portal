@@ -196,11 +196,6 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                         <p className="font-mono">{nextClaim !== 0 ? nextClaim : "TBA"}</p>
                     </div>
                 </div>
-                <ClaimPayoutModal
-                    model={true}
-                    setter={() => closeClaimPayoutModal()}
-                    props={payoutClaimProps}
-                />
                 <div className="mt-auto fullWidth">
                     <UniButton
                         type={ButtonTypes.BASE}
