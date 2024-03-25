@@ -27,7 +27,6 @@ const getStatusColor = (status) => {
 
 const BlockchainStep = ({ data }) => {
     const { state, content, icon, iconPadding, error, colorOverride } = data;
-    console.log(icon);
     return (
         <>
             <motion.div
