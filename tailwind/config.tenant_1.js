@@ -55,6 +55,15 @@ module.exports = {
                 ".page-header-text": {
                     "font-weight": 800,
                 },
+                ".bordered-box": {
+                    "border-radius": "0.75rem",
+                },
+                ".bordered-box-right": {
+                    "border-radius": "0 0.75rem 0.75rem 0",
+                },
+                ".bordered-box-left": {
+                    "border-radius": "0.75rem 0 0 0.75rem",
+                },
                 ".bordered-container": {
                     "border-radius": "0.75rem",
                     overflow: "hidden",
