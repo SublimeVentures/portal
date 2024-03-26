@@ -5,6 +5,11 @@
     "cacheDirectories": [
         ".next/cache"
     ],
+    "engineStrict": true,
+    "engines": {
+        "yarn": "4.1.1",
+        "node": ">=18.19.1"
+    },
     "scripts": {
         "dev": "node index.js",
         "test": "cross-env NODE_ENV=test node index.js",
