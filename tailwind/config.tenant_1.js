@@ -18,10 +18,6 @@ module.exports = {
                 xxs: ["10px", { lineHeight: "1.375" }],
                 hero: ["48px", { lineHeight: "1.375" }],
             },
-            fontWeight: {
-                bold: 500,
-                "extra-bold": 800,
-            },
         },
     },
     plugins: [
@@ -54,6 +50,15 @@ module.exports = {
                 },
                 ".page-header-text": {
                     "font-weight": 800,
+                },
+                ".bordered-box": {
+                    "border-radius": "0.75rem",
+                },
+                ".bordered-box-right": {
+                    "border-radius": "0 0.75rem 0.75rem 0",
+                },
+                ".bordered-box-left": {
+                    "border-radius": "0.75rem 0 0 0.75rem",
                 },
                 ".bordered-container": {
                     "border-radius": "0.75rem",

@@ -90,7 +90,7 @@ export default function OfferDetailsAbout({ offer }) {
                         <a href={`${cdn}/research/${slug}/ResearchReport.pdf`} target="_blank">
                             <IconButton
                                 zoom={1.1}
-                                size={"w-17 p-3"}
+                                size={"w-17 h-18 p-3"}
                                 icon={<IconDownload className="text-2xl" />}
                                 noBorder={isIconsBordered}
                             />
