@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY yarn.lock ./
 COPY .env ./
+COPY .yarn ./
 COPY .yarnrc.yml ./
 
 # Replace legacy Yarn with modern one
