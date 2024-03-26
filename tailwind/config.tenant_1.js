@@ -18,10 +18,6 @@ module.exports = {
                 xxs: ["10px", { lineHeight: "1.375" }],
                 hero: ["48px", { lineHeight: "1.375" }],
             },
-            fontWeight: {
-                bold: 500,
-                "extra-bold": 800,
-            },
         },
     },
     plugins: [
