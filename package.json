@@ -5,7 +5,6 @@
     "cacheDirectories": [
         ".next/cache"
     ],
-    "engineStrict": true,
     "engines": {
         "yarn": "4.1.1",
         "node": ">=18.19.1"
