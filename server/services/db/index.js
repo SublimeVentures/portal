@@ -1,22 +1,6 @@
 const db = require("./definitions/db.init");
-const { getEnvironment } = require("../../queries/environment.query");
-const { scheduleUpdateEnv } = require("../../services/cron");
 const logger = require("../../../src/lib/logger");
-let env = {};
-
-function getEnv() {
-    return env;
-}
-
-async function fetchEnv() {
-    try {
-        env = await getEnvironment();
-        scheduleUpdateEnv(env);
-        logger.info("|---- ENV: ", env);
-    } catch (error) {
-        logger.error("refreshEnvironment", error);
-    }
-}
+const { fetchEnv } = require("../env");
 
 async function connectDB() {
     try {
@@ -29,4 +13,4 @@ async function connectDB() {
     }
 }
 
-module.exports = { getEnv, connectDB };
+module.exports = { connectDB };

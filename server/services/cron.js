@@ -1,7 +1,6 @@
 const cron = require("node-cron");
-const { getEnvironment } = require("../queries/environment.query");
-
-let scheduledTask = null;
+const logger = require("./logger");
+const { fetchEnv } = require("../services/env");
 
 function getRefreshRate() {
     const randomSecond = Math.floor(Math.random() * 59);
@@ -10,12 +9,13 @@ function getRefreshRate() {
     return `${randomSecond} ${randomMinute} */3 * * *`;
 }
 
-async function scheduleUpdateEnv(env) {
-    if (scheduledTask) scheduledTask.stop();
-
-    scheduledTask = cron.schedule(getRefreshRate(), async () => {
-        env = await getEnvironment();
+async function initCron() {
+    cron.schedule(getRefreshRate(), async () => {
+        logger.info(`CRON :: [fetchEnv]`);
+        await fetchEnv();
     });
+
+    logger.warn("|---- Cron: OK");
 }
 
-module.exports = { scheduleUpdateEnv };
+module.exports = { initCron };

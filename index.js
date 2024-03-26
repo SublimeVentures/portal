@@ -8,6 +8,7 @@ const { serializeError } = require("serialize-error");
 const logger = require("./src/lib/logger");
 
 const { connectDB } = require("./server/services/db");
+const { initCron } = require("./server/services/cron");
 
 const { router: authRoute } = require("./server/routes/auth.router.js");
 const { router: envRoute } = require("./server/routes/environment.router.js");
@@ -31,6 +32,7 @@ const nextHandler = nextApp.getRequestHandler();
 
 nextApp.prepare().then(async () => {
     await connectDB();
+    await initCron();
 
     const server = express();
     server.use(express.json());

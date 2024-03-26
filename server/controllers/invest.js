@@ -1,6 +1,6 @@
 const moment = require("moment");
 const { getOfferWithLimits } = require("../queries/offers.query");
-const { getEnv } = require("../services/db");
+const { getEnv } = require("../services/env");
 const {
     expireAllocation,
     investIncreaseAllocationReserved,
