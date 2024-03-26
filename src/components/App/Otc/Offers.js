@@ -314,7 +314,7 @@ export default function OtcOffers({ propOffers }) {
                                 <IconButton
                                     zoom={1.1}
                                     size="p-3"
-                                    icon={<IconHistory className="w-5" />}
+                                    icon={<IconHistory />}
                                     handler={() => setShowHistory((current) => !current)}
                                 />
                             </div>

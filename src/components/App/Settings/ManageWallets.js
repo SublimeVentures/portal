@@ -41,7 +41,12 @@ export default function ManageWallets({ walletProps }) {
                     <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
                         <div className="flex flex-1 card-content-dedicated">WALLETS</div>
                         <a href={ExternalLinks.STAKING} target={"_blank"}>
-                            <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
+                            <IconButton
+                                zoom={1.1}
+                                size={"w-8"}
+                                icon={<IconInfo className="h-8 w-8" />}
+                                noBorder={true}
+                            />
                         </a>
                     </div>
                     <div>

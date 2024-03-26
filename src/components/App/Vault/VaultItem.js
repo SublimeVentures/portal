@@ -51,8 +51,8 @@ export default function VaultItem({ item, passData }) {
     }, []);
 
     return (
-        <div className="bordered-container boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4">
-            <div className={`relative bg-navy-accent flex flex-1 flex-col p-5 `}>
+        <div className="bordered-box boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4">
+            <div className="sm:bordered-box-left lg:bordered-box xl:bordered-box-left relative bg-navy-accent flex flex-1 flex-col p-5">
                 <div className="font-bold text-2xl flex items-center glowNormal">
                     <div className="flex flex-1">{item.name}</div>
                     {(isSoon || awaitngClaim) && (
@@ -64,22 +64,22 @@ export default function VaultItem({ item, passData }) {
                 </div>
                 <div className="pt-1 text-xs text-gray text-left">Participated {participated}</div>
 
-                <div className={`card-content-description text-md pt-2`}>
-                    <div className={"detailRow "}>
+                <div className="card-content-description text-md pt-2">
+                    <div className="detailRow">
                         <p>Invested</p>
-                        <hr className={"spacer"} />
+                        <hr className="spacer" />
                         <p>${normalized_invested}</p>
                     </div>
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Vested</p>
-                        <hr className={"spacer"} />
+                        <hr className="spacer" />
                         <p>{vestedPercentage}%</p>
                     </div>
                     {isManaged ? (
-                        <div className={"detailRow "}>
+                        <div className="detailRow">
                             <p>Performance</p>
-                            <hr className={"spacer"} />
-                            <p className={""}>
+                            <hr className="spacer" />
+                            <p>
                                 <span
                                     className={`${tgeParsed !== "TBA" && performance > 0 ? "text-app-success" : " text-white"}`}
                                 >
@@ -98,28 +98,31 @@ export default function VaultItem({ item, passData }) {
                             </p>
                         </div>
                     )}
-                    <div className={"detailRow "}>
+                    <div className="detailRow">
                         <p>Next unlock</p>
-                        <hr className={"spacer"} />
+                        <hr className="spacer" />
                         <p>{nextClaim !== 0 ? nextClaim : "TBA"}</p>
                     </div>
                 </div>
 
-                <div className="moreVault opacity-0 text-center">
+                <div className="moreVault opacity-0 text-center absolute -bottom-5 mx-auto left-0 right-0">
                     <div className="flex items-center justify-center moreVaultIcon">
                         <div className="icon z-10 w-15 h-15 cursor-pointer" onClick={() => passData(setPassData())}>
-                            <IconMore className="w-8" />
+                            <IconMore className="w-8 h-8" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className={`relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex`} ref={tilt}>
+            <div
+                className="bordered-box-right relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex"
+                ref={tilt}
+            >
                 <Link href={`${PAGE.Opportunities}/${item.slug}`}>
                     <Image
                         src={`${cdn}/research/${item.slug}/logo.jpg`}
                         fill
-                        className={` imageOfferList  bg-cover `}
+                        className={`imageOfferList bg-cover bordered-box-right`}
                         alt={item.slug}
                         sizes="(max-width: 2000px) 200px"
                     />
