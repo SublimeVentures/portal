@@ -1,4 +1,4 @@
-const { getEnv } = require("../services/db");
+const { getEnv } = require("../services/env");
 const { getOfferList } = require("../queries/offers.query");
 
 async function getPermittedOfferList(user, isOtc) {

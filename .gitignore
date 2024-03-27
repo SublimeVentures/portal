@@ -19,7 +19,7 @@
 *.pem
 newrelic_agent.log
 ./newrelic_agent.log
-
+dump.rdb
 
 # debug
 npm-debug.log*
