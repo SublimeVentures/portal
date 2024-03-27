@@ -6,11 +6,14 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getCopy } from "@/lib/seoConfig";
 import { TENANTS_STAKIMG } from "@/components/App/Settings/helper";
+import Input from "@/components/App/Input";
 
 export default function StakingModal({ model, setter, stakingModalProps }) {
     const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
     const { account, activeDiamond } = useEnvironmentContext();
 
+    const [stakeSize, setStakeSize] = useState(() => (isStaked ? stakeMulti : stakeReq));
+    const [isInputError, setInputError] = useState(false);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const closeModal = () => {
@@ -21,7 +24,6 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
     };
 
     const token = useGetToken(stakingCurrency?.contract);
-    const stakeSize = isStaked ? stakeMulti : stakeReq;
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
@@ -40,6 +42,7 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                 spender: activeDiamond,
                 transactionType: METHOD.STAKE,
             },
+            disabled: isInputError,
             token,
             setTransactionSuccessful,
         };
@@ -53,6 +56,8 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
             </>
         );
     };
+
+    console.log("status", isInputError, stakingCurrency, stakingModalProps);
 
     const contentStake = () => {
         return (
@@ -68,12 +73,29 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                         <hr className={"spacer"} />
                         <p>{TENANTS_STAKIMG()[isS1 ? 0 : 1]}</p>
                     </div>
+
+                    {/* to remove */}
                     <div className={"detailRow"}>
-                        <p>{isStaked ? "Add" : "Required"} Stake</p>
+                        <p>{isStaked ? "Add" : "Min Required"} Stake</p>
                         <hr className={"spacer"} />
                         <p>
-                            {stakeSize} {stakingCurrency.name}
+                            {stakeReq} {stakingCurrency.name}
                         </p>
+                    </div>
+
+                    <div className={"detailRow"}>
+                        <p>Stake Amount:</p>
+                        <Input
+                            type="number"
+                            setStatus={setInputError}
+                            input={stakeSize}
+                            setInput={setStakeSize}
+                            dividable={stakeMulti}
+                            max={5000}
+                            min={stakeReq}
+                            extraCurrency={stakingCurrency.symbol}
+                            customCss="mt-2 border"
+                        />
                     </div>
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
