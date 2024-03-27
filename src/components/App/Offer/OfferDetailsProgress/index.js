@@ -19,7 +19,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     const amt_guaranteed = allocations?.alloGuaranteed ? allocations?.alloGuaranteed : 0;
 
     const filled_base = Math.round((amt_filled / allocations?.alloTotal) * 100);
-    const filled_res = Math.round((amt_res / allocations?.alloTotal) * 100);
+    const filled_res = Math.min(
+        Math.round((amt_res / allocations?.alloTotal) * 100),
+        allocations?.alloTotal - filled_base,
+    );
+
     const filled_guaranteed = Math.round((amt_guaranteed / allocations?.alloTotal) * 100);
 
     const progress = isSoldOut ? 100 : filled_base;
@@ -85,7 +89,9 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="absolute w-full h-full"
             />
 
-            <p className="absolute z-50 right-1 mr-1 select-none">Filled {Number(progress).toFixed(0)}%</p>
+            <p className="absolute z-50 right-1 mr-1 select-none pointer-events-none">
+                Filled {Number(progress).toFixed(0)}%
+            </p>
         </div>
     );
 }
