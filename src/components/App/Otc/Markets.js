@@ -28,7 +28,11 @@ export default function OtcMarkets({ propMarkets }) {
                                             }
                                         >
                                             <Link href={`${PAGE.Opportunities}/${el.slug}`}>
-                                                <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} />
+                                                <IconButton
+                                                    noBorder
+                                                    zoom={1.1}
+                                                    icon={<IconInfo className="h-8 w-8" />}
+                                                />
                                             </Link>
                                         </span>
                                     </td>
