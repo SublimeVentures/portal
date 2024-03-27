@@ -17,21 +17,22 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     const amt_filled = allocations?.alloFilled ? allocations?.alloFilled : 0;
     const amt_res = allocations?.alloRes ? allocations?.alloRes : 0;
     const amt_guaranteed = allocations?.alloGuaranteed ? allocations?.alloGuaranteed : 0;
+    const amt_total = allocations?.alloTotal ? allocations?.alloTotal : 0;
 
-    const filled_base = Math.round((amt_filled / allocations?.alloTotal) * 100);
-    const filled_res = Math.min(
-        Math.round((amt_res / allocations?.alloTotal) * 100),
-        allocations?.alloTotal - filled_base,
-    );
-
-    const filled_guaranteed = Math.round((amt_guaranteed / allocations?.alloTotal) * 100);
-
+    const filled_base = Math.round((amt_filled / amt_total) * 100);
     const progress = isSoldOut ? 100 : filled_base;
 
-    const { width, offset } = calculateProgressMetrics(filled_base, filled_res, filled_guaranteed);
-    const filled_base_rounding = calculateEndRounding(filled_base - filled_res - width);
-    const filled_res_rounding = calculateEndRounding(filled_base + filled_res);
-    const filled_guaranteed_rounding = calculateEndRounding(width + offset);
+    const filled_guaranteed = Math.min(
+        Math.round((amt_guaranteed / amt_total) * 100),
+        isSoldOut ? 0 : amt_total - amt_guaranteed,
+    );
+
+    const filled_res = Math.min(Math.round((amt_res / amt_total) * 100), isSoldOut ? 0 : amt_total - amt_filled);
+
+    const { offset } = calculateProgressMetrics(progress, filled_res, filled_guaranteed);
+    const filled_base_rounding = calculateEndRounding(progress - filled_res - filled_guaranteed);
+    const filled_res_rounding = calculateEndRounding(progress + filled_res);
+    const filled_guaranteed_rounding = calculateEndRounding(filled_guaranteed + offset);
 
     return (
         <div className="relative h-[50px] w-full flex flex-row items-center rounded-xl select-none" ref={tilt}>
@@ -43,7 +44,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 ></span>
             </div>
             <Tooltiper
-                text={`Filled base ${filled_base}%`}
+                text={`Filled base ${progress}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -53,7 +54,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                         }}
                     ></div>
                 }
-                style={{ width: `${filled_base}%`, "--progress-step-color": progressColors.baseColor }}
+                style={{ width: `${progress}%`, "--progress-step-color": progressColors.baseColor }}
                 className="w-full h-full"
             />
             <Tooltiper
@@ -82,7 +83,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                     ></div>
                 }
                 style={{
-                    width: `${width}%`,
+                    width: `${filled_guaranteed}%`,
                     left: `${offset}%`,
                     "--progress-step-color": progressColors.guaranteedColor,
                 }}

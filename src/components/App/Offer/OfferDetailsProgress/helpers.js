@@ -5,34 +5,19 @@ export const calculateFilledPercentage = (totalBaseRes, totalAdjusted) => {
 
 export const calculateGuaranteedPercentage = (guaranteed, totalAdjusted) => (guaranteed / totalAdjusted) * 100;
 
-export const adjustGuaranteedFilled = (percentageFilled, percentageGuaranteedFilled) => {
-    if (percentageFilled + percentageGuaranteedFilled > 100) {
-        const excess = percentageFilled + percentageGuaranteedFilled - 100;
-        percentageGuaranteedFilled -= excess;
-    }
-
-    return percentageGuaranteedFilled;
-};
-
 export const calculateProgressMetrics = (base, res, guaranteed) => {
     const totalBaseRes = base + res;
     const totalAdjusted = totalBaseRes + guaranteed;
 
-    let percentageFilled = 0,
-        percentageGuaranteed = 0;
+    let percentageFilled = 0;
 
     if (totalAdjusted <= 100) {
-        percentageGuaranteed = guaranteed;
         percentageFilled = calculateFilledPercentage(totalBaseRes, totalAdjusted);
     } else {
-        percentageFilled = (totalBaseRes / totalAdjusted) * 100;
-        percentageGuaranteed = (guaranteed / totalBaseRes) * 100;
+        percentageFilled = 100 - guaranteed;
     }
 
-    percentageGuaranteed = adjustGuaranteedFilled(percentageFilled, percentageGuaranteed);
-
     return {
-        width: Math.round(percentageGuaranteed) || 0,
         offset: Math.round(percentageFilled) || 0,
     };
 };
