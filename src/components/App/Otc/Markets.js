@@ -8,9 +8,8 @@ export default function OtcMarkets({ propMarkets }) {
 
     return (
         <div className="bordered-container offerWrap  flex flex-1 maxHeight">
-            <div className="overflow-x-auto flex flex-col bg-navy-accent bordered-container">
+            <div className="overflow-x-auto flex flex-col bg-navy-accent">
                 <div className="page-table-header flex p-5 glowNormal header">Markets</div>
-
                 <table>
                     <tbody>
                         {otc.map((el) => {
