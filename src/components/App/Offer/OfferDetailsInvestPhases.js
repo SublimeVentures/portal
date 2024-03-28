@@ -15,7 +15,7 @@ import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
 import Dropdown from "@/components/App/Dropdown";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { checkIfNumberKey } from "@/lib/utils";
+import { checkIfNumberKey, tenantIndex } from "@/lib/utils";
 import { IconButton } from "@/components/Button/IconButton";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/lib/investment";
@@ -25,6 +25,9 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
+import { TENANT } from "@/lib/tenantHelper";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const {
@@ -340,12 +343,13 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                             zoom={1.1}
                             size="w-12 p-3"
                             icon={<DynamicIcon name={ICONS.CALCULATOR} />}
-                            noBorder={!isBased}
+                            noBorder={!isBaseVCTenant}
                             handler={() => setCalculateModal(true)}
                         />
                         <IconButton
                             zoom={1.1}
                             size="w-12 p-3"
+                            noBorder={!isBaseVCTenant}
                             icon={<DynamicIcon name={ICONS.DIAMOND} className="text-gold" />}
                             handler={() => setUpgradeModal(true)}
                         />
