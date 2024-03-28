@@ -166,12 +166,11 @@ export const AppOfferDetails = ({ session }) => {
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar} />
                 <div className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
-                    <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
-                    {/*{!phaseIsClosed ? (*/}
-                    {/*    <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />*/}
-                    {/*) : (*/}
-                    {/*    <OfferDetailsInvestClosed />*/}
-                    {/*)}*/}
+                    {!phaseIsClosed ? (
+                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
+                    ) : (
+                        <OfferDetailsInvestClosed />
+                    )}
                 </div>
                 <div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
                     <OfferDetailsParams paramsParams={paramsParams} />
