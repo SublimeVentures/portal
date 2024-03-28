@@ -31,7 +31,322 @@ export const OfferDetailsParams = ({ paramsParams }) => {
                     <div className="text-5xl font-bold flex flex-1 glow font-light py-2">${normalized_total}</div>
 
                     <div className="py-2">
-                        <OfferDetailsProgress allocations={allocation} isSoldOut={isSoldOut} />
+                        {/* <OfferDetailsProgress allocations={allocation} isSoldOut={isSoldOut} /> */}
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 90000,
+                                alloGuaranteed: 5000,
+                                alloRes: 5000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 50386,
+                                alloGuaranteed: 21491,
+                                alloRes: 8763,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 90000,
+                                alloGuaranteed: 15000,
+                                alloRes: 15000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 90000,
+                                alloGuaranteed: 10000,
+                                alloRes: 0,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 90000,
+                                alloGuaranteed: 0,
+                                alloRes: 10000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 90000,
+                                alloGuaranteed: 10000,
+                                alloRes: 10000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 10000,
+                                alloGuaranteed: 5000,
+                                alloRes: 5000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 10000,
+                                alloGuaranteed: 10000,
+                                alloRes: 0,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 10000,
+                                alloGuaranteed: 0,
+                                alloRes: 10000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 10000,
+                                alloGuaranteed: 10000,
+                                alloRes: 10000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 10000,
+                                alloGuaranteed: 15000,
+                                alloRes: 15000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 85986,
+                                alloGuaranteed: 13652,
+                                alloRes: 362,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: false,
+                                isSettled: false,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 35895,
+                                alloGuaranteed: 13642,
+                                alloRes: 50463,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: true,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 7578,
+                                alloGuaranteed: 55809,
+                                alloRes: 36613,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: true,
+                                isSettled: false,
+                            }}
+                            isSoldOut={true}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 90594,
+                                alloGuaranteed: 2926,
+                                alloRes: 6480,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 17200,
+                                alloGuaranteed: 7827,
+                                alloRes: 74973,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: true,
+                                isSettled: false,
+                            }}
+                            isSoldOut={true}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 99472,
+                                alloGuaranteed: 358,
+                                alloRes: 170,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: true,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 45000,
+                                alloGuaranteed: 15000,
+                                alloRes: 40000,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 60000,
+                                alloGuaranteed: 20000,
+                                alloRes: 20000,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: true,
+                                isSettled: false,
+                            }}
+                            isSoldOut={true}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 30000,
+                                alloGuaranteed: 50000,
+                                alloRes: 20000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: false,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 25000,
+                                alloGuaranteed: 25000,
+                                alloRes: 50000,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: true,
+                                isSettled: true,
+                            }}
+                            isSoldOut={true}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 70000,
+                                alloGuaranteed: 15000,
+                                alloRes: 15000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 85000,
+                                alloGuaranteed: 5000,
+                                alloRes: 10000,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: false,
+                                isSettled: false,
+                            }}
+                            isSoldOut={true}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 40000,
+                                alloGuaranteed: 30000,
+                                alloRes: 30000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: true,
+                                isSettled: true,
+                            }}
+                            isSoldOut={false}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 20000,
+                                alloGuaranteed: 40000,
+                                alloRes: 40000,
+                                alloTotal: 100000,
+                                isPaused: true,
+                                isRefund: true,
+                                isSettled: false,
+                            }}
+                            isSoldOut={true}
+                        />
+                        <OfferDetailsProgress
+                            allocations={{
+                                alloFilled: 10000,
+                                alloGuaranteed: 60000,
+                                alloRes: 30000,
+                                alloTotal: 100000,
+                                isPaused: false,
+                                isRefund: false,
+                                isSettled: false,
+                            }}
+                            isSoldOut={false}
+                        />
                     </div>
                     <div className="flex flex-col gap-2 mt-5">
                         {booked > 0 && (

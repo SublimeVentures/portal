@@ -8,7 +8,6 @@ export const calculateGuaranteedPercentage = (guaranteed, totalAdjusted) => (gua
 export const calculateProgressMetrics = (base, res, guaranteed) => {
     const totalBaseRes = base + res;
     const totalAdjusted = totalBaseRes + guaranteed;
-
     let percentageFilled = 0;
 
     if (totalAdjusted <= 100) {
