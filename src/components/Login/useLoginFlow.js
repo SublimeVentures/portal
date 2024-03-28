@@ -33,19 +33,14 @@ export default function useLoginFlow() {
         isConnecting: accountIsConnecting,
         connector: connectorActive,
     } = useAccount();
-    const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
-    const {
-        connectors,
-        connectAsync: connect,
-        error: connectorError,
-        isLoading: connectorIsLoading,
-        variables: connectVariables,
-    } = useConnect();
+    const { signMessageAsync: signMessageFn } = useSignMessage();
+    const { connectors, connectAsync: connect, isLoading: connectorIsLoading } = useConnect();
 
     const signMessage = useCallback(async () => {
         setErrorMsg("");
         setIsLoginLoading(true);
         setIsSigningMessage(true);
+
         try {
             const time = moment.utc().unix();
             const nonce = uuidv4();
@@ -61,8 +56,9 @@ export default function useLoginFlow() {
                 partner,
                 LOGIN_TYPE.WEB3,
             );
+
             if (isAuth?.ok) {
-                router.replace(isUrlTrusted(callbackUrl) && callbackUrl ? callbackUrl : routes.App);
+                router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
                 router.push({
                     pathname: routes.Login,

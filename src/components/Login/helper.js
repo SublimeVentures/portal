@@ -1,6 +1,6 @@
-export const isUrlTrusted = (url, environment) => {
+export const isUrlTrusted = (url) => {
     const trustedURLs = process.env.TRUSTED_DOMAINS?.split(" ");
-    const isDevEnvironment = process.env.ENV === "dev";
+    const isDevEnvironment = process.env.NEXT_PUBLIC_ENV === "dev";
 
     return (
         trustedURLs &&
