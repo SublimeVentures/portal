@@ -93,6 +93,7 @@ async function getEnvironment() {
     const offers = await db.query(query_funded, { type: QueryTypes.SELECT });
 
     let funded = 0;
+    let investments = 0;
     const TENANT_ID = Number(process.env.NEXT_PUBLIC_TENANT);
     if (TENANT_ID === TENANT.basedVC) {
         funded = offers.map((item) => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
@@ -107,6 +108,10 @@ async function getEnvironment() {
         TENANT_ID === TENANT.basedVC
             ? funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
             : funded;
+    environment.stats.launchpad = offers.filter((offer) => offer.isLaunchpad).length;
+    environment.stats.vc = offers.filter(
+        (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
+    ).length;
 
     return environment;
 }

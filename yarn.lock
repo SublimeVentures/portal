@@ -9187,7 +9187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-cron@npm:^3.0.3":
+"node-cron@npm:3.0.3":
   version: 3.0.3
   resolution: "node-cron@npm:3.0.3"
   dependencies:
@@ -12558,7 +12558,7 @@ __metadata:
     next: "npm:14.1.4"
     next-seo: "npm:6.5.0"
     node-cache: "npm:5.1.2"
-    node-cron: "npm:^3.0.3"
+    node-cron: "npm:3.0.3"
     pg: "npm:8.11.3"
     pg-connection-string: "npm:2.6.2"
     pg-hstore: "npm:2.3.4"

@@ -1,13 +1,12 @@
 import Head from "next/head";
 import { useQuery } from "@tanstack/react-query";
-import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import Empty from "@/components/App/Empty";
 import IconStars from "@/assets/svg/Stars.svg";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import Loader from "@/components/App/Loader";
 import OfferItem from "@/components/App/Offer/OfferItem";
 import Stat from "@/components/Stat";
-import { fetchLaunchpadList, fetchOfferList } from "@/fetchers/offer.fetcher";
+import { fetchLaunchpadList } from "@/fetchers/offer.fetcher";
 import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
@@ -34,7 +33,7 @@ export default function AppLaunchpad({ session }) {
     });
 
     const offerList = response?.offers;
-    const accelerator = offerList?.length ? offerList?.length : 0;
+    const projectsUnderLaunchpad = response?.stats?.launchpad ? response.stats.launchpad : 0;
 
     const renderPage = () => {
         if (isLoading) return <Loader />;
@@ -69,7 +68,7 @@ export default function AppLaunchpad({ session }) {
                         <Stat
                             color={"gold"}
                             title={"Projects"}
-                            value={accelerator}
+                            value={projectsUnderLaunchpad}
                             icon={<IconStars className={"w-9"} />}
                         />
                     </div>

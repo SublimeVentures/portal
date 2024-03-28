@@ -35,9 +35,10 @@ export default function AppOffer({ session }) {
     });
 
     const offerList = response?.offers;
-    const offerListRender = offerList ? offerList.filter((el) => !el.isAccelerator) : [];
+    const offerListRender = offerList ? offerList : [];
     const stats = response?.stats;
     const partners = stats ? stats.partners : 0;
+    const projectsInvested = stats ? stats.vc : 0;
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
     const renderPage = () => {
@@ -68,7 +69,7 @@ export default function AppOffer({ session }) {
                         <Stat
                             color="gold"
                             title="Investments"
-                            value={offerListRender.length}
+                            value={projectsInvested}
                             icon={<IconStars className={"w-9 text-2xl"} />}
                         />
                         {tenantIndex === TENANT.basedVC && (

@@ -1,5 +1,5 @@
 const { getEnv } = require("../services/env");
-const { getOfferList } = require("../queries/offers.query");
+const { getOfferList, getLaunchpadList, getOtcList } = require("../queries/offers.query");
 
 const OFFER_TYPES = {
     VC: "vc",
