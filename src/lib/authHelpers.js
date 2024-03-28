@@ -27,19 +27,24 @@ const verifyToken = async (token, secret) => {
 };
 
 const verifyID = async (req, isRefresh) => {
-    const token = req.cookies[isRefresh ? refreshTokenName : authTokenName];
-    if (token) {
-        try {
+    let token;
+    try {
+        token = req.cookies[isRefresh ? refreshTokenName : authTokenName];
+        if (token) {
             const session = await verifyToken(token, isRefresh ? JWT_REFRESH_SECRET_encode : JWT_ACCESS_SECRET_encode);
-            return { user: session?.user, auth: true };
-        } catch (e) {
-            if (e.code == "ERR_JWT_EXPIRED") return { auth: false, exists: !!token };
+            if (session.user) {
+                return { user: session?.user, auth: true };
+            }
         }
+    } catch (error) {
+        if (error.code === "ERR_JWT_EXPIRED") return { auth: false, exists: !!token };
+        console.error("Error verifying Id", error);
     }
+
     return { auth: false };
 };
 
-const refreshTokens = async (refreshToken) => {
+const refreshData = async (refreshToken) => {
     try {
         const response = await axios.put(
             `${process.env.AUTHER}/auth/login`,
@@ -54,7 +59,7 @@ const refreshTokens = async (refreshToken) => {
 
         return result;
     } catch (error) {
-        console.error("Error refreshing token:", error);
+        console.error("Error refreshing data:", error);
         return { ok: false }; // Or handle the error as appropriate
     }
 };
@@ -68,5 +73,5 @@ module.exports = {
     buildCookie,
     verifyToken,
     verifyID,
-    refreshTokens,
+    refreshData,
 };
