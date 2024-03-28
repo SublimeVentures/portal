@@ -102,8 +102,8 @@ export default function Sidebar({ session }) {
                 icon: <IconLight className="w-8 mr-3 text-2xl" />,
             },
             {
-                name: "Accelerator",
-                link: PAGE.Accelerator,
+                name: "Launchpad",
+                link: PAGE.Launchpad,
                 icon: isBaseVCTenant ? (
                     <IconGrowth className="w-7 mr-4 text-2xl" />
                 ) : (

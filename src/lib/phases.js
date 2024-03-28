@@ -73,11 +73,16 @@ function processPhases(phases, isSettled) {
 
 function phases(offer) {
     let data;
-    let phases = [Phases.Pending, updatePhaseDate(Phases.Open, offer.d_open)];
-    if (offer.lengthFCFS) {
-        phases.push(updatePhaseDate(Phases.FCFS, offer.d_open));
+    let phases = [Phases.Pending];
+
+    if (offer.isLaunchpad) {
+        phases.push(updatePhaseDate(Phases.Open, offer.d_open));
+    } else {
+        if (offer.lengthFCFS) {
+            phases.push(updatePhaseDate(Phases.FCFS, offer.d_open));
+        }
+        phases.push(updatePhaseDate(Phases.Unlimited, offer.d_open + (offer?.lengthFCFS ? offer.lengthFCFS : 0)));
     }
-    phases.push(updatePhaseDate(Phases.Unlimited, offer.d_open + offer.lengthFCFS));
     phases.push(updatePhaseDate(Phases.Closed, offer.d_close));
 
     data = processPhases(phases, offer.isSettled);

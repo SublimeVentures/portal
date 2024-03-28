@@ -1,16 +1,37 @@
-const { getEnv } = require("../services/db");
-const { getOfferList } = require("../queries/offers.query");
+const { getEnv } = require("../services/env");
+const { getOfferList, getLaunchpadList, getOtcList } = require("../queries/offers.query");
 
-async function getPermittedOfferList(user, isOtc) {
-    const { tenantId, partnerId } = user;
-    return await getOfferList(partnerId, tenantId, isOtc);
+const OFFER_TYPES = {
+    VC: "vc",
+    LAUNCHPAD: "launchpad",
+    OTC: "otc",
+};
+
+const offerTypeToFunction = {
+    [OFFER_TYPES.VC]: getOfferList,
+    [OFFER_TYPES.LAUNCHPAD]: getLaunchpadList,
+    [OFFER_TYPES.OTC]: getOtcList,
+};
+
+async function getParamOfferList(user, req) {
+    try {
+        const { tenantId, partnerId } = user;
+        const fetchFunction = offerTypeToFunction[req.query.type];
+
+        if (!fetchFunction) {
+            throw Error("Bad type");
+        }
+
+        return {
+            stats: getEnv().stats,
+            offers: await fetchFunction(partnerId, tenantId),
+        };
+    } catch (error) {
+        return {
+            ok: false,
+            data: `Bad request ${error.message}`,
+        };
+    }
 }
 
-async function getParamOfferList(user) {
-    return {
-        stats: getEnv().stats,
-        offers: await getPermittedOfferList(user),
-    };
-}
-
-module.exports = { getParamOfferList, getPermittedOfferList };
+module.exports = { getParamOfferList };

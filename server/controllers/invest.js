@@ -1,6 +1,6 @@
 const moment = require("moment");
 const { getOfferWithLimits } = require("../queries/offers.query");
-const { getEnv } = require("../services/db");
+const { getEnv } = require("../services/env");
 const {
     expireAllocation,
     investIncreaseAllocationReserved,
@@ -30,11 +30,13 @@ async function processBooking(offer, offerLimit, user, amount) {
         sumAmountForUserAndTenant(offer.id, userId, tenantId),
         fetchUpgradeUsed(userId, offer.id, tenantId),
     ]);
-    console.log("vault", vault);
-    console.log("upgrades", upgrades);
-    console.log("offer", offer);
+    // console.log("vault", vault);
+    // console.log("upgrades", upgrades);
+    // console.log("offer", offer);
 
-    const upgradeGuaranteed = upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const upgradeGuaranteed = offer?.isLaunchpad
+        ? { isExpired: true, alloMax: 0, alloUsed: 0 }
+        : upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     const upgradeIncreased = upgrades.find((el) => el.id === PremiumItemsENUM.Increased);
 
     let transaction;
@@ -44,7 +46,7 @@ async function processBooking(offer, offerLimit, user, amount) {
 
         //increase reservation and ensure no overbooking
         const increaseReserved = await investIncreaseAllocationReserved(offer, amount, upgradeGuaranteed, transaction);
-        console.log("increaseReserved", increaseReserved);
+        // console.log("increaseReserved", increaseReserved);
 
         if (!increaseReserved.ok) throw Error(BookingErrorsENUM.Overallocated);
 
@@ -155,7 +157,7 @@ async function processReservation(queryParams, user) {
                 ...{ expire: moment.utc().unix() + 3 * 60 },
             };
         }
-        console.log("CACHE[_offerId]", CACHE[_offerId]);
+
         const currency = getEnv().currencies[_chain][_currency];
         if (!currency || !currency.isSettlement || (currency.partnerId && currency.partnerId !== tenantId)) {
             return {
@@ -163,22 +165,19 @@ async function processReservation(queryParams, user) {
                 code: BookingErrorsENUM.BadCurrency,
             };
         }
-        console.log("currency", currency);
 
         const offerLimit =
-            CACHE[_offerId].offerLimits.find((el) => el.partnerId === partnerId) ||
-            CACHE[_offerId].offerLimits.find((el) => el.partnerId === tenantId);
-        console.log("offerLimit", offerLimit);
+            CACHE[_offerId].offerLimits.find((el) => el.partnerId === tenantId) ||
+            CACHE[_offerId].offerLimits.find((el) => el.partnerId === partnerId && !el.isTenantExclusive);
+        if (!offerLimit) throw Error("No offer limit condition");
 
         //test if offer's ready
         const checkIsReadyForStart = checkInvestmentStateConditions(userId, tenantId, CACHE[_offerId], offerLimit);
-        console.log("checkIsReadyForStart", checkIsReadyForStart);
 
         if (!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
         //check conditions and book
         const isBooked = await processBooking(CACHE[_offerId], offerLimit, user, _amount);
-        console.log("isBooked", isBooked);
 
         if (!isBooked.ok) {
             return {

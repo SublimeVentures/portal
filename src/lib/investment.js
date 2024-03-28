@@ -11,24 +11,30 @@ function roundAmount(amount) {
 
 function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min;
-    switch (account.tenantId) {
-        case TENANT.basedVC: {
-            allocationUser_base = account.multi * offer.alloMax;
-            allocationUser_min = offer.alloMin;
-            break;
-        }
-        case TENANT.NeoTokyo: {
-            allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus;
-            if (allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION;
-            allocationUser_min = MIN_ALLOCATION;
-            break;
-        }
-        case TENANT.CyberKongz: {
-            allocationUser_base = offer.alloMax * Math.ceil(account.stakeSize / offer.alloMax);
-            allocationUser_min = offer.alloMin;
-            break;
+    if (offer.isLaunchpad) {
+        allocationUser_base = offer.alloMax;
+        allocationUser_min = offer.alloMin || MIN_ALLOCATION;
+    } else {
+        switch (account.tenantId) {
+            case TENANT.basedVC: {
+                allocationUser_base = account.multi * offer.alloMax;
+                allocationUser_min = offer.alloMin;
+                break;
+            }
+            case TENANT.NeoTokyo: {
+                allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus;
+                if (allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION;
+                allocationUser_min = MIN_ALLOCATION;
+                break;
+            }
+            case TENANT.CyberKongz: {
+                allocationUser_base = offer.alloMax * Math.ceil(account.stakeSize / offer.alloMax);
+                allocationUser_min = offer.alloMin;
+                break;
+            }
         }
     }
+
     allocationUser_max = getUserAllocationBaseWithIncreased(allocationUser_base, upgradeIncreasedUsed);
 
     return {
@@ -67,6 +73,18 @@ function allocationParseUnlimited(params) {
     return params;
 }
 
+function allocationParseOpen(params) {
+    const { allocationOffer_left, allocationUser_invested, output } = params;
+    const { allocationUser_max } = output;
+
+    params.output.allocationUser_left = getAllocationLeft(
+        allocationOffer_left,
+        allocationUser_max - allocationUser_invested,
+    );
+
+    return params;
+}
+
 function allocationParseFCFS(params) {
     const { allocationOffer_left, allocationUser_invested, output } = params;
     const { allocationUser_guaranteed, allocationUser_max, allocationUser_min } = output;
@@ -85,8 +103,10 @@ function allocationParseFCFS(params) {
 function allocationPhaseAdjust(params) {
     const { offerPhaseCurrent } = params;
 
-    if (offerPhaseCurrent.phase === PhaseId.Open || offerPhaseCurrent.phase === PhaseId.Unlimited) {
+    if (offerPhaseCurrent.phase === PhaseId.Unlimited) {
         return allocationParseUnlimited(params);
+    } else if (offerPhaseCurrent.phase === PhaseId.Open) {
+        return allocationParseOpen(params);
     } else {
         return allocationParseFCFS(params);
     }
@@ -215,15 +235,15 @@ function buttonInvestIsDisabled(
     isStakeLock,
     userInvestmentState,
 ) {
-    console.log(
-        "buttonInvestIsDisabledV1",
-        allocationOffer?.isPaused ||
-            offerPhaseCurrent?.controlsDisabled ||
-            isStakeLock ||
-            !investmentAmount ||
-            !isAllocationOk,
-        isAllocationOk,
-    );
+    // console.log(
+    //     "buttonInvestIsDisabledV1",
+    //     allocationOffer?.isPaused ||
+    //     offerPhaseCurrent?.controlsDisabled ||
+    //     isStakeLock ||
+    //     !investmentAmount ||
+    //     !isAllocationOk,
+    //     isAllocationOk,
+    // );
     return (
         allocationOffer?.isPaused ||
         offerPhaseCurrent?.controlsDisabled ||

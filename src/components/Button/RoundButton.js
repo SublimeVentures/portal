@@ -14,7 +14,7 @@ export const ButtonIconSize = {
     clicksLow: "w-[18px] mt-[1px] mr-1 text-xl",
     clicks2: "w-3 text-xl",
     invest: "w-9 mr-5 text-2xl",
-    default: "w-8 mr-5"
+    default: "w-8 mr-5",
 };
 
 export function RoundButton({
