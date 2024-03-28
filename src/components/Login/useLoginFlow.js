@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { logIn } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
+import { isUrlTrusted } from "@/components/Login/helper";
 
 const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
@@ -52,6 +53,7 @@ export default function useLoginFlow() {
             const signature = await signMessageFn({ message });
 
             const callbackUrl = router.query.callbackUrl;
+
             const isAuth = await logIn(
                 message,
                 signature,
@@ -60,7 +62,7 @@ export default function useLoginFlow() {
                 LOGIN_TYPE.WEB3,
             );
             if (isAuth?.ok) {
-                router.replace(callbackUrl ? callbackUrl : routes.App);
+                router.replace(isUrlTrusted(callbackUrl) && callbackUrl ? callbackUrl : routes.App);
             } else {
                 router.push({
                     pathname: routes.Login,
