@@ -342,15 +342,14 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                         <IconButton
                             zoom={1.1}
                             size="w-12 p-3"
-                            icon={<DynamicIcon name={ICONS.CALCULATOR} />}
-                            noBorder={!isBaseVCTenant}
+                            icon={<DynamicIcon name={ICONS.CALCULATOR} style="background-text-dedicated" />}
                             handler={() => setCalculateModal(true)}
                         />
                         <IconButton
                             zoom={1.1}
                             size="w-12 p-3"
                             noBorder={!isBaseVCTenant}
-                            icon={<DynamicIcon name={ICONS.DIAMOND} className="text-gold" />}
+                            icon={<DynamicIcon name={ICONS.DIAMOND} style="background-text-dedicated" />}
                             handler={() => setUpgradeModal(true)}
                         />
                     </div>
@@ -386,7 +385,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                                         setValue(allocationData.allocationUser_min);
                                     }}
                                 >
-                                    <IconCancel className="w-6 opacity-70" />
+                                    <IconCancel className="w-6 h-6 opacity-70" />
                                 </div>
                             </Transition.Child>
                         </Transition>

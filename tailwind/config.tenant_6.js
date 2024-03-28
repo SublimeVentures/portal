@@ -60,6 +60,7 @@ module.exports = {
                 },
                 ".background-text-dedicated": {
                     color: "rgb(185 37 81)",
+                    fill: "rgb(245 164 0)",
                 },
                 ".background-text-description": {
                     "font-family": "Work Sans, sans-serif",
