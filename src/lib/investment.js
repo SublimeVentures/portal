@@ -82,7 +82,6 @@ function allocationParseOpen(params) {
         allocationUser_max - allocationUser_invested,
     );
 
-    console.log("allocationParseOpen", params);
     return params;
 }
 

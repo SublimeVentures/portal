@@ -7,7 +7,6 @@ export default function OfferDetailsTopBar({ paramsBar }) {
     const { cdn } = useEnvironmentContext();
     let { offer, phaseCurrent, phaseNext, refreshInvestmentPhase, phaseIsClosed } = paramsBar;
     let { name, genre, slug } = offer;
-    console.log("paramsBar", paramsBar);
 
     return (
         <div className={"col-span-12 flex flex-col gap-10 md:flex-row"}>
