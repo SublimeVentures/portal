@@ -7,33 +7,25 @@ const OFFER_TYPES = {
     OTC: "otc",
 };
 
+const offerTypeToFunction = {
+    [OFFER_TYPES.VC]: getOfferList,
+    [OFFER_TYPES.LAUNCHPAD]: getLaunchpadList,
+    [OFFER_TYPES.OTC]: getOtcList,
+};
+
 async function getParamOfferList(user, req) {
     try {
         const { tenantId, partnerId } = user;
+        const fetchFunction = offerTypeToFunction[req.query.type];
 
-        switch (req.query.type) {
-            case OFFER_TYPES.VC: {
-                return {
-                    stats: getEnv().stats,
-                    offers: await getOfferList(partnerId, tenantId),
-                };
-            }
-            case OFFER_TYPES.LAUNCHPAD: {
-                return {
-                    stats: getEnv().stats,
-                    offers: await getLaunchpadList(partnerId, tenantId),
-                };
-            }
-            case OFFER_TYPES.OTC: {
-                return {
-                    stats: getEnv().stats,
-                    offers: await getOtcList(partnerId, tenantId),
-                };
-            }
-            default: {
-                throw Error("Bad type");
-            }
+        if (!fetchFunction) {
+            throw Error("Bad type");
         }
+
+        return {
+            stats: getEnv().stats,
+            offers: await fetchFunction(partnerId, tenantId),
+        };
     } catch (error) {
         return {
             ok: false,

@@ -37,13 +37,13 @@ export default function AppOffer({ session }) {
     const offerList = response?.offers;
     const offerListRender = offerList ? offerList : [];
     const stats = response?.stats;
-    const partners = stats ? stats.partners : 0;
-    const projectsInvested = stats ? stats.vc : 0;
+    const partners = stats && stats?.partners ? stats.partners : 0;
+    const projectsInvested = stats && stats?.vc ? stats.vc : 0;
     const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
     const renderPage = () => {
         if (isLoading) return <Loader />;
-        if (!offerListRender || offerListRender.length === 0) return <Empty />;
+        if (!offerListRender || offerListRender.length === 0 || isError) return <Empty />;
         return (
             <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
                 {!!offerList && offerListRender.map((el) => <OfferItem offer={el} cdn={cdn} key={el.slug} />)}

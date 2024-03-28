@@ -33,11 +33,11 @@ export default function AppLaunchpad({ session }) {
     });
 
     const offerList = response?.offers;
-    const projectsUnderLaunchpad = response?.stats?.launchpad ? response.stats.launchpad : 0;
+    const projectsUnderLaunchpad = response?.stats?.launchpad ?? 0;
 
     const renderPage = () => {
         if (isLoading) return <Loader />;
-        if (!offerList || offerList.length === 0) return <Empty />;
+        if (!offerList || offerList.length === 0 || isError) return <Empty />;
 
         return (
             <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
