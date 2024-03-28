@@ -88,16 +88,19 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const dropdownCurrencyOptions = getCurrencySettlement();
 
     const setValue = (data) => {
-        if (!data) return;
         try {
             if (!Number.isInteger(data)) {
                 data = data.replace(/[^0-9]/g, "");
             }
-            setInvestmentAmount(data);
+            if (data) {
+                setInvestmentAmount(data);
+            }
+
             let formatted = Number(data).toLocaleString();
             if (formatted == 0) {
                 formatted = "";
             }
+
             setInvestmentAmountFormatted(formatted);
         } catch (error) {
             // Error handling: do nothing or log the error if needed
@@ -169,7 +172,6 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
             } else if (savedAmount === Number(investmentAmount)) {
                 openInvestmentModal();
             } else {
-                console.log("restore ", savedAmount);
                 setRestoreModal({
                     open: true,
                     amount: savedAmount,
@@ -259,16 +261,6 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         setAllocationData({ ...allocations });
         const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocations, investmentAmount);
         setIsError({ state: !allocationIsValid, msg: message });
-        console.log(
-            "MAX_SUMMARY",
-            allocations,
-            session,
-            offer,
-            phaseCurrent,
-            upgradesUse,
-            userInvested?.invested,
-            allocation,
-        );
         const { isDisabled, text } = buttonInvestState(
             allocation ? allocation : {},
             phaseCurrent,
