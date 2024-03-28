@@ -30,7 +30,7 @@ export default function OtcMarkets({ propMarkets }) {
                                                 <IconButton
                                                     noBorder
                                                     zoom={1.1}
-                                                    icon={<IconInfo className="h-8 w-8" />}
+                                                    icon={<IconInfo className="h-7 w-7" />}
                                                 />
                                             </Link>
                                         </span>
