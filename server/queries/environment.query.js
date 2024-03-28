@@ -81,21 +81,17 @@ async function getEnvironment() {
     //-- PARAM :: `stats.funded`
 
     const query_funded = `
-            SELECT
-                o.*,
-                array_agg(ol."partnerId") AS offerLimits,
-                ofr."alloRaised"
-            FROM
-                offer o
-            LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
-            LEFT JOIN "offerFundraise" ofr ON o.id = ofr."offerId"
-            GROUP BY
-                o.id, ofr."alloRaised"
-`;
+        SELECT o.*,
+               array_agg(ol."partnerId") AS offerLimits,
+               ofr."alloRaised"
+        FROM offer o
+                 LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
+                 LEFT JOIN "offerFundraise" ofr ON o.id = ofr."offerId"
+        GROUP BY o.id, ofr."alloRaised"
+    `;
 
     const offers = await db.query(query_funded, { type: QueryTypes.SELECT });
 
-    console.log("offers", offers);
     let funded = 0;
     const TENANT_ID = Number(process.env.NEXT_PUBLIC_TENANT);
     if (TENANT_ID === TENANT.basedVC) {
@@ -104,8 +100,6 @@ async function getEnvironment() {
         const filteredOffers = offers.filter(
             (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
         );
-
-        console.log("filteredOffers", filteredOffers, TENANT_ID);
 
         funded = filteredOffers.map((item) => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
     }

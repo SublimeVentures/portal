@@ -102,8 +102,8 @@ export default function Sidebar({ session }) {
                 icon: <IconLight className="w-8 mr-3 text-2xl" />,
             },
             {
-                name: "Accelerator",
-                link: PAGE.Accelerator,
+                name: "Launchpad",
+                link: PAGE.Launchpad,
                 icon: isBaseVCTenant ? (
                     <IconGrowth className="w-7 mr-4 text-2xl" />
                 ) : (
@@ -205,7 +205,7 @@ export default function Sidebar({ session }) {
                         <div className="flex items-center">{TENANT_LOGO()}</div>
                     </Link>
                     <ChangeNetwork />
-                    <ChangeAddress session={session} />
+                    {/*<ChangeAddress session={session} />*/}
                 </div>
                 <nav className="flex flex-col pt-10 flex-1 font-accent text-md navbar-item">
                     <div className="flex flex-col gap-2">{generateLink(menu.groupUser)}</div>

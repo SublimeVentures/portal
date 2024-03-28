@@ -6,21 +6,19 @@ const {
     processSellOtcDeal,
     saveOtcLock,
 } = require("../queries/otc.query");
-const { getPermittedOfferList } = require("./offerList");
 const moment = require("moment");
 const { createHash } = require("./helpers");
-const { signData } = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
 const { isAddress } = require("web3-validator");
 const axios = require("axios");
+const { getOtcList } = require("../queries/offers.query");
 
 async function getMarkets(session) {
     try {
-        const offers = await getPermittedOfferList(session, true);
-        console.log("offers markets", offers, session);
-        return offers;
+        const { tenantId, partnerId } = session;
+        return await getOtcList(partnerId, tenantId);
     } catch (error) {
         logger.error(`ERROR :: [getOffers] OTC`, {
             error: serializeError(error),
@@ -134,7 +132,6 @@ async function signOffer(user, req) {
             },
         );
 
-        // const signature = await signData(address, otcId, dealId, deal.data.id, expireDate)
         if (!signature?.data?.ok) {
             throw new Error("Invalid signature");
         }
