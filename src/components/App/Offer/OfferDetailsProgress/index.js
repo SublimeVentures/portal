@@ -29,10 +29,12 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
 
     const filled_res = Math.min(Math.round((amt_res / amt_total) * 100), isSoldOut ? 0 : amt_total - amt_filled);
 
-    const { offset } = calculateProgressMetrics(progress, filled_res, filled_guaranteed);
-    const filled_base_rounding = calculateEndRounding(progress - filled_res - filled_guaranteed);
-    const filled_res_rounding = calculateEndRounding(progress + filled_res);
-    const filled_guaranteed_rounding = calculateEndRounding(filled_guaranteed + offset);
+    const { guaranteedWidth, guaranteedOffset } = calculateProgressMetrics(progress, filled_res, filled_guaranteed);
+    const reservedWidth = filled_base + filled_res > 100 ? filled_res - (filled_base + filled_res - 100) : filled_res;
+
+    const filled_base_rounding = calculateEndRounding(progress - reservedWidth - guaranteedWidth);
+    const filled_res_rounding = calculateEndRounding(progress + reservedWidth);
+    const filled_guaranteed_rounding = calculateEndRounding(guaranteedWidth + guaranteedOffset);
 
     return (
         <div className="relative h-[50px] w-full flex flex-row items-center rounded-xl select-none" ref={tilt}>
@@ -44,7 +46,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 ></span>
             </div>
             <Tooltiper
-                text={`Filled base ${progress}%`}
+                text={`Filled ${progress}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -58,7 +60,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="w-full h-full"
             />
             <Tooltiper
-                text={`Filled res ${filled_res}%`}
+                text={`Booked ${reservedWidth}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -68,11 +70,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                         }}
                     ></div>
                 }
-                style={{ width: `${filled_res}%`, "--progress-step-color": progressColors.resColor }}
+                style={{ width: `${reservedWidth}%`, "--progress-step-color": progressColors.resColor }}
                 className="w-full h-full"
             />
             <Tooltiper
-                text={`Filled guaranteed ${filled_guaranteed}%`}
+                text={`Guaranteed ${filled_guaranteed}%`}
                 wrapper={
                     <div
                         className="absolute w-full h-full z-30 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -83,8 +85,8 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                     ></div>
                 }
                 style={{
-                    width: `${filled_guaranteed}%`,
-                    left: `${offset}%`,
+                    width: `${guaranteedWidth}%`,
+                    left: `${guaranteedOffset}%`,
                     "--progress-step-color": progressColors.guaranteedColor,
                 }}
                 className="absolute w-full h-full"

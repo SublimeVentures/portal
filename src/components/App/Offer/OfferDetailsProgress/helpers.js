@@ -3,21 +3,23 @@ export const calculateFilledPercentage = (totalBaseRes, totalAdjusted) => {
     return (filledData / 100) * totalAdjusted;
 };
 
-export const calculateGuaranteedPercentage = (guaranteed, totalAdjusted) => (guaranteed / totalAdjusted) * 100;
-
 export const calculateProgressMetrics = (base, res, guaranteed) => {
     const totalBaseRes = base + res;
     const totalAdjusted = totalBaseRes + guaranteed;
-    let percentageFilled = 0;
+    let percentageFilled = 0,
+        percentageGuaranteed = 0;
 
     if (totalAdjusted <= 100) {
+        percentageGuaranteed = guaranteed;
         percentageFilled = calculateFilledPercentage(totalBaseRes, totalAdjusted);
     } else {
-        percentageFilled = 100 - guaranteed;
+        percentageFilled = 0;
+        percentageGuaranteed = 0;
     }
 
     return {
-        offset: Math.round(percentageFilled) || 0,
+        guaranteedWidth: Math.round(percentageGuaranteed) || 0,
+        guaranteedOffset: Math.round(percentageFilled) || 0,
     };
 };
 
