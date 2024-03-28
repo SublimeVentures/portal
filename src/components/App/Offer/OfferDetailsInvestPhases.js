@@ -92,9 +92,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
             if (!Number.isInteger(data)) {
                 data = data.replace(/[^0-9]/g, "");
             }
-            if (data) {
-                setInvestmentAmount(data);
-            }
+            setInvestmentAmount(data);
 
             let formatted = Number(data).toLocaleString();
             if (formatted == 0) {
