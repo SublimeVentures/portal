@@ -188,7 +188,7 @@ export default function Sidebar({ session }) {
                         onClick={() => {
                             toggleMobile();
                         }}
-                        className={`flex items-center px-5 py-2  bordered-container  sidebar-item select-none ${el.disabled ? "disabled" : ""} ${router.asPath === el.link ? "arl" : ""}`}
+                        className={`flex items-center px-5 py-2  bordered-container  sidebar-item select-none ${el.disabled ? "disabled" : ""} ${router.pathname === el.link ? "arl" : ""}`}
                     >
                         {el.icon}
                         {el.name}

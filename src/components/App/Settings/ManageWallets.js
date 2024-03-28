@@ -39,7 +39,7 @@ export default function ManageWallets({ walletProps }) {
             <div className="bordered-container boxshadow relative offerWrap flex flex-1 max-w-[600px]">
                 <div className="relative bg-navy-accent flex flex-1 flex-col">
                     <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
-                        <div className="flex flex-1 card-content-dedicated">WALLETS</div>
+                        <div className="flex flex-1 font-bold">WALLETS</div>
                         <a href={ExternalLinks.STAKING} target={"_blank"}>
                             <IconButton
                                 zoom={1.1}
