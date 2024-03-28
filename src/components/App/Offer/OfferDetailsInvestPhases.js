@@ -332,6 +332,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                         <IconButton
                             zoom={1.1}
                             size="w-12 p-3"
+                            noBorder={!isBaseVCTenant}
                             icon={<DynamicIcon name={ICONS.CALCULATOR} style="background-text-dedicated" />}
                             handler={() => setCalculateModal(true)}
                         />
