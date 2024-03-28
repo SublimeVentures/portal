@@ -79,7 +79,8 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const displayGuaranteed =
         !!upgradesUse.guaranteedUsed &&
         (phaseCurrent.phase === PhaseId.FCFS || phaseCurrent.phase === PhaseId.Pending) &&
-        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax;
+        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
+        !offer.isLaunchpad;
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencySettlement();
@@ -340,15 +341,16 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                             zoom={1.1}
                             size="w-12 p-3"
                             icon={<DynamicIcon name={ICONS.CALCULATOR} />}
-                            noBorder={!isBased}
                             handler={() => setCalculateModal(true)}
                         />
-                        <IconButton
-                            zoom={1.1}
-                            size="w-12 p-3"
-                            icon={<DynamicIcon name={ICONS.DIAMOND} className="text-gold" />}
-                            handler={() => setUpgradeModal(true)}
-                        />
+                        {!offer?.isLaunchpad && (
+                            <IconButton
+                                zoom={1.1}
+                                size="w-12 p-3"
+                                icon={<DynamicIcon name={ICONS.DIAMOND} className="text-gold" />}
+                                handler={() => setUpgradeModal(true)}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

@@ -43,7 +43,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 ></span>
             </div>
             <Tooltiper
-                text={`Filled base ${filled_base}%`}
+                text={`Filled ${filled_base}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -57,7 +57,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="w-full h-full"
             />
             <Tooltiper
-                text={`Filled res ${filled_res}%`}
+                text={`Booked ${filled_res}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -71,7 +71,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="w-full h-full"
             />
             <Tooltiper
-                text={`Filled guaranteed ${filled_guaranteed}%`}
+                text={`Guaranteed ${filled_guaranteed}%`}
                 wrapper={
                     <div
                         className="absolute w-full h-full z-30 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"

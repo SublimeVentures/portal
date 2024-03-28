@@ -6,11 +6,23 @@ import { authTokenName } from "@/lib/authHelpers";
 
 export const fetchOfferList = async () => {
     try {
-        const { data } = await axiosPrivate.get(API.offerList);
+        const { data } = await axiosPrivate.get(`${API.offerList}/?type=vc`);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "fetchOfferList" });
+        }
+    }
+    return {};
+};
+
+export const fetchLaunchpadList = async () => {
+    try {
+        const { data } = await axiosPrivate.get(`${API.offerList}/?type=launchpad`);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchLaunchpadList" });
         }
     }
     return {};
