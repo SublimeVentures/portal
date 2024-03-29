@@ -4,7 +4,6 @@ import { axiosPublic } from "./axiosPublic";
 const refreshTokenFn = async () => {
     try {
         const response = await axiosPublic.put("/api/auth/login");
-        console.log("response refres", response);
 
         return response.status === 200;
     } catch (error) {

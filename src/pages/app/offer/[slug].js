@@ -61,7 +61,8 @@ export const AppOfferDetails = ({ session }) => {
         queryFn: () => fetchOfferAllocation(offerId),
         refetchOnMount: false,
         refetchOnWindowFocus: true,
-        refetchInterval: phaseIsClosed ? false : 15000,
+        refetchInterval: 15000,
+        // refetchInterval: phaseIsClosed ? false : 15000,
     });
 
     const {
@@ -210,7 +211,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 staleTime: 15 * 60 * 1000,
             });
             const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
-            console.log("offerDetails", offerDetails, slug, query);
+
             const offerId = offerDetails.id;
 
             if (!offerId) {
@@ -233,8 +234,12 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
             if (!(offerAllocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
                 throw Error("Data not fetched");
             }
+            return {
+                additionalProps: {
+                    dehydratedState: dehydrate(queryClient),
+                },
+            };
         } catch (error) {
-            console.error("Error", error);
             return {
                 redirect: {
                     permanent: true,
@@ -242,12 +247,6 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 },
             };
         }
-
-        return {
-            additionalProps: {
-                dehydratedState: dehydrate(queryClient),
-            },
-        };
     };
 
     return await processServerSideData(req, res, resolvedUrl, customLogicCallback);

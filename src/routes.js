@@ -10,7 +10,7 @@ const PAGE = {
     Privacy: "/privacy",
     App: "/app",
     Opportunities: "/app/offer",
-    Accelerator: "/app/accelerator",
+    Launchpad: "/app/launchpad",
     OTC: "/app/otc",
     Notifs: "/app/latest",
     Mysterybox: "/app/mysterybox",

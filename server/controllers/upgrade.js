@@ -27,8 +27,9 @@ async function useGuaranteed(offerId, user, transaction) {
 
     const offer = await getOfferWithLimits(offerId);
     const offerLimit =
-        offer.offerLimits.find((el) => el.partnerId === partnerId) ||
-        offer.offerLimits.find((el) => el.partnerId === tenantId);
+        offer.offerLimits.find((el) => el.partnerId === tenantId) ||
+        offer.offerLimits.find((el) => el.partnerId === partnerId && !el.isTenantExclusive);
+
     const { allocationUser_max } = getUserAllocationMax(
         user,
         { ...offer, ...offerLimit },

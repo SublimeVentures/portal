@@ -82,7 +82,8 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const displayGuaranteed =
         !!upgradesUse.guaranteedUsed &&
         (phaseCurrent.phase === PhaseId.FCFS || phaseCurrent.phase === PhaseId.Pending) &&
-        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax;
+        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
+        !offer.isLaunchpad;
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencySettlement();
@@ -170,6 +171,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
             } else if (savedAmount === Number(investmentAmount)) {
                 openInvestmentModal();
             } else {
+                console.log("restore ", savedAmount);
                 setRestoreModal({
                     open: true,
                     amount: savedAmount,
@@ -336,13 +338,15 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                             icon={<DynamicIcon name={ICONS.CALCULATOR} style="background-text-dedicated" />}
                             handler={() => setCalculateModal(true)}
                         />
-                        <IconButton
-                            zoom={1.1}
-                            size="w-12 p-3"
-                            noBorder={!isBaseVCTenant}
-                            icon={<DynamicIcon name={ICONS.DIAMOND} style="background-text-dedicated" />}
-                            handler={() => setUpgradeModal(true)}
-                        />
+                        {!offer?.isLaunchpad && (
+                            <IconButton
+                                zoom={1.1}
+                                size="w-12 p-3"
+                                noBorder={!isBaseVCTenant}
+                                icon={<DynamicIcon name={ICONS.DIAMOND} style="background-text-dedicated" />}
+                                handler={() => setUpgradeModal(true)}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

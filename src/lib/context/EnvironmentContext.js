@@ -5,7 +5,7 @@ import set from "lodash.set";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useRouter } from "next/router";
 import { TENANT } from "@/lib/tenantHelper";
-import { logOut } from "@/fetchers/auth.fetcher";
+import { logOut, logOutRefresh } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 
 const DEFAULT_STATE = {
@@ -157,7 +157,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
 
     useEffect(() => {
         const handleLogoutEvent = () => {
-            environmentCleanup();
+            environmentCleanup(true);
         };
 
         if (typeof window !== "undefined") {
@@ -219,10 +219,10 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         });
     };
 
-    const environmentCleanup = () => {
+    const environmentCleanup = (softLogout) => {
         router.push(routes.Landing).then(async (el) => {
             setEnvironmentProps(DEFAULT_STATE);
-            await logOut();
+            softLogout ? await logOutRefresh() : await logOut();
         });
     };
 
