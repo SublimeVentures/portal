@@ -53,8 +53,8 @@ const refreshCookies = async (token) => {
 };
 
 const refreshAuth = async ({accessToken, refreshToken}) => {
-    const accessCookie = buildCookie(authTokenName, accessToken, authTokenValidityLength);
-    const refreshCookie = buildCookie(refreshTokenName, refreshToken, refreshTokenValidityLength);
+    const accessCookie = buildCookie(authTokenName, accessToken, authTokenValidityLength * 60 * 1000);
+    const refreshCookie = buildCookie(refreshTokenName, refreshToken, refreshTokenValidityLength * 60 * 60 * 1000);
 
     return {
         cookie: {
