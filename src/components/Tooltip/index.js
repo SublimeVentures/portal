@@ -1,7 +1,5 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
-
-import { Portal } from "@/lib/portal";
 import { cn } from "@/lib/cn";
 
 const Tooltip = dynamic(() => import("react-tooltip").then((mod) => mod.Tooltip), { ssr: false });
@@ -21,13 +19,11 @@ export function Tooltiper({ wrapper, text, type = TooltipType.Primary, className
             <a id={id} className={cn(`text-${type} cursor-pointer`, className)} {...rest}>
                 {wrapper}
             </a>
-            <Portal>
-                <Tooltip
-                    anchorSelect={`#${id}`}
-                    className={`basic ${type === TooltipType.Error ? "bg-app-error opacity-100" : "bg-app-accent2"}`}
-                    content={text}
-                />
-            </Portal>
+            <Tooltip
+                anchorSelect={`#${id}`}
+                className={`basic ${type === TooltipType.Error ? "bg-app-error opacity-100" : "bg-app-accent2"}`}
+                content={text}
+            />
         </>
     );
 }
