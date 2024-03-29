@@ -2,10 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import {
     IoCloudDownloadOutline as IconDownload,
-    IoLogoDiscord as IconDiscord,
     IoOpenOutline as IconWebsite,
     IoLogoTwitter as IconTwitter,
 } from "react-icons/io5";
+import { FaDiscord as IconDiscord } from "react-icons/fa";
 import { IconButton } from "@/components/Button/IconButton";
 import { tenantIndex } from "@/lib/utils";
 import OfferDetailsMediaSlider from "@/components/App/Offer/OfferDetailsMediaSlider";

@@ -24,8 +24,8 @@ router.post("/login", async (req, res) => {
         envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
 
         const session = await refreshCookies(result.token);
-        
-        if (!session?.ok) throw Error("Error generating cookies")
+
+        if (!session?.ok) throw Error("Error generating cookies");
 
         const cookies = [session.cookie.refreshCookie, session.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
@@ -40,8 +40,6 @@ router.post("/login", async (req, res) => {
 
 //LOG OUT
 router.delete("/login", async (req, res) => {
-
-
     try {
         if (!req.body.softLogout) {
             const { auth } = await verifyID(req);
@@ -72,7 +70,6 @@ router.delete("/login", async (req, res) => {
     }
 });
 
-
 //REFRESH TOKEN
 router.put("/login", async (req, res) => {
     try {
@@ -88,7 +85,7 @@ router.put("/login", async (req, res) => {
 
         const userData = await refreshData(token);
         if (!userData?.ok) throw Error("Bad AUTHER response");
-        
+
         const refresh = await refreshCookies(userData.token);
         if (!refresh) return res.status(403).json({ ok: false, error: "Refresh failed" });
 

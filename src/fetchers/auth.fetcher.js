@@ -20,7 +20,7 @@ export const logOut = async () => {
 export const logOutRefresh = async () => {
     try {
         const { data } = await axiosPrivate.delete(API.auth, {
-            data: { softLogout: true }
+            data: { softLogout: true },
         });
         return data;
     } catch (e) {}

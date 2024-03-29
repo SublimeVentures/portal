@@ -145,7 +145,7 @@ export default function OtcOffers({ propOffers }) {
                                         </span>
                                     </td>
                                     <td
-                                        className=" text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
+                                        className="text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
                                         data-label="CHAIN"
                                     >
                                         <span className="flex flex-row flex-1 justify-center gap-2">
@@ -160,35 +160,32 @@ export default function OtcOffers({ propOffers }) {
                                         className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
                                         data-label="ACTION"
                                     >
-                                        <div className={"flex flex-row gap-1 justify-end sm:justify-center"}>
+                                        <div className="flex flex-row gap-1 justify-end sm:justify-center">
                                             {ownership.ok &&
                                                 (ownership.isActive ? (
                                                     <div
-                                                        className={` duration-300 hover:text-app-error cursor-pointer`}
+                                                        className="duration-300 hover:text-app-error cursor-pointer"
                                                         onClick={() => openCancel(el)}
                                                     >
-                                                        <IconCancel className={"w-6"} />
+                                                        <IconCancel className="w-6 h-6" />
                                                     </div>
                                                 ) : (
                                                     <Tooltiper
                                                         wrapper={
-                                                            <div
-                                                                className={`disabled duration-300 hover:text-app-error cursor-pointer`}
-                                                                onClick={() => {}}
-                                                            >
-                                                                <IconCancel className={"w-6"} />
+                                                            <div className="disabled duration-300 hover:text-app-error cursor-pointer">
+                                                                <IconCancel className="w-6 h-6" />
                                                             </div>
                                                         }
-                                                        text={`Created from other wallet`}
+                                                        text="Created from other wallet"
                                                         type={TooltipType.Error}
                                                     />
                                                 ))}
                                             {!ownership.ok && (
                                                 <div
-                                                    className={"duration-300 hover:text-app-error cursor-pointer"}
+                                                    className="duration-300 hover:text-app-error cursor-pointer"
                                                     onClick={() => openTake(el)}
                                                 >
-                                                    <IconCart className={"w-6"} />
+                                                    <IconCart className="w-6 h-6" />
                                                 </div>
                                             )}
                                         </div>

@@ -15,7 +15,7 @@ import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
 import Dropdown from "@/components/App/Dropdown";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { checkIfNumberKey } from "@/lib/utils";
+import { checkIfNumberKey, tenantIndex } from "@/lib/utils";
 import { IconButton } from "@/components/Button/IconButton";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/lib/investment";
@@ -25,6 +25,9 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
+import { TENANT } from "@/lib/tenantHelper";
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const {
@@ -86,16 +89,17 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const dropdownCurrencyOptions = getCurrencySettlement();
 
     const setValue = (data) => {
-        if (!data) return;
         try {
             if (!Number.isInteger(data)) {
                 data = data.replace(/[^0-9]/g, "");
             }
             setInvestmentAmount(data);
+
             let formatted = Number(data).toLocaleString();
             if (formatted == 0) {
                 formatted = "";
             }
+
             setInvestmentAmountFormatted(formatted);
         } catch (error) {
             // Error handling: do nothing or log the error if needed
@@ -257,16 +261,6 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         setAllocationData({ ...allocations });
         const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocations, investmentAmount);
         setIsError({ state: !allocationIsValid, msg: message });
-        console.log(
-            "MAX_SUMMARY",
-            allocations,
-            session,
-            offer,
-            phaseCurrent,
-            upgradesUse,
-            userInvested?.invested,
-            allocation,
-        );
         const { isDisabled, text } = buttonInvestState(
             allocation ? allocation : {},
             phaseCurrent,
@@ -340,14 +334,16 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                         <IconButton
                             zoom={1.1}
                             size="w-12 p-3"
-                            icon={<DynamicIcon name={ICONS.CALCULATOR} />}
+                            noBorder={!isBaseVCTenant}
+                            icon={<DynamicIcon name={ICONS.CALCULATOR} style="background-text-dedicated" />}
                             handler={() => setCalculateModal(true)}
                         />
                         {!offer?.isLaunchpad && (
                             <IconButton
                                 zoom={1.1}
                                 size="w-12 p-3"
-                                icon={<DynamicIcon name={ICONS.DIAMOND} className="text-gold" />}
+                                noBorder={!isBaseVCTenant}
+                                icon={<DynamicIcon name={ICONS.DIAMOND} style="background-text-dedicated" />}
                                 handler={() => setUpgradeModal(true)}
                             />
                         )}
@@ -384,7 +380,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                                         setValue(allocationData.allocationUser_min);
                                     }}
                                 >
-                                    <IconCancel className="w-6 opacity-70" />
+                                    <IconCancel className="w-6 h-6 opacity-70" />
                                 </div>
                             </Transition.Child>
                         </Transition>
