@@ -25,10 +25,9 @@
         "prepare": "husky"
     },
     "lint-staged": {
-        "*.{js,css,jsx,json}": [
+        "*.{js,css,jsx}": [
             "eslint --fix --cache",
-            "prettier --write",
-            "git add"
+            "prettier --write"
         ]
     },
     "dependencies": {
