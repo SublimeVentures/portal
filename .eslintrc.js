@@ -18,7 +18,6 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:prettier/recommended",
         "eslint-config-prettier",
-        "prettier",
     ],
     parser: "@babel/eslint-parser",
     parserOptions: {
@@ -28,32 +27,23 @@ module.exports = {
         },
         requireConfigFile: false,
         babelOptions: {
-            presets: ["@babel/preset-env"],
+            presets: ["@babel/preset-env", "@babel/preset-react"],
         },
     },
     plugins: ["react", "react-hooks", "prettier", "jsx-a11y"],
     rules: {
-        "linebreak-style": ["error", "unix"],
-        semi: ["error", "never"],
         "react/react-in-jsx-scope": "off",
-        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/rules-of-hooks": "warn",
         "react-hooks/exhaustive-deps": "warn",
         "react/no-unescaped-entities": "warn",
-        "import/order": "warn",
+        "import/order": "error",
     },
     settings: {
         react: {
             version: "detect",
         },
         "import/resolver": {
-            node: {
-                extensions: [".js", ".jsx"],
-                moduleDirectory: ["node_modules", "src/", "server/"],
-            },
-            "eslint-import-resolver-alias": {
-                map: [["@/", "./src/*"]],
-                extensions: [".js", ".jsx"],
-            },
+            alias: [["@", "./src"]],
         },
     },
-}
+};

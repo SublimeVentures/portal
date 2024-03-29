@@ -1291,7 +1291,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.20.2":
+"@babel/preset-env@npm:7.24.3, @babel/preset-env@npm:^7.20.2":
   version: 7.24.3
   resolution: "@babel/preset-env@npm:7.24.3"
   dependencies:
@@ -1394,7 +1394,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.18.6":
+"@babel/preset-react@npm:7.24.1, @babel/preset-react@npm:^7.18.6":
   version: 7.24.1
   resolution: "@babel/preset-react@npm:7.24.1"
   dependencies:
@@ -6243,6 +6243,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-jsx@npm:0.1.0":
+  version: 0.1.0
+  resolution: "eslint-plugin-jsx@npm:0.1.0"
+  dependencies:
+    eslint-plugin-react: "npm:3.4.2"
+    html-tags: "npm:1"
+    svg-tags: "npm:1"
+  checksum: 10c0/aff82e43d6ebc5b7998857e502e0619200bce1671fbe3c756ea5880dbe56a0805dd687c7439a773394624885148a39d42da7e2759b4c3fb6889e94c6487f7553
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-prettier@npm:5.1.3":
   version: 5.1.3
   resolution: "eslint-plugin-prettier@npm:5.1.3"
@@ -6269,6 +6280,13 @@ __metadata:
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
   checksum: 10c0/58c7e10ea5792c33346fcf5cb4024e14837035ce412ff99c2dcb7c4f903dc9b17939078f80bfef826301ce326582c396c00e8e0ac9d10ac2cde2b42d33763c65
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react@npm:3.4.2":
+  version: 3.4.2
+  resolution: "eslint-plugin-react@npm:3.4.2"
+  checksum: 10c0/9a37b1bad4e5f960bccb1f15cd4af823222bbb086a1adae1ab085090a9019403f79d3b48aaad366af9353a9ee36e86c236af8f7d938c7754607ab831edfb12f4
   languageName: node
   linkType: hard
 
@@ -7305,6 +7323,13 @@ __metadata:
   dependencies:
     void-elements: "npm:3.1.0"
   checksum: 10c0/159292753d48b84d216d61121054ae5a33466b3db5b446e2ffc093ac077a411a99ce6cbe0d18e55b87cf25fa3c5a86c4d8b130b9719ec9b66623259000c72c15
+  languageName: node
+  linkType: hard
+
+"html-tags@npm:1":
+  version: 1.2.0
+  resolution: "html-tags@npm:1.2.0"
+  checksum: 10c0/142fd98897f37f00e6feadd620f474a032194a909a4c79fb4e5e08d548357fea2813d2ae2d434854e487cd4d7479ffc48b2f6fae5dcb9f58375fcb640bf38284
   languageName: node
   linkType: hard
 
@@ -11701,6 +11726,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"svg-tags@npm:1":
+  version: 1.0.0
+  resolution: "svg-tags@npm:1.0.0"
+  checksum: 10c0/5867e29e8f431bf7aecf5a244d1af5725f80a1086187dbc78f26d8433b5e96b8fe9361aeb10d1699ff483b9afec785a10916b9312fe9d734d1a7afd48226c954
+  languageName: node
+  linkType: hard
+
 "svgo@npm:^3.0.2":
   version: 3.2.0
   resolution: "svgo@npm:3.2.0"
@@ -12622,6 +12654,8 @@ __metadata:
   dependencies:
     "@babel/core": "npm:7.24.3"
     "@babel/eslint-parser": "npm:7.24.1"
+    "@babel/preset-env": "npm:7.24.3"
+    "@babel/preset-react": "npm:7.24.1"
     "@headlessui/react": "npm:1.7.18"
     "@leenguyen/react-flip-clock-countdown": "npm:1.5.1"
     "@next/eslint-plugin-next": "npm:14.1.4"
@@ -12643,6 +12677,7 @@ __metadata:
     eslint-config-prettier: "npm:9.1.0"
     eslint-import-resolver-alias: "npm:1.1.2"
     eslint-plugin-import: "npm:2.29.1"
+    eslint-plugin-jsx: "npm:0.1.0"
     eslint-plugin-jsx-a11y: "npm:6.8.0"
     eslint-plugin-prettier: "npm:5.1.3"
     eslint-plugin-react: "npm:7.34.1"
