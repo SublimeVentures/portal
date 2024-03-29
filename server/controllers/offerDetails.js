@@ -31,6 +31,7 @@ async function getParamOfferDetails(user, req) {
         url_web: offer.url_web,
         media: offer.media,
         isAccelerator: offer.isAccelerator,
+        isLaunchpad: offer.isLaunchpad,
         //per limits
         alloMin: offer.alloMin,
         alloMax: offer.alloMax,

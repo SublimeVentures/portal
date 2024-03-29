@@ -24,6 +24,7 @@ import ChangeAddress from "@/components/Navigation/ChangeAddress";
 import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 import { getCopy } from "@/lib/seoConfig";
+import { cn } from "@/lib/cn";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -102,8 +103,8 @@ export default function Sidebar({ session }) {
                 icon: <IconLight className="w-8 mr-3 text-2xl" />,
             },
             {
-                name: "Accelerator",
-                link: PAGE.Accelerator,
+                name: "Launchpad",
+                link: PAGE.Launchpad,
                 icon: isBaseVCTenant ? (
                     <IconGrowth className="w-7 mr-4 text-2xl" />
                 ) : (
@@ -188,7 +189,10 @@ export default function Sidebar({ session }) {
                         onClick={() => {
                             toggleMobile();
                         }}
-                        className={`flex items-center px-5 py-2  bordered-container  sidebar-item select-none ${el.disabled ? "disabled" : ""} ${router.asPath === el.link ? "arl" : ""}`}
+                        className={cn("flex items-center px-5 py-2 bordered-container sidebar-item select-none", {
+                            disabled: el.disabled,
+                            arl: router.pathname === el.link,
+                        })}
                     >
                         {el.icon}
                         {el.name}

@@ -5,7 +5,8 @@ const axios = require("axios");
 const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
 const { envCache } = require("../controllers/envionment");
-const { verifyID, buildCookie, refreshTokens } = require("../../src/lib/authHelpers");
+const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
+const { refreshCookies } = require("../controllers/login/tokenHelper");
 
 //LOGIN USER
 router.post("/login", async (req, res) => {
@@ -22,34 +23,37 @@ router.post("/login", async (req, res) => {
 
         envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
 
-        const cookies = [result.cookie.refreshCookie, result.cookie.accessCookie];
+        const session = await refreshCookies(result.token);
+
+        if (!session?.ok) throw Error("Error generating cookies");
+
+        const cookies = [session.cookie.refreshCookie, session.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
-        delete result.cookie;
         delete result.token;
         delete result.env;
         return res.status(200).json(result);
     } catch (error) {
-        logger.info(`LOGIN USER`, {
-            error: serializeError(error),
-            body: req.body,
-        });
+        logger.info(`LOGIN USER`, { error: serializeError(error), body: req.body });
         return res.status(400).json({});
     }
 });
 
 //LOG OUT
 router.delete("/login", async (req, res) => {
-    const { auth } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
-
     try {
-        const token = req.cookies[authTokenName];
-        const auth = await axios.delete(`${process.env.AUTHER}/auth/login`, {
-            data: { token },
-        });
-        const result = auth.data;
-        if (!result?.ok) throw Error("Bad AUTHER response");
-        const cookies = [result.cookie.refreshCookie, result.cookie.accessCookie];
+        if (!req.body.softLogout) {
+            const { auth } = await verifyID(req);
+            if (!auth) return res.status(401).json({});
+
+            const token = req.cookies[authTokenName];
+            const authData = await axios.delete(`${process.env.AUTHER}/auth/login`, { data: { token } });
+            const result = authData.data;
+            if (!result?.ok) throw Error("Bad AUTHER response");
+        }
+
+        const accessCookie = buildCookie(authTokenName, null, -1);
+        const refreshCookie = buildCookie(refreshTokenName, null, -1);
+        const cookies = [refreshCookie, accessCookie];
         res.setHeader("Set-Cookie", cookies);
         return res.status(200).json({ ok: true });
     } catch (error) {
@@ -58,11 +62,10 @@ router.delete("/login", async (req, res) => {
             body: req.body,
             cookie: req.cookies[authTokenName],
         });
-
         const accessCookie = buildCookie(authTokenName, null, -1);
         const refreshCookie = buildCookie(refreshTokenName, null, -1);
-        const cookie = [accessCookie, refreshCookie];
-        res.setHeader("Set-Cookie", cookie);
+        const cookies = [refreshCookie, accessCookie];
+        res.setHeader("Set-Cookie", cookies);
         return res.status(400).json({ ok: false });
     }
 });
@@ -72,16 +75,26 @@ router.put("/login", async (req, res) => {
     try {
         const token = req.cookies[refreshTokenName];
         console.log("refresh", token);
-        const refresh = await refreshTokens(token);
 
-        if (!refresh?.ok) throw Error("Bad AUTHER response");
+        if (!token) {
+            return res.status(400).send({ ok: false, error: "Token is required" });
+        }
+
+        const { auth, user } = await verifyID(req, true);
+        if (!auth) return res.status(401).json({ ok: false, error: "Not authorized" });
+
+        const userData = await refreshData(token);
+        if (!userData?.ok) throw Error("Bad AUTHER response");
+
+        const refresh = await refreshCookies(userData.token);
+        if (!refresh) return res.status(403).json({ ok: false, error: "Refresh failed" });
+
+        if (!refresh?.ok) throw Error("Error generating cookies");
 
         const cookies = [refresh.cookie.refreshCookie, refresh.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
-        delete refresh.data.user;
-        delete refresh.token;
 
-        return res.status(200).json(refresh.data);
+        return res.status(200).json(userData.data);
     } catch (error) {
         logger.error(`ERROR :: REFRESH USER`, {
             error: serializeError(error),
