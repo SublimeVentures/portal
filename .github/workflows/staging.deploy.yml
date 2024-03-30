@@ -52,7 +52,7 @@ jobs:
       - name: Checkout submodule to staging branch
         run: |
           cd ./server/services/db/definitions
-          git fetch -all
+          git fetch --all
           git checkout ${{ env.ENV }}
           git pull origin ${{ env.ENV }}
           cd -
