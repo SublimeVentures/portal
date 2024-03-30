@@ -52,7 +52,7 @@ jobs:
       - name: Checkout submodule to staging branch
         run: |
           cd ./server/services/db/definitions
-          git fetch -all
+          git fetch --all
           git checkout develop
           git pull origin develop
           cd -
