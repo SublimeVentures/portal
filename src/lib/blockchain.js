@@ -18,6 +18,12 @@ const RPCs = {
         fallback2: "https://snowy-cold-general.matic.quiknode.pro/ef4093d59090cea515d612a18380e69aaeda42e4/",
         fallback3: "https://polygon-mainnet.g.alchemy.com/v2/FuElfvJibpbYOz1NRpz31H3GX9GhZjsC",
     },
+    43114: {
+        main: "https://cosmopolitan-rough-dream.avalanche-mainnet.quiknode.pro/948ecd999cc2729ab0d0738ed191fa9a234df346/ext/bc/C/rpc/",
+        fallback1: "https://rpc.ankr.com/avalanche/650887a823beb18b6898043c82c50269153b7bc6c4f604068bfa35abf4fefa02",
+        fallback2:
+            "https://late-solemn-mansion.avalanche-mainnet.quiknode.pro/42db2654cb19ee23c3fc9b8a78bb3c33e22d141c/ext/bc/C/rpc/",
+    },
 };
 
 const TENANT_WALLETCONNECT = () => {
