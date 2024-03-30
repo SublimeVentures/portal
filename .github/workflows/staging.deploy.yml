@@ -50,8 +50,8 @@ jobs:
         run: |
           cd ./server/services/db/definitions
           git fetch
-          git checkout develop
-          git pull origin develop
+          git checkout staging
+          git pull origin staging
           cd -
 
       - name: Fetch secrets
