@@ -31,7 +31,7 @@ for tag in task_def['tags']:
         tag['value'] = app
 
 # Define the output file path
-output_file_path = f".github/scripts/{tenant_name}-development-task-definition.json"
+output_file_path = f".github/scripts/{tenant_name}-{env}-task-definition.json"
 
 # Write the updated task definition back to the new file
 with open(output_file_path, 'w') as f:
