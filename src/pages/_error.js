@@ -1,6 +1,6 @@
+import * as Sentry from "@sentry/nextjs";
 import LayoutFullscreen from "@/components/Layout/LayoutFullscreen";
 import ErrorPage from "@/components/ErrorPage";
-import * as Sentry from "@sentry/nextjs";
 
 function Error({ statusCode }) {
     return <ErrorPage statusCode={statusCode} />;
