@@ -41,6 +41,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.ORG_PAT }}
+          fetch-depth: 0
+
+      - name: Checkout submodule to staging branch
+        run: |
+          git submodule update --init --recursive ./server/services/db/definitions
+          cd ./server/services/db/definitions
+          git fetch --all --prune --tags
+          git checkout -b staging origin/staging || git checkout staging
+          git pull origin staging
+          cd -
 
       - name: Fetch secrets
         run: |
@@ -74,6 +87,7 @@ jobs:
         run: |
           FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
           UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-staging-task-definition.json"
+          cat $UPDATED_TASK_DEFINITION
           revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
           echo "Registered Task Definition: $revision"
           aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"

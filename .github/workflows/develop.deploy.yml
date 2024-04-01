@@ -45,14 +45,18 @@ jobs:
           submodules: 'true'
           token: ${{ secrets.ORG_PAT }}
 
+      - name: Initialize and update submodule
+        run: |
+          git submodule update --init --recursive
 
-      - name: Checkout submodule to dev branch
+      - name: Checkout submodule to staging branch
         run: |
           cd ./server/services/db/definitions
-          git fetch
+          git fetch --all
           git checkout develop
           git pull origin develop
           cd -
+
 
       - name: Fetch secrets
         run: |
