@@ -76,7 +76,7 @@
     }
 
     input:focus ~ label,
-  input.highlight ~ label,
+  input.highlight ~ label
   //input:not([value=""]) ~ label
     {
         top: -10px;

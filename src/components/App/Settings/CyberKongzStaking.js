@@ -15,6 +15,7 @@ export default function CyberKongzStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
     const router = useRouter();
 
+    const [stakeAmount, setStakeAmount] = useState(500);
     const [staked, setStaked] = useState(false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
@@ -97,7 +98,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                         </p>
                     )}
                 </div>
-                {staked && (
+                {Boolean(staked) && (
                     <div className={"detailRow text-app-success"}>
                         <p>Next {unstake ? "re" : "un"}stake</p>
                         <hr className={"spacer"} />
@@ -114,7 +115,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                     </div>
                 )}
 
-                <div className={" flex flex-1 justify-between mt-5"}>
+                <div className={"flex flex-1 justify-between mt-5"}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={"GET BANANA"}
