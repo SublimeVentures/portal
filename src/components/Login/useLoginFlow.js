@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
-import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import { logIn } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
+import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 import { isUrlTrusted } from "@/components/Login/helper";
 
 const SIGNING_MESSAGE = {
@@ -23,7 +23,7 @@ export default function useLoginFlow() {
 
     const [signErrorMsg, setErrorMsg] = useState("");
     const [isSigningMessage, setIsSigningMessage] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
     const [isLoginLoading, setIsLoginLoading] = useState(false);
     const [partner, setPartner] = useState(0);
 
@@ -42,7 +42,7 @@ export default function useLoginFlow() {
         setIsSigningMessage(true);
 
         try {
-            const time = moment.utc().unix();
+            const time = Math.floor(new Date().getTime() / 1000);
             const nonce = uuidv4();
             const message = `${SIGNING_MESSAGE[process.env.NEXT_PUBLIC_TENANT]}\n\nDOMAIN: ${window.location.host.replace("www.", "")}\nTIME: ${time}\nNONCE: ${nonce}\n\nI herby accept Privacy Policy and Terms of Use available https://${window.location.host.replace("www.", "")}/terms and https://${window.location.host.replace("www.", "")}/privacy`;
             const signature = await signMessageFn({ message });
@@ -62,7 +62,7 @@ export default function useLoginFlow() {
             } else {
                 router.push({
                     pathname: routes.Login,
-                    query: { error: "CredentialsSignin" },
+                    query: { error: LoginErrorsEnum.CREDENTIALS_ERROR },
                 });
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
@@ -86,14 +86,21 @@ export default function useLoginFlow() {
             }
         }
 
-        setModalOpen(true);
+        setLoginModalOpen(true);
     }, [accountAddress, accountIsConnected, isLoginLoading, signMessage]);
 
     useEffect(() => {
-        if (modalOpen) {
+        if (loginModalOpen) {
             setErrorMsg("");
         }
-    }, [modalOpen]);
+    }, [loginModalOpen]);
+
+    useEffect(() => {
+        if (accountAddress && loginModalOpen) {
+            setLoginModalOpen(false);
+            void handleConnect();
+        }
+    }, [accountAddress, handleConnect, loginModalOpen]);
 
     const loginData = {
         connectors,
@@ -101,8 +108,8 @@ export default function useLoginFlow() {
         connectorActive,
         connect,
         handleConnect,
-        modalOpen,
-        setModalOpen,
+        loginModalOpen,
+        setLoginModalOpen,
         signErrorMsg,
         setErrorMsg,
         accountIsConnecting,

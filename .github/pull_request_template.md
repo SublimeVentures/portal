@@ -11,5 +11,6 @@
 ## Checklist
 
 - [ ] Provided a screenshot (only if change is visible in UI)
+- [ ] Provided steps for playback (only if possible).
 - [ ] Provided a change scope in summary
 - [ ] Local Docker build has passed
