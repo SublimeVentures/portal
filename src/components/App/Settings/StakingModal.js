@@ -6,11 +6,13 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getCopy } from "@/lib/seoConfig";
 import { TENANTS_STAKIMG } from "@/components/App/Settings/helper";
+import StepInput from "@/components/App/StepInput";
 
 export default function StakingModal({ model, setter, stakingModalProps }) {
-    const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
+    const { stakeReq, isS1, stakeMulti, stakingCurrency } = stakingModalProps;
     const { account, activeDiamond } = useEnvironmentContext();
 
+    const [stakeSize, setStakeSize] = useState(stakeReq);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const closeModal = () => {
@@ -21,7 +23,6 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
     };
 
     const token = useGetToken(stakingCurrency?.contract);
-    const stakeSize = isStaked ? stakeMulti : stakeReq;
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
@@ -56,24 +57,38 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
 
     const contentStake = () => {
         return (
-            <div className={"min-w-[300px]"}>
+            <div className="min-w-[300px]">
                 <div>
                     To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span>{" "}
                     investments, every investor must stake{" "}
-                    <span className={"text-app-success"}>${stakingCurrency.symbol}</span> token.
+                    <span className="text-app-success">${stakingCurrency.symbol}</span> token.
                 </div>
-                <div className={"my-5"}>
-                    <div className={"detailRow"}>
+                <div className="my-5 flex flex-col gap-y-2">
+                    <div className="detailRow">
                         <p>Detected NFT</p>
-                        <hr className={"spacer"} />
+                        <hr className="spacer" />
                         <p>{TENANTS_STAKIMG()[isS1 ? 0 : 1]}</p>
                     </div>
-                    <div className={"detailRow"}>
-                        <p>{isStaked ? "Add" : "Required"} Stake</p>
-                        <hr className={"spacer"} />
+
+                    <div className="detailRow">
+                        <p>Min Required Stake</p>
+                        <hr className="spacer" />
                         <p>
-                            {stakeSize} {stakingCurrency.name}
+                            {stakeReq} {stakingCurrency.name}
                         </p>
+                    </div>
+
+                    <div className={"detailRow"}>
+                        <p>Stake Amount:</p>
+                        <hr className={"spacer"} />
+                        <StepInput
+                            step={stakeMulti}
+                            min={stakeReq}
+                            max={5000}
+                            value={stakeSize}
+                            setValue={setStakeSize}
+                            aria-label={`Add ${stakeSize} ${stakingCurrency.name}`}
+                        />
                     </div>
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
@@ -83,9 +98,9 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
 
     const contentSuccess = () => {
         return (
-            <div className={"min-w-[300px]"}>
-                <div className={"text-app-success"}>{stakingCurrency.name} staked successfully.</div>
-                <div className={"text-gold"}>Welcome to {getCopy("NAME")}.</div>
+            <div className="min-w-[300px]">
+                <div className="text-app-success">{stakingCurrency.name} staked successfully.</div>
+                <div className="text-gold">Welcome to {getCopy("NAME")}.</div>
             </div>
         );
     };
