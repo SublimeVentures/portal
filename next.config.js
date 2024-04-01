@@ -39,16 +39,11 @@ const nextConfig = {
 module.exports = nextConfig;
 
 // Injected content via Sentry wizard below
-if (process.env.ENV === "production" && !process.env.FORCE_DEV) {
+if (process.env.ENV !== "dev") {
     module.exports = withSentryConfig(
         module.exports,
         {
-            // For all available options, see:
-            // https://github.com/getsentry/sentry-webpack-plugin#options
-
-            // Suppresses source map uploading logs during build
             silent: true,
-
             org: process.env.SENTRY_ORG,
             project: process.env.SENTRY_PROJECT,
         },

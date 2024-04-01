@@ -3,7 +3,6 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
-
 const DNS = process.env.SENTRY_DSN;
 
 Sentry.init({
@@ -20,4 +19,7 @@ Sentry.init({
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
+
+    // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+    // spotlight: process.env.NODE_ENV === 'development',
 });
