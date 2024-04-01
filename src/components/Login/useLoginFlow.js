@@ -6,6 +6,7 @@ import { logIn } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
+import { isUrlTrusted } from "@/components/Login/helper";
 
 const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
@@ -57,7 +58,7 @@ export default function useLoginFlow() {
             );
 
             if (isAuth?.ok) {
-                router.replace(callbackUrl ? callbackUrl : routes.App);
+                router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
                 router.push({
                     pathname: routes.Login,

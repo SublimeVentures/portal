@@ -32,6 +32,7 @@ const nextConfig = {
         DOMAIN: process.env.DOMAIN,
         JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
         NEXT_PUBLIC_ENV: process.env.ENV,
+        TRUSTED_DOMAINS: process.env.TRUSTED_DOMAINS,
     },
 };
 
