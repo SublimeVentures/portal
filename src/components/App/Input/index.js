@@ -106,7 +106,7 @@ export default function Input({
                     setStatus(true);
                     return setIsError({
                         state: true,
-                        msg: `Amount has to be divisible by $10`,
+                        msg: `Amount has to be divisible by $${dividable}`,
                     });
                 }
                 setStatus(false);
