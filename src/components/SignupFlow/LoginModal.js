@@ -4,14 +4,7 @@ import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
 import { ExternalLinks } from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { KNOWN_CONNECTORS } from "@/lib/blockchain";
-
-function getConnectorImage(connectorName) {
-    if (KNOWN_CONNECTORS.includes(connectorName)) {
-        return `${connectorName}.png`;
-    }
-    return "wallet.png";
-}
+import { getConnectorImage } from "@/components/SignupFlow/helper";
 
 export default function LoginModal({ loginModalProps }) {
     const {
@@ -20,8 +13,8 @@ export default function LoginModal({ loginModalProps }) {
         connectorIsLoading,
         connect,
         handleConnect,
-        modalOpen,
-        setModalOpen,
+        loginModalOpen,
+        setLoginModalOpen,
         signErrorMsg,
         setErrorMsg,
         accountIsConnecting,
@@ -29,23 +22,19 @@ export default function LoginModal({ loginModalProps }) {
         isLoginLoading,
     } = loginModalProps;
 
-    const buttonHandler = async (connector) => {
+    const buttonHandler = (connector) => {
         setErrorMsg("");
-        if (!connectorIsLoading) {
-            if (connectorActive) {
-                handleConnect();
-            } else {
-                try {
-                    await connect({ connector });
-                } catch (error) {
-                    setErrorMsg(error.shortMessage);
-                }
+        if (connectorIsLoading) return;
+
+        if (connectorActive) {
+            handleConnect();
+        } else {
+            try {
+                connect({ connector });
+            } catch (error) {
+                setErrorMsg(error.shortMessage);
             }
         }
-    };
-
-    const title = () => {
-        return <span className="card-table-header">Connect Wallet</span>;
     };
 
     const content = () => {
@@ -66,14 +55,12 @@ export default function LoginModal({ loginModalProps }) {
                             <UniButton
                                 type={ButtonTypes.BASE}
                                 key={connector.id}
-                                handler={async () => {
-                                    await buttonHandler(connector);
-                                }}
+                                handler={() => buttonHandler(connector)}
                                 text={connector.name}
                                 isWide={true}
                                 zoom={1.05}
-                                state={"min-w-[300px] mx-auto"}
-                                size={"text-sm sm"}
+                                state="min-w-[300px] mx-auto"
+                                size="text-sm sm"
                                 isLoadingWithIcon={true}
                                 isDisabled={accountIsConnecting || isSigningMessage || isLoginLoading}
                                 icon={
@@ -101,11 +88,9 @@ export default function LoginModal({ loginModalProps }) {
 
     return (
         <GenericModal
-            isOpen={modalOpen}
-            closeModal={() => {
-                setModalOpen(false);
-            }}
-            title={title()}
+            isOpen={loginModalOpen}
+            closeModal={() => setLoginModalOpen(false)}
+            title={<span className="card-table-header">Connect Wallet</span>}
             content={content()}
         />
     );
