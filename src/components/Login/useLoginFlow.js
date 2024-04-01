@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { logIn } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
+import { isUrlTrusted } from "@/components/Login/helper";
 
 const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
@@ -32,19 +33,14 @@ export default function useLoginFlow() {
         isConnecting: accountIsConnecting,
         connector: connectorActive,
     } = useAccount();
-    const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
-    const {
-        connectors,
-        connectAsync: connect,
-        error: connectorError,
-        isLoading: connectorIsLoading,
-        variables: connectVariables,
-    } = useConnect();
+    const { signMessageAsync: signMessageFn } = useSignMessage();
+    const { connectors, connectAsync: connect, isLoading: connectorIsLoading } = useConnect();
 
     const signMessage = useCallback(async () => {
         setErrorMsg("");
         setIsLoginLoading(true);
         setIsSigningMessage(true);
+
         try {
             const time = moment.utc().unix();
             const nonce = uuidv4();
@@ -52,6 +48,7 @@ export default function useLoginFlow() {
             const signature = await signMessageFn({ message });
 
             const callbackUrl = router.query.callbackUrl;
+
             const isAuth = await logIn(
                 message,
                 signature,
@@ -59,8 +56,9 @@ export default function useLoginFlow() {
                 partner,
                 LOGIN_TYPE.WEB3,
             );
+
             if (isAuth?.ok) {
-                router.replace(callbackUrl ? callbackUrl : routes.App);
+                router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
                 router.push({
                     pathname: routes.Login,
