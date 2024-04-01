@@ -4,7 +4,7 @@ export const isUrlTrusted = (url) => {
 
     return (
         trustedURLs &&
-        !!trustedURLs.find(
+        trustedURLs.some(
             (domain) => (isDevEnvironment && url.startsWith("http://" + domain)) || url.startsWith("https://" + domain),
         )
     );
