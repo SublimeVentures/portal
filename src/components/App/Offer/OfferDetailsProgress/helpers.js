@@ -3,21 +3,9 @@ export const calculateFilledPercentage = (totalBaseRes, totalAdjusted) => {
     return (filledData / 100) * totalAdjusted;
 };
 
-export const calculateGuaranteedPercentage = (guaranteed, totalAdjusted) => (guaranteed / totalAdjusted) * 100;
-
-export const adjustGuaranteedFilled = (percentageFilled, percentageGuaranteedFilled) => {
-    if (percentageFilled + percentageGuaranteedFilled > 100) {
-        const excess = percentageFilled + percentageGuaranteedFilled - 100;
-        percentageGuaranteedFilled -= excess;
-    }
-
-    return percentageGuaranteedFilled;
-};
-
 export const calculateProgressMetrics = (base, res, guaranteed) => {
     const totalBaseRes = base + res;
     const totalAdjusted = totalBaseRes + guaranteed;
-
     let percentageFilled = 0,
         percentageGuaranteed = 0;
 
@@ -25,15 +13,13 @@ export const calculateProgressMetrics = (base, res, guaranteed) => {
         percentageGuaranteed = guaranteed;
         percentageFilled = calculateFilledPercentage(totalBaseRes, totalAdjusted);
     } else {
-        percentageFilled = (totalBaseRes / totalAdjusted) * 100;
-        percentageGuaranteed = (guaranteed / totalBaseRes) * 100;
+        percentageFilled = 0;
+        percentageGuaranteed = 0;
     }
 
-    percentageGuaranteed = adjustGuaranteedFilled(percentageFilled, percentageGuaranteed);
-
     return {
-        width: Math.round(percentageGuaranteed) || 0,
-        offset: Math.round(percentageFilled) || 0,
+        guaranteedWidth: Math.round(percentageGuaranteed) || 0,
+        guaranteedOffset: Math.round(percentageFilled) || 0,
     };
 };
 
