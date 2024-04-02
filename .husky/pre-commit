@@ -1,2 +1,1 @@
-yarn lint --quiet
 yarn lint-staged
