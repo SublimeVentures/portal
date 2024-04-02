@@ -299,7 +299,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 zoom={1.1}
                                 size={""}
                                 noBorder={true}
-                                icon={<IconMinus className={"w-6"} />}
+                                icon={<IconMinus className={"w-6 text-2xl"} />}
                                 handler={() => setMultiplierHandler(false)}
                             />
                             <div
@@ -311,7 +311,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 zoom={1.1}
                                 size={""}
                                 noBorder={true}
-                                icon={<IconPlus className={"w-6"} />}
+                                icon={<IconPlus className={"w-6 text-2xl"} />}
                                 handler={() => setMultiplierHandler(true)}
                             />
                         </div>

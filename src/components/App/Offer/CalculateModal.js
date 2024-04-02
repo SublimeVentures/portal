@@ -74,7 +74,7 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
                         zoom={1.1}
                         size={""}
                         noBorder={true}
-                        icon={<IconMinus className={"w-8"} />}
+                        icon={<IconMinus className={"w-8 text-2xl"} />}
                         handler={() => setMultiplierHandler(false)}
                     />
                     <div
@@ -86,7 +86,7 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
                         zoom={1.1}
                         size={""}
                         noBorder={true}
-                        icon={<IconPlus className={"w-8"} />}
+                        icon={<IconPlus className={"w-8 text-2xl"} />}
                         handler={() => setMultiplierHandler(true)}
                     />
                 </div>
