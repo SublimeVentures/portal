@@ -164,7 +164,7 @@ export default function Input({
                         leaveTo="opacity-0"
                     >
                         <div className="absolute top-5 right-5 cursor-pointer" onClick={() => clearInput()}>
-                            <IconCancel className="w-6 opacity-70" />
+                            <IconCancel className="w-6 text-2xl opacity-70" />
                         </div>
                     </Transition.Child>
                 </Transition>

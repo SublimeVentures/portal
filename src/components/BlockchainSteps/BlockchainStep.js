@@ -30,7 +30,7 @@ const BlockchainStep = ({ data }) => {
                         className={cn("flex flex-1 gap-3 items-center", colorOverride ?? getStatusColor(state))}
                     >
                         <div className={cn("blob relative", { active: state === STEP_STATE.PROCESSING })}>
-                            <DynamicIcon name={icon} style={iconPadding} />
+                            <DynamicIcon name={icon} style={cn(iconPadding, "max-h-full max-w-full")} />
                         </div>
 
                         <div className="flex flex-1">{content}</div>
