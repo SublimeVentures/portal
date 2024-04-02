@@ -12659,7 +12659,7 @@ __metadata:
     "@headlessui/react": "npm:1.7.18"
     "@leenguyen/react-flip-clock-countdown": "npm:1.5.1"
     "@next/eslint-plugin-next": "npm:14.1.4"
-    "@sentry/nextjs": "npm:7.107.0"
+    "@sentry/nextjs": "npm:^7.105.0"
     "@svgr/webpack": "npm:8.1.0"
     "@tanstack/react-query": "npm:5.28.4"
     "@tanstack/react-query-devtools": "npm:5.28.4"
