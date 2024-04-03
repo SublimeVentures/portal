@@ -35,10 +35,6 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     const filled_guaranteed_rounding = calculateEndRounding(guaranteedWidth + guaranteedOffset);
 
     return (
-        <>
-        <div>filled_base: {filled_base}</div>
-        <div>reservedWidth: {reservedWidth}</div>
-        <div>filled_res, filled_base: {filled_res > filled_base}</div>
         <div className="relative h-[50px] w-full flex flex-row items-center rounded-xl select-none" ref={tilt}>
             <div className="os-progress-bar absolute rounded-xl overflow-hidden -z-10">
                 <span className="os-progress-bar--meter flex flex-1 rounded-tl-xl rounded-bl-xl"></span>
@@ -102,6 +98,5 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 Filled {Number(progress).toFixed(0)}%
             </p>
         </div>
-        </>
     );
 }
