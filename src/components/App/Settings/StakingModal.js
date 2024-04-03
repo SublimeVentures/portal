@@ -44,7 +44,7 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
             token,
             setTransactionSuccessful,
         };
-    }, [stakingCurrency?.contract, activeDiamond, model]);
+    }, [stakingCurrency?.contract, activeDiamond, model, stakeSize]);
     console.log("blockchainInteractionData", blockchainInteractionData);
 
     const title = () => {
