@@ -7,6 +7,7 @@ import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
+import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
@@ -68,6 +69,14 @@ export default function CyberKongzStaking({ stakingProps }) {
                     <a href={ExternalLinks.STAKING} target={"_blank"}>
                         <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                     </a>
+                </div>
+                <div className="detailRow">
+                    <p>ACCOUNT ID</p>
+                    <hr className="spacer" />
+                    <p className="flex gap-1 justify-end items-center">
+                        <span>A1B2C3D4</span>
+                        <InlineCopyButton copiable={"A1B2C3D4"} />
+                    </p>
                 </div>
                 <div className={"detailRow"}>
                     <p>KONG ID</p>

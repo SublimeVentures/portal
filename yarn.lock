@@ -10249,7 +10249,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -12704,6 +12704,7 @@ __metadata:
     pg-hstore: "npm:2.3.4"
     postcss: "npm:8.4.37"
     prettier: "npm:3.2.5"
+    prop-types: "npm:15.8.1"
     react: "npm:18.2.0"
     react-cookie: "npm:7.1.0"
     react-dom: "npm:18.2.0"
