@@ -14,26 +14,24 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
 
     useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.05, speed: 1000, max: 5 }), []);
 
-    const amt_filled = allocations?.alloFilled ? allocations?.alloFilled : 0;
-    const amt_res = allocations?.alloRes ? allocations?.alloRes : 0;
-    const amt_guaranteed = allocations?.alloGuaranteed ? allocations?.alloGuaranteed : 0;
-    const amt_total = allocations?.alloTotal ? allocations?.alloTotal : 0;
+    const isSettled = allocations?.isSettled ?? false;
+    const amt_filled = allocations?.alloFilled ?? 0;
+    const amt_res = allocations?.alloRes ?? 0;
+    const amt_guaranteed = allocations?.alloGuaranteed ?? 0;
+    const amt_total = allocations?.alloTotal ?? 0;
 
-    const filled_base = Math.round((amt_filled / amt_total) * 100);
+    const filled_base = Math.min(Math.round((amt_filled / amt_total) * 100), 100)
     const progress = isSoldOut ? 100 : filled_base;
+    const isFullfield = isSoldOut || progress >= 100;
+    
+    const filled_res2 = isFullfield ? 0 : Math.min(Math.round(amt_res/amt_total * 100), 100)
+    const filled_res = filled_res2 > filled_base ? filled_res2 - filled_base : filled_res2
 
-    const filled_guaranteed = Math.min(
-        Math.round((amt_guaranteed / amt_total) * 100),
-        isSoldOut ? 0 : amt_total - amt_guaranteed,
-    );
-
-    const filled_res = Math.min(Math.round((amt_res / amt_total) * 100), isSoldOut ? 0 : amt_total - amt_filled);
-
+    const filled_guaranteed = Math.min(Math.round((amt_guaranteed / amt_total) * 100), isFullfield ? 0 : Math.max(amt_total - amt_guaranteed, 0));
     const { guaranteedWidth, guaranteedOffset } = calculateProgressMetrics(progress, filled_res, filled_guaranteed);
-    const reservedWidth = filled_base + filled_res > 100 ? filled_res - (filled_base + filled_res - 100) : filled_res;
 
-    const filled_base_rounding = calculateEndRounding(progress - reservedWidth - guaranteedWidth);
-    const filled_res_rounding = calculateEndRounding(progress + reservedWidth);
+    const filled_base_rounding = calculateEndRounding(progress - filled_res - guaranteedWidth);
+    const filled_res_rounding = calculateEndRounding(progress + filled_res);
     const filled_guaranteed_rounding = calculateEndRounding(guaranteedWidth + guaranteedOffset);
 
     return (
@@ -46,7 +44,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 ></span>
             </div>
             <Tooltiper
-                text={`Filled ${progress}%`}
+                text={(isSettled || isFullfield) ? null : `Filled ${progress}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -60,17 +58,19 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="w-full h-full"
             />
             <Tooltiper
-                text={`Booked ${reservedWidth}%`}
+                text={`Booked ${filled_res}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
                         style={{
+                            borderTopLeftRadius: progress === 0 ? '12px' : '0',
+                            borderBottomLeftRadius: progress === 0 ? '12px' : '0',
                             borderTopRightRadius: filled_res_rounding,
                             borderBottomRightRadius: filled_res_rounding,
                         }}
                     ></div>
                 }
-                style={{ width: `${reservedWidth}%`, "--progress-step-color": progressColors.resColor }}
+                style={{ width: `${filled_res}%`, "--progress-step-color": progressColors.resColor }}
                 className="w-full h-full"
             />
             <Tooltiper
@@ -79,6 +79,8 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                     <div
                         className="absolute w-full h-full z-30 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
                         style={{
+                            borderTopLeftRadius: progress + filled_res === 0 ? '12px' : '0',
+                            borderBottomLeftRadius: progress + filled_res === 0 ? '12px' : '0',
                             borderTopRightRadius: filled_guaranteed_rounding,
                             borderBottomRightRadius: filled_guaranteed_rounding,
                         }}
