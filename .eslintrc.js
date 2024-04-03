@@ -29,7 +29,7 @@ module.exports = {
     ],
     rules: {
         "@next/next/no-img-element": "warn",
-        "react/react-in-jsx-scope": "warn",
+        "react/react-in-jsx-scope": "off",
         "react-hooks/rules-of-hooks": "warn",
         "react-hooks/exhaustive-deps": "warn",
         "react/no-unescaped-entities": "warn",
