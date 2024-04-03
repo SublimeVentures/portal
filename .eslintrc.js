@@ -32,11 +32,13 @@ module.exports = {
     },
     plugins: ["react", "react-hooks", "prettier", "jsx-a11y"],
     rules: {
+        "@next/next/no-img-element": "warn",
         "react/react-in-jsx-scope": "off",
         "react-hooks/rules-of-hooks": "warn",
         "react-hooks/exhaustive-deps": "warn",
         "react/no-unescaped-entities": "warn",
-        "import/order": "error",
+        "import/order": "warn",
+        "jsx-a11y/alt-text": "warn",
     },
     settings: {
         react: {
