@@ -26,7 +26,7 @@ export default function LayoutApp({ children }) {
 
             <div className="flex flex-col collap:flex-row bg-app-bg min-h-screen">
                 <Sidebar session={children.props?.session} />
-                <main className="flex flex-col w-full grow sm:min-h-screen max-w-[1920px] p-5 mobile:p-10 gap-5 mobile:gap-10 text-app-white">
+                <main className="flex flex-col w-full grow sm:min-h-screen max-w-[1920px] p-5 mobile:p-10 gap-5 mobile:gap-10 text-app-white relative">
                     {children}
                 </main>
                 {/*<main className="flex flex-col w-full sm:min-h-screen max-w-[1920px] p-5 mobile:p-10 gap-5 mobile:gap-10 text-app-white">{children}</main>*/}
