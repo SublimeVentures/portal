@@ -73,8 +73,8 @@ export default function NeoTokyoStaking({ stakingProps }) {
                     <p>ACCOUNT ID</p>
                     <hr className="spacer" />
                     <p className="flex gap-1 justify-end items-center">
-                        <span>A1B2C3D4</span>
-                        <InlineCopyButton copiable={"A1B2C3D4"} />
+                        <span>{session.accountId}</span>
+                        <InlineCopyButton copiable={session.accountId} />
                     </p>
                 </div>
                 <div className={`detailRow  ${isElite ? "text-gold" : ""}`}>

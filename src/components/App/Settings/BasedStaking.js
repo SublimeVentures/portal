@@ -3,7 +3,8 @@ import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
-export default function BasedStaking({ account }) {
+export default function BasedStaking({ stakingProps }) {
+    const { session } = stakingProps;
     return (
         <div className={`rounded-xl boxshadow relative offerWrap flex flex-1 max-w-[600px]`}>
             <div className={` rounded-xl relative bg-navy-accent flex flex-1 flex-col p-5 `}>
@@ -17,8 +18,8 @@ export default function BasedStaking({ account }) {
                     <p>ACCOUNT ID</p>
                     <hr className="spacer" />
                     <p className="flex gap-1 justify-end items-center">
-                        <span>A1B2C3D4</span>
-                        <InlineCopyButton copiable={"A1B2C3D4"} />
+                        <span>{session.accountId}</span>
+                        <InlineCopyButton copiable={session.accountId} />
                     </p>
                 </div>
                 <div className={"flex flex-1 justify-center items-center"}>Staking available soon</div>
