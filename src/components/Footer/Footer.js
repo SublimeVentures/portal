@@ -3,7 +3,7 @@ import Link from "next/link";
 import PAGE from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
 
-export default function Navbar() {
+export default function Footer() {
     const { pathname } = useRouter();
     return (
         <div

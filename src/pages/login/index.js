@@ -11,6 +11,7 @@ import { verifyID } from "@/lib/authHelpers";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
 import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
+import Layout from "@/components/Layout/Layout";
 
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
     ssr: true,
@@ -92,4 +93,8 @@ export const getServerSideProps = async ({ req, res }) => {
             isAuthenticated: account.auth,
         },
     };
+};
+
+Login.getLayout = function (page) {
+    return <Layout>{page}</Layout>;
 };

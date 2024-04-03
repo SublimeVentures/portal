@@ -17,6 +17,7 @@ import Linker from "@/components/link";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 import { TENANT } from "@/lib/tenantHelper";
+import Layout from "@/components/Layout/Layout";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -135,4 +136,8 @@ export const getServerSideProps = async (context) => {
             isAuthenticated: account.auth,
         },
     };
+};
+
+LoginPartner.getLayout = function (page) {
+    return <Layout>{page}</Layout>;
 };

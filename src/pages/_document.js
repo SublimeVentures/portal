@@ -1,5 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import { TENANT } from "@/lib/tenantHelper";
+import InitPage from "@/components/InitPage/InitPage";
 
 const TENANT_FAVICON = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -23,10 +24,10 @@ export default function Document() {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link rel="icon" href={TENANT_FAVICON()} sizes="any" />
             </Head>
-            <body>
-                <Main />
-                <div id="portal-root" />
-                <NextScript />
+            <body style={{ display: 'block' }}>
+            <InitPage/>
+            <Main />
+            <NextScript />
             </body>
         </Html>
     );
