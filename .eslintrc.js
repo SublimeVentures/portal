@@ -11,26 +11,15 @@ module.exports = {
     extends: [
         "next/core-web-vitals",
         "eslint:recommended",
-        "next",
         "plugin:react/recommended",
         "plugin:react-hooks/recommended",
         "plugin:jsx-a11y/recommended",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:prettier/recommended",
+        "next",
         "prettier", 
     ],
-    parser: "@babel/eslint-parser",
-    parserOptions: {
-        ecmaVersion: 2021,
-        sourceType: "module",
-        ecmaFeatures: {
-            jsx: true,
-        },
-        babelOptions: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-        },
-    },
     plugins: [
         "react",
         "react-hooks",
@@ -40,7 +29,7 @@ module.exports = {
     ],
     rules: {
         "@next/next/no-img-element": "warn",
-        "react/react-in-jsx-scope": "off",
+        "react/react-in-jsx-scope": "warn",
         "react-hooks/rules-of-hooks": "warn",
         "react-hooks/exhaustive-deps": "warn",
         "react/no-unescaped-entities": "warn",
