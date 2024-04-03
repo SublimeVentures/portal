@@ -89,7 +89,7 @@ jobs:
       - name: Deploy new code
         run: |
           FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
-          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-development-task-definition.json"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-${{env.ENV}}-task-definition.json"
           revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
           echo "Registered Task Definition: $revision"
           aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
