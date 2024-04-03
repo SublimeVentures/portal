@@ -60,14 +60,9 @@ export default function NeoTokyoStaking({ stakingProps }) {
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>
                         IDENTITY
                     </div>
-                    <a href={ExternalLinks.STAKING} target={"_blank"}>
+                    <a href={ExternalLinks.STAKING} target={"_blank"} rel="noreferrer">
                         <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                     </a>
-                </div>
-                <div className={"detailRow"}>
-                    <p>CITIZEN</p>
-                    <hr className={"spacer"} />
-                    <p>#{session.tokenId}</p>
                 </div>
                 <div className="detailRow">
                     <p>ACCOUNT ID</p>
@@ -76,6 +71,11 @@ export default function NeoTokyoStaking({ stakingProps }) {
                         <span>{session.accountId}</span>
                         <InlineCopyButton copiable={session.accountId} />
                     </p>
+                </div>
+                <div className={"detailRow"}>
+                    <p>CITIZEN</p>
+                    <hr className={"spacer"} />
+                    <p>#{session.tokenId}</p>
                 </div>
                 <div className={`detailRow  ${isElite ? "text-gold" : ""}`}>
                     <p>SEASON</p>
