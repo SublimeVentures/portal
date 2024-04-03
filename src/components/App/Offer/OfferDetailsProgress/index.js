@@ -24,17 +24,21 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     const progress = isSoldOut ? 100 : filled_base;
     const isFullfield = isSoldOut || progress >= 100;
     
-    const filled_res2 = isFullfield ? 0 : Math.min(Math.round(amt_res/amt_total * 100), 100)
-    const filled_res = filled_res2 > filled_base ? filled_res2 - filled_base : filled_res2
+    const filled_res = isFullfield ? 0 : Math.min(Math.round(amt_res/amt_total * 100), 100)
+    const reservedWidth = filled_res > filled_base ? filled_res - filled_base : filled_res
 
     const filled_guaranteed = Math.min(Math.round((amt_guaranteed / amt_total) * 100), isFullfield ? 0 : Math.max(amt_total - amt_guaranteed, 0));
-    const { guaranteedWidth, guaranteedOffset } = calculateProgressMetrics(progress, filled_res, filled_guaranteed);
+    const { guaranteedWidth, guaranteedOffset } = calculateProgressMetrics(progress, reservedWidth, filled_guaranteed);
 
-    const filled_base_rounding = calculateEndRounding(progress - filled_res - guaranteedWidth);
-    const filled_res_rounding = calculateEndRounding(progress + filled_res);
+    const filled_base_rounding = calculateEndRounding(progress - reservedWidth - guaranteedWidth);
+    const filled_res_rounding = calculateEndRounding(progress + reservedWidth);
     const filled_guaranteed_rounding = calculateEndRounding(guaranteedWidth + guaranteedOffset);
 
     return (
+        <>
+        <div>filled_base: {filled_base}</div>
+        <div>reservedWidth: {reservedWidth}</div>
+        <div>filled_res, filled_base: {filled_res > filled_base}</div>
         <div className="relative h-[50px] w-full flex flex-row items-center rounded-xl select-none" ref={tilt}>
             <div className="os-progress-bar absolute rounded-xl overflow-hidden -z-10">
                 <span className="os-progress-bar--meter flex flex-1 rounded-tl-xl rounded-bl-xl"></span>
@@ -58,7 +62,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="w-full h-full"
             />
             <Tooltiper
-                text={`Booked ${filled_res}%`}
+                text={`Booked ${reservedWidth}%`}
                 wrapper={
                     <div
                         className="w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
@@ -70,7 +74,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                         }}
                     ></div>
                 }
-                style={{ width: `${filled_res}%`, "--progress-step-color": progressColors.resColor }}
+                style={{ width: `${reservedWidth}%`, "--progress-step-color": progressColors.resColor }}
                 className="w-full h-full"
             />
             <Tooltiper
@@ -79,8 +83,8 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                     <div
                         className="absolute w-full h-full z-30 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
                         style={{
-                            borderTopLeftRadius: progress + filled_res === 0 ? '12px' : '0',
-                            borderBottomLeftRadius: progress + filled_res === 0 ? '12px' : '0',
+                            borderTopLeftRadius: progress + reservedWidth === 0 ? '12px' : '0',
+                            borderBottomLeftRadius: progress + reservedWidth === 0 ? '12px' : '0',
                             borderTopRightRadius: filled_guaranteed_rounding,
                             borderBottomRightRadius: filled_guaranteed_rounding,
                         }}
@@ -98,5 +102,6 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 Filled {Number(progress).toFixed(0)}%
             </p>
         </div>
+        </>
     );
 }

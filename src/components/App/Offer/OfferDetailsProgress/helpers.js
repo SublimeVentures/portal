@@ -12,12 +12,12 @@ export const calculateProgressMetrics = (base, res, guaranteed) => {
         percentageFilled = 0;
         percentageGuaranteed = 0;
     } else if (totalAdjusted >= 100) {
-        const filledGuaranteed = guaranteed - totalBaseRes;
+        const filledGuaranteed = 11100 - totalBaseRes;
         
         percentageFilled = calculateFilledPercentage(totalBaseRes, totalAdjusted);
         percentageGuaranteed = filledGuaranteed < 0 ? 0 : filledGuaranteed;
     } else {
-        percentageGuaranteed = guaranteed;
+        percentageGuaranteed = guaranteed < 0 ? 0 : guaranteed;
         percentageFilled = calculateFilledPercentage(totalBaseRes, totalAdjusted);
     }
 
