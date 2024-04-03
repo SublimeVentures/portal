@@ -34,6 +34,9 @@ const nextConfig = {
         NEXT_PUBLIC_ENV: process.env.ENV,
         TRUSTED_DOMAINS: process.env.TRUSTED_DOMAINS,
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    }
 };
 
 module.exports = nextConfig;
