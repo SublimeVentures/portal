@@ -4,6 +4,7 @@ import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import { verifyID } from "@/lib/authHelpers";
 import { TENANT } from "@/lib/tenantHelper";
+import Layout from "@/components/Layout/Layout";
 
 const HomeBased = dynamic(() => import("@/components/Home"), { ssr: true });
 const HomeCitCap = dynamic(() => import("@/components/HomeCitCap"), {
@@ -51,4 +52,8 @@ export const getServerSideProps = async ({ res }) => {
             account: account?.user ? account.user : null,
         },
     };
+};
+
+Home.getLayout = function (page) {
+    return <Layout>{page}</Layout>;
 };

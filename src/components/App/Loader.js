@@ -19,7 +19,7 @@ export default function Loader() {
             return (
                 <img
                     src={"https://cdn.citizencapital.fund/webapp/load.gif"}
-                    className={"max-w-[400px] max-h-[300px] mx-auto"}
+                    className={"max-w-[400px] max-h-[300px] absolute-center-loading"}
                     alt="citizencapitaloader"
                 />
             );

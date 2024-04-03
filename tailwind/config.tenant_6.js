@@ -65,6 +65,11 @@ module.exports = {
                 ".background-text-description": {
                     "font-family": "Work Sans, sans-serif",
                 },
+                ".absolute-center-loading": {
+                    position: 'absolute',
+                    top: 'calc(50% - 150px)',
+                    left: 'calc(50% - 200px)',
+                },
             };
 
             addUtilities(newUtilities);

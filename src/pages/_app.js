@@ -42,7 +42,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
             setRouteChangeInProgress(url)
         }
 
-        const handleRouteChangeComplete = (...args) => {
+        const handleRouteChangeComplete = () => {
             setRouteChangeInProgress(null)
         }
 
