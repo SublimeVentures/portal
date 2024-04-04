@@ -4,14 +4,14 @@ on:
     branches:
       - production
 
-name: STAGING - deploy on ECS
+name: PRODUCTION - deploy on ECS
 
 env:
   AWS_DEFAULT_REGION: us-west-2
   SECRETS: template
   APP: webapp
   ENV: production
-  ECS_TASK_DEFINITION: .aws/staging-task-definition.json
+  ECS_TASK_DEFINITION: .aws/production-task-definition.json
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   HUSKY: 0
