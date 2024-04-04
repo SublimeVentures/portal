@@ -94,7 +94,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="absolute w-full h-full"
             />
 
-            <p className="absolute z-50 right-1 mr-1 select-none pointer-events-none">
+            <p className="absolute z-40 right-1 mr-1 select-none pointer-events-none">
                 Filled {Number(progress).toFixed(0)}%
             </p>
         </div>
