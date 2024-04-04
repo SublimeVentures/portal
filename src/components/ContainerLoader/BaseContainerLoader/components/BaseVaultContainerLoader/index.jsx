@@ -12,7 +12,6 @@ import { Skeleton } from "@/components/Skeleton";
 const vaultSkeletonsNumber = 6;
 
 const BaseVaultContainerLoader = (props) => {
-    console.log(props);
     return (
         <>
             <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
@@ -33,7 +32,7 @@ const BaseVaultContainerLoader = (props) => {
                                 />
                             </div>
                             <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
-                                <FallbackImage src={props.session?.img} alt="Profile" />
+                                <FallbackImage src={props.session?.img} alt="Profile" fallbackSrc="/logo_1.svg" />
                             </div>
                         </div>
                     </div>
@@ -78,7 +77,7 @@ const BaseVaultContainerLoader = (props) => {
                         </div>
                         <div className="bordered-box-right relative w-[200px] cursor-pointer flex hidden sm:flex lg:hidden xl:!flex">
                             <Image
-                                src={props.session?.img}
+                                src={props.session?.img || "/logo_1.svg"}
                                 fill
                                 className={`imageOfferList bg-cover bordered-box-right`}
                                 alt=""
