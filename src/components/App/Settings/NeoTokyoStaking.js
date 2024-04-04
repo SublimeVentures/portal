@@ -7,6 +7,7 @@ import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
+import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
@@ -59,9 +60,17 @@ export default function NeoTokyoStaking({ stakingProps }) {
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>
                         IDENTITY
                     </div>
-                    <a href={ExternalLinks.STAKING} target={"_blank"}>
+                    <a href={ExternalLinks.STAKING} target={"_blank"} rel="noreferrer">
                         <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                     </a>
+                </div>
+                <div className="detailRow">
+                    <p>ACCOUNT ID</p>
+                    <hr className="spacer" />
+                    <p className="flex gap-1 justify-end items-center">
+                        <span>{session.accountId}</span>
+                        <InlineCopyButton copiable={session.accountId} />
+                    </p>
                 </div>
                 <div className={"detailRow"}>
                     <p>CITIZEN</p>

@@ -7,6 +7,7 @@ import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
+import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
@@ -15,6 +16,7 @@ export default function CyberKongzStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
     const router = useRouter();
 
+    const [stakeAmount, setStakeAmount] = useState(500);
     const [staked, setStaked] = useState(false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
@@ -68,6 +70,14 @@ export default function CyberKongzStaking({ stakingProps }) {
                         <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                     </a>
                 </div>
+                <div className="detailRow">
+                    <p>ACCOUNT ID</p>
+                    <hr className="spacer" />
+                    <p className="flex gap-1 justify-end items-center">
+                        <span>{session.accountId}</span>
+                        <InlineCopyButton copiable={session.accountId} />
+                    </p>
+                </div>
                 <div className={"detailRow"}>
                     <p>KONG ID</p>
                     <hr className={"spacer"} />
@@ -97,7 +107,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                         </p>
                     )}
                 </div>
-                {staked && (
+                {Boolean(staked) && (
                     <div className={"detailRow text-app-success"}>
                         <p>Next {unstake ? "re" : "un"}stake</p>
                         <hr className={"spacer"} />
@@ -114,7 +124,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                     </div>
                 )}
 
-                <div className={" flex flex-1 justify-between mt-5"}>
+                <div className={"flex flex-1 justify-between mt-5"}>
                     <UniButton
                         type={ButtonTypes.BASE}
                         text={"GET BANANA"}

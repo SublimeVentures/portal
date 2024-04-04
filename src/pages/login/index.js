@@ -10,6 +10,8 @@ import { seoConfig } from "@/lib/seoConfig";
 import { verifyID } from "@/lib/authHelpers";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
 import { TENANT } from "@/lib/tenantHelper";
+import { LoginErrorsEnum } from "@/constants/enum/login.enum";
+
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
     ssr: true,
 });
@@ -45,7 +47,7 @@ export default function Login({ isAuthenticated }) {
     }, []);
 
     useEffect(() => {
-        if (router?.query?.error === "CredentialsSignin") {
+        if (router?.query?.error === LoginErrorsEnum.CREDENTIALS_ERROR) {
             setErrorModal(true);
         }
     }, [router.query]);
@@ -69,12 +71,7 @@ export default function Login({ isAuthenticated }) {
                 twitter={seo.twitter}
             />
             {TENANTS_LOGIN(data)}
-            <ErrorModal
-                model={errorModal}
-                setter={() => {
-                    setErrorModal(false);
-                }}
-            />
+            <ErrorModal model={errorModal} setter={() => setErrorModal(false)} />
         </>
     );
 }
