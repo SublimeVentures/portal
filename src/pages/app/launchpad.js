@@ -32,6 +32,8 @@ export default function AppLaunchpad({ session }) {
         refetchOnWindowFocus: false,
     });
 
+    console.log("response", response);
+
     const offerList = response?.offers;
     const projectsUnderLaunchpad = response?.stats?.launchpad ?? 0;
 
@@ -59,7 +61,7 @@ export default function AppLaunchpad({ session }) {
                 <div className="flex flex-col justify-center">
                     <div className="glow text-3xl page-header-text">Launchpad</div>
                     <div className="text-outline text-md mt-2 white min-w-[250px]">
-                        Hyper-promising projects with smaller allocations that are near
+                        Hyper-promising projects with smaller allocations that are close to
                         <Tooltiper wrapper={" TGE"} text={`Token Generation Event`} type={TooltipType.Success} />.
                     </div>
                 </div>

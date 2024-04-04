@@ -65,9 +65,7 @@ export default function OfferItem({ offer, cdn }) {
 
     const { phaseCurrent } = phases(offer);
     const state = phaseCurrent?.phaseName;
-
     const status = getStatus(phaseCurrent);
-
     return (
         <div
             className={`

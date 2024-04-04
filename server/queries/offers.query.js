@@ -1,8 +1,8 @@
+const { serializeError } = require("serialize-error");
+const { QueryTypes } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
-const { QueryTypes } = require("sequelize");
 
 async function getOffersPublic() {
     try {
@@ -84,6 +84,7 @@ const query_getLaunchpadList = `
         o.name,
         o.genre,
         o.ticker,
+        o."isLaunchpad",
         ol.d_open,
         ol.d_close,
         ol."offerId",

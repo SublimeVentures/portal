@@ -75,12 +75,23 @@ function allocationParseUnlimited(params) {
 
 function allocationParseOpen(params) {
     const { allocationOffer_left, allocationUser_invested, output } = params;
-    const { allocationUser_max } = output;
+    const { allocationUser_max, allocationUser_guaranteed, allocationUser_min } = output;
 
-    params.output.allocationUser_left = getAllocationLeft(
-        allocationOffer_left,
-        allocationUser_max - allocationUser_invested,
-    );
+    //todo: remove
+    let allocationUser_left;
+    if (allocationUser_guaranteed.total > 0 && allocationUser_guaranteed.left >= allocationUser_min) {
+        allocationUser_left = allocationUser_guaranteed.left;
+    } else {
+        allocationUser_left = getAllocationLeft(allocationOffer_left, allocationUser_max - allocationUser_invested);
+    }
+    //todo: remove end
+
+    params.output.allocationUser_left = allocationUser_left;
+
+    // params.output.allocationUser_left = getAllocationLeft(
+    //     allocationOffer_left,
+    //     allocationUser_max - allocationUser_invested,
+    // );
 
     return params;
 }
@@ -185,10 +196,11 @@ function userInvestmentState(
         allocationUser_guaranteed: allocationUser_guaranteed_rounded < 0 ? 0 : allocationUser_guaranteed_rounded,
         allocationUser_invested,
         allocationOffer_left,
+        offer_isSettled: allocationOffer_left <= 0 && allocationOffer?.alloTotal - allocationOffer?.alloFilled <= 0,
         offer_isProcessing:
-            allocationOffer_left - 50 <= 0 && allocationOffer?.alloTotal - allocationOffer?.alloFilled + 50 > 0,
-        offer_isSettled:
-            allocationOffer_left - 50 <= 0 && allocationOffer?.alloTotal - allocationOffer?.alloFilled - 50 <= 0,
+            allocationOffer_left <= 0 && allocationOffer?.alloTotal - allocationOffer?.alloFilled + 50 > 0,
+        // offer_isSettled:
+        //     allocationOffer_left - 50 <= 0 && allocationOffer?.alloTotal - allocationOffer?.alloFilled - 50 <= 0,
     };
 }
 
@@ -250,7 +262,8 @@ function buttonInvestIsDisabled(
         isStakeLock ||
         !investmentAmount ||
         !isAllocationOk ||
-        ((allocationData.offer_isProcessing || allocationData.offer_isSettled) &&
+        (allocationData.offer_isSettled &&
+            // ((allocationData.offer_isProcessing || allocationData.offer_isSettled) &&
             !(allocationData.allocationUser_left > 0))
     );
 }

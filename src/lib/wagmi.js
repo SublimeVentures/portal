@@ -16,7 +16,8 @@ const fallbackOptions = {
 };
 
 export const config = createConfig({
-    chains: [mainnet, polygon, bsc, avalanche],
+    chains: [mainnet, polygon, bsc],
+    // chains: [mainnet, polygon, bsc, avalanche],
     batch: { multicall: true },
     cacheTime: 0, //default: 4_000
     pollingInterval: 4_000,
