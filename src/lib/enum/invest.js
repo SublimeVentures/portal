@@ -9,8 +9,7 @@ const BookingErrorsENUM = {
     VerificationFailed: "VERIFICATION_FAILED",
     AllocationTooHigh: "ALLOCATION_TOO_HIGH",
     ProcessingError: "PROCESSING_ERROR",
-    Open: "OPEN"
-}
+    Open: "OPEN",
+};
 
-
-module.exports = {BookingErrorsENUM}
+module.exports = { BookingErrorsENUM };

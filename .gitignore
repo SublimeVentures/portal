@@ -19,7 +19,7 @@
 *.pem
 newrelic_agent.log
 ./newrelic_agent.log
-
+dump.rdb
 
 # debug
 npm-debug.log*
@@ -32,9 +32,9 @@ yarn-error.log*
 .env.*
 .env*.*
 # local env files
-.env*.local
 .env.production
 .env.local
+!/.env.example
 
 .history/
 
@@ -43,4 +43,15 @@ yarn-error.log*
 .vercel
 
 # Sentry Auth Token
+.sentryclirc
+
+# Yarn 4
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+# Sentry Config File
 .sentryclirc

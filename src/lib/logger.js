@@ -7,29 +7,12 @@ module.exports = {
         Sentry.captureException(error);
     },
     error: (message, data) => {
-        console.log(`ERROR :: ${message}`, data)
-        Sentry.withScope((scope) => {
-            scope.setLevel("error");
-            scope.setExtras(data);
-            Sentry.captureMessage(message);
-        });
+        console.log(`ERROR :: ${message}`, data);
     },
     warn: (message, data) => {
-        console.log(`WARN :: ${message}`, data)
-
-        Sentry.withScope((scope) => {
-            scope.setLevel("warning");
-            scope.setExtras(data);
-            Sentry.captureMessage(message);
-        });
+        console.log(`WARN :: ${message}`, data);
     },
     info: (message, data) => {
-        console.log(`INFO :: ${message}`, data)
-
-        Sentry.withScope((scope) => {
-            scope.setLevel("info");
-            scope.setExtras(data);
-            Sentry.captureMessage(message);
-        });
+        console.log(`INFO :: ${message}`, data);
     },
 };

@@ -2,80 +2,72 @@
 @import "slick-carousel/slick/slick-theme.css";
 
 .slick-slide {
-  float: left;
-  height: 100%;
-  min-height: 1px;
+    float: left;
+    height: 100%;
+    min-height: 1px;
 }
 
 .slick-track {
-  display: flex !important;
-  align-items: center;
+    display: flex !important;
+    align-items: center;
 }
 
 .center {
-  .slick-center {
-    .customSlide {
-      opacity: 1;
-      -ms-transform: scale(1.08);
-      transform: scale(1.08);
+    .slick-center {
+        .customSlide {
+            opacity: 1;
+            -ms-transform: scale(1.08);
+            transform: scale(1.08);
+        }
     }
-  }
 
-  .customSlide {
-    opacity: .8;
-    transition: all .3s ease;
-  }
-
+    .customSlide {
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
 }
-
 
 .customSlide {
-  color: #fff;
-  font-size: 36px;
-  line-height: 100px;
-  margin: 15px;
-  position: relative;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  background: theme('colors.slides') !important;
-  padding: 20px;
+    color: #fff;
+    font-size: 36px;
+    line-height: 100px;
+    margin: 15px;
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    background: theme("colors.slides") !important;
+    padding: 20px;
 }
 
-
 .smallSlider {
-
-
-  .customSlide {
-  }
-  .slick-slide{
-    display: flex;
-    flex:1;
-
-
-    & > div {
-      display: flex;
-      flex:1;
+    .customSlide {
     }
-  }
-
-  .slick-slider {
-    display: contents;
-    flex: 1;
-
-
-
-    .slick-list {
-      display: flex;
-
-      flex: 1;
-
-      .slick-track{
+    .slick-slide {
         display: flex;
         flex: 1;
-      }
+
+        & > div {
+            display: flex;
+            flex: 1;
+        }
     }
-  }
+
+    .slick-slider {
+        display: contents;
+        flex: 1;
+
+        .slick-list {
+            display: flex;
+
+            flex: 1;
+
+            .slick-track {
+                display: flex;
+                flex: 1;
+            }
+        }
+    }
 }
 
 //
@@ -103,7 +95,7 @@
 //    padding: 20px;
 //  }
 //
-  .partnerLogo {
+.partnerLogo {
     min-width: 100px;
     max-width: 100px;
     min-height: 100px;
@@ -111,5 +103,5 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-  }
+}
 //}

@@ -1,10 +1,5 @@
-import {
-    useSimulateContract,
-    useWaitForTransactionReceipt,
-    useWriteContract
-} from 'wagmi'
-import {useEffect} from "react";
-
+import { useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useEffect } from "react";
 
 function processError(...errors) {
     for (const error of errors) {
@@ -27,24 +22,25 @@ function extractReason(errorMessage) {
 }
 
 function useSendTransaction(isEnabled, method, chainId, account) {
-    if(method?.stop) {
-        return true
+    if (method?.stop) {
+        return true;
     }
-    if(!method) {
+    if (!method) {
         method = {
             name: "",
             inputs: "",
             contract: "",
             abi: "",
             confirmations: "",
-        }
+        };
     }
 
-    const {name, inputs, contract, abi, confirmations} = method
+    const { name, inputs, contract, abi, confirmations } = method;
 
-    const scope = `${account}_trans_${contract}_${name}_${chainId}_${!!inputs ? (inputs[1] || inputs[0]) : "temp"}`
+    const scope = `${account}_trans_${contract}_${name}_${chainId}_${!!inputs ? inputs[1] || inputs[0] : "temp"}`;
 
-    const rando = { method,
+    const rando = {
+        method,
         functionName: name,
         address: contract,
         args: inputs,
@@ -55,8 +51,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
         query: {
             enabled: isEnabled,
         },
-    }
-
+    };
 
     const simulate = useSimulateContract({
         functionName: name,
@@ -69,41 +64,60 @@ function useSendTransaction(isEnabled, method, chainId, account) {
         query: {
             enabled: isEnabled,
         },
-    })
+    });
 
-    const write = useWriteContract()
+    const write = useWriteContract();
 
-    const confirmEnabled = write.isSuccess
+    const confirmEnabled = write.isSuccess;
     const confirm = useWaitForTransactionReceipt({
         confirmations: confirmations,
         hash: write?.data,
         query: {
-            enabled: confirmEnabled
-        }
-    })
+            enabled: confirmEnabled,
+        },
+    });
 
-    console.log(`useSendTransaction - render ${inputs ? inputs : "tempSend"}`, isEnabled, simulate.isSuccess, !write.isPending, !confirm?.data)
+    console.log(
+        `useSendTransaction - render ${inputs ? inputs : "tempSend"}`,
+        isEnabled,
+        simulate.isSuccess,
+        !write.isPending,
+        !confirm?.data,
+    );
 
     useEffect(() => {
-        console.log(`useSendTransaction - trigger ${inputs ? inputs : "temp"}`, simulate.isSuccess, !write.isPending, !confirm?.isLoading, !confirm?.isPending, !confirm.isFetching, isEnabled )
-        if (simulate.isSuccess && !write.isPending && !(confirm.isLoading || confirm.isFetching) && isEnabled ) {
-            write.writeContract(simulate.data?.request)
+        console.log(
+            `useSendTransaction - trigger ${inputs ? inputs : "temp"}`,
+            simulate.isSuccess,
+            !write.isPending,
+            !confirm?.isLoading,
+            !confirm?.isPending,
+            !confirm.isFetching,
+            isEnabled,
+        );
+        if (simulate.isSuccess && !write.isPending && !(confirm.isLoading || confirm.isFetching) && isEnabled) {
+            write.writeContract(simulate.data?.request);
         }
     }, [simulate.isSuccess, isEnabled]);
-
-
 
     return {
         isError: simulate.isError || write.isError || confirm.isError,
         error: processError(simulate.error, write.error, confirm.error),
         // error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage,
-        isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || write.isPending,
+        isLoading:
+            simulate.isFetching ||
+            write.isFetching ||
+            confirm.isFetching ||
+            simulate.isLoading ||
+            write.isLoading ||
+            confirm.isLoading ||
+            write.isPending,
         // isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || confirm.isPending || write.isPending,
         simulate,
         write,
         confirm,
-        rando
-    }
+        rando,
+    };
 }
 
 export default useSendTransaction;

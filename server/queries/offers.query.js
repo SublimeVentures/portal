@@ -1,25 +1,25 @@
-const {models} = require('../services/db/definitions/db.init');
+const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
+const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
-const {QueryTypes} = require("sequelize");
+const { QueryTypes } = require("sequelize");
 
 async function getOffersPublic() {
     try {
         return models.offer.findAll({
-            attributes: ['name', 'genre', 'url_web', 'slug'],
+            attributes: ["name", "genre", "url_web", "slug"],
             where: {
-                displayPublic: true
+                displayPublic: true,
             },
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-            raw: true
+            order: [["createdAt", "DESC"]],
+            raw: true,
         });
     } catch (error) {
-        logger.error('QUERY :: [getOffersPublic]', {error: serializeError(error)});
+        logger.error("QUERY :: [getOffersPublic]", {
+            error: serializeError(error),
+        });
     }
-    return []
+    return [];
 }
 
 const query_getOfferList = `
@@ -27,14 +27,10 @@ const query_getOfferList = `
         o.slug,
         o.name,
         o.genre,
-        o.otc,
         o.ticker,
-        o."isAccelerator",
         ol.d_open,
         ol.d_close,
         ol."offerId",
-        ofr."alloRaised",
-        ofr."alloTotal",
         ofr."isPaused",
         ofr."isSettled"
     FROM
@@ -47,12 +43,14 @@ const query_getOfferList = `
             FROM
                 "offerLimit" ol1
             WHERE
-                ol1."offerId" = o.id AND
-                ol1."partnerId" IN (:partnerId, :tenantId)
+                ol1."offerId" = o.id AND (
+                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                        ol1."partnerId" = :tenantId
+                )
             ORDER BY
                 CASE
-                    WHEN ol1."partnerId" = :partnerId THEN 1
-                    WHEN ol1."partnerId" = :tenantId THEN 2
+                    WHEN ol1."partnerId" = :tenantId THEN 1
+                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
                     ELSE 3
                     END
             LIMIT 1
@@ -60,23 +58,37 @@ const query_getOfferList = `
             LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
     WHERE
         o.display = true AND
+        o."isLaunchpad" = false AND
+        o."isAccelerator" = false AND
         ol."offerId" IS NOT NULL
     ORDER BY
         ol.d_open DESC;
 `;
+async function getOfferList(partnerId, tenantId) {
+    try {
+        return await db.query(query_getOfferList, {
+            type: QueryTypes.SELECT,
+            replacements: { partnerId, tenantId },
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getOfferList]", {
+            error: serializeError(error),
+        });
+    }
+    return [];
+}
 
-
-const query_getOfferListOtc = `
+const query_getLaunchpadList = `
     SELECT
         o.slug,
         o.name,
         o.genre,
-        o.otc,
         o.ticker,
-        o."isAccelerator",
         ol.d_open,
         ol.d_close,
-        ol."offerId"
+        ol."offerId",
+        ofr."isPaused",
+        ofr."isSettled"
     FROM
         "offer" o
             LEFT JOIN LATERAL (
@@ -87,38 +99,69 @@ const query_getOfferListOtc = `
             FROM
                 "offerLimit" ol1
             WHERE
-                ol1."offerId" = o.id AND
-                ol1."partnerId" IN (:partnerId, :tenantId)
+                ol1."offerId" = o.id AND (
+                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                        ol1."partnerId" = :tenantId
+                )
             ORDER BY
                 CASE
-                    WHEN ol1."partnerId" = :partnerId THEN 1
-                    WHEN ol1."partnerId" = :tenantId THEN 2
+                    WHEN ol1."partnerId" = :tenantId THEN 1
+                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
                     ELSE 3
                     END
             LIMIT 1
             ) ol ON true
+            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
     WHERE
         o.display = true AND
-        o.otc != 0 AND
+        o."isLaunchpad" = true AND
+        o."isAccelerator" = false AND
         ol."offerId" IS NOT NULL
     ORDER BY
         ol.d_open DESC;
 `;
-
-
-async function getOfferList(partnerId, tenantId, isOtc) {
+async function getLaunchpadList(partnerId, tenantId) {
     try {
-        const query = isOtc ? query_getOfferListOtc : query_getOfferList
-        return await db.query(query, {
+        return await db.query(query_getLaunchpadList, {
             type: QueryTypes.SELECT,
             replacements: { partnerId, tenantId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getOfferList]', {error: serializeError(error)});
+        logger.error("QUERY :: [getLaunchpadList]", {
+            error: serializeError(error),
+        });
     }
-    return []
+    return [];
 }
 
+const query_getOtcList = `
+    SELECT
+        o.id AS "offerId",
+        o.slug,
+        o.name,
+        o.genre,
+        o.ticker,
+        o.otc
+    FROM
+        "offer" o
+    WHERE
+        o.otc != 0
+    ORDER BY
+        o.id DESC;
+`;
+async function getOtcList(partnerId, tenantId) {
+    try {
+        return await db.query(query_getOtcList, {
+            type: QueryTypes.SELECT,
+            replacements: { partnerId, tenantId },
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getOtcList]", {
+            error: serializeError(error),
+        });
+    }
+    return [];
+}
 
 const query_getOfferDetails = `
     SELECT
@@ -135,12 +178,14 @@ const query_getOfferDetails = `
             FROM
                 "offerLimit" ol1
             WHERE
-                ol1."offerId" = o.id AND
-                ol1."partnerId" IN (:partnerId, :tenantId)
+                ol1."offerId" = o.id AND (
+                    (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                    ol1."partnerId" = :tenantId
+                )
             ORDER BY
                 CASE
-                    WHEN ol1."partnerId" = :partnerId THEN 1
-                    WHEN ol1."partnerId" = :tenantId THEN 2
+                    WHEN ol1."partnerId" = :tenantId THEN 1
+                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
                     ELSE 3
                 END
             LIMIT 1
@@ -152,7 +197,6 @@ const query_getOfferDetails = `
     LIMIT 1;
 `;
 
-
 async function getOfferDetails(slug, partnerId, tenantId) {
     try {
         return await db.query(query_getOfferDetails, {
@@ -160,46 +204,42 @@ async function getOfferDetails(slug, partnerId, tenantId) {
             replacements: { slug, partnerId, tenantId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getOfferDetails]', {error: serializeError(error), slug, });
+        logger.error("QUERY :: [getOfferDetails]", {
+            error: serializeError(error),
+            slug,
+        });
     }
-    return {}
-}
-
-
-async function getOfferById(id) {
-    try {
-        return models.offer.findOne({
-            where: {id},
-            raw: true
-        })
-    } catch (error) {
-        logger.error('QUERY :: [getOfferById]', {error: serializeError(error), id});
-    }
-    return {}
+    return {};
 }
 
 async function getOfferWithLimits(offerId) {
     try {
         const offer = await models.offer.findOne({
             where: { id: offerId },
-            include: [{
-                model: models.offerLimit,
-                as: 'offerLimits'
-            },
+            include: [
+                {
+                    model: models.offerLimit,
+                    as: "offerLimits",
+                },
                 {
                     model: models.offerFundraise,
-                    as: 'offerFundraise'
-                }],
-
+                    as: "offerFundraise",
+                },
+            ],
         });
 
         return offer ? offer.get({ plain: true }) : null;
     } catch (error) {
-        console.error('Error fetching offer with limits:', error);
+        console.error("Error fetching offer with limits:", error);
         return null;
     }
 }
 
-
-
-module.exports = {getOffersPublic, getOfferList, getOfferDetails, getOfferById, getOfferWithLimits}
+module.exports = {
+    getOffersPublic,
+    getOfferList,
+    getOfferDetails,
+    getLaunchpadList,
+    getOtcList,
+    getOfferWithLimits,
+};

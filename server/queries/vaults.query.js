@@ -1,8 +1,7 @@
-const db = require('../services/db/definitions/db.init');
-const { QueryTypes} = require("sequelize");
+const db = require("../services/db/definitions/db.init");
+const { QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
-
+const { serializeError } = require("serialize-error");
 
 const query_getUserVault = `
         SELECT
@@ -36,20 +35,19 @@ const query_getUserVault = `
             "vault"."createdAt" DESC;
     `;
 
-
 async function getUserVault(userId, partnerId, tenantId) {
-
     try {
         return await db.query(query_getUserVault, {
             type: QueryTypes.SELECT,
             replacements: { userId, partnerId, tenantId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getUserVault]', {error: serializeError(error), userId});
+        logger.error("QUERY :: [getUserVault]", {
+            error: serializeError(error),
+            userId,
+        });
         return [];
     }
 }
 
-
-
-module.exports = { getUserVault}
+module.exports = { getUserVault };

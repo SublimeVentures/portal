@@ -4,16 +4,14 @@ import About from "@/components/HomeCitCap/About";
 import Callout from "@/components/HomeCitCap/Callout";
 import Investors from "@/components/Home/Investors";
 
-
-export default function HomeCitCap({account}) {
+export default function HomeCitCap({ account }) {
     return (
         <>
-            <Hero account={account}/>
-            <Highlights/>
-            <Investors/>
-            <About/>
-            <Callout/>
+            <Hero account={account} />
+            <Highlights />
+            <Investors />
+            <About />
+            <Callout />
         </>
-    )
+    );
 }
-

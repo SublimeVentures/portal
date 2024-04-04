@@ -1,16 +1,16 @@
-import {API} from "@/routes";
-import {axiosPublic} from "@/lib/axios/axiosPublic";
+import { API } from "@/routes";
+import { axiosPublic } from "@/lib/axios/axiosPublic";
 
 export const fetchEnvironment = async (token, authTokenName) => {
     try {
         const { data } = await axiosPublic.get(API.environment, {
             headers: {
-                Cookie: `${authTokenName}=${token}`
-            }
+                Cookie: `${authTokenName}=${token}`,
+            },
         });
-        return data
+        return data;
     } catch (e) {
-        console.log("ERRROR!fetch env failed")
+        console.log("ERRROR!fetch env failed");
     }
-    return {ok:false}
-}
+    return { ok: false };
+};

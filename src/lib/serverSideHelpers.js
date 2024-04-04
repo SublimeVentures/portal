@@ -1,5 +1,7 @@
-import {authTokenName, refreshTokenName, refreshTokens, verifyID} from "@/lib/authHelpers";
-import {fetchEnvironment} from "@/fetchers/environment.fetcher";
+import { refreshCookies } from "../../server/controllers/login/tokenHelper";
+
+import { authTokenName, refreshTokenName, refreshData, verifyID } from "@/lib/authHelpers";
+import { fetchEnvironment } from "@/fetchers/environment.fetcher";
 
 async function handleCustomLogic(account, accessToken, customLogicCallback) {
     if (customLogicCallback) {
@@ -7,23 +9,22 @@ async function handleCustomLogic(account, accessToken, customLogicCallback) {
         if (customResult && customResult.redirect) {
             return { redirect: customResult.redirect };
         }
-        return { ...customResult || {} };
+        return { ...(customResult || {}) };
     }
     return { additionalProps: {} };
 }
 
-
 async function processServerSideData(req, res, route, customLogicCallback) {
     const session = await verifyID(req);
     let accessToken = req.cookies[authTokenName];
-    let accountData = session.user
+    let accountData = session.user;
     if (session.auth) {
         const { additionalProps, redirect } = await handleCustomLogic(accountData, accessToken, customLogicCallback);
         if (redirect) return redirect;
 
-        const env = await fetchEnvironment(req.cookies[authTokenName], authTokenName)
-        if(!env.ok) {
-            console.log("ERROR - filed env refetch")
+        const env = await fetchEnvironment(req.cookies[authTokenName], authTokenName);
+        if (!env.ok) {
+            console.log("ERROR - filed env refetch");
             return {
                 redirect: {
                     permanent: true,
@@ -39,41 +40,36 @@ async function processServerSideData(req, res, route, customLogicCallback) {
             },
         };
     } else if (session.exists) {
-        const newSession = await refreshTokens(req.cookies[refreshTokenName]);
+        const newData = await refreshData(req.cookies[refreshTokenName]);
+        if (newData?.ok) {
+            const newSession = await refreshCookies(newData.token);
+            if (newSession?.ok) {
+                res.setHeader("Set-Cookie", [newSession.cookie.refreshCookie, newSession.cookie.accessCookie]);
+                accessToken = newSession.token.accessToken;
+                accountData = newData.data.user;
 
-        if (newSession?.ok) {
-            res.setHeader('Set-Cookie', [newSession.cookie.refreshCookie, newSession.cookie.accessCookie]);
-            accessToken = newSession.token.accessToken;
-            accountData = newSession.data.user
+                const customResult = await handleCustomLogic(accountData, accessToken, customLogicCallback);
+                console.log("customResult", customResult);
+                if (!!customResult.redirect) return customResult;
 
-            const customResult = await handleCustomLogic(accountData, accessToken, customLogicCallback);
-            console.log("customResult",customResult)
-            if (!!customResult.redirect) return customResult;
-
-            const env = await fetchEnvironment(newSession.token.accessToken, authTokenName)
-            return {
-                props: {
-                    environmentData: env,
-                    session: accountData,
-                    ...customResult.additionalProps,
-                },
-            };
-        } else {
-            return {
-                redirect: {
-                    permanent: true,
-                    destination: `/login?callbackUrl=${route}`,
-                },
-            };
+                const env = await fetchEnvironment(newSession.token.accessToken, authTokenName);
+                return {
+                    props: {
+                        environmentData: env,
+                        session: accountData,
+                        ...customResult.additionalProps,
+                    },
+                };
+            }
         }
-    } else {
-        return {
-            redirect: {
-                permanent: true,
-                destination: `/login?callbackUrl=${route}`,
-            },
-        };
     }
+
+    return {
+        redirect: {
+            permanent: true,
+            destination: `/login?callbackUrl=${route}`,
+        },
+    };
 }
 
 export { processServerSideData };

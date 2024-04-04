@@ -1,8 +1,7 @@
-const db = require('../services/db/definitions/db.init');
-const { QueryTypes} = require("sequelize");
+const db = require("../services/db/definitions/db.init");
+const { QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
-const {serializeError} = require("serialize-error");
-
+const { serializeError } = require("serialize-error");
 
 const query_getPendingPayouts = `
         SELECT 
@@ -28,18 +27,18 @@ const query_getPendingPayouts = `
             c."isClaimed" = false;
     `;
 async function getUserPayout(userId, offerId) {
-
     try {
         return await db.query(query_getPendingPayouts, {
             type: QueryTypes.SELECT,
             replacements: { userId, offerId },
         });
     } catch (error) {
-        logger.error('QUERY :: [getUserPayout]', {error: serializeError(error), userId});
+        logger.error("QUERY :: [getUserPayout]", {
+            error: serializeError(error),
+            userId,
+        });
         return [];
     }
 }
 
-
-
-module.exports = { getUserPayout}
+module.exports = { getUserPayout };
