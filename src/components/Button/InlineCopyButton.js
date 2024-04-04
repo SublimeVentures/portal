@@ -1,17 +1,18 @@
 import PropTypes from "prop-types";
 import { IoCheckmarkOutline, IoClipboard, IoClipboardOutline } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function InlineCopyButton({ copiable, className }) {
+export default function InlineCopyButton({ copiable = "", className }) {
     const [isCheckmark, setIsCheckmark] = useState(false);
     const [hover, setHover] = useState(false);
-    const [timerId, setTimerId] = useState(/** @type {Timeout} */ null);
+    const timerId = useRef(/** @type {Timeout} */ null);
+    const btnRef = useRef(/** @type {HTMLButtonElement} */ null);
 
     useEffect(() => {
         return () => {
             if (timerId !== null) {
-                clearTimeout(timerId);
-                setTimerId(null);
+                clearTimeout(timerId.current);
+                timerId.current = null;
             }
         };
     }, [timerId]);
@@ -20,20 +21,21 @@ export default function InlineCopyButton({ copiable, className }) {
         const copiable = ev.currentTarget.dataset.copiable;
         await window.navigator.clipboard.writeText(copiable);
         setIsCheckmark(true);
-        setTimerId(
-            setTimeout(() => {
-                setIsCheckmark(false);
-            }, 1000),
-        );
+        timerId.current = setTimeout(() => {
+            setIsCheckmark(false);
+        }, 1000);
+    };
+
+    const btnListeners = {
+        onMouseOut: () => setHover(false),
+        onBlur: () => setHover(false),
+        onMouseOver: () => setHover(true),
+        onFocus: () => setHover(true),
+        onClick: onCopy,
     };
 
     return (
-        <button
-            onMouseOut={() => setHover(false)}
-            onMouseOver={() => setHover(true)}
-            onClick={onCopy}
-            data-copiable={copiable}
-        >
+        <button ref={btnRef} {...btnListeners} data-copiable={copiable}>
             {isCheckmark ? (
                 <IoCheckmarkOutline className={className} />
             ) : hover ? (
