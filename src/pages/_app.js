@@ -13,6 +13,7 @@ import Gtag from "@/components/gtag";
 import "react-tooltip/dist/react-tooltip.css";
 import "@/styles/globals.scss";
 import ContainerLoader from "@/components/ContainerLoader";
+import { getContainerLoaderLayout } from "@/components/ContainerLoader/helper";
 
 switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     case TENANT.basedVC: {
@@ -39,7 +40,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
         document.getElementById("initPage").style.display = "none";
 
         const handleRouteChange = (url) => {
-            setUrlTransitionString(url);
+            setUrlTransitionString(url.split("?")[0]);
         };
 
         const handleRouteChangeComplete = () => {
@@ -55,6 +56,8 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
         };
     }, [router.events]);
 
+    const containerLayout = getContainerLoaderLayout(urlTransitionString);
+
     const renderWithLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
     return (
@@ -63,13 +66,15 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                 <QueryClientProvider client={queryClient}>
                     <EnvironmentProvider initialData={environmentData}>
                         <HydrationBoundary state={pageProps.dehydratedState}>
-                            {renderWithLayout(
-                                urlTransitionString ? (
-                                    <ContainerLoader containerUrl={urlTransitionString} {...pageProps} />
-                                ) : (
-                                    <Component {...pageProps} />
-                                ),
-                            )}
+                            {urlTransitionString
+                                ? containerLayout(
+                                      <ContainerLoader
+                                          currentPathName={router.pathname}
+                                          containerUrl={urlTransitionString}
+                                          {...pageProps}
+                                      />,
+                                  )
+                                : renderWithLayout(<Component {...pageProps} />)}
                         </HydrationBoundary>
                     </EnvironmentProvider>
                 </QueryClientProvider>
