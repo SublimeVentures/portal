@@ -26,8 +26,8 @@ jobs:
         tenant: [ based ]
         include:
           - tenant: based
-            cluster: based-prod-webapp-cluster
-            service: based-prod-webapp-service
+            cluster: based-production-webapp-cluster
+            service: based-production-webapp-service
             domain: basedvc.fund
             tenant_id: 1
             aws_region_eu: eu-central-1
