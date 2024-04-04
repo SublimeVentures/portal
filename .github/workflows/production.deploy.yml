@@ -23,22 +23,22 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ based_eu, based_us ]
+        tenant: [ based ]
         include:
-          - tenant: based_eu
-            tenant_name: based
+          - tenant: based
             cluster: based-prod-webapp-cluster
             service: based-prod-webapp-service
             domain: basedvc.fund
             tenant_id: 1
-            aws_region: eu-central-1
-          - tenant: based_us
-            tenant_name: based
-            cluster: based-prod-webapp-cluster
-            service: based-prod-webapp-service
-            domain: basedvc.fund
-            tenant_id: 1
-            aws_region: us-west-2
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+#          - tenant: based_us
+#            tenant_name: based
+#            cluster: based-prod-webapp-cluster
+#            service: based-prod-webapp-service
+#            domain: basedvc.fund
+#            tenant_id: 1
+#            aws_region: us-west-2
 #          - tenant: citcap
 #            cluster: citcap-staging-webapp-cluster
 #            service: citcap-staging-webapp-service
@@ -85,7 +85,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         run: |
           IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
-          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant_name }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
           docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }} -t $IMAGE_URI .
           docker push $IMAGE_URI
           echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
@@ -95,12 +95,12 @@ jobs:
 
       - name: Update ECS Task Definition File
         run: |
-          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant_name }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region }}
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region }}
 
-      - name: Deploy new code
+      - name: Deploy new code US
         run: |
-          FAMILY="${{ matrix.tenant_name }}-${{ env.ENV }}-${{ env.APP }}-td"
-          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant_name }}-production-task-definition.json"
+          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
           cat $UPDATED_TASK_DEFINITION
 #          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
 #          echo "Registered Task Definition: $revision"
@@ -111,4 +111,20 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ matrix.aws_region }}
+          AWS_REGION: ${{ matrix.aws_region_us }}
+
+      - name: Deploy new code EU
+        run: |
+          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
+          cat $UPDATED_TASK_DEFINITION
+#          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+#          echo "Registered Task Definition: $revision"
+#          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+#          echo "Service updated to use new task definition revision"
+#          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+#          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ matrix.aws_region_eu }}
