@@ -93,7 +93,7 @@ jobs:
         run: |
           # Get the latest image URI
           LATEST_IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:056e326"
-          echo LATEST_IMAGE_URI=$LATEST_IMAGE_URI >> $GITHUB_ENV
+          echo IMAGE_URI=$LATEST_IMAGE_URI >> $GITHUB_ENV
 
       - name: Make Python Script Executable [gen. task def]
         run: chmod +x .github/scripts/update_task_definition.py
