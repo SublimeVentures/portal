@@ -56,7 +56,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
         };
     }, [router.events]);
 
-    const containerLayout = getContainerLoaderLayout(urlTransitionString);
+    const containerLayout = getContainerLoaderLayout(urlTransitionString, router.pathname);
 
     const renderWithLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
