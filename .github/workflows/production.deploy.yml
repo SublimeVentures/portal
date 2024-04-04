@@ -102,12 +102,12 @@ jobs:
           FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
           UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
           cat $UPDATED_TASK_DEFINITION
-#          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
-#          echo "Registered Task Definition: $revision"
-#          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
-#          echo "Service updated to use new task definition revision"
-#          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
-#          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "Registered Task Definition: $revision"
+          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+          echo "Service updated to use new task definition revision"
+          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
