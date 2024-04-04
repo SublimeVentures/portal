@@ -76,8 +76,8 @@ module.exports = {
                     color: "rgb(114 157 176)",
                 },
                 ".skeleton": {
-                    'background-color': 'white'
-                }
+                    "background-color": "rgb(192 192 192)",
+                },
             };
             addUtilities(newUtilities);
         },

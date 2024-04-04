@@ -5,9 +5,9 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function LayoutApp({ children }) {
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
-    const stakingEnabled = children.props?.session.stakingEnabled;
-    const isStaked = children.props?.session.isStaked;
-    const stakingCurrency = !!activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
+    const stakingEnabled = children.props?.session?.stakingEnabled;
+    const isStaked = children.props?.session?.isStaked;
+    const stakingCurrency = activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
     return (
         <>
             {stakingEnabled && !isStaked && (
@@ -29,7 +29,6 @@ export default function LayoutApp({ children }) {
                 <main className="flex flex-col w-full grow sm:min-h-screen max-w-[1920px] p-5 mobile:p-10 gap-5 mobile:gap-10 text-app-white relative">
                     {children}
                 </main>
-                {/*<main className="flex flex-col w-full sm:min-h-screen max-w-[1920px] p-5 mobile:p-10 gap-5 mobile:gap-10 text-app-white">{children}</main>*/}
             </div>
         </>
     );

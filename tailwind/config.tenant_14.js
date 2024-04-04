@@ -65,9 +65,12 @@ module.exports = {
                     "font-family": "Work Sans, sans-serif",
                 },
                 ".absolute-center-loading": {
-                    position: 'absolute',
-                    top: 'calc(50% - 150px)',
-                    left: 'calc(50% - 200px)',
+                    position: "absolute",
+                    top: "calc(50% - 150px)",
+                    left: "calc(50% - 200px)",
+                },
+                ".skeleton": {
+                    "background-color": "rgb(185 37 81)",
                 },
             };
 

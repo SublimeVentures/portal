@@ -24,10 +24,10 @@ export default function Document() {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link rel="icon" href={TENANT_FAVICON()} sizes="any" />
             </Head>
-            <body style={{ display: 'block' }}>
-            <InitPage/>
-            <Main />
-            <NextScript />
+            <body style={{ display: "block" }}>
+                <InitPage />
+                <Main />
+                <NextScript />
             </body>
         </Html>
     );

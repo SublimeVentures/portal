@@ -3,12 +3,12 @@ import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function ChangeAddress({ session }) {
-    const { wallets } = session;
+    const wallets = session?.wallets;
     const { account, environmentCleanup, walletGuard } = useEnvironmentContext();
 
     const userAddress = account?.address;
     const isAddressSupported = Boolean(
-        walletGuard && userAddress !== undefined && wallets.find((el) => el === userAddress),
+        walletGuard && userAddress !== undefined && wallets?.find((el) => el === userAddress),
     );
 
     const title = () => {
@@ -51,11 +51,11 @@ export default function ChangeAddress({ session }) {
         return <div className="flex flex-1 flex-col">Your wallet is disconnected.</div>;
     };
 
-    const content = () => (!!userAddress ? contentWrongWallet() : contentWalletDisconnected());
+    const content = () => (userAddress ? contentWrongWallet() : contentWalletDisconnected());
 
     return (
         <GenericModal
-            isOpen={!isAddressSupported}
+            isOpen={!!wallets && !isAddressSupported}
             closeModal={() => {}}
             title={title()}
             content={content()}
