@@ -81,7 +81,7 @@ jobs:
 
       - name: Update ECS Task Definition File
         run: |
-          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }} ${{ env.AWS_REGION }}
 
       - name: Deploy new code
         run: |
