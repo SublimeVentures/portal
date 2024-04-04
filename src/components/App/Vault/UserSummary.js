@@ -79,17 +79,17 @@ export default function UserSummary({ vault, session, premiumData }) {
                                 </>
                             ) : (
                                 <>
-                                    <div className={"max-w-[15rem] flex rounded-full shadow-lg"}>
+                                    <div className="max-w-[15rem] flex rounded-full shadow-lg">
                                         {session.img ? (
                                             <img
                                                 className="flex rounded-full my-auto glitch"
                                                 src={session.img}
-                                                alt={"avatar"}
+                                                alt="avatar"
                                                 ref={glitch.ref}
                                             />
                                         ) : (
                                             <div ref={glitch.ref}>
-                                                <IconNT className={"glitch w-full max-w-[15rem]"} />
+                                                <IconNT className="glitch w-full max-w-[15rem]" />
                                             </div>
                                         )}
                                     </div>
@@ -99,24 +99,24 @@ export default function UserSummary({ vault, session, premiumData }) {
                     </div>
                 </div>
                 <div className="col-span-12 flex flex-col gap-10 custom:col-span-8 justify-center">
-                    <div className={"w-full flex gap-5 flex-col md:flex-row "}>
+                    <div className="w-full flex gap-5 flex-col md:flex-row ">
                         <Stat
-                            color={"gold"}
-                            title={"Projects Invested"}
+                            color="gold"
+                            title="Projects Invested"
                             value={vault ? vault.length : 0}
-                            icon={<IconStars className={"w-9 text-2xl"} />}
+                            icon={<IconStars className="w-9 text-2xl" />}
                         />
                         <Stat
-                            color={"teal"}
-                            title={"Nearest Unlock"}
-                            value={"TBA"}
-                            icon={<IconClock className={"w-7 text-2xl"} />}
+                            color="teal"
+                            title="Nearest Unlock"
+                            value="TBA"
+                            icon={<IconClock className="w-7 text-2xl" />}
                         />
                         <Stat
-                            color={"blue"}
-                            title={"Portfolio Size"}
+                            color="blue"
+                            title="Portfolio Size"
                             value={`$${portfolio}`}
-                            icon={<IconMoney className={"w-7 text-2xl"} />}
+                            icon={<IconMoney className="w-7 text-2xl" />}
                         />
                     </div>
 

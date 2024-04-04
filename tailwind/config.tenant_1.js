@@ -75,6 +75,9 @@ module.exports = {
                 ".background-text-description": {
                     color: "rgb(114 157 176)",
                 },
+                ".skeleton": {
+                    'background-color': 'white'
+                }
             };
             addUtilities(newUtilities);
         },

@@ -4939,6 +4939,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"class-variance-authority@npm:0.7.0":
+  version: 0.7.0
+  resolution: "class-variance-authority@npm:0.7.0"
+  dependencies:
+    clsx: "npm:2.0.0"
+  checksum: 10c0/e11c57edf4bf50ef1c97bae41d68885afbaaedba26c48b7cc5dfb033390fed7012147e9532168d8c4f3497fce4dff15e20e6e60b8c9c9a4b0fe26b0e804513db
+  languageName: node
+  linkType: hard
+
 "classnames@npm:^2.2.5, classnames@npm:^2.3.0":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
@@ -5016,6 +5025,13 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: 10c0/ed0601cd0b1606bc7d82ee7175b97e68d1dd9b91fd1250a3617b38d34a095f8ee0431d40a1a611122dcccb4f93295b4fdb94942aa763392b5fe44effa50c2d5e
+  languageName: node
+  linkType: hard
+
+"clsx@npm:2.0.0":
+  version: 2.0.0
+  resolution: "clsx@npm:2.0.0"
+  checksum: 10c0/c09f43b3144a0b7826b6b11b6a111b2c7440831004eecc02d333533c5e58ef0aa5f2dce071d3b25fbb8c8ea97b45df96c74bcc1d51c8c2027eb981931107b0cd
   languageName: node
   linkType: hard
 
@@ -8648,6 +8664,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:0.364.0":
+  version: 0.364.0
+  resolution: "lucide-react@npm:0.364.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/07e519f700081f6d9f063dc39d9b58da940a976bfc368dd67c272544cfba226b4663eadf1839f41c5014561408200c595ce566b0f07a747e2a69449beb384749
+  languageName: node
+  linkType: hard
+
 "magic-string@npm:^0.27.0":
   version: 0.27.0
   resolution: "magic-string@npm:0.27.0"
@@ -11803,6 +11828,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tailwindcss-animate@npm:1.0.7":
+  version: 1.0.7
+  resolution: "tailwindcss-animate@npm:1.0.7"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 10c0/ec7dbd1631076b97d66a1fbaaa06e0725fccfa63119221e8d87a997b02dcede98ad88bb1ef6665b968f5d260fcefb10592e0299ca70208d365b37761edf5e19a
+  languageName: node
+  linkType: hard
+
 "tailwindcss@npm:3.4.1":
   version: 3.4.1
   resolution: "tailwindcss@npm:3.4.1"
@@ -12659,7 +12693,7 @@ __metadata:
     "@headlessui/react": "npm:1.7.18"
     "@leenguyen/react-flip-clock-countdown": "npm:1.5.1"
     "@next/eslint-plugin-next": "npm:14.1.4"
-    "@sentry/nextjs": "npm:7.107.0"
+    "@sentry/nextjs": "npm:^7.105.0"
     "@svgr/webpack": "npm:8.1.0"
     "@tanstack/react-query": "npm:5.28.4"
     "@tanstack/react-query-devtools": "npm:5.28.4"
@@ -12667,6 +12701,7 @@ __metadata:
     autoprefixer: "npm:10.4.18"
     axios: "npm:1.6.8"
     bignumber.js: "npm:9.1.2"
+    class-variance-authority: "npm:0.7.0"
     clsx: "npm:2.1.0"
     cookie: "npm:0.6.0"
     cookie-parser: "npm:1.4.6"
@@ -12692,6 +12727,7 @@ __metadata:
     lodash.merge: "npm:4.6.2"
     lodash.set: "npm:4.3.2"
     lottie-react: "npm:2.4.0"
+    lucide-react: "npm:0.364.0"
     mem: "npm:10.0.0"
     moment: "npm:2.30.1"
     newrelic: "npm:11.14.0"
@@ -12720,6 +12756,7 @@ __metadata:
     swiper: "npm:11.0.7"
     tailwind-merge: "npm:2.2.2"
     tailwindcss: "npm:3.4.1"
+    tailwindcss-animate: "npm:1.0.7"
     typescript: "npm:5.4.2"
     url: "npm:0.11.3"
     url-loader: "npm:4.1.1"

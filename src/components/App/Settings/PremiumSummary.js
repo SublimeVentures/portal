@@ -13,11 +13,7 @@ export default function PremiumSummary({ data }) {
 
     return (
         <div
-            className={`
-                   bordered-container bg-app-accent banner
-                   flex flex-1 flex-wrap items-center justify-between
-                   px-10 py-5 gap-5
-                   `}
+            className="bordered-container bg-app-accent banner flex flex-1 flex-wrap items-center justify-between px-10 py-5 gap-5"
         >
             <div className="flex flex-1 flex-col md:flex-row justify-center items-center">
                 <div className="flex flex-1 text-3xl font-bold card-content-dedicated">Premium</div>
