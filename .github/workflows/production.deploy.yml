@@ -26,12 +26,14 @@ jobs:
         tenant: [ based_eu, based_us ]
         include:
           - tenant: based_eu
+            tenant_name: based
             cluster: based-prod-webapp-cluster
             service: based-prod-webapp-service
             domain: basedvc.fund
             tenant_id: 1
             aws_region: eu-central-1
           - tenant: based_us
+            tenant_name: based
             cluster: based-prod-webapp-cluster
             service: based-prod-webapp-service
             domain: basedvc.fund
@@ -83,7 +85,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         run: |
           IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
-          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant_name }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
           docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }} -t $IMAGE_URI .
           docker push $IMAGE_URI
           echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
@@ -93,12 +95,12 @@ jobs:
 
       - name: Update ECS Task Definition File
         run: |
-          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region }}
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant_name }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region }}
 
       - name: Deploy new code
         run: |
-          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
-          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
+          FAMILY="${{ matrix.tenant_name }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant_name }}-production-task-definition.json"
           cat $UPDATED_TASK_DEFINITION
 #          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
 #          echo "Registered Task Definition: $revision"
