@@ -113,7 +113,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ matrix.aws_region_us }}
 
-      - name: Update ECS Task Definition File US
+      - name: Update ECS Task Definition File EU
         run: |
           python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region_eu }}
 
