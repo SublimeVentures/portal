@@ -4,8 +4,9 @@ export const isUrlTrusted = (url) => {
 
     return (
         trustedURLs &&
-        trustedURLs.some(
-            (domain) => (isDevEnvironment && url.startsWith("http://" + domain)) || url.startsWith("https://" + domain),
-        )
+        // trustedURLs.some(
+        //     (domain) => (isDevEnvironment && url.startsWith("http://" + domain)) || url.startsWith("https://" + domain),
+        // )
+        trustedURLs.some((domain) => url.startsWith("http://" + domain) || url.startsWith("https://" + domain))
     );
 };
