@@ -73,6 +73,8 @@ jobs:
           aws secretsmanager get-secret-value --secret-id ${{ env.SECRETS }}/${{ env.ENV }}/${{ env.APP }} --query SecretString --output text > .env
           echo NEXT_PUBLIC_TENANT=${{ matrix.tenant_id }} >> .env
           echo DOMAIN=https://${{ matrix.domain }} >> .env
+          cat .env
+
         env:
           AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
 
