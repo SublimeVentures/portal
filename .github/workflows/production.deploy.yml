@@ -23,27 +23,23 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ based ]
+        tenant: [ citcap ]
+#        tenant: [ based, citcap ]
         include:
-          - tenant: based
-            cluster: based-production-webapp-cluster
-            service: based-production-webapp-service
-            domain: basedvc.fund
-            tenant_id: 1
-            aws_region_eu: eu-central-1
-            aws_region_us: us-west-2
-#          - tenant: based_us
-#            tenant_name: based
-#            cluster: based-prod-webapp-cluster
-#            service: based-prod-webapp-service
+#          - tenant: based
+#            cluster: based-production-webapp-cluster
+#            service: based-production-webapp-service
 #            domain: basedvc.fund
 #            tenant_id: 1
-#            aws_region: us-west-2
-#          - tenant: citcap
-#            cluster: citcap-staging-webapp-cluster
-#            service: citcap-staging-webapp-service
-#            domain: citizencapital.fund
-#            tenant_id: 6
+#            aws_region_eu: eu-central-1
+#            aws_region_us: us-west-2
+          - tenant: citcap
+            cluster: citcap-production-webapp-cluster
+            service: citcap-production-webapp-service
+            domain: citizencapital.fund
+            tenant_id: 6
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
 #          - tenant: generic
 #            cluster: generic-staging-webapp-cluster
 #            service: generic-staging-webapp-service
