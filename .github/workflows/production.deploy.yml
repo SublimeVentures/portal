@@ -82,19 +82,19 @@ jobs:
         env:
           AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
 
-#      - name: Build, tag, and push image to Amazon ECR
-#        run: |
-#          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
-#          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
-#          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }} -t $IMAGE_URI .
-#          docker push $IMAGE_URI
-#          echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
-
-      - name: Pull latest image from Amazon ECR
+      - name: Build, tag, and push image to Amazon ECR
         run: |
-          # Get the latest image URI
-          LATEST_IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:056e326"
-          echo IMAGE_URI=$LATEST_IMAGE_URI >> $GITHUB_ENV
+          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
+          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }} -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
+
+#      - name: Pull latest image from Amazon ECR
+#        run: |
+#          # Get the latest image URI
+#          LATEST_IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:056e326"
+#          echo IMAGE_URI=$LATEST_IMAGE_URI >> $GITHUB_ENV
 
       - name: Make Python Script Executable [gen. task def]
         run: chmod +x .github/scripts/update_task_definition.py
