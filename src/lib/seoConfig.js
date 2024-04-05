@@ -4,17 +4,17 @@ import { TENANT } from "@/lib/tenantHelper";
 const copy = {
     [TENANT.basedVC]: {
         NAME: "basedVC",
-        ACCELERATOR: "Accelerator",
+        ACCELERATOR: "Launchpad",
         COMMUNITY: "web3",
     },
     [TENANT.NeoTokyo]: {
         NAME: "Citizen Capital",
-        ACCELERATOR: "CitCapX",
+        ACCELERATOR: "Launchpad",
         COMMUNITY: "NeoTokyo",
     },
     [TENANT.CyberKongz]: {
         NAME: "KongzCapital",
-        ACCELERATOR: "KongzCapX",
+        ACCELERATOR: "Launchpad",
         COMMUNITY: "CyberKongz",
     },
 };
