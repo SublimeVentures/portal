@@ -21,7 +21,6 @@ export default function VaultItem({ item, passData }) {
 
     const { vestedPercentage, nextUnlock, nextSnapshot, nextClaim, isInstant, isSoon, claimStage, payoutId } =
         parseVesting(item.t_unlock);
-    const test = parseVesting(item.t_unlock);
     const awaitngClaim = claimed === 0 && payoutId > 0;
     const performance = (claimed / invested) * 100;
 

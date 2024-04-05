@@ -8,9 +8,8 @@ const alertHeight = "60px";
 
 export default function LayoutApp({ children }) {
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
-    const stakingEnabled = children.props?.session?.stakingEnabled;
-    const isStaked = children.props?.session?.isStaked;
-    const stakingCurrency = activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
+    const { stakingEnabled, isStaked } = children.props?.session || {};
+    const stakingCurrency = activeCurrencyStaking ?? currencyStaking[0];
 
     const isBlockedAlert = stakingEnabled && !isStaked;
     return (
