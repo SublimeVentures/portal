@@ -27,7 +27,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     const filled_res = isFullfield ? 0 : Math.min(Math.round(amt_res/amt_total * 100), 100)
     const reservedWidth = filled_res > filled_base ? filled_res - filled_base : filled_res
 
-    const filled_guaranteed = Math.min(Math.round((amt_guaranteed / amt_total) * 100), isFullfield ? 0 : Math.max(amt_total - amt_guaranteed, 0));
+    const filled_guaranteedPercentage = Math.round((amt_guaranteed / amt_total) * 100);
+    const filled_guaranteed = filled_base + reservedWidth + filled_guaranteedPercentage <= 100
+        ? filled_guaranteedPercentage
+        : Math.min(filled_guaranteedPercentage, isFullfield ? 0 : Math.max(amt_total - amt_guaranteed, 0));
+
     const { guaranteedWidth, guaranteedOffset } = calculateProgressMetrics(progress, reservedWidth, filled_guaranteed);
 
     const filled_base_rounding = calculateEndRounding(progress - reservedWidth - guaranteedWidth);
