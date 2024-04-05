@@ -37,6 +37,7 @@ export const API = {
     publicPartners: "/api/public/partners",
     publicNeoTokyoEnvs: "/api/public/nt-calculator",
     publicKongzEnvs: "/api/public/kongz-calculator",
+    notificationList: "/api/notifications",
 };
 
 const ExternalLinksBased = {
