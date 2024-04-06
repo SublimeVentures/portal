@@ -13,7 +13,7 @@
 
 # production
 /build
-
+.eslintcache
 # misc
 .DS_Store
 *.pem

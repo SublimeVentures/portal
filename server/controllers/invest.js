@@ -34,11 +34,9 @@ async function processBooking(offer, offerLimit, user, amount) {
     // console.log("upgrades", upgrades);
     // console.log("offer", offer);
 
-    const upgradeGuaranteed = upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
-    //todo: enable
-    // const upgradeGuaranteed = offer?.isLaunchpad
-    //     ? { isExpired: true, alloMax: 0, alloUsed: 0 }
-    //     : upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const upgradeGuaranteed = offer?.isLaunchpad
+        ? { isExpired: true, alloMax: 0, alloUsed: 0 }
+        : upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     const upgradeIncreased = upgrades.find((el) => el.id === PremiumItemsENUM.Increased);
 
     let transaction;
