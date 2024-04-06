@@ -26,13 +26,13 @@ jobs:
         tenant: [ citcap ]
 #        tenant: [ based, citcap ]
         include:
-#          - tenant: based
-#            cluster: based-production-webapp-cluster
-#            service: based-production-webapp-service
-#            domain: basedvc.fund
-#            tenant_id: 1
-#            aws_region_eu: eu-central-1
-#            aws_region_us: us-west-2
+          - tenant: based
+            cluster: based-production-webapp-cluster
+            service: based-production-webapp-service
+            domain: basedvc.fund
+            tenant_id: 1
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
           - tenant: citcap
             cluster: citcap-production-webapp-cluster
             service: citcap-production-webapp-service
