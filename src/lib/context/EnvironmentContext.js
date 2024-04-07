@@ -183,7 +183,11 @@ export const EnvironmentProvider = ({ children, initialData }) => {
     };
 
     const getCurrencyStore = () => {
-        if (Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) return getCurrencySettlement();
+        if (
+            Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC ||
+            Number(process.env.NEXT_PUBLIC_TENANT) === TENANT.BAYC
+        )
+            return getCurrencySettlement();
         if (networkProp.isSupported) {
             const preferred = Object.values(currencies).filter(
                 (currency) => currency.chainId === networkProp?.chainId && currency.isStore,

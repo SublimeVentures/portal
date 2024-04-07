@@ -6,8 +6,8 @@ import { ExternalLinks } from "@/routes";
 
 export default function Investors() {
     return (
-        <div className="calloutGradient flex flex-col justify-center text-white pt-10">
-            <div className="px-10 py-25 pb-35 flex flex-col gap-10 flex-1 mx-auto xl:max-w-[1400px]">
+        <div className="calloutGradient flex flex-col justify-center text-white ">
+            <div className="px-10 py-25  flex flex-col gap-10 flex-1 mx-auto xl:max-w-[1400px]">
                 <div className="flex flex-col items-center mx-auto gap-10 md:flex-row">
                     <a href={ExternalLinks.DISCORD} target="_blank" rel="noreferrer">
                         <RoundButton

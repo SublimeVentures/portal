@@ -23,7 +23,7 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ based, citcap ]
+        tenant: [ based, citcap, kongz, apes ]
         include:
           - tenant: based
             cluster: based-production-webapp-cluster
@@ -39,12 +39,20 @@ jobs:
             tenant_id: 6
             aws_region_eu: eu-central-1
             aws_region_us: us-west-2
-#          - tenant: generic
-#            cluster: generic-staging-webapp-cluster
-#            service: generic-staging-webapp-service
-#            tenant_id: 14
-#            domain: kongzcapital.fund
-
+          - tenant: kongz
+            cluster: kongz-production-webapp-cluster
+            service: kongz-production-webapp-service
+            domain: kongzcapital.fund
+            tenant_id: 14
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+          - tenant: apes
+            cluster: apes-production-webapp-cluster
+            service: apes-production-webapp-service
+            domain: apes.capital
+            tenant_id: 19
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
 
     steps:
       - name: Checkout code

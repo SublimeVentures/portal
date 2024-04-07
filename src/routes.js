@@ -104,6 +104,25 @@ const ExternalLinksCyberKongz = {
     STAKING: "#",
 };
 
+const ExternalLinksBAYC = {
+    WIKI: "#",
+    DISCORD: "https://discord.com/invite/bayc",
+    TWITTER: "https://twitter.com/Apes_Capital",
+    GET_APE: "https://app.uniswap.org/#/swap?outputCurrency=0x4d224452801aced8b2f0aebe155379bb5d594381",
+    BOOKING_SYSTEM: "#",
+    OFFER_PHASES: "#",
+    AFTER_INVESTMENT: "#",
+    SUPPORTED_NETWORKS: "#",
+    UPGRADES: "#",
+    LOOTBOX: "#",
+    HOW_TO_ACCESS: "#",
+    DELEGATED_ACCESS: "#",
+    VAULT: "#",
+    OTC: "#",
+    OTC_ANNOUNCE: "#",
+    STAKING: "#",
+};
+
 function getTenantLinks() {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
@@ -114,6 +133,9 @@ function getTenantLinks() {
         }
         case TENANT.CyberKongz: {
             return ExternalLinksCyberKongz;
+        }
+        case TENANT.BAYC: {
+            return ExternalLinksBAYC;
         }
     }
 }
