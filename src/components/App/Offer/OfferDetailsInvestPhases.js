@@ -1,7 +1,6 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import debounce from "lodash.debounce";
 import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
@@ -76,14 +75,20 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
 
     const [isButtonLoading, setButtonLoading] = useState(false); //done
     const [investButtonText, setInvestButtonText] = useState("");
-    const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
+    const isStakeLock = false; //todo: change
+    // const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
     const investmentLocked = investButtonDisabled || isStakeLock;
+
+    // const displayGuaranteed =
+    //     !!upgradesUse.guaranteedUsed &&
+    //     (phaseCurrent.phase === PhaseId.FCFS || phaseCurrent.phase === PhaseId.Pending) &&
+    //     upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
+    //     !offer.isLaunchpad;
 
     const displayGuaranteed =
         !!upgradesUse.guaranteedUsed &&
-        (phaseCurrent.phase === PhaseId.FCFS || phaseCurrent.phase === PhaseId.Pending) &&
-        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
-        !offer.isLaunchpad;
+        phaseCurrent.phase != PhaseId.Unlimited &&
+        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax;
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencySettlement();

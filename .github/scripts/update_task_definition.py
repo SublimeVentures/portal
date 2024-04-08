@@ -21,6 +21,7 @@ task_def['containerDefinitions'][0]['dockerLabels']['environment'] = env
 task_def['containerDefinitions'][0]['dockerLabels']['project'] = tenant_name
 task_def['containerDefinitions'][0]['logConfiguration']['options']['awslogs-group'] = f"/ecs/{tenant_name}-{env}-{app}"
 task_def['containerDefinitions'][0]['logConfiguration']['options']['awslogs-region'] = aws_region
+task_def['containerDefinitions'][0]['dockerLabels']['project'] = tenant_name
 task_def['family'] = f"{tenant_name}-{env}-{app}-td"
 
 # Assuming tags is a list of dictionaries like [{"key": "project", "value": "value1"}, {"key": "environment", "value": "value2"}]

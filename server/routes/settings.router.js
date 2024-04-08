@@ -42,6 +42,7 @@ router.post("/stake", async (req, res) => {
     if (!isUserWallet) return res.status(400).json({});
 
     const result = await refreshStaking(req, isUserWallet);
+
     const session = await refreshCookies(result.token);
 
     if (result.ok) {

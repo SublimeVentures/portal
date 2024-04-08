@@ -1,7 +1,7 @@
+const { QueryTypes } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const { TENANT } = require("../../src/lib/tenantHelper");
-const { QueryTypes } = require("sequelize");
 
 async function getEnvironment() {
     //initialize environment
@@ -107,7 +107,12 @@ async function getEnvironment() {
         TENANT_ID === TENANT.basedVC
             ? funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
             : funded;
-    environment.stats.launchpad = offers.filter((offer) => offer.isLaunchpad).length;
+
+    environment.stats.launchpad = offers.filter(
+        (offer) =>
+            offer.isLaunchpad && Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
+    ).length;
+
     environment.stats.vc = offers.filter(
         (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
     ).length;
