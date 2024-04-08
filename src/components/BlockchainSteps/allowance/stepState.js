@@ -2,8 +2,6 @@ import { ICONS } from "@/lib/icons";
 import { STEP_STATE } from "../enums";
 
 export const stepAllowance = (state, data) => {
-    console.log("BIX :: ALLOWANCE :: step state", state, data);
-
     const iconPadding = "p-[7px]";
     let result = {};
 

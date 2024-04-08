@@ -41,7 +41,6 @@ export const stepLiquidity = (state, data) => {
 
   result.icon = ICONS.SEARCH;
   result.iconPadding = iconPadding;
-  console.log("BIX :: LIQUIDITY :: step state result", result, state, data);
 
   return result;
 };
