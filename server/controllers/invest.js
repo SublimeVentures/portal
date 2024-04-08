@@ -25,7 +25,7 @@ async function processBooking(offer, offerLimit, user, amount) {
     const { userId, tenantId, partnerId } = user;
 
     const { phaseCurrent } = phases({ ...offer, ...offerLimit });
-    console.log("phaseCurrent", phaseCurrent);
+
     const [vault, upgrades] = await Promise.all([
         sumAmountForUserAndTenant(offer.id, userId, tenantId),
         fetchUpgradeUsed(userId, offer.id, tenantId),
@@ -34,10 +34,9 @@ async function processBooking(offer, offerLimit, user, amount) {
     // console.log("upgrades", upgrades);
     // console.log("offer", offer);
 
-    // const upgradeGuaranteed = offer?.isLaunchpad
-    //     ? { isExpired: true, alloMax: 0, alloUsed: 0 }
-    //     : upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
-    const upgradeGuaranteed = upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const upgradeGuaranteed = offer?.isLaunchpad
+        ? { isExpired: true, alloMax: 0, alloUsed: 0 }
+        : upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     const upgradeIncreased = upgrades.find((el) => el.id === PremiumItemsENUM.Increased);
 
     let transaction;

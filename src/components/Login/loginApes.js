@@ -3,12 +3,11 @@ import { IoPlay as PlayIcon } from "react-icons/io5";
 import HeroBg from "@/components/Home/HeroBg";
 import { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
-import IconNT from "@/assets/svg/NT.svg";
 import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 
-export default function LoginCyberKongz({}) {
+export default function LoginApesCapital({}) {
     const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
 
     useEffect(() => {
@@ -20,7 +19,7 @@ export default function LoginCyberKongz({}) {
             <div className={"flex flex-1 justify-between flex-wrap gap-10"}>
                 <div className="flex flex-col p-10 sm:p-20 w-full sm:w-max font-accent blurred glareBg bg-black lg:flex-row ">
                     <div className="flex flex-col flex-1 ">
-                        <div className={"pb-2"}>Login with CyberKongz NFT</div>
+                        <div className={"pb-2"}>Login with BAYC / MAYC NFT</div>
                         <div className={"pb-10"}>
                             <Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
                         </div>
@@ -38,7 +37,7 @@ export default function LoginCyberKongz({}) {
                     </div>
                 </div>
                 <div className={"hidden lg:flex  items-center md:justify-end"}>
-                    <img src={"https://cdn.basedvc.fund/webapp/logo_alt_14.png"} className={"w-[280px]"} />
+                    <img src={"https://cdn.basedvc.fund/webapp/logo_alt_19.png"} className={"w-[280px]"} />
                 </div>
             </div>
         );
@@ -46,7 +45,7 @@ export default function LoginCyberKongz({}) {
 
     return (
         <>
-            <HeroBg subtitle={"Welcome to"} title={"KongzCapital"} content={renderOptions()} />
+            <HeroBg subtitle={"Welcome to"} title={"Apes Capital"} content={renderOptions()} />
             <LoginModal loginModalProps={loginData} />
         </>
     );

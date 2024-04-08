@@ -75,23 +75,12 @@ function allocationParseUnlimited(params) {
 
 function allocationParseOpen(params) {
     const { allocationOffer_left, allocationUser_invested, output } = params;
-    const { allocationUser_max, allocationUser_guaranteed, allocationUser_min } = output;
+    const { allocationUser_max } = output;
 
-    //todo: remove
-    let allocationUser_left;
-    if (allocationUser_guaranteed.total > 0 && allocationUser_guaranteed.left >= allocationUser_min) {
-        allocationUser_left = allocationUser_guaranteed.left - allocationUser_invested;
-        // allocationUser_left = allocationUser_guaranteed.left;
-    } else {
-        allocationUser_left = getAllocationLeft(allocationOffer_left, allocationUser_max - allocationUser_invested);
-    }
-    //todo: remove end
-
-    params.output.allocationUser_left = allocationUser_left;
-    // params.output.allocationUser_left = getAllocationLeft(
-    //     allocationOffer_left,
-    //     allocationUser_max - allocationUser_invested,
-    // );
+    params.output.allocationUser_left = getAllocationLeft(
+        allocationOffer_left,
+        allocationUser_max - allocationUser_invested,
+    );
 
     return params;
 }

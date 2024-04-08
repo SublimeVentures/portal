@@ -75,20 +75,14 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
 
     const [isButtonLoading, setButtonLoading] = useState(false); //done
     const [investButtonText, setInvestButtonText] = useState("");
-    const isStakeLock = false; //todo: change
-    // const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
+    const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
     const investmentLocked = investButtonDisabled || isStakeLock;
-
-    // const displayGuaranteed =
-    //     !!upgradesUse.guaranteedUsed &&
-    //     (phaseCurrent.phase === PhaseId.FCFS || phaseCurrent.phase === PhaseId.Pending) &&
-    //     upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
-    //     !offer.isLaunchpad;
 
     const displayGuaranteed =
         !!upgradesUse.guaranteedUsed &&
         phaseCurrent.phase != PhaseId.Unlimited &&
-        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax;
+        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
+        !offer.isLaunchpad;
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencySettlement();
