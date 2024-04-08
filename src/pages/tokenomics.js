@@ -21,7 +21,7 @@ const TENANT_TOKENOMICS = () => {
     }
 };
 
-export default function InvestmentsPublic() {
+export default function Tokenomics() {
     const seo = seoConfig(PAGE.Tokenomics);
 
     return (
