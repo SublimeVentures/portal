@@ -11,6 +11,9 @@ export function TENANTS_STAKIMG() {
         case TENANT.CyberKongz: {
             return ["Genesis Kong", "Baby Kong"];
         }
+        case TENANT.BAYC: {
+            return ["BAYC", "MAYC"];
+        }
     }
 }
 

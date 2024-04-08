@@ -25,7 +25,13 @@ const TENANT_MENU = () => {
                 { name: "TOKENOMICS", link: "tokenomics" },
             ];
         }
-        case TENANT.CyberKongz: {
+        case TENANT.BAYC: {
+            return [
+                { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
+                { name: "INVESTMENTS", link: "investments" },
+            ];
+        }
+        default: {
             return [
                 { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
                 { name: "TOKENOMICS", link: "tokenomics" },
@@ -56,7 +62,13 @@ export default function Navbar() {
                 );
             else
                 return (
-                    <a href={el.link} key={i} target="_blank" className="mx-5 cursor-pointer underlineHover">
+                    <a
+                        href={el.link}
+                        key={i}
+                        target="_blank"
+                        className="mx-5 cursor-pointer underlineHover"
+                        rel="noreferrer"
+                    >
                         {el.name}
                     </a>
                 );
@@ -64,13 +76,13 @@ export default function Navbar() {
             if (!el.isExternal)
                 return (
                     <Link href={el.link} key={i} className="mx-3 cursor-pointer ">
-                        <CitCapGlitchButton text={`_${el.name}`} />
+                        <CitCapGlitchButton text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${el.name}`} />
                     </Link>
                 );
             else
                 return (
-                    <a href={el.link} key={i} target="_blank" className="mx-3 cursor-pointer ">
-                        <CitCapGlitchButton text={`_${el.name}`} />
+                    <a href={el.link} key={i} target="_blank" className="mx-3 cursor-pointer " rel="noreferrer">
+                        <CitCapGlitchButton text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${el.name}`} />
                     </a>
                 );
         }
@@ -85,7 +97,7 @@ export default function Navbar() {
             <div
                 className={`
                 ${!isOnTop || isMobileOpen ? "blurredBG" : ""} 
-                flex flex-row items-center w-full px-10 navShadow `}
+                flex flex-row items-center w-full px-10 navShadow py-4`}
             >
                 <Link href="/" onClick={disableMobile}>
                     <div className={`flex`}>

@@ -1,23 +1,23 @@
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { BsLightningCharge as IconLight, BsSafe as IconVault } from "react-icons/bs";
 import { MdOutlineCurrencyExchange as IconExchange } from "react-icons/md";
 import {
-    IoLogoDiscord as IconDiscord,
     IoNotificationsOutline as IconBell,
     IoBookOutline as IconWiki,
     IoLogOutOutline as IconLogout,
     IoSettingsOutline as IconSetting,
     IoDiamondOutline as IconPremium,
 } from "react-icons/io5";
+import { FaDiscord as IconDiscord } from "react-icons/fa";
 import { PiPlantFill as IconGrowth } from "react-icons/pi";
+import { LuBanana } from "react-icons/lu";
+import { SiGamebanana } from "react-icons/si";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import IconNT from "@/assets/svg/NT.svg";
 import PAGE, { ExternalLinks } from "@/routes";
-import { tenantIndex } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import ChangeNetwork from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress from "@/components/Navigation/ChangeAddress";
@@ -25,8 +25,6 @@ import { TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 import { getCopy } from "@/lib/seoConfig";
 import { cn } from "@/lib/cn";
-
-const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -57,7 +55,24 @@ const TENANT_LOGO = () => {
                 </>
             );
         }
+        case TENANT.BAYC: {
+            return (
+                <>
+                    <img
+                        src="https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/hero_19.png"
+                        className="max-w-[125px] md:max-w-[210px]"
+                        alt="Apes Capital"
+                    />
+                </>
+            );
+        }
     }
+};
+const TENANT_LOGO_LAUNCHPAD = {
+    [TENANT.basedVC]: <IconGrowth className="w-7 mr-4 text-2xl" />,
+    [TENANT.NeoTokyo]: <IconNT className="w-8 mr-[0.91rem] text-2xl" />,
+    [TENANT.CyberKongz]: <SiGamebanana className="w-7 mr-4 text-2xl" />,
+    [TENANT.BAYC]: <LuBanana className="w-7 mr-4 text-2xl" />,
 };
 
 export default function Sidebar({ session }) {
@@ -105,11 +120,7 @@ export default function Sidebar({ session }) {
             {
                 name: "Launchpad",
                 link: PAGE.Launchpad,
-                icon: isBaseVCTenant ? (
-                    <IconGrowth className="w-7 mr-4 text-2xl" />
-                ) : (
-                    <IconNT className="w-8 mr-[0.91rem] text-2xl" />
-                ),
+                icon: TENANT_LOGO_LAUNCHPAD[Number(process.env.NEXT_PUBLIC_TENANT)],
             },
             {
                 name: "OTC",

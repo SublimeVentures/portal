@@ -104,6 +104,25 @@ const ExternalLinksCyberKongz = {
     STAKING: "#",
 };
 
+const ExternalLinksBAYC = {
+    WIKI: "https://info.apes.capital/",
+    DISCORD: "https://discord.com/invite/bayc",
+    TWITTER: "https://twitter.com/Apes_Capital",
+    GET_APE: "https://app.uniswap.org/#/swap?outputCurrency=0x4d224452801aced8b2f0aebe155379bb5d594381",
+    BOOKING_SYSTEM: "https://info.apes.capital/overview/faq#how-does-allocation-booking-system-works",
+    OFFER_PHASES: "https://info.apes.capital/overview/the-investment-process",
+    AFTER_INVESTMENT: "https://info.apes.capital/overview/managing-your-investments",
+    SUPPORTED_NETWORKS: "https://info.citizencapital.fund/overview/multichain",
+    UPGRADES: "#",
+    LOOTBOX: "https://info.apes.capital/overview/mystery-boxes",
+    HOW_TO_ACCESS: "https://info.apes.capital/overview/how-to-join",
+    DELEGATED_ACCESS: "#",
+    VAULT: "https://info.apes.capital/overview/managing-your-investments",
+    OTC: "https://info.apes.capital/overview/otc-sales",
+    OTC_ANNOUNCE: "#",
+    STAKING: "https://info.apes.capital/overview/how-to-join",
+};
+
 function getTenantLinks() {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
@@ -114,6 +133,9 @@ function getTenantLinks() {
         }
         case TENANT.CyberKongz: {
             return ExternalLinksCyberKongz;
+        }
+        case TENANT.BAYC: {
+            return ExternalLinksBAYC;
         }
     }
 }

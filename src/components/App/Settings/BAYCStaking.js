@@ -5,14 +5,14 @@ import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
-import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
+import { TENANTS_STAKIMG, timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
-export default function CyberKongzStaking({ stakingProps }) {
+export default function ApeStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
     const router = useRouter();
 
@@ -27,10 +27,10 @@ export default function CyberKongzStaking({ stakingProps }) {
     const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(unstakeDate, staked);
 
     const refreshSession = async (force) => {
-        console.log("refreshSession");
+        console.log("refreshSession", force);
         const result = await updateStaking(account.address);
         console.log("refreshSession result", result);
-        if (!result?.ok) {
+        if (result?.ok) {
             const updatedSession = result.data.updates;
             if (updatedSession.isStaked) setStaked(true);
             if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
@@ -44,7 +44,6 @@ export default function CyberKongzStaking({ stakingProps }) {
     };
 
     const stakingModalProps = {
-        isFlexibleStaking: true,
         stakeReq: session.stakeReq,
         stakeSize: session.stakeSize,
         stakeMulti: session.stakeMulti,
@@ -66,7 +65,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                         IDENTITY
                     </div>
                     <a href={ExternalLinks.STAKING} target={"_blank"} rel="noreferrer">
-                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
+                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo className="h-8 w-8" />} noBorder={true} />
                     </a>
                 </div>
                 <div className="detailRow">
@@ -85,12 +84,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                 <div className={`detailRow  ${isElite ? "text-gold" : ""}`}>
                     <p>SEASON</p>
                     <hr className={"spacer"} />
-                    <p>{session.isS1 ? "Genesis" : "Baby"}</p>
-                </div>
-                <div className={"detailRow"}>
-                    <p>ALLOCATION MAX</p>
-                    <hr className={"spacer"} />
-                    <p>${session.stakeSize}</p>
+                    <p>{session.isS1 ? TENANTS_STAKIMG()[0] : TENANTS_STAKIMG()[1]}</p>
                 </div>
                 <div className={`detailRow ${staked ? "text-app-success" : "text-app-error"}`}>
                     <p>Staked</p>
@@ -126,9 +120,9 @@ export default function CyberKongzStaking({ stakingProps }) {
                 <div className={"flex flex-1 justify-between mt-5"}>
                     <UniButton
                         type={ButtonTypes.BASE}
-                        text={"GET BANANA"}
+                        text={"GET APE"}
                         handler={() => {
-                            window.open(ExternalLinks.GET_BANANA_ETH, "_blank");
+                            window.open(ExternalLinks.GET_APE, "_blank");
                         }}
                     />
 

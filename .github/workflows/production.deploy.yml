@@ -23,31 +23,37 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ based_eu, based_us ]
+        tenant: [ apes ]
+#        tenant: [ based, citcap, kongz, apes ]
         include:
-          - tenant: based_eu
-            cluster: based-prod-webapp-cluster
-            service: based-prod-webapp-service
-            domain: basedvc.fund
-            tenant_id: 1
-            aws_region: eu-central-1
-          - tenant: based_us
-            cluster: based-prod-webapp-cluster
-            service: based-prod-webapp-service
-            domain: basedvc.fund
-            tenant_id: 1
-            aws_region: us-west-2
+#          - tenant: based
+#            cluster: based-production-webapp-cluster
+#            service: based-production-webapp-service
+#            domain: basedvc.fund
+#            tenant_id: 1
+#            aws_region_eu: eu-central-1
+#            aws_region_us: us-west-2
 #          - tenant: citcap
-#            cluster: citcap-staging-webapp-cluster
-#            service: citcap-staging-webapp-service
+#            cluster: citcap-production-webapp-cluster
+#            service: citcap-production-webapp-service
 #            domain: citizencapital.fund
 #            tenant_id: 6
-#          - tenant: generic
-#            cluster: generic-staging-webapp-cluster
-#            service: generic-staging-webapp-service
-#            tenant_id: 14
+#            aws_region_eu: eu-central-1
+#            aws_region_us: us-west-2
+#          - tenant: kongz
+#            cluster: kongz-production-webapp-cluster
+#            service: kongz-production-webapp-service
 #            domain: kongzcapital.fund
-
+#            tenant_id: 14
+#            aws_region_eu: eu-central-1
+#            aws_region_us: us-west-2
+          - tenant: apes
+            cluster: apes-production-webapp-cluster
+            service: apes-production-webapp-service
+            domain: apes.capital
+            tenant_id: 19
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
 
     steps:
       - name: Checkout code
@@ -71,6 +77,7 @@ jobs:
           aws secretsmanager get-secret-value --secret-id ${{ env.SECRETS }}/${{ env.ENV }}/${{ env.APP }} --query SecretString --output text > .env
           echo NEXT_PUBLIC_TENANT=${{ matrix.tenant_id }} >> .env
           echo DOMAIN=https://${{ matrix.domain }} >> .env
+          echo TRUSTED_DOMAINS="https://${{ matrix.domain }} https://www.${{ matrix.domain }} " >> .env
         env:
           AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
 
@@ -88,25 +95,51 @@ jobs:
           docker push $IMAGE_URI
           echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
 
+#      - name: Pull latest image from Amazon ECR
+#        run: |
+#          # Get the latest image URI
+#          LATEST_IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:056e326"
+#          echo IMAGE_URI=$LATEST_IMAGE_URI >> $GITHUB_ENV
+
       - name: Make Python Script Executable [gen. task def]
         run: chmod +x .github/scripts/update_task_definition.py
 
-      - name: Update ECS Task Definition File
+      - name: Update ECS Task Definition File US
         run: |
-          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region }}
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region_us }}
 
-      - name: Deploy new code
+      - name: Deploy new code US
         run: |
           FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
           UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
           cat $UPDATED_TASK_DEFINITION
-#          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
-#          echo "Registered Task Definition: $revision"
-#          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
-#          echo "Service updated to use new task definition revision"
-#          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
-#          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "Registered Task Definition: $revision"
+          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+          echo "Service updated to use new task definition revision"
+          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ matrix.aws_region }}
+          AWS_REGION: ${{ matrix.aws_region_us }}
+
+      - name: Update ECS Task Definition File EU
+        run: |
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region_eu }}
+
+      - name: Deploy new code EU
+        run: |
+          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
+          cat $UPDATED_TASK_DEFINITION
+          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "Registered Task Definition: $revision"
+          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+          echo "Service updated to use new task definition revision"
+          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ matrix.aws_region_eu }}
