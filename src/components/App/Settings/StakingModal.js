@@ -9,7 +9,7 @@ import { TENANTS_STAKIMG } from "@/components/App/Settings/helper";
 import StepInput from "@/components/App/StepInput";
 
 export default function StakingModal({ model, setter, stakingModalProps }) {
-    const { stakeReq, isS1, stakeMulti, stakingCurrency } = stakingModalProps;
+    const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
     const { account, activeDiamond } = useEnvironmentContext();
 
     const [stakeSize, setStakeSize] = useState(stakeReq);
@@ -69,27 +69,28 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                         <hr className="spacer" />
                         <p>{TENANTS_STAKIMG()[isS1 ? 0 : 1]}</p>
                     </div>
-
-                    <div className="detailRow">
-                        <p>Min Required Stake</p>
-                        <hr className="spacer" />
-                        <p>
-                            {stakeReq} {stakingCurrency.name}
-                        </p>
-                    </div>
-
-                    <div className={"detailRow"}>
-                        <p>Stake Amount:</p>
-                        <hr className={"spacer"} />
-                        <StepInput
-                            step={stakeMulti}
-                            min={stakeReq}
-                            max={5000}
-                            value={stakeSize}
-                            setValue={setStakeSize}
-                            aria-label={`Add ${stakeSize} ${stakingCurrency.name}`}
-                        />
-                    </div>
+                    {stakingModalProps?.isFlexibleStaking ? (
+                        <div className={"detailRow"}>
+                            <p>Stake Amount:</p>
+                            <hr className={"spacer"} />
+                            <StepInput
+                                step={stakeMulti}
+                                min={stakeReq}
+                                max={5000}
+                                value={stakeSize}
+                                setValue={setStakeSize}
+                                aria-label={`Add ${stakeSize} ${stakingCurrency.name}`}
+                            />
+                        </div>
+                    ) : (
+                        <div className={"detailRow"}>
+                            <p>{isStaked ? "Add" : "Required"} Stake</p>
+                            <hr className={"spacer"} />
+                            <p>
+                                {stakeSize} {stakingCurrency.name}
+                            </p>
+                        </div>
+                    )}
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
             </div>

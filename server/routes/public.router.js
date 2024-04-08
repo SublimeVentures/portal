@@ -8,7 +8,6 @@ const { getCyberKongzEnvs } = require("../queries/kongz.query");
 router.get("/investments", async (req, res) => {
     return res.status(200).json(await getOffersPublic());
 });
-
 router.get("/partners", async (req, res) => {
     return res.status(200).json(await getPublicPartners());
 });

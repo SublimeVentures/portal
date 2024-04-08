@@ -21,6 +21,7 @@ const BuyStoreItemModal = dynamic(() => import("@/components/App/Store/BuyStoreI
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
     const { cdn, network, getCurrencyStore } = useEnvironmentContext();
+    console.log("getCurrencyStore", getCurrencyStore());
 
     const [isBuyModal, setBuyModal] = useState(false);
     const [order, setOrder] = useState(null);
@@ -55,7 +56,7 @@ export default function AppUpgrades({ session }) {
     };
 
     useEffect(() => {
-        if (!!order) {
+        if (order) {
             setBuyModal(true);
         }
     }, [order]);
@@ -66,7 +67,7 @@ export default function AppUpgrades({ session }) {
     };
 
     const buyModalProps = {
-        order: !!order ? order : {},
+        order: order ? order : {},
         setOrder,
     };
 

@@ -1,6 +1,6 @@
 import { http, createConfig, fallback } from "wagmi";
 import { mainnet, polygon, bsc, avalanche } from "wagmi/chains";
-import { coinbaseWallet, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, walletConnect } from "wagmi/connectors";
 import { RPCs, WALLET_CONNECT_ID } from "@/lib/blockchain";
 
 const retryOptions = {
@@ -16,7 +16,7 @@ const fallbackOptions = {
 };
 
 export const config = createConfig({
-    chains: [mainnet, polygon, bsc, avalanche],
+    chains: [mainnet, polygon, bsc],
     batch: { multicall: true },
     ssr: true,
     cacheTime: 0, //default: 4_000
@@ -26,7 +26,7 @@ export const config = createConfig({
             projectId: WALLET_CONNECT_ID,
         }),
         coinbaseWallet({
-            appName: 'Venture Capital',
+            appName: "Venture Capital",
         }),
     ],
     transports: {

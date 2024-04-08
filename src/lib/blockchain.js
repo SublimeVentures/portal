@@ -37,6 +37,9 @@ const TENANT_WALLETCONNECT = () => {
         case TENANT.CyberKongz: {
             return "5a606cf907328fefe28f0bdae67052b4";
         }
+        case TENANT.BAYC: {
+            return "7320735cf0faaa591d2e4cb8da253dc4";
+        }
     }
 };
 

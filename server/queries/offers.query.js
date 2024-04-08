@@ -1,25 +1,39 @@
+const { serializeError } = require("serialize-error");
+const { QueryTypes } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
-const { QueryTypes } = require("sequelize");
+const { TENANT } = require("../../src/lib/tenantHelper");
 
 async function getOffersPublic() {
     try {
-        return models.offer.findAll({
-            attributes: ["name", "genre", "url_web", "slug"],
-            where: {
-                displayPublic: true,
-            },
-            order: [["createdAt", "DESC"]],
-            raw: true,
+        const tenantId = Number(process.env.NEXT_PUBLIC_TENANT);
+
+        let sqlQuery =
+            tenantId === TENANT.basedVC
+                ? `
+            SELECT name, genre, url_web, slug
+            FROM offer
+            WHERE "displayPublic" = true
+            ORDER BY "createdAt" DESC;
+        `
+                : `
+            SELECT o.name, o.genre, o.url_web, o.slug
+            FROM offer o
+            INNER JOIN "offerLimit" ol ON o.id = ol."offerId"
+            WHERE o."displayPublic" = true AND ol."partnerId" = ${tenantId}
+            ORDER BY o."createdAt" DESC;
+        `;
+
+        return db.query(sqlQuery, {
+            type: QueryTypes.SELECT,
         });
     } catch (error) {
         logger.error("QUERY :: [getOffersPublic]", {
             error: serializeError(error),
         });
+        return [];
     }
-    return [];
 }
 
 const query_getOfferList = `
@@ -28,6 +42,7 @@ const query_getOfferList = `
         o.name,
         o.genre,
         o.ticker,
+        o."isLaunchpad",
         ol.d_open,
         ol.d_close,
         ol."offerId",

@@ -13,6 +13,10 @@ const HomeKongz = dynamic(() => import("@/components/HomeKongzCapital"), {
     ssr: true,
 });
 
+const HomeApes = dynamic(() => import("@/components/HomeApesCapital"), {
+    ssr: true,
+});
+
 const renderLanding = (account) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
@@ -23,6 +27,9 @@ const renderLanding = (account) => {
         }
         case TENANT.CyberKongz: {
             return <HomeKongz account={account} />;
+        }
+        case TENANT.BAYC: {
+            return <HomeApes account={account} />;
         }
     }
 };

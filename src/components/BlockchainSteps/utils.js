@@ -56,6 +56,15 @@ const TENANT_STAKE = (params) => {
                 contract: params.contract,
             };
         }
+        case TENANT.BAYC: {
+            return {
+                name: "stakeV2",
+                inputs: [process.env.NEXT_PUBLIC_TENANT, "0x0000000000000000000000000000000000000000"],
+                abi: abi_staking_generic,
+                confirmations: 2,
+                contract: params.contract,
+            };
+        }
     }
 };
 
@@ -83,6 +92,7 @@ const TENANT_UNSTAKE = (params) => {
 };
 
 const TENANT_UPGRADE = (params, token) => {
+    console.log("dupeks ", Number(process.env.NEXT_PUBLIC_TENANT), TENANT.BAYC);
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.NeoTokyo: {
             return {
@@ -93,7 +103,8 @@ const TENANT_UPGRADE = (params, token) => {
                 contract: params.contract,
             };
         }
-        case TENANT.CyberKongz: {
+        case TENANT.CyberKongz:
+        case TENANT.BAYC: {
             return {
                 name: "buyUpgrade",
                 inputs: [process.env.NEXT_PUBLIC_TENANT, params.amount, params.upgradeId, token.contract],
@@ -330,6 +341,7 @@ export const getMethod = (type, token, params) => {
             const isValid =
                 validNumber(params?.amount) && validNumber(params?.upgradeId) && validAddress(params?.contract);
             const method = TENANT_UPGRADE(params, token);
+            console.log("UPGRADEE", process.env.NEXT_PUBLIC_TENANT, method);
             return isValid
                 ? {
                       ok: true,
@@ -341,6 +353,7 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.STAKE: {
+            console.log("params - METHOD.STAKE", params);
             const isValid =
                 validNumber(params?.allowance) &&
                 validNumber(params?.liquidity) &&

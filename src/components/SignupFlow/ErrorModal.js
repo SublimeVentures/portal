@@ -50,6 +50,19 @@ const TENANTS_ERROR = () => {
                 </>
             );
         }
+        case TENANT.BAYC: {
+            return (
+                <>
+                    <div className="mb-5">
+                        You were stopped by <strong>APE GUARD</strong>.<br />
+                        <div className={"text-app-error"}>BAYC / MAYC NFT not detected...</div>
+                    </div>
+                    <div>
+                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                    </div>
+                </>
+            );
+        }
     }
 };
 

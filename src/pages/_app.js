@@ -25,6 +25,10 @@ switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         import("@/styles/tenants/cyberkongz.scss");
         break;
     }
+    case TENANT.BAYC: {
+        import("@/styles/tenants/bayc.scss");
+        break;
+    }
 }
 
 export default function App({ Component, pageProps: { ...pageProps } }) {

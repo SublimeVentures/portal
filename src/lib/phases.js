@@ -77,6 +77,7 @@ function phases(offer) {
 
     if (offer.isLaunchpad) {
         phases.push(updatePhaseDate(Phases.Open, offer.d_open));
+        phases.push(updatePhaseDate(Phases.Unlimited, offer.d_open + (offer?.lengthFCFS ? offer.lengthFCFS : 0)));
     } else {
         if (offer.lengthFCFS) {
             phases.push(updatePhaseDate(Phases.FCFS, offer.d_open));
