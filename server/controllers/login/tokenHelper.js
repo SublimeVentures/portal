@@ -1,4 +1,3 @@
-const moment = require("moment");
 const { serialize } = require("cookie");
 const { jwtVerify, SignJWT } = require("jose");
 
@@ -60,6 +59,10 @@ const refreshAuth = async ({ accessToken, refreshToken }) => {
         cookie: {
             refreshCookie,
             accessCookie,
+        },
+        token: {
+            accessToken,
+            refreshToken,
         },
     };
 };
