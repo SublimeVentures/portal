@@ -1,4 +1,4 @@
-import { QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
+import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { config } from "@/lib/wagmi";
 import { queryClient } from "@/lib/queryCache";
@@ -11,6 +11,7 @@ import Gtag from "@/components/gtag";
 import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
 
 import { TENANT } from "@/lib/tenantHelper";
+import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 
 switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     case TENANT.basedVC: {
@@ -37,15 +38,17 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
 
     return (
         <>
-            <WagmiProvider config={config}>
-                <QueryClientProvider client={queryClient}>
-                    <EnvironmentProvider initialData={environmentData}>
-                        <HydrationBoundary state={pageProps.dehydratedState}>
-                            {renderWithLayout(<Component {...pageProps} />)}
-                        </HydrationBoundary>
-                    </EnvironmentProvider>
-                </QueryClientProvider>
-            </WagmiProvider>
+            <ClientErrorBoundary>
+                <WagmiProvider config={config}>
+                    <QueryClientProvider client={queryClient}>
+                        <EnvironmentProvider initialData={environmentData}>
+                            <HydrationBoundary state={pageProps.dehydratedState}>
+                                {renderWithLayout(<Component {...pageProps} />)}
+                            </HydrationBoundary>
+                        </EnvironmentProvider>
+                    </QueryClientProvider>
+                </WagmiProvider>
+            </ClientErrorBoundary>
             <Gtag />
         </>
     );
