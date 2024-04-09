@@ -16,8 +16,6 @@ router.post("/wallets/:operation", async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
 
-    const token = req.cookies[authTokenName];
-    const session = await refreshCookies(token);
     let result;
 
     if (req.params.operation === "add") {
@@ -29,7 +27,7 @@ router.post("/wallets/:operation", async (req, res) => {
     }
 
     if (result.ok) {
-        const cookies = [session.cookie.refreshCookie ?? '', session.cookie.accessCookie ?? ''];
+        const cookies = [result.cookie.refreshCookie, result.cookie.accessCookie];
         res.setHeader("Set-Cookie", cookies);
         delete result.data.user;
         delete result.token;
