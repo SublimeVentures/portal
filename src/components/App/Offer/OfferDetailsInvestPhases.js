@@ -91,7 +91,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const setValue = (data) => {
         try {
             if (!Number.isInteger(data)) {
-                data = data.replace(/[^0-9]/g, "");
+                data = Number(data.replace(/[^0-9]/g, ""));
             }
             setInvestmentAmount(data);
 

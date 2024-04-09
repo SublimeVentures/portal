@@ -8,6 +8,11 @@ export default function OfferDetailsTopBar({ paramsBar }) {
     let { offer, phaseCurrent, phaseNext, refreshInvestmentPhase, phaseIsClosed } = paramsBar;
     let { name, genre, slug } = offer;
 
+    console.log('test-0', phaseNext.startDate)
+    console.log('test-00', phaseNext.startDate + 1)
+    console.log('test-1', moment.unix(phaseNext.startDate + 1))
+    console.log('test-2', moment.unix(phaseNext.startDate + 1).format('YYYY-MM-DD HH:mm:ss'))
+
     return (
         <div className={"col-span-12 flex flex-col gap-10 md:flex-row"}>
             <div className={"flex flex-row gap-5 flex-1 items-center"}>
@@ -39,7 +44,7 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                             onComplete={async () => {
                                 refreshInvestmentPhase();
                             }}
-                            to={`${moment.unix(phaseNext.startDate + 1)}`}
+                            to={`${moment.unix(phaseNext.startDate + 1).format('YYYY-MM-DD HH:mm:ss')}`}
                             labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
                         />
                     </div>
