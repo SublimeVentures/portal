@@ -16,7 +16,6 @@ export default class ClientErrorBoundary extends Component {
     componentDidCatch(error, errorInfo) {
         Sentry.captureException(error, {
             event_id: errorInfo.digest,
-            extra: errorInfo.componentStack,
         });
         console.error(error);
     }
