@@ -3,6 +3,7 @@ const router = express.Router();
 const { verifyID } = require("../../src/lib/authHelpers");
 const { getUserWallets, addUserWallet, removeUserWallet, refreshStaking } = require("../controllers/wallets");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
+const { authTokenName } = require("../../src/lib/authHelpers");
 
 router.get("/wallets", async (req, res) => {
     const { auth, user } = await verifyID(req);
@@ -15,6 +16,8 @@ router.post("/wallets/:operation", async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
 
+    const token = req.cookies[authTokenName];
+    const session = await refreshCookies(token);
     let result;
 
     if (req.params.operation === "add") {
@@ -26,12 +29,13 @@ router.post("/wallets/:operation", async (req, res) => {
     }
 
     if (result.ok) {
-        const cookies = [result.cookie.refreshCookie, result.cookie.accessCookie];
+        const cookies = [session.cookie.refreshCookie ?? '', session.cookie.accessCookie ?? ''];
         res.setHeader("Set-Cookie", cookies);
         delete result.data.user;
         delete result.token;
         delete result.cookie;
     }
+
     return res.status(200).json(result);
 });
 
