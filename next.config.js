@@ -11,6 +11,7 @@ const nextConfig = {
 
         return config;
     },
+    productionBrowserSourceMaps: true,
     images: {
         remotePatterns: [
             {
@@ -36,7 +37,7 @@ const nextConfig = {
     },
     eslint: {
         ignoreDuringBuilds: true,
-    }
+    },
 };
 
 module.exports = nextConfig;
