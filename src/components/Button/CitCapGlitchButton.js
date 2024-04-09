@@ -28,11 +28,17 @@ export function CitCapGlitchButton({ text, state, handler, isLoading, isDisabled
             ${state}
             ${isDisabled ? "disabled" : ""}
             shakeBtn font-accent before:content-[attr(text)] after:content-[attr(text)]  
+             ${process.env.NEXT_PUBLIC_TENANT == "19" ? "!pt-[6px]" : "glitch"}
             `}
             data-text={text}
             onClick={() => click()}
         >
-            <span className={"flex flex-row justify-center items-center text-nowrap"}>
+            <span
+                className={`
+                flex flex-row justify-center items-center text-nowrap
+                 ${process.env.NEXT_PUBLIC_TENANT == "19" ? "!pt-[3px]" : ""}
+            `}
+            >
                 {isLoading ? (
                     <>Loading...</>
                 ) : (

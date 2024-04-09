@@ -1,8 +1,6 @@
-import {
-    IoAddCircleOutline as PlusIcon,
-    IoLogoDiscord as DiscordIcon,
-    IoLogoTwitter as TwitterIcon,
-} from "react-icons/io5";
+import { IoAddCircleOutline as PlusIcon } from "react-icons/io5";
+import { FaXTwitter as TwitterIcon } from "react-icons/fa6";
+import { FaDiscord as DiscordIcon } from "react-icons/fa";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import { ExternalLinks } from "@/routes";
 
@@ -17,8 +15,8 @@ export default function Investors() {
                 <div className={`text-center font-light`}>
                     Join our discord to learn more and gain access to VC deal flow.
                 </div>
-                <div className="flex flex-col items-center mx-auto gap-5 md:flex-row">
-                    <a href={ExternalLinks.DISCORD} target="_blank">
+                <div className="flex flex-col items-center mx-auto gap-10 md:flex-row">
+                    <a href={ExternalLinks.DISCORD} target="_blank" rel="noreferrer">
                         <RoundButton
                             text={"Join"}
                             is3d={true}
@@ -29,8 +27,8 @@ export default function Investors() {
                             icon={<DiscordIcon className={ButtonIconSize.hero} />}
                         />
                     </a>
-                    <PlusIcon className="w-8 text-white" />
-                    <a href={ExternalLinks.TWITTER} target="_blank">
+                    <PlusIcon className="text-2xl text-white" />
+                    <a href={ExternalLinks.TWITTER} target="_blank" rel="noreferrer">
                         <RoundButton
                             text={"Follow"}
                             is3d={true}

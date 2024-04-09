@@ -16,7 +16,7 @@ function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedU
         allocationUser_min = offer.alloMin || MIN_ALLOCATION;
     } else {
         switch (account.tenantId) {
-            case TENANT.basedVC: {
+            case TENANT.basedVC || TENANT.BAYC: {
                 allocationUser_base = account.multi * offer.alloMax;
                 allocationUser_min = offer.alloMin;
                 break;
