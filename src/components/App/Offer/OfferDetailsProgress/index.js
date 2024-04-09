@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import VanillaTilt from "vanilla-tilt";
 import { Tooltiper } from "@/components/Tooltip";
+import { cn } from "@/lib/cn";
 import useOfferDetailsProgress from './useOfferDetailsProgress'
 
 const defaultProgressColors = {
@@ -17,7 +18,14 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
 
     return (
         <>
-        <div className="relative h-[50px] w-full flex flex-row items-center rounded-xl select-none" ref={tilt}>
+        <div className='mt-4'>
+            <div>Filled: {allocations.alloFilled}, Percentage: {base_percentage}</div>
+            <div>Booked: {allocations.alloRes}, Percentage: {res_percentage}</div>
+            <div>Guaranteed: {allocations.alloGuaranteed}, Percentage: {guaranteed_percentage}</div>
+            <div>isSoldOut/isSettled: {String(isSoldOut || allocations.isSettled)}</div>
+        </div>
+
+        <div className={cn('relative h-[50px] w-full flex flex-row items-center rounded-xl select-none', { 'overflow-hidden': base_percentage >= 95 })} ref={tilt}>
             <div className="os-progress-bar absolute rounded-xl overflow-hidden -z-10">
                 <span className="os-progress-bar--meter flex flex-1 rounded-tl-xl rounded-bl-xl"></span>
                 <span
@@ -25,9 +33,8 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                     style={{ width: `${100 - base_percentage}%` }}
                 ></span>
             </div>
-
             <Tooltiper
-                text={`Filled ${base_percentage}%`}
+                text={null}
                 wrapper={
                     <div
                         className="w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
