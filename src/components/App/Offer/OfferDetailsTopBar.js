@@ -39,7 +39,7 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                             onComplete={async () => {
                                 refreshInvestmentPhase();
                             }}
-                            to={`${moment.unix(phaseNext.startDate + 1).format('YYYY-MM-DD HH:mm:ss')}`}
+                            to={`${moment.unix(phaseNext.startDate + 1)}`}
                             labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
                         />
                     </div>
