@@ -17,14 +17,6 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.05, speed: 1000, max: 5 }), []);
 
     return (
-        <>
-        <div className='mt-4'>
-            <div>Filled: {allocations.alloFilled}, Percentage: {base_percentage}</div>
-            <div>Booked: {allocations.alloRes}, Percentage: {res_percentage}</div>
-            <div>Guaranteed: {allocations.alloGuaranteed}, Percentage: {guaranteed_percentage}</div>
-            <div>isSoldOut/isSettled: {String(isSoldOut || allocations.isSettled)}</div>
-        </div>
-
         <div className={cn('relative h-[50px] w-full flex flex-row items-center rounded-xl select-none', { 'overflow-hidden': base_percentage >= 95 })} ref={tilt}>
             <div className="os-progress-bar absolute rounded-xl overflow-hidden -z-10">
                 <span className="os-progress-bar--meter flex flex-1 rounded-tl-xl rounded-bl-xl"></span>
@@ -33,6 +25,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                     style={{ width: `${100 - base_percentage}%` }}
                 ></span>
             </div>
+
             <Tooltiper
                 text={null}
                 wrapper={
@@ -47,6 +40,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 style={{ width: `${base_percentage}%`, "--progress-step-color": progressColors.baseColor }}
                 className="w-full h-full"
             />
+            
             <Tooltiper
                 text={`Booked ${res_percentage}%`}
                 wrapper={
@@ -83,6 +77,5 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 Filled {Number(base_percentage).toFixed(0)}%
             </p>
         </div>
-        </>
     );
 }
