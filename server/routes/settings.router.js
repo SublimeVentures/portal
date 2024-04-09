@@ -15,28 +15,32 @@ router.get("/wallets", async (req, res) => {
 router.post("/wallets/:operation", async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
+    try {
+        const token = req.cookies[authTokenName];
+        const session = await refreshCookies(token);
+        let result;
 
-    const token = req.cookies[authTokenName];
-    const session = await refreshCookies(token);
-    let result;
+        if (req.params.operation === "add") {
+            result = await addUserWallet(user, req);
+        } else if (req.params.operation === "remove") {
+            result = await removeUserWallet(user, req);
+        } else {
+            return res.status(200).json({});
+        }
 
-    if (req.params.operation === "add") {
-        result = await addUserWallet(user, req);
-    } else if (req.params.operation === "remove") {
-        result = await removeUserWallet(user, req);
-    } else {
+        if (result.ok) {
+            const cookies = [session.cookie.refreshCookie ?? "", session.cookie.accessCookie ?? ""];
+            res.setHeader("Set-Cookie", cookies);
+            delete result.data.user;
+            delete result.token;
+            delete result.cookie;
+        }
+
+        return res.status(200).json(result);
+    } catch (error) {
+        console.log("error", error);
         return res.status(200).json({});
     }
-
-    if (result.ok) {
-        const cookies = [session.cookie.refreshCookie ?? '', session.cookie.accessCookie ?? ''];
-        res.setHeader("Set-Cookie", cookies);
-        delete result.data.user;
-        delete result.token;
-        delete result.cookie;
-    }
-
-    return res.status(200).json(result);
 });
 
 router.post("/stake", async (req, res) => {
