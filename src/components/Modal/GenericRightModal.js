@@ -30,6 +30,14 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
         };
     }, [isOpen]);
 
+    useEffect(() => {
+        if (isOpen) {
+            document.body.classList.add('blocked');
+        } else {
+            document.body.classList.remove('blocked');
+        }
+    }, [isOpen]);
+
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-30 " onClose={() => closeModalOnBg()}>
@@ -46,7 +54,7 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
                 </Transition.Child>
 
                 <div className={cn("fixed inset-0 overflow-y-auto min-h-full", { 'overflow-hidden': isShake })}>
-                    <div className="flex min-h-full items-center justify-end text-center ">
+                    <div className="flex min-h-full items-center justify-end text-center">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
