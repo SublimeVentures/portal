@@ -60,10 +60,6 @@ const refreshAuth = async ({ accessToken, refreshToken }) => {
             refreshCookie,
             accessCookie,
         },
-        token: {
-            accessToken,
-            refreshToken,
-        },
     };
 };
 

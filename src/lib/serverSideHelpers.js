@@ -41,14 +41,14 @@ async function processServerSideData(req, res, route, customLogicCallback) {
             },
         };
     } else if (session.exists) {
-        const newData = await refreshData(req.cookies[refreshTokenName]);
-        if (newData?.ok) {
-            const newSession = await refreshCookies(newData.token);
+        const newAuthData = await refreshData(req.cookies[refreshTokenName]);
+        if (newAuthData?.ok) {
+            const newSession = await refreshCookies(newAuthData.token);
 
             if (newSession?.ok) {
                 res.setHeader("Set-Cookie", [newSession.cookie.refreshCookie, newSession.cookie.accessCookie]);
-                accessToken = newSession.token.accessToken;
-                accountData = newData.data.user;
+                accessToken = newAuthData.token.accessToken;
+                accountData = newAuthData.data.user;
 
                 const customResult = await handleCustomLogic(accountData, accessToken, customLogicCallback);
 
