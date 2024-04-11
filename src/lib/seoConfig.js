@@ -207,6 +207,9 @@ const seoBAYC = (page) => {
                 page,
             );
         }
+        case PAGE.Tokenomics: {
+            return generateSeo("Apes Capital - tokenomics", "How it works", template_BYAC, page);
+        }
         case PAGE.ToS: {
             return generateSeo(
                 "Apes Capital - terms of service",

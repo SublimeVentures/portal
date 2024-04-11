@@ -1,13 +1,13 @@
-const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
+const axios = require("axios");
+const logger = require("../../src/lib/logger");
 const { getUserLinkedWallets } = require("../queries/wallets.query");
 const { authTokenName } = require("../../src/lib/authHelpers");
-const axios = require("axios");
 
 async function getUserWallets(user) {
-    const { userId } = user;
+    const { userId, tenantId } = user;
     try {
-        return await getUserLinkedWallets(userId);
+        return await getUserLinkedWallets(userId, tenantId);
     } catch (error) {
         logger.error("getUserWallets", { error: serializeError(error) });
         return [];
