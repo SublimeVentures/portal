@@ -23,30 +23,30 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ apes ]
-#        tenant: [ based, citcap, kongz, apes ]
+#        tenant: [ apes ]
+        tenant: [ based, citcap, kongz, apes ]
         include:
-#          - tenant: based
-#            cluster: based-production-webapp-cluster
-#            service: based-production-webapp-service
-#            domain: basedvc.fund
-#            tenant_id: 1
-#            aws_region_eu: eu-central-1
-#            aws_region_us: us-west-2
-#          - tenant: citcap
-#            cluster: citcap-production-webapp-cluster
-#            service: citcap-production-webapp-service
-#            domain: citizencapital.fund
-#            tenant_id: 6
-#            aws_region_eu: eu-central-1
-#            aws_region_us: us-west-2
-#          - tenant: kongz
-#            cluster: kongz-production-webapp-cluster
-#            service: kongz-production-webapp-service
-#            domain: kongzcapital.fund
-#            tenant_id: 14
-#            aws_region_eu: eu-central-1
-#            aws_region_us: us-west-2
+          - tenant: based
+            cluster: based-production-webapp-cluster
+            service: based-production-webapp-service
+            domain: basedvc.fund
+            tenant_id: 1
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+          - tenant: citcap
+            cluster: citcap-production-webapp-cluster
+            service: citcap-production-webapp-service
+            domain: citizencapital.fund
+            tenant_id: 6
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+          - tenant: kongz
+            cluster: kongz-production-webapp-cluster
+            service: kongz-production-webapp-service
+            domain: kongzcapital.fund
+            tenant_id: 14
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
           - tenant: apes
             cluster: apes-production-webapp-cluster
             service: apes-production-webapp-service

@@ -10,6 +10,8 @@ yarn dev
 pnpm dev
 ```
 
+# Staging
+
 ## Envs
 Example env file
 ```DATABASE=postgresql://username:password@host:port/db
