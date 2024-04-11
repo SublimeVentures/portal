@@ -16,9 +16,6 @@ router.post("/wallets/:operation", async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
     try {
-        const token = req.cookies[authTokenName];
-        console.log("token", token);
-
         let result;
 
         if (req.params.operation === "add") {

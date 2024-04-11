@@ -53,24 +53,6 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
     }, [stakingCurrency?.contract, activeDiamond, model, stakeSize]);
     console.log("blockchainInteractionData", blockchainInteractionData, wallet, registeredOriginalWallet);
 
-    const tempParams = {
-        requiredNetwork: stakingCurrency.chainId,
-        account: account.address,
-        allowance: stakeSize,
-        liquidity: stakeSize,
-        buttonText: "Stake",
-        contract: activeDiamond,
-        spender: activeDiamond,
-        delegated: wallet,
-        transactionType: METHOD.STAKE,
-    };
-    const transaction_method = getMethod(tempParams.transactionType, token, {
-        ...tempParams,
-        prerequisite: {},
-    });
-
-    console.log("blockchainInteractionData - transaction_method", transaction_method);
-
     const title = () => {
         return (
             <>
