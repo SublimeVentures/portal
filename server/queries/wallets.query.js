@@ -1,12 +1,13 @@
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
-async function getUserLinkedWallets(userId) {
+async function getUserLinkedWallets(userId, tenantId) {
     try {
         return models.userWallet.findAll({
-            attributes: ["wallet", "isStaking", "isDelegate"],
+            attributes: ["wallet", "isStaking", "isDelegate", "isHolder"],
             where: {
+                tenantId,
                 userId,
                 isActive: true,
             },

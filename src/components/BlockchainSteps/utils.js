@@ -59,7 +59,7 @@ const TENANT_STAKE = (params) => {
         case TENANT.BAYC: {
             return {
                 name: "stakeV2",
-                inputs: [process.env.NEXT_PUBLIC_TENANT, "0x0000000000000000000000000000000000000000"],
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.delegated],
                 abi: abi_staking_generic,
                 confirmations: 2,
                 contract: params.contract,

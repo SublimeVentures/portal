@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import GenericModal from "@/components/Modal/GenericModal";
 import BlockchainSteps from "@/components/BlockchainSteps";
-import { METHOD } from "@/components/BlockchainSteps/utils";
+import { getMethod, METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getCopy } from "@/lib/seoConfig";
@@ -22,6 +22,11 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
         }, 400);
     };
 
+    const registeredOriginalWallet = stakingModalProps?.userWallets?.find((el) => el.isHolder)?.wallet;
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
     const token = useGetToken(stakingCurrency?.contract);
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -39,13 +44,14 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                 buttonText: "Stake",
                 contract: activeDiamond,
                 spender: activeDiamond,
+                delegated: wallet,
                 transactionType: METHOD.STAKE,
             },
             token,
             setTransactionSuccessful,
         };
     }, [stakingCurrency?.contract, activeDiamond, model, stakeSize]);
-    console.log("blockchainInteractionData", blockchainInteractionData);
+    console.log("blockchainInteractionData", blockchainInteractionData, wallet, registeredOriginalWallet);
 
     const title = () => {
         return (
