@@ -13,9 +13,10 @@ const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModa
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
 export default function ApeStaking({ stakingProps }) {
-    const { session, account, stakingCurrency } = stakingProps;
+    const { session, account, stakingCurrency, userWallets } = stakingProps;
     const router = useRouter();
 
+    console.log("stakingProps", stakingProps);
     const [staked, setStaked] = useState(false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
@@ -50,6 +51,7 @@ export default function ApeStaking({ stakingProps }) {
         isS1: session.isS1,
         isStaked: session.isStaked,
         stakingCurrency,
+        userWallets,
         refreshSession,
     };
 

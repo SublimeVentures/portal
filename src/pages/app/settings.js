@@ -57,6 +57,7 @@ export default function AppSettings({ session }) {
         account,
         stakingEnabled,
         stakingCurrency,
+        userWallets,
     };
 
     const walletProps = {

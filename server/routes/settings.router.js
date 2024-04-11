@@ -17,7 +17,8 @@ router.post("/wallets/:operation", async (req, res) => {
     if (!auth) return res.status(401).json({});
     try {
         const token = req.cookies[authTokenName];
-        const session = await refreshCookies(token);
+        console.log("token", token);
+
         let result;
 
         if (req.params.operation === "add") {
@@ -27,6 +28,8 @@ router.post("/wallets/:operation", async (req, res) => {
         } else {
             return res.status(200).json({});
         }
+
+        const session = await refreshCookies(result.token);
 
         if (result.ok) {
             const cookies = [session.cookie.refreshCookie ?? "", session.cookie.accessCookie ?? ""];
