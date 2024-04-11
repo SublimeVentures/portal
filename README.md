@@ -10,7 +10,8 @@ yarn dev
 pnpm dev
 ```
 
-# Staging
+#
+
 
 ## Envs
 Example env file
