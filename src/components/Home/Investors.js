@@ -21,7 +21,7 @@ export default function Investors() {
             perView: 3,
             peek: 50,
             focusAt: "center",
-            autoplay: false,
+            autoplay: 2000,
             perTouch: 1,
             breakpoints: {
                 720: {
