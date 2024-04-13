@@ -151,18 +151,41 @@ async function getLaunchpadList(partnerId, tenantId) {
 
 const query_getOtcList = `
     SELECT
-        o.id AS "offerId",
         o.slug,
         o.name,
         o.genre,
+        o.otc,
         o.ticker,
-        o.otc
+        o."isAccelerator",
+        ol.d_open,
+        ol.d_close,
+        ol."offerId"
     FROM
         "offer" o
+            LEFT JOIN LATERAL (
+            SELECT
+                ol1.d_open,
+                ol1.d_close,
+                ol1."offerId"
+            FROM
+                "offerLimit" ol1
+            WHERE
+                ol1."offerId" = o.id AND
+                ol1."partnerId" IN (:partnerId, :tenantId)
+            ORDER BY
+                CASE
+                    WHEN ol1."partnerId" = :partnerId THEN 1
+                    WHEN ol1."partnerId" = :tenantId THEN 2
+                    ELSE 3
+                    END
+            LIMIT 1
+            ) ol ON true
     WHERE
-        o.otc != 0
+        o.display = true AND
+        o.otc != 0 AND
+        ol."offerId" IS NOT NULL
     ORDER BY
-        o.id DESC;
+        ol.d_open DESC;
 `;
 async function getOtcList(partnerId, tenantId) {
     try {
