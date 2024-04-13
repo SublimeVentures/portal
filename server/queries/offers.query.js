@@ -59,13 +59,13 @@ const query_getOfferList = `
                 "offerLimit" ol1
             WHERE
                 ol1."offerId" = o.id AND (
-                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                        (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
                         ol1."partnerId" = :tenantId
                 )
             ORDER BY
                 CASE
                     WHEN ol1."partnerId" = :tenantId THEN 1
-                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
+                    WHEN ol1."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
                     ELSE 3
                     END
             LIMIT 1
@@ -115,13 +115,13 @@ const query_getLaunchpadList = `
                 "offerLimit" ol1
             WHERE
                 ol1."offerId" = o.id AND (
-                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                        (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
                         ol1."partnerId" = :tenantId
                 )
             ORDER BY
                 CASE
                     WHEN ol1."partnerId" = :tenantId THEN 1
-                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
+                    WHEN ol1."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
                     ELSE 3
                     END
             LIMIT 1
@@ -153,39 +153,49 @@ const query_getOtcList = `
     SELECT
         o.slug,
         o.name,
+        o.ppu,
         o.genre,
-        o.otc,
         o.ticker,
-        o."isAccelerator",
-        ol.d_open,
-        ol.d_close,
-        ol."offerId"
+        o.otc,
+        o."dealStructure",
+        o."isManaged",
+        ol.d_close AS "closedAt",
+        ol."partnerId" AS "ownedByTenantId",
+        p.logo AS "partnerLogo",
+        p.name AS "partnerName",
+        p.slug AS "partnerSlug",
+        (
+            SELECT COUNT(*)
+            FROM "otcDeal" od
+            WHERE od."offerId" = o.id
+              AND od."isFilled" = FALSE
+              AND od."isCancelled" = FALSE
+              AND od."onchainIdMaker" IS NOT NULL
+        ) AS "activeDealsCount"
     FROM
         "offer" o
-            LEFT JOIN LATERAL (
-            SELECT
-                ol1.d_open,
-                ol1.d_close,
-                ol1."offerId"
-            FROM
-                "offerLimit" ol1
-            WHERE
-                ol1."offerId" = o.id AND
-                ol1."partnerId" IN (:partnerId, :tenantId)
-            ORDER BY
-                CASE
-                    WHEN ol1."partnerId" = :partnerId THEN 1
-                    WHEN ol1."partnerId" = :tenantId THEN 2
-                    ELSE 3
-                    END
-            LIMIT 1
-            ) ol ON true
+            LEFT JOIN (
+            SELECT DISTINCT ON ("offerId") "offerId", d_close, "partnerId"
+            FROM "offerLimit"
+            ORDER BY "offerId",
+                     CASE
+                         WHEN "partnerId" = :tenantId THEN 1
+                         WHEN "partnerId" = :partnerId THEN 2
+                         ELSE 3 END,
+                     d_close DESC
+        ) ol ON o.id = ol."offerId"
+            LEFT JOIN "partner" p ON ol."partnerId" = p.id
     WHERE
-        o.display = true AND
-        o.otc != 0 AND
-        ol."offerId" IS NOT NULL
+        o.otc != 0
+      AND (
+                o."isOtcTenantExclusive" = FALSE
+            OR (o."isOtcTenantExclusive" = TRUE AND EXISTS (
+                SELECT 1 FROM "offerLimit" ol2
+                WHERE ol2."offerId" = o.id AND ol2."partnerId" = :tenantId
+            ))
+        )
     ORDER BY
-        ol.d_open DESC;
+        ol.d_close DESC NULLS LAST;
 `;
 async function getOtcList(partnerId, tenantId) {
     try {
@@ -217,13 +227,13 @@ const query_getOfferDetails = `
                 "offerLimit" ol1
             WHERE
                 ol1."offerId" = o.id AND (
-                    (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                    (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
                     ol1."partnerId" = :tenantId
                 )
             ORDER BY
                 CASE
                     WHEN ol1."partnerId" = :tenantId THEN 1
-                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
+                    WHEN ol1."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
                     ELSE 3
                 END
             LIMIT 1

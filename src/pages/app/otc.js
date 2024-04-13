@@ -31,6 +31,8 @@ export default function AppOtc({ session }) {
         staleTime: 3 * 60 * 60 * 1000,
     });
 
+    console.log("otc", otc);
+
     const {
         isSuccess: vaultIsSuccess,
         data: vault,

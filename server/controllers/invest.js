@@ -168,7 +168,9 @@ async function processReservation(queryParams, user) {
 
         const offerLimit =
             CACHE[_offerId].offerLimits.find((el) => el.partnerId === tenantId) ||
-            CACHE[_offerId].offerLimits.find((el) => el.partnerId === partnerId && !el.isTenantExclusive);
+            (CACHE[_offerId].offerLimits.find((el) => el.partnerId === partnerId) &&
+                !CACHE[_offerId].isTenantExclusive);
+
         if (!offerLimit) throw Error("No offer limit condition");
 
         //test if offer's ready
