@@ -413,7 +413,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                 {allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0 && (
                     <div>
                         All spots booked! Awaiting blockchain confirmations. <br />
-                        <Linker url={ExternalLinks.LOOTBOX} text={"Check back soon."} />
+                        <Linker url={ExternalLinks.BOOKING_SYSTEM} text={"Check back soon."} />
                     </div>
                 )}
             </div>

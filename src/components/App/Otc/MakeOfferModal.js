@@ -1,6 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Lottie from "lottie-react";
-import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     IoAddCircleOutline as IconPlus,
@@ -196,7 +195,7 @@ export default function MakeOfferModal({ model, setter, props }) {
     const title = () => {
         return (
             <>
-                {!!transactionSuccessful ? (
+                {transactionSuccessful ? (
                     <>
                         OTC offer <span className="text-app-success">created</span>
                     </>
@@ -230,7 +229,7 @@ export default function MakeOfferModal({ model, setter, props }) {
 
                 <div className="mt-auto fullWidth pb-5">
                     <div className="flex flex-1 justify-center items-center ">
-                        <a href={ExternalLinks.OTC_ANNOUNCE} target={"_blank"} className={"w-full"}>
+                        <a href={ExternalLinks.OTC} target={"_blank"} className={"w-full"} rel="noreferrer">
                             <RoundButton
                                 text={"Announce"}
                                 isLoading={false}
