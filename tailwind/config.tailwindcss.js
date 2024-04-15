@@ -1,5 +1,5 @@
+const merge = require("lodash.merge");
 const coreConfig = require("./config.core.js");
-const merge = require("lodash/merge");
 
 function loadTailwindConfig() {
     const tenant = process.env.NEXT_PUBLIC_TENANT || "1";
