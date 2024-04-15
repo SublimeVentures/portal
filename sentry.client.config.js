@@ -39,4 +39,6 @@ Sentry.init({
             root: "_next",
         }),
     ],
+
+    attachStacktrace: true,
 });
