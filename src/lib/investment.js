@@ -73,7 +73,7 @@ function getAllocationLeft(allocationOffer_left, allocationUser_left) {
 
 function allocationParseUnlimited(params) {
     const { allocationOffer_left } = params;
-    params.output.allocationUser_left = allocationOffer_left;
+    params.output.allocationUser_left = allocationOffer_left > 5600 ? allocationOffer_left : 5600; //todo: change to just allocationOffer_left
     return params;
 }
 
