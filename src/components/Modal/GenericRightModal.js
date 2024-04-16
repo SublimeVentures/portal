@@ -30,17 +30,9 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
         };
     }, [isOpen]);
 
-    useEffect(() => {
-        if (isOpen) {
-            document.body.classList.add('blocked');
-        } else {
-            document.body.classList.remove('blocked');
-        }
-    }, [isOpen]);
-
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-30 " onClose={() => closeModalOnBg()}>
+            <Dialog as="div" className="relative z-30" onClose={() => closeModalOnBg()}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -53,7 +45,7 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
                     <div className="fixed inset-0 blurred5 bg-opacity-5" />
                 </Transition.Child>
 
-                <div className={cn("fixed inset-0 overflow-y-auto min-h-full", { 'overflow-hidden': isShake })}>
+                <div className="fixed inset-0 overflow-y-auto min-h-full overflow-hidden">
                     <div className="flex min-h-full items-center justify-end text-center">
                         <Transition.Child
                             as={Fragment}
@@ -64,22 +56,24 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel
-                                className={cn("dialogWrap flex flex-col min-h-screen glareBg w-full sm:max-w-md transform overflow-hidden text-white p-10 bg-app-bg text-start transition-all", { 'shake': isShake })}
-                            >
-                                <Dialog.Title as="h3" className="text-3xl font-bold pb-5 pt-5">
-                                    <span>{title}</span>
-                                    {!noClose && (
-                                        <div
-                                            className={`absolute top-[20px] right-[0px] cursor-pointer`}
-                                            onClick={closeModal}
-                                        >
-                                            <CancelIcon className={ButtonIconSize.default} />
-                                        </div>
-                                    )}
-                                </Dialog.Title>
-                                {content}
-                            </Dialog.Panel>
+                            <div className='bg-app-bg'>
+                                <Dialog.Panel
+                                    className={cn("dialogWrap flex flex-col min-h-screen glareBg w-full sm:max-w-md transform overflow-hidden text-white p-10 bg-app-bg text-start transition-all", { 'shake': isShake })}
+                                >
+                                    <Dialog.Title as="h3" className="text-3xl font-bold pb-5 pt-5">
+                                        <span>{title}</span>
+                                        {!noClose && (
+                                            <div
+                                                className={`absolute top-[20px] right-[0px] cursor-pointer`}
+                                                onClick={closeModal}
+                                            >
+                                                <CancelIcon className={ButtonIconSize.default} />
+                                            </div>
+                                        )}
+                                    </Dialog.Title>
+                                    {content}
+                                </Dialog.Panel>
+                            </div>
                         </Transition.Child>
                     </div>
                 </div>
