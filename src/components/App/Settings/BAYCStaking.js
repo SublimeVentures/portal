@@ -27,20 +27,18 @@ export default function ApeStaking({ stakingProps }) {
     const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(unstakeDate, staked);
 
     const refreshSession = async (force) => {
-        console.log("refreshSession", force);
         const result = await updateStaking(account.address);
-        console.log("refreshSession result", result);
-        if (result?.ok) {
-            const updatedSession = result.data.updates;
-            if (updatedSession.isStaked) setStaked(true);
-            if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
-            if (updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate);
-            if (updatedSession.isStaked) {
-                router.reload();
-            }
-        } else if (force) {
-            router.reload();
-        }
+        // if (result?.ok) {
+        const updatedSession = result.data.updates;
+        if (updatedSession.isStaked) setStaked(true);
+        if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
+        if (updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate);
+        // if (updatedSession.isStaked) {
+        //     router.reload();
+        // }
+        // } else if (force) {
+        router.reload();
+        // }
     };
 
     const stakingModalProps = {
@@ -78,7 +76,7 @@ export default function ApeStaking({ stakingProps }) {
                     </p>
                 </div>
                 <div className={"detailRow"}>
-                    <p>KONG ID</p>
+                    <p>{session.isS1 ? TENANTS_STAKIMG()[0] : TENANTS_STAKIMG()[1]} ID</p>
                     <hr className={"spacer"} />
                     <p>#{session.tokenId}</p>
                 </div>
