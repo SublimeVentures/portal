@@ -214,7 +214,7 @@ export default function Sidebar({ session }) {
 
     return (
         <aside className="flex sticky top-0 z-20 collap:relative">
-            <div className="p-6 flex flex-col border-r border-app-bg-split boxshadow text-app-white max-h-screen sticky top-0 hidden collap:flex overflow-x-hidden overflow-y-auto">
+            <div className="p-6 flex-col border-r border-app-bg-split boxshadow text-app-white sticky top-0 hidden collap:flex overflow-x-hidden overflow-y-auto">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">{TENANT_LOGO()}</div>
@@ -229,7 +229,7 @@ export default function Sidebar({ session }) {
                 </nav>
             </div>
             <div
-                className={`p-5 flex blurredBgColor flex flex-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? "!bg-app-bg" : ""}`}
+                className={`p-5 blurredBgColor flex flex-1  border-b border-app-bg-split hamburger transition-colors duration-300 collap:hidden ${isMobileOpen ? "!bg-app-bg" : ""}`}
             >
                 <div className="flex flex-row flex-1">
                     <Link href={PAGE.App} className="absolute top-[4px]">
