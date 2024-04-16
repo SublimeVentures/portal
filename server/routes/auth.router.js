@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { refreshTokenName, authTokenName } = require("../../src/lib/authHelpers");
 const axios = require("axios");
-const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
+const { refreshTokenName, authTokenName } = require("../../src/lib/authHelpers");
+const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
@@ -18,7 +18,9 @@ router.post("/login", async (req, res) => {
                 "content-type": "application/json",
             },
         });
+
         const result = auth.data;
+
         if (!result?.ok) throw Error(result?.error);
 
         envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
@@ -28,9 +30,12 @@ router.post("/login", async (req, res) => {
         if (!session?.ok) throw Error("Error generating cookies");
 
         const cookies = [session.cookie.refreshCookie, session.cookie.accessCookie];
+
         res.setHeader("Set-Cookie", cookies);
+
         delete result.token;
         delete result.env;
+
         return res.status(200).json(result);
     } catch (error) {
         logger.info(`LOGIN USER`, { error: serializeError(error), body: req.body });
