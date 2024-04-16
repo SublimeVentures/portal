@@ -34,8 +34,8 @@ export default function DetailsTimeline({ offerId }) {
                 </button>
             </div>
             <div>
-                {notifications.map((item) => (
-                    <TimelineItem key={item.id} item={item} />
+                {notifications.map((item, idx, arr) => (
+                    <TimelineItem key={item.id} item={item} first={idx === 0} last={idx === arr.length - 1} />
                 ))}
             </div>
         </>

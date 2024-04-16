@@ -27,10 +27,12 @@ export default function InlineCopyButton({ copiable = "", className }) {
     };
 
     const btnListeners = {
+        onMouseOver: () => setHover(true),
         onMouseOut: () => setHover(false),
         onBlur: () => setHover(false),
-        onMouseOver: () => setHover(true),
         onFocus: () => setHover(true),
+        onMouseEnter: () => setHover(true),
+        onMouseLeave: () => setHover(false),
         onClick: onCopy,
     };
 
