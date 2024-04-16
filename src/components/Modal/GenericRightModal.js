@@ -56,7 +56,7 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className='bg-app-bg'>
+                            <div className="bg-app-bg">
                                 <Dialog.Panel
                                     className={cn("dialogWrap flex flex-col min-h-screen glareBg w-full sm:max-w-md transform overflow-hidden text-white p-10 bg-app-bg text-start transition-all", { 'shake': isShake })}
                                 >
