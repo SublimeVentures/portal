@@ -32,7 +32,7 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-30" onClose={() => closeModalOnBg()}>
+            <Dialog as="div" className="relative z-30" onClose={closeModalOnBg}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
