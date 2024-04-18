@@ -20,6 +20,7 @@ const LoginCitCap = dynamic(() => import("@/components/Login/loginCitCap"), {
     ssr: true,
 });
 const LoginCyberKongz = dynamic(() => import("@/components/Login/loginCyberKongz"), { ssr: true });
+const LoginApes = dynamic(() => import("@/components/Login/loginApes"), { ssr: true });
 
 const TENANTS_LOGIN = (data) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -32,6 +33,9 @@ const TENANTS_LOGIN = (data) => {
         case TENANT.CyberKongz: {
             return <LoginCyberKongz />;
         }
+        case TENANT.BAYC: {
+            return <LoginApes />;
+        }
     }
 };
 
@@ -42,7 +46,6 @@ export default function Login({ isAuthenticated }) {
 
     useEffect(() => {
         if (isAuthenticated) {
-            console.log("client redirect");
             router.replace("/app");
         }
     }, []);

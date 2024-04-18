@@ -12,6 +12,7 @@ const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
     [TENANT.NeoTokyo]: "INVEST EARLY\nINVEST WITH THE CITADEL",
     [TENANT.CyberKongz]: "INVEST EARLY\nINVEST WITH THE KONG",
+    [TENANT.BAYC]: "INVEST EARLY\nINVEST WITH THE APES",
 };
 
 const LOGIN_TYPE = {
@@ -44,7 +45,7 @@ export default function useLoginFlow() {
         try {
             const time = Math.floor(new Date().getTime() / 1000);
             const nonce = uuidv4();
-            const message = `${SIGNING_MESSAGE[process.env.NEXT_PUBLIC_TENANT]}\n\nDOMAIN: ${window.location.host.replace("www.", "")}\nTIME: ${time}\nNONCE: ${nonce}\n\nI herby accept Privacy Policy and Terms of Use available https://${window.location.host.replace("www.", "")}/terms and https://${window.location.host.replace("www.", "")}/privacy`;
+            const message = `${SIGNING_MESSAGE[process.env.NEXT_PUBLIC_TENANT]}\n\nDOMAIN: ${window.location.host.replace("www.", "")}\nTIME: ${time}\nNONCE: ${nonce}\n\nI hereby accept Privacy Policy and Terms of Use available https://${window.location.host.replace("www.", "")}/terms and https://${window.location.host.replace("www.", "")}/privacy`;
             const signature = await signMessageFn({ message });
 
             const callbackUrl = router.query.callbackUrl;

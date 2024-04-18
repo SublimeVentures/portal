@@ -34,5 +34,11 @@ Sentry.init({
             maskAllText: true,
             blockAllMedia: true,
         }),
+        Sentry.rewriteFramesIntegration({
+            prefix: ".next/",
+            root: "_next",
+        }),
     ],
+
+    attachStacktrace: true,
 });

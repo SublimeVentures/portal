@@ -1,4 +1,5 @@
-import Slider from "react-slick";
+import { useEffect } from "react";
+import Glide, { Autoplay, Breakpoints, Swipe } from "@glidejs/glide/dist/glide.modular.esm";
 import Multicoin from "@/assets/svg/logo/Multicoin.svg?component";
 import Binance from "@/assets/svg/logo/BinanceLabs.svg?component";
 import CryptoCom from "@/assets/svg/logo/CryptoCom.svg?component";
@@ -14,29 +15,22 @@ import { tenantIndex } from "@/lib/utils";
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 export default function Investors() {
-    const settings = {
-        className: "center",
-        centerMode: true,
-        infinite: true,
-        centerPadding: "60px",
-        slidesToShow: 3,
-        speed: 500,
-        autoplaySpeed: 2000,
-        autoplay: true,
-        dots: false,
-        slidesToScroll: 1,
-        arrows: false,
-        responsive: [
-            {
-                breakpoint: 720,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    initialSlide: 1,
+    useEffect(() => {
+        new Glide("div.glide", {
+            type: "carousel",
+            perView: 3,
+            peek: 50,
+            focusAt: "center",
+            autoplay: 2000,
+            perTouch: 1,
+            breakpoints: {
+                720: {
+                    perView: 1,
                 },
             },
-        ],
-    };
+            throttle: 50,
+        }).mount({ Breakpoints, Autoplay, Swipe });
+    }, []);
 
     return (
         <div className="investorGradient flex flex-col justify-center text-white pt-10 uppercase pb-10">
@@ -46,57 +40,42 @@ export default function Investors() {
                     <div className="leading-snug text-3xl">Co-Investors</div>
                 </div>
                 <div></div>
-                <Slider {...settings}>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <Multicoin className="!w-[280px] max-h-[220px]" />
+                <div className="glide">
+                    <div className="glide__track" data-glide-el="track">
+                        <div className="glide__slides glide__slides-custom">
+                            <div className="glide__slide glide__slide-custom">
+                                <Multicoin className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <Binance className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <DynamicIcon
+                                    name={`logo_${isBaseVCTenant ? TENANT.NeoTokyo : TENANT.basedVC}`}
+                                    style={"!w-[280px] max-h-[220px]"}
+                                />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <CryptoCom className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <Coinbase className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <A16z className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <Animoca className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <Qcp className="!w-[280px] max-h-[220px]" />
+                            </div>
+                            <div className="glide__slide glide__slide-custom">
+                                <Sequoia className="!w-[280px] max-h-[220px]" />
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <Binance className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            {isBaseVCTenant ? (
-                                <DynamicIcon name={`logo_${TENANT.NeoTokyo}`} style={"!w-[280px] max-h-[220px]"} />
-                            ) : (
-                                <DynamicIcon name={`logo_${TENANT.basedVC}`} style={"!w-[280px] max-h-[220px]"} />
-                            )}
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <CryptoCom className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <Coinbase className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <A16z className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <Animoca className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <Qcp className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="customSlide justify-center flex min-h-[250px]">
-                            <Sequoia className="!w-[280px] max-h-[220px]" />
-                        </div>
-                    </div>
-                </Slider>
+                </div>
             </div>
         </div>
     );

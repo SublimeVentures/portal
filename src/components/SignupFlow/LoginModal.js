@@ -22,18 +22,17 @@ export default function LoginModal({ loginModalProps }) {
         isLoginLoading,
     } = loginModalProps;
 
-    const buttonHandler = (connector) => {
+    const buttonHandler = async (connector) => {
         setErrorMsg("");
         if (connectorIsLoading) return;
-
-        if (connectorActive) {
-            handleConnect();
-        } else {
-            try {
-                connect({ connector });
-            } catch (error) {
-                setErrorMsg(error.shortMessage);
+        try {
+            if (connectorActive) {
+                await handleConnect();
+            } else {
+                await connect({ connector });
             }
+        } catch (error) {
+            setErrorMsg(error.shortMessage);
         }
     };
 

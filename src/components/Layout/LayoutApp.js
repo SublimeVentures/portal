@@ -17,8 +17,9 @@ export default function LayoutApp({ children }) {
             {isBlockedAlert && (
                 <div
                     className={`fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]`}
+
                 >
-                    Investments are blocked!{" "}
+                    Investments are blocked!&nbsp;
                     <u>
                         <Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link>.
                     </u>

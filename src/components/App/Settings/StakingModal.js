@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import GenericModal from "@/components/Modal/GenericModal";
 import BlockchainSteps from "@/components/BlockchainSteps";
-import { METHOD } from "@/components/BlockchainSteps/utils";
+import { getMethod, METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getCopy } from "@/lib/seoConfig";
@@ -9,7 +9,7 @@ import { TENANTS_STAKIMG } from "@/components/App/Settings/helper";
 import StepInput from "@/components/App/StepInput";
 
 export default function StakingModal({ model, setter, stakingModalProps }) {
-    const { stakeReq, isS1, stakeMulti, stakingCurrency } = stakingModalProps;
+    const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
     const { account, activeDiamond } = useEnvironmentContext();
 
     const [stakeSize, setStakeSize] = useState(stakeReq);
@@ -22,6 +22,11 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
         }, 400);
     };
 
+    const registeredOriginalWallet = stakingModalProps?.userWallets?.find((el) => el.isHolder)?.wallet;
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
     const token = useGetToken(stakingCurrency?.contract);
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -39,13 +44,14 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                 buttonText: "Stake",
                 contract: activeDiamond,
                 spender: activeDiamond,
+                delegated: wallet,
                 transactionType: METHOD.STAKE,
             },
             token,
             setTransactionSuccessful,
         };
     }, [stakingCurrency?.contract, activeDiamond, model, stakeSize]);
-    console.log("blockchainInteractionData", blockchainInteractionData);
+    console.log("blockchainInteractionData", blockchainInteractionData, wallet, registeredOriginalWallet);
 
     const title = () => {
         return (
@@ -69,27 +75,28 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                         <hr className="spacer" />
                         <p>{TENANTS_STAKIMG()[isS1 ? 0 : 1]}</p>
                     </div>
-
-                    <div className="detailRow">
-                        <p>Min Required Stake</p>
-                        <hr className="spacer" />
-                        <p>
-                            {stakeReq} {stakingCurrency.name}
-                        </p>
-                    </div>
-
-                    <div className={"detailRow"}>
-                        <p>Stake Amount:</p>
-                        <hr className={"spacer"} />
-                        <StepInput
-                            step={stakeMulti}
-                            min={stakeReq}
-                            max={5000}
-                            value={stakeSize}
-                            setValue={setStakeSize}
-                            aria-label={`Add ${stakeSize} ${stakingCurrency.name}`}
-                        />
-                    </div>
+                    {stakingModalProps?.isFlexibleStaking ? (
+                        <div className={"detailRow"}>
+                            <p>Stake Amount:</p>
+                            <hr className={"spacer"} />
+                            <StepInput
+                                step={stakeMulti}
+                                min={stakeReq}
+                                max={5000}
+                                value={stakeSize}
+                                setValue={setStakeSize}
+                                aria-label={`Add ${stakeSize} ${stakingCurrency.name}`}
+                            />
+                        </div>
+                    ) : (
+                        <div className={"detailRow"}>
+                            <p>{isStaked ? "Add" : "Required"} Stake</p>
+                            <hr className={"spacer"} />
+                            <p>
+                                {stakeSize} {stakingCurrency.name}
+                            </p>
+                        </div>
+                    )}
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
             </div>

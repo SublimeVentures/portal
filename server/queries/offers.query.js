@@ -1,25 +1,39 @@
+const { serializeError } = require("serialize-error");
+const { QueryTypes } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
-const { QueryTypes } = require("sequelize");
+const { TENANT } = require("../../src/lib/tenantHelper");
 
 async function getOffersPublic() {
     try {
-        return models.offer.findAll({
-            attributes: ["name", "genre", "url_web", "slug"],
-            where: {
-                displayPublic: true,
-            },
-            order: [["createdAt", "DESC"]],
-            raw: true,
+        const tenantId = Number(process.env.NEXT_PUBLIC_TENANT);
+
+        let sqlQuery =
+            tenantId === TENANT.basedVC
+                ? `
+            SELECT name, genre, url_web, slug
+            FROM offer
+            WHERE "displayPublic" = true
+            ORDER BY "createdAt" DESC;
+        `
+                : `
+            SELECT o.name, o.genre, o.url_web, o.slug
+            FROM offer o
+            INNER JOIN "offerLimit" ol ON o.id = ol."offerId"
+            WHERE o."displayPublic" = true AND ol."partnerId" = ${tenantId}
+            ORDER BY o."createdAt" DESC;
+        `;
+
+        return db.query(sqlQuery, {
+            type: QueryTypes.SELECT,
         });
     } catch (error) {
         logger.error("QUERY :: [getOffersPublic]", {
             error: serializeError(error),
         });
+        return [];
     }
-    return [];
 }
 
 const query_getOfferList = `
@@ -28,6 +42,7 @@ const query_getOfferList = `
         o.name,
         o.genre,
         o.ticker,
+        o."isLaunchpad",
         ol.d_open,
         ol.d_close,
         ol."offerId",
@@ -136,18 +151,41 @@ async function getLaunchpadList(partnerId, tenantId) {
 
 const query_getOtcList = `
     SELECT
-        o.id AS "offerId",
         o.slug,
         o.name,
         o.genre,
+        o.otc,
         o.ticker,
-        o.otc
+        o."isAccelerator",
+        ol.d_open,
+        ol.d_close,
+        ol."offerId"
     FROM
         "offer" o
+            LEFT JOIN LATERAL (
+            SELECT
+                ol1.d_open,
+                ol1.d_close,
+                ol1."offerId"
+            FROM
+                "offerLimit" ol1
+            WHERE
+                ol1."offerId" = o.id AND
+                ol1."partnerId" IN (:partnerId, :tenantId)
+            ORDER BY
+                CASE
+                    WHEN ol1."partnerId" = :partnerId THEN 1
+                    WHEN ol1."partnerId" = :tenantId THEN 2
+                    ELSE 3
+                    END
+            LIMIT 1
+            ) ol ON true
     WHERE
-        o.otc != 0
+        o.display = true AND
+        o.otc != 0 AND
+        ol."offerId" IS NOT NULL
     ORDER BY
-        o.id DESC;
+        ol.d_open DESC;
 `;
 async function getOtcList(partnerId, tenantId) {
     try {

@@ -26,6 +26,19 @@
     padding: 4px 15px 4px 20px;
 }
 
+.shakeBtn.bayc {
+    font-weight: 100;
+    background: black;
+    color: white;
+    font-size: 3em;
+    padding: 10px 20px 10px 20px;
+    letter-spacing: 0.15em;
+    border:0;
+    span {
+        margin-top:12px;
+    }
+}
+
 .shakeBtn.inverted {
     background: white;
     color: #000;
@@ -176,11 +189,11 @@
     color: black;
 }
 
-.shakeBtn:hover:before {
+.shakeBtn.glitch:hover:before {
     animation: glitch-test 1.5s infinite linear alternate-reverse;
 }
 
-.shakeBtn:hover:after {
+.shakeBtn.glitch:hover:after {
     -webkit-animation: glitch-test 2s infinite linear alternate;
     animation: glitch-test 2s infinite linear alternate;
 }

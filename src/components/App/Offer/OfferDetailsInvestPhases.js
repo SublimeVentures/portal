@@ -1,7 +1,6 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import debounce from "lodash.debounce";
 import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
@@ -81,7 +80,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
 
     const displayGuaranteed =
         !!upgradesUse.guaranteedUsed &&
-        (phaseCurrent.phase === PhaseId.FCFS || phaseCurrent.phase === PhaseId.Pending) &&
+        phaseCurrent.phase != PhaseId.Unlimited &&
         upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
         !offer.isLaunchpad;
 
@@ -414,7 +413,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                 {allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0 && (
                     <div>
                         All spots booked! Awaiting blockchain confirmations. <br />
-                        <Linker url={ExternalLinks.LOOTBOX} text={"Check back soon."} />
+                        <Linker url={ExternalLinks.BOOKING_SYSTEM} text={"Check back soon."} />
                     </div>
                 )}
             </div>

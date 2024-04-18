@@ -13,6 +13,9 @@ const TENANT_FAVICON = () => {
         case TENANT.CyberKongz: {
             return "/favicon_14.png";
         }
+        case TENANT.BAYC: {
+            return "/favicon_19.png";
+        }
     }
 };
 

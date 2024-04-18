@@ -11,25 +11,29 @@ function roundAmount(amount) {
 
 function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min;
+    const allocation_min = offer?.alloMin || MIN_ALLOCATION;
     if (offer.isLaunchpad) {
         allocationUser_base = offer.alloMax;
-        allocationUser_min = offer.alloMin || MIN_ALLOCATION;
+        allocationUser_min = allocation_min;
     } else {
         switch (account.tenantId) {
-            case TENANT.basedVC: {
+            case TENANT.basedVC || TENANT.BAYC: {
                 allocationUser_base = account.multi * offer.alloMax;
-                allocationUser_min = offer.alloMin;
+                if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
+                allocationUser_min = allocation_min;
                 break;
             }
             case TENANT.NeoTokyo: {
                 allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus;
-                if (allocationUser_base < MIN_ALLOCATION) allocationUser_base = MIN_ALLOCATION;
-                allocationUser_min = MIN_ALLOCATION;
+                if (allocationUser_base < allocation_min) allocationUser_base = allocation_min;
+                if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
+                allocationUser_min = allocation_min;
                 break;
             }
             case TENANT.CyberKongz: {
                 allocationUser_base = offer.alloMax * Math.ceil(account.stakeSize / offer.alloMax);
-                allocationUser_min = offer.alloMin;
+                if (allocationUser_base < allocation_min) allocationUser_base = allocation_min;
+                allocationUser_min = allocation_min;
                 break;
             }
         }
@@ -69,7 +73,7 @@ function getAllocationLeft(allocationOffer_left, allocationUser_left) {
 
 function allocationParseUnlimited(params) {
     const { allocationOffer_left } = params;
-    params.output.allocationUser_left = allocationOffer_left;
+    params.output.allocationUser_left = allocationOffer_left > 5600 ? allocationOffer_left : 5600; //todo: change to just allocationOffer_left
     return params;
 }
 

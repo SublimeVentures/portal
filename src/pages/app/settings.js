@@ -14,6 +14,7 @@ import { TENANT } from "@/lib/tenantHelper";
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });
 const StakeNeoTokyo = dynamic(() => import("@/components/App/Settings/NeoTokyoStaking"), { ssr: true });
 const StakeCyberKongz = dynamic(() => import("@/components/App/Settings/CyberKongzStaking"), { ssr: true });
+const StakeBAYC = dynamic(() => import("@/components/App/Settings/BAYCStaking"), { ssr: true });
 
 const TENANTS_STAKING = (stakingProps) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -26,6 +27,10 @@ const TENANTS_STAKING = (stakingProps) => {
         }
         case TENANT.CyberKongz: {
             if (stakingProps.stakingEnabled) return <StakeCyberKongz stakingProps={stakingProps} />;
+            break;
+        }
+        case TENANT.BAYC: {
+            if (stakingProps.stakingEnabled) return <StakeBAYC stakingProps={stakingProps} />;
             break;
         }
         default: {
@@ -52,6 +57,7 @@ export default function AppSettings({ session }) {
         account,
         stakingEnabled,
         stakingCurrency,
+        userWallets,
     };
 
     const walletProps = {

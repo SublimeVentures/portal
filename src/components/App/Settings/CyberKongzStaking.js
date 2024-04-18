@@ -16,7 +16,6 @@ export default function CyberKongzStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
     const router = useRouter();
 
-    const [stakeAmount, setStakeAmount] = useState(500);
     const [staked, setStaked] = useState(false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
@@ -30,22 +29,22 @@ export default function CyberKongzStaking({ stakingProps }) {
     const refreshSession = async (force) => {
         console.log("refreshSession");
         const result = await updateStaking(account.address);
-        // if(!result?.ok) {
-        //
-        // } else {
         console.log("refreshSession result", result);
-
-        const updatedSession = result.data.updates;
-        if (updatedSession.isStaked) setStaked(true);
-        if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
-        if (updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate);
-        if (updatedSession.isStaked || force) {
+        if (!result?.ok) {
+            const updatedSession = result.data.updates;
+            if (updatedSession.isStaked) setStaked(true);
+            if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
+            if (updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate);
+            if (updatedSession.isStaked) {
+                router.reload();
+            }
+        } else if (force) {
             router.reload();
         }
-        // }
     };
 
     const stakingModalProps = {
+        isFlexibleStaking: true,
         stakeReq: session.stakeReq,
         stakeSize: session.stakeSize,
         stakeMulti: session.stakeMulti,

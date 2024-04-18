@@ -52,9 +52,7 @@ const ExternalLinksBased = {
     WIKI: "https://info.basedvc.fund",
     DISCORD: "https://discord.gg/AsGvs6uRU8",
     TWITTER: "https://twitter.com/basedvcfund",
-    OTC_ANNOUNCE: "https://discord.gg/gXDZBnmuQ6",
     OTC: "https://info.basedvc.fund/OTC-fdad47130a0a49bbaa1a1e4c9fd95907",
-
     APPLY: "https://tally.so/r/mK5Pvk",
     WHALE_CLUB: "https://info.basedvc.fund/3VC-Whale-Club-5fea374623c1493d8af2b4b04914ab3e",
     //todo: https://www.notion.so/basedvc/Investment-Cap-Model-5b685123fe3c43e9a29e6d8fa67be2a3 - to be fixed
@@ -79,7 +77,6 @@ const ExternalLinksCitCap = {
     APPLY: "https://tally.so/r/wLPg0l",
 
     OTC: "https://info.citizencapital.fund/OTC-08ce38805290416eb073b139bd54e3f7",
-    OTC_ANNOUNCE: "https://discord.com/channels/884204406189490176/1185352947308171324",
     STAKING: "https://info.citizencapital.fund/BYTES-Staking-Requirement-f1621bfe909b41d797fd77ca784a8fa0",
 };
 
@@ -100,8 +97,25 @@ const ExternalLinksCyberKongz = {
     DELEGATED_ACCESS: "#",
     VAULT: "#",
     OTC: "#",
-    OTC_ANNOUNCE: "#",
     STAKING: "#",
+};
+
+const ExternalLinksBAYC = {
+    WIKI: "https://info.apes.capital/",
+    DISCORD: "https://discord.gg/apesplus",
+    TWITTER: "https://twitter.com/Apes_Capital",
+    GET_APE: "https://app.uniswap.org/#/swap?outputCurrency=0x4d224452801aced8b2f0aebe155379bb5d594381",
+    BOOKING_SYSTEM: "https://info.apes.capital/overview/faq#how-does-allocation-booking-system-works",
+    OFFER_PHASES: "https://info.apes.capital/overview/the-investment-process",
+    AFTER_INVESTMENT: "https://info.apes.capital/overview/managing-your-investments",
+    SUPPORTED_NETWORKS: "https://info.apes.capital/overview/multichain",
+    UPGRADES: "https://info.apes.capital/overview/upgrades",
+    LOOTBOX: "https://info.apes.capital/overview/mystery-boxes",
+    HOW_TO_ACCESS: "https://info.apes.capital/overview/how-to-join",
+    DELEGATED_ACCESS: "https://info.apes.capital/overview/faq#how-to-setup-a-delegated-wallet-for-login",
+    VAULT: "https://info.apes.capital/overview/managing-your-investments",
+    OTC: "https://info.apes.capital/overview/otc-sales",
+    STAKING: "https://info.apes.capital/overview/how-to-join",
 };
 
 function getTenantLinks() {
@@ -114,6 +128,9 @@ function getTenantLinks() {
         }
         case TENANT.CyberKongz: {
             return ExternalLinksCyberKongz;
+        }
+        case TENANT.BAYC: {
+            return ExternalLinksBAYC;
         }
     }
 }

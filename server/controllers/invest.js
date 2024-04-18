@@ -1,4 +1,6 @@
 const moment = require("moment");
+const { serializeError } = require("serialize-error");
+const axios = require("axios");
 const { getOfferWithLimits } = require("../queries/offers.query");
 const { getEnv } = require("../services/env");
 const {
@@ -6,18 +8,16 @@ const {
     investIncreaseAllocationReserved,
     investUpsertParticipantReservation,
 } = require("../queries/invest.query");
-const { createHash } = require("./helpers");
 const { fetchUpgradeUsed } = require("../queries/upgrade.query");
 const { PremiumItemsENUM } = require("../../src/lib/enum/store");
 const { BookingErrorsENUM } = require("../../src/lib/enum/invest");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 const { sumAmountForUserAndTenant } = require("../queries/participants.query");
 const { phases } = require("../../src/lib/phases");
 const { userInvestmentState } = require("../../src/lib/investment");
 const db = require("../services/db/definitions/db.init");
-const axios = require("axios");
 const { authTokenName } = require("../../src/lib/authHelpers");
+const { createHash } = require("./helpers");
 
 let CACHE = {};
 
@@ -25,7 +25,7 @@ async function processBooking(offer, offerLimit, user, amount) {
     const { userId, tenantId, partnerId } = user;
 
     const { phaseCurrent } = phases({ ...offer, ...offerLimit });
-    console.log("phaseCurrent", phaseCurrent);
+
     const [vault, upgrades] = await Promise.all([
         sumAmountForUserAndTenant(offer.id, userId, tenantId),
         fetchUpgradeUsed(userId, offer.id, tenantId),

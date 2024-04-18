@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { QueryClientProvider, HydrationBoundary } from "@tanstack/react-query";
+import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { useRouter } from "next/router";
 import { config } from "@/lib/wagmi";
@@ -14,6 +14,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import "@/styles/globals.scss";
 import ContainerLoader from "@/components/ContainerLoader";
 import { getContainerLoaderLayout } from "@/components/ContainerLoader/helper";
+import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 
 switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     case TENANT.basedVC: {
@@ -26,6 +27,10 @@ switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     }
     case TENANT.CyberKongz: {
         import("@/styles/tenants/cyberkongz.scss");
+        break;
+    }
+    case TENANT.BAYC: {
+        import("@/styles/tenants/bayc.scss");
         break;
     }
 }
@@ -62,11 +67,12 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
 
     return (
         <>
-            <WagmiProvider config={config}>
-                <QueryClientProvider client={queryClient}>
-                    <EnvironmentProvider initialData={environmentData}>
-                        <HydrationBoundary state={pageProps.dehydratedState}>
-                            {urlTransitionString
+            <ClientErrorBoundary>
+                <WagmiProvider config={config}>
+                    <QueryClientProvider client={queryClient}>
+                        <EnvironmentProvider initialData={environmentData}>
+                            <HydrationBoundary state={pageProps.dehydratedState}>
+                                {urlTransitionString
                                 ? containerLayout(
                                       <ContainerLoader
                                           currentPathName={router.pathname}
@@ -75,10 +81,11 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                                       />,
                                   )
                                 : renderWithLayout(<Component {...pageProps} />)}
-                        </HydrationBoundary>
-                    </EnvironmentProvider>
-                </QueryClientProvider>
-            </WagmiProvider>
+                            </HydrationBoundary>
+                        </EnvironmentProvider>
+                    </QueryClientProvider>
+                </WagmiProvider>
+            </ClientErrorBoundary>
             <Gtag />
         </>
     );

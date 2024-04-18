@@ -4,18 +4,19 @@ import { TENANT } from "@/lib/tenantHelper";
 const copy = {
     [TENANT.basedVC]: {
         NAME: "basedVC",
-        ACCELERATOR: "Accelerator",
         COMMUNITY: "web3",
     },
     [TENANT.NeoTokyo]: {
         NAME: "Citizen Capital",
-        ACCELERATOR: "CitCapX",
         COMMUNITY: "NeoTokyo",
     },
     [TENANT.CyberKongz]: {
         NAME: "KongzCapital",
-        ACCELERATOR: "KongzCapX",
         COMMUNITY: "CyberKongz",
+    },
+    [TENANT.BAYC]: {
+        NAME: "Apes Capital",
+        COMMUNITY: "Bored Apes Yacht Club",
     },
 };
 
@@ -33,6 +34,9 @@ export const seoConfig = (page) => {
         }
         case TENANT.CyberKongz: {
             return seoCyberKongz(page);
+        }
+        case TENANT.BAYC: {
+            return seoBAYC(page);
         }
     }
 };
@@ -141,6 +145,7 @@ const seoNeoTokyo = (page) => {
         }
     }
 };
+
 const seoCyberKongz = (page) => {
     switch (page) {
         case PAGE.Landing: {
@@ -175,6 +180,49 @@ const seoCyberKongz = (page) => {
                 "KongzCapital - privacy policy",
                 "THE CYBERKONGZ COMMUNITY LED VC FUND.",
                 template_CyberKongz,
+                page,
+            );
+        }
+    }
+};
+
+const seoBAYC = (page) => {
+    switch (page) {
+        case PAGE.Landing: {
+            return generateSeo(
+                "Apes Capital - community led VC fund",
+                "THE BAYC & MAYC COMMUNITY LED VC FUND.",
+                template_BYAC,
+                page,
+            );
+        }
+        case PAGE.Login: {
+            return generateSeo("Apes Capital - login", "THE BAYC & MAYC COMMUNITY LED VC FUND.", template_BYAC, page);
+        }
+        case PAGE.Investments: {
+            return generateSeo(
+                "Apes Capital - our investments",
+                "THE BAYC & MAYC COMMUNITY LED VC FUND.",
+                template_BYAC,
+                page,
+            );
+        }
+        case PAGE.Tokenomics: {
+            return generateSeo("Apes Capital - tokenomics", "How it works", template_BYAC, page);
+        }
+        case PAGE.ToS: {
+            return generateSeo(
+                "Apes Capital - terms of service",
+                "THE BAYC & MAYC COMMUNITY LED VC FUND.",
+                template_BYAC,
+                page,
+            );
+        }
+        case PAGE.Privacy: {
+            return generateSeo(
+                "Apes Capital - privacy policy",
+                "THE BAYC & MAYC COMMUNITY LED VC FUND.",
+                template_BYAC,
                 page,
             );
         }
@@ -248,7 +296,7 @@ const template_CyberKongz = {
     url: "https://kongzcapital.fund",
     og: {
         type: "website",
-        url: "",
+        url: "https://kongzcapital.fund",
         title: "3",
         description: "",
         images: [
@@ -265,6 +313,31 @@ const template_CyberKongz = {
     twitter: {
         handle: "@KongzCapital",
         site: "@KongzCapital",
+        cardType: "summary_large_image",
+    },
+};
+
+const template_BYAC = {
+    url: "https://apes.capital",
+    og: {
+        type: "website",
+        url: "https://apes.capital",
+        title: "3",
+        description: "",
+        images: [
+            {
+                url: "https://cdn.citizencapital.fund/webapp/og_apes.png",
+                width: 800,
+                height: 600,
+                alt: "Join BAYC & MAYC",
+                type: "image/jpeg",
+            },
+        ],
+        siteName: "Apes Capital",
+    },
+    twitter: {
+        handle: "@Apes_Capital",
+        site: "@Apes_Capital",
         cardType: "summary_large_image",
     },
 };
