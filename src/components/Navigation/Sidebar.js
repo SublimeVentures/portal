@@ -213,7 +213,7 @@ export default function Sidebar({ session }) {
     };
 
     return (
-        <aside className="flex sticky top-0 z-20 collap:relative">
+        <aside className="flex h-full">
             <div className="p-6 flex-col border-r border-app-bg-split boxshadow text-app-white sticky top-0 hidden collap:flex overflow-x-hidden overflow-y-auto">
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
