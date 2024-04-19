@@ -83,8 +83,7 @@ export default function TakeOfferModal({ model, setter, props }) {
 
     const { lock, text } = customLocks();
 
-    console.log("selectedCurrency", selectedCurrency, offerDetails);
-    const token = useGetToken(selectedCurrency?.contract || getCurrencySettlement()[0].contract);
+    const token = useGetToken(selectedCurrency?.contract || getCurrencySettlement()[0]?.contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
