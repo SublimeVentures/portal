@@ -59,7 +59,9 @@ export default function ChangeAddress({ session }) {
     const contentWalletDisconnected = () => {
         return (
             <div className="flex flex-1 flex-col">
-                <p className="pb-5">Your wallet is disconnected.</p>
+                <p className="pb-5">
+                    Your wallet is disconnected. If you use a browser extension for crypto wallet then check it.
+                </p>
                 <div className="mt-auto w-full">
                     <div className="w-full fullWidth">
                         <UniButton
