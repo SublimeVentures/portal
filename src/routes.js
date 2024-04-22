@@ -38,6 +38,7 @@ export const API = {
     publicNeoTokyoEnvs: "/api/public/nt-calculator",
     publicKongzEnvs: "/api/public/kongz-calculator",
     notificationList: "/api/notifications",
+    notificationData: "/api/notifications/extended",
 };
 
 const ExternalLinksBased = {

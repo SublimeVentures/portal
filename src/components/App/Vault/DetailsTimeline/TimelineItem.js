@@ -1,9 +1,8 @@
 import PropTypes from "prop-types";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import moment from "moment";
-import Link from "next/link";
 import { cn } from "@/lib/cn";
-import InlineCopyButton from "@/components/Button/InlineCopyButton";
+import TimelineTransaction from "@/components/App/Vault/DetailsTimeline/TimelineTransaction";
 
 export default function TimelineItem({ item, first = false, last = false }) {
     return (
@@ -23,39 +22,23 @@ export default function TimelineItem({ item, first = false, last = false }) {
                             {moment(item.onchain.createdAt).format("yyyy/MM/DD HH:mm:ss")}
                         </p>
                     </div>
-                    <div className="flex justify-start items-center gap-2">
-                        <div>
-                            <div className="text-gray">txID</div>
+                    {item.onchain?.txID && (
+                        <div className="flex justify-start items-center gap-2">
                             <div>
-                                <Transaction transaction={item.onchain.txID} />
+                                <div className="text-gray">txID</div>
+                                <div>
+                                    <TimelineTransaction tx={item.onchain.txID} chainId={item.onchain.chainId} />
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-gray"></div>
+                                <div></div>
                             </div>
                         </div>
-                        <div>
-                            <div className="text-gray">TX Info</div>
-                            <div>
-                                <Link
-                                    href={`https://api.tenderly.co/api/v1/public-contract/${item.onchain.chainId}/tx/${item.onchain.txID}`}
-                                >
-                                    click
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
-    );
-}
-
-function Transaction({ transaction }) {
-    const shortened = `${transaction.slice(0, 5)}...${transaction.slice(-4)}`;
-    return (
-        <p className="flex gap-2 items-center">
-            <Link className="hover:underline font-mono" target="_blank" href={`https://etherscan.io/tx/${transaction}`}>
-                {shortened}
-            </Link>
-            <InlineCopyButton copiable={transaction} />
-        </p>
     );
 }
 
