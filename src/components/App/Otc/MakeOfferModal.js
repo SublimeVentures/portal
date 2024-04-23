@@ -48,7 +48,6 @@ export default function MakeOfferModal({ model, setter, props }) {
     const { getCurrencySettlement, account, activeOtcContract, network } = useEnvironmentContext();
     const { getExpireData, setExpireData } = useLocalStorage();
 
-    console.log("currentMarket", currentMarket);
     const amountStorageKey = `otc.${currentMarket?.offerId}.amount`;
     const priceStorageKey = `otc.${currentMarket?.offerId}.price`;
     const currencyStorageKey = `otc.${currentMarket?.offerId}.currency`;
