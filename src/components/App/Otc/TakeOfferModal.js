@@ -83,8 +83,7 @@ export default function TakeOfferModal({ model, setter, props }) {
 
     const { lock, text } = customLocks();
 
-    console.log("selectedCurrency", selectedCurrency, offerDetails);
-    const token = useGetToken(selectedCurrency?.contract || getCurrencySettlement()[0].contract);
+    const token = useGetToken(selectedCurrency?.contract || getCurrencySettlement()[0]?.contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -130,7 +129,7 @@ export default function TakeOfferModal({ model, setter, props }) {
 
     if (!currentMarket?.name || !offerDetails?.currency) return;
 
-    const chainDesired = network.chains.find((el) => el.id === offerDetails?.chainId);
+    const chainDesired = network.chains?.find((el) => el.id === offerDetails?.chainId);
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString();
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString();
 
