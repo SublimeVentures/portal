@@ -31,8 +31,6 @@ export default function Dropdown({ options, selector, classes, propSelected, isS
         }
     }, [defaultSelected]);
 
-    console.log("selected", selected);
-
     useOnClickOutside(ref, () => setIsOpen(false));
 
     return (
