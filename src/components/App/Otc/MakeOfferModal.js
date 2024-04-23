@@ -79,9 +79,8 @@ export default function MakeOfferModal({ model, setter, props }) {
     const textCopy = isSeller ? "sell" : "buy";
 
     useEffect(() => {
-        console.log(getExpireData(currencyStorageKey));
         setSelectedCurrency(getExpireData(currencyStorageKey) || dropdownCurrencyOptions[0]);
-    }, [network.chainId, isSeller]);
+    }, [network.chainId, isSeller, model]);
 
     const calcPrice = (multi, amt) => {
         const newPrice = Number(Number(amt * multi).toFixed(2));
