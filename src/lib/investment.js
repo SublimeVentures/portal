@@ -18,8 +18,8 @@ function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedU
     } else {
         switch (account.tenantId) {
             case TENANT.basedVC || TENANT.BAYC: {
-                allocationUser_base = account.multi * offer.alloMax;
-                if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
+                allocationUser_base = account.multi * offer.alloMax; //todo: add new field for alloMulti and alloLimit
+                // if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
                 allocationUser_min = allocation_min;
                 break;
             }
@@ -73,7 +73,7 @@ function getAllocationLeft(allocationOffer_left, allocationUser_left) {
 
 function allocationParseUnlimited(params) {
     const { allocationOffer_left } = params;
-    params.output.allocationUser_left = allocationOffer_left >= 5600 ? allocationOffer_left : 0; //todo: change to just allocationOffer_left
+    params.output.allocationUser_left = allocationOffer_left; //todo: change implement min validation if exists
     return params;
 }
 
