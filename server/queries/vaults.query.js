@@ -1,7 +1,7 @@
-const db = require("../services/db/definitions/db.init");
 const { QueryTypes } = require("sequelize");
-const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
+const db = require("../services/db/definitions/db.init");
+const logger = require("../../src/lib/logger");
 
 const query_getUserVault = `
         SELECT
@@ -9,7 +9,6 @@ const query_getUserVault = `
             "vault"."claimed",
             "vault"."locked",
             "vault"."createdAt",
-            -- Add other vault columns as needed
             "offer"."slug",
             "offer"."name",
             "offer"."tge",
@@ -18,7 +17,6 @@ const query_getUserVault = `
             "offer"."ticker",
             "offer"."t_unlock",
             "offer"."isManaged"
-            -- Add other offer columns as needed
         FROM
             "vault"
                 JOIN
@@ -27,9 +25,11 @@ const query_getUserVault = `
             "vault"."userId" = :userId AND
             "vault"."invested" != 0 AND
         "offer"."id" IN (
-            SELECT DISTINCT "offerId" 
+            SELECT DISTINCT "offerLimit"."offerId"
             FROM "offerLimit"
-            WHERE "offerLimit"."partnerId" IN (:partnerId, :tenantId)
+                     JOIN "offer" ON "offerLimit"."offerId" = "offer"."id"
+            WHERE ("offer"."isTenantExclusive" = false AND "offerLimit"."partnerId" IN (:partnerId, :tenantId))
+               OR ("offer"."isTenantExclusive" = true AND "offerLimit"."partnerId" = :tenantId)
         )
         ORDER BY
             "vault"."createdAt" DESC;

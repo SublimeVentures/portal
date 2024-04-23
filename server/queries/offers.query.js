@@ -59,8 +59,8 @@ const query_getOfferList = `
                 "offerLimit" ol1
             WHERE
                 ol1."offerId" = o.id AND (
-                        (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
-                        ol1."partnerId" = :tenantId
+                    (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                    ol1."partnerId" = :tenantId
                 )
             ORDER BY
                 CASE
@@ -70,12 +70,32 @@ const query_getOfferList = `
                     END
             LIMIT 1
             ) ol ON true
-            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
+            LEFT JOIN LATERAL (
+            SELECT
+                ofr1."isPaused",
+                ofr1."isSettled",
+                ofr1."offerId"
+            FROM
+                "offerFundraise" ofr1
+            WHERE
+                ofr1."offerId" = o.id AND (
+                    (o."isTenantExclusive" = false AND ofr1."partnerId" = :partnerId) OR
+                    ofr1."partnerId" = :tenantId
+                )
+            ORDER BY
+                CASE
+                    WHEN ofr1."partnerId" = :tenantId THEN 1
+                    WHEN ofr1."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
+                    ELSE 3
+                    END
+            LIMIT 1
+            ) ofr ON true
     WHERE
         o.display = true AND
         o."isLaunchpad" = false AND
         o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL
+        ol."offerId" IS NOT NULL AND
+        ofr."offerId" IS NOT NULL
     ORDER BY
         ol.d_open DESC;
 `;
@@ -115,8 +135,8 @@ const query_getLaunchpadList = `
                 "offerLimit" ol1
             WHERE
                 ol1."offerId" = o.id AND (
-                        (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
-                        ol1."partnerId" = :tenantId
+                    (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                    ol1."partnerId" = :tenantId
                 )
             ORDER BY
                 CASE
@@ -126,12 +146,32 @@ const query_getLaunchpadList = `
                     END
             LIMIT 1
             ) ol ON true
-            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
+            LEFT JOIN LATERAL (
+            SELECT
+                ofr1."isPaused",
+                ofr1."isSettled",
+                ofr1."offerId"
+            FROM
+                "offerFundraise" ofr1
+            WHERE
+                ofr1."offerId" = o.id AND (
+                    (o."isTenantExclusive" = false AND ofr1."partnerId" = :partnerId) OR
+                    ofr1."partnerId" = :tenantId
+                )
+            ORDER BY
+                CASE
+                    WHEN ofr1."partnerId" = :tenantId THEN 1
+                    WHEN ofr1."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
+                    ELSE 3
+                    END
+            LIMIT 1
+            ) ofr ON true
     WHERE
         o.display = true AND
         o."isLaunchpad" = true AND
         o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL
+        ol."offerId" IS NOT NULL AND
+        ofr."offerId" IS NOT NULL
     ORDER BY
         ol.d_open DESC;
 `;
@@ -188,8 +228,8 @@ const query_getOtcList = `
     WHERE
         o.otc != 0
       AND (
-                o."isOtcTenantExclusive" = FALSE
-            OR (o."isOtcTenantExclusive" = TRUE AND EXISTS (
+                o."isOtcExclusive" = FALSE
+            OR (o."isOtcExclusive" = TRUE AND EXISTS (
                 SELECT 1 FROM "offerLimit" ol2
                 WHERE ol2."offerId" = o.id AND ol2."partnerId" = :tenantId
             ))
@@ -227,8 +267,8 @@ const query_getOfferDetails = `
                 "offerLimit" ol1
             WHERE
                 ol1."offerId" = o.id AND (
-                    (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
-                    ol1."partnerId" = :tenantId
+                    ol1."partnerId" = :tenantId or 
+                    (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId)
                 )
             ORDER BY
                 CASE
@@ -244,7 +284,6 @@ const query_getOfferDetails = `
         ol."offerId" IS NOT NULL
     LIMIT 1;
 `;
-
 async function getOfferDetails(slug, partnerId, tenantId) {
     try {
         return await db.query(query_getOfferDetails, {
