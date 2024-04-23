@@ -35,6 +35,7 @@ export default function Input({
         if (!Number.isInteger(data)) {
             data = data.replace(/[^0-9]/g, "");
         }
+
         setInput(data);
     };
 
@@ -81,7 +82,7 @@ export default function Input({
 
     useEffect(() => {
         if (type === "number" && min) {
-            setValueNumber(min);
+            setValueNumber(initialValue || min);
         } else {
             setValueString(initialValue);
         }

@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
-import { useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import useOnClickOutside from "@/lib/hooks/useOnClickOutside";
 
-// export default function Dropdown({options, classes, propSelected, position, isSmall}) {
-export default function Dropdown({ options, selector, classes, propSelected, isSmall }) {
+const calculateMoved = (index, isSmall) => index * (isSmall ? -35 : -62);
+
+export default function Dropdown({ options, selector, classes, propSelected, isSmall, defaultSelected }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -11,22 +11,29 @@ export default function Dropdown({ options, selector, classes, propSelected, isS
     const ref = useRef();
 
     const changeOption = (selected, index) => {
-        setMoved(index * (isSmall ? -35 : -62));
+        setMoved(calculateMoved(index, isSmall));
         let _selected = selected;
         setSelected(index);
         propSelected(selected);
         setDirection(_selected < index ? -1 : 1);
+
         setTimeout(() => {
             setDirection(0);
             setIsOpen(false);
         }, 500);
     };
 
-    useOnClickOutside(ref, () => setIsOpen(false));
+    useEffect(() => {
+        if (defaultSelected >= 0) {
+            setSelected(defaultSelected);
+            setMoved(calculateMoved(defaultSelected, isSmall));
+            propSelected(options[defaultSelected]);
+        }
+    }, [defaultSelected]);
 
-    // useEffect(() => {
-    //     if (position !== selected) changeOption(0)
-    // }, [position])
+    console.log("selected", selected);
+
+    useOnClickOutside(ref, () => setIsOpen(false));
 
     return (
         <div
