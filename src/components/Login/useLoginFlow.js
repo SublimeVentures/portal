@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { v4 as uuidv4 } from "uuid";
 import { logIn } from "@/fetchers/auth.fetcher";
 import routes from "@/routes";
@@ -36,11 +36,6 @@ export default function useLoginFlow() {
     } = useAccount();
     const { signMessageAsync: signMessageFn } = useSignMessage();
     const { connectors, connectAsync: connect, isLoading: connectorIsLoading } = useConnect();
-    const { disconnect } = useDisconnect();
-
-    useEffect(() => {
-        disconnect();
-    }, []);
 
     const signMessage = useCallback(async () => {
         setErrorMsg("");
