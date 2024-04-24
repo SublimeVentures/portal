@@ -1,7 +1,7 @@
 import Image from "next/image";
-import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import CustomFlipClockCountdown from "@/components/FlipClockCountdown";
 
 export default function OfferDetailsTopBar({ paramsBar }) {
     const { cdn } = useEnvironmentContext();
@@ -34,12 +34,10 @@ export default function OfferDetailsTopBar({ paramsBar }) {
                         ends in
                     </div>
                     <div>
-                        <FlipClockCountdown
+                        <CustomFlipClockCountdown
                             className="flip-clock"
-                            onComplete={async () => {
-                                refreshInvestmentPhase();
-                            }}
-                            to={`${moment.unix(phaseNext.startDate + 1)}`}
+                            onComplete={async () => refreshInvestmentPhase()}
+                            to={moment.unix(phaseNext.startDate + 1).valueOf()}
                             labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
                         />
                     </div>
