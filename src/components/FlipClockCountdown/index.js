@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 
 export default function CustomFlipClockCountdown({ className, onComplete, to, labels, labelStyle }) {
@@ -11,19 +11,14 @@ export default function CustomFlipClockCountdown({ className, onComplete, to, la
         return () => document.removeEventListener("visibilitychange", forceUpdate);
     }, []);
 
-    const FlipClockCountdownContent = useMemo(
-        () => (
-            <FlipClockCountdown
-                key={_}
-                labelStyle={labelStyle}
-                className={className}
-                onComplete={onComplete}
-                to={to}
-                labels={labels}
-            />
-        ),
-        [_],
+    return (
+        <FlipClockCountdown
+            key={_}
+            labelStyle={labelStyle}
+            className={className}
+            onComplete={onComplete}
+            to={to}
+            labels={labels}
+        />
     );
-
-    return FlipClockCountdownContent;
 }
