@@ -1,0 +1,145 @@
+@layer base {
+  :root {
+      // Colors
+      --foreground-color: 0, 0%, 100%;
+      --primary-color: 188, 91%, 38%;
+      --accent-color: 36, 65%, 71%;
+      --destructive-color: 0, 74%, 55%;
+
+      // Font family
+      --font-poppins: 'Poppins',
+      
+      // Font size
+      --text-xxs: 11px;
+      --text-xs: 12px;
+      --text-sm: 13px;
+      --text-md: 14px;
+      --text-lg: 16px;
+      --text-xl: 17px;
+      --text-2xl: 18px;
+      --text-3xl: 20px;
+      --text-4xl: 21px;
+      --text-5xl: 22px;
+      --text-6xl: 23px;
+      --text-7xl: 26px;
+      --text-8xl: 28px;
+      --text-9xl: 29px;
+      --text-10xl: 34px;
+      --text-11xl: 39px;
+      
+      // Font weight
+      --font-light: 300;
+      --font-regular: 400;
+      --font-medium: 500;
+      --font-semibold: 600;
+      --font-bold: 700;
+      
+      --radius: 5px;
+      --radius-lg: 64px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #082030;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent linear-gradient(180deg, #0D87A1 0%, #164062 100%) 0% 0% no-repeat padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #082030;
+}
+
+// @TODO: Refactor: The following styles are for gradient backgrounds and border gradients.
+.cardGradient {
+  background: transparent linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%) 0% 0% no-repeat padding-box;
+}
+
+.cardGradientLight {
+  background: transparent linear-gradient(324deg, hsl(var(--primary-color)) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
+}
+
+.cardBorderPrimary {
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius); 
+    padding: 2px; 
+    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+.cardBorderAccent {
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius); 
+    padding: 2px;
+    background: linear-gradient(131deg, transparent 0%, hsl(var(--accent-color)) 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude; 
+  }
+}
+
+.cardGradientDark {
+  background: transparent linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%) 0% 0% no-repeat padding-box;
+}
+
+.bg-sidebar {
+  background: linear-gradient(333deg, #0A1728 0%, #082536 100%) 0% 0% no-repeat padding-box;
+}
+
+.cardBorderPrimary-sheet {
+  position: relative;
+  z-index: 1;
+  border-top-left-radius: var(--radius-lg);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius-lg); 
+    padding: 2px; 
+    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsl(var(--light)) 0 0) content-box, linear-gradient(hsl(var(--light)) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+.cardBorderPrimary-dialog {
+  border-radius: var(--radius);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius); 
+    padding: 2px; 
+    background: linear-gradient(231deg, transparent 0%, #099FB7 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
