@@ -5,7 +5,8 @@ export default function CustomFlipClockCountdown({ className, onComplete, to, la
     const [_, forceRender] = useState({});
 
     useEffect(() => {
-        const forceUpdate = () => forceRender({});
+        const forceUpdate = () => document.visibilityState === "visible" && forceRender({});
+
         document.addEventListener("visibilitychange", forceUpdate);
 
         return () => document.removeEventListener("visibilitychange", forceUpdate);
