@@ -9,7 +9,7 @@ const NavigationTabs = () => {
     const router = useRouter();
 
     return (
-        <div className="bg-sidebar collap:hidden">
+        <div className="bg-sidebar-gradient collap:hidden">
             <ul className="p-4 flex items-center justify-between gap-4">
                 {menu.map(({ name, path, icon }) => (
                     <li key={name}>

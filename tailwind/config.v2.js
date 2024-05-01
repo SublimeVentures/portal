@@ -48,11 +48,12 @@ module.exports = {
                 "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
                 "sheet-gradient": `linear-gradient(151deg, #051626 0%, #1A3754 49%, #051626 100%)`,
                 "dialog-gradient": `linear-gradient(102deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)`,
+                "sidebar-gradient": `linear-gradient(333deg, #0A1728 0%, #082536 100%)`,
 
                 "upgrade-to-premium-pattern": "url('/img/upgrade-to-premium-bg.png')",
                 "upgrade-to-premium-banner-pattern": "url('/img/upgrade-to-premium-banner.png')",
                 "empty-investment-pattern": "url('/img/empty-investment-pattern.png')",
-                "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
+                "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png'§)",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
         },
@@ -71,5 +72,5 @@ module.exports = {
             "accordion-up": "accordion-up 0.2s ease-out",
         },
     },
-    plugins: [require("tailwindcss-animate")],
+    plugins: [],
 }

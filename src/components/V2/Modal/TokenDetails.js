@@ -23,7 +23,7 @@ const TokenDetails = () => {
 
       <SheetContent className="h-full flex flex-col">
           <SheetHeader>
-              <Avatar size="large" classNama="bg-black">
+              <Avatar size="large" className="bg-black">
                   <AvatarImage src="" />
                   <AvatarFallback>CN</AvatarFallback>
               </Avatar>

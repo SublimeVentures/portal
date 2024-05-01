@@ -2,10 +2,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { IconButton } from "@/components/ui/icon-button";
-import { IoBookOutline as IconWiki } from "react-icons/io5";
-import { FaDiscord as IconDiscord } from "react-icons/fa";
-import PAGE, { ExternalLinks } from "@/routes";
 import { cn } from "@/lib/cn";
+import { mainMenu, socialMenu } from "@/config";
 
 // @Todo
 // Should add?
@@ -37,15 +35,15 @@ const Sidebar = () => {
 
     return (
       <aside>
-          <div className='hidden p-6 min-h-screen h-full w-max bg-sidebar collap:flex collap:flex-col collap:gap-2'>
+          <div className='hidden p-6 min-h-screen h-full w-max bg-sidebar-gradient collap:flex collap:flex-col collap:gap-2'>
               <div className='px-8 mb-10 flex flex-col'>
                   <h1 className="text-8xl font-semibold text-foreground">based.vc</h1>
                   <p className="text-md font-light text-foreground">VC for all</p>
               </div>
 
               <nav>
-                  {generateMenu("Menu", menu.groupUser)}
-                  {generateMenu("Account", menu.groupProfile)}
+                  {generateMenu("Menu", mainMenu.groupUser)}
+                  {generateMenu("Account", mainMenu.groupProfile)}
               </nav>
 
               <div className="mt-auto flex flex-col items-center">
@@ -69,58 +67,5 @@ const Sidebar = () => {
       </aside>
     )
 }
-
-const menu = {
-    groupUser: [
-        {
-            name: "Vault",
-            path: PAGE.App,
-        },
-        {
-            name: "Opportunities",
-            path: PAGE.Opportunities,
-        },
-        {
-            name: "OTC Market",
-            path: PAGE.OTC,
-        },
-        {
-            name: "Upgrades",
-            path: PAGE.Upgrades,
-        },
-    ],
-    groupProfile: [
-        {
-            name: "Mystery Box",
-            path: "/",
-        },
-        {
-            name: "Settings",
-            path: PAGE.Settings,
-        },
-        {
-            name: "History",
-            path: "/",
-        },
-    ]
-}
-
-const socialMenu = [
-    {
-        name: "discord",
-        path: ExternalLinks.DISCORD,
-        icon: IconDiscord,
-    },
-    {
-        name: "gitbook",
-        path: ExternalLinks.WIKI,
-        icon: IconWiki,
-    },
-    {
-        name: "twitter-x",
-        path: "/",
-        icon: IconDiscord,
-    },
-]
 
 export default Sidebar;

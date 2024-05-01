@@ -104,29 +104,6 @@
   background: transparent linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%) 0% 0% no-repeat padding-box;
 }
 
-.bg-sidebar {
-  background: linear-gradient(333deg, #0A1728 0%, #082536 100%) 0% 0% no-repeat padding-box;
-}
-
-.cardBorderPrimary-sheet {
-  position: relative;
-  z-index: 1;
-  border-top-left-radius: var(--radius-lg);
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: var(--radius-lg); 
-    padding: 2px; 
-    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsl(var(--light)) 0 0) content-box, linear-gradient(hsl(var(--light)) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
 .cardBorderPrimary-dialog {
   border-radius: var(--radius);
 
@@ -138,6 +115,24 @@
     border-radius: var(--radius); 
     padding: 2px; 
     background: linear-gradient(231deg, transparent 0%, #099FB7 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+.gradient-border-sheet-header {
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius-lg);
+    padding: 2px; 
+    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 25%);
     -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
