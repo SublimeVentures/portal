@@ -20,7 +20,8 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
     };
 
     const calcPrice = (multi, amt) => {
-        const value = ((amt * multi - amt) * 95) / 100;
+        const coefficient = multi * Number(0.95) * Number(0.9);
+        const value = amt * coefficient;
 
         setPrice(Number(Number(value > 0 ? value : 0).toFixed(2)));
     };
