@@ -18,7 +18,7 @@ export default function ChangeAddress({ session }) {
         if (!isAddressSupported) {
             reconnect();
         }
-    }, [isAddressSupported, reconnect]);
+    }, [isAddressSupported, account]);
 
     const title = () => {
         return (
