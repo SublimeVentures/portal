@@ -1,3 +1,5 @@
+import { useReconnect } from "wagmi";
+import { useEffect } from "react";
 import GenericModal from "@/components/Modal/GenericModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -5,11 +7,18 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 export default function ChangeAddress({ session }) {
     const { wallets } = session;
     const { account, environmentCleanup, walletGuard } = useEnvironmentContext();
-
+    const { reconnect } = useReconnect();
     const userAddress = account?.address;
+
     const isAddressSupported = Boolean(
         walletGuard && userAddress !== undefined && wallets.find((el) => el === userAddress),
     );
+
+    useEffect(() => {
+        if (!isAddressSupported) {
+            reconnect();
+        }
+    }, [isAddressSupported, account]);
 
     const title = () => {
         return (
@@ -48,10 +57,29 @@ export default function ChangeAddress({ session }) {
         );
     };
     const contentWalletDisconnected = () => {
-        return <div className="flex flex-1 flex-col">Your wallet is disconnected.</div>;
+        return (
+            <div className="flex flex-1 flex-col">
+                <p className="pb-5">Your wallet is disconnected. If you're using a crypto extension, check it.</p>
+                <div className="mt-auto w-full">
+                    <div className="w-full fullWidth">
+                        <UniButton
+                            type={ButtonTypes.BASE}
+                            state="danger ml-auto"
+                            text="Logout"
+                            isWide={true}
+                            zoom={1.1}
+                            size="text-sm sm"
+                            handler={() => {
+                                environmentCleanup();
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        );
     };
 
-    const content = () => (!!userAddress ? contentWrongWallet() : contentWalletDisconnected());
+    const content = () => (userAddress ? contentWrongWallet() : contentWalletDisconnected());
 
     return (
         <GenericModal
