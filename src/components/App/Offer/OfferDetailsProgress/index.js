@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import VanillaTilt from "vanilla-tilt";
-import { Tooltiper } from "@/components/Tooltip";
+import { PortalTooltiper } from "@/components/PortalTooltip";
 import { cn } from "@/lib/cn";
 import useOfferDetailsProgress from './useOfferDetailsProgress'
 
@@ -17,7 +17,7 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
     useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.05, speed: 1000, max: 5 }), []);
 
     return (
-        <div className={cn('relative h-[50px] w-full flex flex-row items-center rounded-xl select-none pointer-events-none overflow-hidden hover:overflow-visible')} ref={tilt}>
+        <div className={cn('relative h-[50px] w-full flex flex-row items-center rounded-xl select-none overflow-hidden')} ref={tilt}>
             <div className="os-progress-bar absolute rounded-xl overflow-hidden -z-10">
                 <span className="os-progress-bar--meter flex flex-1 rounded-tl-xl rounded-bl-xl"></span>
                 <span
@@ -26,11 +26,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 ></span>
             </div>
 
-            <Tooltiper
+            <PortalTooltiper
                 text={null}
                 wrapper={
                     <div
-                        className="pointer-events-auto w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
+                        className="w-full h-full z-10 opacity-10 bg-[var(--progress-step-color)] rounded-tl-xl rounded-bl-xl cursor-pointer transition-all duration-150 hover:opacity-100 hover:border-2 hover:z-40 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
                         style={{
                             borderTopRightRadius: base_rounding,
                             borderBottomRightRadius: base_rounding,
@@ -41,11 +41,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 className="w-full h-full"
             />
             
-            <Tooltiper
+            <PortalTooltiper
                 text={`Booked ${res_percentage}%`}
                 wrapper={
                     <div
-                        className="pointer-events-auto w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
+                        className="w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
                         style={{
                             borderTopLeftRadius: base_percentage === 0 ? '12px' : '0',
                             borderBottomLeftRadius: base_percentage === 0 ? '12px' : '0',
@@ -57,11 +57,11 @@ export default function OfferDetailsProgress({ allocations, isSoldOut, progressC
                 style={{ width: `${res_percentage}%`, "--progress-step-color": progressColors.resColor }}
                 className="w-full h-full"
             />
-            <Tooltiper
+            <PortalTooltiper
                 text={`Guaranteed ${guaranteed_percentage}%`}
                 wrapper={
                     <div
-                        className="pointer-events-auto w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
+                        className="w-full h-full z-20 opacity-10 bg-[var(--progress-step-color)] cursor-pointer transition-all duration-150 hover:z-40 hover:opacity-100 hover:border-2 hover:border-[var(--progress-step-color)] hover:shadow-[0_0_2px_var(--progress-step-color),inset_0_0_2px_var(--progress-step-color),0_0_0px_var(--progress-step-color),0_0_0_var(--progress-step-color),0_0_10px_var(--progress-step-color)]"
                         style={{
                             borderTopLeftRadius: base_percentage + res_percentage <= 1 ? '12px' : '0',
                             borderBottomLeftRadius: base_percentage + res_percentage <= 1 ? '12px' : '0',
