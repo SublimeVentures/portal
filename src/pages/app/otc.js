@@ -14,8 +14,10 @@ import { fetchVault } from "@/fetchers/vault.fetcher";
 import OtcMarkets from "@/components/App/Otc/Markets";
 import OtcOffers from "@/components/App/Otc/Offers";
 import routes from "@/routes";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { NAME } = getTenantConfig().seo;
 
 export default function AppOtc({ session }) {
     const router = useRouter();
@@ -120,7 +122,7 @@ export default function AppOtc({ session }) {
         );
     };
 
-    const title = `OTC Market - ${getCopy("NAME")}`;
+    const title = `OTC Market - ${NAME}`;
 
     return (
         <>

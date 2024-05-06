@@ -12,11 +12,13 @@ import Loader from "@/components/App/Loader";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import StoreItem from "@/components/App/Store/StoreItem";
 import { fetchStore } from "@/fetchers/store.fetcher";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
 const BuyStoreItemModal = dynamic(() => import("@/components/App/Store/BuyStoreItemModal"), { ssr: false });
+
+const { NAME } = getTenantConfig().seo;
 
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
@@ -71,7 +73,7 @@ export default function AppUpgrades({ session }) {
         setOrder,
     };
 
-    const title = `Upgrades - ${getCopy("NAME")}`;
+    const title = `Upgrades - ${NAME}`;
 
     return (
         <>

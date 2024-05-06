@@ -7,13 +7,15 @@ import VaultItem from "@/components/App/Vault/VaultItem";
 import { fetchVault } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import DetailsSidebar from "@/components/App/Vault/DetailsSidebar";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
 const UserSummary = dynamic(() => import("@/components/App/Vault/UserSummary"), { ssr: false });
+
+const { NAME } = getTenantConfig().seo;
 
 export default function AppVault({ session }) {
     const userId = session.userId;
@@ -77,7 +79,7 @@ export default function AppVault({ session }) {
         vaultData: vault,
     };
 
-    const title = `Vault - ${getCopy("NAME")}`;
+    const title = `Vault - ${NAME}`;
     return (
         <>
             <Head>

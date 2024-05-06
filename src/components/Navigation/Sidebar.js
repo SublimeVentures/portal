@@ -21,10 +21,11 @@ import PAGE, { ExternalLinks } from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import ChangeNetwork from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress from "@/components/Navigation/ChangeAddress";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
-import { getCopy } from "@/lib/seoConfig";
 import { cn } from "@/lib/cn";
+
+const { NAME } = getTenantConfig().seo;
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -32,7 +33,7 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style="w-17 text-white" />{" "}
-                    <div className="text-2xl ml-2">{getCopy("NAME")}</div>
+                    <div className="text-2xl ml-2">{NAME}</div>
                 </>
             );
         }
@@ -40,7 +41,7 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style="w-17 text-white" />{" "}
-                    <div className="font-accent text-sm ml-3">{getCopy("NAME")}</div>
+                    <div className="font-accent text-sm ml-3">{NAME}</div>
                 </>
             );
         }
