@@ -1,7 +1,11 @@
 import { http, createConfig, fallback } from "wagmi";
 import { mainnet, polygon, bsc, avalanche } from "wagmi/chains";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
-import { RPCs, WALLET_CONNECT_ID } from "@/lib/blockchain";
+import { RPCs } from "@/lib/blockchain";
+import { tenantIndex } from "@/lib/utils";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { walletConnectProjectId } = getTenantConfig(tenantIndex);
 
 const retryOptions = {
     retryCount: 7,
@@ -23,7 +27,7 @@ export const config = createConfig({
     pollingInterval: 4_000,
     connectors: [
         walletConnect({
-            projectId: WALLET_CONNECT_ID,
+            projectId: walletConnectProjectId,
         }),
         coinbaseWallet({
             appName: "Venture Capital",

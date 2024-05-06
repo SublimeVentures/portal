@@ -1,5 +1,5 @@
 const { getSEOTenantConfig } = require("./config/seo.config");
-
+const WALLET_CONNECT_ID = require("./config/walletconnect.config");
 const TENANT = require("./enum/tenant").TENANT;
 
 function getTenantConfig(tenantIndex) {
@@ -10,6 +10,7 @@ function getTenantConfig(tenantIndex) {
 
     return {
         tenantIndex,
+        walletConnectProjectId: WALLET_CONNECT_ID,
         seo: getSEOTenantConfig(tenantIndex),
     };
 }
