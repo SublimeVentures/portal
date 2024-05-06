@@ -28,7 +28,7 @@ const {
     PAGES: {
         [PAGE.Privacy]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function Privacy() {
     return (

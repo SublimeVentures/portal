@@ -1,5 +1,3 @@
-import { TENANT } from "@/lib/tenantHelper";
-
 const RPCs = {
     1: {
         main: "https://eth-mainnet.g.alchemy.com/v2/-u2zi788MkJexUSsl4DUSFmnTQP7ZIKh",
@@ -26,24 +24,6 @@ const RPCs = {
     },
 };
 
-const TENANT_WALLETCONNECT = () => {
-    switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
-        case TENANT.basedVC: {
-            return "fd985de17a4eed15096ed191f885cbcb";
-        }
-        case TENANT.NeoTokyo: {
-            return "595f43a2eed724f824aa5ff2b5dc75c2";
-        }
-        case TENANT.CyberKongz: {
-            return "5a606cf907328fefe28f0bdae67052b4";
-        }
-        case TENANT.BAYC: {
-            return "7320735cf0faaa591d2e4cb8da253dc4";
-        }
-    }
-};
-
-const WALLET_CONNECT_ID = TENANT_WALLETCONNECT();
 const KNOWN_CONNECTORS = ["Coinbase Wallet", "Ledger", "MetaMask", "WalletConnect"];
 
-export { RPCs, WALLET_CONNECT_ID, KNOWN_CONNECTORS };
+export { RPCs, KNOWN_CONNECTORS };

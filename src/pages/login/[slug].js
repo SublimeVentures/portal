@@ -26,7 +26,7 @@ const {
     PAGES: {
         [PAGE.Login]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function LoginPartner({ selectedPartner, isAuthenticated }) {
     const router = useRouter();

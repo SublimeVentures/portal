@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { PAGE } from "@/lib/enum/route";
 import { verifyID } from "@/lib/authHelpers";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
-import { tenantIndex } from "@/lib/utils";
 
 const HomeBased = dynamic(() => import("@/components/Home"), { ssr: true });
 const HomeCitCap = dynamic(() => import("@/components/HomeCitCap"), {
@@ -40,7 +39,7 @@ const {
     PAGES: {
         [PAGE.Landing]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function Home({ account }) {
     return (

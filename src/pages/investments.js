@@ -5,7 +5,6 @@ import { fetchPublicInvestments } from "@/fetchers/public.fecher";
 import { queryClient } from "@/lib/queryCache";
 import { PAGE } from "@/lib/enum/route";
 import { getTenantConfig } from "@/lib/tenantHelper";
-import { tenantIndex } from "@/lib/utils";
 
 const {
     DESCRIPTION,
@@ -13,7 +12,7 @@ const {
     PAGES: {
         [PAGE.Investments]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function InvestmentsPublic() {
     const { isLoading, data, isError } = useQuery({

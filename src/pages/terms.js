@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import HeroBg from "@/components/Home/HeroBg";
 import PAGE from "@/routes";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
-import { tenantIndex } from "@/lib/utils";
 
 const ToS_based = dynamic(() => import("@/components/Legal/ToS_based"), {
     ssr: true,
@@ -35,7 +34,7 @@ const {
     PAGES: {
         [PAGE.ToS]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function Terms() {
     return (

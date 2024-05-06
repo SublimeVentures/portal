@@ -2,10 +2,9 @@ import { http, createConfig, fallback } from "wagmi";
 import { mainnet, polygon, bsc, avalanche } from "wagmi/chains";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
 import { RPCs } from "@/lib/blockchain";
-import { tenantIndex } from "@/lib/utils";
 import { getTenantConfig } from "@/lib/tenantHelper";
 
-const { walletConnectProjectId } = getTenantConfig(tenantIndex);
+const { walletConnectProjectId } = getTenantConfig();
 
 const retryOptions = {
     retryCount: 7,

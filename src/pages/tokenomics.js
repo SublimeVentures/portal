@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import HeroBg from "@/components/Home/HeroBg";
 import PAGE from "@/routes";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
-import { tenantIndex } from "@/lib/utils";
 const TokenomicNeoTokyo = dynamic(() => import("@/components/Tokenomics/TokenomicsCitCap"), { ssr: true });
 const TokenomicKongzCapital = dynamic(() => import("@/components/Tokenomics/TokenomicsCyberKongz"), { ssr: true });
 
@@ -27,7 +26,7 @@ const {
     PAGES: {
         [PAGE.Tokenomics]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function Tokenomics() {
     return (

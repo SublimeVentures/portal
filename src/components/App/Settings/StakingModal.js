@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
 import GenericModal from "@/components/Modal/GenericModal";
 import BlockchainSteps from "@/components/BlockchainSteps";
-import { getMethod, METHOD } from "@/components/BlockchainSteps/utils";
+import { METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getCopy } from "@/lib/seoConfig";
-import { TENANTS_STAKIMG } from "@/components/App/Settings/helper";
 import StepInput from "@/components/App/StepInput";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { staking } = getTenantConfig();
 
 export default function StakingModal({ model, setter, stakingModalProps }) {
     const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
@@ -73,7 +75,7 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
                     <div className="detailRow">
                         <p>Detected NFT</p>
                         <hr className="spacer" />
-                        <p>{TENANTS_STAKIMG()[isS1 ? 0 : 1]}</p>
+                        <p>{staking[isS1 ? 0 : 1]}</p>
                     </div>
                     {stakingModalProps?.isFlexibleStaking ? (
                         <div className={"detailRow"}>

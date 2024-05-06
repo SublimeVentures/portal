@@ -10,7 +10,6 @@ import { verifyID } from "@/lib/authHelpers";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
-import { tenantIndex } from "@/lib/utils";
 
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
     ssr: true,
@@ -44,7 +43,7 @@ const {
     PAGES: {
         [PAGE.Login]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function Login({ isAuthenticated }) {
     let [errorModal, setErrorModal] = useState(false);

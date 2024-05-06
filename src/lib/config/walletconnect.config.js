@@ -1,4 +1,5 @@
 const { TENANT } = require("../enum/tenant");
+
 const TENANT_WALLETCONNECT = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {

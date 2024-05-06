@@ -3,7 +3,6 @@ import LayoutFullscreen from "@/components/Layout/LayoutFullscreen";
 import { PAGE } from "@/lib/enum/route";
 import NotFoundPage from "@/components/NotFoundPage";
 import { getTenantConfig } from "@/lib/tenantHelper";
-import { tenantIndex } from "@/lib/utils";
 
 const {
     DESCRIPTION,
@@ -11,7 +10,7 @@ const {
     PAGES: {
         [PAGE.NotFound]: { title, url },
     },
-} = getTenantConfig(tenantIndex).seo;
+} = getTenantConfig().seo;
 
 export default function FourOhFour() {
     return (

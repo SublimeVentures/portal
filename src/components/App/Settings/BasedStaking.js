@@ -1,6 +1,3 @@
-import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
-import { ExternalLinks } from "@/routes";
-import { IconButton } from "@/components/Button/IconButton";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 export default function BasedStaking({ stakingProps }) {
