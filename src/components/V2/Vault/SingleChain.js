@@ -11,7 +11,7 @@ const SingleChain = ({ icon: Icon, active }) => {
                 <div className={cn("mx-1.5 flex items-center justify-center w-[31px] h-[31px] rounded-full bg-[#113651]", {
                     "bg-primary-light-gradient": active
                 })}>
-                    <Icon />
+                    <Icon className="p-2" />
                 </div>
             </div>
         </div>
