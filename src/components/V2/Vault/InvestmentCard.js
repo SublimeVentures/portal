@@ -2,7 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 export const SkeletonInvestmentCard = ({ variant = "default" }) => {
     return (
@@ -70,9 +70,9 @@ const InvestmentCard = ({ details }) => {
               </div>
           </dl>
 
-          <Button variant={isAvaiable ? "default" : "outline"} className="mt-7 w-full">
+          <Button variant={isAvaiable ? "accent" : "outline"} className="mt-7 w-full">
               <span>{isAvaiable ? "Claim" : "Details"}</span>
-              <ArrowTopRightIcon />
+              <ArrowIcon className="ml-2" />
           </Button>
 
           {participatedDate && <p className="mt-4 text-xxs font-light text-foreground/[.56] text-center">Participated {participatedDate}</p>}

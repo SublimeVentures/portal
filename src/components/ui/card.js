@@ -33,9 +33,9 @@ const Card = forwardRef(({ variant, border, className, ...props }, ref) => (
 Card.displayName = "Card";
 
 
-const CardIcon = forwardRef(({ icon: Icon, className, ...props }, ref) => (
+const CardIcon = forwardRef(({ icon: Icon, color = "white", className, ...props }, ref) => (
     <div ref={ref} className={cn("size-14 rounded-full flex justify-center items-center", className)} {...props}>
-        <Icon className='p-3.5 w-full h-full' />
+        <Icon className="text-inherit" />
     </div>
 ));
 

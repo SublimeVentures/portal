@@ -31,7 +31,7 @@ const IconButton = forwardRef(({ name = "", icon: Icon, variant, shape, classNam
     
     return (
         <Comp className={cn(iconButtonVariants({ variant, shape, className }))} ref={ref} {...props}>
-            <Icon className="p-2 w-full h-full" />
+            <Icon className="p-3 flex items-center justify-between" />
             <span className="sr-only">{name}</span>
         </Comp>
     )

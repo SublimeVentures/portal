@@ -2,7 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 export const SkeletonInvestmentCardMobile = ({ variant = "default" }) => {
     return (
@@ -71,7 +71,7 @@ const InvestmentCardMobile = ({ details }) => {
                     
                     <Button variant={isAvaiable ? "accent" : "outline"} className="w-full">
                         <span>{isAvaiable ? "Claim" : "Details"}</span>
-                        <ArrowTopRightIcon />
+                        <ArrowIcon className="ml-2" />
                     </Button>
             </div>
         </Card>

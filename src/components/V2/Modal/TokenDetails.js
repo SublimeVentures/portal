@@ -1,5 +1,3 @@
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -13,6 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import ArrowIcon from "@/assets/v2/svg/arrow.svg";
  
 const TokenDetails = () => {
   return (
@@ -84,7 +83,7 @@ const TokenDetails = () => {
                   <h3 className="mr-4 text-lg font-medium text-foreground">Timeline</h3>
                   <Button variant="link">
                       <span>See all</span>
-                      <ArrowTopRightIcon className="ml-1" />
+                      <ArrowIcon className="ml-1" />
                   </Button>
               </div>
 

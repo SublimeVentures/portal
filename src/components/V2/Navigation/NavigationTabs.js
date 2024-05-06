@@ -1,9 +1,12 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { SpeakerLoudIcon } from "@radix-ui/react-icons";
 
 import PAGE from "@/routes";
 import { IconButton } from "@/components/ui/icon-button";
+import NounStatisticsIcon from "@/assets/v2/svg/noun-statistics.svg";
+import NounVaultIcon from "@/assets/v2/svg/noun-vault.svg";
+import CourtIcon from "@/assets/v2/svg/court.svg";
+import DiamondIcon from "@/assets/v2/svg/diamond.svg";
 
 const NavigationTabs = () => {
     const router = useRouter();
@@ -27,24 +30,23 @@ const menu = [
     {
         name: "1",
         path: PAGE.App,
-        icon: SpeakerLoudIcon,
+        icon: NounStatisticsIcon,
     },
     {
         name: "2",
         path: "/",
-        icon: SpeakerLoudIcon,
+        icon: NounVaultIcon,
     },
     {
         name: "3",
         path: "/",
-        icon: SpeakerLoudIcon,
+        icon: CourtIcon,
     },
     {
         name: "4",
         path: "/",
-        icon: SpeakerLoudIcon,
+        icon: DiamondIcon,
     },
 ];
-
 
 export default NavigationTabs;

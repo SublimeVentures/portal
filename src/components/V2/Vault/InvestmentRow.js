@@ -2,7 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 export const SkeletonInvestmentRow = ({ variant = "default", border = "default" }) => {
     return (
@@ -73,8 +73,8 @@ const InvestmentRow = ({ details }) => {
                     </p>
                   
                   <Button variant={isAvaiable ? "accent" : "outline"}>
-                      <span className="mr-1">{isAvaiable ? "Claim" : "Details"}</span>
-                      <ArrowTopRightIcon />
+                      <span>{isAvaiable ? "Claim" : "Details"}</span>
+                      <ArrowIcon className="ml-2" />
                   </Button>
             </div>
         </Card>

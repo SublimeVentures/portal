@@ -1,9 +1,8 @@
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 const EmptyInvestments = () => {
     return (
@@ -25,7 +24,7 @@ const EmptyInvestments = () => {
                     <p className="text-md font-light text-foreground">BlockGames</p>
                 </div>
                 <p className="max-w-[20ch] text-2xl text-foreground italic text-center collap:text-left">Latest exclusive investment opportunity</p>
-                <IconButton name="Upgrade" shape="circle" variant="accent" icon={ArrowTopRightIcon} />
+                <IconButton name="Upgrade" shape="circle" variant="accent" icon={ArrowIcon} />
             </div>
         </Card>
     )

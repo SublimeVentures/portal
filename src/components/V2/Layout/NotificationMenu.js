@@ -8,9 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { BellIcon } from "@radix-ui/react-icons";
 import { IconButton } from "@/components/ui/icon-button";
 import SingleNotification from "@/components/V2/Layout/SingleNotification";
+import bellIcon from "@/assets/v2/svg/bell.svg";
 
 const NotificationMenu = () => {
   const notifications = mockedNotifications;
@@ -19,7 +19,7 @@ const NotificationMenu = () => {
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <IconButton icon={BellIcon} variant="transparent" shape="circle" />
+            <IconButton icon={bellIcon} variant="transparent" shape="circle" />
         </DropdownMenuTrigger>
         
         <DropdownMenuContent className="w-[315px]">
@@ -81,3 +81,4 @@ const mockedNotifications = [
 ]
 
 export default NotificationMenu;
+
