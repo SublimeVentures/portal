@@ -10,18 +10,25 @@ import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import { verifyID } from "@/lib/authHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { fetchPartners } from "@/fetchers/public.fecher";
-import { seoConfig } from "@/lib/seoConfig";
-import PAGE, { ExternalLinks } from "@/routes";
+import { ExternalLinks } from "@/routes";
+import { PAGE } from "@/lib/enum/route";
 import { tenantIndex } from "@/lib/utils";
 import Linker from "@/components/link";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
+const {
+    DESCRIPTION,
+    INFO: { og, twitter },
+    PAGES: {
+        [PAGE.Login]: { title, url },
+    },
+} = getTenantConfig(tenantIndex).seo;
+
 export default function LoginPartner({ selectedPartner, isAuthenticated }) {
-    const seo = seoConfig(PAGE.Login);
     const router = useRouter();
     const tilt = useRef(null);
     const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
@@ -90,13 +97,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
 
     return (
         <>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             <HeroBg subtitle={"powered by basedVC"} title={logo()} content={renderOptions()} />
             <LoginModal loginModalProps={loginData} />
         </>

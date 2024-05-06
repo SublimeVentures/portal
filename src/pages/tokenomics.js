@@ -1,9 +1,9 @@
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import HeroBg from "@/components/Home/HeroBg";
-import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import { tenantIndex } from "@/lib/utils";
 const TokenomicNeoTokyo = dynamic(() => import("@/components/Tokenomics/TokenomicsCitCap"), { ssr: true });
 const TokenomicKongzCapital = dynamic(() => import("@/components/Tokenomics/TokenomicsCyberKongz"), { ssr: true });
 
@@ -16,23 +16,23 @@ const TENANT_TOKENOMICS = () => {
             return <TokenomicKongzCapital />;
         }
         default: {
-            return <></>;
+            return null;
         }
     }
 };
 
-export default function Tokenomics() {
-    const seo = seoConfig(PAGE.Tokenomics);
+const {
+    DESCRIPTION,
+    INFO: { og, twitter },
+    PAGES: {
+        [PAGE.Tokenomics]: { title, url },
+    },
+} = getTenantConfig(tenantIndex).seo;
 
+export default function Tokenomics() {
     return (
         <>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             <HeroBg
                 subtitle={"our tokenomics"}
                 title={"how it works"}

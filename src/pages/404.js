@@ -1,21 +1,22 @@
 import { NextSeo } from "next-seo";
 import LayoutFullscreen from "@/components/Layout/LayoutFullscreen";
-import PAGE from "@/routes";
-import { seoConfig } from "@/lib/seoConfig";
+import { PAGE } from "@/lib/enum/route";
 import NotFoundPage from "@/components/NotFoundPage";
+import { getTenantConfig } from "@/lib/tenantHelper";
+import { tenantIndex } from "@/lib/utils";
+
+const {
+    DESCRIPTION,
+    INFO: { og, twitter },
+    PAGES: {
+        [PAGE.NotFound]: { title, url },
+    },
+} = getTenantConfig(tenantIndex).seo;
 
 export default function FourOhFour() {
-    const seo = seoConfig(PAGE.Landing);
-
     return (
         <div className={"max-h-screen overflow-hidden"}>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             <NotFoundPage />
         </div>
     );
