@@ -17,7 +17,7 @@ import { LuBanana } from "react-icons/lu";
 import { SiGamebanana } from "react-icons/si";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import IconNT from "@/assets/svg/NT.svg";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import ChangeNetwork from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress from "@/components/Navigation/ChangeAddress";
@@ -25,7 +25,10 @@ import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 import { cn } from "@/lib/cn";
 
-const { NAME } = getTenantConfig().seo;
+const {
+    seo: { NAME },
+    externalLinks,
+} = getTenantConfig();
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -92,13 +95,13 @@ export default function Sidebar({ session }) {
 
     const openDiscord = (e) => {
         e?.preventDefault();
-        window.open(ExternalLinks.DISCORD, "_blank");
+        window.open(externalLinks.DISCORD, "_blank");
         setIsMobileOpen(false);
     };
 
     const openNotion = (e) => {
         e?.preventDefault();
-        window.open(ExternalLinks.WIKI, "_blank");
+        window.open(externalLinks.WIKI, "_blank");
         setIsMobileOpen(false);
     };
 

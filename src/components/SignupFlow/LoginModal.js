@@ -2,9 +2,11 @@ import Image from "next/image";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { getConnectorImage } from "@/components/SignupFlow/helper";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 export default function LoginModal({ loginModalProps }) {
     const {
@@ -41,7 +43,7 @@ export default function LoginModal({ loginModalProps }) {
             <>
                 <div className="pb-10 font-accent">
                     Don't want to connect your cold wallet? You can delegate access!{" "}
-                    <Linker url={ExternalLinks.DELEGATED_ACCESS} />
+                    <Linker url={externalLinks.DELEGATED_ACCESS} />
                 </div>
                 <div className="flex flex-col gap-5 fullWidth">
                     {connectors

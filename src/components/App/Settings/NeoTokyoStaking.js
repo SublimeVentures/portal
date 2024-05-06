@@ -3,14 +3,16 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
+
+const { externalLinks } = getTenantConfig();
 
 export default function NeoTokyoStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
@@ -60,7 +62,7 @@ export default function NeoTokyoStaking({ stakingProps }) {
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>
                         IDENTITY
                     </div>
-                    <a href={ExternalLinks.STAKING} target={"_blank"} rel="noreferrer">
+                    <a href={externalLinks.STAKING} target={"_blank"} rel="noreferrer">
                         <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
                     </a>
                 </div>
@@ -123,7 +125,7 @@ export default function NeoTokyoStaking({ stakingProps }) {
                         type={ButtonTypes.BASE}
                         text={"GET BYTES"}
                         handler={() => {
-                            window.open(ExternalLinks.GETBYTES, "_blank");
+                            window.open(externalLinks.GETBYTES, "_blank");
                         }}
                     />
 

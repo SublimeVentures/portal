@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import LayoutApp from "@/components/Layout/LayoutApp";
-import routes, { ExternalLinks } from "@/routes";
+import routes from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import Linker from "@/components/link";
@@ -19,7 +19,10 @@ import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 const ErrorModal = dynamic(() => import("@/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
 const ClaimMysteryBoxModal = dynamic(() => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"), { ssr: false });
 
-const { NAME } = getTenantConfig().seo;
+const {
+    seo: { NAME },
+    externalLinks,
+} = getTenantConfig();
 
 const TENANT_MYSTERYBOX = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -175,7 +178,7 @@ export default function AppLootbox({ session }) {
                 </div>
 
                 <div className="absolute bottom-0 z-10">
-                    <Linker url={ExternalLinks.LOOTBOX} text="Learn more" />
+                    <Linker url={externalLinks.LOOTBOX} text="Learn more" />
                 </div>
             </div>
             <BuyMysteryBoxModal

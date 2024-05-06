@@ -15,7 +15,9 @@ import { getTenantConfig } from "@/lib/tenantHelper";
 
 const UserSummary = dynamic(() => import("@/components/App/Vault/UserSummary"), { ssr: false });
 
-const { NAME } = getTenantConfig().seo;
+const {
+    seo: { NAME },
+} = getTenantConfig();
 
 export default function AppVault({ session }) {
     const userId = session.userId;

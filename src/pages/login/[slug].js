@@ -10,7 +10,6 @@ import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import { verifyID } from "@/lib/authHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { fetchPartners } from "@/fetchers/public.fecher";
-import { ExternalLinks } from "@/routes";
 import { PAGE } from "@/lib/enum/route";
 import { tenantIndex } from "@/lib/utils";
 import Linker from "@/components/link";
@@ -21,12 +20,15 @@ import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const {
-    DESCRIPTION,
-    INFO: { og, twitter },
-    PAGES: {
-        [PAGE.Login]: { title, url },
+    seo: {
+        DESCRIPTION,
+        INFO: { og, twitter },
+        PAGES: {
+            [PAGE.Login]: { title, url },
+        },
     },
-} = getTenantConfig().seo;
+    externalLinks,
+} = getTenantConfig();
 
 export default function LoginPartner({ selectedPartner, isAuthenticated }) {
     const router = useRouter();
@@ -62,7 +64,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
                                 Unlock exclusive partner privileges by connecting a wallet with your Partner NFT. Ensure
                                 you hold the NFT or have been granted delegated access to journey forward.
                             </div>
-                            <Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
+                            <Linker url={externalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
                         </div>
                         <div className="flex flex-col gap-5 justify-end flex-1 pt-10 lg:mt-0">
                             <RoundButton
