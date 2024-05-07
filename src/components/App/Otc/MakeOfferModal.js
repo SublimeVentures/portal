@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Lottie from "lottie-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -19,6 +19,8 @@ import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { getTenantConfig } from "@/lib/tenantHelper";
+import useLocalStorage from "@/lib/hooks/useLocalStorage";
+import { millisecondsInHour } from "@/constants/datetime";
 
 const { externalLinks } = getTenantConfig();
 
@@ -46,6 +48,11 @@ const TABS = {
 export default function MakeOfferModal({ model, setter, props }) {
     const { currentMarket, allocation, refetchVault, refetchOffers } = props;
     const { getCurrencySettlement, account, activeOtcContract, network } = useEnvironmentContext();
+    const { getExpireData, setExpireData } = useLocalStorage();
+
+    const amountStorageKey = `otc.${currentMarket?.offerId}.amount`;
+    const priceStorageKey = `otc.${currentMarket?.offerId}.price`;
+    const currencyStorageKey = `otc.${currentMarket?.offerId}.currency`;
 
     const allocationMax = allocation ? allocation.invested - allocation.locked : 0;
 
@@ -63,6 +70,7 @@ export default function MakeOfferModal({ model, setter, props }) {
     const [multiplier, setMultiplier] = useState(1);
 
     const multiplierParsed = multiplier.toFixed(2);
+
     const allocationMin = 10;
     const priceMin = allocationMin;
     const statusCheck = statusAmount || statusPrice;
@@ -72,13 +80,16 @@ export default function MakeOfferModal({ model, setter, props }) {
     const textCopy = isSeller ? "sell" : "buy";
 
     useEffect(() => {
-        setSelectedCurrency(dropdownCurrencyOptions[0]);
-    }, [network.chainId, isSeller]);
+        setSelectedCurrency(getExpireData(currencyStorageKey) || dropdownCurrencyOptions[0]);
+    }, [network.chainId, isSeller, model]);
 
     const calcPrice = (multi, amt) => {
-        setPrice(Number(Number(amt * multi).toFixed(2)));
+        const newPrice = Number(Number(amt * multi).toFixed(2));
+        setExpireData(priceStorageKey, newPrice, new Date().getTime() + millisecondsInHour);
+        setPrice(newPrice);
     };
     const setAmountHandler = (amt) => {
+        setExpireData(amountStorageKey, amt, new Date().getTime() + millisecondsInHour);
         setAmount(amt);
         if (amt) calcPrice(multiplier, amt);
     };
@@ -94,13 +105,13 @@ export default function MakeOfferModal({ model, setter, props }) {
     };
 
     useEffect(() => {
-        if (isSeller && amount > allocationMax) setAmountHandler(allocationMax);
+        if (isSeller && amount > allocationMax) setAmountHandler(getExpireData(amountStorageKey) || allocationMax);
     }, [isSeller]);
 
     const { lock, text } = customLocks();
 
     const token = useGetToken(selectedCurrency?.contract);
-    console.log("selectedCurrency?.contract", selectedCurrency?.contract);
+
     const blockchainInteractionDataSELL = useMemo(() => {
         console.log("BIX :: BUTTON STATE locked - refresh");
         return {
@@ -172,10 +183,12 @@ export default function MakeOfferModal({ model, setter, props }) {
     const calcMulti = (price_) => {
         setMultiplier(Number(Number(price_) / Number(amount).toFixed(2)));
     };
-    const setPriceHandler = (amt) => {
-        setPrice(amt);
-        if (amt && amount) calcMulti(amt);
+    const setPriceHandler = (price) => {
+        setPrice(price);
+        setExpireData(priceStorageKey, price, new Date().getTime() + millisecondsInHour);
+        if (price && amount) calcMulti(price);
     };
+
     const setMultiplierHandler = (add) => {
         if (add) {
             setMultiplier((current) => {
@@ -193,6 +206,18 @@ export default function MakeOfferModal({ model, setter, props }) {
             });
         }
     };
+
+    const propSelectedCallback = useCallback(
+        (value) => {
+            setExpireData(currencyStorageKey, value, new Date().getTime() + millisecondsInHour);
+            setSelectedCurrency(value);
+        },
+        [currencyStorageKey, model],
+    );
+
+    const defaultSelected = dropdownCurrencyOptions.findIndex((el) => {
+        return el.symbol === selectedCurrency.symbol;
+    });
 
     const title = () => {
         return (
@@ -282,7 +307,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                     >
                         <div className={"pt-10"}>
                             <Input
-                                type={"number"}
+                                type="number"
                                 placeholder={`${titleCopy} allocation`}
                                 max={isSeller ? allocationMax : 1000000}
                                 min={allocationMin}
@@ -292,7 +317,8 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 light={true}
                                 full={true}
                                 dividable={10}
-                                after={"USD"}
+                                initialValue={getExpireData(amountStorageKey)}
+                                after="USD"
                             />
                         </div>
                         <div className={"py-10 flex flex-row justify-center items-center select-none"}>
@@ -318,8 +344,8 @@ export default function MakeOfferModal({ model, setter, props }) {
                         </div>
                         <div className={"flex flex-row w-full"}>
                             <Input
-                                type={"number"}
-                                placeholder={`For price`}
+                                type="number"
+                                placeholder="For price"
                                 min={priceMin}
                                 max={1000000}
                                 setStatus={setStatusPrice}
@@ -327,13 +353,15 @@ export default function MakeOfferModal({ model, setter, props }) {
                                 input={price}
                                 light={true}
                                 full={true}
-                                customCss={"flex-1"}
+                                initialValue={getExpireData(priceStorageKey)}
+                                customCss="flex-1"
                             />
                             <Dropdown
                                 options={dropdownCurrencyOptions}
                                 selector={"symbol"}
                                 classes={"!text-inherit blended"}
-                                propSelected={setSelectedCurrency}
+                                propSelected={propSelectedCallback}
+                                defaultSelected={defaultSelected}
                             />
                         </div>
                     </motion.div>

@@ -1,4 +1,3 @@
-import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
 import { useMemo, useState, useEffect } from "react";
 import Lottie from "lottie-react";
@@ -13,6 +12,7 @@ import { useInvestContext } from "@/components/App/Offer/InvestContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
+import CustomFlipClockCountdown from "@/components/FlipClockCountdown";
 import { getTenantConfig } from "@/lib/tenantHelper";
 
 const { externalLinks } = getTenantConfig();
@@ -131,17 +131,17 @@ export default function InvestModal({ model, setter, investModalProps }) {
     };
     const contentSteps = () => {
         return (
-            <div className={`flex flex-1 flex-col`}>
+            <div className="flex flex-1 flex-col">
                 <div>
                     You have successfully booked <span className="text-gold font-medium">${amountLocale}</span>{" "}
                     allocation in <span className="font-bold text-gold ">{offer.name}</span>.
                 </div>
                 <div className="pt-10 pb-5 flex flex-col items-center">
                     <div className="pb-2">Complete transfer in the next</div>
-                    <FlipClockCountdown
+                    <CustomFlipClockCountdown
                         className="flip-clock"
                         onComplete={() => bookingExpire()}
-                        to={moment.unix(bookingDetails.expires)}
+                        to={moment.unix(bookingDetails.expires).valueOf()}
                         labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
                         labelStyle={{
                             fontSize: 10,

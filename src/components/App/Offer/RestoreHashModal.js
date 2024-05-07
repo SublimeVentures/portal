@@ -1,8 +1,8 @@
 import moment from "moment";
-import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import GenericModal from "@/components/Modal/GenericModal";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
+import CustomFlipClockCountdown from "@/components/FlipClockCountdown";
 
 export default function RestoreHashModal({ model, setter, restoreModalProps }) {
     const { allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew } = restoreModalProps;
@@ -33,10 +33,10 @@ export default function RestoreHashModal({ model, setter, restoreModalProps }) {
                 </div>
                 <div className="flex flex-col justify-center items-center gap-2">
                     <div>Old booking is going to expire in</div>
-                    <FlipClockCountdown
+                    <CustomFlipClockCountdown
                         className="flip-clock"
                         onComplete={() => bookingExpire()}
-                        to={moment.unix(bookingDetails?.expires)}
+                        to={moment.unix(bookingDetails?.expires).valueOf()}
                         labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
                         labelStyle={{
                             fontSize: 10,
