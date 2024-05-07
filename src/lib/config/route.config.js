@@ -38,7 +38,7 @@ const ExternalLinksCitCap = {
     APPLY: "https://tally.so/r/wLPg0l",
 
     OTC: "https://info.citizencapital.fund/OTC-08ce38805290416eb073b139bd54e3f7",
-    STAKING: "https://info.citizencapital.fund/BYTES-Staking-Requirement-f1621bfe909b41d797fd77ca784a8fa0",
+    STAKING: "https://info.citizencapital.fund/overview/how-to-join",
 };
 
 const ExternalLinksCyberKongz = {

@@ -68,7 +68,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                         IDENTITY
                     </div>
                     <a href={externalLinks.STAKING} target={"_blank"} rel="noreferrer">
-                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
+                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo className="w-8 h-8" />} noBorder={true} />
                     </a>
                 </div>
                 <div className="detailRow">

@@ -4,9 +4,9 @@ export default function BasedStaking({ stakingProps }) {
     const { session } = stakingProps;
     return (
         <div className={`rounded-xl boxshadow relative offerWrap flex flex-1 max-w-[600px]`}>
-            <div className={` rounded-xl relative bg-navy-accent flex flex-1 flex-col p-5 `}>
+            <div className="rounded-xl relative bg-navy-accent flex flex-1 flex-col p-5">
                 <div className="font-bold text-2xl flex items-center glowNormal mb-4">
-                    <div className={"flex flex-1"}>IDENTITY</div>
+                    <div className="flex flex-1">IDENTITY</div>
                 </div>
                 <div className="detailRow">
                     <p>ACCOUNT ID</p>
