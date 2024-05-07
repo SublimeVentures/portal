@@ -1,7 +1,8 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 const TENANTS_ERROR = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -16,7 +17,7 @@ const TENANTS_ERROR = () => {
                         </ul>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -32,7 +33,7 @@ const TENANTS_ERROR = () => {
                         <div className={"text-app-error"}>Neo Tokyo Citizen NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -45,7 +46,7 @@ const TENANTS_ERROR = () => {
                         <div className={"text-app-error"}>CyberKongz NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -58,7 +59,7 @@ const TENANTS_ERROR = () => {
                         <div className={"text-app-error"}>BAYC / MAYC NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );

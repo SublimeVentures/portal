@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
@@ -13,7 +12,7 @@ import { getTenantConfig } from "@/lib/tenantHelper";
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
-const { staking } = getTenantConfig();
+const { staking, externalLinks } = getTenantConfig();
 
 export default function BAYCStaking({ stakingProps }) {
     const { session, account, stakingCurrency, userWallets } = stakingProps;
@@ -124,7 +123,7 @@ export default function BAYCStaking({ stakingProps }) {
                         type={ButtonTypes.BASE}
                         text={"GET APE"}
                         handler={() => {
-                            window.open(ExternalLinks.GET_APE, "_blank");
+                            window.open(externalLinks.GET_APE, "_blank");
                         }}
                     />
 
