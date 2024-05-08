@@ -20,7 +20,8 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
     };
 
     const calcPrice = (multi, amt) => {
-        const value = ((amt * multi - amt) * 95) / 100;
+        const coefficient = multi * 0.95 * 0.9;
+        const value = amt * coefficient;
 
         setPrice(Number(Number(value > 0 ? value : 0).toFixed(2)));
     };
@@ -60,7 +61,6 @@ export default function CalculateModal({ model, setter, calculateModalProps }) {
                         placeholder={"Buying allocation"}
                         max={allocationData.allocationUser_max}
                         min={allocationData.allocationUser_min}
-                        setStatus={setStatusAmount}
                         setInput={setAmountHandler}
                         input={amount}
                         light={true}
