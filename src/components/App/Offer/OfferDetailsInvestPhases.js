@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment, useCallback } from "react";
 import { Transition } from "@headlessui/react";
 import debounce from "lodash.debounce";
 import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
@@ -25,6 +25,8 @@ import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
 import { TENANT } from "@/lib/tenantHelper";
+import useLocalStorage from "@/lib/hooks/useLocalStorage";
+import { millisecondsInHour } from "@/constants/datetime";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -42,8 +44,12 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         premiumData,
         refetchPremiumData,
     } = paramsInvestPhase;
+    const amountStorageKey = `offer.${offer.id}.amount`;
+    const currencyStorageKey = `offer.${offer.id}.currency`;
+
     const { network, getCurrencySettlement } = useEnvironmentContext();
     const { clearBooking, bookingDetails, setBooking, getSavedBooking } = useInvestContext();
+    const { setExpireData, getExpireData } = useLocalStorage();
 
     const [isInvestModal, setInvestModal] = useState(false);
     const [isCalculateModal, setCalculateModal] = useState(false);
@@ -100,6 +106,8 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
             }
 
             setInvestmentAmountFormatted(formatted);
+
+            setExpireData(amountStorageKey, formatted, new Date().getTime() + millisecondsInHour);
         } catch (error) {
             // Error handling: do nothing or log the error if needed
             console.error("Error in setValue:", error);
@@ -225,12 +233,24 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         setButtonLoading(false);
     };
 
+    const propSelectedCallback = useCallback(
+        (value) => {
+            setExpireData(currencyStorageKey, value, new Date().getTime() + millisecondsInHour);
+            setSelectedCurrency(value);
+        },
+        [currencyStorageKey],
+    );
+
     useEffect(() => {
-        setSelectedCurrency(dropdownCurrencyOptions[0]);
+        setSelectedCurrency(getExpireData(currencyStorageKey) || dropdownCurrencyOptions[0]);
     }, [network?.chainId]);
 
     useEffect(() => {
-        if (allocationData?.allocationUser_min) {
+        const cachedData = getExpireData(amountStorageKey);
+
+        if (cachedData) {
+            setValue(cachedData);
+        } else if (allocationData?.allocationUser_min) {
             setValue(allocationData.allocationUser_min);
         } else {
             setValue(offer.alloMin);
@@ -316,6 +336,10 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         afterInvestmentCleanup,
     };
 
+    const defaultSelected = dropdownCurrencyOptions.findIndex((el) => {
+        return el.symbol === selectedCurrency.symbol;
+    });
+
     return (
         <div className="flex flex-1 flex-col items-center justify-center relative">
             <div className={"absolute right-5 top-5"}>
@@ -386,9 +410,10 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                     </div>
                     <Dropdown
                         options={dropdownCurrencyOptions}
-                        selector={"symbol"}
-                        classes={"customSize"}
-                        propSelected={setSelectedCurrency}
+                        selector="symbol"
+                        classes="customSize"
+                        propSelected={propSelectedCallback}
+                        defaultSelected={defaultSelected}
                     />
                     <Transition appear show={showInputInfo} as={Fragment}>
                         <Transition.Child
