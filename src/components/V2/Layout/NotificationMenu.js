@@ -19,14 +19,14 @@ const NotificationMenu = () => {
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <IconButton icon={bellIcon} variant="transparent" shape="circle" />
+            <IconButton icon={bellIcon} variant="transparent" shape="circle" className="outline-none" />
         </DropdownMenuTrigger>
         
-        <DropdownMenuContent className="w-[315px]">
-            <div className="px-8">
+        <DropdownMenuContent className="w-screen rounded-b-lg sm:w-full sm:max-w-[315px] sm:rounded-b">
+            <div className="px-8 flex justify-between sm:flex-col">
                 <DropdownMenuLabel>Notifications</DropdownMenuLabel>
 
-                <div className="pb-4 flex items-center">
+                <div className="flex items-center">
                     <h3 className="mr-2 text-lg font-medium text-foreground">
                         New {" "}
                         <span className="font-light">({newCount})</span>

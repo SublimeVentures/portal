@@ -1,41 +1,12 @@
-@layer base {
-  :root {
-      // Colors
-      --foreground-color: 0, 0%, 100%;
-      --primary-color: 188, 91%, 38%;
-      --accent-color: 36, 65%, 71%;
-      --destructive-color: 0, 74%, 55%;
-
-      // Font family
-      --font-poppins: 'Poppins',
-      
-      // Font size
-      --text-xxs: 11px;
-      --text-xs: 12px;
-      --text-sm: 13px;
-      --text-md: 14px;
-      --text-lg: 16px;
-      --text-xl: 17px;
-      --text-2xl: 18px;
-      --text-3xl: 20px;
-      --text-4xl: 21px;
-      --text-5xl: 22px;
-      --text-6xl: 23px;
-      --text-7xl: 26px;
-      --text-8xl: 28px;
-      --text-9xl: 29px;
-      --text-10xl: 34px;
-      --text-11xl: 39px;
-      
-      // Font weight
-      --font-light: 300;
-      --font-regular: 400;
-      --font-medium: 500;
-      --font-semibold: 600;
-      --font-bold: 700;
-      
-      --radius: 5px;
-      --radius-lg: 64px;
+@layer utilities {
+  .transition-base {
+    @apply transition-all duration-500 ease-in-out;
+  }
+  .transition-hover {
+    @apply transition-all duration-100 ease-in-out;
+  }
+  .overlay {
+    @apply fixed inset-0 z-50 bg-navy-700/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
 }
 
@@ -55,14 +26,119 @@
   background: #082030;
 }
 
-// @TODO: Refactor: The following styles are for gradient backgrounds and border gradients.
-.cardGradient {
-  background: transparent linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%) 0% 0% no-repeat padding-box;
+
+// Source: https://medium.com/@dave_lunny/animating-css-gradients-using-only-css-d2fd7671e759
+.card-gradient {
+  background-size: 100%;
+  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
+  position: relative;
+  z-index: 100;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 5px;
+    padding: 2px;
+    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 }
 
-.cardGradientLight {
-  background: transparent linear-gradient(324deg, hsl(var(--primary-color)) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
+.card-background {
+  background-size: 100%;
+  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
+  position: relative;
+  z-index: 100;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 5px;
+    padding: 2px;
+    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  &::before {
+    background-image: linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%);
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: -100;
+    transition: opacity 200ms;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 1;
+    }
+
+    &::after {
+      background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+    }
+  }
 }
+
+.card-background-accent {
+  background-size: 100%;
+  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
+  position: relative;
+  z-index: 100;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 5px;
+    padding: 2px;
+    background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+
+
+
+
+
+// @TODO: Refactor: The following styles are for gradient backgrounds and border gradients.
+// .cardGradient {
+//   background: transparent linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%) 0% 0% no-repeat padding-box;
+//   // transition: transition-all duration-500 ease-in-out;
+//   transition: all 0.5s ease-in-out; 
+
+//   &:hover, &:focus, &:active {
+//     background: transparent linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;  
+//     transition: all 0.5s ease-in-out; 
+//   }
+// }
+
+// .cardGradient:hover {
+//   background: transparent linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
+// }
+
+
+
+
+
+// .cardGradientLight {
+//   background: transparent linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
+// }
 
 .cardBorderPrimary {
   position: relative;
@@ -73,10 +149,10 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    border-radius: var(--radius); 
+    border-radius: 5px; 
     padding: 2px; 
     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
@@ -91,10 +167,10 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    border-radius: var(--radius); 
+    border-radius: 5px; 
     padding: 2px;
-    background: linear-gradient(131deg, transparent 0%, hsl(var(--accent-color)) 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude; 
   }
@@ -105,17 +181,17 @@
 }
 
 .cardBorderPrimary-dialog {
-  border-radius: var(--radius);
+  border-radius: 5px;
 
   &::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
-    border-radius: var(--radius); 
+    border-radius: 5px; 
     padding: 2px; 
-    background: linear-gradient(231deg, transparent 0%, #099FB7 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    background: linear-gradient(231deg, transparent 0%, #099FB7 0%, transparent 55%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
@@ -130,11 +206,173 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    border-radius: var(--radius-lg);
+    border-radius: 64px;
     padding: 2px; 
     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 25%);
-    -webkit-mask: linear-gradient(hsl(var(--foreground-color)) 0 0) content-box, linear-gradient(hsl(var(--foreground-color)) 0 0);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
 }
+
+// .card-background {
+//   background-size: 100%;
+//   background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
+//   position: relative;
+//   z-index: 100;
+
+//   &::before {
+//     background-image: linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%);
+//     content: "";
+//     display: block;
+//     height: 100%;
+//     position: absolute;
+//     top: 0; left: 0;
+//     opacity: 0;
+//     width: 100%;
+//     z-index: -100;
+//     transition: opacity 200ms;
+//   }
+
+//   &:hover {
+//     &::before {
+//       opacity: 1;
+//     }
+//   }
+// }
+
+// .card-border {
+//   position: relative;
+//   z-index: 1;
+
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     z-index: -1;
+//     border-radius: 5px; 
+//     padding: 2px; 
+//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
+//     -webkit-mask-composite: xor;
+//     mask-composite: exclude;
+//   }
+// }
+
+// .card-border {
+//   position: relative;
+//   z-index: 1;
+
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     z-index: -1;
+//     border-radius: 5px; 
+//     padding: 2px; 
+//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
+//     -webkit-mask-composite: xor;
+//     mask-composite: exclude;
+//   }
+// }
+
+// .card-border-accent {
+//   position: relative;
+//   z-index: 1;
+
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     z-index: -1;
+//     border-radius: 5px; 
+//     padding: 2px;
+//     background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+//     -webkit-mask-composite: xor;
+//     mask-composite: exclude; 
+//   }
+// }
+
+// .card-border {
+//   position: relative;
+//   z-index: 1;
+
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     z-index: -1;
+//     border-radius: 5px;
+//     padding: 2px;
+//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
+//     -webkit-mask-composite: xor;
+//     mask-composite: exclude;
+//   }
+// }
+
+// .card-border-accent {
+//   position: relative;
+//   z-index: 1;
+
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     z-index: -1;
+//     border-radius: 5px;
+//     padding: 2px;
+//     background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+//     -webkit-mask-composite: xor;
+//     mask-composite: exclude;
+//   }
+// }
+
+// .card-background {
+//   background-size: 100%;
+//   background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
+//   position: relative;
+//   z-index: 100;
+
+//   // position: relative;
+//   // z-index: 1;
+
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     z-index: -1;
+//     border-radius: 5px;
+//     padding: 2px;
+//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
+//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+//     -webkit-mask-composite: xor;
+//     mask-composite: exclude;
+//   }
+
+//   &::before {
+//     background-image: linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%);
+//     content: "";
+//     display: block;
+//     height: 100%;
+//     position: absolute;
+//     top: 0; left: 0;
+//     opacity: 0;
+//     width: 100%;
+//     z-index: -100;
+//     transition: opacity 200ms;
+//   }
+
+//   &:hover {
+//     &::before {
+//       opacity: 1;
+//     }
+
+//     .card-border-test::after {
+//       background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+//     }
+//   }
+// }

@@ -25,12 +25,11 @@ const avatarVariants = cva(
     },
 );
 
-
-const Avatar = forwardRef(({ variant, size, className, ...props }, ref) => (
+const AvatarRoot = forwardRef(({ variant, size, className, ...props }, ref) => (
     <AvatarPrimitive.Root ref={ref} className={cn(avatarVariants({ variant, size, className }))} {...props} />
 ));
 
-Avatar.displayName = AvatarPrimitive.Root.displayName;
+AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
 const AvatarImage = forwardRef(({ className, ...props }, ref) => (
     <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full", className)} {...props} />
@@ -38,9 +37,10 @@ const AvatarImage = forwardRef(({ className, ...props }, ref) => (
 
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
-const AvatarFallback = forwardRef(({ className, ...props }, ref) => (
-    <AvatarPrimitive.Fallback
+const AvatarFallback = forwardRef(({ fallback, className, ...props }, ref) => (
+    <AvatarPrimitive.Image
         ref={ref}
+        src={fallback}
         className={cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className)}
         {...props}
     />
@@ -48,4 +48,13 @@ const AvatarFallback = forwardRef(({ className, ...props }, ref) => (
 
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-export { Avatar, AvatarImage, AvatarFallback };
+const Avatar = forwardRef(({ session, ...props }, ref) => (
+    <AvatarRoot ref={ref} {...props}>
+        <AvatarImage src={session?.img} />
+        <AvatarFallback fallback={session?.img_fallback} />
+    </AvatarRoot>
+));
+
+Avatar.displayName = AvatarPrimitive.Avatar.displayName;
+
+export { Avatar, AvatarRoot, AvatarImage, AvatarFallback };

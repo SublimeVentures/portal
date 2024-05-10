@@ -1,29 +1,33 @@
 import { useState, useEffect } from 'react';
 import Link from "next/link";
 import debounce from 'lodash.debounce';
-import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { IconButton } from "@/components/ui/icon-button";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useOutsideClick, useEscapeKey } from '@/hooks';
+import PAGE, { ExternalLinks } from "@/routes";
 import { cn } from '@/lib/cn';
+import { shortenAddress } from "@/lib/v2/helpers"
+import tailwindConfig from '@/../tailwind/config.core'
 
+// change
+import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { IoBookOutline as IconWiki } from "react-icons/io5";
 import { FaDiscord as IconDiscord } from "react-icons/fa";
-import PAGE, { ExternalLinks } from "@/routes";
 
 const MobileMenu = () => {
     const { environmentCleanup } = useEnvironmentContext();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [walletAddress] = useState('0x1234567890abcdef1234567890abcdef12345678'); // Mock address
 
     const menuRef = useOutsideClick(() => setIsMobileMenuOpen(false))
     useEscapeKey(() => setIsMobileMenuOpen(false))
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth > 768 && isMobileMenuOpen) setIsMobileMenuOpen(false)
+            if (window.innerWidth > parseInt(tailwindConfig.theme.extend.screens.collap) && isMobileMenuOpen) setIsMobileMenuOpen(false)
         }
 
         window.addEventListener('resize', debounce(handleResize, 500))
@@ -74,7 +78,7 @@ const MobileMenu = () => {
                     </nav>
 
                     <div className="m-6 flex flex-col items-center">
-                        <h2 className="text-xxs font-light text-[#AEB3B8]">Community</h2>
+                        <h2 className="text-xxs font-light text-gray-100">Community</h2>
                         <ul className="flex items-center gap-4">
                             {socialMenu.map(({ icon, name, path }) => (
                                 <li key={name} className="pt-4">
@@ -96,7 +100,7 @@ const MobileMenu = () => {
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <Button className="w-full" variant="secondary" onClick={handleLogout}>Logout</Button>
-                    <p className="text-md text-foreground">123..456</p>
+                    <p className="text-md text-foreground">{shortenAddress(walletAddress)}</p>
                 </div>
             </div>
         </div>

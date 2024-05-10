@@ -1,41 +1,36 @@
 import { forwardRef } from "react";
 import { cva } from 'class-variance-authority';
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 const cardVariants = cva(
-    "py-3.5 px-5 relative rounded",
+    "group/card py-3.5 px-5 relative rounded transition-base cursor-pointer overflow-hidden",
     {
         variants: {
             variant: {
-                default: "cardGradient cardBorderPrimary",
-                light: "cardGradientLight cardBorderAccent",
+                default: "card-background",
+                accent: "card-background-accent",
+                static: "card-gradient",
                 none: "",
-                dark: "cardGradientDark",
             },
-            border: {
-                default: "cardBorderPrimary",
-                accent: "cardBorderAccent",
-                none: "",
-            }
         },
         defaultVariants: {
             variant: 'default',
             border: 'default',
-          },
+        },
     }
 )
 
 const Card = forwardRef(({ variant, border, className, ...props }, ref) => (
-    <div ref={ref} className={cn(cardVariants({ variant, border, className }))} {...props} />
+    <div ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />
 ));
 
 Card.displayName = "Card";
 
-
 const CardIcon = forwardRef(({ icon: Icon, color = "white", className, ...props }, ref) => (
     <div ref={ref} className={cn("size-14 rounded-full flex justify-center items-center", className)} {...props}>
-        <Icon className="text-inherit" />
+        <Icon className="p-3 text-inherit" />
     </div>
 ));
 
@@ -53,4 +48,11 @@ const CardDescription = forwardRef(({ className, ...props }, ref) => (
 
 CardDescription.displayName = "CardDescription";
 
-export { Card, CardIcon, CardTitle, CardDescription };
+const CardButton = forwardRef(({ className, ...props }, ref) => (
+    <Button ref={ref} variant="outline" className={cn("group-hover/card:bg-accent group-hover/card:border-transparent", className)} {...props} />
+));
+
+CardButton.displayName = "CardButton";
+
+
+export { Card, CardIcon, CardTitle, CardDescription, CardButton };

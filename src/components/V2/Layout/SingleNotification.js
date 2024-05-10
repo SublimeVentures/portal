@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const SingleNotification = ({ content, date, avatar, seen }) => (
-  <div className="flex items-center justify-between">
+  <div className="relative w-full flex items-center justify-between">
       <div className="flex items-center">
           <Avatar>
               <AvatarImage src={avatar} />
@@ -13,7 +13,7 @@ const SingleNotification = ({ content, date, avatar, seen }) => (
           </div>
       </div>
 
-      {!seen && <div className="h-1.5 w-1.5 bg-accent rounded-full shrink-0" />}
+      {!seen && <div className="absolute -right-2 h-1.5 w-1.5 bg-accent rounded-full shrink-0" />}
   </div>
 );
 

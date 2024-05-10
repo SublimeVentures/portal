@@ -1,10 +1,10 @@
 import { forwardRef } from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { cva } from "class-variance-authority";
 
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
+import CrossIcon from "@/assets/v2/svg/cross.svg";
 
 const Sheet = SheetPrimitive.Root;
 
@@ -14,16 +14,7 @@ const SheetClose = SheetPrimitive.Close;
 
 const SheetPortal = SheetPrimitive.Portal;
 
-const SheetOverlay = forwardRef(({ className, ...props }, ref) => (
-    <SheetPrimitive.Overlay
-        className={cn(
-            "fixed inset-0 z-50 bg-[#0A1728]/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-            className
-        )}
-        {...props}
-        ref={ref}
-    />
-))
+const SheetOverlay = forwardRef(({ className, ...props }, ref) => <SheetPrimitive.Overlay className={cn("overlay", className)} {...props} ref={ref} />)
 
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
@@ -52,8 +43,8 @@ const SheetContent = forwardRef(({ side = "right", className, children, ...props
             className={cn(sheetVariants({ side }), className)}
             {...props}
         >
-            <SheetPrimitive.Close className="absolute z-50 right-[38px] top-[46px] rounded ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-              <IconButton name="Close" icon={Cross2Icon} />
+            <SheetPrimitive.Close className="absolute z-50 right-9 top-11 rounded ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+              <IconButton name="Close" icon={CrossIcon} />
             </SheetPrimitive.Close>
             {children}
         </SheetPrimitive.Content>
@@ -65,8 +56,8 @@ SheetContent.displayName = SheetPrimitive.Content.displayName
 const SheetHeader = ({ className, ...props }) => (
     <div className="gradient-border-sheet-header">
         <div className="m-[2px] bg-sheet-pattern bg-cover bg-center bg-no-repeat rounded-tl-lg">
-            <div className="m-[2px] rounded-tl-lg bg-[#051626]/[.7]">
-                <div className={cn("relative pb-[27px] pt-[46px] px-[38px] flex flex-col items-center text-center", className)} {...props} />
+            <div className="m-[2px] rounded-tl-lg bg-gray-400/[.7]">
+                <div className={cn("relative pb-7 pt-11 px-9 flex flex-col items-center text-center", className)} {...props} />
             </div>
         </div>
     </div>

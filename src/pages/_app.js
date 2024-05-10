@@ -1,4 +1,3 @@
-import { Poppins } from "next/font/google";
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { config } from "@/lib/wagmi";
@@ -33,19 +32,12 @@ switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     }
 }
 
-const poppins = Poppins({
-    subsets: ['latin'],
-    display: 'swap',
-    variable: '--font-poppins',
-    weight: ['300', '400', '500', '600', '700']
-});
-
 export default function App({ Component, pageProps: { ...pageProps } }) {
     const { environmentData } = pageProps;
     const renderWithLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
     return (
-        <div className={poppins.className}>
+        <>
             <ClientErrorBoundary>
                 <WagmiProvider config={config}>
                     <QueryClientProvider client={queryClient}>
@@ -58,6 +50,6 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                 </WagmiProvider>
             </ClientErrorBoundary>
             <Gtag />
-        </div>
+        </>
     );
 }

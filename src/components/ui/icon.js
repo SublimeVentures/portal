@@ -8,8 +8,8 @@ const IconVariants = cva(
     {
         variants: {
             color: {
-                default: "text-[#09A0B8] bg-[#09A0B8]/[.1]",
-                accent: "text-[#E5BE83] bg-[#E5BE83]/[.1]",
+                default: "text-navy-50 bg-navy-50/[.1]",
+                accent: "text-accent bg-accent/[.1]",
                 destructive: "text-destructive bg-destructive/[.1]",
             },
             size: {
