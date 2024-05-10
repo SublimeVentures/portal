@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 const cardVariants = cva(
-    "group/card py-3.5 px-5 relative rounded transition-base cursor-pointer overflow-hidden",
+    "group/card py-3.5 px-5 relative rounded transition-base cursor-pointer",
     {
         variants: {
             variant: {
                 default: "card-background",
-                accent: "card-background-accent",
+                accent: "card-gradient-accent",
                 static: "card-gradient",
                 none: "",
             },
@@ -30,7 +30,7 @@ Card.displayName = "Card";
 
 const CardIcon = forwardRef(({ icon: Icon, color = "white", className, ...props }, ref) => (
     <div ref={ref} className={cn("size-14 rounded-full flex justify-center items-center", className)} {...props}>
-        <Icon className="p-3 text-inherit" />
+        <Icon className="p-4 text-inherit" />
     </div>
 ));
 
@@ -43,7 +43,7 @@ const CardTitle = forwardRef(({ className, ...props }, ref) => (
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = forwardRef(({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-foreground",className)} {...props} />
+    <p ref={ref} className={cn("text-foreground", className)} {...props} />
 ));
 
 CardDescription.displayName = "CardDescription";

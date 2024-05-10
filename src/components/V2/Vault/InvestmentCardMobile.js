@@ -2,6 +2,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle, CardButton } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import AlertDestructive from "@/components/V2/Layout/AlertDestructive";
 import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 export const SkeletonInvestmentCardMobile = () => {
@@ -35,12 +36,8 @@ export const SkeletonInvestmentCardMobile = () => {
 
 export const ErrorInvestmentCardMobile = () => {
     return (
-        <Card className="py-8 px-5">
-            <div className="py-4 flex items-center">
-                <div className="h-6 w-6 flex items-center justify-center shrink-0 bg-destructive/[.25] text-destructive rounded-full">!</div>
-                <p className="ml-4 text-lg font-light text-destructive">Unable to fetch data. Please check your internet connection and try again. If the problem persists, contact support for further assistance.</p>
-            </div>
-            <Button variant="destructive" className="w-full">Refetch</Button>
+        <Card>
+            <AlertDestructive variant="column" actionFn={() => {}} />
         </Card>
     );
 };

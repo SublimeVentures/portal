@@ -5,10 +5,11 @@ module.exports = {
         extend: {
             colors: {
                 foreground: "hsla(0, 0%, 100%)",
-                destructive: "hsla(0, 74%, 55%)",
                 primary: "hsla(188, 91%, 38%)",
                 accent: "hsla(36, 65%, 71%)",
                 "accent-light": "hsla(34, 97%, 72%)",
+                destructive: "hsla(0, 74%, 55%)",
+                "destructive-dark": "hsla(324, 29%, 19%)",
             
                 "navy-50": "hsla(188, 91%, 38%)", // #09A0B8
                 "navy-100": "hsla(188, 91%, 37%)", // #099DB5
@@ -63,7 +64,6 @@ module.exports = {
                 "primary-dark-gradient": `linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%)`,
                 "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
                 "sheet-gradient": `linear-gradient(151deg, #051626 0%, #1A3754 49%, #051626 100%)`,
-                "dialog-gradient": `linear-gradient(102deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)`,
                 "sidebar-gradient": `linear-gradient(333deg, #0A1728 0%, #082536 100%)`,
 
                 "upgrade-to-premium-pattern": "url('/img/upgrade-to-premium-bg.png')",

@@ -1,9 +1,8 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle, CardButton } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import AlertDestructive from "@/components/v2/Layout/AlertDestructive";
 import ArrowIcon from "@/assets/v2/svg/arrow.svg";
-import ExclamationMark from "@/assets/v2/svg/exclamation-mark.svg";
 
 export const SkeletonInvestmentRow = () => {
     return (
@@ -39,14 +38,7 @@ export const SkeletonInvestmentRow = () => {
 export const ErrorInvestmentRow = () => {
     return (
         <Card className="h-max py-5 px-8 flex items-center justify-between">
-            <div className="flex items-center">
-                <div className="size-12 flex items-center justify-center shrink-0 bg-destructive text-white rounded-full">
-                    <ExclamationMark className="p-3" />
-                </div>
-                <p className="ml-4 p-2 rounded max-w-prose bg-destructive/[.25] text-destructive">Unable to fetch data. Please check your internet connection and try again. If the problem persists, contact support for further assistance.</p>
-            </div>
-
-            <Button variant="destructive">Refetch</Button>
+            <AlertDestructive />
         </Card>
     )
 }

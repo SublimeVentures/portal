@@ -26,8 +26,6 @@
   background: #082030;
 }
 
-
-// Source: https://medium.com/@dave_lunny/animating-css-gradients-using-only-css-d2fd7671e759
 .card-gradient {
   background-size: 100%;
   background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
@@ -48,6 +46,27 @@
   }
 }
 
+.card-gradient-accent {
+  background-size: 100%;
+  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
+  position: relative;
+  z-index: 100;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 5px;
+    padding: 2px;
+    background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+// Source: https://medium.com/@dave_lunny/animating-css-gradients-using-only-css-d2fd7671e759
 .card-background {
   background-size: 100%;
   background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
@@ -91,96 +110,9 @@
   }
 }
 
-.card-background-accent {
+.dialog-gradient {
   background-size: 100%;
-  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-  position: relative;
-  z-index: 100;
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 5px;
-    padding: 2px;
-    background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
-
-
-
-
-
-// @TODO: Refactor: The following styles are for gradient backgrounds and border gradients.
-// .cardGradient {
-//   background: transparent linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%) 0% 0% no-repeat padding-box;
-//   // transition: transition-all duration-500 ease-in-out;
-//   transition: all 0.5s ease-in-out; 
-
-//   &:hover, &:focus, &:active {
-//     background: transparent linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;  
-//     transition: all 0.5s ease-in-out; 
-//   }
-// }
-
-// .cardGradient:hover {
-//   background: transparent linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
-// }
-
-
-
-
-
-// .cardGradientLight {
-//   background: transparent linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
-// }
-
-.cardBorderPrimary {
-  position: relative;
-  z-index: 1;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 5px; 
-    padding: 2px; 
-    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
-.cardBorderAccent {
-  position: relative;
-  z-index: 1;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 5px; 
-    padding: 2px;
-    background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude; 
-  }
-}
-
-.cardGradientDark {
-  background: transparent linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%) 0% 0% no-repeat padding-box;
-}
-
-.cardBorderPrimary-dialog {
+  background-image: linear-gradient(102deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%);
   border-radius: 5px;
 
   &::before {
@@ -214,165 +146,3 @@
     mask-composite: exclude;
   }
 }
-
-// .card-background {
-//   background-size: 100%;
-//   background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-//   position: relative;
-//   z-index: 100;
-
-//   &::before {
-//     background-image: linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%);
-//     content: "";
-//     display: block;
-//     height: 100%;
-//     position: absolute;
-//     top: 0; left: 0;
-//     opacity: 0;
-//     width: 100%;
-//     z-index: -100;
-//     transition: opacity 200ms;
-//   }
-
-//   &:hover {
-//     &::before {
-//       opacity: 1;
-//     }
-//   }
-// }
-
-// .card-border {
-//   position: relative;
-//   z-index: 1;
-
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     z-index: -1;
-//     border-radius: 5px; 
-//     padding: 2px; 
-//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
-//     -webkit-mask-composite: xor;
-//     mask-composite: exclude;
-//   }
-// }
-
-// .card-border {
-//   position: relative;
-//   z-index: 1;
-
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     z-index: -1;
-//     border-radius: 5px; 
-//     padding: 2px; 
-//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
-//     -webkit-mask-composite: xor;
-//     mask-composite: exclude;
-//   }
-// }
-
-// .card-border-accent {
-//   position: relative;
-//   z-index: 1;
-
-//   &::before {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     z-index: -1;
-//     border-radius: 5px; 
-//     padding: 2px;
-//     background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-//     -webkit-mask-composite: xor;
-//     mask-composite: exclude; 
-//   }
-// }
-
-// .card-border {
-//   position: relative;
-//   z-index: 1;
-
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     z-index: -1;
-//     border-radius: 5px;
-//     padding: 2px;
-//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsl(0, 0%, 100%) 0 0);
-//     -webkit-mask-composite: xor;
-//     mask-composite: exclude;
-//   }
-// }
-
-// .card-border-accent {
-//   position: relative;
-//   z-index: 1;
-
-//   &::before {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     z-index: -1;
-//     border-radius: 5px;
-//     padding: 2px;
-//     background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-//     -webkit-mask-composite: xor;
-//     mask-composite: exclude;
-//   }
-// }
-
-// .card-background {
-//   background-size: 100%;
-//   background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-//   position: relative;
-//   z-index: 100;
-
-//   // position: relative;
-//   // z-index: 1;
-
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     z-index: -1;
-//     border-radius: 5px;
-//     padding: 2px;
-//     background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-//     -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-//     -webkit-mask-composite: xor;
-//     mask-composite: exclude;
-//   }
-
-//   &::before {
-//     background-image: linear-gradient(324deg, hsl(188, 91%, 38%) 0%, #099FB7 100%);
-//     content: "";
-//     display: block;
-//     height: 100%;
-//     position: absolute;
-//     top: 0; left: 0;
-//     opacity: 0;
-//     width: 100%;
-//     z-index: -100;
-//     transition: opacity 200ms;
-//   }
-
-//   &:hover {
-//     &::before {
-//       opacity: 1;
-//     }
-
-//     .card-border-test::after {
-//       background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-//     }
-//   }
-// }

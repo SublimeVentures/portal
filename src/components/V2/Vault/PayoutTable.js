@@ -1,30 +1,21 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import AlertDestructive from "@/components/V2/Layout/AlertDestructive";
 
 export const SkeletonPayoutTable = ({ count = 1 }) => (
-    <Card className="p-0">
+    <Card variant="static" className="p-0">
         <div className="h-5 p-2 rounded bg-primary-light-gradient" />
         <div className="p-4">{Array.from({ length: count }).map((_, index) => <Skeleton key={index} className="h-20 my-4" /> )}</div>
     </Card>
 );
 
-export const ErrorPayoutTable = ({ count = 1 }) => (
-    <Card className="p-0">
+export const ErrorPayoutTable = () => (
+    <Card variant="static" className="p-0">
         <div className="p-2 h-5 rounded bg-primary-light-gradient" />
 
-        <div className="pt-6 pb-12 flex flex-col grow items-center justify-center">
-            <div className="py-12 max-w-lg flex flex-col grow items-center">
-                <div className="mb-2 flex grow items-center">
-                    <div className="mr-2 h-6 w-6 flex items-center justify-center shrink-0 bg-destructive/[.25] text-destructive rounded-full">!</div>
-                    <h3 className="text-4xl font-bold text-destructive">Error</h3>
-                </div>
-                    
-                <p className="text-lg font-light text-center text-destructive">Unable to fetch data. Please check your internet connection and try again. If the problem persists, contact support for further assistance.</p>
-            </div>
-
-            <Button variant="destructive" className="mt-auto max-w-xs">Refetch</Button>
+        <div className="p-12">
+            <AlertDestructive title='Auth error' description="Your session has expired. Please log in again." actionFn={() => {}} btnText="Login" variant="column"  />
         </div>
     </Card>
 );
@@ -76,3 +67,4 @@ const PayoutTable = ({ items }) => (
 );
 
 export default PayoutTable;
+ 

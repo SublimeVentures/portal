@@ -1,7 +1,7 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardButton, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import AlertDestructive from "@/components/V2/Layout/AlertDestructive";
 import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 export const SkeletonInvestmentCard = () => {
@@ -28,25 +28,14 @@ export const SkeletonInvestmentCard = () => {
 
 export const ErrorInvestmentCard = () => {
     return (
-        <Card className="flex flex-col py-8 px-5">
-            <div className="py-4">
-                <div className="mb-2 flex grow items-center">
-                    <div className="mr-2 h-6 w-6 flex items-center justify-center shrink-0 bg-destructive/[.25] text-destructive rounded-full">!</div>
-                    <h3 className="text-4xl font-bold text-destructive">Error</h3>
-                </div>
-                
-                <p className="text-lg font-light text-destructive">Unable to fetch data. Please check your internet connection and try again. If the problem persists, contact support for further assistance.</p>
-            </div>
-
-            <Button variant="destructive" className="mt-auto w-full">Refetch</Button>
+        <Card className="flex flex-col justify-center py-8 px-5">
+            <AlertDestructive variant="column" actionFn={() => {}} />
         </Card>
     )
 }
 
 const InvestmentCard = ({ details }) => {
   const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate, athProfit } = details;
-
-  const isHovered = false;
   
   return (
       <Card className="flex flex-col py-8 px-5">
