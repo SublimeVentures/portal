@@ -31,7 +31,7 @@ export default function AppVault({ session }) {
         refetchOnMount: true,
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 30 * 1000,
+        staleTime: 1 * 60 * 1000,
     });
 
     const { data: premiumData } = useQuery({

@@ -95,4 +95,4 @@ function phases(offer) {
     };
 }
 
-module.exports = { phases, PhaseId };
+module.exports = { phases, PhaseId, Phases };

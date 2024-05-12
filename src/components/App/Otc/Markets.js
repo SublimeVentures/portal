@@ -52,7 +52,7 @@ const getMarketRow = (el, cdn, currentMarket, changeMarket) => {
                         {getPayoutStructure(el.isManaged, el.ticker)}
                         <Tooltiper
                             wrapper={<CiCircleInfo className={"text-2xl"} />}
-                            text={`${el.dealStructure ? `${el.dealStructure}, ` : ""}ppt: ${el.ppu ? `$${el.ppu}` : "TBA"}`}
+                            text={`${el.dealStructure ? `${el.dealStructure}, ` : ""}Price: ${el.ppu ? `$${el.ppu}` : "TBA"}`}
                             type={TooltipType.Primary}
                         />
                         <Tooltiper
@@ -69,7 +69,7 @@ const getMarketRow = (el, cdn, currentMarket, changeMarket) => {
 
                         <Tooltiper
                             wrapper={
-                                <Link href={`${PAGE.Opportunities}/${el.slug}`}>
+                                <Link href={`${PAGE.OTC}/${el.slug}`}>
                                     <CiCircleMore
                                         className={
                                             "text-2xl text-black opacity-0 group-hover:opacity-100 transition duration-300"

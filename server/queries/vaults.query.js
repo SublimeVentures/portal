@@ -25,11 +25,11 @@ const query_getUserVault = `
             "vault"."userId" = :userId AND
             "vault"."invested" != 0 AND
         "offer"."id" IN (
-            SELECT DISTINCT "offerLimit"."offerId"
-            FROM "offerLimit"
-                     JOIN "offer" ON "offerLimit"."offerId" = "offer"."id"
-            WHERE ("offer"."isTenantExclusive" = false AND "offerLimit"."partnerId" IN (:partnerId, :tenantId))
-               OR ("offer"."isTenantExclusive" = true AND "offerLimit"."partnerId" = :tenantId)
+            SELECT DISTINCT "offerFundraise"."offerId"
+            FROM "offerFundraise"
+                     JOIN "offer" ON "offerFundraise"."offerId" = "offer"."id"
+            WHERE ("offer"."isTenantExclusive" = false AND "offerFundraise"."partnerId" IN (:partnerId, :tenantId))
+               OR ("offer"."isTenantExclusive" = true AND "offerFundraise"."partnerId" = :tenantId)
         )
         ORDER BY
             "vault"."createdAt" DESC;
