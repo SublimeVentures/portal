@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import VanillaTilt from "vanilla-tilt";
+import PropTypes from "prop-types";
+import { cn } from "@/lib/cn";
 
 export const ButtonIconSize = {
     hero: "w-8 mr-5 text-2xl",
@@ -31,6 +33,7 @@ export function RoundButton({
     zoom,
     icon,
     handler,
+    noBorder,
 }) {
     const [isActive, setIsActive] = useState(false);
     const [isExecuting, setExecuting] = useState(false);
@@ -42,7 +45,7 @@ export function RoundButton({
             speed: 1000,
             max: is3d ? 10 : 1,
         });
-    }, [zoom]);
+    }, [zoom, is3d]);
 
     const animate = async () => {
         if (isExecuting) return;
@@ -62,15 +65,22 @@ export function RoundButton({
     return (
         <div className={`v-align ${isActive ? "active" : ""}`}>
             <div
-                className={`
-              btn-wrap
-              ${showParticles ? "particles" : ""}
-              ${isPrimary ? "full-btn" : ""}
-              ${!isPrimary ? "out-btn" : ""}
-              ${isLoading || isDisabled || isExecuting ? "disabled" : ""}  
-            `}
+                className={cn(
+                    {
+                        particles: showParticles,
+                        "full-btn": isPrimary,
+                        "out-btn": !isPrimary,
+                        disabled: isLoading || isDisabled || isExecuting,
+                        "!border-none": noBorder,
+                    },
+                    "btn-wrap",
+                )}
             >
-                <button className={`btn ${size}`} onClick={animate} ref={tilt}>
+                <button
+                    className={cn({ "!border-none !shadow-none": noBorder }, `btn ${size}`)}
+                    onClick={animate}
+                    ref={tilt}
+                >
                     <div
                         className={`
                       flex items-center justify-center relative
@@ -91,44 +101,29 @@ export function RoundButton({
 
                 {showParticles && (
                     <div>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
-                        <span className="particles-circle"></span>
+                        {Array(35).map((_, idx) => (
+                            <span key={idx} className="particles-circle"></span>
+                        ))}
                     </div>
                 )}
             </div>
         </div>
     );
 }
+
+RoundButton.propTypes = {
+    text: PropTypes.string,
+    isLoading: PropTypes.bool,
+    isLoadingWithIcon: PropTypes.bool,
+    isDisabled: PropTypes.bool,
+    showParticles: PropTypes.bool,
+    noBorder: PropTypes.bool,
+    is3d: PropTypes.bool,
+    isPrimary: PropTypes.bool,
+    isWide: PropTypes.bool,
+    isWider: PropTypes.bool,
+    size: PropTypes.string,
+    zoom: PropTypes.number,
+    icon: PropTypes.node,
+    handler: PropTypes.func,
+};
