@@ -146,3 +146,9 @@
     mask-composite: exclude;
   }
 }
+
+@media (max-width: 640px) {
+  .gradient-border-sheet-header::before {
+    display: none;
+  }
+}

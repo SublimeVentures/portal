@@ -5,7 +5,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/cn";
 
 const buttonVariants = cva(
-    "py-2 px-8 inline-flex items-center justify-center text-md text-white rounded transition-hover whitespace-nowrap cursor-pointer",
+    "py-2 px-8 inline-flex items-center justify-center text-md text-white rounded transition-hover whitespace-nowrap cursor-pointer leading-none",
     {
         variants: {
             variant: {
@@ -27,7 +27,7 @@ const buttonVariants = cva(
 
 const Button = forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+    return <Comp className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props} />
 });
 
 Button.displayName = "Button";

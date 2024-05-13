@@ -10,6 +10,7 @@ const iconButtonVariants = cva(
         variants: {
             variant: {
                 default: "bg-navy-300 hover:bg-navy-100",
+                primary: "bg-primary shadow-[0px_3px_30px_hsl(var(--primary-color))] hover:bg-primary/[.8]",
                 accent: "bg-accent shadow-[0px_3px_30px_hsl(var(--accent-color))] hover:bg-accent/[.8]",
                 gradient: "bg-primary-light-gradient text-white",
                 transparent: "text-gray-100 bg-transparent hover:bg-navy-300",
