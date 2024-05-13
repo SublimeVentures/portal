@@ -8,7 +8,7 @@ const { NotificationTypes } = require("../enum/NotificationTypes");
  * @property {string | number} [type] Notification type (name or ID)
  * @property {number} [lastId] Last notification ID (for pagination)
  * @property {"timeline" | "full"} [profile] Filter profile (all items or timeline-specific)
- * @property {number} [page=1] Page from which you're starting
+ * @property {number} [limit=8] Page from which you're starting
  */
 
 /**
@@ -49,7 +49,10 @@ const BASE_INCLUDES = [
  */
 async function getNotifications(user, filters) {
     const { userId, tenantId } = user;
-    const filterConfig = { userId };
+    const filterConfig = {
+        userId,
+        limit: filters.limit ?? 8,
+    };
     if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
     if (filters.type) filterConfig["typeId"] = await getNotificationTypeId(filters.type);
     if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
