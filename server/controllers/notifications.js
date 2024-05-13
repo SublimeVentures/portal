@@ -1,5 +1,4 @@
-const { getNotifications, NotificationTypes, getExtendedNotification } = require("../queries/notifications.query");
-const { models } = require("../services/db/definitions/db.init");
+const { getNotifications, getExtendedNotification } = require("../queries/notifications.query");
 
 /**
  * @param {Record<string, any> & { id: number }} user
@@ -11,11 +10,10 @@ async function getNotificationsByParams(user, request) {
 }
 
 /**
- * @param {Record<string, any> & { id: number }} user
  * @param {number} id
  */
-async function getNotificationData(user, id) {
-    return getExtendedNotification(user, id);
+async function getNotificationData(id) {
+    return getExtendedNotification(id);
 }
 
 module.exports = {

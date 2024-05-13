@@ -8,7 +8,39 @@ const { NotificationTypes } = require("../enum/NotificationTypes");
  * @property {string | number} [type] Notification type (name or ID)
  * @property {number} [lastId] Last notification ID (for pagination)
  * @property {"timeline" | "full"} [profile] Filter profile (all items or timeline-specific)
+ * @property {number} [page=1] Page from which you're starting
  */
+
+/**
+ * @typedef {object} ClaimNotificationData
+ * @property {number} claimId
+ * @property {number} payoutId
+ * @property {number} offerPayout
+ * @property {number} amount
+ * @property {string} currency
+ * @property {number} chainId
+ * @property {string} currencySymbol
+ */
+
+const BASE_INCLUDES = [
+    {
+        model: models.notificationType,
+        attributes: ["name"],
+    },
+    {
+        model: models.onchain,
+        include: [
+            {
+                model: models.onchainType,
+                attributes: ["name"],
+            },
+            {
+                model: models.network,
+                foreignKey: "chainId",
+            },
+        ],
+    },
+];
 
 /**
  * @param {Record<string, any> & { id: number }} user
@@ -18,19 +50,17 @@ const { NotificationTypes } = require("../enum/NotificationTypes");
 async function getNotifications(user, filters) {
     const { userId, tenantId } = user;
     const filterConfig = { userId };
-    if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, null] };
+    if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
     if (filters.type) filterConfig["typeId"] = await getNotificationTypeId(filters.type);
     if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
-    if (filters.lastId) filterConfig["id"] = { $gt: filters.lastId };
+    if (filters.lastId) filterConfig["id"] = { [Op.lt]: filters.lastId };
     const profileFilters = await getFiltersFromProfile(filters.profile);
     const config = { ...filterConfig, ...profileFilters };
     return getAllNotifications(config);
 }
 
-async function getExtendedNotification(user, notificationId) {
-    const { userId, tenant } = user;
-    const config = { userId, tenant };
-    return getNotificationByStrategy(notificationId, config);
+async function getExtendedNotification(notificationId) {
+    return getNotificationByStrategy(notificationId);
 }
 
 /**
@@ -89,100 +119,134 @@ function mapNotificationTypeToId(notificationType) {
 
 /**
  * @param {number} notificationId
- * @param {Record<string, string | number>} filterConfig
  * @return {Promise<ReturnType<typeof getExtendedNotification>>}
  */
-async function getNotificationByStrategy(notificationId, filterConfig) {
-    const notification = await models.notification.findByPk(notificationId);
-    const { typeId } = notification;
+async function getNotificationByStrategy(notificationId) {
+    const notification = await getBaseNotification(notificationId);
+    const { typeId, data } = notification;
     switch (/** @type {NotificationType[keyof NotificationType]} */ typeId) {
         case NotificationTypes.CLAIM:
-            return getClaimNotification(filterConfig);
+            return { notification, ...(await getClaimNotification(data)) };
         case NotificationTypes.INVESTMENT:
-            return getInvestmentNotification(filterConfig);
+            return { notification, ...(await getInvestmentNotification(data)) };
         case NotificationTypes.REFUND:
-            return getRefundNotification(filterConfig);
+            return { notification, ...(await getRefundNotification(data)) };
         case NotificationTypes.MYSTERY_BUY:
-            return getMysteryBuyNotification(filterConfig);
+            return { notification, ...(await getMysteryBuyNotification(data)) };
         case NotificationTypes.OTC_CANCEL:
-            return getOtcCancelNotification(filterConfig);
+            return { notification, ...(await getOtcNotification(data)) };
         case NotificationTypes.OTC_MADE:
-            return getOtcMadeNotification(filterConfig);
+            return { notification, ...(await getOtcNotification(data)) };
         case NotificationTypes.OTC_TAKE:
-            return getOtcTakeNotification(filterConfig);
+            return { notification, ...(await getOtcNotification(data)) };
         case NotificationTypes.UPGRADE_BUY:
-            return getUpgradeBuyNotification(filterConfig);
+            return { notification, ...(await getUpgradeBuyNotification(data)) };
         default:
-            return {};
+            return { notification };
     }
 }
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @param {Record<string, any> | number} filterConfig Filters configuration or notification ID
+ * @return {Promise<Model | null>}
  */
-async function getClaimNotification(filterConfig) {
-    return await models.notification.findOne({
-        where: filterConfig,
-        include: [
-            {
-                model: models.notificationType,
-                attributes: ["name"],
-            },
-            {
-                model: models.onchain,
-                include: [
-                    {
-                        model: models.onchainType,
-                        attributes: ["name"],
-                    },
-                    {
-                        model: models.payout,
-                        include: [
-                            {
-                                model: models.payout,
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
+async function getBaseNotification(filterConfig) {
+    const id = Number(filterConfig);
+    if (Number.isNaN(id)) {
+        return models.notification.findOne({
+            where: filterConfig,
+            include: BASE_INCLUDES,
+            plain: true,
+        });
+    }
+
+    return models.notification.findByPk(`${filterConfig}`, {
+        include: BASE_INCLUDES,
+        plain: true,
     });
 }
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @param {{
+ *     amount: number;
+ *     claimId: number;
+ *     payoutId: number;
+ *     offerPayout: number;
+ *     amount: number;
+ *     currency: string;
+ *     chainId: number;
+ *     currencySymbol: string;
+ * }} data
+ * @return {Record<string, any> & data}
  */
-async function getOtcTakeNotification(filterConfig) {}
+async function getClaimNotification(data) {
+    const { chainId, payoutId, claimId, ...contents } = data;
+    const network = await models.network.findByPk(chainId, { plain: true });
+    const payout = await models.payout.findByPk(payoutId, { plain: true });
+    const claim = await models.claim.findByPk(claimId, { plain: true });
+
+    return {
+        ...contents,
+        network,
+        payout,
+        claim,
+    };
+}
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @param {{
+ *     otcId: number;
+ *     dealId: number;
+ *     otcDealId: number;
+ *     price: number;
+ *     amount: number;
+ *     currency: string;
+ *     isSell: boolean;
+ *     tenantId: number
+ * }} data
+ * @return {Record<string, any> & data}
  */
-async function getOtcMadeNotification(filterConfig) {}
+async function getOtcNotification(data) {
+    const { otcDealId, ...contents } = data;
+    const otcDeal = await models.otcDeal.findByPk(otcDealId, { plain: true });
+
+    return { ...contents, otcDeal };
+}
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @type {Record<string, any>}
+ * @param {{ amount: number; partnerId: number }} data
+ * @return {Record<string, any> & data}
  */
-async function getOtcCancelNotification(filterConfig) {}
+async function getInvestmentNotification(data) {
+    const { partnerId, ...contents } = data;
+    const partner = await models.partner.findByPk(partnerId, { plain: true });
+
+    return { ...contents, partner };
+}
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @type {Record<string, any>}
  */
-async function getInvestmentNotification(filterConfig) {}
+async function getRefundNotification(data) {
+    return { ...data };
+}
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @type {Record<string, any>}
+ * @param {{ amount: number; item: number }} data
  */
-async function getRefundNotification(filterConfig) {}
+async function getMysteryBuyNotification(data) {
+    return { ...data };
+}
 
 /**
- * @type {Promise<import("sequelize").Model>}
+ * @type {Record<string, any>}
+ * @param {{ amount: number; item: number }} data
  */
-async function getMysteryBuyNotification(filterConfig) {}
-
-/**
- * @type {Promise<import("sequelize").Model>}
- */
-async function getUpgradeBuyNotification(filterConfig) {}
+async function getUpgradeBuyNotification(data) {
+    return { ...data };
+}
 
 /**
  * @type {Promise<import("sequelize").Model[]>}
@@ -191,23 +255,9 @@ async function getAllNotifications(filterConfig) {
     const { limit, ...where } = filterConfig;
     return await models.notification.findAll({
         where,
-        include: [
-            {
-                model: models.notificationType,
-                attributes: ["name"],
-            },
-            {
-                model: models.onchain,
-                include: [
-                    {
-                        model: models.onchainType,
-                        attributes: ["name"],
-                    },
-                ],
-            },
-        ],
-        limit: limit ?? 8,
-        order: "id",
+        include: BASE_INCLUDES,
+        limit: limit,
+        order: [["id", "DESC"]],
     });
 }
 

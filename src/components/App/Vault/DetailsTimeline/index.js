@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoRefreshOutline } from "react-icons/io5";
 import debounce from "lodash.debounce";
 import TimelineItem from "./TimelineItem";
@@ -10,32 +10,39 @@ import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 export default function DetailsTimeline({ offerId }) {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
-    const last = useRef(-1);
+    const last = useRef(0);
 
     /**
      * @param [lastId]
      */
-    const handleNotificationsFetch = (lastId) => {
-        if (offerId) {
-            let filters = { offerId, profile: "timeline" };
-            if (lastId) {
-                filters = { ...filters, lastId };
+    const handleNotificationsFetch = useCallback(
+        (incremental = false) => {
+            if (offerId) {
+                let filters = { offerId, profile: "timeline" };
+                if (last.current) {
+                    filters = { ...filters, lastId: last.current };
+                }
+                setLoading(true);
+                fetchNotificationList(filters)
+                    .then((list) => {
+                        if (incremental) {
+                            setNotifications((prev) => [...prev, ...list]);
+                        } else {
+                            setNotifications(list);
+                        }
+                        last.current = list[list.length - 1].id;
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
             }
-            setLoading(true);
-            fetchNotificationList(filters)
-                .then((list) => {
-                    setNotifications(list);
-                    last.current = list[list.length - 1];
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        }
-    };
+        },
+        [offerId],
+    );
 
     const debouncedFetch = debounce(handleNotificationsFetch, 1000, { leading: true });
 
-    useEffect(() => handleNotificationsFetch(), []);
+    useEffect(() => handleNotificationsFetch(), [handleNotificationsFetch]);
 
     return (
         <>
@@ -54,7 +61,7 @@ export default function DetailsTimeline({ offerId }) {
                     isWide={true}
                     size="text-sm sm border-transparent my-3"
                     text="Show more"
-                    handler={() => {}}
+                    handler={() => handleNotificationsFetch(true)}
                 />
             </div>
         </>

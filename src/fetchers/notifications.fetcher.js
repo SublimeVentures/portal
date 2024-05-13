@@ -19,7 +19,7 @@ export const fetchNotificationList = async (filters) => {
             Sentry.captureException({ location: "fetchNotificationList" });
         }
     }
-    return {};
+    return [];
 };
 
 export const fetchExtendedNotification = async (id) => {

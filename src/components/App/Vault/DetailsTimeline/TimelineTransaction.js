@@ -1,6 +1,6 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 import { mapChainIdToNameWithScanner } from "../../../../../server/services/mappers/blockchain.mapper";
-import Badge from "@/components/Badge";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 export default function TimelineTransaction({ tx, chainId }) {
@@ -9,10 +9,14 @@ export default function TimelineTransaction({ tx, chainId }) {
     return (
         <p className="flex gap-2 items-center">
             <Link className="hover:underline font-mono" target="_blank" href={`${chainData.scannerUrl}/tx/${tx}`}>
-                {shortened}
+                {shortened} ({chainData.scannerName})
             </Link>
-            <Badge>{chainData.scannerName}</Badge>
             <InlineCopyButton copiable={tx} />
         </p>
     );
 }
+
+TimelineTransaction.propTypes = {
+    tx: PropTypes.string,
+    chainId: PropTypes.number,
+};
