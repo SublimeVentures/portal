@@ -1,10 +1,40 @@
 import PropTypes from "prop-types";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import moment from "moment";
+import { useState } from "react";
 import { cn } from "@/lib/cn";
 import TimelineTransaction from "@/components/App/Vault/DetailsTimeline/TimelineTransaction";
+import TimelineItemExtension from "@/components/App/Vault/DetailsTimeline/TimelineItemExtension";
 
 export default function TimelineItem({ item, first = false, last = false }) {
+    const [expanded, setExpanded] = useState(false);
+
+    function toggleExpansion() {
+        setExpanded((prev) => !prev);
+    }
+
+    /**
+     * @param {item.notificationType.name | string} type
+     */
+    function getNotificationTitle(type) {
+        switch (type) {
+            case "INVESTMENT":
+            case "CLAIM":
+            case "REFUND":
+                return type;
+            case "OTC_MADE":
+                return `${type}`.replaceAll("_", " ");
+            case "OTC_TAKE":
+                return "OTC TAKEN";
+            case "OTC_CANCEL":
+                return "OTC CANCELLED";
+            case "MYSTERY_BUY":
+                return "PURCHASED MYSTERY BOX";
+            case "UPGRADE_BUY":
+                return "PURCHASED UPGRADE";
+        }
+    }
+
     return (
         <div className="flex text-sm">
             <div className="flex flex-col justify-between items-center gap-2">
@@ -17,25 +47,40 @@ export default function TimelineItem({ item, first = false, last = false }) {
             <div className="flex-1 p-2">
                 <div className="w-full h-full rounded-md p-2 bg-white bg-opacity-10">
                     <div className="flex justify-between">
-                        <p className="font-bold">{item.notificationType.name}</p>
+                        <p className="font-bold">{getNotificationTitle(item.notificationType.name)}</p>
                         <p className="italic text-gray">
                             {moment(item.onchain.createdAt).format("yyyy/MM/DD HH:mm:ss")}
                         </p>
                     </div>
                     {item.onchain?.txID && (
-                        <div className="flex justify-start items-center gap-2">
+                        <div className="flex justify-stretch items-center gap-2 w-full">
                             <div>
                                 <div className="text-gray">txID</div>
                                 <div>
                                     <TimelineTransaction tx={item.onchain.txID} chainId={item.onchain.chainId} />
                                 </div>
                             </div>
-                            <div>
-                                <div className="text-gray"></div>
-                                <div></div>
-                            </div>
                         </div>
                     )}
+                    {expanded && (
+                        <div
+                            className={cn(
+                                {
+                                    "hidden h-0": !expanded,
+                                    "flex h-auto": expanded,
+                                },
+                                "justify-stretch items-stretch w-full",
+                            )}
+                        >
+                            <TimelineItemExtension id={expanded ? item.id : null} />
+                        </div>
+                    )}
+                    <div>
+                        <hr className="text-gray my-1" />
+                        <button onClick={toggleExpansion} className="hover:font-bold">
+                            {expanded ? "See less" : "See more"}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,7 +116,7 @@ TimelineItem.propTypes = {
                 amount: PropTypes.number,
                 offerId: PropTypes.number,
                 hash: PropTypes.string,
-                rpc: PropTypes.number,
+                rpc: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
             }),
             isConfirmed: PropTypes.bool,
             isReverted: PropTypes.bool,

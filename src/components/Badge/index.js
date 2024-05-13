@@ -1,7 +1,9 @@
-/**
- * @param {import("react").ReactNode} children
- * @returns {import("react").ReactNode}
- */
+import PropTypes from "prop-types";
+
 export default function Badge({ children }) {
-    return <div className="inline-block border py-0.5 px-1">{children}</div>;
+    return <span className="inline-block border border-gray rounded-full py-0.5 px-2">{children}</span>;
 }
+
+Badge.propTypes = {
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+};
