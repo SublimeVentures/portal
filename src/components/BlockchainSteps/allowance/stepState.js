@@ -2,6 +2,8 @@ import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
 
 export const stepAllowance = (state, data) => {
+    console.log("BIX :: ALLOWANCE :: step state", state, data);
+    
     const iconPadding = "p-[7px]";
     let result = {};
 
@@ -35,6 +37,8 @@ export const stepAllowance = (state, data) => {
 
     result.icon = ICONS.KEY;
     result.iconPadding = iconPadding;
+
+    console.log("BIX :: ALLOWANCE :: step state result", result, state, data);
 
     return result;
 };

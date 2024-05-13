@@ -2,6 +2,8 @@ import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
 
 export const stepTransaction = (state, data) => {
+    console.log("BIX :: TRANSITION :: step state", state, data);
+
     const iconPadding = "p-[7px]";
     let result = {};
 
@@ -21,6 +23,8 @@ export const stepTransaction = (state, data) => {
 
     result.icon = ICONS.ROCKET;
     result.iconPadding = iconPadding;
+
+    console.log("BIX :: TRANSITION :: step state result", result, state, data);
 
     return result;
 };

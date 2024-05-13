@@ -2,6 +2,8 @@ import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
 
 export const stepNetwork = (state, data) => {
+    console.log("BIX :: NETWORK :: step state", state, data);
+
     const iconPadding = data.params.requiredNetwork === 137 ? "p-[6px]" : "p-[3px]";
     let result = {};
 
@@ -23,6 +25,8 @@ export const stepNetwork = (state, data) => {
                 : ICONS.BSC_MONO;
     
     result.iconPadding = iconPadding;
+
+    console.log("BIX :: NETWORK :: step state result", result, state, data);
 
     return result;
 };

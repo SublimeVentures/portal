@@ -44,6 +44,7 @@ const BlockchainSteps = ({ data }) => {
     const { stepTransaction, transaction } = useTransactionStep(state, data, dispatch);
 
     const resetState = () => {
+        console.log("BIX :: PARAM CHANGED - reset writers");
         allowance_set_reset.write?.reset();
         allowance_set.write?.reset();
         transaction.write?.reset();
@@ -63,6 +64,8 @@ const BlockchainSteps = ({ data }) => {
     );
 
     useEffect(() => {
+        console.log(`BIX :: RESET STATE`, stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepTransaction.state);
+
         if (steps.network && stepNetwork.state === STEP_STATE.ERROR) {
             dispatch({ type: networkAction.RESET_NETWORK });
         }
@@ -84,6 +87,7 @@ const BlockchainSteps = ({ data }) => {
 
     useEffect(() => {
         if (!!stepTransaction.transaction_isFinished) {
+            console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(stepTransaction.transaction_isFinished);
         }
     }, [stepTransaction.transaction_isFinished]);

@@ -19,8 +19,12 @@ export default function usePrerequisiteStep(state, data, network_current, dispat
         
     const prerequisite = useGetPrerequisite(prerequisite_shouldRun, { ...params, network: network_current }, state, token);
 
+    console.log("BIX :: PREREQUISITE - shouldRun / isReady", prerequisite_shouldRun, prerequisite_isReady);
+    
     useEffect(() => {
         if (prerequisite_shouldRun) {
+            console.log(`BIX :: PREREQUISITE - SET - should run: ${prerequisite_shouldRun}`);
+            
             dispatch({
                 type: prerequisiteAction.SET_PREREQUISITE,
                 payload: {

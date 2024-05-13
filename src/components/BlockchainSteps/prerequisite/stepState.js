@@ -2,6 +2,8 @@ import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
 
 export const stepPrerequisite = (state, data) => {
+    console.log("BIX :: PREREQUISITE :: step state", state, data);
+
     const iconPadding = "p-[7px]";
     let result = {};
 
@@ -21,6 +23,8 @@ export const stepPrerequisite = (state, data) => {
 
     result.icon = ICONS.TICKET;
     result.iconPadding = iconPadding;
+
+    console.log("BIX :: PREREQUISITE :: step state result", result, state, data);
 
     return result;
 };
