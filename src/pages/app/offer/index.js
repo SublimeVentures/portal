@@ -9,12 +9,13 @@ import Loader from "@/components/App/Loader";
 import OfferItem from "@/components/App/Offer/OfferItem";
 import Stat from "@/components/Stat";
 import { fetchOfferList } from "@/fetchers/offer.fetcher";
-import { getCopy } from "@/lib/seoConfig";
 import { tenantIndex } from "@/lib/utils";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+
+const { NAME } = getTenantConfig().seo;
 
 export default function AppOffer({ session }) {
     const TENANT_ID = session.tenantId;
@@ -51,7 +52,7 @@ export default function AppOffer({ session }) {
         );
     };
 
-    const title = `Opportunities - ${getCopy("NAME")}`;
+    const title = `Opportunities - ${NAME}`;
     return (
         <>
             <Head>

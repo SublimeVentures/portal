@@ -3,16 +3,18 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
-import { TENANTS_STAKIMG, timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
+import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
-export default function ApeStaking({ stakingProps }) {
+const { staking, externalLinks } = getTenantConfig();
+
+export default function BAYCStaking({ stakingProps }) {
     const { session, account, stakingCurrency, userWallets } = stakingProps;
     const router = useRouter();
 
@@ -76,14 +78,14 @@ export default function ApeStaking({ stakingProps }) {
                     </p>
                 </div>
                 <div className={"detailRow"}>
-                    <p>{session.isS1 ? TENANTS_STAKIMG()[0] : TENANTS_STAKIMG()[1]} ID</p>
+                    <p>{session.isS1 ? staking[0] : staking[1]} ID</p>
                     <hr className={"spacer"} />
                     <p>#{session.tokenId}</p>
                 </div>
                 <div className={`detailRow  ${isElite ? "text-gold" : ""}`}>
                     <p>SEASON</p>
                     <hr className={"spacer"} />
-                    <p>{session.isS1 ? TENANTS_STAKIMG()[0] : TENANTS_STAKIMG()[1]}</p>
+                    <p>{session.isS1 ? staking[0] : staking[1]}</p>
                 </div>
                 <div className={`detailRow ${staked ? "text-app-success" : "text-app-error"}`}>
                     <p>Staked</p>
@@ -121,7 +123,7 @@ export default function ApeStaking({ stakingProps }) {
                         type={ButtonTypes.BASE}
                         text={"GET APE"}
                         handler={() => {
-                            window.open(ExternalLinks.GET_APE, "_blank");
+                            window.open(externalLinks.GET_APE, "_blank");
                         }}
                     />
 

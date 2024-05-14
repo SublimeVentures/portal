@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IoPlay as PlayIcon } from "react-icons/io5";
 import Linker from "@/components/link";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import Input from "@/components/App/Input";
 import { CITIZENS, CITIZENS_NAME } from "@/lib/utils";
 import { fetchNeoTokyoEnvs } from "@/fetchers/public.fecher";
 import Select from "@/components/App/Select";
 import { MIN_DIVISIBLE } from "@/lib/investment";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 export default function TokenomicsCitCap({}) {
     const [investmentAllocation, setInvestmentAllocation] = useState(0);
@@ -202,10 +205,10 @@ export default function TokenomicsCitCap({}) {
                     </div>
                     <div className={""}>
                         <div className={""}>
-                            <Linker url={ExternalLinks.GETBYTES} text={"Get BYTES"} />
+                            <Linker url={externalLinks.GETBYTES} text={"Get BYTES"} />
                         </div>
                         <div className={""}>
-                            <Linker url={ExternalLinks.STAKE_NT} text={"Stake in Bank of Neo Tokyo"} />
+                            <Linker url={externalLinks.STAKE_NT} text={"Stake in Bank of Neo Tokyo"} />
                         </div>
                     </div>
                 </div>

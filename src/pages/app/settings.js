@@ -3,13 +3,12 @@ import { dehydrate, useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import routes from "@/routes";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
 import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetcher";
 import ManageWallets from "@/components/App/Settings/ManageWallets";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });
 const StakeNeoTokyo = dynamic(() => import("@/components/App/Settings/NeoTokyoStaking"), { ssr: true });
@@ -39,6 +38,8 @@ const TENANTS_STAKING = (stakingProps) => {
     }
 };
 
+const { NAME } = getTenantConfig().seo;
+
 export default function AppSettings({ session }) {
     const { currencyStaking, activeCurrencyStaking, account } = useEnvironmentContext();
     const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
@@ -66,7 +67,8 @@ export default function AppSettings({ session }) {
         refetchUserWallets,
     };
 
-    const title = `Settings - ${getCopy("NAME")}`;
+    const title = `Settings - ${NAME}`;
+
     return (
         <>
             <Head>

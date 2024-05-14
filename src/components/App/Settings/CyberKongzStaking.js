@@ -3,14 +3,16 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
+
+const { externalLinks } = getTenantConfig();
 
 export default function CyberKongzStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
@@ -65,8 +67,8 @@ export default function CyberKongzStaking({ stakingProps }) {
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>
                         IDENTITY
                     </div>
-                    <a href={ExternalLinks.STAKING} target={"_blank"} rel="noreferrer">
-                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo />} noBorder={true} />
+                    <a href={externalLinks.STAKING} target={"_blank"} rel="noreferrer">
+                        <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo className="w-8 h-8" />} noBorder={true} />
                     </a>
                 </div>
                 <div className="detailRow">
@@ -128,7 +130,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                         type={ButtonTypes.BASE}
                         text={"GET BANANA"}
                         handler={() => {
-                            window.open(ExternalLinks.GET_BANANA_ETH, "_blank");
+                            window.open(externalLinks.GET_BANANA_ETH, "_blank");
                         }}
                     />
 

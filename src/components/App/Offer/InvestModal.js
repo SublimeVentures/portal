@@ -3,7 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/router";
 import GenericModal from "@/components/Modal/GenericModal";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import lottieSuccess from "@/assets/lottie/success.json";
@@ -13,6 +13,9 @@ import BlockchainSteps from "@/components/BlockchainSteps";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import CustomFlipClockCountdown from "@/components/FlipClockCountdown";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 export default function InvestModal({ model, setter, investModalProps }) {
     const router = useRouter();
@@ -121,7 +124,7 @@ export default function InvestModal({ model, setter, investModalProps }) {
                     </div>
                 </div>
                 <div className="mt-auto">
-                    What's next? <Linker url={ExternalLinks.AFTER_INVESTMENT} />
+                    What's next? <Linker url={externalLinks.AFTER_INVESTMENT} />
                 </div>
             </div>
         );
@@ -152,7 +155,7 @@ export default function InvestModal({ model, setter, investModalProps }) {
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
                 <div>
                     Booked allocation will be released when the timer runs to zero.{" "}
-                    <Linker url={ExternalLinks.BOOKING_SYSTEM} />
+                    <Linker url={externalLinks.BOOKING_SYSTEM} />
                 </div>
             </div>
         );

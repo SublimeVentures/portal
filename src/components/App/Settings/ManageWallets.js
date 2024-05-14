@@ -6,9 +6,11 @@ import WalletAddModal from "@/components/App/Settings/WalletAddModal";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
-import { ExternalLinks } from "@/routes";
 import { IconButton } from "@/components/Button/IconButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 export default function ManageWallets({ walletProps }) {
     const { updateEnvironmentProps } = useEnvironmentContext();
@@ -40,7 +42,7 @@ export default function ManageWallets({ walletProps }) {
                 <div className="relative bg-navy-accent flex flex-1 flex-col">
                     <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
                         <div className="flex flex-1 font-bold">WALLETS</div>
-                        <a href={ExternalLinks.DELEGATED_ACCESS} target={"_blank"} rel="noreferrer">
+                        <a href={externalLinks.DELEGATED_ACCESS} target={"_blank"} rel="noreferrer">
                             <IconButton
                                 zoom={1.1}
                                 size={"w-8"}

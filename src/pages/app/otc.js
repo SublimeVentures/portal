@@ -9,13 +9,18 @@ import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import { fetchMarkets, fetchOffers } from "@/fetchers/otc.fetcher";
 import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import { fetchVault } from "@/fetchers/vault.fetcher";
 import OtcMarkets from "@/components/App/Otc/Markets";
 import OtcOffers from "@/components/App/Otc/Offers";
 import routes from "@/routes";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const {
+    seo: { NAME },
+    externalLinks,
+} = getTenantConfig();
 
 export default function AppOtc({ session }) {
     const router = useRouter();
@@ -68,7 +73,7 @@ export default function AppOtc({ session }) {
 
     const openGuide = (e) => {
         e?.preventDefault();
-        window.open(ExternalLinks.OTC, "_blank");
+        window.open(externalLinks.OTC, "_blank");
     };
 
     useEffect(() => {
@@ -120,7 +125,7 @@ export default function AppOtc({ session }) {
         );
     };
 
-    const title = `OTC Market - ${getCopy("NAME")}`;
+    const title = `OTC Market - ${NAME}`;
 
     return (
         <>
