@@ -19,7 +19,6 @@ export function PortalTooltiper({ wrapper, text, type = TooltipType.Primary, cla
     
     useEffect(() => {
       ref.current = document.getElementById("portal-root");
-      console.log("Portal root:", ref.current); 
       setMounted(true)
     }, [])
 
