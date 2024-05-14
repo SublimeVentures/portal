@@ -184,9 +184,11 @@ async function getBaseNotification(filterConfig) {
  */
 async function getClaimNotification(data) {
     const { chainId, payoutId, claimId, ...contents } = data;
-    const network = await models.network.findByPk(chainId, { plain: true });
-    const payout = await models.payout.findByPk(payoutId, { plain: true });
-    const claim = await models.claim.findByPk(claimId, { plain: true });
+    const [network, payout, claim] = await Promise.all([
+        models.network.findByPk(chainId, { plain: true }),
+        models.payout.findByPk(payoutId, { plain: true }),
+        models.claim.findByPk(claimId, { plain: true }),
+    ]);
 
     return {
         ...contents,

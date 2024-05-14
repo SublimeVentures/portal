@@ -55,14 +55,16 @@ export default function DetailsTimeline({ offerId }) {
                 {notifications.map((item) => (
                     <TimelineItem key={item.id} item={item} />
                 ))}
-                <UniButton
-                    type={ButtonTypes.BASE}
-                    noBorder
-                    isWide
-                    size="text-sm sm my-3"
-                    text="Show more"
-                    handler={() => handleNotificationsFetch(true)}
-                />
+                {!!notifications.length && (
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        noBorder
+                        isWide
+                        size="text-sm sm my-3"
+                        text="Show more"
+                        handler={() => handleNotificationsFetch(true)}
+                    />
+                )}
             </div>
         </>
     );

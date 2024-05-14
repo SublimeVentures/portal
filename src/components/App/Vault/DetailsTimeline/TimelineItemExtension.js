@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { NotificationTypes } from "../../../../../server/enum/NotificationTypes";
 import { fetchExtendedNotification } from "@/fetchers/notifications.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
@@ -27,9 +28,7 @@ export default function TimelineItemExtension({ id }) {
     return (
         <div className="basis-full">
             {loading && <div className="w-4 h-4 border border-t-none rounded-full border-white animate-spin"></div>}
-            {extended && !loading && (
-                <ExtendedEntry scope={extended.notification?.notificationType?.name} entry={extended} />
-            )}
+            {extended && !loading && <ExtendedEntry scopeId={extended.notification?.typeId} entry={extended} />}
         </div>
     );
 }
@@ -38,48 +37,46 @@ TimelineItemExtension.propTypes = {
     id: PropTypes.number,
 };
 
-function ExtendedEntry({ scope, entry }) {
-    console.log(Object.keys(entry));
-
+function ExtendedEntry({ scopeId, entry }) {
     const items = Object.entries(entry);
 
     /**
-     * @type {Record<string, any>}
+     * @type {Record<string, import("react").ReactNode>}
      */
     const mappedProps = items.reduce((acc, [key, value]) => {
-        if (["OTC_MADE", "OTC_TAKE", "OTC_CANCEL"].includes(scope)) {
+        if (NotificationTypes.OTCS.includes(scopeId)) {
             if (key === "isSell") {
-                acc["offer type"] = value ? "sell" : "buy";
+                acc["offer type"] = <span>{value ? "sell" : "buy"}</span>;
             } else if (key === "otcDeal") {
                 if (!value) {
-                    acc["OTC deal"] = "no data";
+                    acc["OTC deal"] = <span>no data</span>;
                 } else {
-                    acc["amount"] = value.amount;
-                    acc["price"] = `$${value.price.toFixed(2)}`;
+                    acc["amount"] = <span>{value.amount}</span>;
+                    acc["price"] = <span>${value.price.toFixed(2)}</span>;
                     acc["hash"] = (
                         <span className="flex justify-start items-center gap-2">
                             {value.hash}
                             <InlineCopyButton copiable={value.hash} />
                         </span>
                     );
-                    acc["filled"] = value.isFilled ? "yes" : "no";
-                    if (value.isCancelled) acc["cancelled"] = "yes";
+                    acc["filled"] = <span>{value.isFilled ? "yes" : "no"}</span>;
+                    if (value.isCancelled) acc["cancelled"] = <span>yes</span>;
                 }
             }
-        } else if (scope === "INVESTMENT") {
+        } else if (scopeId === NotificationTypes.INVESTMENT) {
             if (key === "value") {
-                acc[key] = `$${value}`;
+                acc[key] = <span>${value}</span>;
             }
-        } else if (scope === "CLAIM") {
+        } else if (scopeId === NotificationTypes.CLAIM) {
             if (key === "claim") {
-                acc["claimed"] = value.isClaimed ? "yes" : "no";
+                acc["claimed"] = <span>{value.isClaimed ? "yes" : "no"}</span>;
             }
             if (key === "payout") {
-                acc["total amount"] = value.totalAmount.toFixed(2);
-                acc["currency"] = value.currencySymbol;
+                acc["total amount"] = <span>{value.totalAmount.toFixed(2)}</span>;
+                acc["currency"] = <span>{value.currencySymbol}</span>;
             }
         } else if (["boolean", "number", "string"].includes(typeof value)) {
-            acc[key] = value;
+            acc[key] = <span>{value}</span>;
         }
         return acc;
     }, {});
@@ -97,6 +94,6 @@ function ExtendedEntry({ scope, entry }) {
 }
 
 ExtendedEntry.propTypes = {
-    scope: PropTypes.string,
+    scopeId: PropTypes.number,
     entry: /** @type {Record<string, any>} */ PropTypes.object,
 };

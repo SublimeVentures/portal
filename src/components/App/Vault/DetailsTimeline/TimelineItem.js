@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import moment from "moment";
 import { useState } from "react";
+import { NotificationTypes } from "../../../../../server/enum/NotificationTypes";
 import { cn } from "@/lib/cn";
 import TimelineTransaction from "@/components/App/Vault/DetailsTimeline/TimelineTransaction";
 import TimelineItemExtension from "@/components/App/Vault/DetailsTimeline/TimelineItemExtension";
@@ -14,23 +15,27 @@ export default function TimelineItem({ item, first = false, last = false }) {
     }
 
     /**
-     * @param {item.notificationType.name | string} type
+     * @param {import("server/enum/NotificationTypes").NotificationTypes[
+     *     keyof import("server/enum/NotificationTypes").NotificationTypes
+     * ]} type
      */
     function getNotificationTitle(type) {
         switch (type) {
-            case "INVESTMENT":
-            case "CLAIM":
-            case "REFUND":
-                return type;
-            case "OTC_MADE":
-                return `${type}`.replaceAll("_", " ");
-            case "OTC_TAKE":
+            case NotificationTypes.INVESTMENT:
+                return "INVESTMENT";
+            case NotificationTypes.CLAIM:
+                return "CLAIM";
+            case NotificationTypes.REFUND:
+                return "REFUND";
+            case NotificationTypes.OTC_MADE:
+                return "OTC MADE";
+            case NotificationTypes.OTC_TAKE:
                 return "OTC TAKEN";
-            case "OTC_CANCEL":
+            case NotificationTypes.OTC_CANCEL:
                 return "OTC CANCELLED";
-            case "MYSTERY_BUY":
+            case NotificationTypes.MYSTERY_BUY:
                 return "PURCHASED MYSTERY BOX";
-            case "UPGRADE_BUY":
+            case NotificationTypes.UPGRADE_BUY:
                 return "PURCHASED UPGRADE";
         }
     }
@@ -47,7 +52,7 @@ export default function TimelineItem({ item, first = false, last = false }) {
             <div className="flex-1 p-2">
                 <div className="w-full h-full rounded-md p-2 bg-white bg-opacity-10">
                     <div className="flex justify-between">
-                        <p className="font-bold">{getNotificationTitle(item.notificationType.name)}</p>
+                        <p className="font-bold">{getNotificationTitle(item.typeId)}</p>
                         <p className="italic text-gray">
                             {moment(item.onchain.createdAt).format("yyyy/MM/DD HH:mm:ss")}
                         </p>
