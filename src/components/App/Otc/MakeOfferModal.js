@@ -7,7 +7,6 @@ import {
     IoLogoDiscord as IconDiscord,
 } from "react-icons/io5";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import { ExternalLinks } from "@/routes";
 import Input from "@/components/App/Input";
 import { IconButton } from "@/components/Button/IconButton";
 import Dropdown from "@/components/App/Dropdown";
@@ -19,8 +18,11 @@ import GenericRightModal from "@/components/Modal/GenericRightModal";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
+import { getTenantConfig } from "@/lib/tenantHelper";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { millisecondsInHour } from "@/constants/datetime";
+
+const { externalLinks } = getTenantConfig();
 
 export const blockchainPrerequisite = async (params) => {
     const { market, price, amount, isSeller, account, network } = params;
@@ -254,7 +256,7 @@ export default function MakeOfferModal({ model, setter, props }) {
 
                 <div className="mt-auto fullWidth pb-5">
                     <div className="flex flex-1 justify-center items-center ">
-                        <a href={ExternalLinks.OTC} target={"_blank"} className={"w-full"} rel="noreferrer">
+                        <a href={externalLinks.OTC} target={"_blank"} className={"w-full"} rel="noreferrer">
                             <RoundButton
                                 text={"Announce"}
                                 isLoading={false}
@@ -269,7 +271,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                     </div>
                 </div>
                 <div className="absolute -bottom-6 w-full text-center">
-                    <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span>
+                    <Linker url={externalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span>
                 </div>
             </div>
         );
@@ -372,7 +374,7 @@ export default function MakeOfferModal({ model, setter, props }) {
                 )}
 
                 <div className="absolute -bottom-6 w-full text-center">
-                    <Linker url={ExternalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span>
+                    <Linker url={externalLinks.OTC} /> <span className={"ml-5"}>before creating an offer.</span>
                 </div>
             </div>
         );

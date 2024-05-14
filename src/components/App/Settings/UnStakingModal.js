@@ -3,7 +3,9 @@ import GenericModal from "@/components/Modal/GenericModal";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/components/BlockchainSteps";
-import { getCopy } from "@/lib/seoConfig";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { NAME } = getTenantConfig().seo;
 
 export default function CitCapStakingModal({ model, setter, stakingModalProps }) {
     const { stakeSize, stakingCurrency } = stakingModalProps;
@@ -50,8 +52,8 @@ export default function CitCapStakingModal({ model, setter, stakingModalProps })
         return (
             <div className={"min-w-[300px]"}>
                 <div>
-                    To partake in <span className={"inline-block text-app-success"}>{getCopy("NAME")}</span>{" "}
-                    investments, every investor must stake {stakingCurrency.symbol}.
+                    To partake in <span className={"inline-block text-app-success"}>{NAME}</span> investments, every
+                    investor must stake {stakingCurrency.symbol}.
                 </div>
                 <div className={"my-5"}>
                     <div className={"detailRow"}>

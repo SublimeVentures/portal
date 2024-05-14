@@ -17,14 +17,18 @@ import { LuBanana } from "react-icons/lu";
 import { SiGamebanana } from "react-icons/si";
 import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
 import IconNT from "@/assets/svg/NT.svg";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import ChangeNetwork from "@/components/Navigation/ChangeNetwork";
 import ChangeAddress from "@/components/Navigation/ChangeAddress";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
-import { getCopy } from "@/lib/seoConfig";
 import { cn } from "@/lib/cn";
+
+const {
+    seo: { NAME },
+    externalLinks,
+} = getTenantConfig();
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -32,7 +36,7 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style="w-17 text-white" />{" "}
-                    <div className="text-2xl ml-2">{getCopy("NAME")}</div>
+                    <div className="text-2xl ml-2">{NAME}</div>
                 </>
             );
         }
@@ -40,7 +44,7 @@ const TENANT_LOGO = () => {
             return (
                 <>
                     <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style="w-17 text-white" />{" "}
-                    <div className="font-accent text-sm ml-3">{getCopy("NAME")}</div>
+                    <div className="font-accent text-sm ml-3">{NAME}</div>
                 </>
             );
         }
@@ -91,13 +95,13 @@ export default function Sidebar({ session }) {
 
     const openDiscord = (e) => {
         e?.preventDefault();
-        window.open(ExternalLinks.DISCORD, "_blank");
+        window.open(externalLinks.DISCORD, "_blank");
         setIsMobileOpen(false);
     };
 
     const openNotion = (e) => {
         e?.preventDefault();
-        window.open(ExternalLinks.WIKI, "_blank");
+        window.open(externalLinks.WIKI, "_blank");
         setIsMobileOpen(false);
     };
 

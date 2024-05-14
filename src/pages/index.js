@@ -1,9 +1,8 @@
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
-import { seoConfig } from "@/lib/seoConfig";
-import PAGE from "@/routes";
+import { PAGE } from "@/lib/enum/route";
 import { verifyID } from "@/lib/authHelpers";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const HomeBased = dynamic(() => import("@/components/Home"), { ssr: true });
 const HomeCitCap = dynamic(() => import("@/components/HomeCitCap"), {
@@ -34,18 +33,18 @@ const renderLanding = (account) => {
     }
 };
 
+const {
+    DESCRIPTION,
+    INFO: { og, twitter },
+    PAGES: {
+        [PAGE.Landing]: { title, url },
+    },
+} = getTenantConfig().seo;
+
 export default function Home({ account }) {
-    const seo = seoConfig(PAGE.Landing);
     return (
         <>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
-
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             {renderLanding(account)}
         </>
     );

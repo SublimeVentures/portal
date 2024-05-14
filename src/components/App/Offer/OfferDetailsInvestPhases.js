@@ -19,16 +19,17 @@ import { IconButton } from "@/components/Button/IconButton";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/lib/investment";
 import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import { useInvestContext } from "@/components/App/Offer/InvestContext";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import { millisecondsInHour } from "@/constants/datetime";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
+
+const { externalLinks } = getTenantConfig();
 
 export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const {
@@ -438,7 +439,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
                 {allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0 && (
                     <div>
                         All spots booked! Awaiting blockchain confirmations. <br />
-                        <Linker url={ExternalLinks.BOOKING_SYSTEM} text={"Check back soon."} />
+                        <Linker url={externalLinks.BOOKING_SYSTEM} text={"Check back soon."} />
                     </div>
                 )}
             </div>

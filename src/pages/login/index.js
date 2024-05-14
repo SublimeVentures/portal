@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { fetchPartners } from "@/fetchers/public.fecher";
-import PAGE from "@/routes";
+import { PAGE } from "@/lib/enum/route";
 import { queryClient } from "@/lib/queryCache";
-import { seoConfig } from "@/lib/seoConfig";
 import { verifyID } from "@/lib/authHelpers";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
@@ -38,10 +37,17 @@ const TENANTS_LOGIN = (data) => {
     }
 };
 
+const {
+    DESCRIPTION,
+    INFO: { og, twitter },
+    PAGES: {
+        [PAGE.Login]: { title, url },
+    },
+} = getTenantConfig().seo;
+
 export default function Login({ isAuthenticated }) {
     let [errorModal, setErrorModal] = useState(false);
     const router = useRouter();
-    const seo = seoConfig(PAGE.Login);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -66,13 +72,7 @@ export default function Login({ isAuthenticated }) {
 
     return (
         <>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             {TENANTS_LOGIN(data)}
             <ErrorModal model={errorModal} setter={() => setErrorModal(false)} />
         </>
