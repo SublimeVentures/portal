@@ -8,6 +8,7 @@
  * @property {6} INVESTMENT
  * @property {4} OTC_MADE
  * @property {8} CLAIM
+ * @property {[3, 4, 5]} OTCS
  */
 
 /**
@@ -23,6 +24,7 @@ const NotificationTypes = {
     INVESTMENT: 6,
     REFUND: 7,
     CLAIM: 8,
+    OTCS: [3, 4, 5],
 };
 
 module.exports = { NotificationTypes };
