@@ -10,7 +10,7 @@ const UpgradeBanner = ({ isPremium = false }) => (
             {isPremium ? (
                 <div className="flex w-full items-center justify-between">
                     <div>
-                        <CardTitle className="text-accent font-medium">Acquired premium</CardTitle>
+                        <CardTitle className="mb-1 text-accent font-medium">Acquired premium</CardTitle>
                         <Button variant="link" className="text-white">
                             <span>More</span>
                             <ArrowIcon className="ml-2" />
@@ -18,13 +18,13 @@ const UpgradeBanner = ({ isPremium = false }) => (
                     </div>
 
                     <dl>
-                        <div className="flex items-center">
+                        <div className="mb-1 flex items-center">
                             <dt className="mr-2">Guaranteed Allocation</dt>
-                            <dd className="ml-auto h-6 w-6 flex items-center justify-center bg-accent/[.2] text-accent rounded-t">1</dd>
+                            <dd className="ml-auto h-6 w-6 flex items-center justify-center bg-accent/[.2] text-accent rounded">1</dd>
                         </div>
                         <div className="flex items-center">
                             <dt className="mr-2">Increased Allocation</dt>
-                            <dd className="ml-auto h-6 w-6 px-1.5 flex items-center justify-center bg-accent/[.2] text-accent rounded-b">5</dd>
+                            <dd className="ml-auto h-6 w-6 px-1.5 flex items-center justify-center bg-accent/[.2] text-accent rounded">5</dd>
                         </div>
                     </dl>
                 </div>

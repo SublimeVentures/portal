@@ -42,8 +42,8 @@ const SheetContent = forwardRef(({ side, className, children, ...props }, ref) =
             className={cn(sheetVariants({ side }), className)}
             {...props}
         >
-            <SheetPrimitive.Close className="hidden absolute z-50 right-9 top-11 rounded ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
-                <IconButton name="Close" icon={CrossIcon} />
+            <SheetPrimitive.Close className="hidden absolute z-50 right-9 top-11 rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
+                <IconButton name="Close" comp='div' icon={CrossIcon} />
             </SheetPrimitive.Close>
             
             {children}
@@ -72,7 +72,7 @@ const SheetFooter = ({ className, ...props }) => (
 SheetFooter.displayName = "SheetFooter";
 
 const SheetBody = ({ className, ...props }) => (
-    <div className={cn("mx-10 my-4 grow overflow-auto sm:px-10", className )} {...props} />
+    <div className={cn("relative grow w-full overflow-auto", className )} {...props} />
 )
 
 SheetBody.displayName = "SheetBody";

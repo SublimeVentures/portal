@@ -5,7 +5,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/cn";
 
 const iconButtonVariants = cva(
-    "h-[42px] w-[42px] flex items-center justify-center transition-hover text-white cursor-pointer",
+    "h-[42px] w-[42px] flex items-center justify-center transition-hover text-white cursor-pointer outline-none",
     {
         variants: {
             variant: {
@@ -27,16 +27,12 @@ const iconButtonVariants = cva(
     },
 );
 
-const IconButton = forwardRef(({ name = "", icon: Icon, variant, shape, className, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    
-    return (
-        <Comp className={cn(iconButtonVariants({ variant, shape, className }))} ref={ref} {...props}>
-            <Icon className="p-3" />
-            <span className="sr-only">{name}</span>
-        </Comp>
-    )
-});
+const IconButton = forwardRef(({ name = "", icon: Icon, comp: Comp = 'button', variant, shape, className, ...props }, ref) => (
+    <Comp className={cn(iconButtonVariants({ variant, shape, className }))} ref={ref} {...props}>
+        <Icon className="p-3" />
+        <span className="sr-only">{name}</span>
+    </Comp>
+));
 
 IconButton.displayName = "IconButton";
 

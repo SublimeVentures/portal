@@ -5,7 +5,7 @@ module.exports = {
         extend: {
             colors: {
                 foreground: "hsla(0, 0%, 100%)",
-                primary: "hsla(188, 91%, 38%)",
+                primary: "hsla(188, 91%, 38%)", // #099FB7
                 accent: "hsla(36, 65%, 71%)",
                 "accent-light": "hsla(34, 97%, 72%)",
                 destructive: "hsla(0, 74%, 55%)",

@@ -1,7 +1,10 @@
+import { useRef, useEffect } from "react";
+import VanillaTilt from "vanilla-tilt";
+
 import { Avatar } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle, CardButton } from "@/components/ui/card";
-import AlertDestructive from "@/components/v2/Layout/AlertDestructive";
+import AlertDestructive from "@/components/V2/Layout/AlertDestructive";
 import ArrowIcon from "@/assets/v2/svg/arrow.svg";
 
 export const SkeletonInvestmentRow = () => {
@@ -45,10 +48,13 @@ export const ErrorInvestmentRow = () => {
 
 
 const InvestmentRow = ({ details }) => {
-  const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate } = details;
-  
+    const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate } = details;
+    const tilt = useRef(null);
+
+    useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.05, speed: 1000, max: 5 }), []);
+
     return (
-        <Card className="h-max py-5 px-8">
+        <Card ref={tilt} className="h-max py-5 px-8">
             <div className="grid grid-cols-8 items-center">
                 <Avatar session={null} />
 

@@ -1,3 +1,6 @@
+import { useRef, useEffect } from "react";
+import VanillaTilt from "vanilla-tilt";
+
 import { Avatar } from "@/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/components/ui/skeleton";
 import { Card, CardTitle, CardButton } from "@/components/ui/card";
@@ -44,9 +47,12 @@ export const ErrorInvestmentCardMobile = () => {
 
 const InvestmentCardMobile = ({ details }) => {
     const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate, athProfit } = details;
-    
+    const tilt = useRef(null);
+
+    useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.05, speed: 1000, max: 5 }), []);
+
     return (
-        <Card className="h-max">
+        <Card ref={tilt} className="h-max">
             <dl className="px-6 py-4 grid grid-cols-3 items-center gap-4">
                 <Avatar session={null} />
 
