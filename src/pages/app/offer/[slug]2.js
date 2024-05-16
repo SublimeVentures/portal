@@ -3,38 +3,44 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { useEffect, useState } from "react";
 import LayoutApp from "@/components/Layout/LayoutApp";
-import { fetchOfferAllocationSsr, fetchOfferDetails, fetchOfferDetailsSsr } from "@/fetchers/offer.fetcher";
+import {
+    fetchOfferAllocation,
+    fetchOfferAllocationSsr,
+    fetchOfferDetails,
+    fetchOfferDetailsSsr,
+} from "@/fetchers/offer.fetcher";
 import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
-import { Phases } from "@/lib/phases";
 import routes from "@/routes";
 import PAGE from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
+import { PremiumItemsENUM } from "@/lib/enum/store";
 import { queryClient } from "@/lib/queryCache";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
-import { OtcOfferDetailsParams } from "@/components/App/Otc/OtcOfferDetailsParams";
+import { OfferDetailsParams } from "@/components/App/Offer/OfferDetailsParams";
+import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
+import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
 import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
 import { InvestProvider } from "@/components/App/Offer/InvestContext";
-import OtcOfferVesting from "@/components/App/Otc/OtcOfferVesting";
+import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
+import usePhaseTimelineMemo from "@/lib/hooks/usePhaseTimelineMemo";
+import usePhaseInvestmentMemo from "@/lib/hooks/usePhaseInvestmentMemo";
 
 export const AppOfferDetails = ({ session }) => {
     const router = useRouter();
     const { slug } = router.query;
-    const { userId } = session;
+    const { userId, tenantId } = session;
 
-    let [phaseIsClosed] = useState(true);
-    let [phaseCurrent] = useState(Phases.Closed);
-    let [phaseNext] = useState(Phases.Closed);
-
+    //todo: check if fetching right data
     const {
         isSuccess: offerDetailsState,
         data: offerData,
         error: errorOfferDetails,
         refetch: refetchOfferDetails,
     } = useQuery({
-        queryKey: ["otcOfferDetails", slug],
+        queryKey: ["offerDetails", slug],
         queryFn: () => fetchOfferDetails(slug),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
@@ -42,7 +48,24 @@ export const AppOfferDetails = ({ session }) => {
         staleTime: 15 * 60 * 1000,
     });
 
+    const phases = usePhaseTimelineMemo(offerData);
+    const { phaseCurrent, phaseNext, offerClosed, phaseRefresh } = usePhaseInvestmentMemo(phases, offerData);
+
     const offerId = offerData?.id;
+
+    const {
+        isSuccess: offerAllocationState,
+        data: allocation,
+        error: errorOfferAllocation,
+        refetch: refetchOfferAllocation,
+    } = useQuery({
+        queryKey: ["offerAllocation", offerId],
+        queryFn: () => fetchOfferAllocation(offerId),
+        refetchOnMount: false,
+        refetchOnWindowFocus: true,
+        // refetchInterval: 15000,
+        refetchInterval: offerClosed ? false : 15000,
+    });
 
     const {
         isSuccess: userAllocationState,
@@ -53,8 +76,17 @@ export const AppOfferDetails = ({ session }) => {
         queryKey: ["userAllocation", offerId, userId],
         queryFn: () => fetchUserInvestment(offerData?.id),
         refetchOnMount: false,
-        refetchOnWindowFocus: !phaseIsClosed,
+        refetchOnWindowFocus: !offerClosed,
         enabled: !!offerData?.id,
+    });
+
+    const { data: premiumData, refetch: refetchPremiumData } = useQuery({
+        queryKey: ["premiumOwned", userId, tenantId],
+        queryFn: fetchStoreItemsOwned,
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 5 * 1000,
     });
 
     useEffect(() => {
@@ -66,6 +98,13 @@ export const AppOfferDetails = ({ session }) => {
                     }
                 });
             }
+            if (errorOfferAllocation) {
+                refetchOfferAllocation().then((el) => {
+                    if (errorOfferAllocation) {
+                        throw Error("Offer allocations fetch fail");
+                    }
+                });
+            }
             if (errorUserAllocation) {
                 refetchUserAllocation().then((el) => {
                     if (errorUserAllocation) {
@@ -74,35 +113,59 @@ export const AppOfferDetails = ({ session }) => {
                 });
             }
         } catch (error) {
-            router.push(PAGE.OTC);
+            router.push(PAGE.Opportunities);
         }
-    }, [errorOfferDetails, errorUserAllocation]);
+    }, [errorOfferDetails, errorOfferAllocation, errorUserAllocation]);
+
+    const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
 
     const paramsBar = {
-        offer: offerData,
+        offerData,
         phaseCurrent,
         phaseNext,
-        phaseIsClosed,
-        refreshInvestmentPhase: () => {},
+        offerClosed,
+        phaseRefresh,
+    };
+
+    const paramsInvest = {
+        offerData,
+        refetchUserAllocation,
+        userAllocationState,
+        refetchOfferAllocation,
+        userInvested: userAllocation,
+        allocation,
+        session,
+        upgradesUse: { guaranteedUsed, increasedUsed },
+        phaseCurrent,
+        premiumData,
+        refetchPremiumData,
     };
 
     const paramsParams = {
         offer: offerData,
-        //todo: user investment
+        allocation,
+        userInvested: userAllocation?.invested,
+        offerClosed,
+        refetchUserAllocation,
     };
 
     const renderPage = () => {
-        // if (!offerDetailsState || !userAllocationState || !phaseNext) return <Loader />;
+        if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader />;
         if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty />;
 
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <OfferDetailsTopBar paramsBar={paramsBar} />
                 <div className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
-                    <OtcOfferVesting />
+                    {!phaseIsClosed ? (
+                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
+                    ) : (
+                        <OfferDetailsInvestClosed />
+                    )}
                 </div>
                 <div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
-                    <OtcOfferDetailsParams paramsParams={paramsParams} />
+                    <OfferDetailsParams paramsParams={paramsParams} />
                 </div>
                 <div className="flex flex-col col-span-12">
                     <OfferDetailsDetails offer={offerData} />
@@ -113,9 +176,10 @@ export const AppOfferDetails = ({ session }) => {
 
     useEffect(() => {
         if (!offerData?.ok) {
-            router.push(routes.OTC);
+            router.push(routes.Opportunities);
         }
-    }, [offerData]);
+        feedPhases();
+    }, [offerData, allocation?.isSettled, allocation?.isPaused]);
 
     const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${getCopy("NAME")}`;
     return (
@@ -130,16 +194,14 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
     const customLogicCallback = async (account, token) => {
         const slug = query.slug;
 
-        //todo: check if otc !=1
-
         try {
             await queryClient.prefetchQuery({
-                queryKey: ["otcOfferDetails", slug],
+                queryKey: ["offerDetails", slug],
                 queryFn: () => fetchOfferDetailsSsr(slug, token),
                 cacheTime: 30 * 60 * 1000,
                 staleTime: 15 * 60 * 1000,
             });
-            const offerDetails = queryClient.getQueryData(["otcOfferDetails", slug]);
+            const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
 
             const offerId = offerDetails.id;
 
