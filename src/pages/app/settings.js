@@ -9,11 +9,19 @@ import { queryClient } from "@/lib/queryCache";
 import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetcher";
 import ManageWallets from "@/components/App/Settings/ManageWallets";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import ReferralsTable from "@/components/App/Referral/ReferralsTable";
+import { fetchUserReferrals } from "@/fetchers/referral.fetcher";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import { useRouter } from "next/router";
+import PAGE from "@/routes";
+import { tenantIndex } from "@/lib/utils";
 
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });
 const StakeNeoTokyo = dynamic(() => import("@/components/App/Settings/NeoTokyoStaking"), { ssr: true });
 const StakeCyberKongz = dynamic(() => import("@/components/App/Settings/CyberKongzStaking"), { ssr: true });
 const StakeBAYC = dynamic(() => import("@/components/App/Settings/BAYCStaking"), { ssr: true });
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANTS_STAKING = (stakingProps) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -41,6 +49,7 @@ const TENANTS_STAKING = (stakingProps) => {
 const { NAME } = getTenantConfig().seo;
 
 export default function AppSettings({ session }) {
+    const router = useRouter();
     const { currencyStaking, activeCurrencyStaking, account } = useEnvironmentContext();
     const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
     const userId = session?.userId;
@@ -49,6 +58,13 @@ export default function AppSettings({ session }) {
         queryKey: ["userWallets", userId],
         queryFn: () => fetchUserWallets(),
         refetchOnWindowFocus: true,
+    });
+
+    const {
+        data: userReferrals,
+    } = useQuery({
+        queryKey: ["fetchUserReferrals"],
+        queryFn: fetchUserReferrals,
     });
 
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
@@ -79,6 +95,26 @@ export default function AppSettings({ session }) {
                     <ManageWallets walletProps={walletProps} />
                 </div>
                 <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
+                {isBaseVCTenant && userReferrals && <div className={"flex col-span-12 xl:col-span-6"}>
+                    <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase overflow-x-auto"}>
+                        <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
+                            <div className="flex flex-1 font-bold">Referrals Summary</div>
+                        </div>
+                        <ReferralsTable dataProp={userReferrals} />
+                        <div className={"flex flex-row ml-auto p-5 mt-auto"}>
+                            <UniButton
+                                type={ButtonTypes.BASE}
+                                text={"Refer / Claim"}
+                                size={"text-sm xs"}
+                                isWide={true}
+                                isLarge={true}
+                                handler={() => {
+                                    router.replace(PAGE.Referral)
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>}
             </div>
         </>
     );

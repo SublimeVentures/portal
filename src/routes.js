@@ -4,6 +4,8 @@ export const API = {
     fetchWallets: "/api/settings/wallets",
     settingsWallet: "/api/settings/wallets/",
     settingsStake: "/api/settings/stake",
+    referral: "/api/referral/",
+    fetchReferralClaim: "/api/referral-claim",
     fetchVault: "/api/vault/all",
     fetchPayout: "/api/payout/",
     fetchClaim: "/api/claim",

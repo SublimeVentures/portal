@@ -2,6 +2,7 @@ import { isAddress } from "web3-validator";
 import { BigNumber } from "bignumber.js";
 
 import abi_claim from "../../../abi/ClaimFacet.json";
+import abi_referralClaim from "../../../abi/ReferralClaimFacet.abi.json";
 import abi_otc from "../../../abi/OtcFacet.abi.json";
 import abi_invest from "../../../abi/InvestFacet.abi.json";
 
@@ -16,6 +17,7 @@ import abi_mb_generic from "../../../abi/genericMysteryBox.abi.json";
 import abi_mb_based from "../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
+import { blockchainPrerequisite as prerequisite_referralClaimPayout } from "@/components/App/Referral/ReferralClaimPayoutModal";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
 
@@ -34,6 +36,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REFERRAL_CLAIM: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -415,6 +418,35 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+        case METHOD.REFERRAL_CLAIM: {
+            const isValid =
+                validAddress(params?.contract) &&
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.amount) &&
+                validNumber(params?.offerId) &&
+                validNumber(params?.claimId);
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "claimReferralPayouts",
+                          inputs: [
+                              params.offerId,
+                              params.claimId,
+                              params.amount,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_referralClaim,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
     }
 };
 
@@ -431,6 +463,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.CLAIM: {
             return await prerequisite_claimPayout(params);
+        }
+        case METHOD.REFERRAL_CLAIM: {
+            return await prerequisite_referralClaimPayout(params);
         }
         default: {
             return { ok: true, data: {} };

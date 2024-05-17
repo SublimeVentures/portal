@@ -22,6 +22,8 @@ const { router: storeRoute } = require("./server/routes/store.router.js");
 const { router: settingsRoute } = require("./server/routes/settings.router.js");
 const { router: payoutRoute } = require("./server/routes/payout.router.js");
 const { router: claimRoute } = require("./server/routes/claim.router.js");
+const { router: referralRoute } = require("./server/routes/referral.router.js");
+const { router: referralClaimRoute } = require("./server/routes/referralClaim.router.js");
 
 const port = process.env.PORT || 3000;
 const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
@@ -51,6 +53,8 @@ nextApp.prepare().then(async () => {
     server.use("/api/settings", settingsRoute);
     server.use("/api/payout", payoutRoute);
     server.use("/api/claim", claimRoute);
+    server.use("/api/referral", referralRoute);
+    server.use("/api/referral-claim", referralClaimRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {

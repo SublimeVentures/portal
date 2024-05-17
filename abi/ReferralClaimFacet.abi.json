@@ -1,0 +1,30 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "offerId_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "claimId_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes",
+                "name": "signature_",
+                "type": "bytes"
+            }
+        ],
+        "name": "claimReferralPayouts",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

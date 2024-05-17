@@ -49,6 +49,7 @@ export default function useLoginFlow() {
             const signature = await signMessageFn({ message });
 
             const callbackUrl = router.query.callbackUrl;
+            const referralCode = router.query.referral;
 
             const isAuth = await logIn(
                 message,
@@ -56,6 +57,7 @@ export default function useLoginFlow() {
                 Number(process.env.NEXT_PUBLIC_TENANT),
                 partner,
                 LOGIN_TYPE.WEB3,
+                referralCode
             );
 
             if (isAuth?.ok) {

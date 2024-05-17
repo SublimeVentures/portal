@@ -10,6 +10,7 @@ import {
     IoLogOutOutline as IconLogout,
     IoSettingsOutline as IconSetting,
     IoDiamondOutline as IconPremium,
+    IoPersonAdd as IconPersonAdd,
 } from "react-icons/io5";
 import { FaDiscord as IconDiscord } from "react-icons/fa";
 import { PiPlantFill as IconGrowth } from "react-icons/pi";
@@ -27,8 +28,11 @@ import { cn } from "@/lib/cn";
 
 const {
     seo: { NAME },
+    tenantIndex,
     externalLinks,
 } = getTenantConfig();
+
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const TENANT_LOGO = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -164,6 +168,12 @@ export default function Sidebar({ session }) {
                 icon: <IconSetting className="w-8 mr-3 text-2xl" />,
             },
             {
+                name: "Referrals",
+                link: PAGE.Referral,
+                icon: <IconPersonAdd className="w-8 mr-3 text-2xl" />,
+                condition: isBaseVCTenant
+            },
+            {
                 name: "Log out",
                 icon: <IconLogout className="w-8 mr-3 text-2xl" />,
                 action: true,
@@ -185,6 +195,9 @@ export default function Sidebar({ session }) {
 
     const generateLink = (group) => {
         return group.map((el) => {
+            if (el.condition !== undefined && !el.condition) {
+                return null;
+            }
             if (el.action)
                 return (
                     <div

@@ -11,6 +11,7 @@ const PAGE = {
     Launchpad: "/app/launchpad",
     OTC: "/app/otc",
     Notifs: "/app/latest",
+    Referral: "/app/referral",
     Mysterybox: "/app/mysterybox",
     Upgrades: "/app/upgrades",
     Settings: "/app/settings",
