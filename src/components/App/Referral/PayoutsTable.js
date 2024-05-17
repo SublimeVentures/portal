@@ -2,6 +2,7 @@ import {
     useReactTable, flexRender, createColumnHelper, getCoreRowModel, getPaginationRowModel, getSortedRowModel
 } from '@tanstack/react-table';
 import { Fragment, useMemo, useState } from "react";
+import TableActions from './TableActions';
 
 const PayoutsTable = ({ dataProp }) => {
     const data = useMemo(() => dataProp, [dataProp]);
@@ -119,56 +120,7 @@ const PayoutsTable = ({ dataProp }) => {
                     </tbody>
                 </table>
                 <div className="h-2" />
-                <div className="flex items-center gap-2">
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.setPageIndex(0)}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        {'<<'}
-                    </button>
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        {'<'}
-                    </button>
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        {'>'}
-                    </button>
-                    <button
-                        className="border rounded p-1"
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        {'>>'}
-                    </button>
-                    <span className="flex items-center gap-1">
-                        <div>Page</div>
-                        <strong>
-                            {table.getState().pagination.pageIndex + 1} of{' '}
-                            {table.getPageCount()}
-                        </strong>
-                    </span>
-                    <select
-                        value={table.getState().pagination.pageSize}
-                        onChange={e => {
-                            table.setPageSize(Number(e.target.value))
-                        }}
-                        className='text-black'
-                    >
-                        {[5, 10, 20].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                                Show {pageSize}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <TableActions table={table} />
             </div>
         )
     }

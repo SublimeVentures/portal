@@ -148,5 +148,5 @@ export default function ReferralClaimPayoutModal({ model, setter, props }) {
         return transactionSuccessful ? contentSuccess() : contentQuery();
     };
 
-    return <GenericModal isOpen={model} closeModal={() => closeModal()} title={title()} content={content()} />;
+    return <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} />;
 }

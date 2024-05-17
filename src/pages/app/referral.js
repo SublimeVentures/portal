@@ -25,7 +25,7 @@ export default function AppReferral({ session }) {
 
     const {
         isLoadingReferralCode,
-        data: response,
+        data: referralCodeResponse,
         isReferralCodeError,
     } = useQuery({
         queryKey: ["fetchUserReferralCode"],
@@ -64,10 +64,10 @@ export default function AppReferral({ session }) {
     });
 
     useEffect(() => {
-        if (response) {
-            setReferral(`${process.env.DOMAIN}/login?referral=${response.hash}`)
+        if (referralCodeResponse) {
+            setReferral(`${process.env.DOMAIN}/login?referral=${referralCodeResponse.hash}`)
         }
-    }, [response])
+    }, [referralCodeResponse])
 
 
     const closeClaimModal = () => {

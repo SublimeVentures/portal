@@ -15,21 +15,6 @@ export default function DetailsSidebar({ model, setter, claimModalProps }) {
         refetchReferralClaims,
     } = claimModalProps;
 
-    // const {
-    //     isSuccess: isSuccessPayouts,
-    //     data: payouts,
-    //     refetch: refetchPayouts,
-    // } = useQuery({
-    //     queryKey: ["userPayouts", userId, offerId],
-    //     queryFn: () => fetchInvestmentPayout(offerId),
-    //     refetchOnMount: false,
-    //     refetchOnWindowFocus: false,
-    //     cacheTime: 5 * 60 * 1000,
-    //     staleTime: 1 * 30 * 1000,
-    //     enabled: offerId > 0,
-    // });
-
-    // const availablePayouts = isSuccessPayouts ? payouts.reduce((acc, obj) => acc + obj.amount, 0) : 0;
     const isNextPayout = claimModalDetails?.referralPayouts?.length > 0;
     const nextPayout = isNextPayout ? claimModalDetails?.referralPayouts[0] : {};
     const symbol = isNextPayout ? nextPayout?.currencySymbol : "USD";
@@ -39,19 +24,14 @@ export default function DetailsSidebar({ model, setter, claimModalProps }) {
         chainId: nextPayout.chainId,
     };
 
-    // const claimed = offerId > 0 ? vaultData.find((el) => el.id === offerId)?.claimed : 0;
-    // const performance = (claimed / invested) * 100;
-
     const payoutClaimProps = {
         ...claimModalDetails,
         currency,
         refetchReferralClaims
     };
 
-    const closeModal = async () => {
+    const closeModal = () => {
         setter();
-
-        setTimeout(() => { }, 400);
     };
 
     const closeClaimPayoutModal = () => {
@@ -62,7 +42,7 @@ export default function DetailsSidebar({ model, setter, claimModalProps }) {
     };
 
     const openPayoutClaim = () => {
-        // if (!isNextPayout) return;
+        if (!isNextPayout) return;
         setPayoutClaimOpen(true);
     };
 
@@ -151,7 +131,7 @@ export default function DetailsSidebar({ model, setter, claimModalProps }) {
     return (
         <GenericRightModal
             isOpen={model}
-            closeModal={() => closeModal()}
+            closeModal={closeModal}
             title={title()}
             content={content()}
             persistent={false}
