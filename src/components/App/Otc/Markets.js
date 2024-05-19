@@ -25,7 +25,7 @@ const getPayoutStructure = (isManaged, ticker) => {
 const getMarketRow = (el, cdn, currentMarket, changeMarket) => {
     return (
         <div
-            key={el.offerId}
+            key={el.slug}
             onClick={() => changeMarket(el.slug)}
             className={`group p-2 flex items-center cursor-pointer transition duration-300 hover:bg-app-success hover:text-black ${el?.slug === currentMarket?.slug ? "bg-app-success text-black" : ""}`}
         >

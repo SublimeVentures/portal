@@ -12,6 +12,7 @@ import {
 import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
+import { phases } from "@/lib/phases";
 import routes from "@/routes";
 import PAGE from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
@@ -25,15 +26,16 @@ import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestC
 import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
 import { InvestProvider } from "@/components/App/Offer/InvestContext";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
-import usePhaseTimelineMemo from "@/lib/hooks/usePhaseTimelineMemo";
-import usePhaseInvestmentMemo from "@/lib/hooks/usePhaseInvestmentMemo";
 
 export const AppOfferDetails = ({ session }) => {
     const router = useRouter();
     const { slug } = router.query;
     const { userId, tenantId } = session;
 
-    //todo: check if fetching right data
+    let [phaseIsClosed, setPhaseIsClosed] = useState(false);
+    let [phaseCurrent, setPhaseCurrent] = useState(false);
+    let [phaseNext, setPhaseNext] = useState(false);
+
     const {
         isSuccess: offerDetailsState,
         data: offerData,
@@ -48,11 +50,7 @@ export const AppOfferDetails = ({ session }) => {
         staleTime: 15 * 60 * 1000,
     });
 
-    const phases = usePhaseTimelineMemo(offerData);
-    const { phaseCurrent, phaseNext, offerClosed, phaseRefresh } = usePhaseInvestmentMemo(phases, offerData);
-
     const offerId = offerData?.id;
-
     const {
         isSuccess: offerAllocationState,
         data: allocation,
@@ -63,8 +61,8 @@ export const AppOfferDetails = ({ session }) => {
         queryFn: () => fetchOfferAllocation(offerId),
         refetchOnMount: false,
         refetchOnWindowFocus: true,
-        // refetchInterval: 15000,
-        refetchInterval: offerClosed ? false : 15000,
+        refetchInterval: 15000,
+        // refetchInterval: phaseIsClosed ? false : 15000,
     });
 
     const {
@@ -76,7 +74,7 @@ export const AppOfferDetails = ({ session }) => {
         queryKey: ["userAllocation", offerId, userId],
         queryFn: () => fetchUserInvestment(offerData?.id),
         refetchOnMount: false,
-        refetchOnWindowFocus: !offerClosed,
+        refetchOnWindowFocus: !phaseIsClosed,
         enabled: !!offerData?.id,
     });
 
@@ -117,19 +115,30 @@ export const AppOfferDetails = ({ session }) => {
         }
     }, [errorOfferDetails, errorOfferAllocation, errorUserAllocation]);
 
+    const feedPhases = () => {
+        if (!offerData?.id) return;
+        const { isClosed, phaseCurrent, phaseNext } = phases({
+            ...offerData,
+            ...allocation,
+        });
+        setPhaseIsClosed(isClosed);
+        setPhaseCurrent(phaseCurrent);
+        setPhaseNext(phaseNext);
+    };
+
+    const paramsBar = {
+        offer: offerData,
+        phaseCurrent,
+        phaseNext,
+        phaseIsClosed,
+        refreshInvestmentPhase: feedPhases,
+    };
+
     const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
 
-    const paramsBar = {
-        offerData,
-        phaseCurrent,
-        phaseNext,
-        offerClosed,
-        phaseRefresh,
-    };
-
     const paramsInvest = {
-        offerData,
+        offer: offerData,
         refetchUserAllocation,
         userAllocationState,
         refetchOfferAllocation,
@@ -146,7 +155,7 @@ export const AppOfferDetails = ({ session }) => {
         offer: offerData,
         allocation,
         userInvested: userAllocation?.invested,
-        offerClosed,
+        phaseIsClosed,
         refetchUserAllocation,
     };
 

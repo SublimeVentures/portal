@@ -1,47 +1,39 @@
+const { serializeError } = require("serialize-error");
+const { QueryTypes } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
-async function getStoreItemsOwned(userId, tenantId) {
+const query_getUserUpgrades = `
+    SELECT
+        "storeUser"."amount",
+        "store"."id" AS "storeId",
+        "store"."name" AS "storeName",
+        "storePartner"."img" AS "partnerImg"
+    FROM
+        "storeUser"
+            JOIN
+        "storePartner" ON "storeUser"."storePartnerId" = "storePartner"."id"
+            JOIN
+        "store" ON "storePartner"."storeId" = "store"."id"
+    WHERE
+        "storeUser"."userId" = :userId AND
+        "storePartner"."tenantId" = :tenantId;
+    `;
+
+async function getUserUpgrades(userId, tenantId) {
     try {
-        return models.storeUser.findAll({
-            where: {
-                userId: userId,
-            },
-            include: [
-                {
-                    model: models.storePartner,
-                    as: "storePartner", // replace with the correct alias if you have defined one
-                    where: {
-                        tenantId: tenantId,
-                    },
-                    include: [
-                        {
-                            model: models.store,
-                            as: "store", // replace with the correct alias if you have defined one
-                            attributes: [], // Only fetch the storeId
-                        },
-                    ],
-                    attributes: [], // No additional attributes from storePartner are needed
-                },
-            ],
-            attributes: [
-                "amount",
-                [db.literal('"storePartner->store"."id"'), "id"],
-                [db.literal('"storePartner->store"."name"'), "name"],
-                [db.literal('"storePartner"."img"'), "img"],
-            ],
-            raw: true,
+        return await db.query(query_getUserUpgrades, {
+            type: QueryTypes.SELECT,
+            replacements: { userId, tenantId },
         });
     } catch (error) {
-        logger.error("QUERY :: [getStoreItemsOwned]", {
+        logger.error("QUERY :: [getUserUpgrades]", {
             error: serializeError(error),
             userId,
-            tenantId,
         });
+        return [];
     }
-    return [];
 }
 
 async function getStoreItemsOwnedByUser(userId, tenantId, storeId, transaction) {
@@ -92,7 +84,7 @@ async function updateUserUpgradeAmount(userId, storePartnerId, amount, transacti
 }
 
 module.exports = {
-    getStoreItemsOwned,
+    getUserUpgrades,
     getStoreItemsOwnedByUser,
     updateUserUpgradeAmount,
 };

@@ -16,28 +16,37 @@ const InvestContext = createContext({
 
 export const useInvestContext = () => useContext(InvestContext);
 
-export const InvestProvider = ({ children, initialData }) => {
+export const InvestProvider = ({ children, offerData }) => {
     const [cookies, setCookie, removeCookie] = useCookies();
     const [bookingDetails, setBookingDetails] = useState(DEFAULT_STATE);
     const [offerId, setOfferId] = useState(0);
 
     useEffect(() => {
-        console.log("IE :: LOAD");
-        const cookie = cookies[`hash_${initialData}`];
-        console.log("IE :: LOAD", cookie);
-
-        if (!!cookie) {
-            setBookingDetails({
-                code: cookie.code,
-                expires: Number(cookie.expires),
-                amount: Number(cookie.amount),
-                signature: cookie.signature,
-            });
-            console.log("IE :: savedCookie", cookie);
-        }
-        console.log("IE :: initialData", initialData);
-        setOfferId(initialData);
-    }, [initialData]);
+        // console.log("IE :: LOAD");
+        // const cookie = cookies[`hash_${initialData}`];
+        // console.log("IE :: LOAD", cookie);
+        //
+        // if (!!cookie) {
+        //     setBookingDetails({
+        //         code: cookie.code,
+        //         expires: Number(cookie.expires),
+        //         amount: Number(cookie.amount),
+        //         signature: cookie.signature,
+        //     });
+        //     console.log("IE :: savedCookie", cookie);
+        // }
+        // console.log("IE :: initialData", initialData);
+        // setOfferId(initialData);
+    }, [
+        offerData.offerAllocation,
+        offerData.offerDetails,
+        offerData.phases,
+        offerData.phasesData,
+        offerData.phasesData?.phaseNext,
+        offerData.phasesData?.phaseCurrent,
+        offerData.userAllocation?.invested,
+        // offerData.upgrades?,
+    ]);
 
     const setBooking = (booking) => {
         const expires = Number(booking.expires);
@@ -62,7 +71,7 @@ export const InvestProvider = ({ children, initialData }) => {
 
     const getSavedBooking = () => {
         const saved = cookies[`hash_${offerId}`];
-        return !!saved ? { ok: true, ...saved } : { ok: false };
+        return saved ? { ok: true, ...saved } : { ok: false };
     };
 
     const value = {

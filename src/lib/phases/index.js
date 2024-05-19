@@ -6,7 +6,7 @@ const PhaseId = {
     FCFS: 5,
     UnlimitedSlow: 6,
     Unlimited: 7,
-    Closed: 7,
+    Closed: 8,
 };
 
 const Phases = {

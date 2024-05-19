@@ -1,21 +1,21 @@
+const { Op, QueryTypes } = require("sequelize");
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
-async function getOfferRaise(id) {
-    try {
-        return await models.offerFundraise.findOne({
-            where: { offerId: id },
-        });
-    } catch (error) {
-        logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
-            error: serializeError(error),
-        });
-    }
-    return {};
-}
+// async function getOfferRaise(id) {
+//     try {
+//         return await models.offerFundraise.findOne({
+//             where: { offerId: id },
+//         });
+//     } catch (error) {
+//         logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
+//             error: serializeError(error),
+//         });
+//     }
+//     return {};
+// }
 
 async function investIncreaseAllocationReserved(offer, wantedAllocation, upgradeGuaranteed, transaction) {
     let effectiveAllocationReserved;
@@ -150,7 +150,7 @@ async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transa
 }
 
 module.exports = {
-    getOfferRaise,
+    // getOfferRaise,
     bookAllocationGuaranteed,
     expireAllocation,
     investIncreaseAllocationReserved,

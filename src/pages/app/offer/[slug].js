@@ -1,7 +1,7 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import {
     fetchOfferAllocation,
@@ -12,7 +12,6 @@ import {
 import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
-import { phases } from "@/lib/phases";
 import routes from "@/routes";
 import PAGE from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
@@ -26,21 +25,19 @@ import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestC
 import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
 import { InvestProvider } from "@/components/App/Offer/InvestContext";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
+import usePhaseTimelineMemo from "@/lib/hooks/usePhaseTimelineMemo";
+import usePhaseInvestmentMemo from "@/lib/hooks/usePhaseInvestmentMemo";
 
 export const AppOfferDetails = ({ session }) => {
     const router = useRouter();
     const { slug } = router.query;
     const { userId, tenantId } = session;
-
-    let [phaseIsClosed, setPhaseIsClosed] = useState(false);
-    let [phaseCurrent, setPhaseCurrent] = useState(false);
-    let [phaseNext, setPhaseNext] = useState(false);
-
+    console.log("userId", userId);
     const {
-        isSuccess: offerDetailsState,
-        data: offerData,
-        error: errorOfferDetails,
-        refetch: refetchOfferDetails,
+        isSuccess: offerDetails_isSuccess,
+        data: offerDetails,
+        error: offerDetails_error,
+        refetch: offerDetails_refetch,
     } = useQuery({
         queryKey: ["offerDetails", slug],
         queryFn: () => fetchOfferDetails(slug),
@@ -50,62 +47,76 @@ export const AppOfferDetails = ({ session }) => {
         staleTime: 15 * 60 * 1000,
     });
 
-    const offerId = offerData?.id;
+    const phases = usePhaseTimelineMemo(offerDetails);
+    const phasesData = usePhaseInvestmentMemo(phases, offerDetails);
+
+    const offerId = offerDetails?.id;
+    const isExtraQueryEnabled = !!offerDetails?.id;
+    const offerIsClosed = phasesData?.offerClosed;
+
+    const isAllocationRefetchEnabled = offerIsClosed ? false : 15000;
     const {
-        isSuccess: offerAllocationState,
-        data: allocation,
-        error: errorOfferAllocation,
-        refetch: refetchOfferAllocation,
+        isSuccess: offerAllocation_isSuccess,
+        data: offerAllocation,
+        error: offerAllocation_error,
+        refetch: offerAllocation_refetch,
     } = useQuery({
         queryKey: ["offerAllocation", offerId],
         queryFn: () => fetchOfferAllocation(offerId),
+        enabled: isExtraQueryEnabled,
         refetchOnMount: false,
         refetchOnWindowFocus: true,
-        refetchInterval: 15000,
-        // refetchInterval: phaseIsClosed ? false : 15000,
+        refetchInterval: isAllocationRefetchEnabled,
     });
 
     const {
-        isSuccess: userAllocationState,
+        isSuccess: userAllocation_isSuccess,
         data: userAllocation,
-        refetch: refetchUserAllocation,
-        error: errorUserAllocation,
+        refetch: userAllocation_refetch,
+        error: userAllocation_error,
     } = useQuery({
         queryKey: ["userAllocation", offerId, userId],
-        queryFn: () => fetchUserInvestment(offerData?.id),
+        queryFn: () => fetchUserInvestment(offerDetails?.id),
+        enabled: isExtraQueryEnabled,
         refetchOnMount: false,
-        refetchOnWindowFocus: !phaseIsClosed,
-        enabled: !!offerData?.id,
+        refetchOnWindowFocus: !offerIsClosed,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 15 * 1000,
     });
 
-    const { data: premiumData, refetch: refetchPremiumData } = useQuery({
+    const {
+        isSuccess: userUpgrades_isSuccess,
+        data: userUpgrades,
+        refetch: userUpgrades_refetch,
+        error: userUpgrades_error,
+    } = useQuery({
         queryKey: ["premiumOwned", userId, tenantId],
         queryFn: fetchStoreItemsOwned,
         refetchOnMount: true,
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
-        staleTime: 5 * 1000,
+        staleTime: 5 * 60 * 1000,
     });
 
     useEffect(() => {
         try {
-            if (!!errorOfferDetails) {
-                refetchOfferDetails().then((el) => {
-                    if (!!errorOfferDetails) {
+            if (offerDetails_error) {
+                offerDetails_refetch().then((el) => {
+                    if (offerDetails_error) {
                         throw Error("Offer details fetch fail");
                     }
                 });
             }
-            if (!!errorOfferAllocation) {
-                refetchOfferAllocation().then((el) => {
-                    if (!!errorOfferAllocation) {
+            if (offerAllocation_error) {
+                offerAllocation_refetch().then((el) => {
+                    if (offerAllocation_error) {
                         throw Error("Offer allocations fetch fail");
                     }
                 });
             }
-            if (!!errorUserAllocation) {
-                refetchUserAllocation().then((el) => {
-                    if (!!errorUserAllocation) {
+            if (userAllocation_error) {
+                userAllocation_refetch().then((el) => {
+                    if (userAllocation_error) {
                         throw Error("User allocations fetch fail");
                     }
                 });
@@ -113,88 +124,97 @@ export const AppOfferDetails = ({ session }) => {
         } catch (error) {
             router.push(PAGE.Opportunities);
         }
-    }, [errorOfferDetails, errorOfferAllocation, errorUserAllocation]);
-
-    const feedPhases = () => {
-        if (!offerData?.id) return;
-        const { isClosed, phaseCurrent, phaseNext } = phases({
-            ...offerData,
-            ...allocation,
-        });
-        setPhaseIsClosed(isClosed);
-        setPhaseCurrent(phaseCurrent);
-        setPhaseNext(phaseNext);
-    };
-
-    const paramsBar = {
-        offer: offerData,
-        phaseCurrent,
-        phaseNext,
-        phaseIsClosed,
-        refreshInvestmentPhase: feedPhases,
-    };
+    }, [offerDetails_error, offerAllocation_error, userAllocation_error]);
 
     const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
 
-    const paramsInvest = {
-        offer: offerData,
-        refetchUserAllocation,
-        userAllocationState,
-        refetchOfferAllocation,
-        userInvested: userAllocation,
-        allocation,
-        session,
-        upgradesUse: { guaranteedUsed, increasedUsed },
-        phaseCurrent,
-        premiumData,
-        refetchPremiumData,
+    const investmentContextData = {
+        offerDetails,
+        offerAllocation,
+        offerAllocation_refetch,
+        userAllocation,
+        userAllocation_refetch,
+        userUpgrades,
+        userUpgrades_refetch,
+        phases,
+        phasesData,
     };
 
-    const paramsParams = {
-        offer: offerData,
-        allocation,
-        userInvested: userAllocation?.invested,
-        phaseIsClosed,
-        refetchUserAllocation,
-    };
+    console.log("investmentContextData", investmentContextData);
 
+    //     const paramsBar = {
+    //         offerDetails,
+    //         phaseCurrent,
+    //         phaseNext,
+    //         offerClosed,
+    //         phaseRefresh,
+    //     };
+    //
+    //     const paramsInvest = {
+    //         offerDetails,
+    //         userAllocation_refetch,
+    //         userAllocation_isSuccess,
+    //         offerAllocation_refetch,
+    //         userInvested: userAllocation,
+    //         allocation,
+    //         session,
+    //         upgradesUse: { guaranteedUsed, increasedUsed },
+    //         phaseCurrent,
+    //         premiumData,
+    //         refetchPremiumData,
+    //     };
+    //
+    //     const paramsParams = {
+    //         offer: offerDetails,
+    //         allocation,
+    //         userInvested: userAllocation?.invested,
+    //         offerClosed,
+    //         userAllocation_refetch,
+    //     };
+    //
     const renderPage = () => {
-        if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader />;
-        if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty />;
+        if (
+            !offerDetails_isSuccess ||
+            !offerAllocation_isSuccess ||
+            !userAllocation_isSuccess ||
+            !phasesData?.phaseNext
+        )
+            return <Loader />;
+        if (!offerDetails?.id || Object.keys(offerDetails).length === 0) return <Empty />;
 
         return (
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                <OfferDetailsTopBar paramsBar={paramsBar} />
-                <div className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
-                    {!phaseIsClosed ? (
-                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
-                    ) : (
-                        <OfferDetailsInvestClosed />
-                    )}
-                </div>
-                <div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
-                    <OfferDetailsParams paramsParams={paramsParams} />
-                </div>
-                <div className="flex flex-col col-span-12">
-                    <OfferDetailsDetails offer={offerData} />
-                </div>
+                {/*<OfferDetailsTopBar paramsBar={paramsBar} />*/}
+                {/*<div className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">*/}
+                {/*    {!phaseIsClosed ? (*/}
+                {/*        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />*/}
+                {/*    ) : (*/}
+                {/*        <OfferDetailsInvestClosed />*/}
+                {/*    )}*/}
+                {/*</div>*/}
+                {/*<div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">*/}
+                {/*    <OfferDetailsParams paramsParams={paramsParams} />*/}
+                {/*</div>*/}
+                {/*<div className="flex flex-col col-span-12">*/}
+                {/*    <OfferDetailsDetails offer={offerDetails} />*/}
+                {/*</div>*/}
             </div>
         );
     };
-
-    useEffect(() => {
-        if (!offerData?.ok) {
-            router.push(routes.Opportunities);
-        }
-        feedPhases();
-    }, [offerData, allocation?.isSettled, allocation?.isPaused]);
-
-    const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${getCopy("NAME")}`;
+    //
+    //     useEffect(() => {
+    //         if (!offerDetails?.ok) {
+    //             router.push(routes.Opportunities);
+    //         }
+    //         feedPhases();
+    //     }, [offerDetails, allocation?.isSettled, allocation?.isPaused]);
+    //
+    const pageTitle = `${!offerDetails_isSuccess ? "Loading" : offerDetails?.name}  - Invest - ${getCopy("NAME")}`;
     return (
         <>
             <NextSeo title={pageTitle} />
-            <InvestProvider initialData={offerId}>{renderPage()}</InvestProvider>
+            <InvestProvider offerData={investmentContextData}>{renderPage()}</InvestProvider>
         </>
     );
 };
@@ -211,7 +231,6 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 staleTime: 15 * 60 * 1000,
             });
             const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
-
             const offerId = offerDetails.id;
 
             if (!offerId) {

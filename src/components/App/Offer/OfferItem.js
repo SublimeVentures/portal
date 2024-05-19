@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PAGE from "@/routes";
-import { PhaseId, phases } from "@/lib/phases";
+import { PhaseId } from "@/lib/phases";
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
+import { phases } from "@/lib/phases/phaseSystem";
 
 export const OfferStatus = {
     PENDING: "pending",
@@ -64,7 +65,9 @@ export default function OfferItem({ offer, cdn }) {
     }, []);
 
     const { phaseCurrent } = phases(offer);
+
     const state = phaseCurrent?.phaseName;
+    if (!state) return <></>;
 
     const status = getStatus(phaseCurrent);
 

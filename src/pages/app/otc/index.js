@@ -27,8 +27,8 @@ export default function AppOtc({ session }) {
         queryFn: fetchMarkets,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
-        cacheTime: 4 * 60 * 60 * 1000,
-        staleTime: 3 * 60 * 60 * 1000,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1 * 60 * 1000,
     });
 
     console.log("otc", otc);
@@ -57,10 +57,12 @@ export default function AppOtc({ session }) {
         queryFn: () => fetchOffers(currentMarket?.otc),
         refetchOnMount: true,
         refetchOnWindowFocus: true,
-        cacheTime: 0,
-        staleTime: 0,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1 * 10 * 1000,
         enabled: !!currentMarket?.offerId,
     });
+
+    console.log("offers", offers, offersIsSuccess);
 
     const changeMarket = (slug) => {
         router.push(`${PAGE.OTC}/?market=${slug}`, undefined, {
@@ -100,7 +102,6 @@ export default function AppOtc({ session }) {
     };
 
     const renderPage = () => {
-        if (!otcIsSuccess) return <Loader />;
         if (!otcIsSuccess || !vaultIsSuccess) return <Loader />;
         if (otc?.length === 0)
             return (

@@ -24,7 +24,7 @@ router.get("/allocation/:id", async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
 
-    return res.status(200).json(await getOfferAllocation(req));
+    return res.status(200).json(await getOfferAllocation(user, req));
 });
 
 router.get("/:id/upgrade/:upgrade", async (req, res) => {

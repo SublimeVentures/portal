@@ -74,11 +74,11 @@ const query_getOfferList = `
         o.display = true AND
         o."isLaunchpad" = :isLaunchpad AND
         o."isAccelerator" = false AND
-        of."offerId" IS NOT NULL AND
         of."offerId" IS NOT NULL
     ORDER BY
         of.d_open DESC;
 `;
+
 async function getOfferList(partnerId, tenantId) {
     try {
         return await db.query(query_getOfferList, {
@@ -161,7 +161,7 @@ async function getOtcList(partnerId, tenantId) {
 const query_getOfferDetails = `
     SELECT
         o.*,
-        ol.*,
+        of.*,
         od.description
     FROM
         "offer" o
@@ -169,26 +169,26 @@ const query_getOfferDetails = `
         "offerDescription" od ON o."descriptionId" = od.id
             LEFT JOIN LATERAL (
             SELECT
-                ol1.*
+                of_prime.*
             FROM
-                "offerLimit" ol1
+                "offerFundraise" of_prime
             WHERE
-                ol1."offerId" = o.id AND (
-                    ol1."partnerId" = :tenantId or 
-                    (o."isTenantExclusive" = false AND ol1."partnerId" = :partnerId)
+                of_prime."offerId" = o.id AND (
+                        of_prime."partnerId" = :tenantId or 
+                    (o."isTenantExclusive" = false AND of_prime."partnerId" = :partnerId)
                 )
             ORDER BY
                 CASE
-                    WHEN ol1."partnerId" = :tenantId THEN 1
-                    WHEN ol1."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
+                    WHEN of_prime."partnerId" = :tenantId THEN 1
+                    WHEN of_prime."partnerId" = :partnerId AND o."isTenantExclusive" = false THEN 2
                     ELSE 3
                 END
             LIMIT 1
-    ) ol ON true
+    ) of ON true
     WHERE
         o.display = true AND
         o.slug = :slug AND
-        ol."offerId" IS NOT NULL
+        of."offerId" IS NOT NULL
     LIMIT 1;
 `;
 async function getOfferDetails(slug, partnerId, tenantId) {
@@ -206,15 +206,51 @@ async function getOfferDetails(slug, partnerId, tenantId) {
     return {};
 }
 
+const query_getOfferFunding = `
+    SELECT
+        of."alloRes",
+        of."alloFilled",
+        of."alloGuaranteed",
+        of."alloResInjected",
+        of."alloFilledInjected",
+        of."alloGuaranteedInjected",
+        of."alloRaised",
+        of."isPaused",
+        of."isSettled",
+        of."isRefund"
+    FROM
+        "offerFundraise" of
+    WHERE
+        of."offerId" = :offerId
+    ORDER BY
+        CASE
+            WHEN of."partnerId" = :tenantId THEN 1
+            WHEN of."partnerId" = :partnerId THEN 2
+            ELSE 3
+        END
+    LIMIT 1;
+`;
+
+async function getOfferFunding(offerId, partnerId, tenantId) {
+    try {
+        return await db.query(query_getOfferFunding, {
+            type: QueryTypes.SELECT,
+            replacements: { offerId, partnerId, tenantId },
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getOfferFunding]", {
+            error: serializeError(error),
+            slug,
+        });
+    }
+    return {};
+}
+
 async function getOfferWithLimits(offerId) {
     try {
         const offer = await models.offer.findOne({
             where: { id: offerId },
             include: [
-                {
-                    model: models.offerLimit,
-                    as: "offerLimits",
-                },
                 {
                     model: models.offerFundraise,
                     as: "offerFundraise",
@@ -233,6 +269,7 @@ module.exports = {
     getOffersPublic,
     getOfferList,
     getOfferDetails,
+    getOfferFunding,
     getLaunchpadList,
     getOtcList,
     getOfferWithLimits,
