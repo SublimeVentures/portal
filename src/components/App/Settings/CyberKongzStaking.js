@@ -8,12 +8,16 @@ import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
+import useGetStakeRequirements from "@/lib/hooks/useGetStakeRequirements";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
 export default function CyberKongzStaking({ stakingProps }) {
     const { session, account, stakingCurrency } = stakingProps;
+    const { diamonds } = useEnvironmentContext();
+
     const router = useRouter();
 
     const [staked, setStaked] = useState(false);
@@ -23,8 +27,24 @@ export default function CyberKongzStaking({ stakingProps }) {
     const [unstakingModal, setUnStakingModal] = useState(false);
     const isElite = session.isElite;
 
+    const uuid = `${session?.tenantId}_${session?.userId}`;
+    const chainId = Object.keys(diamonds)[0];
+    const diamond = diamonds[chainId];
+    const stakeData = useGetStakeRequirements(
+        true,
+        uuid,
+        diamond,
+        Number(process.env.NEXT_PUBLIC_TENANT),
+        Number(chainId),
+    );
+
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
-    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(unstakeDate, staked);
+    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(
+        unstakeDate,
+        staked,
+        stakeData?.stakeLength[0],
+        stakeData?.stakeWithdraw[0],
+    );
 
     const refreshSession = async (force) => {
         console.log("refreshSession");
