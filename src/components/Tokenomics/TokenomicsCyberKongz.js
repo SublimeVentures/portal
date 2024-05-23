@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IoPlay as PlayIcon } from "react-icons/io5";
 import Linker from "@/components/link";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import { ButtonCitCapIconSize, CitCapButton } from "@/components/Button/CitCapButton";
 import Input from "@/components/App/Input";
 import { fetchCyberKongzEnvs } from "@/fetchers/public.fecher";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
-export default function TokenomicsCitCap({}) {
+const { externalLinks } = getTenantConfig();
+
+export default function TokenomicsCyberKongz({}) {
     const [bananaStaked, setBananaStaked] = useState(0);
 
     const [allocationTotal, setAllocationTotal] = useState("");
@@ -75,7 +78,7 @@ export default function TokenomicsCitCap({}) {
                     </div>
                     <div className={"flex justify-center items-center"}>
                         <div className={""}>
-                            <Linker url={ExternalLinks.GET_BANANA_ETH} text={"Get BANANA"} />
+                            <Linker url={externalLinks.GET_BANANA_ETH} text={"Get BANANA"} />
                         </div>
                     </div>
                 </div>
