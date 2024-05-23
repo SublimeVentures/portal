@@ -1,5 +1,5 @@
 import { Component } from "react";
-import Sentry from "@sentry/nextjs";
+import * as Sentry from "@sentry/nextjs";
 
 export default class ClientErrorBoundary extends Component {
     constructor(props) {
