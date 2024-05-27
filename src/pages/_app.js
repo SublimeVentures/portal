@@ -1,17 +1,16 @@
-import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
-import { config } from "@/lib/wagmi";
-import { queryClient } from "@/lib/queryCache";
+import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 
+import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import Layout from "@/components/Layout/Layout";
-import "react-tooltip/dist/react-tooltip.css";
-import "@/styles/globals.scss";
-
-import Gtag from "@/components/gtag";
-import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
-
-import { TENANT } from "@/lib/tenantHelper";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
+import Gtag from "@/components/gtag";
+import { config } from "@/lib/wagmi";
+import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
+import { queryClient } from "@/lib/queryCache";
+import { TENANT } from "@/v2/helpers/tenant";
+import "react-tooltip/dist/react-tooltip.css";
+import "@/v2/styles/globals.scss";
 
 switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     case TENANT.basedVC: {
