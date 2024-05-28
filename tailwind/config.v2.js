@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+
 module.exports = {
     content: ["app/**/*.{js}", "src/components/**/*.{js}"],
     theme: {
@@ -10,7 +12,6 @@ module.exports = {
                 "accent-light": "hsla(34, 97%, 72%)",
                 destructive: "hsla(0, 74%, 55%)",
                 "destructive-dark": "hsla(324, 29%, 19%)",
-            
                 "navy-50": "hsla(188, 91%, 38%)", // #09A0B8
                 "navy-100": "hsla(188, 91%, 37%)", // #099DB5
                 "navy-200": "hsla(194, 96%, 22%)", // #025770;
@@ -91,6 +92,46 @@ module.exports = {
             "accordion-down": "accordion-down 0.1s ease-out",
             "accordion-up": "accordion-up 0.1s ease-out",
         },
+        deg: {
+            80: "80deg",
+            130: "130deg",
+            140: "140deg",
+        },
     },
-    plugins: [],
-}
+    plugins: [
+        function ({ matchUtilities, theme }) {
+            matchUtilities(
+                {
+                    "border-gradient": (value) => {
+                        return {
+                            "--tw-border-gradient-color": value,
+                        };
+                    },
+                },
+                { values: flattenColorPalette.default(theme("colors")) },
+            );
+            matchUtilities(
+                {
+                    "bg-angle": (angle) => ({
+                        "--tw-bg-gradient-angle": angle,
+                    }),
+                },
+                {
+                    // values from config and defaults you wish to use most
+                    values: theme("deg"),
+                },
+            );
+            matchUtilities(
+                {
+                    "border-angle": (angle) => ({
+                        "--tw-border-gradient-angle": angle,
+                    }),
+                },
+                {
+                    // values from config and defaults you wish to use most
+                    values: theme("deg"),
+                },
+            );
+        },
+    ],
+};

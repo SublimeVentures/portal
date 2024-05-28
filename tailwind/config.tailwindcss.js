@@ -10,7 +10,11 @@ function loadTailwindConfig() {
 }
 
 const mergedConfig = merge(coreConfig, v2Config, loadTailwindConfig());
-
-mergedConfig.plugins.push(animatePlugin);
+mergedConfig.plugins = [
+    ...coreConfig.plugins,
+    ...v2Config.plugins,
+    ...mergedConfig.plugins,
+    animatePlugin
+];
 
 module.exports = mergedConfig;

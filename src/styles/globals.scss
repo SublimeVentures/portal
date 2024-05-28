@@ -246,3 +246,12 @@ body {
         object-fit: cover;
     }
 }
+
+@layer utilities {
+    .bg-border-gradient {
+        background: padding-box linear-gradient(var(--tw-bg-gradient-angle, 260deg), var(--tw-gradient-stops)),
+                    border-box linear-gradient(var(--tw-border-gradient-angle, 130deg), var(--tw-border-gradient-color), transparent 30%),
+                    border-box linear-gradient(var(--tw-bg-gradient-angle, 260deg), var(--tw-gradient-stops));
+        border-color: transparent !important;
+    }
+  }
