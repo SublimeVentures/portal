@@ -1,4 +1,5 @@
-import { InvestmentCard, PartnershipCard, EmptyInvestments, PayoutTable } from "@/v2/components/App/Vault";
+import { InvestmentCard, PartnershipCard, EmptyInvestments } from "@/v2/components/App/Vault";
+import PayoutTable, { PayoutTableVariants } from "@/v2/components/App/Vault/PayoutTable";
 import { SizeStatisticCard, ReturnStatisticCard, InvestedStatisticCard } from "@/v2/components/App/Vault/StatisticsCard";
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { Button } from "@/v2/components/ui/button";
@@ -30,7 +31,12 @@ const mockedPartnership = {
 
 export default function VaultDashboard({ viewOptions: { views, handleChangeView } = {}, isLoading }) {
     const isDesktop = useMediaQuery(breakpoints.md);
+    const isLargeDesktop = useMediaQuery(breakpoints.xxl);
     const [gridView] = views;
+
+    const tableVariant = isLargeDesktop
+        ? PayoutTableVariants.vertical
+        : PayoutTableVariants.horizontal;
 
     return (
         <div className="p-4 md:p-16 overflow-y-auto">
@@ -108,7 +114,7 @@ export default function VaultDashboard({ viewOptions: { views, handleChangeView 
                         </div>
                     </div>
 
-                    <PayoutTable isLoading={isLoading} items={mockedPayoutTable} />
+                    <PayoutTable variant={tableVariant} isLoading={isLoading} items={mockedPayoutTable} />
                 </div>
             </div>
         </div>

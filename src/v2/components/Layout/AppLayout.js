@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 export const layoutStyles = {
     "--alertHeight": "60px",
     "--headerHeight": "100px",
-    "--sidebarWidth": "300px",
+    "--sidebarWidth": "260px",
     "--navbarHeight": "100px",
 }
 
