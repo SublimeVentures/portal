@@ -14,7 +14,7 @@ const buttonVariants = cva(
                 outline: "bg-transparent border border-white hover:bg-foreground/[0.2]",
                 secondary: "bg-gray-300 border border-transparent hover:border-navy-100 hover:bg-transparent",
                 tertiary: "bg-transparent border border-navy-100 hover:border-gray-300 hover:bg-gray-300",
-                gradient: "bg-primary-light-gradient hover:opacity-70",
+                gradient: "bg-primary-light-gradient font-semibold hover:opacity-70",
                 link: "p-0 text-accent hover:underline hover:underline-offset-4",
                 destructive: "bg-destructive hover:bg-destructive/[.8]",
             },

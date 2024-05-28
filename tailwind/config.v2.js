@@ -42,7 +42,7 @@ module.exports = {
                 "8xl": "28px",
                 "9xl": "29px",
                 "10xl": "34px",
-                "11xl": "39ox",
+                "11xl": "39px",
             },
             fontWeight: {
                 light: 300,

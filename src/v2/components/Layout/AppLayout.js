@@ -28,7 +28,7 @@ const MobileLayout = ({ children, isBlockedAlert }) => {
     )
 }
 
-const DesktopLayout = ({ children, isBlockedAlert }) => {
+const DesktopLayout = ({ children, isBlockedAlert, title }) => {
     return (
         <div className={cn("flex h-full grow", { "mt-[var(--alertHeight)]": isBlockedAlert } )}>
             <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} />
@@ -40,7 +40,7 @@ const DesktopLayout = ({ children, isBlockedAlert }) => {
                 })}>
                     <div className="flex flex-col w-full h-full">
                         <main className="flex flex-col grow w-full overflow-y-hidden">
-                            <DesktopHeader />
+                            <DesktopHeader title={title} />
                             {children}
                         </main>
                     </div>
@@ -50,7 +50,7 @@ const DesktopLayout = ({ children, isBlockedAlert }) => {
     )
 }
 
-export default function LayoutApp({ children }) {
+export default function LayoutApp({ children, title }) {
     const isDesktop = useMediaQuery(breakpoints.md)
     
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
@@ -66,7 +66,7 @@ export default function LayoutApp({ children }) {
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
 
             {isDesktop 
-                ? <DesktopLayout isBlockedAlert={isBlockedAlert}>{children}</DesktopLayout>
+                ? <DesktopLayout title={title} isBlockedAlert={isBlockedAlert}>{children}</DesktopLayout>
                 : <MobileLayout isBlockedAlert={isBlockedAlert}>{children}</MobileLayout>
             }
         </div>

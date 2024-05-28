@@ -164,7 +164,7 @@ export default function AppVault({ session }) {
 
     return (
         <>
-            <Metadata title='Vault' />
+            <Metadata title="Vault" />
             <div className="flex flex-col h-full">
                 {renderView(currentView)}
             </div>
@@ -174,4 +174,4 @@ export default function AppVault({ session }) {
 
 export const getServerSideProps = async ({ req, res }) => await processServerSideData(req, res, routes.App);
 
-AppVault.getLayout = (page) => <AppLayout>{page}</AppLayout>
+AppVault.getLayout = (page) => <AppLayout title="Vault Dashboard">{page}</AppLayout>
