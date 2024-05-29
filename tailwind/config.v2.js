@@ -64,7 +64,7 @@ module.exports = {
                 "primary-dark-gradient": `linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%)`,
                 "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
                 "sheet-gradient": `linear-gradient(151deg, #051626 0%, #1A3754 49%, #051626 100%)`,
-                "sidebar-gradient": `linear-gradient(333deg, #0A1728 0%, #082536 100%)`,
+                "navbar-gradient": "linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%)",
 
                 "upgrade-to-premium-pattern": "url('/img/upgrade-to-premium-bg.png')",
                 "upgrade-to-premium-banner-pattern": "url('/img/upgrade-to-premium-banner.png')",
@@ -73,6 +73,9 @@ module.exports = {
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
+            gridTemplateColumns: {
+                // 'test': 'repeat(auto-fit, minmax(220px, 1fr))',
+              },
         },
         keyframes: {
             "accordion-down": {

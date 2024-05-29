@@ -1,41 +1,20 @@
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
+
 import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
 import { verifyID } from "@/lib/authHelpers";
-import { TENANT } from "@/lib/tenantHelper";
+import { useTenantSpecificData } from "@/v2/helpers/tenant";
 
-const HomeBased = dynamic(() => import("@/components/Home"), { ssr: true });
-const HomeCitCap = dynamic(() => import("@/components/HomeCitCap"), {
-    ssr: true,
-});
-const HomeKongz = dynamic(() => import("@/components/HomeKongzCapital"), {
-    ssr: true,
-});
-
-const HomeApes = dynamic(() => import("@/components/HomeApesCapital"), {
-    ssr: true,
-});
-
-const renderLanding = (account) => {
-    switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
-        case TENANT.basedVC: {
-            return <HomeBased account={account} />;
-        }
-        case TENANT.NeoTokyo: {
-            return <HomeCitCap account={account} />;
-        }
-        case TENANT.CyberKongz: {
-            return <HomeKongz account={account} />;
-        }
-        case TENANT.BAYC: {
-            return <HomeApes account={account} />;
-        }
-    }
+const renderLanding = (componentName, account) => {
+    const TenantComponent = dynamic(() => import(`@/components/${componentName}`, { ssr: true }))
+    return <TenantComponent account={account} />
 };
 
 export default function Home({ account }) {
     const seo = seoConfig(PAGE.Landing);
+    const { components } = useTenantSpecificData()
+
     return (
         <>
             <NextSeo
@@ -46,7 +25,7 @@ export default function Home({ account }) {
                 twitter={seo.twitter}
             />
 
-            {renderLanding(account)}
+            {renderLanding(components.landing, account)}
         </>
     );
 }
