@@ -31,7 +31,7 @@ async function getMarkets(session) {
 
 async function getOffers(req) {
     try {
-        return await getActiveOffers(Number(req.params.id));
+        return await getActiveOffers(Number(req.params.id), req.query);
     } catch (error) {
         logger.error(`ERROR :: [getOffers] OTC`, {
             error: serializeError(error),
@@ -42,7 +42,7 @@ async function getOffers(req) {
 
 async function getHistory(req) {
     try {
-        return await getHistoryOffers(Number(req.params.id));
+        return await getHistoryOffers(Number(req.params.id), req.query);
     } catch (error) {
         logger.error(`ERROR :: [getHistory] OTC`, {
             error: serializeError(error),
