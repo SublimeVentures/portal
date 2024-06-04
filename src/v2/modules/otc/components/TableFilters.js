@@ -5,7 +5,7 @@ import CrossIcon from "@/v2/assets/svg/cross.svg";
 import { otcViews } from "../logic/useCurrentView";
 import { offersFilters } from "../utils/filters";
 
-const FiltersDropdown = ({ filters, activeFilters, handleToggleFilter }) => {
+const FiltersDropdown = ({ filters, handleToggleFilter }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -16,11 +16,7 @@ const FiltersDropdown = ({ filters, activeFilters, handleToggleFilter }) => {
                 <DropdownMenuContent className="w-56">
                     <DropdownMenuGroup>
                         {filters.map(filter =>(
-                             <DropdownMenuItem
-                                key={filter.id}
-                                onClick={() => handleToggleFilter(filter.id)}
-                                className={cn("cursor-pointer", { "bg-accent": activeFilters.includes(filter.id)})}
-                            >
+                             <DropdownMenuItem key={filter.id} onClick={() => handleToggleFilter(filter.id)}>
                                 {filter.name}
                             </DropdownMenuItem>
                         ))}
@@ -45,21 +41,21 @@ export default function TableFilters({ data }) {
             <div className="flex flex-wrap items-center gap-4 2xl:flex-row-reverse">
                 <Button onClick={() => handleChangeView(showHistory ? otcViews.offers : otcViews.history)}>{showHistory ? 'Hide': 'Show'} History</Button>
                 <Button>Create offer</Button>
-                {!showHistory && (
-                    <FiltersDropdown
-                        filters={offersFilters}
-                        activeFilters={filters}
-                        handleToggleFilter={handleToggleFilter}
-                    />
-                )}
-                
-                {filters.map(filterId => {
-                    const filter = offersFilters.find(f => f.id === filterId);
+                {!showHistory && <FiltersDropdown filters={offersFilters} handleToggleFilter={handleToggleFilter} />
+}
+                {Object.entries(filters).map(([key, value]) => {
+                    const filter = offersFilters.find(f => {
+                        if (['isSell'].includes(key)) {
+                            return f.filter[key] === value;
+                        }
+                        
+                        return f.filter[key] !== undefined;
+                    });
                     
                     return (
-                        <div key={filterId} className="py-1.5 px-4 text-sm bg-gray-300 rounded">
+                        <div key={key} className="py-1.5 px-4 text-sm bg-gray-300 rounded">
                             {filter.name}
-                            <button className="ml-2" onClick={() => handleFilterRemove(filter.id)}>
+                            <button className="ml-2" onClick={() => handleFilterRemove(key)}>
                                 <CrossIcon className='size-2' />
                                 <span className="sr-only">Remove filter</span>
                             </button>

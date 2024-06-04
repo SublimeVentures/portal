@@ -5,38 +5,52 @@ import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel 
 import { getOffers, getOffersHistory } from "@/v2/services/otc";
 import { getOffersColumns, getHistoryColumns } from "@/v2/modules/otc/utils/columns";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { offersFilters } from "../utils/filters";
 
 export default function useTableData(currentMarket, showHistory, wallets) {
     const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
 
-    const [filters, setFilters] = useState([]);
+    const [filters, setFilters] = useState({});
     const [offersSorting, setOffersSorting] = useState([]);
     
     const [historySorting, setHistorySorting] = useState([]);
 
     const handleToggleFilter = (filterId) => {
-        setFilters(prev => {
-            if (prev.includes(filterId)) {
-                return prev.filter(f => f !== filterId);
-            } else {
-                if (filterId === 'buy' && prev.includes('sell')) {
-                    return [...prev.filter(f => f !== 'sell'), 'buy'];
-                } else if (filterId === 'sell' && prev.includes('buy')) {
-                    return [...prev.filter(f => f !== 'buy'), 'sell'];
-                }
+        const selectedFilter = offersFilters.find(f => f.id === filterId).filter;
 
-                return [...prev, filterId];
+        setFilters(prev => {
+            const newFilters = { ...prev };
+            if (filterId === 'only-me') {
+                if (newFilters.maker) {
+                    delete newFilters.maker;
+                } else {
+                    newFilters.maker = account.address;
+                }
+            } else {
+                if (newFilters.isSell !== undefined && newFilters.isSell === selectedFilter.isSell) {
+                    delete newFilters.isSell;
+                } else {
+                    newFilters.isSell = selectedFilter.isSell;
+                }
             }
+
+            return newFilters;
         });
     };
 
-    const handleFilterRemove = (filterId) => setFilters(prev => prev.filter(f => f !== filterId));
+    const handleFilterRemove = (filterKey) => {
+        setFilters(prev => {
+            const newFilters = { ...prev };
+            delete newFilters[filterKey];
+            return newFilters;
+        });
+    };
 
     const offerColumns = useMemo(() => getOffersColumns(getCurrencySymbolByAddress, wallets, account), [getCurrencySymbolByAddress, wallets, account]);
     const historyColumns = useMemo(() => getHistoryColumns(getCurrencySymbolByAddress), [getCurrencySymbolByAddress]);
 
     const { data: offers, isSuccess: offersIsSuccess, isLoading: offersIsLoading, isError: offersIsError, refetch: refetchOffers } = useQuery({
-        queryKey: ["otcOffers", currentMarket.otc, filters.length, offersSorting[0]?.id, offersSorting[0]?.desc],
+        queryKey: ["otcOffers", currentMarket.otc, filters, offersSorting[0]?.id, offersSorting[0]?.desc],
         queryFn: () => getOffers({ otcId: currentMarket.otc, filters, sort: offersSorting[0] && { sortId: offersSorting[0].id, sortOrder: offersSorting[0].desc ? 'DESC' : 'ASC' }}),
         refetchOnMount: "always",
         refetchOnWindowFocus: false,

@@ -2,10 +2,9 @@ const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const { Op, Sequelize } = require("sequelize");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
+const { getWhereClause } = require("../utils");
 
-async function getActiveOffers(otcId, query) {
-    const { sortId, sortOrder, filters } = query;
-
+function constructOffersOrder (sortId, sortOrder) {
     const validSortColumns = {
         isSell: "isSell",
         amount: "amount",
@@ -15,18 +14,18 @@ async function getActiveOffers(otcId, query) {
     };
 
     const orderDirection = sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-    const orderColumn = validSortColumns[sortId] || 'otcId';
+    const orderColumn = validSortColumns[sortId] || null;
     const offerOrder = [[orderColumn, orderDirection]];
 
-    let whereClause = {};
+    return offerOrder;
+}
 
-    // if (filters) {
-    //     filters.split(',').forEach(filter => {
-    //         // if (filter === 'me') whereClause.maker = currentUserId;
-    //         if (filter === 'sell') whereClause.isSell = true;
-    //         else if (filter === 'buy') whereClause.isSell = false;
-    //     });
-    // }
+
+async function getActiveOffers(otcId, query) {
+    const { sortId, sortOrder, ...filters } = query;
+
+    const offerOrder = constructOffersOrder(sortId, sortOrder);
+    const whereClause = getWhereClause(filters, ['maker'], ['isSell'])
 
     return models.otcDeal.findAll({
         order: offerOrder,
@@ -40,15 +39,15 @@ async function getActiveOffers(otcId, query) {
             "currency",
             "isSell",
             "maker",
-            [db.literal('"onchain"."chainId"'), "chainId"], // Alias 'chainId' from onchain
+            [db.literal('"onchain"."chainId"'), "chainId"],
             [Sequelize.literal('price / amount'), 'multiplier'],
         ],
         where: {
+            ...whereClause,
             otcId,
             isFilled: false,
             isCancelled: false,
             onchainIdMaker: { [Op.ne]: null },
-            ...whereClause,
         },
         include: {
             model: models.onchain,

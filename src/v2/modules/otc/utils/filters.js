@@ -1,14 +1,17 @@
 export const offersFilters = [
   {
-      id: 'me',
+      id: 'only-me',
       name: 'Only mine',
+      filter: { maker: '' },
   },
   {
-      id: 'buy',
+      id: 'only-buy',
       name: 'Only buy',
+      filter: { isSell: false },
   },
   {
-      id: 'sell',
+      id: 'only-sell',
       name: 'Only sell',
+      filter: { isSell: true },
   },
 ];

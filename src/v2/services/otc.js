@@ -21,16 +21,12 @@ export const getMarkets = async (cookie) => {
   return [];
 };
 
-export const getOffers = async ({ otcId, filters = [], sort }) => {
-    if (!otcId) return [];
-    
+export const getOffers = async ({ otcId, filters = {}, sort }) => {
     const { sortId = "", sortOrder = "" } = sort || {};
-    const queryParams = new URLSearchParams({ filters, sortId, sortOrder });
+    const queryParams = new URLSearchParams({ ...filters, sortId, sortOrder });
 
     try {
         const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getOffers}/${otcId}?${queryParams.toString()}`);
-
-        console.log('data', data)
 
         return data;
     } catch (e) {

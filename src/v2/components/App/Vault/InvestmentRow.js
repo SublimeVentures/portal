@@ -9,10 +9,10 @@ import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 
 const InvestmentRowWrapper = ({ children, className }) => {
-    const tilt = useRef(null);
-    useEffect(() => VanillaTilt.init(tilt.current, { scale: 1, speed: 1000, max: 1.2 }), []);
+    const tiltRef = useRef(null);
+    useEffect(() => VanillaTilt.init(tiltRef.current, { scale: 1, speed: 1000, max: 1.2 }), []);
 
-    return <Card ref={tilt} className={cn("h-max py-5 px-8", className)}>{children}</Card>
+    return <Card ref={tiltRef} className={cn("h-max py-5 px-8", className)}>{children}</Card>
 }
 
 export const SkeletonInvestmentRow = () => {
@@ -43,7 +43,6 @@ export const ErrorInvestmentRow = ({ actionFn }) => {
         </InvestmentRowWrapper>
     )
 }
-
 
 const InvestmentRow = ({ details, isLoading = false, isError = false }) => {
     const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate } = details;

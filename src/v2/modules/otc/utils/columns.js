@@ -21,8 +21,8 @@ const isUserOffer = (userWallets, checkWallet, account) => ({ ok: userWallets.in
 const isSellColumn = columnHelper.accessor('isSell', {
     header: 'Type',
     cell: info => {
-        const el = info.getValue();
-        return <span className={cn("font-bold", el.isSell ? "text-destructive" : "text-green-500" )}>{el.isSell ? "Sell" : "Buy"}</span>
+        const isSell = info.getValue();
+        return <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500" )}>{isSell ? "Sell" : "Buy"}</span>
     }
 })
 
