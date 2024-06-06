@@ -3,22 +3,22 @@ import * as Sentry from "@sentry/nextjs";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API_ROUTES } from "@/v2/routes";
 
-export const getMarkets = async (cookie) => {
-  try {
-      const { data } = await axiosPrivate.get(API_ROUTES.otc.getMarkets, {
-          headers: {
-              Cookie: cookie,
-          },
-      });
+export const getMarkets = async (cookie = "") => {
+    try {
+        const { data } = await axiosPrivate.get(API_ROUTES.otc.getMarkets, {
+            headers: {
+                Cookie: cookie,
+            },
+        });
 
-      return data;
-  } catch (e) {
-      if (e?.status && e.status !== 401) {
-          Sentry.captureException({ location: "getMarkets", e });
-      }
-  }
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "getMarkets", e });
+        }
+    }
 
-  return [];
+    return [];
 };
 
 export const getOffers = async ({ otcId, filters = {}, sort }) => {
@@ -30,12 +30,12 @@ export const getOffers = async ({ otcId, filters = {}, sort }) => {
 
         return data;
     } catch (e) {
-        console.log('offers-err', e)
+        console.log("offers-err", e);
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "getOffers", e });
         }
     }
-    
+
     return [];
 };
 
@@ -50,11 +50,11 @@ export const getOffersHistory = async ({ offerId, sort }) => {
 
         return data;
     } catch (e) {
-        console.log('fetchHistory-err', e)
+        console.log("fetchHistory-err", e);
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "fetchHistory", e });
         }
     }
-    
-    return {}
+
+    return {};
 };

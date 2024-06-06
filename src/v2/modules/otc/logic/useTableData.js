@@ -2,25 +2,25 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
 
+import { offersFilters } from "../utils/filters";
 import { getOffers, getOffersHistory } from "@/v2/services/otc";
 import { getOffersColumns, getHistoryColumns } from "@/v2/modules/otc/utils/columns";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { offersFilters } from "../utils/filters";
 
 export default function useTableData(currentMarket, showHistory, wallets) {
     const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
 
     const [filters, setFilters] = useState({});
     const [offersSorting, setOffersSorting] = useState([]);
-    
+
     const [historySorting, setHistorySorting] = useState([]);
 
     const handleToggleFilter = (filterId) => {
-        const selectedFilter = offersFilters.find(f => f.id === filterId).filter;
+        const selectedFilter = offersFilters.find((f) => f.id === filterId).filter;
 
-        setFilters(prev => {
+        setFilters((prev) => {
             const newFilters = { ...prev };
-            if (filterId === 'only-me') {
+            if (filterId === "only-me") {
                 if (newFilters.maker) {
                     delete newFilters.maker;
                 } else {
@@ -39,29 +39,59 @@ export default function useTableData(currentMarket, showHistory, wallets) {
     };
 
     const handleFilterRemove = (filterKey) => {
-        setFilters(prev => {
+        setFilters((prev) => {
             const newFilters = { ...prev };
             delete newFilters[filterKey];
             return newFilters;
         });
     };
 
-    const offerColumns = useMemo(() => getOffersColumns(getCurrencySymbolByAddress, wallets, account), [getCurrencySymbolByAddress, wallets, account]);
+    const offerColumns = useMemo(
+        () => getOffersColumns(getCurrencySymbolByAddress, wallets, account),
+        [getCurrencySymbolByAddress, wallets, account],
+    );
     const historyColumns = useMemo(() => getHistoryColumns(getCurrencySymbolByAddress), [getCurrencySymbolByAddress]);
 
-    const { data: offers, isSuccess: offersIsSuccess, isLoading: offersIsLoading, isError: offersIsError, refetch: refetchOffers } = useQuery({
+    const {
+        data: offers,
+        isSuccess: offersIsSuccess,
+        isLoading: offersIsLoading,
+        isError: offersIsError,
+        refetch: refetchOffers,
+    } = useQuery({
         queryKey: ["otcOffers", currentMarket.otc, filters, offersSorting[0]?.id, offersSorting[0]?.desc],
-        queryFn: () => getOffers({ otcId: currentMarket.otc, filters, sort: offersSorting[0] && { sortId: offersSorting[0].id, sortOrder: offersSorting[0].desc ? 'DESC' : 'ASC' }}),
-        refetchOnMount: "always",
+        queryFn: () =>
+            getOffers({
+                otcId: currentMarket.otc,
+                filters,
+                sort: offersSorting[0] && {
+                    sortId: offersSorting[0].id,
+                    sortOrder: offersSorting[0].desc ? "DESC" : "ASC",
+                },
+            }),
+        refetchOnMount: false,
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 60 * 1000, 
+        staleTime: 1 * 60 * 1000,
         enabled: !!currentMarket.offerId,
     });
-    
-    const { data: history, isSuccess: historyIsSuccess, isLoading: historyIsLoading, isError: historyIsError } = useQuery({
+
+    const {
+        data: history,
+        isSuccess: historyIsSuccess,
+        isLoading: historyIsLoading,
+        isError: historyIsError,
+    } = useQuery({
         queryKey: ["otcHistory", currentMarket.offerId, historySorting[0]?.id, historySorting[0]?.desc],
-        queryFn: () => getOffersHistory({ offerId: currentMarket.offerId, filters, sort: historySorting[0] && { sortId: historySorting[0].id, sortOrder: historySorting[0].desc ? 'DESC' : 'ASC' }}),
+        queryFn: () =>
+            getOffersHistory({
+                offerId: currentMarket.offerId,
+                filters,
+                sort: historySorting[0] && {
+                    sortId: historySorting[0].id,
+                    sortOrder: historySorting[0].desc ? "DESC" : "ASC",
+                },
+            }),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
@@ -85,7 +115,7 @@ export default function useTableData(currentMarket, showHistory, wallets) {
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
-    })
+    });
 
     const historyTable = useReactTable({
         data: history ?? [],
@@ -97,7 +127,7 @@ export default function useTableData(currentMarket, showHistory, wallets) {
         onSortingChange: setHistorySorting,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-    })
+    });
 
     return {
         offers: offersTable,
@@ -109,6 +139,6 @@ export default function useTableData(currentMarket, showHistory, wallets) {
             filters,
             handleToggleFilter,
             handleFilterRemove,
-        }
+        },
     };
-};
+}

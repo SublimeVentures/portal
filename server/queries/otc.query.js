@@ -1,31 +1,31 @@
+const { Op, Sequelize } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, Sequelize } = require("sequelize");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
 const { getWhereClause } = require("../utils");
 
-function constructOffersOrder (sortId, sortOrder) {
+function constructOffersOrder(sortId, sortOrder) {
     const validSortColumns = {
         isSell: "isSell",
         amount: "amount",
         price: "price",
         multiplier: Sequelize.literal("price / amount"),
-        chain: 'chainId',
+        chain: "chainId",
+        date: "updatedAt",
     };
 
-    const orderDirection = sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-    const orderColumn = validSortColumns[sortId] || null;
+    const orderDirection = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
+    const orderColumn = validSortColumns[sortId] || "id";
     const offerOrder = [[orderColumn, orderDirection]];
 
     return offerOrder;
 }
 
-
 async function getActiveOffers(otcId, query) {
     const { sortId, sortOrder, ...filters } = query;
 
     const offerOrder = constructOffersOrder(sortId, sortOrder);
-    const whereClause = getWhereClause(filters, ['maker'], ['isSell'])
+    const whereClause = getWhereClause(filters, ["maker"], ["isSell"]);
 
     return models.otcDeal.findAll({
         order: offerOrder,
@@ -40,7 +40,7 @@ async function getActiveOffers(otcId, query) {
             "isSell",
             "maker",
             [db.literal('"onchain"."chainId"'), "chainId"],
-            [Sequelize.literal('price / amount'), 'multiplier'],
+            [Sequelize.literal("price / amount"), "multiplier"],
         ],
         where: {
             ...whereClause,
@@ -64,18 +64,7 @@ async function getActiveOffers(otcId, query) {
 async function getHistoryOffers(offerId, query) {
     const { sortId, sortOrder } = query;
 
-    const validSortColumns = {
-        isSell: "isSell",
-        amount: "amount",
-        price: "price",
-        multiplier: Sequelize.literal("price / amount"),
-        chain: 'chainId',
-        date: 'updatedAt',
-    };
-
-    const orderDirection = sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-    const orderColumn = validSortColumns[sortId] || 'offerId';
-    const historyOrder = [[orderColumn, orderDirection]];
+    const historyOrder = constructOffersOrder(sortId, sortOrder);
 
     return models.otcDeal.findAll({
         order: historyOrder,
@@ -86,7 +75,7 @@ async function getHistoryOffers(offerId, query) {
             "amount",
             "isSell",
             [db.literal('"onchain"."chainId"'), "chainId"],
-            [Sequelize.literal('price / amount'), 'multiplier'],
+            [Sequelize.literal("price / amount"), "multiplier"],
             "updatedAt",
         ],
         where: { offerId, isFilled: true },
