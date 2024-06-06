@@ -16,13 +16,14 @@ export function Tooltiper({ wrapper, text, type = TooltipType.Primary, className
 
     return (
         <>
-            <a id={id} className={cn(`text-${type} cursor-pointer`, className)} {...rest}>
+            <a id={id} className={cn(`text-${type} cursor-pointer`, className)} {...rest} data-tooltip-place="left">
                 {wrapper}
             </a>
             <Tooltip
                 anchorSelect={`#${id}`}
                 className={`basic z-50 ${type === TooltipType.Error ? "bg-app-error opacity-100" : "bg-app-accent2"}`}
                 content={text}
+                place="left"
             />
         </>
     );

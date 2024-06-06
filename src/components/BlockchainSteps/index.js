@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useCallback } from "react";
 import debounce from "lodash.debounce";
-import { useChainId } from "wagmi";
+import { useChainId, useEstimateFeesPerGas } from "wagmi";
 import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
 import { initialState, reducer } from "@/components/BlockchainSteps/reducer";
 import { STEP_STATE, STEPS, StepsState } from "@/components/BlockchainSteps/StepsState";
@@ -15,6 +15,7 @@ import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
 
 const BlockchainSteps = ({ data }) => {
     const chainId = useChainId();
+    console.log(data);
     const { steps, token, params, setTransactionSuccessful } = data;
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -73,6 +74,12 @@ const BlockchainSteps = ({ data }) => {
         }
     }, [liquidity_balance?.balance, liquidity_balance?.fetchStatus]);
 
+    const gas = useEstimateFeesPerGas({
+        chainId,
+        formatUnits: "gwei",
+    });
+    console.log("BIX :: GAS", gas);
+
     const allowance_isReady = steps?.liquidity
         ? state.liquidity.isFinished
         : steps?.network
@@ -117,14 +124,21 @@ const BlockchainSteps = ({ data }) => {
             dispatch({ type: "SET_ALLOWANCE_SET", payload: true });
         }
     }, [allowance_needIncrease]);
-
+    console.log(gas, arguments);
     const allowance_set_reset = useSendTransaction(
-        allowance_needReset,
+        allowance_needReset && gas.isFetched,
         allowance_methodReset.method,
         chainId,
         params.account,
+        gas,
     );
-    const allowance_set = useSendTransaction(allowance_needIncrease, allowance_method.method, chainId, params.account);
+    const allowance_set = useSendTransaction(
+        allowance_needIncrease && gas.isFetched,
+        allowance_method.method,
+        chainId,
+        params.account,
+        gas,
+    );
     const allowance_isFinished =
         (!allowance_mustRun && !state.allowance.executing && params.allowance <= allowance_current?.allowance) ||
         (state.allowance.executing && allowance_set?.confirm?.data && params.allowance <= allowance_current?.allowance);
@@ -199,6 +213,7 @@ const BlockchainSteps = ({ data }) => {
         state.prerequisite.method || {},
         chainId,
         params.account,
+        gas,
     );
     console.log(`BIX :: TRANSACTION - HOOK STATE`, transaction);
     const transaction_isFinished = transaction.confirm?.data?.transactionHash;
@@ -301,7 +316,7 @@ const BlockchainSteps = ({ data }) => {
     }, [stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepPrerequisite.state, stepTransaction.state]);
 
     useEffect(() => {
-        if (!!transaction_isFinished) {
+        if (transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(transaction_isFinished);
         }

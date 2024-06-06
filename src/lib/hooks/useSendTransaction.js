@@ -1,5 +1,6 @@
 import { useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useEffect } from "react";
+import { parseGwei } from "viem";
 
 function processError(...errors) {
     for (const error of errors) {
@@ -21,7 +22,10 @@ function extractReason(errorMessage) {
     return null;
 }
 
-function useSendTransaction(isEnabled, method, chainId, account) {
+function useSendTransaction(isEnabled, method, chainId, account, gas) {
+    console.log(gas);
+    // debugger;
+    const { gasPrice = BigInt(0), maxFeePerGas = BigInt(0), maxPriorityFeePerGas = BigInt(0) } = gas?.data || {};
     if (method?.stop) {
         return true;
     }
@@ -37,7 +41,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     const { name, inputs, contract, abi, confirmations } = method;
 
-    const scope = `${account}_trans_${contract}_${name}_${chainId}_${!!inputs ? inputs[1] || inputs[0] : "temp"}`;
+    const scope = `${account}_trans_${contract}_${name}_${chainId}_${inputs ? inputs[1] || inputs[0] : "temp"}`;
 
     const rando = {
         method,
@@ -52,7 +56,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
             enabled: isEnabled,
         },
     };
-
+    console.log(gasPrice, maxFeePerGas, maxPriorityFeePerGas, parseGwei("24"));
     const simulate = useSimulateContract({
         functionName: name,
         address: contract,
@@ -61,10 +65,16 @@ function useSendTransaction(isEnabled, method, chainId, account) {
         chainId: chainId,
         scopeKey: scope,
         account: account,
+        gas: BigInt(50000),
+        // gasPrice: parseGwei("50"),
+        maxFeePerGas: parseGwei("100"),
+        maxPriorityFeePerGas: parseGwei("10"),
         query: {
             enabled: isEnabled,
+            // gcTime: 0,
         },
     });
+    console.log(simulate, chainId, inputs, account, method);
 
     const write = useWriteContract();
 
