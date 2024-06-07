@@ -7,7 +7,7 @@ import routes from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 import { isUrlTrusted } from "@/components/Login/helper";
-import { ErrorModalContext } from "@/pages/login";
+import { ErrorModalContext } from "@/components/SignupFlow/ErrorProvider";
 
 const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",

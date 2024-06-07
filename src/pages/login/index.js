@@ -1,13 +1,13 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { NextSeo } from "next-seo";
-import { useEffect, useState, createContext, useCallback, useMemo } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { fetchPartners } from "@/fetchers/public.fecher";
 import { PAGE } from "@/lib/enum/route";
 import { queryClient } from "@/lib/queryCache";
 import { verifyID } from "@/lib/authHelpers";
-import ErrorModal from "@/components/SignupFlow/ErrorModal";
+import ErrorProvider from "@/components/SignupFlow/ErrorProvider";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
@@ -44,10 +44,7 @@ const {
     },
 } = getTenantConfig().seo;
 
-export const ErrorModalContext = createContext("ErrorModalContext");
-
 export default function Login({ isAuthenticated }) {
-    let [errorModal, setErrorModal] = useState("");
     const router = useRouter();
 
     useEffect(() => {
@@ -65,22 +62,11 @@ export default function Login({ isAuthenticated }) {
         refetchOnWindowFocus: false,
     });
 
-    const isOpen = errorModal !== "";
-    const closeModal = useCallback(() => setErrorModal(""), []);
-
-    const value = useMemo(
-        () => ({
-            setErrorModal,
-        }),
-        [setErrorModal],
-    );
-
     return (
-        <ErrorModalContext.Provider value={value}>
+        <ErrorProvider>
             <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             {TENANTS_LOGIN(data)}
-            <ErrorModal isOpen={isOpen} closeModal={closeModal} error={errorModal} />
-        </ErrorModalContext.Provider>
+        </ErrorProvider>
     );
 }
 
