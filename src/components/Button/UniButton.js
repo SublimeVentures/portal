@@ -24,7 +24,6 @@ export function UniButton({
     zoom,
     noBorder,
     text,
-    isWhite,
     isLoading,
     isDisabled,
     isLoadingWithIcon,
@@ -44,6 +43,7 @@ export function UniButton({
                             icon={icon}
                             handler={handler}
                             isWider={isWider}
+                            noBorder={noBorder}
                             zoom={zoom}
                             size={size}
                             isWide={isWide}
