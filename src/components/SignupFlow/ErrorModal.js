@@ -69,21 +69,20 @@ const TENANTS_ERROR = () => {
     }
 };
 
-export default function ErrorModal({ isOpen, closeModal, error }) {
-    const title = useMemo(
-        () => (
-            <>
-                Login <span className="text-app-error">error</span>
-            </>
-        ),
-        [],
+export default function ErrorModal({ isOpen, closeModal, errorMessage }) {
+    const title = (
+        <>
+            Login <span className="text-app-error">error</span>
+        </>
     );
-    let content = TENANTS_ERROR();
-    if (error === LoginErrorsEnum.WALLET_ALREADY_ACTIVE) {
+
+    let content;
+    if (errorMessage === LoginErrorsEnum.WALLET_ALREADY_ACTIVE) {
         content = <p className="text-app-success font-bold mb-5">Wallet already active.</p>;
-    }
-    if (error === LoginErrorsEnum.WALLETS_LIMIT_REACHED) {
+    } else if (errorMessage === LoginErrorsEnum.WALLETS_LIMIT_REACHED) {
         content = <p className="text-app-success font-bold mb-5">Reached maximum wallets limit.</p>;
+    } else {
+        content = TENANTS_ERROR();
     }
 
     return <GenericModal isOpen={isOpen} closeModal={closeModal} title={title} content={content} />;

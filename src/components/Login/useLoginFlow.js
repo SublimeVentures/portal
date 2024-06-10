@@ -22,7 +22,7 @@ const LOGIN_TYPE = {
 
 export default function useLoginFlow() {
     const router = useRouter();
-    const { setErrorModal } = useContext(ErrorModalContext);
+    const { setShow, setMessage } = useContext(ErrorModalContext);
 
     const [signErrorMsg, setErrorMsg] = useState("");
     const [isSigningMessage, setIsSigningMessage] = useState(false);
@@ -62,7 +62,8 @@ export default function useLoginFlow() {
             if (isAuth?.ok) {
                 router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
-                setErrorModal(isAuth?.error);
+                setShow(true);
+                setMessage(isAuth?.error);
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
             }

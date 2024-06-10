@@ -4,16 +4,16 @@ import ErrorModal from "@/components/SignupFlow/ErrorModal";
 export const ErrorModalContext = createContext("ErrorModalContext");
 
 export default function ErrorProvider({ children }) {
-    const [errorModal, setErrorModal] = useState("");
-    const value = useMemo(() => ({ setErrorModal }), [setErrorModal]);
+    const [show, setShow] = useState(false);
+    const [message, setMessage] = useState("");
+    const value = useMemo(() => ({ setShow, setMessage }), [setShow, setMessage]);
 
-    const isOpen = errorModal !== "";
-    const closeModal = useCallback(() => setErrorModal(""), []);
+    const closeModal = useCallback(() => setShow(false), []);
 
     return (
         <ErrorModalContext.Provider value={value}>
             {children}
-            <ErrorModal isOpen={isOpen} closeModal={closeModal} error={errorModal} />
+            <ErrorModal isOpen={show} closeModal={closeModal} errorMessage={message} />
         </ErrorModalContext.Provider>
     );
 }
