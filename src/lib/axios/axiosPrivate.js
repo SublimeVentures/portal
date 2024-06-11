@@ -2,12 +2,14 @@ import axios from "axios";
 
 import { memoizedRefreshToken } from "./refreshToken";
 
-axios.defaults.baseURL = process.env.DOMAIN;
-axios.defaults.headers = {
-    "Content-Type": "application/json",
-};
+const instance = axios.create({
+    baseURL: process.env.DOMAIN,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
 
-axios.interceptors.response.use(
+instance.interceptors.response.use(
     (response) => response,
     async (error) => {
         const config = error?.config;
@@ -27,4 +29,4 @@ axios.interceptors.response.use(
     },
 );
 
-export const axiosPrivate = axios;
+export const axiosPrivate = instance;

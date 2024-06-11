@@ -1,8 +1,8 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { STEP_STATE } from "./enums";
 import DynamicIcon from "@/components/Icon";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
-import { STEP_STATE } from "@/components/BlockchainSteps/StepsState";
 import { ICONS } from "@/lib/icons";
 import { cn } from "@/lib/cn";
 
@@ -30,7 +30,7 @@ const BlockchainStep = ({ data }) => {
                         className={cn("flex flex-1 gap-3 items-center", colorOverride ?? getStatusColor(state))}
                     >
                         <div className={cn("blob relative", { active: state === STEP_STATE.PROCESSING })}>
-                            <DynamicIcon name={icon} style={cn(iconPadding, "max-h-full max-w-full")} />
+                            <DynamicIcon name={icon} style={iconPadding} />
                         </div>
 
                         <div className="flex flex-1">{content}</div>

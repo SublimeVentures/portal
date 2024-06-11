@@ -1,7 +1,7 @@
 require("dotenv").config();
+const url = require("url");
 const express = require("express");
 const next = require("next");
-const url = require("url");
 
 const cookieParser = require("cookie-parser");
 const { serializeError } = require("serialize-error");
@@ -17,11 +17,12 @@ const { router: offerRoute } = require("./server/routes/offer.router.js");
 const { router: investRoute } = require("./server/routes/invest.router.js");
 const { router: vaultRoute } = require("./server/routes/vault.router.js");
 const { router: otcRoute } = require("./server/routes/otc.router.js");
-const { router: mysteryboxRoute } = require("./server/routes/mysterybox.router");
+const { router: mysteryboxRoute } = require("./server/routes/mysterybox.router.js");
 const { router: storeRoute } = require("./server/routes/store.router.js");
 const { router: settingsRoute } = require("./server/routes/settings.router.js");
 const { router: payoutRoute } = require("./server/routes/payout.router.js");
 const { router: claimRoute } = require("./server/routes/claim.router.js");
+const { router: notificationsRoute } = require("./server/routes/notifications.router.js");
 
 const port = process.env.PORT || 3000;
 const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
@@ -51,11 +52,12 @@ nextApp.prepare().then(async () => {
     server.use("/api/settings", settingsRoute);
     server.use("/api/payout", payoutRoute);
     server.use("/api/claim", claimRoute);
+    server.use("/api/notifications", notificationsRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
         res.set({
-            "Cache-Control": "public, maxAllocation-age=3600",
+            "Cache-Control": "public, max-age=3600",
         });
         const parsedUrl = url.parse(req.url, true);
         nextHandler(req, res, parsedUrl);

@@ -160,24 +160,30 @@ const TENANT_MYSTERYBOX = (params, token) => {
 const validAddress = (address) => {
     return typeof address === "string" && isAddress(address);
 };
+
 const validHash = (hash) => {
     return typeof hash === "string" && hash !== "" && hash.length > 0;
 };
+
 const validToken = (token) => {
     return typeof token === "string" && isAddress(token.address);
 };
 const validNumber = (amount) => {
     return typeof amount === "number" && amount > 0;
 };
+
 const validAllowance = (amount) => {
     return typeof amount === "number" && amount >= 0;
 };
+
 const validBoolean = (state) => {
     return typeof state === "boolean";
 };
+
 const getTokenInWei = (amount, token) => {
     const power = BigNumber(10).pow(token.precision);
     const result = BigNumber(amount).multipliedBy(power);
+
     return result.toFixed();
 };
 
