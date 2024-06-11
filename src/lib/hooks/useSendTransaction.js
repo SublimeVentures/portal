@@ -1,6 +1,14 @@
-import { useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+    useSimulateContract,
+    useWaitForTransactionReceipt,
+    useWriteContract,
+    usePublicClient,
+    useConfig,
+    useEstimateFeesPerGas,
+} from "wagmi";
 import { useEffect } from "react";
-import { parseGwei } from "viem";
+import { estimateContractGas } from "viem/actions";
+import { useQuery } from "@tanstack/react-query";
 
 function processError(...errors) {
     for (const error of errors) {
@@ -22,10 +30,69 @@ function extractReason(errorMessage) {
     return null;
 }
 
-function useSendTransaction(isEnabled, method, chainId, account, gas) {
-    console.log(gas);
-    // debugger;
-    const { gasPrice = BigInt(0), maxFeePerGas = BigInt(0), maxPriorityFeePerGas = BigInt(0) } = gas?.data || {};
+const useEstimateContractGas = (args) => {
+    const { query, functionName, address, abi, scopeKey } = args;
+    const enabled = Boolean(abi && address && functionName && (query.enabled ?? true));
+    const config = useConfig(args);
+    const client = usePublicClient(config);
+    const data = useQuery({
+        queryKey: ["estimateContractGas", scopeKey],
+        queryFn: () => estimateContractGas(client, args),
+        ...query,
+        enabled,
+    });
+    return data;
+};
+
+const calculateBigIntMultiplier = (value, multiplier) => {
+    if (!value) {
+        return value;
+    }
+    if (multiplier === 1) {
+        return value;
+    }
+    return BigInt(Math.floor(Number(value) * multiplier));
+};
+
+const GAS_MULTIPLIER = 1;
+const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
+const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1000;
+
+const useCalculateGas = (args) => {
+    const { query, ...params } = args;
+    const { chainId, scopeKey } = params;
+
+    const gas = useEstimateContractGas({
+        ...params,
+        scopeKey: `gas_${scopeKey}`,
+        query,
+    });
+
+    const feesPerGas = useEstimateFeesPerGas({
+        chainId,
+        scopeKey: `fees_${scopeKey}`,
+        query,
+    });
+
+    return {
+        isFetching: gas.isFetching || feesPerGas.isFetching,
+        isSuccess: gas.isSuccess && feesPerGas.isSuccess,
+        isLoading: gas.isLoading || feesPerGas.isLoading,
+        isFetched: gas.isFetched && feesPerGas.isFetched,
+        isError: gas.isError || feesPerGas.isError,
+        error: processError(gas.error, feesPerGas.error),
+        data: {
+            gas: calculateBigIntMultiplier(gas?.data, GAS_MULTIPLIER),
+            maxFeePerGas: calculateBigIntMultiplier(feesPerGas?.data?.maxFeePerGas, MAX_FEE_PER_GAS_MULTIPLIER),
+            maxPriorityFeePerGas: calculateBigIntMultiplier(
+                feesPerGas?.data?.maxPriorityFeePerGas,
+                MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER,
+            ),
+        },
+    };
+};
+
+function useSendTransaction(isEnabled, method, chainId, account) {
     if (method?.stop) {
         return true;
     }
@@ -56,7 +123,20 @@ function useSendTransaction(isEnabled, method, chainId, account, gas) {
             enabled: isEnabled,
         },
     };
-    console.log(gasPrice, maxFeePerGas, maxPriorityFeePerGas, parseGwei("24"));
+
+    const gas = useCalculateGas({
+        functionName: name,
+        address: contract,
+        args: inputs,
+        abi: abi,
+        chainId: chainId,
+        scopeKey: scope,
+        account: account,
+        query: {
+            enabled: isEnabled,
+        },
+    });
+
     const simulate = useSimulateContract({
         functionName: name,
         address: contract,
@@ -65,16 +145,14 @@ function useSendTransaction(isEnabled, method, chainId, account, gas) {
         chainId: chainId,
         scopeKey: scope,
         account: account,
-        gas: BigInt(50000),
-        // gasPrice: parseGwei("50"),
-        maxFeePerGas: parseGwei("100"),
-        maxPriorityFeePerGas: parseGwei("10"),
+        gas: gas?.data?.gas,
+        maxFeePerGas: gas?.data?.maxFeePerGas,
+        maxPriorityFeePerGas: gas?.data?.maxPriorityFeePerGas,
         query: {
-            enabled: isEnabled,
-            // gcTime: 0,
+            enabled: isEnabled && gas.isSuccess,
+            gcTime: 0,
         },
     });
-    console.log(simulate, chainId, inputs, account, method);
 
     const write = useWriteContract();
 
@@ -111,8 +189,8 @@ function useSendTransaction(isEnabled, method, chainId, account, gas) {
     }, [simulate.isSuccess, isEnabled]);
 
     return {
-        isError: simulate.isError || write.isError || confirm.isError,
-        error: processError(simulate.error, write.error, confirm.error),
+        isError: simulate.isError || write.isError || confirm.isError || gas.isError,
+        error: processError(simulate.error, write.error, confirm.error, gas.error),
         // error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage,
         isLoading:
             simulate.isFetching ||
