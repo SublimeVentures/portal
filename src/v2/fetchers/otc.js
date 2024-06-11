@@ -30,7 +30,6 @@ export const getOffers = async ({ otcId, filters = {}, sort }) => {
 
         return data;
     } catch (e) {
-        console.log("offers-err", e);
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "getOffers", e });
         }
@@ -50,7 +49,6 @@ export const getOffersHistory = async ({ offerId, sort }) => {
 
         return data;
     } catch (e) {
-        console.log("fetchHistory-err", e);
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "fetchHistory", e });
         }

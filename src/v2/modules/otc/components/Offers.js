@@ -21,10 +21,10 @@ export default function Offers({ currentMarket, session }) {
     return (
         <div className="relative h-full flex flex-col 2xl:overflow-hidden">                 
             <TableFilters data={{ market: currentMarket.name, showHistory, filterProps, handleChangeView }} />
-            <Card variant="static" className="p-0 h-full flex flex-col 2xl:overflow-hidden">
+            <Card variant="static" className="p-0 h-full flex flex-col md:overflow-hidden">
                 <div className="p-2 h-5 rounded bg-primary-light-gradient" />
 
-                <div className="h-full 2xl:overflow-y-auto">
+                <div className="h-full md:overflow-y-auto">
                     {renderTable(activeView, tableData, wallets)}
                 </div>
             </Card>

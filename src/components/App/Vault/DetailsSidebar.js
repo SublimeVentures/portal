@@ -9,7 +9,7 @@ import { fetchInvestmentPayout } from "@/fetchers/payout.fetcher";
 import DynamicIcon from "@/components/Icon";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import ClaimPayoutModal from "@/components/App/Vault/ClaimPayoutModal";
-import DetailsTimeline from "@/components/App/Vault/DetailsTimeline";
+// import DetailsTimeline from "@/components/App/Vault/DetailsTimeline";
 
 export default function DetailsSidebar({ model, setter, claimModalProps, userId }) {
     const { cdn } = useEnvironmentContext();
@@ -196,7 +196,7 @@ export default function DetailsSidebar({ model, setter, claimModalProps, userId 
                         <hr className="spacer" />
                         <p className="font-mono">{nextClaim !== 0 ? nextClaim : "TBA"}</p>
                     </div>
-                    <DetailsTimeline offerId={offerId} />
+                    {/* <DetailsTimeline offerId={offerId} /> */}
                 </div>
                 <div className="mt-auto fullWidth">
                     <UniButton

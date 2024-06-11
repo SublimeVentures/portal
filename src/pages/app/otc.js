@@ -8,7 +8,7 @@ import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
-import { getMarkets } from "@/v2/services/otc";
+import { getMarkets } from "@/v2/fetchers/otc";
 
 import OTCMarket from "@/v2/modules/otc/OTCMarket";
 

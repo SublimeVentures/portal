@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
 
 import { offersFilters } from "../utils/filters";
-import { getOffers, getOffersHistory } from "@/v2/services/otc";
+import { getOffers, getOffersHistory } from "@/v2/fetchers/otc";
 import { getOffersColumns, getHistoryColumns } from "@/v2/modules/otc/utils/columns";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
