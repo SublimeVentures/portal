@@ -72,7 +72,7 @@ const SheetFooter = ({ className, ...props }) => (
 SheetFooter.displayName = "SheetFooter";
 
 const SheetBody = ({ className, ...props }) => (
-    <div className={cn("relative grow w-full overflow-auto", className )} {...props} />
+    <div className={cn("relative grow w-full overflow-y-auto overflow-x-hidden", className )} {...props} />
 )
 
 SheetBody.displayName = "SheetBody";
