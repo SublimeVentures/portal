@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useQuery } from "@tanstack/react-query";
+import { dehydrate, useQuery } from "@tanstack/react-query";
 
 import { queryClient } from "@/lib/queryCache";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
@@ -72,11 +72,7 @@ export default function AppOtc({ session }) {
     const { market } = router.query;
     const { userId: USER_ID } = session;
 
-    const {
-        isLoading: otcIsLoading,
-        data: otc,
-        ...rest
-    } = useQuery({
+    const { isLoading: otcIsLoading, data: otc } = useQuery({
         queryKey: ["otcMarkets", USER_ID],
         queryFn: () => getMarkets(),
         refetchOnMount: false,
@@ -114,8 +110,19 @@ export default function AppOtc({ session }) {
 }
 
 export const getServerSideProps = async ({ req, res }) => {
-    await queryClient.prefetchQuery("otcMarkets", () => getMarkets(req.headers.cookie));
-    return await processServerSideData(req, res, routes.OTC);
+    const customLogicCallback = async (account, token) => {
+        const userId = account?.userId;
+
+        await queryClient.prefetchQuery(["otcMarkets", userId], () => getMarkets(token));
+
+        return {
+            additionalProps: {
+                dehydratedState: dehydrate(queryClient),
+            },
+        };
+    };
+
+    return await processServerSideData(req, res, routes.OTC, customLogicCallback);
 };
 
 AppOtc.getLayout = function (page) {

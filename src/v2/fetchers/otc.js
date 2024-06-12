@@ -2,14 +2,16 @@ import * as Sentry from "@sentry/nextjs";
 
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API_ROUTES } from "@/v2/routes";
+import { authTokenName } from "@/lib/authHelpers";
 
-export const getMarkets = async (cookie = "") => {
+export const getMarkets = async (token) => {
     try {
         const { data } = await axiosPrivate.get(API_ROUTES.otc.getMarkets, {
             headers: {
-                Cookie: cookie,
+                Cookie: `${authTokenName}=${token}`,
             },
         });
+
 
         return data;
     } catch (e) {
