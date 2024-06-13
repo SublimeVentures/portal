@@ -1775,13 +1775,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@faker-js/faker@npm:8.4.1":
-  version: 8.4.1
-  resolution: "@faker-js/faker@npm:8.4.1"
-  checksum: 10c0/4f2aecddcfdc2cc8b50b2d15d1e37302a7c7a5bbd184ae910a9d271bc11248533ca74dcdd4a9ccbe20410553e7af0f6a4d334c5b955635e09a32ddf4a64942d4
-  languageName: node
-  linkType: hard
-
 "@floating-ui/core@npm:^1.0.0":
   version: 1.6.0
   resolution: "@floating-ui/core@npm:1.6.0"
@@ -7377,13 +7370,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faker@npm:6.6.6":
-  version: 6.6.6
-  resolution: "faker@npm:6.6.6"
-  checksum: 10c0/21f6a57adc921ffb61e5ff767024a699a414047264ff4bbb080bd4994ec5a8061e1828aae9a4be812f6f356f1b6fd082bc2d54df7c37163b943a421a8f7f7079
-  languageName: node
-  linkType: hard
-
 "fast-deep-equal@npm:^2.0.1":
   version: 2.0.1
   resolution: "fast-deep-equal@npm:2.0.1"
@@ -11388,23 +11374,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtualized@npm:9.22.5":
-  version: 9.22.5
-  resolution: "react-virtualized@npm:9.22.5"
-  dependencies:
-    "@babel/runtime": "npm:^7.7.2"
-    clsx: "npm:^1.0.4"
-    dom-helpers: "npm:^5.1.3"
-    loose-envify: "npm:^1.4.0"
-    prop-types: "npm:^15.7.2"
-    react-lifecycles-compat: "npm:^3.0.4"
-  peerDependencies:
-    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0
-    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0
-  checksum: 10c0/b0444b472f317dce61119c07426c5e9ebfe5125d049996678da922717715a1aa83df755aa36877f4b1718aa2e181d22f15ebb807ee356418c56f922f865628c1
-  languageName: node
-  linkType: hard
-
 "react@npm:18.2.0, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -13493,7 +13462,6 @@ __metadata:
     "@babel/eslint-parser": "npm:7.24.1"
     "@babel/preset-env": "npm:7.24.3"
     "@babel/preset-react": "npm:7.24.1"
-    "@faker-js/faker": "npm:8.4.1"
     "@glidejs/glide": "npm:3.6.0"
     "@headlessui/react": "npm:1.7.18"
     "@leenguyen/react-flip-clock-countdown": "npm:1.5.1"
@@ -13531,7 +13499,6 @@ __metadata:
     eslint-plugin-react: "npm:7.34.1"
     eslint-plugin-react-hooks: "npm:4.6.0"
     express: "npm:4.18.3"
-    faker: "npm:6.6.6"
     framer-motion: "npm:11.0.18"
     husky: "npm:9.0.11"
     jose: "npm:5.2.3"
@@ -13562,7 +13529,6 @@ __metadata:
     react-powerglitch: "npm:1.0.3"
     react-select: "npm:5.8.0"
     react-tooltip: "npm:5.26.3"
-    react-virtualized: "npm:9.22.5"
     rematrix: "npm:0.7.2"
     sass: "npm:1.72.0"
     sequelize: "npm:6.37.1"
