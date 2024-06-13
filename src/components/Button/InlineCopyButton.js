@@ -1,6 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { IoCheckmarkOutline, IoClipboard, IoClipboardOutline } from "react-icons/io5";
-import { useEffect, useRef, useState } from "react";
 
 export default function InlineCopyButton({ copiable = "", className }) {
     const [isCheckmark, setIsCheckmark] = useState(false);
