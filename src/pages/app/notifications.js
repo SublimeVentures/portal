@@ -94,24 +94,32 @@ const NotificationList = () => {
     }, [hasMore]);
 
     return (
-        <div className="text-white">
-            {items.map((item, index) => {
-              if (items.length === index + 1) {
-                  return (
-                      <div ref={lastItemRef} key={item.id}>
-                          <TimelineItem item={item} last={true} />
-                      </div>
-                  )
-              } else {
-                  return (
-                      <div key={item.id}>
-                          <TimelineItem item={item} first={index === 0} last={false} />
-                      </div>
-                  )
-              }
-            })}
+        <div>
+            {items.length > 0 ? (
+                <ol>
+                    {items.map((item, index) => {
+                        if (items.length === index + 1) {
+                            return (
+                                <li ref={lastItemRef} key={item.id}>
+                                    <TimelineItem item={item} last={true} />
+                                </li>
+                            )
+                        } else {
+                            return (
+                                <li key={item.id}>
+                                    <TimelineItem item={item} first={index === 0} last={false} />
+                                </li>
+                            )
+                        }
+                    })}
+                </ol>
+            ) : (
+                <div className="h-32 w-full flex items-center justify-center">
+                    <p className="text-foreground">No items available</p>
+                </div>
+            )}
 
-            {!hasMore && (
+            {!hasMore && items.length > 0 && (
                 <div className="h-32 w-full flex items-center justify-center">
                     <p className="text-foreground">No more items to load</p>
                 </div>
@@ -121,9 +129,9 @@ const NotificationList = () => {
                 <div className="h-32 w-full flex items-center justify-center">
                     <p className="text-foreground">Loading...</p>
                 </div>
-              )}
+            )}
         </div>
-    );
+    )
 };
 
 const startDate = format(new Date(), "yyyy-MM-dd");
