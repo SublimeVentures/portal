@@ -56,8 +56,8 @@ SheetContent.displayName = SheetPrimitive.Content.displayName
 const SheetHeader = ({ className, ...props }) => (
     <div className="p-4 gradient-border-sheet-header sm:p-0">
         <div className="bg-sheet-pattern bg-cover bg-center bg-no-repeat ] rounded-lg sm:m-[2px] sm:rounded-tr-none sm:rounded-b-none">
-            <div className="bg-gray-400/[.7] rounded-lg sm:m-[2px] sm:rounded-tr-none sm:rounded-b-none">
-                <div className={cn("relative pb-7 pt-11 px-9 flex flex-col items-center text-center", className)} {...props} />
+            <div className="bg-gray-400/[.6] rounded-lg sm:m-[2px] sm:rounded-tr-none sm:rounded-b-none">
+                <div className={cn("min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center text-center", className)} {...props} />
             </div>
         </div>
     </div>

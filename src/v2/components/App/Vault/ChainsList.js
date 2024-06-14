@@ -8,13 +8,13 @@ import SingleChain from "./SingleChain";
 
 const activeChain = "eth";
 
-const ChainsList = () => {
+const ChainsList = ({ chains = chainList }) => {
     return (
         <div className="relative h-[43px]">
             <FiveChainsIcon className="absolute z-0"  />
 
             <ul className="relative flex items-center h-full justify-center w-max gap-3">
-                {chainList.map(({ name, icon }) => {
+                {chains.map(({ name, icon }) => {
                     const isChainActive = activeChain === name;
 
                     return (
