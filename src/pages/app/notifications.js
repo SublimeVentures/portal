@@ -1,4 +1,5 @@
 import React, { useReducer, useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from "next/router";
 import { format } from "date-fns";
 
 import { AppLayout } from "@/v2/components/Layout";
@@ -134,14 +135,18 @@ const NotificationList = () => {
     )
 };
 
-const startDate = format(new Date(), "yyyy-MM-dd");
-const initialFilters = { startDate, endDate: null, event: null };
-
 export default function AppOtc() {
-    const [filters, dispatch] = useReducer((filters, newFilters) => ({ ...filters, ...newFilters }), initialFilters);
+    const router = useRouter();
+    const { query } = router;
+    const { startDate = '', endDate = null, event = '' } = query;
     
-    const handleChange = (name, value) => dispatch({ [name]: value });
-  
+    const handleInputChange = (name, value) => {
+        router.push({
+            pathname: router.pathname,
+            query: { ...query, [name]: value },
+        });
+    };
+
     const handleApply = () => console.log('Filters:', filters);
     
     return (
@@ -153,10 +158,23 @@ export default function AppOtc() {
                 </div>
 
                 <div className="flex flex-col items-center gap-4 md:flex-row">
-                    <DatePicker className="w-full md:w-auto" date={filters.startDate} setDate={(value) => handleChange("startDate", format(value, "yyyy-MM-dd"))} />
+                    <DatePicker
+                        className="w-full md:w-auto"
+                        date={startDate}
+                        setDate={(value) => handleInputChange("startDate", format(value, "yyyy-MM-dd"))}
+                        toDate={endDate && new Date()}
+                    />
                     <span className="hidden text-white md:block">-</span>
-                    <DatePicker className="w-full md:w-auto" date={filters.endDate} setDate={(value) => handleChange("endDate", format(value, "yyyy-MM-dd"))} />
-                    <Select onValueChange={(value) => handleChange('event', value)}>
+                    <DatePicker
+                        className="w-full md:w-auto"
+                        date={endDate}
+                        setDate={(value) => handleInputChange("endDate", format(value, "yyyy-MM-dd"))}
+                        fromDate={startDate ? new Date(startDate) : null}
+                        toDate={new Date()}
+                    />
+
+
+                    <Select value={event} onValueChange={(value) => handleInputChange('event', value)}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select event type" />
                         </SelectTrigger>

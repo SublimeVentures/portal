@@ -7,7 +7,7 @@ import { Button } from "@/v2/components/ui/button";
 import { Calendar } from "@/v2/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/v2/components/ui/popover";
 
-export function DatePicker({ date = null, setDate, className }) {    
+export function DatePicker({ date = null, setDate, className, ...props }) {    
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -17,7 +17,7 @@ export function DatePicker({ date = null, setDate, className }) {
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus {...props} />
             </PopoverContent>
         </Popover>
     );
