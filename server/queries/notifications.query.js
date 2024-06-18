@@ -1,26 +1,42 @@
 const { Op } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
-const { NotificationTypes } = require("../enum/NotificationTypes");
+// const { NotificationTypes } = require("../enum/NotificationTypes");
 
-/**
- * @typedef {Record<string, string | number>} NotificationFilters
- * @property {string} [offerId] Offer ID retrieved from querystring
- * @property {string | number} [type] Notification type (name or ID)
- * @property {number} [lastId] Last notification ID (for pagination)
- * @property {"timeline" | "full"} [profile] Filter profile (all items or timeline-specific)
- * @property {number} [limit=8] Page from which you're starting
- */
+// @TODO
+// 1. Zwracac TYLKO dane, ktore sa dla notification potrzebne - reszte usunac
+// 2. Zaimplementowac filtry https://github.com/SublimeVentures/portal/commits/feature/vault-timeline-enhancement
 
-/**
- * @typedef {object} ClaimNotificationData
- * @property {number} claimId
- * @property {number} payoutId
- * @property {number} offerPayout
- * @property {number} amount
- * @property {string} currency
- * @property {number} chainId
- * @property {string} currencySymbol
- */
+// typeId
+// onchain.createdAt
+// onchain.txID
+// onchain.chainId
+
+// portal/src/v2/helpers/notifications.js
+// TimelineItemDescription Component - Uzywa takich kluczy jak:
+// src={`${cdn}/research/${slug}/icon.jpg`}
+// const values = { value: '2', amount: '20', otcDeal: { amount: '20', price: 20 }, claim: { isClaimed: true }, payout: { totalAmount: '200', currencySymbol: 'GMRX' } }
+
+// --- --- --- --- --- --- --- --- --- --- --- --- 
+
+// /**
+//  * @typedef {Record<string, string | number>} NotificationFilters
+//  * @property {string} [offerId] Offer ID retrieved from querystring
+//  * @property {string | number} [type] Notification type (name or ID)
+//  * @property {number} [lastId] Last notification ID (for pagination)
+//  * @property {"timeline" | "full"} [profile] Filter profile (all items or timeline-specific)
+//  * @property {number} [limit=8] Page from which you're starting
+//  */
+
+// /**
+//  * @typedef {object} ClaimNotificationData
+//  * @property {number} claimId
+//  * @property {number} payoutId
+//  * @property {number} offerPayout
+//  * @property {number} amount
+//  * @property {string} currency
+//  * @property {number} chainId
+//  * @property {string} currencySymbol
+//  */
 
 const BASE_INCLUDES = [
     {
@@ -49,39 +65,39 @@ const BASE_INCLUDES = [
  */
 async function getNotifications(user, filters) {
     const { userId, tenantId } = user;
-    const filterConfig = {
-        userId,
-        limit: filters.limit ?? 8,
-    };
+    const filterConfig = { userId, limit: filters.limit ?? 8 };
+
     if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
     if (filters.type) filterConfig["typeId"] = await getNotificationTypeId(filters.type);
     if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
     if (filters.lastId) filterConfig["id"] = { [Op.lt]: filters.lastId };
+    
     const profileFilters = await getFiltersFromProfile(filters.profile);
     const config = { ...filterConfig, ...profileFilters };
+    
     return getAllNotifications(config);
 }
 
-async function getExtendedNotification(notificationId) {
-    return getNotificationByStrategy(notificationId);
-}
+// async function getExtendedNotification(notificationId) {
+//     return getNotificationByStrategy(notificationId);
+// }
 
-/**
- * @private
- * @param {string | number | undefined} notificationType
- * @returns {Promise<number>}
- */
-async function getNotificationTypeId(notificationType) {
-    if (typeof notificationType === "number") {
-        return notificationType;
-    }
-    if (typeof notificationType === "string") {
-        const nType = await models.notificationType.findOne({
-            type: notificationType,
-        });
-        return nType.id;
-    }
-}
+// /**
+//  * @private
+//  * @param {string | number | undefined} notificationType
+//  * @returns {Promise<number>}
+//  */
+// async function getNotificationTypeId(notificationType) {
+//     if (typeof notificationType === "number") {
+//         return notificationType;
+//     }
+//     if (typeof notificationType === "string") {
+//         const nType = await models.notificationType.findOne({
+//             type: notificationType,
+//         });
+//         return nType.id;
+//     }
+// }
 
 /**
  * @private
@@ -103,171 +119,171 @@ async function getFiltersFromProfile(profile) {
     }
 }
 
-/**
- * @private
- * @param {import("sequelize").Model} notificationType
- * @returns {boolean}
- */
-function timelineFilter(notificationType) {
-    return ["OTC_TAKE", "OTC_MADE", "OTC_CANCEL", "INVESTMENT", "CLAIM"].includes(notificationType.name);
-}
+// /**
+//  * @private
+//  * @param {import("sequelize").Model} notificationType
+//  * @returns {boolean}
+//  */
+// function timelineFilter(notificationType) {
+//     return ["OTC_TAKE", "OTC_MADE", "OTC_CANCEL", "INVESTMENT", "CLAIM"].includes(notificationType.name);
+// }
 
-/**
- * @param {import("sequelize").Model} notificationType
- * @returns {number}
- */
-function mapNotificationTypeToId(notificationType) {
-    return notificationType.id;
-}
+// /**
+//  * @param {import("sequelize").Model} notificationType
+//  * @returns {number}
+//  */
+// function mapNotificationTypeToId(notificationType) {
+//     return notificationType.id;
+// }
 
-/**
- * @param {number} notificationId
- * @return {Promise<ReturnType<typeof getExtendedNotification>>}
- */
-async function getNotificationByStrategy(notificationId) {
-    const notification = await getBaseNotification(notificationId);
-    const { typeId, data } = notification;
-    switch (/** @type {NotificationType[keyof NotificationType]} */ typeId) {
-        case NotificationTypes.CLAIM:
-            return { notification, ...(await getClaimNotification(data)) };
-        case NotificationTypes.INVESTMENT:
-            return { notification, ...(await getInvestmentNotification(data)) };
-        case NotificationTypes.REFUND:
-            return { notification, ...(await getRefundNotification(data)) };
-        case NotificationTypes.MYSTERY_BUY:
-            return { notification, ...(await getMysteryBuyNotification(data)) };
-        case NotificationTypes.OTC_CANCEL:
-            return { notification, ...(await getOtcNotification(data)) };
-        case NotificationTypes.OTC_MADE:
-            return { notification, ...(await getOtcNotification(data)) };
-        case NotificationTypes.OTC_TAKE:
-            return { notification, ...(await getOtcNotification(data)) };
-        case NotificationTypes.UPGRADE_BUY:
-            return { notification, ...(await getUpgradeBuyNotification(data)) };
-        default:
-            return { notification };
-    }
-}
+// /**
+//  * @param {number} notificationId
+//  * @return {Promise<ReturnType<typeof getExtendedNotification>>}
+//  */
+// async function getNotificationByStrategy(notificationId) {
+//     const notification = await getBaseNotification(notificationId);
+//     const { typeId, data } = notification;
+//     switch (/** @type {NotificationType[keyof NotificationType]} */ typeId) {
+//         case NotificationTypes.CLAIM:
+//             return { notification, ...(await getClaimNotification(data)) };
+//         case NotificationTypes.INVESTMENT:
+//             return { notification, ...(await getInvestmentNotification(data)) };
+//         case NotificationTypes.REFUND:
+//             return { notification, ...(await getRefundNotification(data)) };
+//         case NotificationTypes.MYSTERY_BUY:
+//             return { notification, ...(await getMysteryBuyNotification(data)) };
+//         case NotificationTypes.OTC_CANCEL:
+//             return { notification, ...(await getOtcNotification(data)) };
+//         case NotificationTypes.OTC_MADE:
+//             return { notification, ...(await getOtcNotification(data)) };
+//         case NotificationTypes.OTC_TAKE:
+//             return { notification, ...(await getOtcNotification(data)) };
+//         case NotificationTypes.UPGRADE_BUY:
+//             return { notification, ...(await getUpgradeBuyNotification(data)) };
+//         default:
+//             return { notification };
+//     }
+// }
 
-/**
- * @param {Record<string, any> | number} filterConfig Filters configuration or notification ID
- * @return {Promise<Model | null>}
- */
-async function getBaseNotification(filterConfig) {
-    const id = Number(filterConfig);
-    if (Number.isNaN(id)) {
-        return models.notification.findOne({
-            where: filterConfig,
-            include: BASE_INCLUDES,
-            plain: true,
-        });
-    }
+// /**
+//  * @param {Record<string, any> | number} filterConfig Filters configuration or notification ID
+//  * @return {Promise<Model | null>}
+//  */
+// async function getBaseNotification(filterConfig) {
+//     const id = Number(filterConfig);
+//     if (Number.isNaN(id)) {
+//         return models.notification.findOne({
+//             where: filterConfig,
+//             include: BASE_INCLUDES,
+//             plain: true,
+//         });
+//     }
 
-    return models.notification.findByPk(`${filterConfig}`, {
-        include: BASE_INCLUDES,
-        plain: true,
-    });
-}
+//     return models.notification.findByPk(`${filterConfig}`, {
+//         include: BASE_INCLUDES,
+//         plain: true,
+//     });
+// }
 
-/**
- * @param {{
- *     amount: number;
- *     claimId: number;
- *     payoutId: number;
- *     offerPayout: number;
- *     amount: number;
- *     currency: string;
- *     chainId: number;
- *     currencySymbol: string;
- * }} data
- * @return {Record<string, any> & data}
- */
-async function getClaimNotification(data) {
-    const { chainId, payoutId, claimId, ...contents } = data;
-    const [network, payout, claim] = await Promise.all([
-        models.network.findByPk(chainId, { plain: true }),
-        models.payout.findByPk(payoutId, { plain: true }),
-        models.claim.findByPk(claimId, { plain: true }),
-    ]);
+// /**
+//  * @param {{
+//  *     amount: number;
+//  *     claimId: number;
+//  *     payoutId: number;
+//  *     offerPayout: number;
+//  *     amount: number;
+//  *     currency: string;
+//  *     chainId: number;
+//  *     currencySymbol: string;
+//  * }} data
+//  * @return {Record<string, any> & data}
+//  */
+// async function getClaimNotification(data) {
+//     const { chainId, payoutId, claimId, ...contents } = data;
+//     const [network, payout, claim] = await Promise.all([
+//         models.network.findByPk(chainId, { plain: true }),
+//         models.payout.findByPk(payoutId, { plain: true }),
+//         models.claim.findByPk(claimId, { plain: true }),
+//     ]);
 
-    return {
-        ...contents,
-        network,
-        payout,
-        claim,
-    };
-}
+//     return {
+//         ...contents,
+//         network,
+//         payout,
+//         claim,
+//     };
+// }
 
-/**
- * @param {{
- *     otcId: number;
- *     dealId: number;
- *     otcDealId: number;
- *     price: number;
- *     amount: number;
- *     currency: string;
- *     isSell: boolean;
- *     tenantId: number
- * }} data
- * @return {Record<string, any> & data}
- */
-async function getOtcNotification(data) {
-    const { otcDealId, ...contents } = data;
-    const otcDeal = await models.otcDeal.findByPk(otcDealId, { plain: true });
+// /**
+//  * @param {{
+//  *     otcId: number;
+//  *     dealId: number;
+//  *     otcDealId: number;
+//  *     price: number;
+//  *     amount: number;
+//  *     currency: string;
+//  *     isSell: boolean;
+//  *     tenantId: number
+//  * }} data
+//  * @return {Record<string, any> & data}
+//  */
+// async function getOtcNotification(data) {
+//     const { otcDealId, ...contents } = data;
+//     const otcDeal = await models.otcDeal.findByPk(otcDealId, { plain: true });
 
-    return { ...contents, otcDeal };
-}
+//     return { ...contents, otcDeal };
+// }
 
-/**
- * @type {Record<string, any>}
- * @param {{ amount: number; partnerId: number }} data
- * @return {Record<string, any> & data}
- */
-async function getInvestmentNotification(data) {
-    const { partnerId, ...contents } = data;
-    const partner = await models.partner.findByPk(partnerId, { plain: true });
+// /**
+//  * @type {Record<string, any>}
+//  * @param {{ amount: number; partnerId: number }} data
+//  * @return {Record<string, any> & data}
+//  */
+// async function getInvestmentNotification(data) {
+//     const { partnerId, ...contents } = data;
+//     const partner = await models.partner.findByPk(partnerId, { plain: true });
 
-    return { ...contents, partner };
-}
+//     return { ...contents, partner };
+// }
 
-/**
- * @type {Record<string, any>}
- */
-async function getRefundNotification(data) {
-    return { ...data };
-}
+// /**
+//  * @type {Record<string, any>}
+//  */
+// async function getRefundNotification(data) {
+//     return { ...data };
+// }
 
-/**
- * @type {Record<string, any>}
- * @param {{ amount: number; item: number }} data
- */
-async function getMysteryBuyNotification(data) {
-    return { ...data };
-}
+// /**
+//  * @type {Record<string, any>}
+//  * @param {{ amount: number; item: number }} data
+//  */
+// async function getMysteryBuyNotification(data) {
+//     return { ...data };
+// }
 
-/**
- * @type {Record<string, any>}
- * @param {{ amount: number; item: number }} data
- */
-async function getUpgradeBuyNotification(data) {
-    return { ...data };
-}
+// /**
+//  * @type {Record<string, any>}
+//  * @param {{ amount: number; item: number }} data
+//  */
+// async function getUpgradeBuyNotification(data) {
+//     return { ...data };
+// }
 
 /**
  * @type {Promise<import("sequelize").Model[]>}
  */
 async function getAllNotifications(filterConfig) {
     const { limit, ...where } = filterConfig;
+    
     return await models.notification.findAll({
         where,
         include: BASE_INCLUDES,
-        limit: limit,
+        limit,
         order: [["id", "DESC"]],
     });
 }
 
 module.exports = {
-    NotificationTypes,
     getNotifications,
-    getExtendedNotification,
+    // NotificationTypes,
 };

@@ -20,7 +20,7 @@ export default function DetailsTimeline({ setView, notifications }) {
             </div>
 
             <ul>
-                {notifications.map((item, idx) => (
+                {notifications.map(item => (
                     <li key={item.id} className="group">
                         <TimelineItem item={item} />
                     </li>
