@@ -5,8 +5,8 @@ export const handleError = ({ content, text, action = () => {} }) => ({
     content,
     error: {
         text,
-        action
-    }
+        action,
+    },
 });
 
 export const handleProcessing = ({ content }) => ({ state: STEP_STATE.PROCESSING, content });

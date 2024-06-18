@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useChainId } from "wagmi";
-import useGetTokenBalance from "@/lib/hooks/useGetTokenBalance";
-import { liquidityAction } from "./reducer";
 import { getStepState } from "../getStepState";
 import { STEPS } from "../enums";
+import { liquidityAction } from "./reducer";
+import useGetTokenBalance from "@/lib/hooks/useGetTokenBalance";
 
-export default function useLiquidityStep(state, data, dispatch) {   
+export default function useLiquidityStep(state, data, dispatch) {
     const chainId = useChainId();
     const { steps, token, params } = data;
 
@@ -34,6 +34,6 @@ export default function useLiquidityStep(state, data, dispatch) {
             params,
             liquidity_isFinished,
             liquidity_isReady,
-        })
-    }
+        }),
+    };
 }

@@ -9,7 +9,7 @@ export const defaultTransactionStep = {
 export const transactionAction = Object.freeze({
     SET_TRANSACTION: "SET_TRANSACTION",
     RESET_TRANSACTION: "RESET_TRANSACTION",
-})
+});
 
 export function transactionReducer(state, action) {
     const { type } = action;
@@ -24,11 +24,11 @@ export function transactionReducer(state, action) {
                 ...state,
                 isFinished: !!action.result,
                 txID: action.result,
-            }
+            };
         case transactionAction.RESET_TRANSACTION:
             return {
-                ...defaultTransactionStep
-            }
+                ...defaultTransactionStep,
+            };
         default:
             return state;
     }

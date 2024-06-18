@@ -1,5 +1,5 @@
-import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
+import { ICONS } from "@/lib/icons";
 
 export const stepPrerequisite = (state, data) => {
     console.log("BIX :: PREREQUISITE :: step state", state, data);
@@ -15,9 +15,12 @@ export const stepPrerequisite = (state, data) => {
         } else if (data.isLoading) {
             result = handleProcessing({ content: data.params.prerequisiteTextProcessing || "Validation processing" });
         } else if (data.isError) {
-            result = handleError({ content: data.params.prerequisiteTextError || "Validation failed", text: data?.error });
+            result = handleError({
+                content: data.params.prerequisiteTextError || "Validation failed",
+                text: data?.error,
+            });
         } else {
-            result = handlePending({ content: data.params.prerequisiteTextWaiting || "Validate transaction" })
+            result = handlePending({ content: data.params.prerequisiteTextWaiting || "Validate transaction" });
         }
     }
 

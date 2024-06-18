@@ -10,7 +10,7 @@ export const defaultNetworkStep = {
 export const networkAction = Object.freeze({
     SET_NETWORK: "SET_NETWORK",
     RESET_NETWORK: "RESET_NETWORK",
-})
+});
 
 export function networkReducer(state, action) {
     const { type, payload } = action;
@@ -23,7 +23,7 @@ export function networkReducer(state, action) {
         case networkAction.SET_NETWORK:
             return { ...state, currentNetwork: payload.network, isFinished: payload.isFinished };
         case networkAction.RESET_NETWORK:
-            return { ...defaultNetworkStep }
+            return { ...defaultNetworkStep };
         default:
             return state;
     }

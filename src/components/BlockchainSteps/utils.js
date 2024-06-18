@@ -167,7 +167,6 @@ const validHash = (hash) => {
 
 const validToken = (token) => {
     return typeof token === "string" && isAddress(token.address);
-
 };
 const validNumber = (amount) => {
     return typeof amount === "number" && amount > 0;

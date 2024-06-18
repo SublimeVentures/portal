@@ -39,12 +39,11 @@ export default function VaultDashboard({ viewOptions: { views, handleChangeView 
         : PayoutTableVariants.horizontal;
 
     return (
-        <div className="p-4 md:p-16 overflow-y-auto">
+        <div className="overflow-y-auto">
             <div className="flex p-4 flex-col gap-8 xl:grid xl:grid-cols-9 2xl:grid-cols-8 md:mb-24">
                 <div className="flex flex-col grow col-span-4 2xl:col-span-3">
                     <div className="h-12 lg:h-20">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-2xl font-semibold text-foreground lg:text-7xl">Vault Dashboard</h3>
                             <p className="text-2xl text-foreground">My Statistics</p>
                         </div>
                     </div>

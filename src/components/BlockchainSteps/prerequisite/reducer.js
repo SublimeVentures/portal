@@ -10,7 +10,7 @@ export const defaultPrerequisiteStep = {
 export const prerequisiteAction = Object.freeze({
     SET_PREREQUISITE: "SET_PREREQUISITE",
     RESET_PREREQUISITE: "RESET_PREREQUISITE",
-})
+});
 
 export function prerequisiteReducer(state, action) {
     const { type, payload } = action;
@@ -27,11 +27,11 @@ export function prerequisiteReducer(state, action) {
                 extra: payload?.extra,
                 error: payload?.error,
                 isFinished: payload?.isFinished,
-            }
+            };
         case prerequisiteAction.RESET_PREREQUISITE:
             return {
-                ...defaultPrerequisiteStep
-            }
+                ...defaultPrerequisiteStep,
+            };
         default:
             return state;
     }

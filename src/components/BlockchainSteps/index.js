@@ -2,16 +2,16 @@ import React, { useEffect, useReducer, useCallback } from "react";
 import { useChainId } from "wagmi";
 import debounce from "lodash.debounce";
 
-import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
-import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
-import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { stepsReducer, initialState, stepsAction } from "./reducer";
 import useNetworkStep, { networkAction } from "./network";
 import useLiquidityStep, { liquidityAction } from "./liquidity";
-import useAllowanceStep, { allowanceAction} from "./allowance";
+import useAllowanceStep, { allowanceAction } from "./allowance";
 import usePrerequisiteStep, { prerequisiteAction } from "./prerequisite";
 import useTransactionStep, { transactionAction } from "./transaction";
 import { STEP_STATE } from "./enums";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
+import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
 
 const BlockchainSteps = ({ data }) => {
     const chainId = useChainId();
@@ -36,7 +36,7 @@ const BlockchainSteps = ({ data }) => {
         chainId,
         token?.contract,
     ]);
-    
+
     const { stepNetwork, network_current } = useNetworkStep(state, data, dispatch);
     const { stepLiquidity } = useLiquidityStep(state, data, dispatch);
     const { stepAllowance, allowance_set_reset, allowance_set } = useAllowanceStep(state, data, dispatch);
@@ -64,7 +64,13 @@ const BlockchainSteps = ({ data }) => {
     );
 
     useEffect(() => {
-        console.log(`BIX :: RESET STATE`, stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepTransaction.state);
+        console.log(
+            `BIX :: RESET STATE`,
+            stepNetwork.state,
+            stepLiquidity.state,
+            stepAllowance.state,
+            stepTransaction.state,
+        );
 
         if (steps.network && stepNetwork.state === STEP_STATE.ERROR) {
             dispatch({ type: networkAction.RESET_NETWORK });
@@ -86,7 +92,7 @@ const BlockchainSteps = ({ data }) => {
     }, [stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepPrerequisite.state, stepTransaction.state]);
 
     useEffect(() => {
-        if (!!stepTransaction.transaction_isFinished) {
+        if (stepTransaction.transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(stepTransaction.transaction_isFinished);
         }
@@ -115,7 +121,7 @@ const BlockchainSteps = ({ data }) => {
                 {steps.transaction && <BlockchainStep data={stepPrerequisite} />}
                 {steps.transaction && <BlockchainStep data={stepTransaction} />}
             </div>
-        
+
             <div className="pb-5 button-container">
                 <UniButton
                     type={ButtonTypes.BASE}
@@ -129,7 +135,7 @@ const BlockchainSteps = ({ data }) => {
                 />
             </div>
         </>
-    )
+    );
 };
 
 export default BlockchainSteps;

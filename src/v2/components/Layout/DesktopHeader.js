@@ -11,17 +11,23 @@ const mockedUser = {
     walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
 }
 
-export default function Header() {
+export default function Header({ title }) {
     const { environmentCleanup } = useEnvironmentContext();
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="px-16 pt-16 w-full hidden md:block">
+        <header className="p-16 w-full">
             <div className="flex justify-between flex-wrap gap-4">
-                <h3 className="hidden text-4xl font-regular text-foreground md:block">
-                    Welcome back, {" "}
-                    <span className="text-accent">{mockedUser.username}!</span>
-                </h3>
+                <div className="flex items-baseline">
+                    <h2 className="text-7xl font-bold text-foreground">
+                        {title}
+                    </h2>
+
+                    <p className="ml-8 text-4xl font-regular text-foreground">
+                        Welcome back, {" "}
+                        <span className="text-accent">{mockedUser.username}!</span>
+                    </p>
+                </div>
 
                 <div className="relative z-10 flex flex-wrap items-center gap-4">
                     <div className="flex flex-col text-end">

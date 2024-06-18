@@ -28,19 +28,19 @@ const MobileLayout = ({ children, isBlockedAlert }) => {
     )
 }
 
-const DesktopLayout = ({ children, isBlockedAlert }) => {
+const DesktopLayout = ({ children, isBlockedAlert, title }) => {
     return (
         <div className={cn("flex h-full grow", { "mt-[var(--alertHeight)]": isBlockedAlert } )}>
             <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} />
-                
+
             <div className="flex grow pl-[var(--sidebarWidth)] ml-0 m-6">
-                <div className={cn("grow bg-[#05060B] rounded-[33px]", {
+                <div className={cn("grow bg-[#05060B] rounded-[33px] md:overflow-y-auto 2x:overflow-y-hidden", {
                     "max-h-[calc(100vh_-_theme('spacing.12'))]": !isBlockedAlert,
                     "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
                 })}>
                     <div className="flex flex-col w-full h-full">
-                        <main className="flex flex-col grow w-full overflow-y-hidden">
-                            <DesktopHeader />
+                        <main className="flex flex-col grow w-full">
+                            {/* <DesktopHeader title={title} /> */}
                             {children}
                         </main>
                     </div>
@@ -50,7 +50,7 @@ const DesktopLayout = ({ children, isBlockedAlert }) => {
     )
 }
 
-export default function LayoutApp({ children }) {
+export default function LayoutApp({ children, title }) {
     const isDesktop = useMediaQuery(breakpoints.md)
     
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
@@ -66,7 +66,7 @@ export default function LayoutApp({ children }) {
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
 
             {isDesktop 
-                ? <DesktopLayout isBlockedAlert={isBlockedAlert}>{children}</DesktopLayout>
+                ? <DesktopLayout title={title} isBlockedAlert={isBlockedAlert}>{children}</DesktopLayout>
                 : <MobileLayout isBlockedAlert={isBlockedAlert}>{children}</MobileLayout>
             }
         </div>

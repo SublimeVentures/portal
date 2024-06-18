@@ -16,6 +16,7 @@ const PAGE = {
     Mysterybox: "/app/mysterybox",
     Upgrades: "/app/upgrades",
     Settings: "/app/settings",
+    Notifications: "/app/notifications",
 };
 
 export const API = {

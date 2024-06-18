@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import useGetNetwork from "@/lib/hooks/useGetNetwork";
-import { networkAction } from "./reducer";
 import { getStepState } from "../getStepState";
 import { STEPS } from "../enums";
+import { networkAction } from "./reducer";
+import useGetNetwork from "@/lib/hooks/useGetNetwork";
 
 export default function useNetworkStep(state, data, dispatch) {
     const { steps, params } = data;
@@ -33,6 +33,6 @@ export default function useNetworkStep(state, data, dispatch) {
             network_isReady,
             network_shouldRun,
             network_isFinished,
-        })
-    }
+        }),
+    };
 }

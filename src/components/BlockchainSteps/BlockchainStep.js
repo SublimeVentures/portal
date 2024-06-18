@@ -1,10 +1,10 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { STEP_STATE } from "./enums";
 import DynamicIcon from "@/components/Icon";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import { ICONS } from "@/lib/icons";
 import { cn } from "@/lib/cn";
-import { STEP_STATE } from "./enums"
 
 const colors = {
     [STEP_STATE.PENDING]: "text-gray",

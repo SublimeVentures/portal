@@ -5,6 +5,7 @@ export const fetchMarkets = async () => {
     try {
         const url = `/api/otc/markets`;
         const { data } = await axiosPrivate.get(url);
+
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -14,26 +15,34 @@ export const fetchMarkets = async () => {
     return {};
 };
 
-export const fetchOffers = async (otcId) => {
+export const fetchOffers = async ({ otcId, filters = {}, sort }) => {
     if (!otcId) return [];
+    
+    const { sortId = "", sortOrder = "" } = sort || {};
+    const queryParams = new URLSearchParams({ ...filters, sortId, sortOrder });
+
     try {
         const url = `/api/otc/offers/${otcId}`;
         const { data } = await axiosPrivate.get(url);
         return data;
     } catch (e) {
+        console.log('offers-err', e)
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "fetchOffers", e });
         }
     }
+    
     return [];
 };
 
 export const fetchHistory = async (offerId) => {
     try {
+        console.log('fetchHistory', offerId)
         const url = `/api/otc/history/${offerId}`;
         const { data } = await axiosPrivate.get(url);
         return data;
     } catch (e) {
+        console.log('fetchHistory-err', e)
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "fetchHistory", e });
         }

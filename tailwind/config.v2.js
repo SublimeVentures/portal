@@ -42,7 +42,7 @@ module.exports = {
                 "8xl": "28px",
                 "9xl": "29px",
                 "10xl": "34px",
-                "11xl": "39ox",
+                "11xl": "39px",
             },
             fontWeight: {
                 light: 300,
@@ -73,9 +73,6 @@ module.exports = {
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
-            gridTemplateColumns: {
-                // 'test': 'repeat(auto-fit, minmax(220px, 1fr))',
-              },
         },
         keyframes: {
             "accordion-down": {

@@ -1,5 +1,5 @@
-import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
+import { ICONS } from "@/lib/icons";
 
 export const stepNetwork = (state, data) => {
     console.log("BIX :: NETWORK :: step state", state, data);
@@ -11,7 +11,7 @@ export const stepNetwork = (state, data) => {
         result = handleSuccess({ content: `Connected network: ${state.currentNetwork}` });
     } else if (data.isLoading) {
         result = handleProcessing({ content: "Switching network..." });
-    } else if (!!data.error) {
+    } else if (data.error) {
         result = handleError({ content: "Error switching network", text: data?.error?.shortMessage });
     } else {
         result = handlePending({ content: "Network check" });
@@ -21,9 +21,9 @@ export const stepNetwork = (state, data) => {
         data.params.requiredNetwork === 1
             ? ICONS.ETH_MONO
             : data.params.requiredNetwork === 137
-                ? ICONS.MATIC_MONO
-                : ICONS.BSC_MONO;
-    
+              ? ICONS.MATIC_MONO
+              : ICONS.BSC_MONO;
+
     result.iconPadding = iconPadding;
 
     console.log("BIX :: NETWORK :: step state result", result, state, data);

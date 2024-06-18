@@ -1,9 +1,9 @@
-import { stepNetwork } from './network/stepState'
-import { stepLiquidity } from './liquidity/stepState'
-import { stepAllowance } from './allowance/stepState'
-import { stepPrerequisite } from './prerequisite/stepState'
-import { stepTransaction } from './transaction/stepState'
-import { STEPS } from './enums'
+import { stepNetwork } from "./network/stepState";
+import { stepLiquidity } from "./liquidity/stepState";
+import { stepAllowance } from "./allowance/stepState";
+import { stepPrerequisite } from "./prerequisite/stepState";
+import { stepTransaction } from "./transaction/stepState";
+import { STEPS } from "./enums";
 
 const stepConfigurations = {
     [STEPS.NETWORK]: stepNetwork,

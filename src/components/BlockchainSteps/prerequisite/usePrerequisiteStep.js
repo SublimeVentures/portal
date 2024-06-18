@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
-import { prerequisiteAction } from "./reducer";
 import { getStepState } from "../getStepState";
 import { STEPS } from "../enums";
+import { prerequisiteAction } from "./reducer";
+import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
 
 export default function usePrerequisiteStep(state, data, network_current, dispatch) {
     const { steps, token, params } = data;
@@ -10,21 +10,27 @@ export default function usePrerequisiteStep(state, data, network_current, dispat
     const prerequisite_isReady = steps.allowance
         ? state.allowance.isFinished
         : steps?.liquidity
-        ? state.liquidity.isFinished
-        : steps.network
-        ? state.network.isFinished
-        : true;
+          ? state.liquidity.isFinished
+          : steps.network
+            ? state.network.isFinished
+            : true;
 
-    const prerequisite_shouldRun = steps.transaction && !state.prerequisite.isFinished && !state.prerequisite.lock && prerequisite_isReady;
-        
-    const prerequisite = useGetPrerequisite(prerequisite_shouldRun, { ...params, network: network_current }, state, token);
+    const prerequisite_shouldRun =
+        steps.transaction && !state.prerequisite.isFinished && !state.prerequisite.lock && prerequisite_isReady;
+
+    const prerequisite = useGetPrerequisite(
+        prerequisite_shouldRun,
+        { ...params, network: network_current },
+        state,
+        token,
+    );
 
     console.log("BIX :: PREREQUISITE - shouldRun / isReady", prerequisite_shouldRun, prerequisite_isReady);
-    
+
     useEffect(() => {
         if (prerequisite_shouldRun) {
             console.log(`BIX :: PREREQUISITE - SET - should run: ${prerequisite_shouldRun}`);
-            
+
             dispatch({
                 type: prerequisiteAction.SET_PREREQUISITE,
                 payload: {
@@ -42,6 +48,6 @@ export default function usePrerequisiteStep(state, data, network_current, dispat
             token,
             params,
             prerequisite_isReady,
-        })
-    }
+        }),
+    };
 }

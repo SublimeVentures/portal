@@ -1,60 +1,63 @@
-import Head from "next/head";
+// import Head from "next/head";
+// import { useQuery } from "@tanstack/react-query";
+// import { BiMoneyWithdraw as IconMoney, BiNetworkChart as IconNetwork } from "react-icons/bi";
+// import Empty from "@/components/App/Empty";
+// import IconStars from "@/assets/svg/Stars.svg";
+// import LayoutApp from "@/components/Layout/LayoutApp";
+// import Loader from "@/components/App/Loader";
+// import OfferItem from "@/components/App/Offer/OfferItem";
+// import Stat from "@/components/Stat";
+// import { fetchOfferList } from "@/fetchers/offer.fetcher";
+// import { getCopy } from "@/lib/seoConfig";
+// import { tenantIndex } from "@/lib/utils";
+// import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+// import { TENANT } from "@/lib/tenantHelper";
 
-import { useQuery } from "@tanstack/react-query";
-import { BiMoneyWithdraw as IconMoney, BiNetworkChart as IconNetwork } from "react-icons/bi";
-import Empty from "@/components/App/Empty";
-import IconStars from "@/assets/svg/Stars.svg";
-import LayoutApp from "@/components/Layout/LayoutApp";
-import Loader from "@/components/App/Loader";
-import OfferItem from "@/components/App/Offer/OfferItem";
-import Stat from "@/components/Stat";
-import { fetchOfferList } from "@/fetchers/offer.fetcher";
-import { getCopy } from "@/lib/seoConfig";
-import { tenantIndex } from "@/lib/utils";
+import { AppLayout } from "@/v2/components/Layout";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { TENANT } from "@/lib/tenantHelper";
 
 export default function AppOffer({ session }) {
-    const TENANT_ID = session.tenantId;
-    const PARTNER_ID = session.partnerId;
-    const { cdn } = useEnvironmentContext();
+    // const TENANT_ID = session.tenantId;
+    // const PARTNER_ID = session.partnerId;
+    // const { cdn } = useEnvironmentContext();
 
-    const {
-        isLoading,
-        data: response,
-        isError,
-    } = useQuery({
-        queryKey: ["offerList", { TENANT_ID, PARTNER_ID }],
-        queryFn: fetchOfferList,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 60 * 1000,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-    });
+    // const {
+    //     isLoading,
+    //     data: response,
+    //     isError,
+    // } = useQuery({
+    //     queryKey: ["offerList", { TENANT_ID, PARTNER_ID }],
+    //     queryFn: fetchOfferList,
+    //     cacheTime: 5 * 60 * 1000,
+    //     staleTime: 1 * 60 * 1000,
+    //     refetchOnMount: false,
+    //     refetchOnWindowFocus: false,
+    // });
 
-    const offerList = response?.offers;
-    const offerListRender = offerList ? offerList : [];
-    const stats = response?.stats;
-    const partners = stats && stats?.partners ? stats.partners : 0;
-    const projectsInvested = stats && stats?.vc ? stats.vc : 0;
-    const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
+    // const offerList = response?.offers;
+    // const offerListRender = offerList ? offerList : [];
+    // const stats = response?.stats;
+    // const partners = stats && stats?.partners ? stats.partners : 0;
+    // const projectsInvested = stats && stats?.vc ? stats.vc : 0;
+    // const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
-    const renderPage = () => {
-        if (isLoading) return <Loader />;
-        if (!offerListRender || offerListRender.length === 0 || isError) return <Empty />;
-        return (
-            <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
-                {!!offerList && offerListRender.map((el) => <OfferItem offer={el} cdn={cdn} key={el.slug} />)}
-            </div>
-        );
-    };
+    // const renderPage = () => {
+    //     if (isLoading) return <Loader />;
+    //     if (!offerListRender || offerListRender.length === 0 || isError) return <Empty />;
+    //     return (
+    //         <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
+    //             {!!offerList && offerListRender.map((el) => <OfferItem offer={el} cdn={cdn} key={el.slug} />)}
+    //         </div>
+    //     );
+    // };
 
-    const title = `Opportunities - ${getCopy("NAME")}`;
+    // const title = `Opportunities - ${getCopy("NAME")}`;
+    
     return (
         <>
-            <Head>
+            <h2 className="text-foreground">Opportunities</h2>
+            {/* <Head>
                 <title>{title}</title>
             </Head>
             <div className="flex flex-col justify-between gap-7 xl:flex-row">
@@ -89,7 +92,7 @@ export default function AppOffer({ session }) {
                     </div>
                 </div>
             </div>
-            {renderPage()}
+            {renderPage()} */}
         </>
     );
 }
@@ -99,5 +102,5 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 AppOffer.getLayout = function (page) {
-    return <LayoutApp>{page}</LayoutApp>;
+    return <AppLayout title="Opportunities">{page}</AppLayout>;
 };

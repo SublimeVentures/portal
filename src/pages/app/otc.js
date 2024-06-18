@@ -1,158 +1,123 @@
-import Head from "next/head";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { AiOutlineRead as ReadIcon } from "react-icons/ai";
-import LayoutApp from "@/components/Layout/LayoutApp";
-import RoundBanner from "@/components/App/RoundBanner";
-import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import { fetchMarkets, fetchOffers } from "@/fetchers/otc.fetcher";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+
+import { queryClient } from "@/lib/queryCache";
+import { AppLayout, Metadata } from "@/v2/components/Layout";
 import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
-import PAGE, { ExternalLinks } from "@/routes";
-import { fetchVault } from "@/fetchers/vault.fetcher";
-import OtcMarkets from "@/components/App/Otc/Markets";
-import OtcOffers from "@/components/App/Otc/Offers";
-import routes from "@/routes";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
+import routes from "@/routes";
+import { getMarkets } from "@/v2/fetchers/otc";
+
+import OTCMarket from "@/v2/modules/otc/OTCMarket";
+
+// @TODO - Modals
+// const { offers, vault, currentMarket, session, refetchOffers, offersIsSuccess, vaultIsSuccess, table } = propOffers;
+//         // const [isMakeOfferModal, setIsMakeOfferModal] = useState(false);
+// const [isCancelOfferModal, setIsCancelOfferModal] = useState(false);
+// const [isTakeOfferModal, setIsTakeOfferModal] = useState(false);
+// const [offerDetails, setOfferDetails] = useState(false);
+// const openCancel = (offer) => {
+//     setOfferDetails(offer);
+//     setIsCancelOfferModal(true);
+// };
+
+// const openTake = (offer) => {
+//     setOfferDetails(offer);
+//     setIsTakeOfferModal(true);
+// };
+
+// const haveAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
+
+// const makeOfferProps = { ...propOffers, allocation: haveAllocation };
+// const interactOfferProps = { ...propOffers, offerDetails };
+// const filters = ['filter-1', 'filter-2']
+
+{
+    /* <MakeOfferModal
+                model={isMakeOfferModal}
+                setter={() => {
+                    setIsMakeOfferModal(false);
+                }}
+                props={{ ...makeOfferProps }}
+            />
+            <CancelOfferModal
+                model={isCancelOfferModal}
+                setter={() => {
+                    setIsCancelOfferModal(false);
+                }}
+                props={{ ...interactOfferProps }}
+            />
+            <TakeOfferModal
+                model={isTakeOfferModal}
+                setter={() => {
+                    setIsTakeOfferModal(false);
+                }}
+                props={{ ...interactOfferProps }}
+            /> */
+}
+
+//     const { isSuccess: vaultIsSuccess, data: vault, refetch: refetchVault } = useQuery({
+//         queryKey: ["userVault", USER_ID],
+//         queryFn: fetchVault,
+//         refetchOnMount: false,
+//         refetchOnWindowFocus: false,
+//         cacheTime: 0,
+//         staleTime: 0,
+//     });
 
 export default function AppOtc({ session }) {
     const router = useRouter();
     const { market } = router.query;
     const { userId: USER_ID } = session;
 
-    const { isSuccess: otcIsSuccess, data: otc } = useQuery({
+    const {
+        isLoading: otcIsLoading,
+        data: otc,
+        ...rest
+    } = useQuery({
         queryKey: ["otcMarkets", USER_ID],
-        queryFn: fetchMarkets,
+        queryFn: () => getMarkets(),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         cacheTime: 4 * 60 * 60 * 1000,
         staleTime: 3 * 60 * 60 * 1000,
     });
 
-    const {
-        isSuccess: vaultIsSuccess,
-        data: vault,
-        refetch: refetchVault,
-    } = useQuery({
-        queryKey: ["userVault", USER_ID],
-        queryFn: fetchVault,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        cacheTime: 0,
-        staleTime: 0,
-    });
-
-    const currentMarket = otc?.find((el) => el.slug === market);
-
-    const {
-        isSuccess: offersIsSuccess,
-        data: offers,
-        refetch: refetchOffers,
-    } = useQuery({
-        queryKey: ["otcOffers", currentMarket?.otc],
-        queryFn: () => fetchOffers(currentMarket?.otc),
-        refetchOnMount: true,
-        refetchOnWindowFocus: true,
-        cacheTime: 0,
-        staleTime: 0,
-        enabled: !!currentMarket?.offerId,
-    });
-
-    const changeMarket = (slug) => {
-        router.push(`${PAGE.OTC}/?market=${slug}`, undefined, {
-            shallow: true,
-        });
-    };
-
-    const openGuide = (e) => {
-        e?.preventDefault();
-        window.open(ExternalLinks.OTC, "_blank");
-    };
+    const currentMarket = otc?.find((el) => el.slug === market) ?? null;
 
     useEffect(() => {
-        if (!!otc && !!currentMarket) {
-        } else {
-            if (otc && otc[0]?.slug) {
-                changeMarket(otc[0]?.slug);
-            }
-        }
-    }, [otc, otc?.markets, market]);
+        if (!currentMarket && otc && otc[0]?.slug)
+            router.push(`${routes.OTC}/?market=${otc[0].slug}`, undefined, { shallow: true });
+    }, [otc, currentMarket]);
 
-    const propMarkets = {
-        otc,
-        currentMarket,
-        changeMarket,
-    };
-
-    const propOffers = {
-        refetchOffers,
-        refetchVault,
-        vault,
-        offersIsSuccess,
-        vaultIsSuccess,
-        offers,
-        currentMarket,
-        session,
-    };
-
-    const renderPage = () => {
-        if (!otcIsSuccess) return <Loader />;
-        if (!otcIsSuccess || !vaultIsSuccess) return <Loader />;
-        if (otc?.length === 0)
-            return (
-                <div className="col-span-12 max-h-[40vh]">
-                    <Empty />
-                </div>
-            );
+    if (otcIsLoading || !currentMarket) {
         return (
-            <div className="col-span-12">
-                <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                    <div className="col-span-12 lg:col-span-4 flex flex-1">
-                        <OtcMarkets propMarkets={propMarkets} />
-                    </div>
-                    <div className="col-span-12 lg:col-span-8 flex flex-1 ">
-                        <OtcOffers propOffers={propOffers} />
-                    </div>
-                </div>
+            <>
+                <Metadata title="Loading" />
+                <Loader />
+            </>
+        );
+    }
+
+    if (otc.length === 0) {
+        return (
+            <div className="col-span-12 max-h-[40vh]">
+                <Metadata title="OTC Market" />
+                <Empty />
             </div>
         );
-    };
+    }
 
-    const title = `OTC Market - ${getCopy("NAME")}`;
-
-    return (
-        <>
-            <Head>
-                <title>{title}</title>
-            </Head>
-            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                <div className="col-span-12 flex">
-                    <RoundBanner
-                        title={"Over the counter"}
-                        subtitle={"Need liquidity? Trade your allocation."}
-                        action={
-                            <RoundButton
-                                text={"Learn more"}
-                                isWide={true}
-                                size={"text-sm sm"}
-                                handler={openGuide}
-                                icon={<ReadIcon className={ButtonIconSize.hero} />}
-                            />
-                        }
-                    />
-                </div>
-                {renderPage()}
-            </div>
-        </>
-    );
+    return <OTCMarket session={session} otc={otc} currentMarket={currentMarket} />;
 }
 
 export const getServerSideProps = async ({ req, res }) => {
+    await queryClient.prefetchQuery("otcMarkets", () => getMarkets(req.headers.cookie));
     return await processServerSideData(req, res, routes.OTC);
 };
 
 AppOtc.getLayout = function (page) {
-    return <LayoutApp>{page}</LayoutApp>;
+    return <AppLayout title="OTC Market">{page}</AppLayout>;
 };

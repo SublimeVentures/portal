@@ -1,13 +1,34 @@
+const { Op, Sequelize } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op } = require("sequelize");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
+const { getWhereClause } = require("../utils");
 
-///////////
-///queries
-//////////
-async function getActiveOffers(otcId) {
+function constructOffersOrder(sortId, sortOrder) {
+    const validSortColumns = {
+        isSell: "isSell",
+        amount: "amount",
+        price: "price",
+        multiplier: Sequelize.literal("price / amount"),
+        chain: "chainId",
+        date: "updatedAt",
+    };
+
+    const orderDirection = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
+    const orderColumn = validSortColumns[sortId] || "id";
+    const offerOrder = [[orderColumn, orderDirection]];
+
+    return offerOrder;
+}
+
+async function getActiveOffers(otcId, query) {
+    const { sortId, sortOrder, ...filters } = query;
+
+    const offerOrder = constructOffersOrder(sortId, sortOrder);
+    const whereClause = getWhereClause(filters, ["maker"], ["isSell"]);
+
     return models.otcDeal.findAll({
+        order: offerOrder,
         attributes: [
             "id",
             "offerId",
@@ -18,9 +39,11 @@ async function getActiveOffers(otcId) {
             "currency",
             "isSell",
             "maker",
-            [db.literal('"onchain"."chainId"'), "chainId"], // Alias 'chainId' from onchain
+            [db.literal('"onchain"."chainId"'), "chainId"],
+            [Sequelize.literal("price / amount"), "multiplier"],
         ],
         where: {
+            ...whereClause,
             otcId,
             isFilled: false,
             isCancelled: false,
@@ -38,8 +61,13 @@ async function getActiveOffers(otcId) {
     });
 }
 
-async function getHistoryOffers(offerId) {
+async function getHistoryOffers(offerId, query) {
+    const { sortId, sortOrder } = query;
+
+    const historyOrder = constructOffersOrder(sortId, sortOrder);
+
     return models.otcDeal.findAll({
+        order: historyOrder,
         attributes: [
             "id",
             "offerId",
@@ -47,6 +75,7 @@ async function getHistoryOffers(offerId) {
             "amount",
             "isSell",
             [db.literal('"onchain"."chainId"'), "chainId"],
+            [Sequelize.literal("price / amount"), "multiplier"],
             "updatedAt",
         ],
         where: { offerId, isFilled: true },

@@ -1,5 +1,5 @@
-import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
+import { ICONS } from "@/lib/icons";
 
 export const stepLiquidity = (state, data) => {
     console.log("BIX :: LIQUIDITY :: step state", state, data);
@@ -13,7 +13,7 @@ export const stepLiquidity = (state, data) => {
         result = handleProcessing({ content: "Checking account funds" });
     } else if (data.isError) {
         result = handleError({
-            content: 'Error occurred',
+            content: "Error occurred",
             text: data?.error?.shortMessage,
             action: data.refetch,
         });

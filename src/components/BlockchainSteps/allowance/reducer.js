@@ -1,4 +1,4 @@
-import { stepsAction } from "../reducer"
+import { stepsAction } from "../reducer";
 
 export const defaultAllowanceStep = {
     isFinished: false,
@@ -11,7 +11,7 @@ export const allowanceAction = Object.freeze({
     SET_ALLOWANCE: "SET_ALLOWANCE",
     SET_ALLOWANCE_SET: "SET_ALLOWANCE_SET",
     RESET_ALLOWANCE: "RESET_ALLOWANCE",
-})
+});
 
 export function allowanceReducer(state, action) {
     const { type, payload } = action;
@@ -26,7 +26,7 @@ export function allowanceReducer(state, action) {
         case allowanceAction.SET_ALLOWANCE_SET:
             return { ...state, executing: payload };
         case allowanceAction.RESET_ALLOWANCE:
-            return { ...defaultAllowanceStep }
+            return { ...defaultAllowanceStep };
         default:
             return state;
     }

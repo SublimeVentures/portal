@@ -52,7 +52,7 @@ function useBlockchainButton(steps, state, params, extraState) {
     useEffect(() => {
         const buttonState = processButtonState();
         console.log("BIX :: BUTTON STATE", buttonState);
-        
+
         if (buttonState.lock) {
             setResult(buttonState);
         } else {

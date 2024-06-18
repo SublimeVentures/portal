@@ -1,5 +1,5 @@
-import { ICONS } from "@/lib/icons";
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
+import { ICONS } from "@/lib/icons";
 
 export const stepTransaction = (state, data) => {
     console.log("BIX :: TRANSITION :: step state", state, data);
@@ -11,9 +11,9 @@ export const stepTransaction = (state, data) => {
         result = handlePending({ content: "Send transaction" });
     } else {
         if (state.isFinished) {
-            result = handleSuccess({ content: "Transaction confirmed" })
+            result = handleSuccess({ content: "Transaction confirmed" });
         } else if (data.isFetching || data.isLoading) {
-            result = handleProcessing({ content: "Sending transaction" })
+            result = handleProcessing({ content: "Sending transaction" });
         } else if (data.isError) {
             result = handleError({ content: "Error on sending transaction", text: data?.error });
         } else {

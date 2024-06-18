@@ -1,8 +1,65 @@
-@import "@/styles/globals.scss";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import "@/v2/styles/gradients.scss";
+// @import "@/styles/globals.scss";
+
+@layer base {
+  body {
+    @apply overflow-hidden;
+  }
+}
+
+@layer components {
+  .table {
+    @apply table-fixed w-full;
+
+    .table-head {
+      @apply relative;
+    }
+    
+    .table-head-cell {
+      @apply py-4 pl-2 pr-5 text-sm font-regular text-foreground normal-case text-left;
+    }
+
+    .table-body-row {
+      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base;
+    }
+
+    .table-data {
+      @apply table-cell py-4 px-2 text-sm text-foreground text-left before:content-none;
+    }
+  }
+
+  .table-inline {
+    @apply table-fixed w-full;
+
+    .table-head {
+      @apply absolute inset-0 p-0 m-[-1px] h-[1px] w-[1px] overflow-hidden;
+    }
+
+    .table-head-cell {
+      @apply text-sm font-regular text-foreground normal-case text-left;
+    }
+
+    .table-body-row {
+      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base;
+    }
+
+    .table-data {
+      @apply block px-5 py-1 text-sm text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
+    }
+  }
+
+  .definition-section {
+    @apply mb-2 mt-4 py-4 px-8 flex flex-col gap-6 bg-foreground/[.02] rounded;
+  }
+
+  .definition-grid {
+    @apply grid grid-cols-2 gap-6;
+  }
+}
 
 @layer utilities {
   .transition-base {
@@ -35,139 +92,6 @@
 
 .vault-investment::-webkit-scrollbar-track {
   margin: 64px;
-}
-
-body {
-  overflow: hidden;
-}
-
-.card-gradient {
-  background-size: 100%;
-  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-  position: relative;
-  z-index: 100;
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 5px;
-    padding: 2px;
-    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
-.card-gradient-accent {
-  background-size: 100%;
-  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-  position: relative;
-  z-index: 100;
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 5px;
-    padding: 2px;
-    background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
-// Source: https://medium.com/@dave_lunny/animating-css-gradients-using-only-css-d2fd7671e759
-.card-background {
-  background-size: 100%;
-  background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-  position: relative;
-  z-index: 100;
-  border-radius: 5px;
-
-  &::before, &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-
-  &::after {
-    z-index: -1;
-    padding: 2px;
-    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 15%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-
-  &::before {
-    background-image: linear-gradient(324deg, #164062 0%, #099FB7 100%);
-    background: transparent linear-gradient(324deg, #164062 0%, #099FB7 100%) 0% 0% no-repeat padding-box;
-    display: block;
-    height: 100%;
-    opacity: 0;
-    width: 100%;
-    z-index: -100;
-    transition: opacity 200ms;
-  }
-
-  &:hover {
-    &::before {
-      opacity: 1;
-    }
-
-    &::after {
-      background: linear-gradient(131deg, transparent 0%, hsl(36, 65%, 71%) 0%, transparent 15%);
-    }
-  }
-}
-
-.dialog-gradient {
-  background-size: 100%;
-  background-image: linear-gradient(102deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%);
-  border-radius: 5px;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 5px; 
-    padding: 2px; 
-    background: linear-gradient(231deg, transparent 0%, #099FB7 0%, transparent 55%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
-.gradient-border-sheet-header {
-  position: relative;
-  z-index: 1;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: 64px;
-    padding: 2px; 
-    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 25%);
-    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-}
-
-@media (max-width: 640px) {
-  .gradient-border-sheet-header::before {
-    display: none;
-  }
 }
 
 .test-grid {

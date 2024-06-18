@@ -3,13 +3,13 @@ import { stepsAction } from "../reducer";
 export const defaultLiquidityStep = {
     isFinished: false,
     lock: true,
-    balance: 0
+    balance: 0,
 };
 
 export const liquidityAction = Object.freeze({
     SET_LIQUIDITY: "SET_LIQUIDITY",
     RESET_LIQUIDITY: "RESET_LIQUIDITY",
-})
+});
 
 export function liquidityReducer(state, action) {
     const { type, payload } = action;
@@ -22,7 +22,7 @@ export function liquidityReducer(state, action) {
         case liquidityAction.SET_LIQUIDITY:
             return { ...state, balance: payload.balance, isFinished: payload.isFinished };
         case liquidityAction.RESET_LIQUIDITY:
-            return { ...defaultLiquidityStep }
+            return { ...defaultLiquidityStep };
         default:
             return state;
     }

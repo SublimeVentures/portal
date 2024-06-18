@@ -7,7 +7,7 @@ import { transactionReducer, defaultTransactionStep } from "./transaction/reduce
 export const stepsAction = Object.freeze({
     START: "START",
     RESET: "RESET",
-})
+});
 
 export const initialState = {
     network: defaultNetworkStep,
@@ -15,11 +15,11 @@ export const initialState = {
     allowance: defaultAllowanceStep,
     prerequisite: defaultPrerequisiteStep,
     transaction: defaultTransactionStep,
-}
+};
 
-export const combineReducers = slices => (state, action) => {
+export const combineReducers = (slices) => (state, action) => {
     return Object.keys(slices).reduce((acc, prop) => {
-        return { ...acc, [prop]: slices[prop](acc[prop], action)};
+        return { ...acc, [prop]: slices[prop](acc[prop], action) };
     }, state);
 };
 
