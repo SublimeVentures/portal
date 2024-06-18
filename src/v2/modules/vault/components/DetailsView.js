@@ -1,10 +1,12 @@
 import { Button } from "@/v2/components/ui/button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
+import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import DynamicIcon from "@/components/Icon";
 import { NETWORKS } from "@/lib/utils";
 import { updateToLocalString, getFormattedDate } from "@/v2/lib/helpers";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
+import { cn } from "@/lib/cn";
 import { views } from "./DetailsSidebar";
 
 const DetailsView = ({ setView, ...props }) => {
@@ -13,85 +15,31 @@ const DetailsView = ({ setView, ...props }) => {
     return (
         <>
             <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Status</h3>
-
-            <dl className='py-4 px-8 flex flex-col gap-4 bg-foreground/[.02]'>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Progress</dt>
-                    <dd className="text-lg font-medium text-foreground">{vestedPercentage}%</dd>
-                </div>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Invested</dt>
-                    <dd className="text-lg font-medium text-foreground">
-                        {updateToLocalString(invested)}
-                    </dd>
-                </div>
-                <div className="flex justify-between items-center">
-                      <dt className="text-md font-light text-foreground">Vested</dt>
-                      <dd className="text-lg font-medium text-foreground">
-                          {updateToLocalString(claimed, currency?.symbol)}
-                      </dd>
-                </div>
-
-                {availablePayouts > 0 && (
-                    <div className="flex justify-between items-center">
-                        <dt className="text-md font-light text-foreground">Available payout</dt>
-                        <dd className="text-lg font-medium text-foreground">
-                            <p className="flex gap-1 h-[18px] font-mono">
-                                <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />
-                                {Number(availablePayouts).toLocaleString()} {currency?.symbol}
-                            </p>
-                        </dd>
-                    </div>
-                )}
+            <dl className='definition-grid definition-section'>
+                <DefinitionItem term="Progress">{vestedPercentage}%</DefinitionItem>
+                <DefinitionItem term="Invested">{updateToLocalString(invested)}</DefinitionItem>
+                <DefinitionItem term="Vested">{updateToLocalString(claimed, currency?.symbol)}</DefinitionItem>
+                <DefinitionItem term="Available payout">
+                    <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />
+                    {Number(availablePayouts).toLocaleString()} {currency?.symbol}
+                </DefinitionItem>
             </dl>
 
             <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Performance</h3>
-            <dl className='py-4 px-8 flex flex-col gap-4 bg-foreground/[.02]'>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">TGE gain</dt>
-                    <dd className="text-lg font-medium">
-                        <span className={`${tgeParsed !== "TBA" ? "text-green-500" : "text-foreground"}`}>
-                            {tgeParsed}
-                        </span>
-                    </dd>
-                </div>
-                <div className="flex justify-between items-center">
-                    {isManaged ? (
-                        <>
-                            <dt className="text-md font-light text-foreground">Return</dt>
-                            <dd className="text-lg font-medium text-foreground">
-                                <span className={`${tgeParsed !== "TBA" ? "text-green-500" : "text-foreground"}`}>
-                                    +{updateToLocalString(performance, '%')}
-                                </span>
-                            </dd>
-                        </>
-                    ) : (
-                        <>
-                            <dt className="text-md font-light text-foreground">ATH Profit</dt>
-                            <dd className="text-lg font-medium text-foreground">Soon</dd>
-                        </>
-                    )}
-                </div>
+            <dl className='definition-grid definition-section'>
+                <DefinitionItem term="TGE gain" className={cn(tgeParsed !== "TBA" ? "text-green-500" : "text-foreground")}>{tgeParsed}</DefinitionItem>
+                {isManaged
+                    ? <DeinitionItem term="Return" className={cn(tgeParsed !== "TBA" ? "text-green-500" : "text-foreground")}>+{updateToLocalString(performance, '%')}</DeinitionItem> 
+                    : <DefinitionItem term="ATH Profit">Soon</DefinitionItem>
+                }
             </dl>
 
             <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Dates</h3>
-            <dl className='py-4 px-8 flex flex-col gap-4 bg-foreground/[.02]'>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Participated</dt>
-                    <dd className="text-lg font-medium text-foreground">{getFormattedDate(participated)}</dd>
-                </div>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Next Unlock</dt>
-                    <dd className="text-lg font-medium text-foreground">{nextUnlock !== 0 ? nextUnlock : "TBA"}</dd>
-                </div>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Allocation Snapshot</dt>
-                    <dd className="text-lg font-medium text-foreground">{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</dd>
-                </div>
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Claim Date</dt>
-                    <dd className="text-lg font-medium text-foreground">{nextClaim !== 0 ? nextClaim : "TBA"}</dd>
-                </div>
+            <dl className='definition-grid definition-section'>
+                <DefinitionItem term="Participated">{getFormattedDate(participated)}</DefinitionItem>
+                <DefinitionItem term="Next Unlock">{nextUnlock !== 0 ? nextUnlock : "TBA"}</DefinitionItem>
+                <DefinitionItem term="Allocation Snapshot">{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</DefinitionItem>
+                <DefinitionItem term="Claim Date">{nextClaim !== 0 ? nextClaim : "TBA"}</DefinitionItem>
             </dl>
 
             <div className="pb-2 pt-4 px-8 flex items-center">
@@ -102,7 +50,7 @@ const DetailsView = ({ setView, ...props }) => {
                 </Button>
             </div>
 
-            {notifications.length >= 0 ? <TimelineItem item={notifications[0]} showTimeline={false} /> : null}
+            {notifications && notifications.length > 0 && <TimelineItem item={notifications[0]} showTimeline={false} />}
         </>
     );
 };

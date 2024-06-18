@@ -7,16 +7,14 @@ import { getFormattedDate } from "@/v2/lib/helpers";
 import { getNotificationTitle } from "@/v2/helpers/notifications";
 import { cn } from "@/lib/cn";
 
-export default function TimelineItem({ item, first = false, last = false, showTimeline = true }) {
+export default function TimelineItem({ item, showTimeline = true }) {
     return (
         <div className="flex text-sm">
             {showTimeline ? (
-                <div className="mx-4 flex flex-col justify-between items-center gap-2">
-                    <div className={cn("w-0 h-full min-h-2", { "border border-foreground/[.2]": !first })}></div>
+                <div className={cn("mx-4 flex flex-col justify-between items-center gap-2 before:w-0 before:border-foreground/[.2] before:border before:h-full after:w-0 after:border after:border-foreground/[.2] after:h-full group-first:before:border-none group-last:after:border-none")}>
                     <div>
-                        <TimelineSVG />
+                        <TimelineSVG /> 
                     </div>
-                    <div className={cn("w-0 h-full min-h-2", { "border border-foreground/[.2]": !last })}></div>
                 </div>
             ) : null}
 

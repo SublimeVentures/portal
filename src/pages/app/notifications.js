@@ -101,14 +101,14 @@ const NotificationList = () => {
                     {items.map((item, index) => {
                         if (items.length === index + 1) {
                             return (
-                                <li ref={lastItemRef} key={item.id}>
-                                    <TimelineItem item={item} last={true} />
+                                <li ref={lastItemRef} key={item.id} className='group'>
+                                    <TimelineItem item={item} />
                                 </li>
                             )
                         } else {
                             return (
-                                <li key={item.id}>
-                                    <TimelineItem item={item} first={index === 0} last={false} />
+                                <li key={item.id} className='group'>
+                                    <TimelineItem item={item} />
                                 </li>
                             )
                         }

@@ -86,10 +86,11 @@ export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModal
 
     const availablePayouts = isSuccessPayouts ? payouts.reduce((acc, obj) => acc + obj.amount, 0) : 0;
     const isNextPayout = isSuccessPayouts && payouts.length > 0;
-    const nextPayout = isNextPayout ? payouts[0] : {};
-    const symbol = isNextPayout ? nextPayout.currencySymbol : isManaged ? "USD" : ticker;
-    const currency = { symbol: symbol, precision: nextPayout.precision, chainId: nextPayout.chainId };
-
+    const nextPayout = isNextPayout ? payouts[0] : null;
+    const { currencySymbol, precision, chainId } = nextPayout || {};
+    const symbol = currencySymbol || (isManaged ? "USD" : ticker);
+    const currency = { symbol, precision: precision ?? null, chainId: chainId ?? null };
+    
     const claimed = offerId > 0 ? vaultData.find((el) => el.id === offerId)?.claimed : 0;
     const performance = (claimed / invested) * 100;
 

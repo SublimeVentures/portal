@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import OtcMessage from "@/v2/components/Timeline/OTCMessage";
 import { NotificationTypes, NotificationTypeNames } from "@/v2/enum/notifications"
 
 /**
@@ -12,11 +11,9 @@ export function getNotificationTitle(type) {
 }
 
 // Needs cdn and slug - src={`${cdn}/research/${slug}/icon.jpg`}
-const icon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
+const values = { value: '2', amount: '20', otcDeal: { amount: '20', price: 20 }, claim: { isClaimed: true }, payout: { totalAmount: '200', currencySymbol: 'GMRX' } }
 
-export function getDescriptionMessage(type) {
-    const values = { value: '2', amount: '20', otcDeal: { amount: '20', price: 20 }, claim: { isClaimed: true }, payout: { totalAmount: '200', currencySymbol: 'GMRX' } }
-    
+export function getDescriptionMessage(type) {    
     switch (type) {
         case NotificationTypes.INVESTMENT:
             return `Invested $${values.value}`;
@@ -25,53 +22,11 @@ export function getDescriptionMessage(type) {
         case NotificationTypes.REFUND:
             return `Issued refund for: ${values.amount}`
         case NotificationTypes.OTC_MADE:
-            return (
-                <>
-                    Made {values.otcDeal?.amount} {values.payout?.currencySymbol} 
-                    <span className="rounded-lg">
-                        <Image
-                            src={icon}
-                            className="inline mx-2 rounded-full"
-                            alt=""
-                            width={25}
-                            height={25}
-                        />
-                    </span> 
-                    units at ${values.otcDeal?.price.toFixed(2)} each.
-                </>
-            );
+            return <OtcMessage action="Made" values={values} />
         case NotificationTypes.OTC_TAKE:
-            return (
-                <>
-                    Taken {values.otcDeal?.amount} {values.payout?.currencySymbol} 
-                    <span className="rounded-lg">
-                        <Image
-                            src={icon}
-                            className="inline mx-2 rounded-full"
-                            alt=""
-                            width={25}
-                            height={25}
-                        />
-                    </span> 
-                    units at ${values.otcDeal?.price.toFixed(2)} each.
-                </>
-            );
+            return <OtcMessage action="Take" values={values} />
         case NotificationTypes.OTC_CANCEL:
-            return (
-                <>
-                    Cancelled {values.otcDeal?.amount} {values.payout?.currencySymbol} 
-                    <span className="rounded-lg">
-                        <Image
-                            src={icon}
-                            className="inline mx-2 rounded-full"
-                            alt=""
-                            width={25}
-                            height={25}
-                        />
-                    </span> 
-                    units at ${values.otcDeal?.price.toFixed(2)} each.
-                </>
-            );
+            return <OtcMessage action="Cancel" values={values} />
         case NotificationTypes.UPGRADE_BUY:
             return "Increased Allocation";
         case NotificationTypes.MYSTERY_BUY:
@@ -81,7 +36,6 @@ export function getDescriptionMessage(type) {
 }
 
 export function getRedirectMessage(type) {
-    const values = { value: '2', amount: '20', otcDeal: { amount: '20', price: 20 }, claim: { isClaimed: true }, payout: { totalAmount: '200', currencySymbol: 'GMRX' }, payoutCount: '2nd' }
     switch (type) {
         case NotificationTypes.CLAIM:
             return `Claimed ${values.payoutCount} payout on ${values.currencySymbol} chain`;

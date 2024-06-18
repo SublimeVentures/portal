@@ -110,6 +110,13 @@ import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import Loader from "@/components/App/Loader";
 import EmptyVault from "@/components/App/EmptyVault";
 
+const queryOptions = {
+    cacheTime: 5 * 60 * 1000,
+    staleTime: 1 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+};
+  
 // Data for Details Sidebar. Currently Vault have mocked data, so it needs to be applied later
 const useGetVaultData = (session) => {
     const userId = session.userId;
@@ -120,19 +127,13 @@ const useGetVaultData = (session) => {
     const { isSuccess: isSuccessDataFeed, data: vault, refetch: refetchVault } = useQuery({
         queryKey: ["userVault", userId],
         queryFn: fetchVault,
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 30 * 1000,
+        ...queryOptions,
     });
   
     const { data: premiumData } = useQuery({
         queryKey: ["premiumOwned", userId, tenantId],
         queryFn: fetchStoreItemsOwned,
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 60 * 1000,
+        ...queryOptions,
     });
   
     const closeClaimModal = () => {
@@ -160,7 +161,7 @@ const useGetVaultData = (session) => {
             const setPassData = () => ({ ...item, participated, normalized_tgeDiff, normalized_invested, tgeParsed, vestedPercentage, nextUnlock, nextSnapshot, nextClaim, isInstant, isSoon, claimStage });
 
             // return <VaultItem item={el} key={el.name} passData={openClaimModal} />;
-            return <div className="icon z-10 w-15 h-15 cursor-pointer text-white whitespace-nowrap" onClick={() => openClaimModal(setPassData())}>Open Details Sidebar</div>
+            return <div key={item.name} className="icon z-10 w-15 h-15 cursor-pointer text-white whitespace-nowrap" onClick={() => openClaimModal(setPassData())}>Open Details Sidebar</div>
         });
     };
   
