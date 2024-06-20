@@ -1,4 +1,4 @@
-import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
+import BlockchainStep from "@/v2/components/BlockchainSteps/BlockchainStep";
 
 import LinkIcon from "@/v2/assets/svg/link.svg";
 import BalanceIcon from "@/v2/assets/svg/balance.svg";

@@ -17,9 +17,6 @@ export default function AppOtc({ session }) {
     const { market } = router.query;
     const { userId: USER_ID } = session;
 
-    // const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
-    // const [isMakeModalOpen2, setIsMakeModalOpen2] = useState(false);
-
     const { data: otc, isLoading: otcIsLoading, isSuccess: otcIsSuccess } = useQuery({
         queryKey: ["otcMarkets", USER_ID],
         queryFn: () => getMarkets(),
@@ -50,11 +47,8 @@ export default function AppOtc({ session }) {
         enabled: !!currentMarket?.offerId,
     });
     
-    // TODO: Move to hook, create prop getters
     const haveAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
-    // const { offers, vault, currentMarket: currentMarket2, session, refetchOffers, offersIsSuccess, vaultIsSuccess, table } = propOffers;
-    // const makeOfferProps = { allocation: haveAllocation };
-
+    
     const propOffers = {
         refetchOffers,
         refetchVault,

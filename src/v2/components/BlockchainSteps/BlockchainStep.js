@@ -1,64 +1,29 @@
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { STEP_STATE } from "./enums";
-import DynamicIcon from "@/components/Icon";
-import { Tooltiper, TooltipType } from "@/components/Tooltip";
-import { ICONS } from "@/lib/icons";
+
 import { cn } from "@/lib/cn";
+import { STEP_STATE } from "./enums";
 
-const colors = {
-    [STEP_STATE.PENDING]: "text-gray",
-    [STEP_STATE.PROCESSING]: "text-gold",
-    [STEP_STATE.SUCCESS]: "text-app-success",
-    [STEP_STATE.ERROR]: "text-app-error",
-};
+// import { AnimatePresence, motion } from "framer-motion";
+// import { ICONS } from "@/lib/icons";
+// import DynamicIcon from "@/components/Icon";
 
-const getStatusColor = (status) => colors[status] || "";
-
-const BlockchainStep = ({ data }) => {
-    const { state, content, icon, iconPadding, error, colorOverride } = data;
+const BlockchainStep = ({ data, icon: Icon }) => {
+    const { state } = data;
 
     return (
-        <>
-            <motion.div className="flex flex-row items-center text-[14px]" layout>
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={`${state}-${icon}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className={cn("flex flex-1 gap-3 items-center", colorOverride ?? getStatusColor(state))}
-                    >
-                        <div className={cn("blob relative", { active: state === STEP_STATE.PROCESSING })}>
-                            <DynamicIcon name={icon} style={iconPadding} />
-                        </div>
-
-                        <div className="flex flex-1">{content}</div>
-
-                        {state === STEP_STATE.SUCCESS && (
-                            <div className="rightIcon">
-                                <DynamicIcon name={ICONS.CHECKMARK} style="p-[2px]" />
-                            </div>
-                        )}
-                        {state === STEP_STATE.ERROR && (
-                            <div
-                                className="rightIcon "
-                                onClick={() => {
-                                    if (error?.action) error?.action();
-                                }}
-                            >
-                                <Tooltiper
-                                    wrapper={<DynamicIcon name={ICONS.ALERT} style={""} />}
-                                    text={`${error?.text}`}
-                                    type={TooltipType.Error}
-                                />
-                            </div>
-                        )}
-                    </motion.div>
-                </AnimatePresence>
-            </motion.div>
-            {icon !== ICONS.ROCKET && <div className="spacer"></div>}
-        </>
+        <li>
+            <div className="relative h-[43px]">
+                <div className="relative flex items-center h-full justify-center w-max gap-3 scale-110">
+                    <div className={cn("mx-1.5 flex items-center justify-center w-[31px] h-[31px] rounded-full", {
+                        "bg-foreground/[.25]": state === STEP_STATE.PENDING || state === STEP_STATE.PROCESSING,
+                        "bg-gradient-to-b from-[#44DA66] to-[#226D33]": state === STEP_STATE.SUCCESS,
+                        "bg-gradient-to-b from-[#F46F6F] to-[#711D1D]": state === STEP_STATE.ERROR,
+                    })}>
+                        <Icon className={cn("p-2 text-gray-200", { "text-foreground": true })} />
+                    </div>
+                </div>
+            </div>
+        </li>
     );
 };
 

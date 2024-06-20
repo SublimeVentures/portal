@@ -58,7 +58,7 @@ export default function MakeOfferModal({ model, setter, props }) {
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencySettlement();
 
-    const [transactionSuccessful, setTransactionSuccessful] = useState(true);
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [amount, setAmount] = useState(10);
     const [statusAmount, setStatusAmount] = useState(false);
