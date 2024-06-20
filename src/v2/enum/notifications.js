@@ -15,29 +15,34 @@
  * @description Notification types as a representation in code
  * @type {NotificationType}
  */
-export const NotificationTypes = {
-  MYSTERY_BUY: 1,
-  UPGRADE_BUY: 2,
-  OTC_CANCEL: 3,
-  OTC_MADE: 4,
-  OTC_TAKE: 5,
-  INVESTMENT: 6,
-  REFUND: 7,
-  CLAIM: 8,
-  OTCS: [3, 4, 5],
+const NotificationTypes = {
+    MYSTERY_BUY: 1,
+    UPGRADE_BUY: 2,
+    OTC_CANCEL: 3,
+    OTC_MADE: 4,
+    OTC_TAKE: 5,
+    INVESTMENT: 6,
+    REFUND: 7,
+    CLAIM: 8,
+    OTCS: [3, 4, 5],
 };
 
 /**
  * @description Notification type names as a representation in code
  * @type {object}
  */
-export const NotificationTypeNames = {
-  [NotificationTypes.INVESTMENT]: 'Invested',
-  [NotificationTypes.CLAIM]: 'Claimed',
-  [NotificationTypes.REFUND]: 'Refunded',
-  [NotificationTypes.OTC_MADE]: 'OTC Made',
-  [NotificationTypes.OTC_TAKE]: 'OTC Take',
-  [NotificationTypes.OTC_CANCEL]: 'OTC Cancelled',
-  [NotificationTypes.MYSTERY_BUY]: 'Mystery Box obtained',
-  [NotificationTypes.UPGRADE_BUY]: 'Acquired premium',
+const NotificationTypeNames = {
+    [NotificationTypes.INVESTMENT]: "Invested",
+    [NotificationTypes.CLAIM]: "Claimed",
+    [NotificationTypes.REFUND]: "Refunded",
+    [NotificationTypes.OTC_MADE]: "OTC Made",
+    [NotificationTypes.OTC_TAKE]: "OTC Take",
+    [NotificationTypes.OTC_CANCEL]: "OTC Cancelled",
+    [NotificationTypes.MYSTERY_BUY]: "Mystery Box obtained",
+    [NotificationTypes.UPGRADE_BUY]: "Acquired premium",
+};
+
+module.exports = {
+    NotificationTypeNames,
+    NotificationTypes,
 };
