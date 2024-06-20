@@ -1,4 +1,4 @@
-import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
+import BlockchainStep from "@/v2/components/BlockchainSteps/BlockchainStep";
 
 import LinkIcon from "@/v2/assets/svg/link.svg";
 import BalanceIcon from "@/v2/assets/svg/balance.svg";
@@ -25,7 +25,7 @@ const colorSchemes = {
     [stepsStatus.PROCESSING]: successColors,
     [stepsStatus.SUCCESS]: successColors,
 };
-    
+
 // @TODO 
 // -> Get description for each step
 // -> Get svg from designer for chains with different amount of circles and create dynamic component with it
