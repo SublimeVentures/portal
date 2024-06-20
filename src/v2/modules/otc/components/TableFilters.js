@@ -28,7 +28,7 @@ const FiltersDropdown = ({ filters, handleToggleFilter }) => {
 }
 
 export default function TableFilters({ data }) {
-    const { market, showHistory, filterProps, handleChangeView } = data;
+    const { market, showHistory, filterProps, handleChangeView, setIsMakeModalOpen } = data;
     const { filters, handleToggleFilter, handleFilterRemove } = filterProps;
 
     return (
@@ -40,7 +40,7 @@ export default function TableFilters({ data }) {
 
             <div className="flex flex-wrap items-center gap-4 2xl:flex-row-reverse">
                 <Button onClick={() => handleChangeView(showHistory ? otcViews.offers : otcViews.history)}>{showHistory ? 'Hide': 'Show'} History</Button>
-                <Button>Create offer</Button>
+                <Button onClick={() => setIsMakeModalOpen(true)}>Create offer</Button>
                 {!showHistory && <FiltersDropdown filters={offersFilters} handleToggleFilter={handleToggleFilter} />
 }
                 {Object.entries(filters).map(([key, value]) => {
