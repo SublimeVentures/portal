@@ -22,8 +22,8 @@ const NotificationTypes = require("../../src/v2/enum/notifications.js").Notifica
  * @typedef {Record<string, string | number>} NotificationFilters
  * @property {string} [offerId] Offer ID retrieved from querystring
  * @property {string | number} [type] Notification type (name or ID)
- * @property {Date|number} [before] Max. date of notification
- * @property {Date|number} [after] Min. date of notification
+ * @property {number} [before] Max. date of notification
+ * @property {number} [after] Min. date of notification
  * @property {number} [page=1] Page from which you're starting
  * @property {number} [size=8] Page size
  */
