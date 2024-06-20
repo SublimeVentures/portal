@@ -1,8 +1,12 @@
-import { Metadata } from "@/v2/components/Layout";
+import { useState } from "react";
 
+import { Metadata } from "@/v2/components/Layout";
+import MakeOfferModal from "@/v2/modules/otc/components/MakeOfferModal";
 import { OtcMarkets, OtcCurrentMarket, OtcOffers } from "./components";
 
-export default function OTCMarket({ session, otc, currentMarket }) {
+export default function OTCMarket({ session, otc, propOffers, currentMarket }) {
+    const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
+
     return (
         <>
             <Metadata title={`${currentMarket.name} Market`} />
@@ -19,10 +23,12 @@ export default function OTCMarket({ session, otc, currentMarket }) {
                         
                     <div className="h-full w-full flex flex-col">
                         <OtcCurrentMarket currentMarket={currentMarket} />
-                        <OtcOffers session={session} currentMarket={currentMarket} />
+                        <OtcOffers session={session} currentMarket={currentMarket} setIsMakeModalOpen={setIsMakeModalOpen} propOffers={propOffers} />
                     </div>
                 </div>
             </div>
+
+            <MakeOfferModal isModalOpen={isMakeModalOpen} setIsModalOpen={setIsMakeModalOpen} props={propOffers} />
         </>
     );
 };

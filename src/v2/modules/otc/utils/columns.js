@@ -1,9 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import moment from "moment";
 
-import { Button } from "@/v2/components/ui/button";
 import { NETWORKS } from "@/lib/utils";
-import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { cn } from "@/lib/cn"
 
 // @todo
@@ -11,6 +9,8 @@ import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import DynamicIcon from "@/components/Icon";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
+import TakeOfferModal from "@/v2/modules/otc/components/TakeOfferModal";
+import CancelOfferModal from '@/v2/modules/otc/components/CancelOfferModal';
 
 const columnHelper = createColumnHelper();
 
@@ -56,18 +56,17 @@ const chainColumn = (getCurrencySymbolByAddress) => columnHelper.accessor('chain
     }
 })
 
-const actionColumn = (wallets, account) => columnHelper.accessor('action', {
+const actionColumn = (wallets, account, propOffers) => columnHelper.accessor('action', {
     header: 'Action',
     cell: (info) => {
         const ownership = isUserOffer(wallets, info.row.original.maker, account);
+        const offerDetails = info.row.original;
 
         return (
             <div className="flex flex-row justify-end gap-1 lg:justify-start">
                 {ownership.ok &&
                     (ownership.isActive ? (
-                        <div className="duration-300 hover:text-destructive cursor-pointer" onClick={() => openCancel(el)}>
-                            <IconCancel className="w-6 h-6" />
-                        </div>
+                        <CancelOfferModal {...propOffers} offerDetails={offerDetails} />
                     ) : (
                         <Tooltiper
                             wrapper={
@@ -81,12 +80,7 @@ const actionColumn = (wallets, account) => columnHelper.accessor('action', {
                     )
                 )}
 
-                {!ownership.ok && (
-                    <Button variant="accent" onClick={() => openTake(el)}>
-                        <span>Buy</span>
-                        <ArrowIcon className="ml-2" />
-                    </Button>
-                )}
+                {!ownership.ok && <TakeOfferModal {...propOffers} offerDetails={offerDetails} />}
             </div>
         )
     },
@@ -99,10 +93,10 @@ const dateColumn = columnHelper.accessor('date', {
     filterFn: intFilter,
 })
 
-export const getOffersColumns = (getCurrencySymbolByAddress, wallets, account) => {
-  return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), actionColumn(wallets, account)]
+export const getOffersColumns = (getCurrencySymbolByAddress, wallets, account, propOffers) => {
+    return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), actionColumn(wallets, account, propOffers)]
 }
 
 export const getHistoryColumns = (getCurrencySymbolByAddress) => {
-  return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), dateColumn]
+    return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), dateColumn]
 }
