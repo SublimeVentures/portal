@@ -6,6 +6,12 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { views } from "./DetailsSidebar";
 
 export default function DetailsTimeline({ setView, notifications }) {    
+    const hasNotifications = notifications.length > 0;
+    
+    if (!hasNotifications) {
+        return <p className="p-4 my-8 text-center">No notifications found</p>
+    }
+
     return (
         <>
             <div className="w-full pb-2 pt-4 px-8 flex items-center justify-between">

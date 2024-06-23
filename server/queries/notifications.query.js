@@ -53,14 +53,14 @@ const BASE_INCLUDES = [
  * @param {NotificationFilters} filters
  * @returns {Promise<import("sequelize").Model[]>}
  */
-async function getNotifications(user, filters) {
+async function getNotifications(user, filters = {}) {
     const { userId, tenantId } = user;
     const size = filters.size ?? 8;
     const page = filters.page ?? 1;
     const offset = (page === 1 ? page : page - 1) * size;
     const filterConfig = { userId, limit: size ?? 8, offset };
 
-    if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
+    // if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
     if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
     if (filters.type) {
         filterConfig["typeId"] = typeof filters.type === "number" ? filters.type : notificationTypeToId(filters.type);
@@ -72,6 +72,8 @@ async function getNotifications(user, filters) {
     } else if (filters.after) {
         filterConfig["created_at"] = { [Op.gte]: new Date(filters.after) };
     }
+
+    // console.log('getNotifications-filterConfig', filterConfig)
 
     return getAllNotifications(filterConfig);
 }
@@ -91,6 +93,7 @@ async function notificationTypeToId(typeName) {
  */
 async function getNotificationByStrategy(notification) {
     const { typeId } = notification;
+
     switch (/** @type {NotificationType[keyof NotificationType]} */ typeId) {
         case NotificationTypes.CLAIM:
             return getClaimNotification(notification);
@@ -118,7 +121,7 @@ async function getNotificationByStrategy(notification) {
  */
 async function getClaimNotification({ id, data }) {
     const { chainId, payoutId, claimId } = data;
-    return models.notification.findByPk(id, {
+    return await models.notification.findByPk(id, {
         include: [
             {
                 model: models.network,
@@ -141,7 +144,7 @@ async function getClaimNotification({ id, data }) {
  */
 async function getOtcNotification({ id, data }) {
     const { otcDealId } = data;
-    return models.notification.findByPk(id, {
+    return await models.notification.findByPk(id, {
         include: [
             {
                 model: models.otcDeal,
@@ -157,11 +160,11 @@ async function getOtcNotification({ id, data }) {
  */
 async function getInvestmentNotification({ id, data }) {
     const { partnerId } = data;
-    return models.notification.findByPk(id, {
+    return await models.notification.findByPk(id, {
         include: [
             {
                 model: models.partner,
-                where: { id: partnerId },
+                // where: { id: partnerId },
             },
         ],
     });
@@ -172,7 +175,7 @@ async function getInvestmentNotification({ id, data }) {
  * @return {import("sequelize").Model}
  */
 async function getRefundNotification({ id }) {
-    return models.notification.findByPk(id);
+    return await models.notification.findByPk(id);
 }
 
 /**
@@ -180,7 +183,7 @@ async function getRefundNotification({ id }) {
  * @return {import("sequelize").Model}
  */
 async function getMysteryBuyNotification({ id }) {
-    return models.notification.findByPk(id);
+    return await models.notification.findByPk(id);
 }
 
 /**
@@ -188,7 +191,7 @@ async function getMysteryBuyNotification({ id }) {
  * @return {import("sequelize").Model}
  */
 async function getUpgradeBuyNotification({ id }) {
-    return models.notification.findByPk(id);
+    return await models.notification.findByPk(id);
 }
 
 /**
@@ -196,6 +199,7 @@ async function getUpgradeBuyNotification({ id }) {
  */
 async function getAllNotifications(filterConfig) {
     const { limit, offset, ...where } = filterConfig;
+
     const base = await models.notification.findAll({
         where,
         include: BASE_INCLUDES,
@@ -203,12 +207,15 @@ async function getAllNotifications(filterConfig) {
         offset,
         order: [["id", "DESC"]],
     });
+
     const results = [];
+
     for (const notification of base) {
         results.push(getNotificationByStrategy(notification));
     }
 
-    return results;
+    const settledResults = await Promise.allSettled(results);
+    return settledResults.filter(result => result.status === 'fulfilled').map(result => result.value);
 }
 
 module.exports = {
