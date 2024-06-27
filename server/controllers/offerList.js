@@ -17,15 +17,11 @@ async function getParamOfferList(user, req) {
     try {
         const { tenantId, partnerId } = user;
         const fetchFunction = offerTypeToFunction[req.query.type];
+        if (!fetchFunction) throw Error("Bad type");
 
-        if (!fetchFunction) {
-            throw Error("Bad type");
-        }
+        const result = await fetchFunction(partnerId, tenantId, req.query.page, req.query.limit);
 
-        return {
-            stats: getEnv().stats,
-            offers: await fetchFunction(partnerId, tenantId),
-        };
+        return result;
     } catch (error) {
         return {
             ok: false,
@@ -34,4 +30,8 @@ async function getParamOfferList(user, req) {
     }
 }
 
-module.exports = { getParamOfferList };
+async function getOffersStats() {
+    return getEnv().stats
+}
+
+module.exports = { getParamOfferList, getOffersStats };

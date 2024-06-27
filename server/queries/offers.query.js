@@ -77,20 +77,96 @@ const query_getOfferList = `
         o."isAccelerator" = false AND
         ol."offerId" IS NOT NULL
     ORDER BY
-        ol.d_open DESC;
+        ol.d_open DESC
+    LIMIT :limit OFFSET :offset;
 `;
-async function getOfferList(partnerId, tenantId) {
+
+const query_checkMore = `
+    SELECT 1 AS "exists"
+    FROM
+        "offer" o
+            LEFT JOIN LATERAL (
+            SELECT
+                ol1."offerId"
+            FROM
+                "offerLimit" ol1
+            WHERE
+                ol1."offerId" = o.id AND (
+                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                        ol1."partnerId" = :tenantId
+                )
+            ORDER BY
+                CASE
+                    WHEN ol1."partnerId" = :tenantId THEN 1
+                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
+                    ELSE 3
+                    END
+            LIMIT 1
+            ) ol ON true
+            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
+    WHERE
+        o.display = true AND
+        o."isLaunchpad" = false AND
+        o."isAccelerator" = false AND
+        ol."offerId" IS NOT NULL
+    LIMIT 1 OFFSET :nextOffset;
+`;
+
+async function getOfferList(partnerId, tenantId, page, limit) {
+    const currentPage = parseInt(page) ?? 0;
+    const currentLimit = parseInt(limit) ?? 6;
+    const offset = currentPage * currentLimit;
+    const nextOffset = offset + currentLimit;
+
     try {
-        return await db.query(query_getOfferList, {
+        const offers = await db.query(query_getOfferList, {
             type: QueryTypes.SELECT,
-            replacements: { partnerId, tenantId },
+            replacements: { partnerId, tenantId, limit, offset },
         });
+
+        const hasMoreResults = await db.query(query_checkMore, {
+            type: QueryTypes.SELECT,
+            replacements: { partnerId, tenantId, nextOffset },
+        });
+
+        const nextPage = hasMoreResults.length > 0 ? currentPage + 1 : null
+
+        return { offers, nextPage }
     } catch (error) {
         logger.error("QUERY :: [getOfferList]", {
             error: serializeError(error),
         });
     }
     return [];
+}
+
+const query_getOfferProgress = `
+    SELECT
+        CASE 
+            WHEN ofr."alloTotal" > 0 THEN (ofr."alloFilled" / ofr."alloTotal") * 100
+            ELSE 0
+        END AS progress
+    FROM
+        "offerFundraise" ofr
+    WHERE
+        ofr."offerId" = :offerId;
+`;
+
+async function getOfferProgress(offerId) {
+    try {
+        const result = await db.query(query_getOfferProgress, {
+            type: QueryTypes.SELECT,
+            replacements: { offerId },
+        });
+        
+        return result.length > 0 ? result[0] : null;
+    } catch (error) {
+        logger.error("QUERY :: [getOfferProgress]", {
+            error: serializeError(error),
+        });
+    }
+
+    return null;
 }
 
 const query_getLaunchpadList = `
@@ -276,6 +352,7 @@ async function getOfferWithLimits(offerId) {
 module.exports = {
     getOffersPublic,
     getOfferList,
+    getOfferProgress,
     getOfferDetails,
     getLaunchpadList,
     getOtcList,

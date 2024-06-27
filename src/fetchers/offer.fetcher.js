@@ -4,13 +4,40 @@ import { API } from "@/routes";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { authTokenName } from "@/lib/authHelpers";
 
-export const fetchOfferList = async () => {
+export const fetchOfferList = async (page = 0, limit = 6) => {
     try {
-        const { data } = await axiosPrivate.get(`${API.offerList}/?type=vc`);
+        const { data } = await axiosPrivate.get(`${API.offerList}/?type=vc&page=${page}&limit=${limit}`);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "fetchOfferList" });
+        }
+    }
+    return {};
+};
+
+export const fetchOfferStats = async () => {
+    try {
+        const { data } = await axiosPrivate.get(API.offerStats);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchOfferList" });
+        }
+    }
+
+    return {};
+};
+
+export const fetchOfferProgress = async (offerId) => {
+    if (!offerId) return {};
+
+    try {
+        const { data } = await axiosPrivate.get(`${API.offerProgress}?offerId=${offerId}`);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchOfferProgress" });
         }
     }
     return {};
