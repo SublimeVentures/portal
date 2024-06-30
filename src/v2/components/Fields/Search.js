@@ -1,9 +1,8 @@
 import { BiSearchAlt } from "react-icons/bi";
 
-import { Button } from "@/v2/components/ui/button";
 import { cn } from "@/lib/cn";
 
-const Search = ({ name, className, handleSearch, ...props }) => {
+const Search = ({ name, className, ...props }) => {
     return (
         <div className={cn("py-2 px-4 flex justify-between border border-navy-100/[.5] bg-foreground/[.1] rounded", className)}>
             <div className="w-full flex items-center">
@@ -15,8 +14,6 @@ const Search = ({ name, className, handleSearch, ...props }) => {
                     {...props}
                 />
             </div>
-
-            <Button variant="gradient" onClick={handleSearch}>Search</Button>
         </div>
     )
 }
