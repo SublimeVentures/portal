@@ -21,21 +21,23 @@ export default function useBlockchainStep({ data }) {
     const { steps, token, params, setTransactionSuccessful } = data;
     const [state, dispatch] = useReducer(mainReducer, initialState);
 
+    const { price, liquidity, allowance, amount, account, spender, contract, isSeller, otcId, offerDetails = {} } = params;
+
     useEffect(() => {
         dispatch({ type: stepsAction.RESET });
         resetState();
     }, [
-        params.price,
-        params.liquidity,
-        params.allowance,
-        params.amount,
-        params.account,
-        params.spender,
-        params.contract,
-        params.isSeller,
-        params.otcId,
-        params?.offerDetails?.otcId,
-        params?.offerDetails?.dealId,
+        price,
+        liquidity,
+        allowance,
+        amount,
+        account,
+        spender,
+        contract,
+        isSeller,
+        otcId,
+        offerDetails?.otcId,
+        offerDetails?.dealId,
         chainId,
         token?.contract,
     ]);

@@ -1,5 +1,6 @@
-import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
 import { ICONS } from "@/lib/icons";
+import { NetworkEnum } from "@/v2/lib/network";
+import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
 
 export const stepNetwork = (state, data) => {
     console.log("BIX :: NETWORK :: step state", state, data);
@@ -16,9 +17,9 @@ export const stepNetwork = (state, data) => {
     }
 
     result.icon =
-        data.params.requiredNetwork === 1
+        data.params.requiredNetwork === NetworkEnum.eth
             ? ICONS.ETH_MONO
-            : data.params.requiredNetwork === 137
+            : data.params.requiredNetwork === NetworkEnum.matic
               ? ICONS.MATIC_MONO
               : ICONS.BSC_MONO;
 
