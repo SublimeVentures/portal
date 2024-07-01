@@ -48,7 +48,7 @@ const calculateBigIntMultiplier = (value, multiplier) => {
     if (!value) {
         return value;
     }
-    if (multiplier === 1) {
+    if (multiplier <= 1) {
         return value;
     }
     return BigInt(Math.floor(Number(value) * multiplier));
@@ -59,19 +59,25 @@ const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
 const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1000;
 
 const useCalculateGas = (args) => {
-    const { query, ...params } = args;
+    const { query = {}, ...params } = args;
     const { chainId, scopeKey } = params;
 
     const gas = useEstimateContractGas({
         ...params,
         scopeKey: `gas_${scopeKey}`,
-        query,
+        query: {
+            gcTime: 0,
+            ...query,
+        },
     });
 
     const feesPerGas = useEstimateFeesPerGas({
         chainId,
         scopeKey: `fees_${scopeKey}`,
-        query,
+        query: {
+            gcTime: 0,
+            ...query,
+        },
     });
 
     return {
