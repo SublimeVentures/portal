@@ -37,7 +37,6 @@ export default function OffersTable({ data }) {
                                     </td>
                                 ))}
                             </tr>
-                            <div className='h-3' />
                         </Fragment>
                     ))}
                 </tbody>

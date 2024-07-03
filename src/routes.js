@@ -31,6 +31,8 @@ export const API = {
     fetchStoreItemsOwned: "/api/store/owned",
     publicInvestments: "/api/public/investments",
     offerList: "/api/offer",
+    offerStats: "/api/offer/stats",
+    offerProgress: "/api/offer/progress",
     offerAllocation: "/api/offer/allocation/",
     offerDetails: "/api/offer/",
     auth: "/api/auth/login",
@@ -39,7 +41,6 @@ export const API = {
     publicNeoTokyoEnvs: "/api/public/nt-calculator",
     publicKongzEnvs: "/api/public/kongz-calculator",
     notificationList: "/api/notifications",
-    notificationData: "/api/notifications/extended",
 };
 
 const ExternalLinksBased = {

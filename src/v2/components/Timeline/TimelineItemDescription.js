@@ -4,7 +4,7 @@ import { getDescriptionMessage } from "@/v2/helpers/notifications";
 // import { NotificationTypes } from "@/v2/enum/notifications";
 
 // @TODO - Adjust backend to fetch this data from original query
-export default function TimelineItemDescription({ type }) {
+export default function TimelineItemDescription({ type, entry = {} }) {
     // const mappedProps = {};
 
     // Object.entries(entry).forEach(([key, value]) => {
@@ -52,45 +52,6 @@ TimelineItemDescription.propTypes = {
 };
 
 // Previous code for context:
-
-// import PropTypes from "prop-types";
-// import { useEffect, useState } from "react";
-// import { NotificationTypes } from "../../../../../server/enum/NotificationTypes";
-// import { fetchExtendedNotification } from "@/fetchers/notifications.fetcher";
-// import InlineCopyButton from "@/components/Button/InlineCopyButton";
-
-// /**
-//  * @typedef {Record<string, Record<string, any>>} FrontendNotification
-//  */
-
-// export default function TimelineItemExtension({ id }) {
-//     const [loading, setLoading] = useState(false);
-//     const [extended, setExtended] = useState(/** @type {FrontendNotification} */ {});
-
-//     useEffect(() => {
-//         if (id) {
-//             setLoading(true);
-//             fetchExtendedNotification(id)
-//                 .then((ext) => {
-//                     setExtended(ext);
-//                 })
-//                 .finally(() => {
-//                     setLoading(false);
-//                 });
-//         }
-//     }, [id]);
-
-//     return (
-//         <div className="basis-full">
-//             {loading && <div className="w-4 h-4 border border-t-none rounded-full border-white animate-spin"></div>}
-//             {extended && !loading && <ExtendedEntry scopeId={extended.notification?.typeId} entry={extended} />}
-//         </div>
-//     );
-// }
-
-// TimelineItemExtension.propTypes = {
-//     id: PropTypes.number,
-// };
 
 // function ExtendedEntry({ scopeId, entry }) {
 //     const items = Object.entries(entry);

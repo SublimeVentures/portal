@@ -7,7 +7,7 @@ import { getOffers, getOffersHistory } from "@/v2/fetchers/otc";
 import { getOffersColumns, getHistoryColumns } from "@/v2/modules/otc/utils/columns";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
-export default function useTableData(currentMarket, showHistory, wallets) {
+export default function useTableData(currentMarket, showHistory, wallets, propOffers) {
     const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
 
     const [filters, setFilters] = useState({});
@@ -47,9 +47,10 @@ export default function useTableData(currentMarket, showHistory, wallets) {
     };
 
     const offerColumns = useMemo(
-        () => getOffersColumns(getCurrencySymbolByAddress, wallets, account),
+        () => getOffersColumns(getCurrencySymbolByAddress, wallets, account, propOffers),
         [getCurrencySymbolByAddress, wallets, account],
     );
+
     const historyColumns = useMemo(() => getHistoryColumns(getCurrencySymbolByAddress), [getCurrencySymbolByAddress]);
 
     const {

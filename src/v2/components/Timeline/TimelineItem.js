@@ -21,7 +21,8 @@ export default function TimelineItem({ item, showTimeline = true }) {
             <div className="my-2 py-4 px-8 w-full flex flex-col gap-2 bg-foreground/[.1] rounded">
                 <dl className="flex justify-between items-center">
                     <dt className="text-md font-light text-foreground">{getNotificationTitle(item.typeId)}</dt>
-                    <dd className="text-lg font-medium text-foreground">{getFormattedDate(item.onchain.createdAt)}</dd>
+                    {/* <dd className="text-lg font-medium text-foreground">{getFormattedDate(item.onchain.createdAt)}</dd> */}
+                    <dd className="text-lg font-medium text-foreground">?</dd>
                 </dl>
 
                 <TimelineItemDescription type={item.typeId} />

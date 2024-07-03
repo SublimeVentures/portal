@@ -5,13 +5,13 @@ import TableFilters from "./TableFilters";
 import useCurrentView, { otcViews } from "../logic/useCurrentView";
 import useTableData from "../logic/useTableData";
 
-export default function Offers({ currentMarket, session }) {
+export default function Offers({ currentMarket, session, setIsMakeModalOpen, propOffers }) {
     const { wallets } = session;
 
     const { activeView, handleChangeView } = useCurrentView();
     const showHistory = activeView === otcViews.history;
 
-    const { filterProps, ...tableData } = useTableData(currentMarket, showHistory, wallets);
+    const { filterProps, ...tableData } = useTableData(currentMarket, showHistory, wallets, propOffers);
 
     const renderTable = (view, data, wallets) => {
         if (view === otcViews.history) return <OffersHistoryTable data={data} />
@@ -20,7 +20,7 @@ export default function Offers({ currentMarket, session }) {
 
     return (
         <div className="relative h-full flex flex-col 2xl:overflow-hidden">                 
-            <TableFilters data={{ market: currentMarket.name, showHistory, filterProps, handleChangeView }} />
+            <TableFilters data={{ market: currentMarket.name, showHistory, filterProps, handleChangeView, setIsMakeModalOpen }} />
             <Card variant="static" className="p-0 h-full flex flex-col md:overflow-hidden">
                 <div className="p-2 h-5 rounded bg-primary-light-gradient" />
 

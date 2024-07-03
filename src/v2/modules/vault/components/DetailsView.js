@@ -42,15 +42,19 @@ const DetailsView = ({ setView, ...props }) => {
                 <DefinitionItem term="Claim Date">{nextClaim !== 0 ? nextClaim : "TBA"}</DefinitionItem>
             </dl>
 
-            <div className="pb-2 pt-4 px-8 flex items-center">
-                <h3 className="mr-4 text-lg font-medium text-foreground">Timeline</h3>
-                <Button variant="link" onClick={() => setView(views.timeline)}>
-                    <span>See all</span>
-                    <ArrowIcon className="ml-1" />
-                </Button>
-            </div>
+            {(notifications && notifications.length > 0) ? (
+                <>
+                    <div className="pb-2 pt-4 px-8 flex items-center">
+                        <h3 className="mr-4 text-lg font-medium text-foreground">Timeline</h3>
+                        <Button variant="link" onClick={() => setView(views.timeline)}>
+                            <span>See all</span>
+                            <ArrowIcon className="ml-1" />
+                        </Button>
+                    </div>
 
-            {notifications && notifications.length > 0 && <TimelineItem item={notifications[0]} showTimeline={false} />}
+                    <TimelineItem item={notifications[0]} showTimeline={false} />
+                </>
+            ) : null}
         </>
     );
 };

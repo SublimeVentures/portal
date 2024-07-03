@@ -13,14 +13,14 @@
 
 @layer components {
   .table {
-    @apply table-fixed w-full;
+    @apply table-fixed border-separate border-spacing-y-3 w-full;
 
     .table-head {
       @apply relative;
     }
     
     .table-head-cell {
-      @apply py-4 pl-2 pr-5 text-sm font-regular text-foreground normal-case text-left;
+      @apply pt-4 pl-2 pr-5 text-sm font-regular text-foreground normal-case text-left;
     }
 
     .table-body-row {
@@ -57,7 +57,7 @@
   }
 
   .definition-grid {
-    @apply grid grid-cols-2 gap-6;
+    @apply grid grid-cols-2 gap-4 items-center;
   }
 }
 
@@ -88,6 +88,16 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(36, 65%, 71%);
   cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
 }
 
 .vault-investment::-webkit-scrollbar-track {

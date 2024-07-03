@@ -14,31 +14,31 @@ function useBlockchainButton(steps, state, params, extraState) {
         }
         if (steps.network && extraState?.stepNetwork?.state === STEP_STATE.PROCESSING) {
             return {
-                text: "Processing.",
+                text: "Analysing checkpoints",
                 lock: true,
             };
         }
         if (steps.liquidity && extraState?.stepLiquidity?.state === STEP_STATE.PROCESSING) {
             return {
-                text: "Processing..",
+                text: "Analysing checkpoints",
                 lock: true,
             };
         }
         if (steps.allowance && extraState?.stepAllowance?.state === STEP_STATE.PROCESSING) {
             return {
-                text: "Processing...",
+                text: "Analysing checkpoints",
                 lock: true,
             };
         }
         if (steps.prerequisite && extraState?.stepPrerequisite?.state === STEP_STATE.PROCESSING) {
             return {
-                text: "Processing....",
+                text: "Analysing checkpoints",
                 lock: true,
             };
         }
         if (steps.transaction && extraState?.stepTransaction?.state === STEP_STATE.PROCESSING) {
             return {
-                text: "Processing....",
+                text: "Analysing checkpoints",
                 lock: true,
             };
         }
@@ -77,6 +77,7 @@ function useBlockchainButton(steps, state, params, extraState) {
         const buttonState = processButtonState();
         setResult(buttonState);
     }, []);
+
     useEffect(() => {
         const buttonState = processButtonState();
         setResult(buttonState);
