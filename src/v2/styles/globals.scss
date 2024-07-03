@@ -71,6 +71,9 @@
   .overlay {
     @apply fixed inset-0 z-50 bg-navy-700/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
 }
 
 ::-webkit-scrollbar {
