@@ -27,7 +27,7 @@ export default function CurrentMarket({ currentMarket }) {
                         <h3 className="text-lg font-bold text-foreground leading-none">{name}</h3>
                         <p className="text-md text-foreground leading-none whitespace-nowrap 2xl:text-5xl">{genre}</p>
                         <Button variant="outline" className="mt-auto w-full">
-                            <span>Project Overview</span>
+                            Project Overview
                             <ArrowIcon className="ml-4" />
                         </Button>
                     </div>

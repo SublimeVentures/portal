@@ -2,10 +2,11 @@ import { Button } from "@/v2/components/ui/button";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
 import { otcViews } from "../logic/useCurrentView";
 import { offersFilters } from "../utils/filters";
+import { findFilter } from "../utils/helpers";
 
 export default function TableFilters({ data }) {
     const { market, showHistory, filterProps, handleChangeView, setIsMakeModalOpen } = data;
-    const { filters, handleToggleFilter, handleFilterRemove } = filterProps;
+    const { filters, handleFilterRemove } = filterProps;
 
     return (
         <div className="my-4 flex justify-between items-center gap-4 text-white">
@@ -21,13 +22,7 @@ export default function TableFilters({ data }) {
                 <Button className="py-2.5 px-3" onClick={() => setIsMakeModalOpen(true)}>Create offer</Button>
 
                 {Object.entries(filters).map(([key, value]) => {
-                    const filter = offersFilters.find(f => {
-                        if (['isSell'].includes(key)) {
-                            return f.filter[key] === value;
-                        }
-                        
-                        return f.filter[key] !== undefined;
-                    });
+                    const filter = findFilter(offersFilters, key, value);
                     
                     return (
                         <div key={key} className="py-1.5 px-4 text-sm bg-gray-300 rounded">
