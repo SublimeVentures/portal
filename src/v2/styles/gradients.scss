@@ -38,6 +38,25 @@
   }
 }
 
+.card-dark {
+  background-color: #101926;
+  position: relative;
+  z-index: 1;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 5px;
+    padding: 2px;
+    background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 55%);
+    -webkit-mask: linear-gradient(hsla(0, 0%, 100%) 0 0) content-box, linear-gradient(hsla(0, 0%, 100%) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
 // Source: https://medium.com/@dave_lunny/animating-css-gradients-using-only-css-d2fd7671e759
 .card-background {
   background-size: 100%;
