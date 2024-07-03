@@ -1,4 +1,4 @@
-export const formatCurrency = (amount) => {
+export const shortCurrencyFormatterWithSuffix = (amount) => {
   const thresholds = [
     { limit: 1_000_000_000, divisor: 1_000_000_000, suffix: "B+" },
     { limit: 1_000_000, divisor: 1_000_000, suffix: "M+" },

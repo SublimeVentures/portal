@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
-import { formatCurrency } from "@/v2/lib/currency";
+import { shortCurrencyFormatterWithSuffix } from "@/v2/lib/currency";
 import { useIntersectionObserver } from "@/v2/hooks";
 import { Metadata } from "@/v2/components/Layout";
 import { InvestedStatisticCard, PartnersStatisticCard, RaisedStatisticCard  } from "@/v2/components/App/Vault/StatisticsCard";
@@ -35,7 +35,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                         <div className="flex flex-wrap gap-4 grow md:flex md:grow-0">
                             <InvestedStatisticCard value={investments} />
                             {tenantIndex === TENANT.basedVC ? <PartnersStatisticCard value={partners} /> : null}
-                            <RaisedStatisticCard value={formatCurrency(rawFunded)} />
+                            <RaisedStatisticCard value={shortCurrencyFormatterWithSuffix(rawFunded)} />
                         </div>
                     </div>
 

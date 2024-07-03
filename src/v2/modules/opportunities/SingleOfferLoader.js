@@ -21,5 +21,5 @@ export default function SingleOfferLoader() {
                 <Skeleton count={2} className='my-2' />
             </div>
         </Card>
-    )
-} 
+    );
+};
