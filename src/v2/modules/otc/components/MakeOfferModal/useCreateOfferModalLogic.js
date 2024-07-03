@@ -210,23 +210,23 @@ export default function useCreateOfferModalLogic(props, isModalOpen, setIsModalO
         textCopy,
         selectedTab,
         blockchainInteractionData: blockchainData[selectedTab],
-        getSelectedMarketProps: () => ({
+        getSelectedMarketProps: useCallback(() => ({
             name: currentMarket.name,
             ticker: currentMarket.ticker,
             slug: currentMarket.slug,
             cdn, 
-        }),
-        getOfferTabsProps: () => ({
+        }), [currentMarket.name, currentMarket.ticker, currentMarket.slug, cdn]),
+        getOfferTabsProps: useCallback(() => ({
             allocationMax,
             selectedTab,
             handleSelectTab,
-        }),
-        getOfferFormProps: () => ({
+        }), [allocationMax, selectedTab, handleSelectTab]),
+        getOfferFormProps: useCallback(() => ({
             form,
             cdn,
             multiplierParsed,
             market: { name: currentMarket.name, slug: currentMarket.slug },
             getOfferFieldProps,
-        }),
+        }), [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps]),
     };
 };

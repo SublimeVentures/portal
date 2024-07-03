@@ -1,22 +1,8 @@
 const { Op } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const NotificationTypes = require("../../src/v2/enum/notifications.js").NotificationTypes;
-
-// @TODO
-// 1. Zwracac TYLKO dane, ktore sa dla notification potrzebne - reszte usunac
-// 2. Zaimplementowac filtry https://github.com/SublimeVentures/portal/commits/feature/vault-timeline-enhancement
-
-// typeId
-// onchain.createdAt
-// onchain.txID
-// onchain.chainId
-
-// portal/src/v2/helpers/notifications.js
-// TimelineItemDescription Component - Uzywa takich kluczy jak:
-// src={`${cdn}/research/${slug}/icon.jpg`}
-// const values = { value: '2', amount: '20', otcDeal: { amount: '20', price: 20 }, claim: { isClaimed: true }, payout: { totalAmount: '200', currencySymbol: 'GMRX' } }
-
-// --- --- --- --- --- --- --- --- --- --- --- ---
+const logger = require("../../src/lib/logger");
+const { serializeError } = require("serialize-error");
 
 /**
  * @typedef {Record<string, string | number>} NotificationFilters
@@ -54,28 +40,36 @@ const BASE_INCLUDES = [
  * @returns {Promise<import("sequelize").Model[]>}
  */
 async function getNotifications(user, filters = {}) {
-    const { userId, tenantId } = user;
-    const size = filters.size ?? 8;
-    const page = filters.page ?? 1;
-    const offset = (page === 1 ? page : page - 1) * size;
-    const filterConfig = { userId, limit: size ?? 8, offset };
+    try {
+        const { userId, tenantId } = user;
+        const size = filters.size ?? 8;
+        const page = filters.page ?? 1;
+        const offset = (page === 1 ? page : page - 1) * size;
+        const filterConfig = { userId, limit: size ?? 8, offset };
+    
+        // if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
+        if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
+        if (filters.type) {
+            filterConfig["typeId"] = typeof filters.type === "number" ? filters.type : notificationTypeToId(filters.type);
+        }
+        if (filters.before && filters.after) {
+            filterConfig["created_at"] = { [Op.between]: [new Date(filters.after), new Date(filters.before)] };
+        } else if (filters.before) {
+            filterConfig["created_at"] = { [Op.lte]: new Date(filters.before) };
+        } else if (filters.after) {
+            filterConfig["created_at"] = { [Op.gte]: new Date(filters.after) };
+        }
+    
+        // console.log('getNotifications-filterConfig', filterConfig)
+    
+        return getAllNotifications(filterConfig);
+    } catch (error) {
+        logger.error("QUERY :: [getNotifications]", {
+            error: serializeError(error),
+        });
 
-    // if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
-    if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
-    if (filters.type) {
-        filterConfig["typeId"] = typeof filters.type === "number" ? filters.type : notificationTypeToId(filters.type);
+        return [];
     }
-    if (filters.before && filters.after) {
-        filterConfig["created_at"] = { [Op.between]: [new Date(filters.after), new Date(filters.before)] };
-    } else if (filters.before) {
-        filterConfig["created_at"] = { [Op.lte]: new Date(filters.before) };
-    } else if (filters.after) {
-        filterConfig["created_at"] = { [Op.gte]: new Date(filters.after) };
-    }
-
-    // console.log('getNotifications-filterConfig', filterConfig)
-
-    return getAllNotifications(filterConfig);
 }
 
 /**
@@ -120,38 +114,54 @@ async function getNotificationByStrategy(notification) {
  * @return {import("sequelize").Model}
  */
 async function getClaimNotification({ id, data }) {
-    const { chainId, payoutId, claimId } = data;
-    return await models.notification.findByPk(id, {
-        include: [
-            {
-                model: models.network,
-                where: { id: chainId },
-            },
-            {
-                model: models.payout,
-                where: { id: payoutId },
-            },
-            {
-                model: models.claim,
-                where: { id: claimId },
-            },
-        ],
-    });
+    try {
+        const { chainId, payoutId, claimId } = data;
+        return await models.notification.findByPk(id, {
+            include: [
+                {
+                    model: models.network,
+                    where: { id: chainId },
+                },
+                {
+                    model: models.payout,
+                    where: { id: payoutId },
+                },
+                {
+                    model: models.claim,
+                    where: { id: claimId },
+                },
+            ],
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getClaimNotification]", {
+            error: serializeError(error),
+        });
+        
+        return [];
+    }
 }
 
 /**
  * @return {import("sequelize").Model}
  */
 async function getOtcNotification({ id, data }) {
-    const { otcDealId } = data;
-    return await models.notification.findByPk(id, {
-        include: [
-            {
-                model: models.otcDeal,
-                where: { id: otcDealId },
-            },
-        ],
-    });
+    try {
+        const { otcDealId } = data;
+        return await models.notification.findByPk(id, {
+            include: [
+                {
+                    model: models.otcDeal,
+                    where: { id: otcDealId },
+                },
+            ],
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getOtcNotification]", {
+            error: serializeError(error),
+        });
+        
+        return [];
+    }
 }
 
 /**
@@ -159,15 +169,23 @@ async function getOtcNotification({ id, data }) {
  * @return {import("sequelize").Model}
  */
 async function getInvestmentNotification({ id, data }) {
-    const { partnerId } = data;
-    return await models.notification.findByPk(id, {
-        include: [
-            {
-                model: models.partner,
-                // where: { id: partnerId },
-            },
-        ],
-    });
+    try {
+        // const { partnerId } = data;
+        return await models.notification.findByPk(id, {
+            include: [
+                {
+                    model: models.partner,
+                    // where: { id: partnerId },
+                },
+            ],
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getInvestmentNotification]", {
+            error: serializeError(error),
+        });
+        
+        return [];
+    }
 }
 
 /**
@@ -175,7 +193,15 @@ async function getInvestmentNotification({ id, data }) {
  * @return {import("sequelize").Model}
  */
 async function getRefundNotification({ id }) {
-    return await models.notification.findByPk(id);
+    try {
+        return await models.notification.findByPk(id);
+    } catch (error) {
+        logger.error("QUERY :: [getRefundNotification]", {
+            error: serializeError(error),
+        });
+        
+        return [];
+    }
 }
 
 /**
@@ -183,7 +209,15 @@ async function getRefundNotification({ id }) {
  * @return {import("sequelize").Model}
  */
 async function getMysteryBuyNotification({ id }) {
-    return await models.notification.findByPk(id);
+    try {
+        return await models.notification.findByPk(id);
+    } catch (error) {
+        logger.error("QUERY :: [getMysteryBuyNotification]", {
+            error: serializeError(error),
+        });
+        
+        return [];
+    }
 }
 
 /**
@@ -191,31 +225,47 @@ async function getMysteryBuyNotification({ id }) {
  * @return {import("sequelize").Model}
  */
 async function getUpgradeBuyNotification({ id }) {
-    return await models.notification.findByPk(id);
+    try {
+        return await models.notification.findByPk(id);
+    } catch (error) {
+        logger.error("QUERY :: [getUpgradeBuyNotification]", {
+            error: serializeError(error),
+        });
+        
+        return [];
+    }
 }
 
 /**
  * @type {Promise<import("sequelize").Model[]>}
  */
 async function getAllNotifications(filterConfig) {
-    const { limit, offset, ...where } = filterConfig;
+    try {
+        const { limit, offset, ...where } = filterConfig;
 
-    const base = await models.notification.findAll({
-        where,
-        include: BASE_INCLUDES,
-        limit,
-        offset,
-        order: [["id", "DESC"]],
-    });
+        const base = await models.notification.findAll({
+            where,
+            include: BASE_INCLUDES,
+            limit,
+            offset,
+            order: [["id", "DESC"]],
+        });
 
-    const results = [];
+        const results = [];
 
-    for (const notification of base) {
-        results.push(getNotificationByStrategy(notification));
+        for (const notification of base) {
+            results.push(getNotificationByStrategy(notification));
+        }
+
+        const settledResults = await Promise.allSettled(results);
+        return settledResults.filter(result => result.status === 'fulfilled').map(result => result.value);
+    } catch (error) {
+        logger.error("QUERY :: [getAllNotifications]", {
+            error: serializeError(error),
+        });
+        
+        return [];
     }
-
-    const settledResults = await Promise.allSettled(results);
-    return settledResults.filter(result => result.status === 'fulfilled').map(result => result.value);
 }
 
 module.exports = {
