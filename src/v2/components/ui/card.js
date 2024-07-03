@@ -12,6 +12,7 @@ const cardVariants = cva(
                 default: "card-background",
                 accent: "card-gradient-accent",
                 static: "card-gradient",
+                dark: "card-dark",
                 none: "",
             },
         },

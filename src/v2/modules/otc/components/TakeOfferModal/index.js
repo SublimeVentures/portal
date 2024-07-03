@@ -25,7 +25,7 @@ import TransactionSuccess from "../TransactionSucces";
 const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
 
 export default function TakeOfferModal(props) {
-    const { offerDetails, vault, currentMarket, refetchVault, refetchOffers } = props;
+    const { offerDetails, vault, currentMarket, refetchVault, refetchOffers, className } = props;
     const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
 
     const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } = useBlockchainTakeOfferTransaction({ offerDetails, vault, currentMarket });
@@ -47,8 +47,8 @@ export default function TakeOfferModal(props) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="accent">
-                    <span>Take</span>
+                <Button variant="accent" className={className}>
+                    Take
                     <ArrowIcon className="ml-2" />
                 </Button>
             </SheetTrigger>

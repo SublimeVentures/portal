@@ -5,16 +5,17 @@ import { API } from "@/routes";
 /**
  * @param {NotificationFilters} filters
  */
-export const fetchNotificationList = async (filters) => {
+export const fetchNotificationList = async (filters = {}) => {
     try {
-        const queryParams = {};
-        // if (filters.type) queryParams["type"] = filters.type;
-        // if (filters.offerId) queryParams["offerId"] = filters.offerId;
-        // if (filters.lastId) queryParams["lastId"] = filters.lastId;
-        
-        const query = new URLSearchParams(queryParams);
-        const { data } = await axiosPrivate.get(`${API.notificationList}?${query}`);
-        
+        const params = {};
+        if (filters.page) params["page"] = filters.page;
+        if (filters.type) params["type"] = filters.type;
+        if (filters.startDate) params["startDate"] = filters.startDate;
+        if (filters.endDate) params["endDate"] = filters.endDate;
+        if (filters.offerId) params["offerId"] = filters.offerId;
+
+        const { data } = await axiosPrivate.get(API.notificationList, { params });
+
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {

@@ -3,14 +3,8 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { NETWORKS } from "@/lib/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import GenericRightModal from "@/components/Modal/GenericRightModal";
 import { fetchInvestmentPayout } from "@/fetchers/payout.fetcher";
-import DynamicIcon from "@/components/Icon";
-import { ButtonIconSize } from "@/components/Button/RoundButton";
-import ClaimPayoutModal from "@/components/App/Vault/ClaimPayoutModal";
 
 import {
   Sheet,
@@ -25,7 +19,6 @@ import {
 import { IconButton } from "@/v2/components/ui/icon-button";
 import GoBackIcon from "@/v2/assets/svg/go-back.svg";
 import { Button } from "@/v2/components/ui/button";
-import { Avatar } from "@/v2/components/ui/avatar";
 
 import DetailsView from "./DetailsView";
 import DetailsTimeline from "./DetailsTimeline";
@@ -52,7 +45,6 @@ const variants = {
 
 export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModalProps, userId }) {
     const { cdn } = useEnvironmentContext();
-    const [payoutClaimOpen, setPayoutClaimOpen] = useState(false);
 
     const {
         id: offerId,
@@ -72,7 +64,7 @@ export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModal
         createdAt,
     } = claimModalProps;
 
-    const { notifications } = useTimelineData()
+    const { notifications } = useTimelineData(offerId)
 
     const { isSuccess: isSuccessPayouts, data: payouts, refetch: refetchPayouts } = useQuery({
         queryKey: ["userPayouts", userId, offerId],
@@ -93,29 +85,6 @@ export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModal
     
     const claimed = offerId > 0 ? vaultData.find((el) => el.id === offerId)?.claimed : 0;
     const performance = (claimed / invested) * 100;
-
-    // const payoutClaimProps = {
-    //     ...claimModalProps,
-    //     currency,
-    //     nextPayout,
-    //     refetchPayouts,
-    //     refetchVault,
-    // };
-
-    // const closeModal = async () => {
-    //     setter();
-    //     setTimeout(() => {}, 400);
-    // };
-
-    // const closeClaimPayoutModal = () => {
-    //     setPayoutClaimOpen(false);
-    //     setTimeout(() => refetchPayouts(), 100);
-    // };
-
-    // const openPayoutClaim = () => {
-    //     if (!isNextPayout) return;
-    //     setPayoutClaimOpen(true);
-    // };
 
     const viewProps = {
       [views.details]: {
@@ -207,64 +176,3 @@ export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModal
       </Sheet>
     );
 }
-
-
-// USER ID 11302
-        
-// <GenericRightModal
-//     isOpen={model}
-//     closeModal={() => closeModal()}
-//     title={title()}
-//     content={content()}
-//     persistent={false}
-// />
-
-// Details View --- --- --- --- --- --- --- --- --- --- --- --- --- 
-
-    //             <div className="mt-auto fullWidth">
-    //                 <UniButton
-    //                     type={ButtonTypes.BASE}
-    //                     isWide={true}
-    //                     isDisabled={!isNextPayout}
-    //                     size="text-sm sm"
-    //                     state="danger"
-    //                     text="Payout"
-    //                     handler={() => {
-    //                         openPayoutClaim();
-    //                     }}
-    //                 />
-    //             </div>
-
-        //             {isNextPayout && (
-    //                 <ClaimPayoutModal
-    //                     model={payoutClaimOpen}
-    //                     setter={() => closeClaimPayoutModal()}
-    //                     props={payoutClaimProps}
-    //                 />
-    //             )}
-
-    //                 <DetailsTimeline offerId={offerId} />
-    //             </div>
-    //             <div className="mt-auto fullWidth">
-    //                 <UniButton
-    //                     type={ButtonTypes.BASE}
-    //                     isWide={true}
-    //                     isDisabled={!isNextPayout}
-    //                     size="text-sm sm"
-    //                     state="danger"
-    //                     text="Payout"
-    //                     handler={() => {
-    //                         openPayoutClaim();
-    //                     }}
-    //                 />
-    //             </div>
-    //             {isNextPayout && (
-    //                 <ClaimPayoutModal
-    //                     model={payoutClaimOpen}
-    //                     setter={() => closeClaimPayoutModal()}
-    //                     props={payoutClaimProps}
-    //                 />
-    //             )}
-    //         </div>
-    //     );
-    // };

@@ -7,6 +7,8 @@ import courtSvg from "@/v2/assets/svg/court.svg";
 
 export const SizeStatisticCard = partiallyApply(StatisticCard, { title: "Portfolio Size", icon: pieSvg });
 export const ReturnStatisticCard = partiallyApply(StatisticCard, { title: "Returns", icon: diamondSvg });
-export const InvestedStatisticCard = partiallyApply(StatisticCard, { title: "Projects invested", icon: courtSvg });
+export const InvestedStatisticCard = partiallyApply(StatisticCard, { title: "Invested", icon: courtSvg });
+export const PartnersStatisticCard = partiallyApply(StatisticCard, { title: "Partners", icon: courtSvg });
+export const RaisedStatisticCard = partiallyApply(StatisticCard, { title: "Raised", icon: diamondSvg });
 
 export default StatisticCard;

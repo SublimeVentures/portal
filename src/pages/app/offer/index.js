@@ -1,106 +1,77 @@
-// import Head from "next/head";
-// import { useQuery } from "@tanstack/react-query";
-// import { BiMoneyWithdraw as IconMoney, BiNetworkChart as IconNetwork } from "react-icons/bi";
-// import Empty from "@/components/App/Empty";
-// import IconStars from "@/assets/svg/Stars.svg";
-// import LayoutApp from "@/components/Layout/LayoutApp";
-// import Loader from "@/components/App/Loader";
-// import OfferItem from "@/components/App/Offer/OfferItem";
-// import Stat from "@/components/Stat";
-// import { fetchOfferList } from "@/fetchers/offer.fetcher";
-// import { getCopy } from "@/lib/seoConfig";
-// import { tenantIndex } from "@/lib/utils";
-// import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-// import { TENANT } from "@/lib/tenantHelper";
+import { dehydrate, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
-import { AppLayout } from "@/v2/components/Layout";
 import { processServerSideData } from "@/lib/serverSideHelpers";
+import { queryClient } from "@/lib/queryCache";
+import { cacheOptions } from "@/v2/helpers/query";
+import { fetchOfferList, fetchOfferStats } from "@/fetchers/offer.fetcher";
+import { AppLayout } from "@/v2/components/Layout";
+import { Metadata } from "@/v2/components/Layout";
+import Opportunities from "@/v2/modules/opportunities/Opportunities"
+import Empty from "@/components/App/Empty";
+import Loader from "@/components/App/Loader";
 import routes from "@/routes";
 
-export default function AppOffer({ session }) {
-    // const TENANT_ID = session.tenantId;
-    // const PARTNER_ID = session.partnerId;
-    // const { cdn } = useEnvironmentContext();
+const PAGE_LIMIT = 6;
 
-    // const {
-    //     isLoading,
-    //     data: response,
-    //     isError,
-    // } = useQuery({
-    //     queryKey: ["offerList", { TENANT_ID, PARTNER_ID }],
-    //     queryFn: fetchOfferList,
-    //     cacheTime: 5 * 60 * 1000,
-    //     staleTime: 1 * 60 * 1000,
-    //     refetchOnMount: false,
-    //     refetchOnWindowFocus: false,
-    // });
+const fetchOffers = async ({ pageParam }) => await fetchOfferList(pageParam, PAGE_LIMIT);
 
-    // const offerList = response?.offers;
-    // const offerListRender = offerList ? offerList : [];
-    // const stats = response?.stats;
-    // const partners = stats && stats?.partners ? stats.partners : 0;
-    // const projectsInvested = stats && stats?.vc ? stats.vc : 0;
-    // const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
+export default function AppOpportunities({ session }) {
+    const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = session;
 
-    // const renderPage = () => {
-    //     if (isLoading) return <Loader />;
-    //     if (!offerListRender || offerListRender.length === 0 || isError) return <Empty />;
-    //     return (
-    //         <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
-    //             {!!offerList && offerListRender.map((el) => <OfferItem offer={el} cdn={cdn} key={el.slug} />)}
-    //         </div>
-    //     );
-    // };
+    const { data: statsList, isLoading: isStatsLoading, isError: isStatsError } = useQuery({
+        queryKey: ["offerStats", TENANT_ID, PARTNER_ID],
+        queryFn: fetchOfferStats,
+        ...cacheOptions,
+    });
 
-    // const title = `Opportunities - ${getCopy("NAME")}`;
-    
-    return (
-        <>
-            <h2 className="text-foreground">Opportunities</h2>
-            {/* <Head>
-                <title>{title}</title>
-            </Head>
-            <div className="flex flex-col justify-between gap-7 xl:flex-row">
-                <div className="flex flex-col justify-center">
-                    <div className="glow text-3xl page-header-text">Funded Projects</div>
-                    <div className="text-outline text-md mt-2 white min-w-[250px]">
-                        We bring new industry giants to our community
-                    </div>
-                </div>
-                <div className="flex flex-1 2xl:max-w-[900px] w-full">
-                    <div className="w-full flex gap-5 flex-col md:flex-row">
-                        <Stat
-                            color="gold"
-                            title="Investments"
-                            value={projectsInvested}
-                            icon={<IconStars className={"w-9 text-2xl"} />}
-                        />
-                        {tenantIndex === TENANT.basedVC && (
-                            <Stat
-                                color="teal"
-                                title="Partners"
-                                value={partners}
-                                icon={<IconNetwork className="w-7 text-2xl" />}
-                            />
-                        )}
-                        <Stat
-                            color={"blue"}
-                            title={"Raised"}
-                            value={funded}
-                            icon={<IconMoney className={"w-7 text-2xl"} />}
-                        />
-                    </div>
-                </div>
+    const { data: offersList, isLoading: isOffersLoading, isError: isOffersError, error, isFetchingNextPage, hasNextPage, fetchNextPage } = useInfiniteQuery({
+        queryKey: ["offerList", TENANT_ID, PARTNER_ID],
+        queryFn: fetchOffers,
+        getNextPageParam: (lastPage) => lastPage.nextPage,
+        initialPageParam: 0,
+        ...cacheOptions,
+    });
+
+    const offers = offersList?.pages.flatMap(page => page.offers) ?? [];
+    const stats = statsList ?? {};
+
+    console.log('offers', offersList)
+
+    if (isOffersLoading || isStatsLoading) {
+        return (
+            <div className="col-span-12 max-h-[40vh]">
+                <Metadata title="Loading" />
+                <Loader />
             </div>
-            {renderPage()} */}
-        </>
-    );
+        );
+    }
+
+    if (!offers.length || isOffersError || isStatsError) {
+        return (
+            <div className="col-span-12 max-h-[40vh]">
+                <Metadata title="Opportunities" />
+                <Empty />
+            </div>
+        );
+    }
+    
+    return <Opportunities offers={offers} stats={stats} infiniteLoaderOpts={{ isFetchingNextPage, hasNextPage, fetchNextPage }}/>
 }
 
 export const getServerSideProps = async ({ req, res }) => {
-    return await processServerSideData(req, res, routes.Opportunities);
+    const customLogicCallback = async (account) => {
+        const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = account;
+        await queryClient.prefetchQuery(["offerList", TENANT_ID, PARTNER_ID], fetchOfferList);
+        await queryClient.prefetchQuery(["offerStats", TENANT_ID, PARTNER_ID], fetchOfferStats);
+        
+        return {
+            additionalProps: {
+                dehydratedState: dehydrate(queryClient),
+            },
+        };
+    };
+
+    return await processServerSideData(req, res, routes.Opportunities, customLogicCallback);
 };
 
-AppOffer.getLayout = function (page) {
-    return <AppLayout title="Opportunities">{page}</AppLayout>;
-};
+AppOpportunities.getLayout = (page) => <AppLayout title="Opportunities">{page}</AppLayout>;

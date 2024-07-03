@@ -21,11 +21,10 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import TransactionSuccess from "../TransactionSucces";
 import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
 
-// import DynamicIcon from "@/components/Icon";
 const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
 
 export default function CancelOfferModal(props) {
-    const { currentMarket, offerDetails, refetchVault, refetchOffers } = props;
+    const { currentMarket, offerDetails, refetchVault, refetchOffers, className } = props;
     const { getCurrencySymbolByAddress, network, cdn } = useEnvironmentContext();
 
     const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } = useBlockchainCancelOfferTransaction({ otcId: currentMarket?.otc, dealId: offerDetails?.dealId, requiredNetwork: offerDetails?.chainId });
@@ -44,8 +43,8 @@ export default function CancelOfferModal(props) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline">
-                    <span>Cancel</span>
+                <Button variant="outline" className={className}>
+                    Cancel
                     <ArrowIcon className="ml-2" />
                 </Button>
             </SheetTrigger>

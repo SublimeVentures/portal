@@ -73,6 +73,9 @@ module.exports = {
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
+            gridTemplateColumns: {
+                'cards': 'repeat(auto-fill, minmax(450px, 1fr))',
+            }
         },
         keyframes: {
             "accordion-down": {
