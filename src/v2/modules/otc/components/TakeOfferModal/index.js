@@ -48,7 +48,7 @@ export default function TakeOfferModal(props) {
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="accent" className={className}>
-                    <span>Take</span>
+                    Take
                     <ArrowIcon className="ml-2" />
                 </Button>
             </SheetTrigger>

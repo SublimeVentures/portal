@@ -25,7 +25,7 @@ const colorSchemes = {
     [stepsStatus.PROCESSING]: successColors,
     [stepsStatus.SUCCESS]: successColors,
 };
-    
+
 // @TODO 
 // -> Get description for each step
 // -> Get svg from designer for chains with different amount of circles and create dynamic component with it

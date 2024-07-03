@@ -23,8 +23,8 @@ import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTrans
 
 const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
 
-export default function CancelOfferModal(props, className) {
-    const { currentMarket, offerDetails, refetchVault, refetchOffers } = props;
+export default function CancelOfferModal(props) {
+    const { currentMarket, offerDetails, refetchVault, refetchOffers, className } = props;
     const { getCurrencySymbolByAddress, network, cdn } = useEnvironmentContext();
 
     const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } = useBlockchainCancelOfferTransaction({ otcId: currentMarket?.otc, dealId: offerDetails?.dealId, requiredNetwork: offerDetails?.chainId });
@@ -43,8 +43,8 @@ export default function CancelOfferModal(props, className) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline" className>
-                    <span>Cancel</span>
+                <Button variant="outline" className={className}>
+                    Cancel
                     <ArrowIcon className="ml-2" />
                 </Button>
             </SheetTrigger>
