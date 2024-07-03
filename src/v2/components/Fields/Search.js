@@ -1,6 +1,5 @@
 import { BiSearchAlt } from "react-icons/bi";
 
-// import { Button } from "@/v2/components/ui/button";
 import { cn } from "@/lib/cn";
 
 const Search = ({ name, className, ...props }) => {
@@ -15,8 +14,6 @@ const Search = ({ name, className, ...props }) => {
                     {...props}
                 />
             </div>
-
-            {/* <Button type="submit" variant="gradient">Search</Button> */}
         </div>
     )
 }
