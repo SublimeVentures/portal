@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { fetchInvestmentPayout } from "@/fetchers/payout.fetcher";
+import { STAGES } from "@/lib/vesting";
 
 import {
   Sheet,
@@ -62,7 +63,10 @@ export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModal
         vaultData,
         invested,
         createdAt,
+        claimStage,
     } = claimModalProps;
+
+    const isAvaiable = claimStage !== STAGES.CLAIM
 
     const { notifications } = useTimelineData(offerId)
 
@@ -167,7 +171,9 @@ export default function DetailsSidebar({ isModalOpen, setIsModalOpen, claimModal
 
               <SheetFooter>
                   <SheetClose asChild>
-                      <Button variant="accent" type="submit">Claim</Button>
+                      <Button type="submit" variant={isAvaiable ? "accent" : "outline"} disabled={!isAvaiable}>
+                          Claim
+                      </Button>
                   </SheetClose>
                   
                   <p className="text-xxs text-foreground/[.5]">You will automatically receive {ticker} token after settlement.</p>
