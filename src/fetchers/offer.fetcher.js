@@ -4,14 +4,9 @@ import { API } from "@/routes";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { authTokenName } from "@/lib/authHelpers";
 
-export const fetchOfferList = async (page = 0, limit = 6) => {
+export const fetchOfferList = async (query) => {
     try {
-        const { data } = await axiosPrivate.get(API.offerList, {
-            params: {
-                page,
-                limit,
-            }
-        });
+        const { data } = await axiosPrivate.get(API.offerList, { params: { type: "vc", ...query } });
 
         return data;
     } catch (e) {
@@ -42,7 +37,7 @@ export const fetchOfferProgress = async (offerId) => {
         const { data } = await axiosPrivate.get(API.offerProgress, {
             params: {
                 offerId,
-            }
+            },
         });
         return data;
     } catch (e) {

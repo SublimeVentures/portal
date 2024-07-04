@@ -32,9 +32,9 @@ export const fetchUserInvestmentSsr = async (offerId, token) => {
     return 0;
 };
 
-export const fetchVault = async () => {
+export const fetchVault = async (query = {}) => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchVault);
+        const { data } = await axiosPrivate.get(API.fetchVault, { params: query });
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {

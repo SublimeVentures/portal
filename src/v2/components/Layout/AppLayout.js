@@ -3,7 +3,6 @@ import { BlockedAlert } from "@/v2/components/Alert";
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
-
 export const layoutStyles = {
     "--alertHeight": "60px",
     "--headerHeight": "100px",
@@ -41,7 +40,7 @@ const DesktopLayout = ({ children, isBlockedAlert, title }) => {
                     })}
                 >
                     <div className="flex flex-col w-full h-full">
-                        <main className="flex flex-col grow w-full">
+                        <main className="flex flex-col grow w-full h-full">
                             <DesktopHeader title={title} />
                             {children}
                         </main>

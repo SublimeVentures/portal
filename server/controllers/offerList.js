@@ -16,10 +16,15 @@ const offerTypeToFunction = {
 async function getParamOfferList(user, req) {
     try {
         const { tenantId, partnerId } = user;
-        const fetchFunction = offerTypeToFunction[req.query.type];
+        const { type, limit, isSettled, page } = req.query;
+        const fetchFunction = offerTypeToFunction[type];
         if (!fetchFunction) throw Error("Bad type");
 
-        const result = await fetchFunction(partnerId, tenantId, req.query.page, req.query.limit);
+        const result = await fetchFunction(partnerId, tenantId, {
+            ...(page && { page: parseInt(page, 10) }),
+            ...(limit && { limit: parseInt(limit, 10) }),
+            ...(isSettled && { isSettled: isSettled === "true" }),
+        });
 
         return result;
     } catch (error) {
@@ -31,7 +36,7 @@ async function getParamOfferList(user, req) {
 }
 
 async function getOffersStats() {
-    return getEnv().stats
+    return getEnv().stats;
 }
 
 module.exports = { getParamOfferList, getOffersStats };

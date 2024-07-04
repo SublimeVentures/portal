@@ -1,0 +1,19 @@
+import moment from "moment";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+
+export default function useInvestmentsData(details) {
+    console.log(details);
+    const { cdn } = useEnvironmentContext();
+    return {
+        title: details?.offer?.name,
+        coin: details?.offer?.ticker,
+        invested: details.invested || 0,
+        vested: details.vested || 0,
+        logo: `${cdn}/research/${details?.offer?.slug}/icon.jpg`,
+        isManaged: details?.offer?.isManaged,
+        performance: details.performance * 100,
+        participatedDate: moment(details.createdAt).utc().local().format("YYYY-MM-DD"),
+        isClaimSoon: details.nextClaimDate !== null,
+        canClaim: details.canClaim,
+    };
+}

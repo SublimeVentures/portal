@@ -75,7 +75,8 @@ const query_getOfferList = `
         o.display = true AND
         o."isLaunchpad" = false AND
         o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL
+        ol."offerId" IS NOT NULL AND
+        (COALESCE(:isSettled::boolean, ofr."isSettled") = ofr."isSettled")
     ORDER BY
         ol.d_open DESC
     LIMIT :limit OFFSET :offset;
@@ -108,30 +109,29 @@ const query_checkMore = `
         o.display = true AND
         o."isLaunchpad" = false AND
         o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL
+        ol."offerId" IS NOT NULL AND
+        (COALESCE(:isSettled::boolean, ofr."isSettled") = ofr."isSettled")
     LIMIT 1 OFFSET :nextOffset;
 `;
 
-async function getOfferList(partnerId, tenantId, page, limit) {
-    const currentPage = parseInt(page) ?? 0;
-    const currentLimit = parseInt(limit) ?? 6;
-    const offset = currentPage * currentLimit;
-    const nextOffset = offset + currentLimit;
+async function getOfferList(partnerId, tenantId, { limit = 6, page = 0, isSettled }) {
+    const offset = page * limit;
+    const nextOffset = offset + limit;
 
     try {
         const offers = await db.query(query_getOfferList, {
             type: QueryTypes.SELECT,
-            replacements: { partnerId, tenantId, limit, offset },
+            replacements: { partnerId, tenantId, limit, offset, isSettled },
         });
 
         const hasMoreResults = await db.query(query_checkMore, {
             type: QueryTypes.SELECT,
-            replacements: { partnerId, tenantId, nextOffset },
+            replacements: { partnerId, tenantId, nextOffset, isSettled },
         });
 
-        const nextPage = hasMoreResults.length > 0 ? currentPage + 1 : null
+        const nextPage = hasMoreResults.length > 0 ? page + 1 : null;
 
-        return { offers, nextPage }
+        return { offers, nextPage };
     } catch (error) {
         logger.error("QUERY :: [getOfferList]", {
             error: serializeError(error),
@@ -158,7 +158,7 @@ async function getOfferProgress(offerId) {
             type: QueryTypes.SELECT,
             replacements: { offerId },
         });
-        
+
         return result.length > 0 ? result[0] : null;
     } catch (error) {
         logger.error("QUERY :: [getOfferProgress]", {
