@@ -109,7 +109,8 @@ const query_checkMore = `
         o.display = true AND
         o."isLaunchpad" = false AND
         o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL
+        ol."offerId" IS NOT NULL AND
+        (COALESCE(:isSettled::boolean, ofr."isSettled") = ofr."isSettled")
     LIMIT 1 OFFSET :nextOffset;
 `;
 

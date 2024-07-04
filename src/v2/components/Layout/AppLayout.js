@@ -40,7 +40,7 @@ const DesktopLayout = ({ children, isBlockedAlert, title }) => {
                     })}
                 >
                     <div className="flex flex-col w-full h-full">
-                        <main className="flex flex-col grow w-full h-full">
+                        <main className="flex flex-col grow w-full h-full h-full">
                             <DesktopHeader title={title} />
                             {children}
                         </main>
