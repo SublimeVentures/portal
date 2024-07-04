@@ -22,7 +22,7 @@ const SORT_BY = {
 
 const DEFAULT_SORT_BY = SORT_BY.CREATED_AT;
 
-const exclude = (obj, ...keys) => {
+export const exclude = (obj, ...keys) => {
     const copy = { ...obj };
     keys.forEach((key) => delete copy[key]);
     return copy;
@@ -38,7 +38,7 @@ const FILTERS_LABELS = {
     IS_UPCOMING: "Claim upcoming",
 };
 
-const FilterButton = ({ children, ...props }) => (
+export const FilterButton = ({ children, ...props }) => (
     <Button variant="secondary" className="px-3 gap-3 md:px-6 md:gap-3.5 flex items-center" {...props}>
         {children}
         <CrossIcon className="size-2 stroke-2" />

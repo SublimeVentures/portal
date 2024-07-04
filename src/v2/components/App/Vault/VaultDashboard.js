@@ -9,42 +9,12 @@ import {
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { Button } from "@/v2/components/ui/button";
 import { useInvestments } from "@/pages/app/vault/investments";
+import { usePayoutsInfiniteQuery } from "@/pages/app/vault/payouts";
 
 const testEmpty = false;
 
 let statisticsInvestments = { size: "$10.151,18", returns: "$38.593,92", projects: "4" };
 if (testEmpty) Object.keys(statisticsInvestments).forEach((key) => (statisticsInvestments[key] = "0"));
-
-let mockedPayoutTable = [
-    {
-        id: "1",
-        name: "Limewire",
-        coin: "LMWR",
-        status: "Upcoming",
-        percentageUnlocked: "12",
-        moneyUnlocked: "2000000",
-        lastPayout: "03.04.2024",
-    },
-    {
-        id: "2",
-        name: "Portal",
-        coin: "Portal",
-        status: "Upcoming",
-        percentageUnlocked: "2.50",
-        moneyUnlocked: "125000",
-        lastPayout: "02.04.2024",
-    },
-    {
-        id: "3",
-        name: "Gaimin",
-        coin: "GMRX",
-        status: "Pending",
-        percentageUnlocked: "10",
-        moneyUnlocked: "95000",
-        lastPayout: "01.04.2024",
-    },
-];
-if (testEmpty) mockedPayoutTable = [];
 
 const mockedPartnership = {
     title: "Based.VC & Steady Stack",
@@ -111,13 +81,24 @@ const Investments = () => {
     );
 };
 
-export default function VaultDashboard({ viewOptions: { views, handleChangeView } = {}, isLoading }) {
-    const isDesktop = useMediaQuery(breakpoints.md);
+const Payouts = () => {
+    const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery({ limit: 5 });
     const isLargeDesktop = useMediaQuery(breakpoints.xxl);
-    const [gridView] = views;
-
     const tableVariant = isLargeDesktop ? PayoutTableVariants.vertical : PayoutTableVariants.horizontal;
+    return (
+        <div className="col-span-5">
+            <div className="mb-4 w-full flex items-center justify-between gap-4">
+                <h3 className="text-nowrap text-2xl text-foreground">Payout table</h3>
+                <Button variant="link" className="ml-auto text-accent" asChild>
+                    <Link href="/app/vault/payouts">see all</Link>
+                </Button>
+            </div>
+            <PayoutTable variant={tableVariant} isLoading={isLoading} pages={pages} />
+        </div>
+    );
+};
 
+export default function VaultDashboard({ viewOptions: { views, handleChangeView } = {}, isLoading }) {
     return (
         <div className="overflow-y-auto">
             <div className="flex p-4 flex-col gap-8 xl:grid xl:grid-cols-9 2xl:grid-cols-8 md:mb-24">
@@ -149,17 +130,7 @@ export default function VaultDashboard({ viewOptions: { views, handleChangeView 
                     />
                 </div>
 
-                <div className="col-span-5">
-                    <div className="mb-4 w-full flex items-center justify-between gap-4">
-                        <h3 className="text-nowrap text-2xl text-foreground">Payout table</h3>
-                        <div className="flex items-center flex-wrap gap-4">
-                            <Button variant="tertiary">Filters</Button>
-                            <Button variant="secondary">Progress</Button>
-                            <Button variant="secondary">Progress</Button>
-                        </div>
-                    </div>
-                    <PayoutTable variant={tableVariant} isLoading={isLoading} items={mockedPayoutTable} />
-                </div>
+                <Payouts />
             </div>
         </div>
     );
