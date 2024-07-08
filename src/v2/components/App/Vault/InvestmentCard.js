@@ -1,23 +1,26 @@
-import { useRef, useEffect } from "react";
-import VanillaTilt from "vanilla-tilt";
-
 import { Avatar } from "@/v2/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/v2/components/ui/skeleton";
-import { Card, CardButton, CardTitle } from "@/v2/components/ui/card";
+import { Card, CardTitle } from "@/v2/components/ui/card";
 import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+import useInvestmentsData from "@/v2/hooks/useInvestmentsData";
+import { cn } from "@/lib/cn";
+import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
+import { Button } from "@/v2/components/ui/button";
 
 // aspect-[5/8]
-const InvestmentCardWrapper = ({ children }) => {
-    const tilt = useRef(null);
-    useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.02, speed: 1000, max: 2 }), []);
-
+const InvestmentCardWrapper = ({ children, className }) => {
     return (
-        <Card ref={tilt} className="relative flex flex-col py-8 px-5 h-full w-full">
+        <Card
+            className={cn(
+                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button",
+                className,
+            )}
+        >
             {children}
         </Card>
-    )
-}
+    );
+};
 
 export const SkeletonInvestmentCard = () => {
     return (
@@ -27,86 +30,67 @@ export const SkeletonInvestmentCard = () => {
                     <Skeleton className="w-3/4" />
                     <Skeleton className="w-full" />
                 </div>
-
                 <SkeletonCircle className="size-16" />
             </div>
 
-          <div className="mb-8 grid grid-cols-2 gap-4">
-              <Skeleton count={4} className="w-full" />
-              <Skeleton count={4} className="w-full" />
-          </div>
-          
-          <Skeleton className="mt-auto h-8 w-full" />
+            <div className="mb-8 grid grid-cols-2 gap-4">
+                <Skeleton count={4} className="w-full" />
+                <Skeleton count={4} className="w-full" />
+            </div>
+
+            <Skeleton className="mt-auto h-8 w-full" />
         </InvestmentCardWrapper>
-    )
-}
+    );
+};
 
 export const ErrorInvestmentCard = ({ actionFn }) => {
     return (
         <InvestmentCardWrapper>
             <AlertDestructive variant="column" actionFn={actionFn} />
         </InvestmentCardWrapper>
-    )
-}
+    );
+};
 
 const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
-    const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate, athProfit } = details;
+    const data = useInvestmentsData(details);
+    const { title, coin, logo, participatedDate, canClaim, isClaimSoon } = data;
 
     if (isLoading) {
-        return <SkeletonInvestmentCard />
+        return <SkeletonInvestmentCard />;
     }
 
     if (isError) {
-        return <ErrorInvestmentCard actionFn={() => {}}/>
+        return <ErrorInvestmentCard actionFn={() => {}} />;
     }
-  
     return (
         <InvestmentCardWrapper>
-            <div className="mb-8 flex justify-between items-center">
+            <div className="mb-4 md:mb-8 flex justify-between items-center">
                 <div>
-                    <CardTitle className="pb-2 text-3xl font-medium text-foreground leading-none">{title}</CardTitle>
-                    <p className='text-md font-light text-foreground leading-none'>{coin}</p>
+                    <CardTitle className="pb-2 text-md md:text-3xl font-medium text-foreground leading-none">
+                        {coin}
+                    </CardTitle>
+                    <p className="text-xs md:text-md font-light text-foreground leading-none">{title}</p>
                 </div>
-                <Avatar session={null} />
+                <Avatar
+                    className="size-10"
+                    session={{
+                        img: logo,
+                    }}
+                />
             </div>
+            <Attributes details={data} className="grow gap-2 mb-5" grid />
+            <Button variant={canClaim ? "accent" : "outline"} className="mb-3.5 mt-auto w-full font-xs">
+                <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
+                <ArrowIcon className="ml-2 size-2" />
+            </Button>
 
-            <dl className="mb-7 flex flex-col grow gap-4">
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Invested</dt>
-                    <dd className="text-lg font-medium text-foreground">${invested}</dd>
-                </div>
-
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Vested</dt>
-                    <dd className="text-lg font-medium text-foreground">{vested}%</dd>
-                </div>
-
-                {athProfit ? (
-                    <div className="flex justify-between items-center">
-                        <dt className="text-md font-light text-foreground text-foreground/[.4]">ATH Profit</dt>
-                        <dd className="text-lg font-medium text-foreground text-foreground/[.4]">SOON</dd>
-                    </div>
-                ) : (
-                    <div className="flex justify-between items-center">
-                        <dt className="text-md font-light text-foreground">Performance</dt>
-                        <dd className="text-lg font-medium text-foreground">{performance}</dd>
-                    </div>
-                )}
-
-                <div className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">Next Unlock</dt>
-                    <dd className="text-lg font-medium text-foreground">{nextUnlock ? "Available" : "TBA"}</dd>
-                </div>
-            </dl>
-
-            <CardButton className="mb-2 mt-auto w-full">
-                <span>{isAvaiable ? "Claim" : "Details"}</span>
-                <ArrowIcon className="ml-2" />
-            </CardButton>
-
-            {participatedDate && <p className="absolute left-0 bottom-1 py-2 w-full text-xxs font-light text-foreground/[.56] text-center">Participated {participatedDate}</p>}
+            {participatedDate && (
+                <p className="absolute left-0 bottom-1 py-2 w-full text-xxs font-light text-foreground/[.56] text-center">
+                    Participated {participatedDate}
+                </p>
+            )}
         </InvestmentCardWrapper>
-    )
-}
+    );
+};
 
 export default InvestmentCard;

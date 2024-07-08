@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.036 13.036">
-  <g id="Group_8710" data-name="Group 8710" transform="translate(0.354 0.353)">
-    <path id="Path_15769" data-name="Path 15769" d="M0,0H17.436" transform="translate(0 0) rotate(45)" fill="none" stroke="#fff" stroke-width="1"/>
-    <path id="Path_15770" data-name="Path 15770" d="M0,0H17.436" transform="translate(12.329 0) rotate(135)" fill="none" stroke="#fff" stroke-width="1"/>
+  <g fill="none" stroke="currentColor">
+    <path d="m.354.353 12.3291 12.3291"/>
+    <path d="M12.683.353.3539 12.6821"/>
   </g>
 </svg>

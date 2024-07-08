@@ -1,25 +1,29 @@
 import { useRef } from "react";
 
+import SingleOffer from "./SingleOffer";
+import SingleOfferLoader from "./SingleOfferLoader";
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
 import { shortCurrencyFormatterWithSuffix } from "@/v2/lib/currency";
 import { useIntersectionObserver } from "@/v2/hooks";
 import { Metadata } from "@/v2/components/Layout";
-import { InvestedStatisticCard, PartnersStatisticCard, RaisedStatisticCard  } from "@/v2/components/App/Vault/StatisticsCard";
-import SingleOffer from "./SingleOffer";
-import SingleOfferLoader from "./SingleOfferLoader";
+import {
+    InvestedStatisticCard,
+    PartnersStatisticCard,
+    RaisedStatisticCard,
+} from "@/v2/components/App/Vault/StatisticsCard";
 
 export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
     const { partners = 0, vc: investments = 0, funded: rawFunded = 0 } = stats;
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
-    
+
     const ref = useRef();
     useIntersectionObserver(ref, (isIntersecting) => {
         if (isIntersecting && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage()
+            fetchNextPage();
         }
     });
-    
+
     return (
         <>
             <Metadata title="Opportunities" />
@@ -29,7 +33,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                         <div className="mb-8">
                             <h3 className="text-nowrap text-2xl text-foreground">Funded Projects</h3>
                             <p className="text-lg text-[#C4C4C4] whitespace-pre-line">
-                            We bring new industry giants to our community
+                                We bring new industry giants to our community
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-4 grow md:flex md:grow-0">
@@ -40,8 +44,8 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                     </div>
 
                     <ul className="mt-8 grid grid-cols-cards gap-y-6 gap-x-8">
-                        {offers.map(offer => (
-                            <li key={offer.offerId}>
+                        {offers.map((offer) => (
+                            <li key={offer?.offerId}>
                                 <SingleOffer offer={offer} />
                             </li>
                         ))}
@@ -66,4 +70,4 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
             </div>
         </>
     );
-};
+}
