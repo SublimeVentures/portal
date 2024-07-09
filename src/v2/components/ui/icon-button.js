@@ -29,7 +29,7 @@ const iconButtonVariants = cva(
 
 const IconButton = forwardRef(({ name = "", icon: Icon, comp: Comp = 'button', variant, shape, className, ...props }, ref) => (
     <Comp className={cn(iconButtonVariants({ variant, shape, className }))} ref={ref} {...props}>
-        <Icon className="p-3" />
+        <Icon />
         <span className="sr-only">{name}</span>
     </Comp>
 ));
