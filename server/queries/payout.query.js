@@ -43,6 +43,41 @@ async function getUserPayout(userId, offerId) {
     }
 }
 
+function createConditions(userId, now, upcomingThreshold, { isSoon, isUpcoming, isPending }) {
+    const conditions = {
+        offerId: {
+            [Op.in]: Sequelize.literal(`(SELECT "offerId" FROM "vault" WHERE "userId" = :userId)`),
+        },
+    };
+
+    const andConditions = [];
+
+    if (isSoon !== undefined) {
+        andConditions.push({
+            snapshotDate: { [Op.lte]: now },
+            claimDate: { [Op.gte]: now },
+        });
+    }
+
+    if (isUpcoming !== undefined) {
+        andConditions.push({
+            claimDate: { [Op.between]: [now, upcomingThreshold] },
+        });
+    }
+
+    if (isPending !== undefined) {
+        andConditions.push({
+            claimDate: { [Op.notBetween]: [now, upcomingThreshold] },
+        });
+    }
+
+    if (andConditions.length > 0) {
+        conditions[Op.and] = andConditions;
+    }
+
+    return conditions;
+}
+
 async function getAllPayouts({
     userId,
     limit = 100,
@@ -57,48 +92,22 @@ async function getAllPayouts({
         const now = Math.floor(Date.now() / 1000); // Current time in epoch seconds
         const upcomingThreshold = now + 14 * 24 * 60 * 60; // 14 days from now in epoch seconds
 
-        const conditions = {
-            offerId: {
-                [Op.in]: Sequelize.literal(`(SELECT "offerId" FROM "vault" WHERE "userId" = :userId)`),
-            },
-        };
+        const conditions = createConditions(userId, now, upcomingThreshold, { isSoon, isUpcoming, isPending });
 
-        const andConditions = [];
-
-        if (isSoon !== undefined) {
-            andConditions.push(Sequelize.literal(`:now BETWEEN "payout"."snapshotDate" AND "payout"."claimDate"`));
-        }
-
-        if (isUpcoming !== undefined) {
-            andConditions.push(
-                Sequelize.literal(`"payout"."claimDate" >= :now AND "payout"."claimDate" <= :upcomingThreshold`),
-            );
-        }
-
-        if (isPending !== undefined) {
-            andConditions.push(Sequelize.literal(`"payout"."claimDate" < :now`));
-        }
-
-        if (andConditions.length > 0) {
-            conditions[Op.and] = andConditions;
-        }
+        const isUpcomingLiteral = Sequelize.literal(
+            `CASE WHEN "payout"."claimDate" BETWEEN :now AND :upcomingThreshold THEN TRUE ELSE FALSE END`,
+        );
+        const isPendingLiteral = Sequelize.literal(`CASE WHEN "payout"."claimDate" < :now THEN TRUE ELSE FALSE END`);
+        const isSoonLiteral = Sequelize.literal(
+            `CASE WHEN :now BETWEEN "payout"."snapshotDate" AND "payout"."claimDate" THEN TRUE ELSE FALSE END`,
+        );
 
         const payouts = await models.payout.findAndCountAll({
             attributes: {
                 include: [
-                    [
-                        Sequelize.literal(
-                            `CASE WHEN "payout"."claimDate" >= :now AND "payout"."claimDate" <= :upcomingThreshold THEN TRUE ELSE FALSE END`,
-                        ),
-                        "isUpcoming",
-                    ],
-                    [Sequelize.literal(`CASE WHEN "payout"."claimDate" < :now THEN TRUE ELSE FALSE END`), "isPending"],
-                    [
-                        Sequelize.literal(
-                            `CASE WHEN :now BETWEEN "payout"."snapshotDate" AND "payout"."claimDate" THEN TRUE ELSE FALSE END`,
-                        ),
-                        "isSoon",
-                    ],
+                    [isUpcomingLiteral, "isUpcoming"],
+                    [isPendingLiteral, "isPending"],
+                    [isSoonLiteral, "isSoon"],
                 ],
             },
             include: [

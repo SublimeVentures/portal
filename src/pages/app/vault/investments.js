@@ -39,7 +39,7 @@ function InvestmentsPage() {
     return (
         <>
             <Metadata title="My Investments" />
-            <div className="flex flex-col gap-5 md:h-full md:pt-13 md:gap-13 md:px-19">
+            <div className="flex flex-col gap-5 md:h-full md:pt-9 md:gap-9 md:px-19">
                 <InvestmentsFilters
                     className="md:flex-initial"
                     investments={investments}

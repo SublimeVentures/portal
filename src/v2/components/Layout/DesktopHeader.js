@@ -15,12 +15,12 @@ export default function Header({ title }) {
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="p-16 w-full">
-            <div className="flex justify-between flex-wrap gap-4">
+        <header className="pt-12 px-19 w-full">
+            <div className="flex justify-between items-center flex-wrap gap-4">
                 <div className="flex items-baseline">
                     <h2 className="text-7xl font-bold text-foreground">{title}</h2>
 
-                    <p className="ml-8 text-4xl font-regular text-foreground">
+                    <p className="text-4xl font-regular text-foreground">
                         Welcome back, <span className="text-accent">{mockedUser.username}!</span>
                     </p>
                 </div>
