@@ -151,4 +151,31 @@ async function getAllPayouts({
     }
 }
 
-module.exports = { getUserPayout, getAllPayouts };
+async function getDistinctChainsAndWallets() {
+    try {
+        const results = await models.payout.findAll({
+            attributes: [
+                [Sequelize.fn("DISTINCT", Sequelize.col("payout.chainId")), "chainId"],
+                "currency",
+                [Sequelize.literal(`ARRAY_AGG(DISTINCT "payout"."offerId")`), "offerIds"],
+            ],
+            include: [
+                {
+                    model: models.offer,
+                    where: { isManaged: false },
+                    attributes: [],
+                },
+            ],
+            group: ["payout.chainId", "payout.currency"],
+            raw: true,
+        });
+        return results;
+    } catch (error) {
+        logger.error("QUERY :: [getDistinctChainsAndWallets]", {
+            error: serializeError(error),
+        });
+        return [];
+    }
+}
+
+module.exports = { getUserPayout, getAllPayouts, getDistinctChainsAndWallets };

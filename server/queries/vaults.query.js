@@ -62,6 +62,13 @@ async function getUserVault(
                 AND claim."isClaimed" = true
         ) > 0`;
 
+        const athSubquery = `
+        (
+            SELECT COALESCE(SUM("claim"."amount" * "offer"."ath"), 0)
+            FROM "claim"
+            WHERE "claim"."offerId" = "vault"."offerId" AND "claim"."userId" = :userId
+        )`;
+
         const result = await models.vault.findAndCountAll({
             attributes: [
                 "invested",
@@ -73,6 +80,7 @@ async function getUserVault(
                 [Sequelize.literal(`"vault"."claimed" / NULLIF("vault"."invested", 0)`), "performance"],
                 [Sequelize.literal(`${isClaimedCheckSubquery}`), "canClaim"],
                 [Sequelize.literal(`${nextClaimDateSubquery}`), "nextClaimDate"],
+                [Sequelize.literal(`${athSubquery}`), "ath"],
             ],
             include: [
                 {
@@ -123,4 +131,54 @@ async function getUserVault(
     }
 }
 
-module.exports = { getUserVault };
+async function getUserVaultStats(userId) {
+    try {
+        const totalClaimAmountSubquery = Sequelize.literal(`(
+            SELECT COALESCE(SUM(
+                "claim"."amount" * 
+                CASE 
+                    WHEN "offer"."isManaged" = false THEN "offer"."ath" 
+                    ELSE 1 
+                END
+            ), 0)
+            FROM "claim"
+            INNER JOIN "offer" ON "claim"."offerId" = "offer"."id"
+            WHERE "claim"."userId" = :userId
+        )`);
+
+        const result = await models.vault.findAll({
+            attributes: [
+                [Sequelize.cast(Sequelize.fn("COUNT", Sequelize.col("vault.id")), "integer"), "count"],
+                [Sequelize.cast(Sequelize.fn("SUM", Sequelize.col("vault.invested")), "decimal"), "invested"],
+                [Sequelize.cast(Sequelize.fn("SUM", Sequelize.col("vault.claimed")), "decimal"), "claimed"],
+                [Sequelize.cast(Sequelize.fn("SUM", Sequelize.col("vault.locked")), "decimal"), "locked"],
+                [Sequelize.cast(totalClaimAmountSubquery, "decimal"), "return"],
+            ],
+            where: {
+                userId,
+                invested: {
+                    [Op.ne]: 0,
+                },
+            },
+            replacements: { userId },
+            raw: true,
+        });
+
+        const stats = result[0];
+        return stats;
+    } catch (error) {
+        logger.error("QUERY :: [getUserVault]", {
+            error: serializeError(error),
+            userId,
+        });
+        return {
+            count: 0,
+            invested: 0,
+            claimed: 0,
+            locked: 0,
+            return: 0,
+        };
+    }
+}
+
+module.exports = { getUserVault, getUserVaultStats };

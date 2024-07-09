@@ -1,4 +1,4 @@
-const { getUserVault } = require("../queries/vaults.query");
+const { getUserVault, getUserVaultStats } = require("../queries/vaults.query");
 
 async function userVault(req, res, user) {
     const { userId, partnerId, tenantId } = user;
@@ -37,4 +37,12 @@ function convertToBoolean(value) {
     return value; // leave as is if not 'true' or 'false'
 }
 
-module.exports = { userVault };
+async function userVaultStats(req, res, user) {
+    const { userId } = user;
+
+    const vaultStats = await getUserVaultStats(userId);
+
+    return res.status(200).json(vaultStats);
+}
+
+module.exports = { userVault, userVaultStats };

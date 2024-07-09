@@ -1,11 +1,7 @@
 import { PartnershipCard } from "@/v2/components/App/Vault";
-import {
-    SizeStatisticCard,
-    ReturnStatisticCard,
-    InvestedStatisticCard,
-} from "@/v2/components/App/Vault/StatisticsCard";
 import Investments from "@/v2/modules/vault/Investments";
 import Payouts from "@/v2/modules/vault/Payouts";
+import Statistics from "@/v2/modules/vault/Statistics";
 
 const testEmpty = false;
 
@@ -23,18 +19,7 @@ export default function VaultDashboard({ viewOptions: { views, handleChangeView 
     return (
         <div className="overflow-y-auto">
             <div className="flex p-4 flex-col gap-8 xl:grid xl:grid-cols-9 2xl:grid-cols-8 md:mb-12 md:px-19">
-                <div className="flex flex-col grow col-span-4 2xl:col-span-3">
-                    <div className="h-12 lg:h-20">
-                        <div className="flex items-center justify-between">
-                            <p className="text-2xl text-foreground">My Statistics</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap gap-4 grow lg:flex-col">
-                        <SizeStatisticCard value={statisticsInvestments.size} isLoading={isLoading} />
-                        <ReturnStatisticCard value={statisticsInvestments.returns} isLoading={isLoading} />
-                        <InvestedStatisticCard value={statisticsInvestments.projects} isLoading={isLoading} />
-                    </div>
-                </div>
+                <Statistics />
 
                 <Investments />
 

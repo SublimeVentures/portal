@@ -1,6 +1,7 @@
 const cron = require("node-cron");
-const logger = require("./logger");
 const { fetchEnv } = require("../services/env");
+const { updateATH } = require("../services/database"); // Make sure this path is correct
+const logger = require("./logger");
 
 function getRefreshRate() {
     const randomSecond = Math.floor(Math.random() * 59);
@@ -10,11 +11,17 @@ function getRefreshRate() {
 }
 
 async function initCron() {
+    // Existing cron job for fetchEnv
     cron.schedule(getRefreshRate(), async () => {
         logger.info(`CRON :: [fetchEnv]`);
         await fetchEnv();
     });
 
+    // New cron job for updating the database daily at around 1 AM
+    cron.schedule("0 1 * * *", async () => {
+        logger.info(`CRON :: [updateATH]`);
+        await updateATH();
+    });
     logger.warn("|---- Cron: OK");
 }
 
