@@ -1,271 +1,142 @@
 const { Op } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
-const NotificationTypes = require("../../src/v2/enum/notifications.js").NotificationTypes;
-const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
+const { NotificationTypes } = require("../../src/v2/enum/notifications");
 
-/**
- * @typedef {Record<string, string | number>} NotificationFilters
- * @property {string} [offerId] Offer ID retrieved from querystring
- * @property {string | number} [type] Notification type (name or ID)
- * @property {number} [before] Max. date of notification
- * @property {number} [after] Min. date of notification
- * @property {number} [page=1] Page from which you're starting
- * @property {number} [size=8] Page size
- */
-
-const BASE_INCLUDES = [
-    {
-        model: models.notificationType,
-        attributes: ["name"],
-    },
-    {
-        model: models.onchain,
-        include: [
-            {
-                model: models.onchainType,
-                attributes: ["name"],
-            },
-            {
-                model: models.network,
-                foreignKey: "chainId",
-            },
-        ],
-    },
-];
-
-/**
- * @param {Record<string, any> & { id: number }} user
- * @param {NotificationFilters} filters
- * @returns {Promise<import("sequelize").Model[]>}
- */
-async function getNotifications(user, filters = {}) {
-    try {
-        const { userId, tenantId } = user;
-        const size = filters.size ?? 8;
-        const page = filters.page ?? 1;
-        const offset = (page === 1 ? page : page - 1) * size;
-        const filterConfig = { userId, limit: size ?? 8, offset };
-    
-        // if (tenantId) filterConfig["tenantId"] = { [Op.or]: [tenantId, 0, null] };
-        if (filters.offerId) filterConfig["offerId"] = Number.parseInt(filters.offerId);
-        if (filters.type) {
-            filterConfig["typeId"] = typeof filters.type === "number" ? filters.type : notificationTypeToId(filters.type);
+function buildWhereFromAuthorizedQuery(user, query) {
+    const { userId, tenantId } = user;
+    const { size = 12, last = null, sort = "asc", ...whereQuery } = query;
+    const where = {};
+    where["userId"] = userId;
+    where["tenantId"] = { [Op.in]: [tenantId, null, 0] };
+    if (last) {
+        where["id"] = {
+            [sort === "asc" ? Op.gt : Op.lt]: last,
+        };
+    }
+    if ("before" in whereQuery && "after" in whereQuery) {
+        where["created_at"] = { [Op.between]: [whereQuery.before, whereQuery.after] };
+    } else if ("before" in whereQuery) {
+        where["created_at"] = { [Op.lte]: new Date(whereQuery.before) };
+    } else if ("after" in whereQuery) {
+        where["created_at"] = { [Op.gte]: new Date(whereQuery.after) };
+    } else {
+        for (const [key, value] of Object.entries(whereQuery)) {
+            where[key] = value;
         }
-        if (filters.before && filters.after) {
-            filterConfig["created_at"] = { [Op.between]: [new Date(filters.after), new Date(filters.before)] };
-        } else if (filters.before) {
-            filterConfig["created_at"] = { [Op.lte]: new Date(filters.before) };
-        } else if (filters.after) {
-            filterConfig["created_at"] = { [Op.gte]: new Date(filters.after) };
-        }
-    
-        // console.log('getNotifications-filterConfig', filterConfig)
-    
-        return getAllNotifications(filterConfig);
-    } catch (error) {
-        logger.error("QUERY :: [getNotifications]", {
-            error: serializeError(error),
-        });
-
-        return [];
     }
+    return { size, where, sort };
 }
 
-/**
- * @param {string} typeName
- * @return {Promise<void>}
- */
-async function notificationTypeToId(typeName) {
-    const key = typeName.toUpperCase();
-    return NotificationTypes[key];
+async function getNotifications(user, query) {
+    const { where, size, sort } = buildWhereFromAuthorizedQuery(user, query);
+    const notifications = await models.notification.findAll({
+        where,
+        raw: true,
+        limit: size,
+        order: [["id", sort.toUpperCase()]],
+    });
+    const last = notifications[notifications.length - 1].id;
+    return {
+        last,
+        notifications: await Promise.all(
+            notifications.map((notif) => {
+                switch (notif.typeId) {
+                    case NotificationTypes.MYSTERY_BUY:
+                        return enrichMysteryBuyNotification(notif);
+                    case NotificationTypes.UPGRADE_BUY:
+                        return enrichUpgradeBuyNotification(notif);
+                    case NotificationTypes.OTC_CANCEL:
+                    case NotificationTypes.OTC_MADE:
+                    case NotificationTypes.OTC_TAKE:
+                        return enrichOtcNotification(notif);
+                    case NotificationTypes.INVESTMENT:
+                        return enrichInvestmentNotification(notif);
+                    case NotificationTypes.REFUND:
+                        return enrichReturnNotification(notif);
+                    case NotificationTypes.CLAIM:
+                        return enrichClaimNotification(notif);
+                    default:
+                        return notif;
+                }
+            }),
+        ),
+    };
 }
 
-/**
- * @param {import("sequelize").Model<{ id: number; data: any }>} notification
- * @return {Promise<import("sequelize").Model>}
- */
-async function getNotificationByStrategy(notification) {
-    const { typeId } = notification;
-
-    switch (/** @type {NotificationType[keyof NotificationType]} */ typeId) {
-        case NotificationTypes.CLAIM:
-            return getClaimNotification(notification);
-        case NotificationTypes.INVESTMENT:
-            return getInvestmentNotification(notification);
-        case NotificationTypes.REFUND:
-            return getRefundNotification(notification);
-        case NotificationTypes.MYSTERY_BUY:
-            return getMysteryBuyNotification(notification);
-        case NotificationTypes.OTC_CANCEL:
-            return getOtcNotification(notification);
-        case NotificationTypes.OTC_MADE:
-            return getOtcNotification(notification);
-        case NotificationTypes.OTC_TAKE:
-            return getOtcNotification(notification);
-        case NotificationTypes.UPGRADE_BUY:
-            return getUpgradeBuyNotification(notification);
-        default:
-            return notification;
-    }
+async function enrichMysteryBuyNotification(plainNotification) {
+    const item = await models.storePartner.findOne({
+        where: {
+            id: plainNotification.data.item,
+        },
+        raw: true,
+    });
+    return {
+        ...plainNotification,
+        item,
+    };
 }
 
-/**
- * @return {import("sequelize").Model}
- */
-async function getClaimNotification({ id, data }) {
-    try {
-        const { chainId, payoutId, claimId } = data;
-        return await models.notification.findByPk(id, {
-            include: [
-                {
-                    model: models.network,
-                    where: { id: chainId },
-                },
-                {
-                    model: models.payout,
-                    where: { id: payoutId },
-                },
-                {
-                    model: models.claim,
-                    where: { id: claimId },
-                },
-            ],
-        });
-    } catch (error) {
-        logger.error("QUERY :: [getClaimNotification]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
+async function enrichUpgradeBuyNotification(plainNotification) {
+    const item = await models.storePartner.findOne({
+        where: {
+            id: plainNotification.data.item,
+        },
+        raw: true,
+    });
+    return {
+        ...plainNotification,
+        item,
+    };
 }
 
-/**
- * @return {import("sequelize").Model}
- */
-async function getOtcNotification({ id, data }) {
-    try {
-        const { otcDealId } = data;
-        return await models.notification.findByPk(id, {
-            include: [
-                {
-                    model: models.otcDeal,
-                    where: { id: otcDealId },
-                },
-            ],
-        });
-    } catch (error) {
-        logger.error("QUERY :: [getOtcNotification]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
+async function enrichOtcNotification(plainNotification) {
+    const otcDeal = await models.otcDeal.findOne({
+        where: {
+            id: plainNotification.data.otcDealId,
+        },
+        raw: true,
+    });
+    return {
+        ...plainNotification,
+        otcDeal,
+    };
 }
 
-/**
- * @type {Record<string, any>}
- * @return {import("sequelize").Model}
- */
-async function getInvestmentNotification({ id, data }) {
-    try {
-        // const { partnerId } = data;
-        return await models.notification.findByPk(id, {
-            include: [
-                {
-                    model: models.partner,
-                    // where: { id: partnerId },
-                },
-            ],
-        });
-    } catch (error) {
-        logger.error("QUERY :: [getInvestmentNotification]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
+async function enrichInvestmentNotification(plainNotification) {
+    const partner = await models.partner.findOne({
+        where: {
+            id: plainNotification.data.partnerId,
+        },
+        raw: true,
+    });
+    return {
+        ...plainNotification,
+        partner,
+    };
 }
 
-/**
- * @type {Record<string, any>}
- * @return {import("sequelize").Model}
- */
-async function getRefundNotification({ id }) {
-    try {
-        return await models.notification.findByPk(id);
-    } catch (error) {
-        logger.error("QUERY :: [getRefundNotification]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
+async function enrichReturnNotification(plainNotification) {
+    return plainNotification;
 }
 
-/**
- * @type {Record<string, any>}
- * @return {import("sequelize").Model}
- */
-async function getMysteryBuyNotification({ id }) {
-    try {
-        return await models.notification.findByPk(id);
-    } catch (error) {
-        logger.error("QUERY :: [getMysteryBuyNotification]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
-}
-
-/**
- * @type {Record<string, any>}
- * @return {import("sequelize").Model}
- */
-async function getUpgradeBuyNotification({ id }) {
-    try {
-        return await models.notification.findByPk(id);
-    } catch (error) {
-        logger.error("QUERY :: [getUpgradeBuyNotification]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
-}
-
-/**
- * @type {Promise<import("sequelize").Model[]>}
- */
-async function getAllNotifications(filterConfig) {
-    try {
-        const { limit, offset, ...where } = filterConfig;
-
-        const base = await models.notification.findAll({
-            where,
-            include: BASE_INCLUDES,
-            limit,
-            offset,
-            order: [["id", "DESC"]],
-        });
-
-        const results = [];
-
-        for (const notification of base) {
-            results.push(getNotificationByStrategy(notification));
-        }
-
-        const settledResults = await Promise.allSettled(results);
-        return settledResults.filter(result => result.status === 'fulfilled').map(result => result.value);
-    } catch (error) {
-        logger.error("QUERY :: [getAllNotifications]", {
-            error: serializeError(error),
-        });
-        
-        return [];
-    }
+async function enrichClaimNotification(plainNotification) {
+    const claim = await models.claim.findOne({
+        where: {
+            id: plainNotification.data.claimId,
+        },
+        raw: true,
+    });
+    const payout = await models.payout.findOne({
+        where: {
+            id: plainNotification.data.payoutId,
+        },
+        raw: true,
+    });
+    return {
+        ...plainNotification,
+        claim,
+        payout,
+    };
 }
 
 module.exports = {
