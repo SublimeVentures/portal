@@ -13,7 +13,7 @@ function buildWhereFromAuthorizedQuery(user, query) {
             [sort === "asc" ? Op.gt : Op.lt]: last,
         };
     }
-    if ("before" in whereQuery && "after" in whereQuery) {
+    if (whereQuery.before && whereQuery.after) {
         where["created_at"] = { [Op.between]: [whereQuery.before, whereQuery.after] };
     } else if ("before" in whereQuery) {
         where["created_at"] = { [Op.lte]: new Date(whereQuery.before) };
@@ -28,91 +28,125 @@ function buildWhereFromAuthorizedQuery(user, query) {
 }
 
 async function getNotifications(user, query) {
-    const { where, size, sort } = buildWhereFromAuthorizedQuery(user, query);
-    const notifications = await models.notification.findAll({
-        where,
-        raw: true,
-        limit: size,
-        order: [["id", sort.toUpperCase()]],
-    });
-    const last = notifications[notifications.length - 1].id;
-    return {
-        last,
-        notifications: await Promise.all(
-            notifications.map((notif) => {
-                switch (notif.typeId) {
-                    case NotificationTypes.MYSTERY_BUY:
-                        return enrichMysteryBuyNotification(notif);
-                    case NotificationTypes.UPGRADE_BUY:
-                        return enrichUpgradeBuyNotification(notif);
-                    case NotificationTypes.OTC_CANCEL:
-                    case NotificationTypes.OTC_MADE:
-                    case NotificationTypes.OTC_TAKE:
-                        return enrichOtcNotification(notif);
-                    case NotificationTypes.INVESTMENT:
-                        return enrichInvestmentNotification(notif);
-                    case NotificationTypes.REFUND:
-                        return enrichReturnNotification(notif);
-                    case NotificationTypes.CLAIM:
-                        return enrichClaimNotification(notif);
-                    default:
-                        return notif;
-                }
-            }),
-        ),
-    };
+    try {
+        const { where, size, sort } = buildWhereFromAuthorizedQuery(user, query);
+        const notifications = await models.notification.findAll({
+            where,
+            raw: true,
+            limit: size,
+            order: [["id", sort.toUpperCase()]],
+        });
+        if (!notifications.length) {
+            return {
+                last: null,
+                notifications: [],
+            };
+        }
+        const last = notifications[notifications.length - 1].id;
+        return {
+            last,
+            notifications: await Promise.all(
+                notifications.map((notif) => {
+                    switch (notif.typeId) {
+                        case NotificationTypes.MYSTERY_BUY:
+                            return enrichMysteryBuyNotification(notif);
+                        case NotificationTypes.UPGRADE_BUY:
+                            return enrichUpgradeBuyNotification(notif);
+                        case NotificationTypes.OTC_CANCEL:
+                        case NotificationTypes.OTC_MADE:
+                        case NotificationTypes.OTC_TAKE:
+                            return enrichOtcNotification(notif);
+                        case NotificationTypes.INVESTMENT:
+                            return enrichInvestmentNotification(notif);
+                        case NotificationTypes.REFUND:
+                            return enrichReturnNotification(notif);
+                        case NotificationTypes.CLAIM:
+                            return enrichClaimNotification(notif);
+                        default:
+                            return notif;
+                    }
+                }),
+            ),
+        };
+    } catch (err) {
+        console.log("[Notifications] Fetch Error:", err.message);
+        return {
+            next: null,
+            notifications: [],
+        };
+    }
 }
 
 async function enrichMysteryBuyNotification(plainNotification) {
-    const item = await models.storePartner.findOne({
-        where: {
-            id: plainNotification.data.item,
-        },
-        raw: true,
-    });
-    return {
-        ...plainNotification,
-        item,
-    };
+    try {
+        const item = await models.storePartner.findOne({
+            where: {
+                id: plainNotification.data.item,
+            },
+            raw: true,
+        });
+        return {
+            ...plainNotification,
+            item,
+        };
+    } catch (err) {
+        console.log("[Notifications] Enrichment Error:", err.message);
+        return plainNotification;
+    }
 }
 
 async function enrichUpgradeBuyNotification(plainNotification) {
-    const item = await models.storePartner.findOne({
-        where: {
-            id: plainNotification.data.item,
-        },
-        raw: true,
-    });
-    return {
-        ...plainNotification,
-        item,
-    };
+    try {
+        const item = await models.storePartner.findOne({
+            where: {
+                id: plainNotification.data.item,
+            },
+            raw: true,
+        });
+        return {
+            ...plainNotification,
+            item,
+        };
+    } catch (err) {
+        console.log("[Notifications] Enrichment Error:", err.message);
+        return plainNotification;
+    }
 }
 
 async function enrichOtcNotification(plainNotification) {
-    const otcDeal = await models.otcDeal.findOne({
-        where: {
-            id: plainNotification.data.otcDealId,
-        },
-        raw: true,
-    });
-    return {
-        ...plainNotification,
-        otcDeal,
-    };
+    try {
+        const otcDeal = await models.otcDeal.findOne({
+            where: {
+                id: plainNotification.data.otcDealId,
+            },
+            raw: true,
+        });
+        return {
+            ...plainNotification,
+            otcDeal,
+        };
+    } catch (err) {
+        console.log("[Notifications] Enrichment Error:", err.message);
+        return plainNotification;
+    }
 }
 
 async function enrichInvestmentNotification(plainNotification) {
-    const partner = await models.partner.findOne({
-        where: {
-            id: plainNotification.data.partnerId,
-        },
-        raw: true,
-    });
-    return {
-        ...plainNotification,
-        partner,
-    };
+    try {
+        const partner = await models.partner.findOne({
+            where: {
+                id: plainNotification.data.partnerId,
+            },
+            raw: true,
+        });
+        return {
+            ...plainNotification,
+            partner,
+        };
+    } catch (err) {
+        console.log("[Notifications] Enrichment Error:", err.message);
+        return plainNotification;
+    }
 }
 
 async function enrichReturnNotification(plainNotification) {
@@ -120,18 +154,31 @@ async function enrichReturnNotification(plainNotification) {
 }
 
 async function enrichClaimNotification(plainNotification) {
-    const claim = await models.claim.findOne({
-        where: {
-            id: plainNotification.data.claimId,
-        },
-        raw: true,
-    });
-    const payout = await models.payout.findOne({
-        where: {
-            id: plainNotification.data.payoutId,
-        },
-        raw: true,
-    });
+    let claim;
+    let payout;
+    try {
+        claim = await models.claim.findOne({
+            where: {
+                id: plainNotification.data.claimId,
+            },
+            raw: true,
+        });
+    } catch (err) {
+        console.log("[Notifications] Enrichment Error:", err.message);
+        claim = null;
+    }
+    try {
+        payout = await models.payout.findOne({
+            where: {
+                id: plainNotification.data.payoutId,
+            },
+            raw: true,
+        });
+    } catch (err) {
+        console.log("[Notifications] Enrichment Error:", err.message);
+        payout = null;
+    }
+
     return {
         ...plainNotification,
         claim,
