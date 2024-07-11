@@ -120,3 +120,11 @@ input[type=number] {
   // background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
   background: linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%);
 }
+
+.tabs-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.tabs-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #0D87A1 transparent;
+}
