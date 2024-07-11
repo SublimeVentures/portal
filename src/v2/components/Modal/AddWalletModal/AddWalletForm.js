@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -23,19 +23,19 @@ export default function AddWalletForm({ networkList }) {
         },
     });
 
-    const network = watch('network');
     const address = watch('address');
 
-    useEffect(() => {
-        if (address) {
-            try {
-                formSchema.parse({ address, network });
-                clearErrors('address');
-            } catch (e) {
-                e.errors.forEach(error => setError(error.path[0], { type: "manual", message: error.message }));
-            }
+    const handleNetworkChange = useCallback((network, address, onChange) => {   
+        onChange(network);
+
+        try {
+            console.log('yyy', address, network)
+            formSchema.parse({ address, network });
+            clearErrors('address');
+        } catch (e) {
+            e.errors.forEach(error => setError(error.path[0], { type: "manual", message: error.message }));
         }
-    }, [network, address, setError]);
+    }, [formSchema, clearErrors, setError]);
 
     return (
         <>
@@ -62,7 +62,7 @@ export default function AddWalletForm({ networkList }) {
                             <FormItem className="my-2 w-full md:mt-2 md:ml-2 md:w-40">
                                 <FormLabel className="md:sr-only">Network</FormLabel>
                                 <FormControl>
-                                    <Select {...field} onValueChange={val => field.onChange(val, field.onChange)}>
+                                    <Select {...field} onValueChange={(value) => handleNetworkChange(value, address, field.onChange)}>
                                         <SelectTrigger className="border text-md bg-transparent text-foreground/[.6]">
                                             <SelectValue />
                                         </SelectTrigger>
