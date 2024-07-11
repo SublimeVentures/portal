@@ -5,7 +5,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/cn";
 
 const iconButtonVariants = cva(
-    "h-[42px] w-[42px] flex items-center justify-center transition-hover text-white cursor-pointer outline-none",
+    "h-[42px] w-[42px] flex items-center justify-center shrink-0  transition-hover text-white cursor-pointer outline-none",
     {
         variants: {
             variant: {
@@ -13,6 +13,7 @@ const iconButtonVariants = cva(
                 primary: "bg-primary shadow-[0px_3px_30px_hsl(var(--primary-color))] hover:bg-primary/[.8]",
                 accent: "bg-accent shadow-[0px_3px_30px_hsl(var(--accent-color))] hover:bg-accent/[.8]",
                 gradient: "bg-primary-light-gradient text-white",
+                outline: "bg-transparent border border-white text-white",
                 transparent: "text-gray-100 bg-transparent hover:bg-navy-300",
             },
             shape: {

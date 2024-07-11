@@ -21,7 +21,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <IconButton icon={bellIcon} variant="transparent" shape="circle" className="outline-none" />
+            <IconButton icon={bellIcon} variant="transparent" shape="circle" className="p-3 outline-none" />
         </DropdownMenuTrigger>
         
         <DropdownMenuContent

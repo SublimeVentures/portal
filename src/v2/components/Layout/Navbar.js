@@ -17,7 +17,7 @@ const NavigationTabs = () => {
                 {menu.map(({ name, path, icon }) => (
                     <li key={name}>
                         <Link href={path}>
-                            <IconButton className="h-16 w-16 p-1" shape="circle" variant={router.pathname === path ? "gradient" : "transparent"} icon={icon} />
+                            <IconButton className="h-12 w-12 p-3" shape="circle" variant={router.pathname === path ? "gradient" : "transparent"} icon={icon} />
                         </Link>
                     </li>
                 ))}

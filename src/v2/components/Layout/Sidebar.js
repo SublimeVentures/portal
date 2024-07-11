@@ -63,6 +63,7 @@ export default function({ session, isBlockedAlert = false }) {
                             <li key={name} className="pt-4">
                                 <IconButton
                                     variant="transparent"
+                                    className="p-3"
                                     shape="circle"
                                     name={name}
                                     icon={icon}
