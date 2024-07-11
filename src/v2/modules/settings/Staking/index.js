@@ -8,13 +8,12 @@ import StakingActions from "./StakingActions";
 
 export default function Staking({ session }) {
     const { currencyStaking, activeCurrencyStaking, account } = useEnvironmentContext();
-    // const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
-    const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
+    const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
+    // const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
 
     const { staked, unstake, ...rest } = useStakingSettings({ session, account })
     const isNew = true;
     const isElite = session.isElite;
-    let stakingEnabled = true
 
     return (
         <Card variant="none" className="py-6 px-12 flex flex-col gap-8 w-full bg-settings-gradient md:flex-row">
