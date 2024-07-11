@@ -74,8 +74,11 @@ module.exports = {
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
             gridTemplateColumns: {
-                'cards': 'repeat(auto-fill, minmax(450px, 1fr))',
-            }
+                "cards": "repeat(auto-fill, minmax(450px, 1fr))",
+            },
+            boxShadow: {
+                "accent": "0 3px 30px #FDC171",
+            },
         },
         keyframes: {
             "accordion-down": {
