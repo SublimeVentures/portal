@@ -3,18 +3,24 @@ import VanillaTilt from "vanilla-tilt";
 
 import { Avatar } from "@/v2/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/v2/components/ui/skeleton";
-import { Card, CardTitle, CardButton } from "@/v2/components/ui/card";
+import { Card, CardButton } from "@/v2/components/ui/card";
 import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+import useInvestmentsData from "@/v2/hooks/useInvestmentsData";
+import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
+import { Button } from "@/v2/components/ui/button";
 
 const InvestmentCardMobileWrapper = ({ children, className }) => {
     const tilt = useRef(null);
     useEffect(() => VanillaTilt.init(tilt.current, { scale: 1.02, speed: 1000, max: 2 }), []);
 
-    return <Card ref={tilt} className={cn("h-max py-8 px-5", className)}>{children}</Card>
-}
-
+    return (
+        <Card ref={tilt} className={cn("h-max p-2", className)}>
+            {children}
+        </Card>
+    );
+};
 
 export const SkeletonInvestmentCardMobile = () => {
     return (
@@ -29,12 +35,11 @@ export const SkeletonInvestmentCardMobile = () => {
             </div>
 
             <div className="mx-5">
-                <Skeleton className="h-8"/>
+                <Skeleton className="h-8" />
             </div>
         </InvestmentCardMobileWrapper>
     );
 };
-
 export const ErrorInvestmentCardMobile = ({ actionFn }) => {
     return (
         <InvestmentCardMobileWrapper>
@@ -44,53 +49,42 @@ export const ErrorInvestmentCardMobile = ({ actionFn }) => {
 };
 
 const InvestmentCardMobile = ({ details, isLoading = false, isError = false }) => {
-    const { title, coin, invested = 0, vested = 0, performance = 'TBA', nextUnlock = false, isAvaiable = false, participatedDate, athProfit } = details;
+    const data = useInvestmentsData(details);
+    const { title, coin, logo, participatedDate, canClaim, isClaimSoon } = data;
 
     if (isLoading) {
-        return <SkeletonInvestmentCardMobile />
+        return <SkeletonInvestmentCardMobile />;
     }
 
     if (isError) {
-        return <ErrorInvestmentCardMobile actionFn={actionFn} />
+        return <ErrorInvestmentCardMobile actionFn={actionFn} />;
     }
 
     return (
         <InvestmentCardMobileWrapper>
-            <dl className="px-6 py-4 grid grid-cols-3 items-center gap-4">
-                <Avatar session={null} />
-
-                <div>
-                    <dt className="mb-2 text-md font-light text-foreground leading-none">Invested</dt>
-                    <dd className="text-lg font-medium text-foreground">${invested}</dd>
+            <div className="grid grid-cols-3 grid-row-2 px-0 py-2 gap-x-4 gap-y-3">
+                <div className="pl-4 order-1">
+                    <Avatar session={{ img: logo }} className="size-9" />
                 </div>
-                <div>
-                    <dt className="mb-2 text-md font-light text-foreground leading-none">Vested</dt>
-                    <dd className="text-lg font-medium text-foreground leading-none">{vested}%</dd>
-                </div>
-                <div>
-                    <CardTitle className="mb-2 text-3xl font-medium text-foreground leading-none">{title}</CardTitle>
-                    <p className='text-md font-light text-foreground leading-none'>{coin}</p>
-                </div>
-                <div>
-                    <dt className="mb-2 text-md font-light text-foreground leading-none">Performance</dt>
-                    <dd className="text-lg font-medium text-foreground leading-none">{performance}</dd>
-                </div>
-                <div>
-                    <dt className="mb-2 text-md font-light text-foreground leading-none">Next Unlock</dt>
-                    <dd className="text-lg font-medium text-foreground leading-none">{nextUnlock ? "Available" : "TBA"}</dd>
-                </div>
-            </dl>
-
-            <div className='mt-2 px-6 py-4 flex items-center bg-foreground/[.2] rounded'>
-                <p className="w-full text-xxs font-light text-foreground/[.56]">{participatedDate && `Participated ${participatedDate}`}</p>
-                    
-                <CardButton className="w-full">
-                    <span>{isAvaiable ? "Claim" : "Details"}</span>
-                    <ArrowIcon className="ml-2" />
-                </CardButton>
+                <h1 className="text-foreground flex flex-col-reverse pl-4 order-3">
+                    <span className="text-xs md:text-md font-light">{title}</span>
+                    <small className="text-xs md:text-lg font-medium">{coin}</small>
+                </h1>
+                <Attributes
+                    details={data}
+                    className="col-span-2 row-span-2 grid-rows-subgrid grid-cols-subgrid order-2"
+                />
+            </div>
+            <div className="mt-2 px-6 py-4 flex items-center bg-foreground/[.2] rounded">
+                <p className="w-full text-xxs font-light text-foreground/[.56]">
+                    {participatedDate && `Participated ${participatedDate}`}
+                </p>
+                <Button className="w-full" variant={canClaim ? "accent" : "outline"}>
+                    <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
+                    <ArrowIcon className="ml-2 size-2" />
+                </Button>
             </div>
         </InvestmentCardMobileWrapper>
     );
 };
-
 export default InvestmentCardMobile;

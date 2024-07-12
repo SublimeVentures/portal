@@ -1,29 +1,13 @@
-import { InvestmentCard, EmptyInvestmentsEnhanced } from "@/v2/components/App/Vault";
-import { InvestmentsFilters } from "@/v2/components/App/Vault";
+import { InvestmentCard } from "@/v2/components/App/Vault";
 
-export default function InvestmentsGrid({ investments = [], viewOptions = {}, isLoading = false }) {
-    if (investments.length <= 0) {
-        return (
-            <div className="p-16 h-full">
-                <EmptyInvestmentsEnhanced />
-            </div>
-        )
-    }
-
+export default function InvestmentsGrid({ investments = [], isLoading = false }) {
     return (
-        <>
-            <InvestmentsFilters investments={investments} viewOptions={viewOptions} />
-            <div className="vault-investment md:px-8 md:mx-8 md:mb-24 md:py-16 md:overflow-x-hidden md:overflow-y-auto" >
-                <div>
-                    <ul className="gap-4 h-full test-grid md:gap-8"> 
-                        {investments.map(item => (
-                            <li key={item.id}>
-                                <InvestmentCard details={item} isLoading={isLoading} />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-        </>
+        <ul className="grid gap-2 md:gap-12 grid-cols-[repeat(auto-fit,minmax(170px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] -mr-3">
+            {investments.map((item) => (
+                <li key={item.slug}>
+                    <InvestmentCard details={item} isLoading={isLoading} key={item.slug} />
+                </li>
+            ))}
+        </ul>
     );
 }

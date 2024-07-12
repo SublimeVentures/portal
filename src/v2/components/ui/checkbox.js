@@ -7,14 +7,14 @@ const Checkbox = forwardRef(({ className, ...props }, ref) => (
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
-          "aspect-square h-4 w-4 shrink-0 rounded border border-foreground text-foreground shadow cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-20",
-          "data-[state=checked]:border-accent data-[state=checked]:shadow-[0_3px_30px_#FDC171]",
+          "aspect-square h-4 w-4 shrink-0 rounded border border-foreground text-foreground cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-20",
+          "data-[state=checked]:border-accent data-[state=checked]:shadow-accent",
           className,
         )}
         {...props}
     >
-        <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
-            <div className="h-2.5 w-2.5 rounded-[2px] bg-accent" />
+        <CheckboxPrimitive.Indicator className={cn("relative flex items-center justify-center text-current")}>
+            <div className="absolute h-2.5 w-2.5 rounded-[2px] bg-accent" />
         </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
 ));

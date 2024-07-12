@@ -5,12 +5,11 @@ module.exports = {
         extend: {
             colors: {
                 foreground: "hsla(0, 0%, 100%)",
-                primary: "hsla(188, 91%, 38%)", // #099FB7
                 accent: "hsla(36, 65%, 71%)",
                 "accent-light": "hsla(34, 97%, 72%)",
                 destructive: "hsla(0, 74%, 55%)",
                 "destructive-dark": "hsla(324, 29%, 19%)",
-            
+
                 "navy-50": "hsla(188, 91%, 38%)", // #09A0B8
                 "navy-100": "hsla(188, 91%, 37%)", // #099DB5
                 "navy-200": "hsla(194, 96%, 22%)", // #025770;
@@ -20,11 +19,23 @@ module.exports = {
                 "navy-600": "hsla(211, 62%, 11%)", // #0A1A2B
                 "navy-700": "hsla(214, 60%, 10%)", // #0A1728
                 "navy-800": "hsla(211, 58%, 15%)", // #10263d
-
                 "gray-100": "hsla(210, 7%, 70%)", // #AEB3B8
                 "gray-200": "hsla(206, 18%, 46%)", // #60788a
                 "gray-300": "hsla(203, 72%, 11%)", // #082131
                 "gray-400": "hsla(209, 77%, 9%)", // #051626
+
+                primary: {
+                    DEFAULT: "#099DB5",
+                    500: "#099DB5",
+                    600: "#086377",
+                    700: "#095A6E",
+                    800: "#08374A",
+                    900: "#092B3D",
+                },
+            },
+            spacing: {
+                13: "3.25rem", // 52px
+                19: "4.75rem", // 76px
             },
             fontSize: {
                 xxs: "11px",
@@ -75,8 +86,12 @@ module.exports = {
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
             gridTemplateColumns: {
-                'cards': 'repeat(auto-fill, minmax(450px, 1fr))',
-            }
+                "cards": "repeat(auto-fill, minmax(450px, 1fr))",
+            },
+            boxShadow: {
+                DEFAULT: "0px 3px 30px var(--tw-shadow-color, rgb(0 0 0 / 0.05))",
+                "accent": "0 3px 30px #FDC171",
+            },
         },
         keyframes: {
             "accordion-down": {
@@ -94,4 +109,4 @@ module.exports = {
         },
     },
     plugins: [],
-}
+};
