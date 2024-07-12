@@ -84,10 +84,11 @@ module.exports = {
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
             gridTemplateColumns: {
-                cards: "repeat(auto-fill, minmax(450px, 1fr))",
+                "cards": "repeat(auto-fill, minmax(450px, 1fr))",
             },
             boxShadow: {
                 DEFAULT: "0px 3px 30px var(--tw-shadow-color, rgb(0 0 0 / 0.05))",
+                "accent": "0 3px 30px #FDC171",
             },
         },
         keyframes: {
