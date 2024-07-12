@@ -38,6 +38,15 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    async redirects() {
+        return [
+            {
+                source: "/app",
+                destination: "/app/vault",
+                permanent: true,
+            },
+        ];
+    },
 };
 
 module.exports = nextConfig;

@@ -15,7 +15,7 @@ const RadioGroupItem = forwardRef(({ className, ...props }, ref) => {
             ref={ref}
             className={cn(
                 "aspect-square h-4 w-4 rounded-full border border-foreground text-foreground shadow cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-20",
-                "data-[state=checked]:border-accent data-[state=checked]:shadow-[0_3px_30px_#FDC171]",
+                "data-[state=checked]:border-accent data-[state=checked]:shadow-accent",
                 className
             )}
             {...props}

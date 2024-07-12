@@ -1,15 +1,14 @@
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
 import { Button } from "@/v2/components/ui/button";
-import { SingleChain } from "@/v2/components/App/Vault";
+import { ChainSwitch } from "@/v2/components/App/Vault";
 import { Avatar } from "@/v2/components/ui/avatar";
 import { shortenAddress } from "@/v2/lib/helpers";
-import DiamondIcon from "@/v2/assets/svg/diamond.svg";
 
 const mockedUser = {
     username: "Steady Stacker",
     walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
-}
+};
 
 export default function Header({ title }) {
     const { environmentCleanup } = useEnvironmentContext();
@@ -19,13 +18,10 @@ export default function Header({ title }) {
         <header className="p-16 w-full">
             <div className="flex justify-between flex-wrap gap-4">
                 <div className="flex items-baseline">
-                    <h2 className="text-7xl font-bold text-foreground">
-                        {title}
-                    </h2>
+                    <h2 className="text-7xl font-bold text-foreground">{title}</h2>
 
                     <p className="ml-8 text-4xl font-regular text-foreground">
-                        Welcome back, {" "}
-                        <span className="text-accent">{mockedUser.username}!</span>
+                        Welcome back, <span className="text-accent">{mockedUser.username}!</span>
                     </p>
                 </div>
 
@@ -38,12 +34,13 @@ export default function Header({ title }) {
 
                     <div className="mx-2 h-6 w-0.5 bg-foreground" />
 
-                    <p className="text-foreground">+4</p>
-                    <SingleChain icon={DiamondIcon} active />
+                    <ChainSwitch />
                     <NotificationMenu />
-                    <Button className="hidden md:flex" variant="secondary" onClick={handleLogout}>Logout</Button>
+                    <Button className="hidden md:flex" variant="secondary" onClick={handleLogout}>
+                        Logout
+                    </Button>
                 </div>
             </div>
         </header>
     );
-};
+}

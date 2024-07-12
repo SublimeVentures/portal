@@ -71,6 +71,9 @@
   .overlay {
     @apply fixed inset-0 z-50 bg-navy-700/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -116,4 +119,12 @@ input[type=number] {
   // background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 25%);
   // background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
   background: linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%);
+}
+
+.tabs-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.tabs-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #0D87A1 transparent;
 }
