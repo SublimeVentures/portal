@@ -39,6 +39,7 @@ const IconButton = forwardRef(
     ),
 );
 
+
 IconButton.displayName = "IconButton";
 
 export { IconButton, iconButtonVariants };

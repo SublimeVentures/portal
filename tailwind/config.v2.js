@@ -76,6 +76,8 @@ module.exports = {
                 "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
                 "sheet-gradient": `linear-gradient(151deg, #051626 0%, #1A3754 49%, #051626 100%)`,
                 "navbar-gradient": "linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%)",
+                "settings-gradient": 'linear-gradient(125deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)',
+
                 "upgrade-to-premium-pattern": "url('/img/upgrade-to-premium-bg.png')",
                 "upgrade-to-premium-banner-pattern": "url('/img/upgrade-to-premium-banner.png')",
                 "premium-banner": "url('/img/premium-banner.png')",
