@@ -68,7 +68,7 @@ const MobileMenu = () => {
                 name="Toggle mobile menu"
                 onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
                 icon={isMobileMenuOpen ? CrossIcon : MenuIcon}
-                className="relative z-10"
+                className="p-3 relative z-10"
             />
 
             <div

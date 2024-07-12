@@ -1,6 +1,6 @@
 import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
 import { CheckboxField } from "@/v2/components/ui/checkbox";
-import ConnectionField from "./components/ConnectionField";
+import ConnectionField from "./ConnectionField";
 import { CONNECTION_TYPE } from "./helpers";
 
 export default function NotificationsSettings() {

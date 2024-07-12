@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const iconButtonVariants = cva(
-    "flex items-center justify-center transition-hover text-white cursor-pointer outline-none p-3",
+    "h-[42px] w-[42px] flex items-center justify-center shrink-0 transition-hover text-white cursor-pointer outline-none",
     {
         variants: {
             variant: {
@@ -11,6 +11,7 @@ const iconButtonVariants = cva(
                 primary: "bg-primary shadow shadow-primary hover:bg-primary/[.8] group-hover/button:bg-primary/[.8]",
                 accent: "bg-accent shadow shadow-accent hover:bg-accent/[.8] group-hover/button:bg-accent/[.8]",
                 gradient: "bg-primary-light-gradient text-white",
+                outline: "bg-transparent border border-white text-white",
                 transparent: "text-gray-100 bg-transparent hover:bg-navy-300",
             },
             shape: {

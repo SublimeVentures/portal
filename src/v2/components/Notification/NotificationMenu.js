@@ -23,13 +23,18 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                 <IconButton icon={bellIcon} variant="transparent" shape="circle" className="outline-none" />
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent
-                style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                className="rounded-b-lg w-screen h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] overflow-auto sm:max-w-[315px] sm:h-auto sm:rounded-b"
-            >
-                <div className="px-8 flex justify-between sm:flex-col">
-                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-
+  return (
+    <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+            <IconButton icon={bellIcon} variant="transparent" shape="circle" className="p-3 outline-none" />
+        </DropdownMenuTrigger>
+        
+        <DropdownMenuContent
+            style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
+            className="rounded-b-lg w-screen h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] overflow-auto sm:max-w-[315px] sm:h-auto sm:rounded-b"
+        >
+            <div className="px-8 flex justify-between sm:flex-col">
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                     <div className="flex items-center">
                         <h3 className="mr-2 text-lg font-medium text-foreground">
                             New <span className="font-light">({newCount})</span>
