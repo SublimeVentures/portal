@@ -44,5 +44,5 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 AppSettings.getLayout = function (page) {
-    return <AppLayout>{page}</AppLayout>;
+    return <AppLayout title="Settings">{page}</AppLayout>;
 };
