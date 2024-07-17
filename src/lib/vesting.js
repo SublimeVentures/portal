@@ -1,6 +1,7 @@
 import moment from "moment";
 
-const SOON_DATE = 2592000;
+const THREE_DAYS_IN_SECONDS = 259200;
+const MONTH_IN_SECONDS = THREE_DAYS_IN_SECONDS * 10;
 
 export const STAGES = {
     UNLOCK: 1,
@@ -27,25 +28,26 @@ export function parseVesting(offerVesting) {
         let claimStage = STAGES.UNLOCK;
 
         for (let i = 0; i < offerVesting.length; i++) {
-            if (offerVesting[i].c === 0) break;
-            if (offerVesting[i].c > now) {
-                const unlockDateUnix = moment(offerVesting[i].u, "YYYY-MM-DD").unix();
+            const vesting = offerVesting[i];
+            if (vesting.c === 0) break;
+            if (vesting.c > now) {
+                const unlockDateUnix = moment(vesting.u, "YYYY-MM-DD").unix();
                 isSoon =
-                    offerVesting[i].c - now <= SOON_DATE ||
-                    offerVesting[i].s - now <= SOON_DATE ||
-                    unlockDateUnix - now <= SOON_DATE;
-                nextUnlock = offerVesting[i].u;
-                nextSnapshot = moment.unix(offerVesting[i].s).utc().local().format("YYYY-MM-DD mm:SS");
-                nextClaim = moment.unix(offerVesting[i].c).utc().local().format("YYYY-MM-DD mm:SS");
+                    vesting.c - now <= THREE_DAYS_IN_SECONDS ||
+                    vesting.s - now <= THREE_DAYS_IN_SECONDS ||
+                    unlockDateUnix - now <= MONTH_IN_SECONDS;
+                nextUnlock = vesting.u;
+                nextSnapshot = moment.unix(vesting.s).utc().local().format("YYYY-MM-DD mm:SS");
+                nextClaim = moment.unix(vesting.c).utc().local().format("YYYY-MM-DD mm:SS");
 
-                if (now > unlockDateUnix && offerVesting[i].s !== 0) {
+                if (now > unlockDateUnix && vesting.s !== 0) {
                     claimStage = STAGES.SNAPSHOT;
-                } else if (now > offerVesting[i].s && offerVesting[i].c !== 0) {
+                } else if (now > vesting.s && vesting.c !== 0) {
                     claimStage = STAGES.CLAIM;
                 }
                 break;
             }
-            vestedPercentage += offerVesting[i].p;
+            vestedPercentage += vesting.p;
             payoutId = i + 1;
         }
 
@@ -54,7 +56,7 @@ export function parseVesting(offerVesting) {
             nextUnlock,
             nextSnapshot,
             nextClaim,
-            isInstant: nextClaim == nextUnlock,
+            isInstant: nextClaim === nextUnlock,
             isSoon,
             claimStage,
             payoutId,

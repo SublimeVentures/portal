@@ -8,33 +8,25 @@ import { fetchPartners } from "@/fetchers/public.fecher";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import PAGE from "@/routes";
 import { queryClient } from "@/lib/queryCache";
-import { seoConfig } from "@/lib/seoConfig";
 import { verifyID } from "@/lib/authHelpers";
 import ErrorModal from "@/components/SignupFlow/ErrorModal";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
 const renderLogin = (componentName, data) => {
-    const TenantComponent = dynamic(() => import(`@/components/Login/${componentName}`), { ssr: true })
-    return <TenantComponent ssrData={data} />
+    const TenantComponent = dynamic(() => import(`@/components/Login/${componentName}`), { ssr: true });
+    return <TenantComponent ssrData={data} />;
 };
 
 export default function Login({ isAuthenticated }) {
-    let [errorModal, setErrorModal] = useState(false);
     const router = useRouter();
     const seo = seoConfig(PAGE.Login);
-    const { components } = useTenantSpecificData()
+    const { components } = useTenantSpecificData();
 
     useEffect(() => {
         if (isAuthenticated) {
             router.replace("/app");
         }
     }, []);
-
-    useEffect(() => {
-        if (router?.query?.error === LoginErrorsEnum.CREDENTIALS_ERROR) {
-            setErrorModal(true);
-        }
-    }, [router.query]);
 
     const { data } = useQuery({
         queryKey: ["partnerList"],

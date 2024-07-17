@@ -15,7 +15,6 @@ import Empty from "@/components/App/Empty";
 import { phases } from "@/lib/phases";
 import routes from "@/routes";
 import PAGE from "@/routes";
-import { getCopy } from "@/lib/seoConfig";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { queryClient } from "@/lib/queryCache";
 import { processServerSideData } from "@/lib/serverSideHelpers";
@@ -26,6 +25,9 @@ import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestC
 import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
 import { InvestProvider } from "@/components/App/Offer/InvestContext";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { NAME } = getTenantConfig().seo;
 
 export const AppOfferDetails = ({ session }) => {
     const router = useRouter();
@@ -89,23 +91,23 @@ export const AppOfferDetails = ({ session }) => {
 
     useEffect(() => {
         try {
-            if (!!errorOfferDetails) {
+            if (errorOfferDetails) {
                 refetchOfferDetails().then((el) => {
-                    if (!!errorOfferDetails) {
+                    if (errorOfferDetails) {
                         throw Error("Offer details fetch fail");
                     }
                 });
             }
-            if (!!errorOfferAllocation) {
+            if (errorOfferAllocation) {
                 refetchOfferAllocation().then((el) => {
-                    if (!!errorOfferAllocation) {
+                    if (errorOfferAllocation) {
                         throw Error("Offer allocations fetch fail");
                     }
                 });
             }
-            if (!!errorUserAllocation) {
+            if (errorUserAllocation) {
                 refetchUserAllocation().then((el) => {
-                    if (!!errorUserAllocation) {
+                    if (errorUserAllocation) {
                         throw Error("User allocations fetch fail");
                     }
                 });
@@ -190,7 +192,7 @@ export const AppOfferDetails = ({ session }) => {
         feedPhases();
     }, [offerData, allocation?.isSettled, allocation?.isPaused]);
 
-    const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${getCopy("NAME")}`;
+    const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${NAME}`;
     return (
         <>
             <NextSeo title={pageTitle} />

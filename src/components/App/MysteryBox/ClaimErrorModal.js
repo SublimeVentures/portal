@@ -1,6 +1,8 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 export default function ClaimErrorModal({ model, setter, errorMessage }) {
     const title = () => {
@@ -16,7 +18,7 @@ export default function ClaimErrorModal({ model, setter, errorMessage }) {
             <>
                 <div className="mb-5">{errorMessage}.</div>
                 <div>
-                    <Linker url={ExternalLinks.LOOTBOX} />
+                    <Linker url={externalLinks.LOOTBOX} />
                 </div>
             </>
         );

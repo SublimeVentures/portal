@@ -2,7 +2,9 @@ import { IoAddCircleOutline as PlusIcon } from "react-icons/io5";
 import { FaXTwitter as TwitterIcon } from "react-icons/fa6";
 import { FaDiscord as DiscordIcon } from "react-icons/fa";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
-import { ExternalLinks } from "@/routes";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 export default function Investors() {
     return (
@@ -16,7 +18,7 @@ export default function Investors() {
                     Join our discord to learn more and gain access to VC deal flow.
                 </div>
                 <div className="flex flex-col items-center mx-auto gap-10 md:flex-row">
-                    <a href={ExternalLinks.DISCORD} target="_blank" rel="noreferrer">
+                    <a href={externalLinks.DISCORD} target="_blank" rel="noreferrer">
                         <RoundButton
                             text={"Join"}
                             is3d={true}
@@ -28,7 +30,7 @@ export default function Investors() {
                         />
                     </a>
                     <PlusIcon className="text-2xl text-white" />
-                    <a href={ExternalLinks.TWITTER} target="_blank" rel="noreferrer">
+                    <a href={externalLinks.TWITTER} target="_blank" rel="noreferrer">
                         <RoundButton
                             text={"Follow"}
                             is3d={true}

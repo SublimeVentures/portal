@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { AiOutlineRead as ReadIcon } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import routes, { ExternalLinks } from "@/routes";
+import routes from "@/routes";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import Empty from "@/components/App/Empty";
 import LayoutApp from "@/components/Layout/LayoutApp";
@@ -12,11 +12,16 @@ import Loader from "@/components/App/Loader";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import StoreItem from "@/components/App/Store/StoreItem";
 import { fetchStore } from "@/fetchers/store.fetcher";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
 const BuyStoreItemModal = dynamic(() => import("@/components/App/Store/BuyStoreItemModal"), { ssr: false });
+
+const {
+    seo: { NAME },
+    externalLinks,
+} = getTenantConfig();
 
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
@@ -71,7 +76,7 @@ export default function AppUpgrades({ session }) {
         setOrder,
     };
 
-    const title = `Upgrades - ${getCopy("NAME")}`;
+    const title = `Upgrades - ${NAME}`;
 
     return (
         <>
@@ -91,7 +96,7 @@ export default function AppUpgrades({ session }) {
                             isWide={true}
                             size="text-sm sm"
                             handler={() => {
-                                window.open(ExternalLinks.UPGRADES, "_blank");
+                                window.open(externalLinks.UPGRADES, "_blank");
                             }}
                             icon={<ReadIcon className={ButtonIconSize.hero} />}
                         />
