@@ -1,5 +1,6 @@
 const { serialize } = require("cookie");
 const { jwtVerify, SignJWT } = require("jose");
+const { getEnv } = require("../../services/env");
 
 const authTokenValidityLength = 15; //min
 const refreshTokenValidityLength = 12; //hours
@@ -32,6 +33,11 @@ const buildCookie = (name, content, maxAge) => {
 
 const verifyToken = async (token, secret) => {
     const { payload } = await jwtVerify(token, secret);
+    if (payload.user.tenantId) {
+        if (payload.user.tenantId !== process.env.NEXT_PUBLIC_TENANT) {
+            throw new Error("Invalid tenant");
+        }
+    }
     if (!payload) throw new Error("Bad JWT");
     return payload;
 };
