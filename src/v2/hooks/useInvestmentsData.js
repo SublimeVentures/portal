@@ -2,7 +2,6 @@ import moment from "moment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function useInvestmentsData(details) {
-    console.log(details);
     const { cdn } = useEnvironmentContext();
     return {
         title: details?.offer?.name,

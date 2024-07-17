@@ -15,7 +15,7 @@ export function formatCurrency(value, currency = "USD") {
     return Number(value).toLocaleString("en-US", {
         style: "currency",
         currency,
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
+        minimumFractionDigits: value % 1 ? 2 : 0,
+        maximumFractionDigits: 2,
     });
 }

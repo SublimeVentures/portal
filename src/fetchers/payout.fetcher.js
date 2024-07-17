@@ -13,3 +13,15 @@ export const fetchInvestmentPayout = async (offerId) => {
     }
     return [];
 };
+
+export const fetchAllPayouts = async (query) => {
+    try {
+        const { data } = await axiosPrivate.get(API.fetchPayout, { params: query });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchAllPayouts", e });
+        }
+    }
+    return { count: 0, rows: [] };
+};
