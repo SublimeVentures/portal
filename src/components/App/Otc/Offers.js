@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { IoCartOutline as IconCart, IoCloseCircleOutline as IconCancel } from "react-icons/io5";

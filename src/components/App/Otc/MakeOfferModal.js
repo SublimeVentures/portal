@@ -1,10 +1,10 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Lottie from "lottie-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     IoAddCircleOutline as IconPlus,
-    IoRemoveCircleOutline as IconMinus,
     IoLogoDiscord as IconDiscord,
+    IoRemoveCircleOutline as IconMinus,
 } from "react-icons/io5";
 import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import Input from "@/components/App/Input";
@@ -384,8 +384,11 @@ export default function MakeOfferModal({ model, setter, props }) {
         return transactionSuccessful ? contentSuccess() : contentForm();
     };
 
+    const blocked = props?.session?.stakingEnabled && !props?.session?.isStaked;
+
     return (
         <GenericRightModal
+            withTopMargin={blocked}
             isOpen={model}
             closeModal={() => closeModal()}
             title={title()}
