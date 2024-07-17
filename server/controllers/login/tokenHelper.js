@@ -1,6 +1,5 @@
 const { serialize } = require("cookie");
 const { jwtVerify, SignJWT } = require("jose");
-const { getEnv } = require("../../services/env");
 
 const authTokenValidityLength = 15; //min
 const refreshTokenValidityLength = 12; //hours
