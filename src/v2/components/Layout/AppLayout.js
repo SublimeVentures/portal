@@ -39,12 +39,10 @@ const DesktopLayout = ({ children, isBlockedAlert, title }) => {
                         "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
                     })}
                 >
-                    <div className="flex flex-col w-full h-full">
-                        <main className="flex flex-col grow w-full h-full h-full">
-                            <DesktopHeader title={title} />
-                            {children}
-                        </main>
-                    </div>
+                    <main className="flex flex-col w-full h-full">
+                        <DesktopHeader title={title} />
+                        {children}
+                    </main>
                 </div>
             </div>
         </div>

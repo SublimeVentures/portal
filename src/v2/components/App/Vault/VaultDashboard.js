@@ -1,42 +1,16 @@
-import { PartnershipCard } from "@/v2/components/App/Vault";
 import Investments from "@/v2/modules/vault/Investments";
 import Payouts from "@/v2/modules/vault/Payouts";
 import Statistics from "@/v2/modules/vault/Statistics";
+import Announcements from "@/v2/modules/vault/Announcements";
 
-const testEmpty = false;
-
-let statisticsInvestments = { size: "$10.151,18", returns: "$38.593,92", projects: "4" };
-if (testEmpty) Object.keys(statisticsInvestments).forEach((key) => (statisticsInvestments[key] = "0"));
-
-const mockedPartnership = {
-    title: "Based.VC & Steady Stack",
-    description:
-        "The partnership operates in the technology sector, specializing in developing software solutions for small businesses.",
-    partners: [{ id: 1 }, { id: 2, styles: "bg-primary shadow-primary" }],
-};
-
-export default function VaultDashboard({ viewOptions: { views, handleChangeView } = {}, isLoading }) {
+export default function VaultDashboard() {
     return (
-        <div className="overflow-y-auto">
-            <div className="flex p-4 flex-col gap-8 xl:grid xl:grid-cols-9 2xl:grid-cols-8 md:mb-12 md:px-19">
-                <Statistics />
-
-                <Investments />
-
-                <div className="col-span-4 h-full flex flex-col 2xl:col-span-3">
-                    <div className="h-full grow mb-20">
-                        <h3 className="text-nowrap text-2xl text-foreground">Community Partnership</h3>
-                    </div>
-
-                    <PartnershipCard
-                        title={mockedPartnership.title}
-                        description={mockedPartnership.description}
-                        partners={mockedPartnership.partners}
-                        isLoading={isLoading}
-                    />
-                </div>
-
-                <Payouts />
+        <div className="grow flex flex-col gap-8 md:grid md:grid-cols-10 md:px-12 md:overflow-y-auto md:gap-8 3xl:gap-x-13 3xl:gap-y-10 3xl:grid-cols-6 3xl:px-19 3xl:pb-12 3xl:pt-14 3xl:overflow-hidden">
+            <Statistics className="md:col-span-3 3xl:col-span-2" />
+            <Investments className="md:col-span-7 3xl:col-span-4" />
+            <Announcements className="md:col-span-6 3xl:col-span-2" />
+            <div className="md:col-span-10 3xl:col-span-4 3xl:grid 3xl:grid-cols-subgrid 3xl:grid-rows-1 3xl:gap-9 3xl:overflow-hidden">
+                <Payouts className="3xl:col-span-3 flex flex-col" />
             </div>
         </div>
     );

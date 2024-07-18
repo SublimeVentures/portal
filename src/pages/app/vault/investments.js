@@ -39,7 +39,7 @@ function InvestmentsPage() {
     return (
         <>
             <Metadata title="My Investments" />
-            <div className="flex flex-col gap-5 md:h-full md:pt-9 md:gap-9 md:px-19">
+            <div className="flex flex-col grow gap-5 md:h-full md:pt-9 md:gap-9 md:px-12 3xl:px-19">
                 <InvestmentsFilters
                     className="md:flex-initial"
                     investments={investments}
@@ -54,7 +54,7 @@ function InvestmentsPage() {
                         <EmptyInvestmentsEnhanced />
                     </div>
                 ) : (
-                    <div className="md:flex-auto md:px-19 md:-mx-19 md:pt-2 md:pb-13 md:overflow-x-hidden md:overflow-y-auto">
+                    <div className="md:flex-auto md:px-12 md:-mx-12 3xl:px-19 3xl:-mx-19 md:pt-2 md:pb-13 md:overflow-x-hidden md:overflow-y-auto">
                         <div>
                             {view === VIEW_TYPES.LIST && (
                                 <InvestmentsList investments={investments} isLoading={isLoading} />

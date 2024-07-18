@@ -40,7 +40,7 @@ export const PayoutTableVariants = Object.freeze({
     horizontal: "horizontal",
 });
 
-const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isLoading, isError }) => {
+const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isLoading, isError, className }) => {
     const { getResearchIconSrc } = useImage();
 
     if (isLoading) return <SkeletonPayoutTable />;
@@ -60,9 +60,9 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
         "order-1": variant === PayoutTableVariants.horizontal,
     });
     return (
-        <Card variant="static" className="p-0 h-full">
+        <Card variant="static" className={cn("p-0 flex flex-col", className)}>
             <div className="p-2 h-5 rounded bg-primary-light-gradient" />
-            <div className="p-4">
+            <div className="p-4 grow overflow-y-auto">
                 {!pages[0]?.rows?.length ? (
                     <div className="h-80 flex flex-col gap-4 justify-center items-center bg-foreground/[0.03]">
                         <CardTitle className="text-2xl font-medium text-foreground">No payouts found</CardTitle>

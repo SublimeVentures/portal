@@ -9,9 +9,7 @@ function IndexPage() {
     return (
         <>
             <Metadata title="Vault" />
-            <div className="flex flex-col h-full">
-                <VaultDashboard isLoading={false} viewOptions={{ views: ["dashboard"] }} />
-            </div>
+            <VaultDashboard isLoading={false} viewOptions={{ views: ["dashboard"] }} />
         </>
     );
 }
