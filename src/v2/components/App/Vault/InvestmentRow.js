@@ -79,9 +79,7 @@ export const Attributes = ({ details, className, grid }) => {
                     {performance === 0 ? "TBA" : formatPercentage(details.performance / 100, true)}
                 </Definition>
             ) : (
-                <Definition title="ATH Profit" disabled>
-                    SOON
-                </Definition>
+                <Definition title="ATH Profit">{details.ath === 0 ? "TBA" : formatCurrency(details.ath)}</Definition>
             )}
             <Definition title="Next Unlock">
                 {details.canClaim ? "Available" : details.isClaimSoon ? "Soon" : "TBA"}

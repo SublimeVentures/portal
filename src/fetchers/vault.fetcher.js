@@ -34,7 +34,7 @@ export const fetchUserInvestmentSsr = async (offerId, token) => {
 
 export const fetchVault = async (query = {}) => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchVault, { params: query });
+        const { data } = await axiosPrivate.get(API.fetchVault + "/all", { params: query });
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -42,4 +42,16 @@ export const fetchVault = async (query = {}) => {
         }
     }
     return [];
+};
+
+export const fetchVaultStats = async () => {
+    try {
+        const { data } = await axiosPrivate.get(API.fetchVault + "/stats");
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchVaultStats", e });
+        }
+    }
+    return {};
 };

@@ -14,5 +14,6 @@ export default function useInvestmentsData(details) {
         participatedDate: moment(details.createdAt).utc().local().format("YYYY-MM-DD"),
         isClaimSoon: details.nextClaimDate !== null,
         canClaim: details.canClaim,
+        ath: details.ath || 0,
     };
 }
