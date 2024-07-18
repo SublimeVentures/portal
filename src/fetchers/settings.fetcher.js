@@ -32,17 +32,16 @@ export const fetchUserWalletsSsr = async (token) => {
     return {};
 };
 
-export const addUserWallet = async (signature) => {
+export const addUserWallet = async (signature, address, network) => {
     try {
-        const { data } = await axiosPrivate.post(`${API.settingsWallet}add`, {
-            signature,
-        });
+        const { data } = await axiosPrivate.post(`${API.settingsWallet}add`, { signature, address, network });
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "addUserWallet", e });
         }
     }
+
     return {};
 };
 
