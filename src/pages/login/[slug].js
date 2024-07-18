@@ -45,7 +45,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
 
     useEffect(() => {
         if (isAuthenticated) {
-            router.replace("/app");
+            router.replace("/");
         }
 
         setPartner(selectedPartner.id);

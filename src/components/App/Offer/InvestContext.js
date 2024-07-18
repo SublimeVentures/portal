@@ -26,7 +26,7 @@ export const InvestProvider = ({ children, initialData }) => {
         const cookie = cookies[`hash_${initialData}`];
         console.log("IE :: LOAD", cookie);
 
-        if (!!cookie) {
+        if (cookie) {
             setBookingDetails({
                 code: cookie.code,
                 expires: Number(cookie.expires),
@@ -56,13 +56,13 @@ export const InvestProvider = ({ children, initialData }) => {
     const clearBooking = () => {
         const removedCookieContent = cookies[`hash_${offerId}`];
         console.log("clean", bookingDetails, removedCookieContent);
-        removeCookie(`hash_${offerId}`, { path: "/app/offer" });
+        removeCookie(`hash_${offerId}`, { path: "/offer" });
         setBookingDetails(DEFAULT_STATE);
     };
 
     const getSavedBooking = () => {
         const saved = cookies[`hash_${offerId}`];
-        return !!saved ? { ok: true, ...saved } : { ok: false };
+        return saved ? { ok: true, ...saved } : { ok: false };
     };
 
     const value = {
