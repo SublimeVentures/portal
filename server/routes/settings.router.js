@@ -12,9 +12,8 @@ router.get("/wallets", async (req, res) => {
     res.status(200).json(await getUserWallets(user));
 });
 
-router.post("/wallets/:operation", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+router.post("/wallets/:operation", authMiddleware, async (req, res) => {
+    const { user, ...request } = req;
     try {
         let result;
 

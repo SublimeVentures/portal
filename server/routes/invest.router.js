@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { reserveSpot, reserveExpire, reserveExpireAll } = require("../controllers/invest");
+const { reserveSpot } = require("../controllers/invest");
 const { verifyID } = require("../../src/lib/authHelpers");
+const authMiddleware = require("../middlewares/auth.middleware");
 
-router.get("/", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
 
