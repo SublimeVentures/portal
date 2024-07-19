@@ -14,13 +14,13 @@ function PayoutsPage() {
     const { query } = useRouter();
     const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery(query);
     return (
-        <div className="flex flex-col gap-5 md:h-full md:gap-9 md:px-19 md:pt-9 md:pb-12">
+        <div className="flex flex-col gap-5 md:gap-9 md:py-9 3xl:pt-12 md:px-12 3xl:px-19 grow overflow-hidden">
             <header className="flex md:items-center md:gap-5">
                 <h1 className="text-white text-2xl">Payouts</h1>
                 <Filters />
                 <UpgradeBanner className="hidden ml-auto 2xl:block" />
             </header>
-            <PayoutTable variant={tableVariant} isLoading={isLoading} pages={pages} />
+            <PayoutTable variant={tableVariant} isLoading={isLoading} pages={pages} className="grow overflow-hidden" />
         </div>
     );
 }

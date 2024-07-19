@@ -3,6 +3,11 @@ module.exports = {
     content: ["app/**/*.{js}", "src/components/**/*.{js}"],
     theme: {
         extend: {
+            screens: {
+                "3xl": "1800px",
+                "4xl": "1920px",
+                "5xl": "2560px",
+            },
             colors: {
                 foreground: "hsla(0, 0%, 100%)",
                 accent: "hsla(36, 65%, 71%)",
@@ -38,6 +43,7 @@ module.exports = {
                 19: "4.75rem", // 76px
             },
             fontSize: {
+                "3xs": "10px",
                 xxs: "11px",
                 xs: "12px",
                 sm: "13px",
@@ -76,7 +82,7 @@ module.exports = {
                 "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
                 "sheet-gradient": `linear-gradient(151deg, #051626 0%, #1A3754 49%, #051626 100%)`,
                 "navbar-gradient": "linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%)",
-                "settings-gradient": 'linear-gradient(125deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)',
+                "settings-gradient": "linear-gradient(125deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)",
 
                 "upgrade-to-premium-pattern": "url('/img/upgrade-to-premium-bg.png')",
                 "upgrade-to-premium-banner-pattern": "url('/img/upgrade-to-premium-banner.png')",
@@ -86,11 +92,11 @@ module.exports = {
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
             },
             gridTemplateColumns: {
-                "cards": "repeat(auto-fill, minmax(450px, 1fr))",
+                cards: "repeat(auto-fill, minmax(450px, 1fr))",
             },
             boxShadow: {
                 DEFAULT: "0px 3px 30px var(--tw-shadow-color, rgb(0 0 0 / 0.05))",
-                "accent": "0 3px 30px #FDC171",
+                accent: "0 3px 30px #FDC171",
             },
         },
         keyframes: {

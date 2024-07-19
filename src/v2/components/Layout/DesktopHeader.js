@@ -15,7 +15,7 @@ export default function Header({ title }) {
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="pt-12 px-19 w-full">
+        <header className="pt-9 3xl:pt-12 px-12 3xl:px-19 w-full">
             <div className="flex justify-between items-center flex-wrap gap-4">
                 <div className="flex items-baseline">
                     <h2 className="text-7xl font-bold text-foreground">{title}</h2>
