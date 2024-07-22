@@ -4,6 +4,8 @@ import { cn } from "@/lib/cn";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
 import { otcViews } from "../logic/useCurrentView";
 import { offersFilters } from "../utils/filters";
+import useMarket from "../logic/useMarket";
+import MakeOfferModal from "./MakeOfferModal";
 
 const FiltersDropdown = ({ filters, handleToggleFilter }) => {
     return (
@@ -27,22 +29,34 @@ const FiltersDropdown = ({ filters, handleToggleFilter }) => {
     );
 }
 
-export default function TableFilters({ data }) {
-    const { market, showHistory, filterProps, handleChangeView, setIsMakeModalOpen } = data;
+export default function TableFilters({ session, data }) {
+    const { showHistory, filterProps, handleChangeView, setIsMakeModalOpen } = data;
     const { filters, handleToggleFilter, handleFilterRemove } = filterProps;
+
+    const { currentMarket } = useMarket(session)
 
     return (
         <div className="my-4 flex flex-col text-white gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
             <h3 className="text-2xl text-foreground whitespace-nowrap">
-                Offers {showHistory && "History"}
-                <span className="inline-block -translate-y-2 text-md whitespace-nowrap">{market}</span>
+                {currentMarket ? (
+                    <>
+                        {showHistory && "History"}
+                        <span className="inline-block -translate-y-2 text-md whitespace-nowrap">{currentMarket.name}</span>
+                    </>
+                ) : (
+                    "Latest deals"
+                )}
             </h3>
 
             <div className="flex flex-wrap items-center gap-4 2xl:flex-row-reverse">
-                <Button onClick={() => handleChangeView(showHistory ? otcViews.offers : otcViews.history)}>{showHistory ? 'Hide': 'Show'} History</Button>
-                <Button onClick={() => setIsMakeModalOpen(true)}>Create offer</Button>
-                {!showHistory && <FiltersDropdown filters={offersFilters} handleToggleFilter={handleToggleFilter} />
-}
+                {currentMarket ? (
+                    <>
+                        <Button onClick={() => handleChangeView(showHistory ? otcViews.offers : otcViews.history)}>{showHistory ? 'Hide': 'Show'} History</Button>
+                        <MakeOfferModal session={session} /> 
+                        {!showHistory && <FiltersDropdown filters={offersFilters} handleToggleFilter={handleToggleFilter} />}
+                    </>
+                ) : null}
+
                 {Object.entries(filters).map(([key, value]) => {
                     const filter = offersFilters.find(f => {
                         if (['isSell'].includes(key)) {

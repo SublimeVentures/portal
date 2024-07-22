@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetBody, SheetTitle } from "@/v2/components/ui/sheet";
+import { Sheet, SheetClose, SheetTrigger, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetBody, SheetTitle } from "@/v2/components/ui/sheet";
 import { Button } from "@/v2/components/ui/button";
 import BlockchainSteps from "@/v2/components/BlockchainSteps"
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
@@ -13,7 +13,9 @@ import SelectedMarket from "./SelectedMarket";
 import OfferTabs from "./OfferTabs";
 import OfferForm from "./OfferForm";
 
-export default function MakeOfferModal({ isModalOpen, setIsModalOpen, props }) {
+export default function MakeOfferModal({ session }) {
+    const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
+
     const {
         transactionSuccessful,
         textCopy,
@@ -22,15 +24,19 @@ export default function MakeOfferModal({ isModalOpen, setIsModalOpen, props }) {
         getSelectedMarketProps,
         getOfferTabsProps,
         getOfferFormProps,
-    } = useCreateOfferModalLogic(props, isModalOpen, setIsModalOpen);
+    } = useCreateOfferModalLogic(session, isMakeModalOpen, setIsMakeModalOpen);
     const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({ data: blockchainInteractionData })
 
     useEffect(() => {
-        if (!isModalOpen) resetState();
-    }, [isModalOpen])
+        if (!isMakeModalOpen) resetState();
+    }, [isMakeModalOpen])
 
     return (
-        <Sheet open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <Sheet open={isMakeModalOpen} onOpenChange={setIsMakeModalOpen}>
+            <SheetTrigger asChild>
+                <Button>Create offer</Button>
+            </SheetTrigger>
+
             <SheetContent className="h-full flex flex-col rounded-t-lg">
                 <SheetHeader>
                     <SheetTitle>{transactionSuccessful ? "Offer created" : "Create Offer"}</SheetTitle>

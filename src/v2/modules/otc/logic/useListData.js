@@ -50,10 +50,10 @@ export default function useListData(currentMarket, showHistory) {
         isError: offersIsError,
         refetch: refetchOffers,
     } = useQuery({
-        queryKey: ["otcOffers", currentMarket.otc, filters, offersSorting[0]?.id, offersSorting[0]?.desc],
+        queryKey: ["otcOffers", currentMarket?.otc, filters, offersSorting[0]?.id, offersSorting[0]?.desc],
         queryFn: () =>
             getOffers({
-                otcId: currentMarket.otc,
+                otcId: currentMarket?.otc,
                 filters,
                 sort: offersSorting[0] && {
                     sortId: offersSorting[0].id,
@@ -64,7 +64,7 @@ export default function useListData(currentMarket, showHistory) {
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
         staleTime: 1 * 60 * 1000,
-        enabled: !!currentMarket.offerId,
+        enabled: !!currentMarket?.offerId,
     });
 
     const {
@@ -73,10 +73,10 @@ export default function useListData(currentMarket, showHistory) {
         isLoading: historyIsLoading,
         isError: historyIsError,
     } = useQuery({
-        queryKey: ["otcHistory", currentMarket.offerId, historySorting[0]?.id, historySorting[0]?.desc],
+        queryKey: ["otcHistory", currentMarket?.offerId, historySorting[0]?.id, historySorting[0]?.desc],
         queryFn: () =>
             getOffersHistory({
-                offerId: currentMarket.offerId,
+                offerId: currentMarket?.offerId,
                 filters,
                 sort: historySorting[0] && {
                     sortId: historySorting[0].id,

@@ -9,7 +9,7 @@ import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import OffersDefinitionItem from "./OffersDefinitionItem";
 
-export default function OffersMobileHistoryList({ market, data, wallets, propOffers }) {
+export default function OffersMobileHistoryList({ market, data }) {
     const { cdn, getCurrencySymbolByAddress } = useEnvironmentContext();
     const { history, isLoading } = data;
 

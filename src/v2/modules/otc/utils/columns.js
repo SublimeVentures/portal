@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { createColumnHelper } from '@tanstack/react-table';
 import moment from "moment";
 
@@ -47,16 +48,36 @@ const multiplierColumn = columnHelper.accessor('multiplier', {
 const chainColumn = (getCurrencySymbolByAddress) => columnHelper.accessor('chain', {
     header: 'Chain',
     cell: (info) => {
-      return (
-          <span className="flex flex-row flex-1 justify-end gap-2 lg:justify-start">
-              <DynamicIcon name={getCurrencySymbolByAddress(info.row.original.currency)} style={ButtonIconSize.hero3} />
-              <DynamicIcon name={NETWORKS[info.row.original.chainId]} style={ButtonIconSize.hero3} />
-          </span>
-      )
+        return (
+            <span className="flex flex-row flex-1 justify-end gap-2 lg:justify-start">
+                <DynamicIcon name={getCurrencySymbolByAddress(info.row.original.currency)} style={ButtonIconSize.hero3} />
+                <DynamicIcon name={NETWORKS[info.row.original.chainId]} style={ButtonIconSize.hero3} />
+            </span>
+        )
     }
 })
 
-const actionColumn = (wallets, account, propOffers) => columnHelper.accessor('action', {
+const marketColumn = (cdn) => columnHelper.accessor('name', {
+    header: 'Market',
+    cell: (info) => {
+        const slug = info.row.original.slug;
+
+        return (
+            <span className="flex items-center gap-2">
+                <Image
+                    src={`${cdn}/research/${slug}/icon.jpg`}
+                    className="rounded"
+                    alt={slug}
+                    width={30}
+                    height={30}
+                />
+                {info.getValue()}
+            </span>
+        )
+    }
+})
+
+const actionColumn = (wallets, account, session) => columnHelper.accessor('action', {
     header: 'Action',
     cell: (info) => {
         const ownership = isUserOffer(wallets, info.row.original.maker, account);
@@ -66,7 +87,8 @@ const actionColumn = (wallets, account, propOffers) => columnHelper.accessor('ac
             <div className="flex flex-row justify-end gap-1 lg:justify-start">
                 {ownership.ok &&
                     (ownership.isActive ? (
-                        <CancelOfferModal {...propOffers} offerDetails={offerDetails} />
+                        // <CancelOfferModal session={session} offerDetails={offerDetails} />
+                        <div>cancel</div>
                     ) : (
                         <Tooltiper
                             wrapper={
@@ -80,7 +102,8 @@ const actionColumn = (wallets, account, propOffers) => columnHelper.accessor('ac
                     )
                 )}
 
-                {!ownership.ok && <TakeOfferModal {...propOffers} offerDetails={offerDetails} />}
+                <div>take</div>
+                {/* {!ownership.ok && <TakeOfferModal session={session} offerDetails={offerDetails} />} */}
             </div>
         )
     },
@@ -93,10 +116,14 @@ const dateColumn = columnHelper.accessor('date', {
     filterFn: intFilter,
 })
 
-export const getOffersColumns = (getCurrencySymbolByAddress, wallets, account, propOffers) => {
-    return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), actionColumn(wallets, account, propOffers)]
+export const getOffersColumns = (getCurrencySymbolByAddress, wallets, account, session) => {
+    return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), actionColumn(wallets, account, session)]
 }
 
 export const getHistoryColumns = (getCurrencySymbolByAddress) => {
     return [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn(getCurrencySymbolByAddress), dateColumn]
+}
+
+export const getLatestDealsColumns = (cdn) => {
+    return [marketColumn(cdn), isSellColumn, multiplierColumn, dateColumn]
 }

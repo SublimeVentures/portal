@@ -12,7 +12,7 @@ export default function MarketDetails({ src, alt, offer, className }) {
     const { ticker } = offer;
 
     return (
-        <dl className={cn("relative py-2 px-4 grid grid-flow-col items-center bg-foreground/[.1] rounded", className)}>
+        <dl className={cn("relative py-4 px-8 grid grid-flow-col items-center bg-foreground/[.1] rounded", className)}>
             <DescriptionListHelper term="Payout">${ticker}</DescriptionListHelper>
             <DescriptionListHelper term="Price">$?</DescriptionListHelper>
             <DescriptionListHelper term="Listed">?</DescriptionListHelper>

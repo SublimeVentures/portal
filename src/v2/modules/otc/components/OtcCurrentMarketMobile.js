@@ -3,9 +3,8 @@ import Image from "next/image";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { Card } from "@/v2/components/ui/card";
 import { Button } from "@/v2/components/ui/button";
+import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import MarketDetails from "./MarketDetails";
-
-import ArrowIcon from "@/v2/assets/svg/arrow.svg";                    <span>Back</span>
 
 export default function CurrentMarket({ currentMarket }) {
     const { name, ticker, genre, slug } = currentMarket;
@@ -28,7 +27,7 @@ export default function CurrentMarket({ currentMarket }) {
                         <p className="text-md text-foreground leading-none whitespace-nowrap 2xl:text-5xl">{genre}</p>
                         <Button variant="outline" className="mt-auto w-full">
                             Project Overview
-                            <ArrowIcon className="ml-4" />
+                            <ArrowIcon className="ml-4 w-3 h-3" />
                         </Button>
                     </div>
                 </div>

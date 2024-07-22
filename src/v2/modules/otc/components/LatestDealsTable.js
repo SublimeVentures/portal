@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import { flexRender } from '@tanstack/react-table';
 
-import SkeletonTable from "../components/SkeletonTable";
+import SkeletonTable from "@/v2/modules/otc/components/SkeletonTable";
 
-export default function OffersHistoryTable({ data }) {
-    const { history: table, isLoading } = data;
+export default function LatestDealsTable({ data }) {
+    const { latest: table, isLoading } = data;
 
     return (
         <div className="p-4">
@@ -15,8 +15,9 @@ export default function OffersHistoryTable({ data }) {
                             {headerGroup.headers.map(header => (
                                 <th className="table-head-cell" key={header.id}>
                                     {header.isPlaceholder ? null : (
-                                        <div>
+                                        <div {...{ className: header.column.getCanSort() ? 'cursor-pointer' : '', onClick: header.column.getToggleSortingHandler() }}>
                                             {flexRender( header.column.columnDef.header, header.getContext() )}
+                                            {{ asc: ' 🔼', desc: ' 🔽' }[header.column.getIsSorted()] ?? null}
                                         </div>
                                     )}
                                 </th>

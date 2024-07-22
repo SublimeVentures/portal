@@ -21,14 +21,28 @@ import useBlockchainTakeOfferTransaction from "./useBlockchainTakeOfferTransacti
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import TransactionSuccess from "../TransactionSucces";
+import useMarket from "../../logic/useMarket";
 
 const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
+    
+    // const propOffers = {
+    //     // refetchOffers,
+    //     // refetchVault,
+    //     // vault,
+    //     // offersIsSuccess,
+    //     // vaultIsSuccess,
+    //     // offers,
+    //     currentMarket,
+    //     session,
+    //     // allocation: haveAllocation,
+    // };
+    // const { offerDetails, vault, currentMarket, refetchVault, refetchOffers, className } = props;
 
-export default function TakeOfferModal(props) {
-    const { offerDetails, vault, currentMarket, refetchVault, refetchOffers, className } = props;
+export default function TakeOfferModal({ session, offerDetails, className }) {
+    const { currentMarket } = useMarket(session);
     const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
 
-    const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } = useBlockchainTakeOfferTransaction({ offerDetails, vault, currentMarket });
+    const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } = useBlockchainTakeOfferTransaction({ session, offerDetails });
     const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({ data: blockchainInteractionData })
 
     if (!currentMarket?.name || !offerDetails?.currency) return;
@@ -49,7 +63,7 @@ export default function TakeOfferModal(props) {
             <SheetTrigger asChild>
                 <Button variant="accent" className={className}>
                     Take
-                    <ArrowIcon className="ml-2" />
+                    <ArrowIcon className="ml-2 w-2 h-2" />
                 </Button>
             </SheetTrigger>
 

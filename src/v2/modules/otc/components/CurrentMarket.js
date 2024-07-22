@@ -1,6 +1,9 @@
 import Image from "next/image";
 
+import { Card } from "@/v2/components/ui/card";
+import { Button } from "@/v2/components/ui/button";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import MarketDetails from "./MarketDetails";
 
 export default function CurrentMarket({ currentMarket }) {
@@ -8,7 +11,7 @@ export default function CurrentMarket({ currentMarket }) {
     const { cdn } = useEnvironmentContext();
 
     return (
-        <div className="mb-2 w-full items-center justify-between md:flex">
+        <Card variant="none" className="p-4 w-full items-center justify-between bg-settings-gradient md:flex">
             <div className="mb-2 flex items-center gap-4 2xl:gap-8">
                 <Image
                     src={`${cdn}/research/${slug}/icon.jpg`}
@@ -18,11 +21,12 @@ export default function CurrentMarket({ currentMarket }) {
                     height={100}
                 />
                 <div>
-                    <div className="flex items-center 2xl:items-start">
-                        <h3 className="text-lg font-bold text-foreground leading-none 2xl:text-[42px]">{name}</h3>
-                        <p className="ml-2 text-md text-foreground/[.5] leading-none whitespace-nowrap 2xl:text-5xl">${ticker}</p>
-                    </div>
-                    <p className="text-md text-foreground 2xl:text-9xl">{genre}</p>
+                    <h3 className="text-[24px] font-bold text-foreground leading-none">{name}</h3>
+                    <p className="text-[20px] text-foreground">{genre}</p>
+                    <Button variant="outline" className="mt-2">
+                        Project Overview
+                        <ArrowIcon className="ml-4 w-3 h-3" />
+                    </Button>
                 </div>
             </div>
 
@@ -30,8 +34,8 @@ export default function CurrentMarket({ currentMarket }) {
                 src={`${cdn}/research/${slug}/icon.jpg`}
                 alt={`Icon of ${name}`}
                 offer={{ ticker }}
-                className="w-80"
+                className="w-96"
             />
-        </div>
+        </Card>
     );
 };

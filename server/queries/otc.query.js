@@ -4,14 +4,14 @@ const db = require("../services/db/definitions/db.init");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
 const { getWhereClause } = require("../utils");
 
-function constructOffersOrder(sortId, sortOrder) {
+function constructOffersOrder(sortId = "date", sortOrder = "DESC") {
     const validSortColumns = {
         isSell: "isSell",
         amount: "amount",
         price: "price",
         multiplier: Sequelize.literal("price / amount"),
         chain: "chainId",
-        date: "updatedAt",
+        date: "createdAt",
     };
 
     const orderDirection = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
@@ -19,6 +19,40 @@ function constructOffersOrder(sortId, sortOrder) {
     const offerOrder = [[orderColumn, orderDirection]];
 
     return offerOrder;
+}
+
+async function getLatestOffers(query) {
+    const { sortId, sortOrder, ...filters } = query;
+
+    const offerOrder = constructOffersOrder(sortId, sortOrder);
+    const whereClause = getWhereClause(filters, [], ["isSell"]);
+
+    return models.otcDeal.findAll({
+        order: offerOrder,
+        limit: 10,
+        attributes: [
+            "id",
+            "offerId",
+            "isSell",
+            "price",
+            "amount",
+            "createdAt",
+            [db.literal('"offer"."name"'), "name"],
+            [db.literal('"offer"."slug"'), "slug"],
+            [Sequelize.literal("price / amount"), "multiplier"],
+        ],
+        where: {
+            ...whereClause,
+            isFilled: false,
+            isCancelled: false,
+        },
+        include: {
+            model: models.offer,
+            attributes: [],
+            required: true, // Ensures INNER JOIN
+        },
+        raw: true,
+    });
 }
 
 async function getActiveOffers(otcId, query) {
@@ -39,6 +73,7 @@ async function getActiveOffers(otcId, query) {
             "currency",
             "isSell",
             "maker",
+            "createdAt",
             [db.literal('"onchain"."chainId"'), "chainId"],
             [Sequelize.literal("price / amount"), "multiplier"],
         ],
@@ -211,6 +246,7 @@ async function saveOtcLock(userId, wallet, deal, expireDate, transaction) {
 }
 
 module.exports = {
+    getLatestOffers,
     getActiveOffers,
     getHistoryOffers,
     saveOtcHash,

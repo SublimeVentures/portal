@@ -24,6 +24,7 @@ export const fetchOffers = async ({ otcId, filters = {}, sort }) => {
     try {
         const url = `/api/otc/offers/${otcId}`;
         const { data } = await axiosPrivate.get(url);
+
         return data;
     } catch (e) {
         console.log('offers-err', e)
@@ -37,7 +38,6 @@ export const fetchOffers = async ({ otcId, filters = {}, sort }) => {
 
 export const fetchHistory = async (offerId) => {
     try {
-        console.log('fetchHistory', offerId)
         const url = `/api/otc/history/${offerId}`;
         const { data } = await axiosPrivate.get(url);
         return data;

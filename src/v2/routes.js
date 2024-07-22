@@ -2,6 +2,7 @@ export const OTC_API_ROUTES = Object.freeze({
     getMarkets: '/api/otc/markets',
     getOffers: '/api/otc/offers',
     getHistory: '/api/otc/history',
+    getLatest: '/api/otc/latest',
 });
 
 export const NETWORK_API_ROUTES = Object.freeze({

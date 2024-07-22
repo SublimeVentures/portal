@@ -7,20 +7,20 @@ import { cn } from "@/lib/cn";
 
 export default function SingleMarket({ name, genre, slug, selectedMarket }) {
     const { cdn } = useEnvironmentContext();
-    const isSelected = selectedMarket.slug === slug;
+    const isSelected = selectedMarket ? selectedMarket.slug === slug : false;
 
     return (
         <Link
             shallow
             href={`${routes.OTC}?market=${slug}`}
-            className={cn("p-4 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09] md:flex-row", { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected })}
+            className={cn("p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09] md:flex-row", { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected })}
         >
             <Image
                 src={`${cdn}/research/${slug}/icon.jpg`}
                 className="size-20 rounded"
                 alt={slug}
-                width={100}
-                height={100}
+                width={90}
+                height={90}
             />
 
           <div className="ml-4 flex flex-col gap-2">

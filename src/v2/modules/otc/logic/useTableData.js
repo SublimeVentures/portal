@@ -3,17 +3,20 @@ import { useQuery } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
 
 import { offersFilters } from "../utils/filters";
-import { getOffers, getOffersHistory } from "@/v2/fetchers/otc";
-import { getOffersColumns, getHistoryColumns } from "@/v2/modules/otc/utils/columns";
+import { getOffers, getOffersHistory, getLatestDeals } from "@/v2/fetchers/otc";
+import { getOffersColumns, getHistoryColumns, getLatestDealsColumns } from "@/v2/modules/otc/utils/columns";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import useMarket from "@/v2/modules/otc/logic/useMarket";
 
-export default function useTableData(currentMarket, showHistory, wallets, propOffers) {
-    const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
+export default function useTableData(session, showHistory) {
+    const { cdn, getCurrencySymbolByAddress, account } = useEnvironmentContext();
+    const { userId, wallets } = session;
+    const { selectedOtc, currentMarket } = useMarket(userId)
 
     const [filters, setFilters] = useState({});
     const [offersSorting, setOffersSorting] = useState([]);
-
     const [historySorting, setHistorySorting] = useState([]);
+    const [latestSorting, setLatestSorting] = useState([]);
 
     const handleToggleFilter = (filterId) => {
         const selectedFilter = offersFilters.find((f) => f.id === filterId).filter;
@@ -46,12 +49,19 @@ export default function useTableData(currentMarket, showHistory, wallets, propOf
         });
     };
 
+    // const offerColumns = useMemo(
+    //     () => getOffersColumns(getCurrencySymbolByAddress, wallets, account, propOffers),
+    //     [getCurrencySymbolByAddress, wallets, account],
+    // );
+
     const offerColumns = useMemo(
-        () => getOffersColumns(getCurrencySymbolByAddress, wallets, account, propOffers),
-        [getCurrencySymbolByAddress, wallets, account],
+        () => getOffersColumns(getCurrencySymbolByAddress, wallets, account, session),
+        [getCurrencySymbolByAddress, wallets, account, session],
     );
 
     const historyColumns = useMemo(() => getHistoryColumns(getCurrencySymbolByAddress), [getCurrencySymbolByAddress]);
+
+    const latestColumns = useMemo(() => getLatestDealsColumns(cdn), [cdn]);
 
     const {
         data: offers,
@@ -60,10 +70,10 @@ export default function useTableData(currentMarket, showHistory, wallets, propOf
         isError: offersIsError,
         refetch: refetchOffers,
     } = useQuery({
-        queryKey: ["otcOffers", currentMarket.otc, filters, offersSorting[0]?.id, offersSorting[0]?.desc],
+        queryKey: ["otcOffers", selectedOtc, filters, offersSorting[0]?.id, offersSorting[0]?.desc],
         queryFn: () =>
             getOffers({
-                otcId: currentMarket.otc,
+                otcId: selectedOtc,
                 filters,
                 sort: offersSorting[0] && {
                     sortId: offersSorting[0].id,
@@ -74,7 +84,7 @@ export default function useTableData(currentMarket, showHistory, wallets, propOf
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
         staleTime: 1 * 60 * 1000,
-        enabled: !!currentMarket.offerId,
+        enabled: !!selectedOtc,
     });
 
     const {
@@ -83,10 +93,10 @@ export default function useTableData(currentMarket, showHistory, wallets, propOf
         isLoading: historyIsLoading,
         isError: historyIsError,
     } = useQuery({
-        queryKey: ["otcHistory", currentMarket.offerId, historySorting[0]?.id, historySorting[0]?.desc],
+        queryKey: ["otcHistory", currentMarket?.offerId, historySorting[0]?.id, historySorting[0]?.desc],
         queryFn: () =>
             getOffersHistory({
-                offerId: currentMarket.offerId,
+                offerId: currentMarket?.offerId,
                 filters,
                 sort: historySorting[0] && {
                     sortId: historySorting[0].id,
@@ -98,6 +108,21 @@ export default function useTableData(currentMarket, showHistory, wallets, propOf
         cacheTime: 5 * 60 * 1000,
         staleTime: 3 * 60 * 1000,
         enabled: showHistory,
+    });
+
+    const {
+        data: latest,
+        isSuccess: latestIsSuccess,
+        isLoading: latestIsLoading,
+        isError: latestIsError,
+    } = useQuery({
+        queryKey: ["otcLatestDeals"],
+        // queryFn: () => getLatestDeals(),
+        queryFn: getLatestDeals,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1 * 60 * 1000,
     });
 
     useEffect(() => {
@@ -130,12 +155,25 @@ export default function useTableData(currentMarket, showHistory, wallets, propOf
         getSortedRowModel: getSortedRowModel(),
     });
 
+    const latestTable = useReactTable({
+        data: latest ?? [],
+        columns: latestColumns,
+        state: {
+            sorting: latestSorting,
+        },
+        manualSorting: true,
+        onSortingChange: setLatestSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+    });
+
     return {
+        latest: latestTable,
         offers: offersTable,
         history: historyTable,
-        isLoading: offersIsLoading || historyIsLoading,
-        isSuccess: offersIsSuccess || historyIsSuccess,
-        isError: offersIsError || historyIsError,
+        isLoading: offersIsLoading || historyIsLoading || latestIsLoading,
+        isSuccess: offersIsSuccess || historyIsSuccess || latestIsSuccess,
+        isError: offersIsError || historyIsError || latestIsError,
         filterProps: {
             filters,
             handleToggleFilter,

@@ -3,9 +3,11 @@ import OffersMobileHistoryList from "./OffersMobileHistoryList";
 import ListFilters from "./ListFilters";
 import useCurrentView, { otcViews } from "../logic/useCurrentView";
 import useListData from "../logic/useListData";
+import useMarket from "../logic/useMarket";
 
-export default function OffersMobile({ currentMarket, session, setIsMakeModalOpen, propOffers }) {
+export default function OffersMobile({ session, setIsMakeModalOpen, propOffers }) {
     const { wallets } = session;
+    const { currentMarket } = useMarket(session);
 
     const { activeView, handleChangeView } = useCurrentView();
     const showHistory = activeView === otcViews.history;
@@ -19,7 +21,7 @@ export default function OffersMobile({ currentMarket, session, setIsMakeModalOpe
 
     return (
         <div className="relative h-full flex flex-col 2xl:overflow-hidden">                 
-            <ListFilters data={{ market: currentMarket.name, showHistory, filterProps, handleChangeView, setIsMakeModalOpen }} /> 
+            <ListFilters data={{ market: currentMarket?.name, showHistory, filterProps, handleChangeView, setIsMakeModalOpen }} /> 
             <div className="h-full md:overflow-y-auto">
                 {renderList(activeView, data, currentMarket, wallets, propOffers)}
             </div>

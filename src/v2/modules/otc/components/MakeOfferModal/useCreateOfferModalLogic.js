@@ -3,17 +3,24 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
+import { queryClient } from "@/lib/queryCache"; 
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { millisecondsInHour } from "@/constants/datetime";
+import useMarket from "../../logic/useMarket";
 
 export const TABS = Object.freeze({ BUY: 0, SELL: 1 });
 export const DEFAULT_VALUES = Object.freeze({ MULTIPLIER: 1, MIN_ALLOCATION: 10, MAX_PRICE: 1000000 })
 
-export default function useCreateOfferModalLogic(props, isModalOpen, setIsModalOpen) {
-    const { currentMarket, allocation, refetchVault, refetchOffers } = props;
+// @TODO - refetch vault, fetch allocation
+export default function useCreateOfferModalLogic(session, isModalOpen, setIsModalOpen) {
+    const { currentMarket } = useMarket(session);
+    
+    // @TODO 
+    const allocation = null
+
     const { cdn, account, activeOtcContract, network, getCurrencySettlement } = useEnvironmentContext();
     const { getExpireData, setExpireData } = useLocalStorage();
 
@@ -104,7 +111,8 @@ export default function useCreateOfferModalLogic(props, isModalOpen, setIsModalO
 
     useEffect(() => {
         const closeModal = async () => {
-            await Promise.all([refetchVault(), refetchOffers()]);
+            // await Promise.all([refetchVault(), queryClient.invalidateQueries(["otcOffers"])]);
+            await Promise.all([queryClient.invalidateQueries(["otcOffers"])]);
             
             reset();
             setMultiplier(DEFAULT_VALUES.MULTIPLIER);

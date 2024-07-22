@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/router";
 
 import { Metadata } from "@/v2/components/Layout";
 import MakeOfferModal from "@/v2/modules/otc/components/MakeOfferModal";
@@ -6,24 +7,31 @@ import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { OtcMarkets, MarketList, OtcCurrentMarket, OtcCurrentMarketMobile, OtcOffers, OtcOffersMobile } from "./components";
 import { Search } from "@/v2/components/Fields";
 import { Button } from "@/v2/components/ui/button";
+import useMarket from "@/v2/modules/otc/logic/useMarket";
 
-export default function OTCMarket({ session, otc, propOffers, currentMarket }) {
-    const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
+export default function OTCMarket({ session }) {
     const isDesktop = useMediaQuery(breakpoints.md);
+    const { otc, currentMarket } = useMarket(session.userId)
+    
+    // const router = useRouter();
+    // const {market } = router.query;
+
+    // const currentMarket = useMemo(() => otc?.find((el) => el.slug === market) ?? null, [otc]);
+    // const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
 
     const [showMarkets, setShowMarkets] = useState(false);
     const [searchValue, setSearchValue] = useState('');
-
-    const filteredMarkets = useMemo(() => otc.filter(offer => offer.name.toLowerCase().includes(searchValue.toLowerCase())), [otc, searchValue]);
     
+    const filteredMarkets = useMemo(() => otc.filter(offer => offer.name.toLowerCase().includes(searchValue.toLowerCase())), [otc, searchValue]);
+
     const handleSearchChange = useCallback((evt) => setSearchValue(evt.target.value), []);
 
     return (
         <>
-            <Metadata title={`${currentMarket.name} Market`} />
+            <Metadata title={`${currentMarket ? currentMarket.name : 'OTC'} Market`} />
             <div className="p-4 md:p-16 md:h-[calc(100vh_-_100px)]">
                 <div className="mb-8">
-                    <h3 className="text-nowrap text-2xl text-foreground">{isDesktop ? "All markets" : "OTC Market"}</h3>
+                    <h3 className="text-nowrap text-2xl text-foreground">OTC Market</h3>
                     <p className="text-lg text-[#C4C4C4] whitespace-pre-line">
                         Explore Opportunities Beyond the Exchange
                     </p>
@@ -39,8 +47,9 @@ export default function OTCMarket({ session, otc, propOffers, currentMarket }) {
                         />
                                         
                         <div className="h-full w-full flex flex-col">
-                            <OtcCurrentMarket currentMarket={currentMarket} />
-                            <OtcOffers session={session} currentMarket={currentMarket} setIsMakeModalOpen={setIsMakeModalOpen} propOffers={propOffers} />
+                            {/* {currentMarket && <OtcCurrentMarket currentMarket={currentMarket} />} */}
+                            {/* <OtcOffers session={session} currentMarket={currentMarket} setIsMakeModalOpen={setIsMakeModalOpen} propOffers={propOffers} /> */}
+                            <OtcOffers session={session} />
                         </div>
                     </div>
                 ) : (
@@ -60,16 +69,15 @@ export default function OTCMarket({ session, otc, propOffers, currentMarket }) {
                                 <MarketList markets={filteredMarkets} selectedMarket={currentMarket} className="h-full" />
                             ) : (
                                 <>
-                                    <OtcCurrentMarketMobile currentMarket={currentMarket} />
-                                    <OtcOffersMobile session={session} currentMarket={currentMarket} setIsMakeModalOpen={setIsMakeModalOpen} propOffers={propOffers} />
+                                    {/* {currentMarket && <OtcCurrentMarketMobile currentMarket={currentMarket} />} */}
+                                    {/* <OtcOffersMobile session={session} currentMarket={currentMarket} setIsMakeModalOpen={setIsMakeModalOpen} propOffers={propOffers} /> */}
+                                    <OtcOffersMobile session={session} currentMarket={currentMarket} />
                                 </>
                             )}
                         </div>
                     </div>
                 )}
             </div>
-
-            <MakeOfferModal isModalOpen={isMakeModalOpen} setIsModalOpen={setIsMakeModalOpen} props={propOffers} />
         </>
     );
 };

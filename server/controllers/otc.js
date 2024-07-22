@@ -1,6 +1,7 @@
 const {
     getActiveOffers,
     getHistoryOffers,
+    getLatestOffers,
     saveOtcHash,
     checkDealBeforeSigning,
     processSellOtcDeal,
@@ -45,6 +46,17 @@ async function getHistory(req) {
         return await getHistoryOffers(Number(req.params.id), req.query);
     } catch (error) {
         logger.error(`ERROR :: [getHistory] OTC`, {
+            error: serializeError(error),
+        });
+        return [];
+    }
+}
+
+async function getLatestDeals(req) {
+    try {
+        return await getLatestOffers(req.query);
+    } catch (error) {
+        logger.error(`ERROR :: [getLatestDeals] OTC`, {
             error: serializeError(error),
         });
         return [];
@@ -163,4 +175,4 @@ async function signOffer(user, req) {
     }
 }
 
-module.exports = { getMarkets, getOffers, getHistory, createOffer, signOffer };
+module.exports = { getMarkets, getOffers, getHistory, getLatestDeals, createOffer, signOffer };

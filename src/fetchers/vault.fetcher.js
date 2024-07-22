@@ -41,6 +41,7 @@ export const fetchVault = async (query = {}) => {
             Sentry.captureException({ location: "fetchVault", e });
         }
     }
+
     return [];
 };
 

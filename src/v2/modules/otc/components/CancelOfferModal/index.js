@@ -20,11 +20,14 @@ import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import TransactionSuccess from "../TransactionSucces";
 import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
+import useMarket from "../../logic/useMarket";
 
 const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
 
-export default function CancelOfferModal(props) {
-    const { currentMarket, offerDetails, refetchVault, refetchOffers, className } = props;
+// @TODO - fetch vault 
+// const { currentMarket, offerDetails, refetchVault, refetchOffers, className } = props;
+export default function CancelOfferModal({ session, offerDetails, className }) {
+    const { currentMarket } = useMarket();
     const { getCurrencySymbolByAddress, network, cdn } = useEnvironmentContext();
 
     const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } = useBlockchainCancelOfferTransaction({ otcId: currentMarket?.otc, dealId: offerDetails?.dealId, requiredNetwork: offerDetails?.chainId });

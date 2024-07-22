@@ -87,6 +87,10 @@
   width: 10px;
 }
 
+.block-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
 ::-webkit-scrollbar-track {
   background: #082030;
 }
@@ -96,7 +100,6 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(36, 65%, 71%);
   cursor: pointer;
 }
 

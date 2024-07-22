@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getMarkets, getOffers, getHistory, createOffer, signOffer } = require("../controllers/otc");
+const { getMarkets, getOffers, getHistory, getLatestDeals, createOffer, signOffer } = require("../controllers/otc");
 const { verifyID } = require("../../src/lib/authHelpers");
 
 router.get("/markets", async (req, res) => {
@@ -21,6 +21,12 @@ router.get("/history/:id", async (req, res) => {
     if (!auth) return res.status(401).json({});
 
     return res.status(200).json(await getHistory(req));
+});
+
+router.get("/latest", async (req, res) => {
+    const { auth } = await verifyID(req);
+    if (!auth) return res.status(401).json({});
+    return res.status(200).json(await getLatestDeals(req));
 });
 
 router.post("/:id/create", async (req, res) => {
