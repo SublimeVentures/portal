@@ -7,6 +7,7 @@ const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 //LOGIN USER
 router.post("/login", async (req, res) => {
@@ -82,7 +83,7 @@ router.delete("/login", async (req, res) => {
 });
 
 //REFRESH TOKEN
-router.put("/login", async (req, res) => {
+router.put("/login", authMiddleware, async (req, res) => {
     try {
         const token = req.cookies[refreshTokenName];
         console.log("refresh", token);
@@ -90,9 +91,6 @@ router.put("/login", async (req, res) => {
         if (!token) {
             return res.status(400).send({ ok: false, error: "Token is required" });
         }
-
-        const { auth, user } = await verifyID(req, true);
-        if (!auth) return res.status(401).json({ ok: false, error: "Not authorized" });
 
         const userData = await refreshData(token);
         if (!userData?.ok) throw Error("Bad AUTHER response");
