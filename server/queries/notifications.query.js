@@ -14,7 +14,9 @@ function buildWhereFromAuthorizedQuery(user, query) {
         };
     }
     if (whereQuery.before && whereQuery.after) {
-        where["created_at"] = { [Op.between]: [whereQuery.before, whereQuery.after] };
+        where["created_at"] = {
+            [Op.between]: [whereQuery.before, whereQuery.after],
+        };
     } else if ("before" in whereQuery) {
         where["created_at"] = { [Op.lte]: new Date(whereQuery.before) };
     } else if ("after" in whereQuery) {
@@ -90,7 +92,7 @@ async function enrichMysteryBuyNotification(plainNotification) {
             item,
         };
     } catch (err) {
-        console.log("[Notifications] Enrichment Error:", err.message);
+        console.log("[Notifications] MYSTERY_BUY Enrichment Error:", err.message);
         return plainNotification;
     }
 }
@@ -108,7 +110,7 @@ async function enrichUpgradeBuyNotification(plainNotification) {
             item,
         };
     } catch (err) {
-        console.log("[Notifications] Enrichment Error:", err.message);
+        console.log("[Notifications] UPGRADE_BUY Enrichment Error:", err.message);
         return plainNotification;
     }
 }
@@ -126,7 +128,7 @@ async function enrichOtcNotification(plainNotification) {
             otcDeal,
         };
     } catch (err) {
-        console.log("[Notifications] Enrichment Error:", err.message);
+        console.log("[Notifications] OTC Enrichment Error:", err.message);
         return plainNotification;
     }
 }
@@ -144,7 +146,7 @@ async function enrichInvestmentNotification(plainNotification) {
             partner,
         };
     } catch (err) {
-        console.log("[Notifications] Enrichment Error:", err.message);
+        console.log("[Notifications] INVEST Enrichment Error:", err.message);
         return plainNotification;
     }
 }
@@ -154,36 +156,28 @@ async function enrichReturnNotification(plainNotification) {
 }
 
 async function enrichClaimNotification(plainNotification) {
-    let claim;
-    let payout;
     try {
-        claim = await models.claim.findOne({
+        const claim = await models.claim.findOne({
             where: {
                 id: plainNotification.data.claimId,
             },
             raw: true,
         });
-    } catch (err) {
-        console.log("[Notifications] Enrichment Error:", err.message);
-        claim = null;
-    }
-    try {
-        payout = await models.payout.findOne({
+        const payout = await models.payout.findOne({
             where: {
                 id: plainNotification.data.payoutId,
             },
             raw: true,
         });
+        return {
+            ...plainNotification,
+            claim,
+            payout,
+        };
     } catch (err) {
-        console.log("[Notifications] Enrichment Error:", err.message);
-        payout = null;
+        console.log("[Notifications] CLAIM Enrichment Error:", err.message);
+        return plainNotification;
     }
-
-    return {
-        ...plainNotification,
-        claim,
-        payout,
-    };
 }
 
 module.exports = {
