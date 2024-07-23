@@ -8,6 +8,7 @@ import { authTokenName } from "@/lib/authHelpers";
 export const getMarkets = async () => {
     try {
         const { data } = await axiosPrivate.get(API_ROUTES.otc.getMarkets);
+
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -30,6 +31,22 @@ export const getMarketsSsr = async (token) => {
     } catch (e) {
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "getMarketsSsr", e });
+        }
+    }
+
+    return [];
+};
+
+export const getUserAlocation = async () => {
+    try {
+        console.log('11');
+        const { data } = await axiosPrivate.get(API_ROUTES.otc.getUserAllocation);
+        console.log('22', data)
+
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "getUserAllocation", e });
         }
     }
 

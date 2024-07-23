@@ -2,21 +2,26 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { dehydrate, useQuery } from "@tanstack/react-query";
 
-import { fetchOffers } from "@/fetchers/otc.fetcher"
-import { fetchVault } from "@/fetchers/vault.fetcher";
+// import { fetchOffers } from "@/fetchers/otc.fetcher"
+// import { fetchVault } from "@/fetchers/vault.fetcher";
 import { getMarkets, getMarketsSsr } from "@/v2/fetchers/otc";
 import { queryClient } from "@/lib/queryCache";
 import { processServerSideData } from "@/lib/serverSideHelpers";
-import OTCMarket from "@/v2/modules/otc/OTCMarket";
+// import OTCMarket from "@/v2/modules/otc/OTCMarket";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
-import Empty from "@/components/App/Empty";
-import Loader from "@/components/App/Loader";
+// import Empty from "@/components/App/Empty";
+// import Loader from "@/components/App/Loader";
 import routes from "@/routes";
 
-import useMarket from "@/v2/modules/otc/logic/useMarket";
+import OTCLayout from "@/v2/modules/otc/OTCLayout";
+import Markets from "@/v2/modules/otc/Markets";
+import Overview from "@/v2/modules/otc/Overview";
+import OTCTables from "@/v2/modules/otc/OTCTables";
+
+// import useMarket from "@/v2/modules/otc/logic/useMarket";
 
 export default function AppOtc({ session }) {
-    const { otcIsLoading, length } = useMarket(session.userId);
+    // const { otcIsLoading, length } = useMarket(session.userId);
 
     // const { data: otc = [], isLoading: otcIsLoading } = useQuery({
     //     queryKey: ["otcMarkets", USER_ID],
@@ -79,25 +84,33 @@ export default function AppOtc({ session }) {
     // };
 
     // if (otcIsLoading || vaultIsLoading || !currentMarket) {
-    if (otcIsLoading) {
-        return (
-            <>
-                <Metadata title="Loading" />
-                <Loader />
-            </>
-        );
-    }
+    // if (otcIsLoading) {
+    //     return (
+    //         <>
+    //             <Metadata title="Loading" />
+    //             <Loader />
+    //         </>
+    //     );
+    // }
 
-    if (length === 0) {
-        return (
-            <div className="col-span-12 max-h-[40vh]">
-                <Metadata title="OTC Market" />
-                <Empty />
-            </div>
-        );
-    }
+    // if (length === 0) {
+    //     return (
+    //         <div className="col-span-12 max-h-[40vh]">
+    //             <Metadata title="OTC Market" />
+    //             <Empty />
+    //         </div>
+    //     );
+    // }
 
-    return <OTCMarket session={session} />
+    // return <OTCMarket session={session} />
+
+    return (
+        <OTCLayout session={session}>
+            <Markets />
+            <Overview />
+            <OTCTables />
+        </OTCLayout>
+    )
 }
 
 export const getServerSideProps = async ({ req, res }) => {

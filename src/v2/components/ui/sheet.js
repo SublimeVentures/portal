@@ -25,7 +25,7 @@ const sheetVariants = cva(
         variants: {
             side: {
                 left: "bottom-0 left-0 h-full w-3/4 rounded-lg data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-lg sm:rounded-l-none",
-                right: "bottom-0 right-0 w-full max-h-[calc(100vh_-_100px)] data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right rounded-lg sm:max-w-lg sm:max-h-full sm:max-w-lg sm:rounded-r-none",
+                right: "bottom-0 right-0 w-full max-h-[calc(100vh_-_100px)] data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right rounded-t-lg sm:max-w-lg sm:max-h-full sm:max-w-lg sm:rounded-r-none",
             },
         },
         defaultVariants: {
@@ -72,7 +72,7 @@ const SheetFooter = ({ className, ...props }) => (
 SheetFooter.displayName = "SheetFooter";
 
 const SheetBody = ({ className, ...props }) => (
-    <div className={cn("relative grow w-full overflow-y-auto overflow-x-hidden", className )} {...props} />
+    <div className={cn("relative grow w-full overflow-hidden", className )} {...props} />
 )
 
 SheetBody.displayName = "SheetBody";

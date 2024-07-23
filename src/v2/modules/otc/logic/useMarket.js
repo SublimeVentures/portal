@@ -2,12 +2,14 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
 import { getMarkets } from "@/v2/fetchers/otc";
+import { useSession } from "../logic/store";
 
-export default function useMarket(USER_ID) {
-  const router = useRouter();
-  const { market } = router.query;
+export default function useMarket() {
+    const { userId: USER_ID } = useSession();
+    const router = useRouter();
+    const { market } = router.query;
 
-    const { data: otc = [], isLoading: otcIsLoading } = useQuery({
+    const { data: markets = [], isLoading } = useQuery({
         queryKey: ["otcMarkets", USER_ID],
         queryFn: () => getMarkets(),
         refetchOnMount: false,
@@ -16,14 +18,11 @@ export default function useMarket(USER_ID) {
         staleTime: 3 * 60 * 60 * 1000,
     });
 
-    const currentMarket = otc?.find((el) => el.slug === market) ?? null;
-    const selectedOtc = currentMarket?.otc ?? null;
+    const currentMarket = markets?.find((el) => el.slug === market) ?? null;
 
     return {
-        otc,
+        markets,
         currentMarket,
-        selectedOtc,
-        otcIsLoading,
-        length: otc.length,
+        isLoading,
     }
 };

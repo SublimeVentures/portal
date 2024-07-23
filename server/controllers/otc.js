@@ -15,13 +15,29 @@ const db = require("../services/db/definitions/db.init");
 const { isAddress } = require("web3-validator");
 const axios = require("axios");
 const { getOtcList } = require("../queries/offers.query");
+const { getAllocation } = require("../queries/offers.query");
 
 async function getMarkets(session) {
     try {
         const { tenantId, partnerId } = session;
         return await getOtcList(partnerId, tenantId);
     } catch (error) {
-        logger.error(`ERROR :: [getOffers] OTC`, {
+        logger.error(`ERROR :: [getMarkets] OTC`, {
+            error: serializeError(error),
+        });
+        return {
+            markets: [],
+        };
+    }
+}
+
+async function getUserAllocation(user) {
+    const { userId } = user;
+    
+    try {
+        return await getAllocation(userId);
+    } catch (error) {
+        logger.error(`ERROR :: [getUserAllocation] OTC`, {
             error: serializeError(error),
         });
         return {
@@ -175,4 +191,4 @@ async function signOffer(user, req) {
     }
 }
 
-module.exports = { getMarkets, getOffers, getHistory, getLatestDeals, createOffer, signOffer };
+module.exports = { getMarkets, getUserAllocation, getOffers, getHistory, getLatestDeals, createOffer, signOffer };
