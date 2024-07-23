@@ -69,13 +69,13 @@ export default function AppUpgrades({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className="flex grow 3xl:px-19 3xl:py-12 3xl:gap-11">
+            <div className="flex grow 3xl:px-19 3xl:py-12 3xl:gap-11 pointer-events-none group">
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
                             key={data.slug}
-                            variant={data.id === 1 ? "accent" : "default"}
-                            className="text-white flex-1 flex flex-col gap-11 py-14 items-center justify-center"
+                            variant={data.id === 1 ? "accent" : "static"}
+                            className="text-white flex-1 flex flex-col gap-11 py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100"
                         >
                             <Image
                                 src={`${cdn}/webapp/store/${data.img}`}
@@ -106,7 +106,12 @@ export default function AppUpgrades({ session }) {
                                         {data.price} {currency && getCurrency(currency.symbol)}
                                     </DefinitionDescription>
                                 </dl>
-                                <Button className="w-1/3" variant={data.id === 1 ? "accent" : "default"}>
+                                <Button
+                                    className="w-1/3"
+                                    variant={data.id === 1 ? "accent" : "default"}
+                                    disabled={data.availability < 1}
+                                    onClick={() => setOrder(data)}
+                                >
                                     Buy
                                 </Button>
                             </div>

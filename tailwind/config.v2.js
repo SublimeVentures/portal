@@ -30,7 +30,7 @@ module.exports = {
                 "gray-400": "hsla(209, 77%, 9%)", // #051626
 
                 primary: {
-                    DEFAULT: "#099DB5",
+                    DEFAULT: "#0BB0C8",
                     500: "#099DB5",
                     600: "#086377",
                     700: "#095A6E",

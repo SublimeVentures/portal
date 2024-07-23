@@ -1,16 +1,17 @@
-import { Button } from "@/v2/components/ui/button";
-
 import { stepsStatus } from "./reducer";
+import { Button } from "@/v2/components/ui/button";
+import { cn } from "@/lib/cn";
 
-export default function BlockchainStepButton({ run, status, buttonLock, buttonText }) {
+export default function BlockchainStepButton({ run, status, buttonLock, buttonText, className }) {
+    const isIdle = status === stepsStatus.IDLE;
     return (
         <Button
-            variant={status === stepsStatus.IDLE ? "accent" : "outline"}
-            className={status === stepsStatus.IDLE ? "" : "border-accent text-accent"}
+            variant={isIdle ? "accent" : "outline"}
+            className={cn(className, { "border-accent text-accent": !isIdle })}
             onClick={run}
             disabled={buttonLock}
         >
             {buttonText}
         </Button>
     );
-};
+}
