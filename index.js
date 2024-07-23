@@ -43,17 +43,16 @@ nextApp.prepare().then(async () => {
     server.use("/api/auth", authRoute);
     server.use("/api/public", publicRoute);
 
-    server.use(authMiddleware);
-    server.use("/api/environment", envRoute);
-    server.use("/api/offer", offerRoute);
-    server.use("/api/invest", investRoute);
-    server.use("/api/vault", vaultRoute);
-    server.use("/api/otc", otcRoute);
-    server.use("/api/mysterybox", mysteryboxRoute);
-    server.use("/api/store", storeRoute);
-    server.use("/api/settings", settingsRoute);
-    server.use("/api/payout", payoutRoute);
-    server.use("/api/claim", claimRoute);
+    server.use("/api/environment", authMiddleware, envRoute);
+    server.use("/api/offer", authMiddleware, offerRoute);
+    server.use("/api/invest", authMiddleware, investRoute);
+    server.use("/api/vault", authMiddleware, vaultRoute);
+    server.use("/api/otc", authMiddleware, otcRoute);
+    server.use("/api/mysterybox", authMiddleware, mysteryboxRoute);
+    server.use("/api/store", authMiddleware, storeRoute);
+    server.use("/api/settings", authMiddleware, settingsRoute);
+    server.use("/api/payout", authMiddleware, payoutRoute);
+    server.use("/api/claim", authMiddleware, claimRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
