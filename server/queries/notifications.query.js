@@ -47,28 +47,7 @@ async function getNotifications(user, query) {
         const last = notifications[notifications.length - 1].id;
         return {
             last,
-            notifications: await Promise.all(
-                notifications.map((notif) => {
-                    switch (notif.typeId) {
-                        case NotificationTypes.MYSTERY_BUY:
-                            return enrichMysteryBuyNotification(notif);
-                        case NotificationTypes.UPGRADE_BUY:
-                            return enrichUpgradeBuyNotification(notif);
-                        case NotificationTypes.OTC_CANCEL:
-                        case NotificationTypes.OTC_MADE:
-                        case NotificationTypes.OTC_TAKE:
-                            return enrichOtcNotification(notif);
-                        case NotificationTypes.INVESTMENT:
-                            return enrichInvestmentNotification(notif);
-                        case NotificationTypes.REFUND:
-                            return enrichReturnNotification(notif);
-                        case NotificationTypes.CLAIM:
-                            return enrichClaimNotification(notif);
-                        default:
-                            return notif;
-                    }
-                }),
-            ),
+            notifications: await buildFullNotifications(notifications),
         };
     } catch (err) {
         console.log("[Notifications] Fetch Error:", err.message);
@@ -77,6 +56,31 @@ async function getNotifications(user, query) {
             notifications: [],
         };
     }
+}
+
+async function buildFullNotifications(baseNotifications) {
+    return Promise.all(
+        baseNotifications.map((notif) => {
+            switch (notif.typeId) {
+                case NotificationTypes.MYSTERY_BUY:
+                    return enrichMysteryBuyNotification(notif);
+                case NotificationTypes.UPGRADE_BUY:
+                    return enrichUpgradeBuyNotification(notif);
+                case NotificationTypes.OTC_CANCEL:
+                case NotificationTypes.OTC_MADE:
+                case NotificationTypes.OTC_TAKE:
+                    return enrichOtcNotification(notif);
+                case NotificationTypes.INVESTMENT:
+                    return enrichInvestmentNotification(notif);
+                case NotificationTypes.REFUND:
+                    return enrichReturnNotification(notif);
+                case NotificationTypes.CLAIM:
+                    return enrichClaimNotification(notif);
+                default:
+                    return notif;
+            }
+        }),
+    );
 }
 
 async function enrichMysteryBuyNotification(plainNotification) {
