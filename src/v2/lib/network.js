@@ -9,3 +9,11 @@ export const NETWORKS = Object.freeze({
     [NetworkEnum.matic]: "matic",
     [NetworkEnum.bsc]: "bsc",
 });
+
+export const AirdropNetworkEnum = Object.freeze({
+    sol: 501,
+});
+
+export const AIRDROP_NETWORKS = Object.freeze({
+    [NetworkEnum.sol]: "solana",
+});

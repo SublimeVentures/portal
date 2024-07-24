@@ -23,6 +23,7 @@ const { router: settingsRoute } = require("./server/routes/settings.router.js");
 const { router: payoutRoute } = require("./server/routes/payout.router.js");
 const { router: claimRoute } = require("./server/routes/claim.router.js");
 const { router: notificationsRoute } = require("./server/routes/notifications.router.js");
+const { router: networkRoute } = require("./server/routes/network.router.js");
 
 const port = process.env.PORT || 3000;
 const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
@@ -53,6 +54,7 @@ nextApp.prepare().then(async () => {
     server.use("/api/payout", payoutRoute);
     server.use("/api/claim", claimRoute);
     server.use("/api/notifications", notificationsRoute);
+    server.use("/api/network", networkRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {

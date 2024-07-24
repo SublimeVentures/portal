@@ -1,5 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 
+import { AirdropNetworkEnum } from "@/v2/lib/network";
+
 export const isValidSolanaAddress = (address) => {
     try {
         let pubkey = new PublicKey(address);
@@ -10,5 +12,5 @@ export const isValidSolanaAddress = (address) => {
 };
 
 export const isAddressValid = {
-    solana: (address) => isValidSolanaAddress(address),
+    [AirdropNetworkEnum.sol]: (address) => isValidSolanaAddress(address),
 };

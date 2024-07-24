@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useNetworkList } from "./useNetworkList";
 import AddWalletForm from "./AddWalletForm";
  
-export default function AddWalletModal() {
+export default function AddWalletModal({ isMaxWallets, wallets }) {
     const [open, setOpen] = useState(false);
 
     const { data: networkList = [], isLoading } = useNetworkList();
@@ -14,11 +14,17 @@ export default function AddWalletModal() {
     if (isLoading) {
         return <div>loading...</div>
     }
+    
+    if (!filteredNetwors.length) {
+        return null;
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => setOpen(true)}>Add</Button>
+                <Button variant="outline" disabled={isMaxWallets}  onClick={() => setOpen(true)} className="w-full">
+                    Add wallet
+                </Button>
             </DialogTrigger>
 
             <DialogContent handleClose={() => setOpen(false)}>
@@ -33,10 +39,9 @@ export default function AddWalletModal() {
                     <p className="ml-2 text-md font-light text-destructive text-center md:text-lg md:text-left">Wallet can be assigned only to one account.</p>
                 </div>
 
-                <AddWalletForm networkList={filteredNetwors} />
+                <AddWalletForm networkList={filteredNetwors} wallets={wallets} />
             
                 <DialogFooter>
-                    <Button variant="gradient">Add Wallet</Button>
                     <Button variant="secondary" className="md:hidden" onClick={() => setOpen(false)}>Close</Button>
                 </DialogFooter>
             </DialogContent>

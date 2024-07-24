@@ -15,12 +15,18 @@ async function getUserWallets(user) {
 }
 
 async function addUserWallet(user, req) {
+    const { signature, address, network } = req.body;
+
     try {
         const token = req.cookies[authTokenName];
+
         const session = await axios.post(`${process.env.AUTHER}/session/addWallet`, {
             token,
-            signature: req.body.signature,
+            signature,
+            address,
+            network,
         });
+
         return session.data;
     } catch (error) {
         logger.error("addUserWallet", { error: serializeError(error) });

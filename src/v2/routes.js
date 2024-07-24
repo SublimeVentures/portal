@@ -4,8 +4,13 @@ export const OTC_API_ROUTES = Object.freeze({
     getHistory: '/api/otc/history',
 });
 
+export const NETWORK_API_ROUTES = Object.freeze({
+    getNetwork: '/api/network',
+});
+
 export const API_ROUTES = Object.freeze({
-    otc: OTC_API_ROUTES
+    otc: OTC_API_ROUTES,
+    network: NETWORK_API_ROUTES,
 });
 
 export const routes = Object.freeze({

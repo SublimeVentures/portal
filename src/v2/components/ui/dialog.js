@@ -34,7 +34,7 @@ const DialogContent = forwardRef(({ className, children, ...props }, ref) => (
                 className="absolute right-[53px] top-[32px] rounded opacity-70 ring-offset-background transition-base hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
                 onClick={props.handleClose}
             >
-                <IconButton name="Close" icon={CrossIcon} className="hidden md:block" />
+                <IconButton name="Close" icon={CrossIcon} className="p-3 hidden md:block" />
             </DialogPrimitive.Close>
         </DialogPrimitive.Content>
     </DialogPortal>
