@@ -1,8 +1,58 @@
 const { withSentryConfig } = require("@sentry/nextjs");
+const { TENANT } = require("./src/lib/tenantHelper");
 
-/** @type {import('next').NextConfig} */
+const nonRewritablePaths = [
+    "_next",
+    "join",
+    "login",
+    "investments",
+    "tokenomics",
+    "terms",
+    "privacy",
+    "404",
+    "api",
+    "app",
+    "favicon.ico",
+    "favicon.svg",
+];
+
+/** @type {import("next").NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
+    async rewrites() {
+        if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
+            return {
+                beforeFiles: [
+                    {
+                        source: `/:path((?!${nonRewritablePaths.join("|")}).*)`,
+                        destination: "/app/:path*",
+                    },
+                    {
+                        source: "/",
+                        destination: "/app",
+                    },
+                ],
+            };
+        }
+        return [];
+    },
+    async redirects() {
+        if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
+            return [
+                {
+                    source: "/app",
+                    destination: "/",
+                    permanent: true,
+                },
+                {
+                    source: "/app/:path*",
+                    destination: "/:path*",
+                    permanent: true,
+                },
+            ];
+        }
+        return [];
+    },
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/,
