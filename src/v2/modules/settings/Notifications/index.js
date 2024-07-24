@@ -5,7 +5,7 @@ import { CONNECTION_TYPE } from "./helpers";
 
 export default function NotificationsSettings() {
     return (
-        <Card variant="none" className="py-6 px-12 flex flex-col gap-8 w-full bg-settings-gradient">
+        <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full w-full bg-settings-gradient">
             <div>
                 <CardTitle className="text-2xl font-medium text-foreground leading-10">Notifications Settings</CardTitle>
                 <CardDescription className="text-md font-light">View and update your personal preference</CardDescription>

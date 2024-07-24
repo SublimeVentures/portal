@@ -25,7 +25,7 @@ export default function WalletSettings({ wallets }) {
     }, [isAddWalletModalOpen, isRemoveWalletModalOpen])
     
     return (
-        <Card variant="none" className="flex flex-col gap-8 w-full bg-settings-gradient md:py-6 md:px-12">
+        <Card variant="none" className="flex flex-col gap-8 h-full w-full bg-settings-gradient md:py-6 md:px-12">
             <div className="flex justify-between items-center">
                 <div>
                     <CardTitle className="text-lg font-medium">Wallet connect</CardTitle>
@@ -58,7 +58,7 @@ export default function WalletSettings({ wallets }) {
               )})}
             </ul>
 
-            <Button disabled={wallets.length >= maxWallets} variant="outline" className="md:hidden">Add wallet</Button>
+            <Button disabled={wallets.length >= maxWallets} variant="outline" className="mt-auto md:hidden">Add wallet</Button>
         </Card>
     );
 };
