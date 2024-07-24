@@ -33,10 +33,12 @@ export default function LayoutApp({ children }) {
                         : "min-h-screen",
                 )}
             >
-                <div className={cn("sticky top-0 z-20",
-                    isBlockedAlert
-                        ? "max-h-[calc(100vh_-_var(--alertHeight))] top-[var(--alertHeight)]"
-                        : "max-h-screen",
+                <div
+                    className={cn(
+                        "sticky top-0 z-20",
+                        isBlockedAlert
+                            ? "max-h-[calc(100vh_-_var(--alertHeight))] top-[var(--alertHeight)]"
+                            : "max-h-screen",
                     )}
                 >
                     <Sidebar session={children.props?.session} />
