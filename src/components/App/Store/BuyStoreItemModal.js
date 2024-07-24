@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import GenericModal from "@/components/Modal/GenericModal";
 import PAGE, { ExternalLinks } from "@/routes";
 import Linker from "@/components/link";
@@ -9,46 +8,13 @@ import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import lottieSuccess from "@/assets/lottie/success.json";
 import Dropdown from "@/components/App/Dropdown";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import BlockchainSteps from "@/v2/components/BlockchainSteps";
+import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
-import { Dialog, DialogContent } from "@/v2/components/ui/dialog";
-import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
-import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
-import { Label } from "@/v2/components/ui/label";
-import { SelectSimple as Select, SelectItem as Option } from "@/v2/components/ui/select";
-import { Input } from "@/v2/components/ui/input";
-import { cn } from "@/lib/cn";
-import USDCIcon from "@/v2/assets/svg/usdc.svg";
-import USDTIcon from "@/v2/assets/svg/usdt.svg";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
-
-const UpgradeSymbol = ({ className }) => (
-    <span className={cn("rounded-full size-4 inline-block mr-3 align-text-top", className)}></span>
-);
-
-const UpgradeCurrency = ({ className, icon: Icon }) => (
-    <span className={cn("rounded size-4 inline-block mr-3 align-text-top p-0.5", className)}>
-        <Icon />
-    </span>
-);
-
-const CURRENCY_ICON = {
-    USDC: USDCIcon,
-    USDT: USDTIcon,
-};
-
-const CURRENCY_BG_COLOR = {
-    USDC: "bg-[#2775CA]",
-    USDT: "bg-[#53AE94]",
-};
-
-const UpgradeCurrencyPicker = ({ symbol }) => {
-    return <UpgradeCurrency className={cn(CURRENCY_BG_COLOR[symbol])} icon={CURRENCY_ICON[symbol]} />;
-};
 
 export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
@@ -90,7 +56,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
             params: {
                 requiredNetwork: selectedCurrency.chainId,
                 account: account.address,
-                buttonText: "Buy this upgrade",
+                buttonText: "Buy",
                 liquidity: Number(order.price),
                 allowance: Number(order.price),
                 amount: 1,
@@ -104,10 +70,6 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
         };
     }, [model, token?.contract, activeDiamond, selectedCurrency?.contract]);
 
-    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
-        data: blockchainInteractionData,
-    });
-    console.log(blockchainInteractionData);
     const title = () => {
         return (
             <>
@@ -161,54 +123,34 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
         );
     };
     const contentSteps = () => {
-        console.log(dropdownCurrencyOptions);
         return (
-            <>
-                <h1 className="text-accent text-6xl mb-6">{order.name}</h1>
-                <p className="text-md mb-10">{order.description}</p>
-                <div className="grid grid-cols-2 gap-5">
-                    <div className="">
-                        <Label className="block">Upgrade type</Label>
-                        <Select placeholder="Select upgrade type" className="flex w-full">
-                            <Option value="one">
-                                <UpgradeSymbol className="bg-accent" />
-                                Guaranted
-                            </Option>
-                            <Option value="two">
-                                <UpgradeSymbol className="bg-primary" />
-                                Ungarented
-                            </Option>
-                        </Select>
+            <div className={`flex flex-1 flex-col`}>
+                <div className={`flex flex-col gap-2 mt-5 card-content-description`}>
+                    <div className={"detailRow"}>
+                        <p>Item</p>
+                        <hr className={"spacer"} />
+                        <p>{order.name}</p>
                     </div>
-                    <div>
-                        <Label>Quantitiy</Label>
-                    </div>
-                    <div>
-                        <Label className="block">Price</Label>
-                        <Select
-                            placeholder="Select currency"
-                            className="flex w-full"
-                            onChange={setSelectedCurrency}
-                            value={selectedCurrency}
-                        >
-                            {dropdownCurrencyOptions.map((currency) => {
-                                return (
-                                    <Option value={currency} key={currency.symbol}>
-                                        <UpgradeCurrencyPicker symbol={currency.symbol} />
-                                        {currency.symbol}
-                                    </Option>
-                                );
-                            })}
-                        </Select>
-                    </div>
-                    <div>
-                        <Label className="block">Total</Label>
-                        <Input />
+                    <div className={"detailRow"}>
+                        <p>Total Cost</p>
+                        <hr className={"spacer"} />
+                        <div className="font-bold text-gold flex items-center">
+                            <span className={"mr-2"}>{order.price}</span>
+                            {dropdownCurrencyOptions.length > 1 ? (
+                                <Dropdown
+                                    options={dropdownCurrencyOptions}
+                                    selector={"symbol"}
+                                    propSelected={setSelectedCurrency}
+                                    isSmall={true}
+                                />
+                            ) : (
+                                <>{dropdownCurrencyOptions[0]?.symbol}</>
+                            )}
+                        </div>
                     </div>
                 </div>
-                {model && <BlockchainSteps {...getBlockchainStepsProps()} />}
-                <BlockchainStepButton className="w-full" {...getBlockchainStepButtonProps()} />
-            </>
+                {model && <BlockchainSteps data={blockchainInteractionData} />}
+            </div>
         );
     };
 
@@ -217,20 +159,6 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     };
 
     return (
-        <Dialog open={model}>
-            <DialogContent open={true} className="flex max-w-[950px] gap-13">
-                <Image
-                    src="/img/upgrade-dialog-premium.png"
-                    width={423}
-                    height={556}
-                    alt="Upgrade"
-                    className="-ml-13 -my-8 rounded-l"
-                />
-                <div className="text-white">
-                    {title()}
-                    {content()}
-                </div>
-            </DialogContent>
-        </Dialog>
+        <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true} />
     );
 }

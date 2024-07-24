@@ -2,16 +2,10 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
-import { AiOutlineRead as ReadIcon } from "react-icons/ai";
 import Image from "next/image";
-import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import routes, { ExternalLinks } from "@/routes";
-import { ButtonIconSize } from "@/components/Button/RoundButton";
-import Empty from "@/components/App/Empty";
+import routes from "@/routes";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
-import Loader from "@/components/App/Loader";
 import { PremiumItemsENUM } from "@/lib/enum/store";
-import StoreItem from "@/components/App/Store/StoreItem";
 import { fetchStore } from "@/fetchers/store.fetcher";
 import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
@@ -20,22 +14,19 @@ import { Card } from "@/v2/components/ui/card";
 import { cn } from "@/lib/cn";
 import { getCurrency } from "@/components/App/Store/helper";
 import { Button } from "@/v2/components/ui/button";
+import Header from "@/v2/components/App/Upgrades/Header";
 
-const BuyStoreItemModal = dynamic(() => import("@/components/App/Store/BuyStoreItemModal"), { ssr: false });
+const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
 
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
-    const { cdn, network, getCurrencyStore } = useEnvironmentContext();
+    const { cdn, getCurrencyStore } = useEnvironmentContext();
     console.log("getCurrencyStore", getCurrencyStore());
 
     const [isBuyModal, setBuyModal] = useState(false);
     const [order, setOrder] = useState(null);
 
-    const {
-        isLoading,
-        data: response,
-        refetch,
-    } = useQuery({
+    const { data: response, refetch } = useQuery({
         queryKey: ["store", tenantId],
         queryFn: fetchStore,
         refetchOnMount: false,
@@ -65,11 +56,12 @@ export default function AppUpgrades({ session }) {
     const title = `Upgrades - ${getCopy("NAME")}`;
 
     return (
-        <>
+        <div className="flex flex-col grow 3xl:px-19 3xl:py-12 3xl:gap-12">
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className="flex grow 3xl:px-19 3xl:py-12 3xl:gap-11 pointer-events-none group">
+            <Header title="Supercharge your investments" />
+            <div className="flex grow 3xl:gap-11 pointer-events-none group">
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
@@ -97,14 +89,10 @@ export default function AppUpgrades({ session }) {
                             </div>
                             <div className="flex items-center px-11 py-6 rounded-md bg-white/5 backdrop-blur-2xl w-9/12 mx-auto">
                                 <dl className="grid grid-rows-2 grid-flow-col w-2/3">
-                                    <DefinitionTerm>Type</DefinitionTerm>
-                                    <DefinitionDescription>
-                                        {data.id === 1 ? "Not Stackable" : "Stackable"}
-                                    </DefinitionDescription>
-                                    <DefinitionTerm>Price</DefinitionTerm>
-                                    <DefinitionDescription>
+                                    <Definition term="Type">{data.id === 1 ? "Not Stackable" : "Stackable"}</Definition>
+                                    <Definition term="Price">
                                         {data.price} {currency && getCurrency(currency.symbol)}
-                                    </DefinitionDescription>
+                                    </Definition>
                                 </dl>
                                 <Button
                                     className="w-1/3"
@@ -125,7 +113,7 @@ export default function AppUpgrades({ session }) {
                 }}
                 buyModalProps={buyModalProps}
             />
-        </>
+        </div>
     );
 }
 
@@ -135,6 +123,15 @@ function DefinitionTerm({ children }) {
 
 function DefinitionDescription({ children }) {
     return <dd className="text-2xl leading-7">{children}</dd>;
+}
+
+function Definition({ children, term }) {
+    return (
+        <>
+            <DefinitionTerm>{term}</DefinitionTerm>
+            <DefinitionDescription>{children}</DefinitionDescription>
+        </>
+    );
 }
 
 export const getServerSideProps = async ({ req, res }) => {

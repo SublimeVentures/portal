@@ -41,6 +41,7 @@ module.exports = {
             spacing: {
                 13: "3.25rem", // 52px
                 17: "4.25rem", // 68px
+                18: "4.5rem", // 72px
                 19: "4.75rem", // 76px
             },
             fontSize: {
@@ -61,13 +62,6 @@ module.exports = {
                 "9xl": "29px",
                 "10xl": "34px",
                 "11xl": "39px",
-            },
-            fontWeight: {
-                light: 300,
-                regular: 400,
-                medium: 500,
-                semibold: 600,
-                bold: 700,
             },
             fontFamily: {
                 body: ["Poppins", "sans-serif"],
@@ -91,6 +85,9 @@ module.exports = {
                 "empty-investment-pattern": "url('/img/empty-investment-pattern.png')",
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
+                gradient: "linear-gradient(var(--tw-gradient-angle), var(--tw-gradient-stops))",
+                pattern:
+                    "linear-gradient(0deg, rgba(9, 32, 57, 1) 0%, rgba(9, 32, 57, 1) 60%, rgba(9, 29, 51, 0.85) 70%, rgba(10, 12, 14, 0.75) 100%), url('/img/sheet-pattern.png')",
             },
             gridTemplateColumns: {
                 cards: "repeat(auto-fill, minmax(450px, 1fr))",
@@ -114,6 +111,24 @@ module.exports = {
             "accordion-down": "accordion-down 0.1s ease-out",
             "accordion-up": "accordion-up 0.1s ease-out",
         },
+        angle: {
+            80: "80deg",
+            130: "130deg",
+            140: "140deg",
+        },
     },
-    plugins: [],
+    plugins: [
+        function ({ matchUtilities, theme }) {
+            matchUtilities(
+                {
+                    angle: (angle) => ({
+                        "--tw-gradient-angle": angle,
+                    }),
+                },
+                {
+                    values: theme("angle"),
+                },
+            );
+        },
+    ],
 };

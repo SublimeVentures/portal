@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
+import { cva } from "class-variance-authority";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import { cn } from "@/lib/cn";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
@@ -19,13 +20,27 @@ const DialogOverlay = forwardRef(({ className, ...props }, ref) => (
 
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-const DialogContent = forwardRef(({ className, children, ...props }, ref) => (
+const dialogVariants = cva([], {
+    variants: {
+        variant: {
+            accent: "dialog-gradient",
+            default: "bg-gradient angle-[114deg] from-[#06162E] via-[#11354B] to-[#06162E]",
+            pattern: "bg-pattern",
+        },
+    },
+    defaultVariants: {
+        variant: "accent",
+    },
+});
+
+const DialogContent = forwardRef(({ className, children, variant, ...props }, ref) => (
     <DialogPortal>
         <DialogOverlay />
         <DialogPrimitive.Content
             ref={ref}
             className={cn(
-                "dialog-gradient max-w-[700px] w-11/12 fixed left-[50%] top-[50%] z-50 grid rounded translate-x-[-50%] translate-y-[-50%] gap-8 px-13 py-8 shadow-[0_0_58px_hsla(0, 0%, 0%, 0.38)]",
+                dialogVariants({ variant }),
+                "max-w-[700px] w-11/12 fixed left-[50%] top-[50%] z-50 grid rounded translate-x-[-50%] translate-y-[-50%] gap-8 px-13 py-8 shadow-[0_0_58px_hsla(0, 0%, 0%, 0.38)]",
                 "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:w-full data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
                 className,
             )}

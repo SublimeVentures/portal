@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
-import { CaretSortIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { CommonStyleInput } from "@/v2/components/ui/input";
+import { controlVariants } from "@/v2/components/ui/input";
 
 import { cn } from "@/lib/cn";
 
@@ -11,13 +11,13 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
-const SelectTrigger = forwardRef(({ className, children, ...props }, ref) => (
+const SelectTrigger = forwardRef(({ className, children, size, ...props }, ref) => (
     <SelectPrimitive.Trigger
         ref={ref}
-        className={cn(CommonStyleInput, "group items-center justify-center gap-3", className)}
+        className={cn(controlVariants({ size }), "group items-center justify-center gap-3", className)}
         {...props}
     >
-        <span className="grow group-data-[placeholder]:text-white/20 text-left">{children}</span>
+        <span className="grow group-data-[placeholder]:text-white/20 text-left overflow-hidden">{children}</span>
         <SelectPrimitive.Icon asChild>
             <ChevronDownIcon className="size-4 transition-transform group-data-[state=open]:rotate-180" />
         </SelectPrimitive.Icon>
@@ -112,10 +112,10 @@ const SelectSeparator = forwardRef(({ className, ...props }, ref) => (
 
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-const SelectSimple = ({ children, placeholder, className, onChange, value }) => {
+const SelectSimple = ({ children, placeholder, className, onChange, value, size }) => {
     return (
         <Select onValueChange={onChange} value={value}>
-            <SelectTrigger className={className}>
+            <SelectTrigger className={className} size={size}>
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>{children}</SelectContent>

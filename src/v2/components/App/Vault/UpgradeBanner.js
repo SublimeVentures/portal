@@ -47,7 +47,7 @@ const UpgradeBanner = ({ isPremium = false, className }) => (
                 <>
                     <IconButton name="Upgrade" shape="circle" variant="accent" icon={ArrowIcon} size="8" />
                     <div className="ml-8">
-                        <CardTitle className="text-lg font-regular italic text-accent">
+                        <CardTitle className="text-lg font-normal italic text-accent">
                             Upgrade to <span className="font-semibold">Premium!</span>
                         </CardTitle>
 

@@ -63,7 +63,7 @@ export default function LayoutApp({ children, title }) {
     return (
         <div
             style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-            className="min-h-screen h-full w-full flex flex-col bg-[#082536]"
+            className="min-h-screen h-full w-full flex flex-col bg-[#082536] font-body"
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
 

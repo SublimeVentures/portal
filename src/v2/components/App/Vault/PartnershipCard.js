@@ -82,7 +82,7 @@ const PartnershipCard = ({ title, content, logos = [], isLoading, isError }) => 
             </ul>
             <div>
                 {title && (
-                    <CardTitle className="text-md md:text-lg 3xl:text-2xl text-center md:text-left 3xl:text-center font-regular text-foreground mb-3">
+                    <CardTitle className="text-md md:text-lg 3xl:text-2xl text-center md:text-left 3xl:text-center font-normal text-foreground mb-3">
                         {title}
                     </CardTitle>
                 )}
