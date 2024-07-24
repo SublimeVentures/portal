@@ -46,13 +46,12 @@ async function getUserAllocation(user) {
     }
 }
 
+
 async function getOffers(req) {
     try {
         return await getActiveOffers(Number(req.params.id), req.query);
     } catch (error) {
-        logger.error(`ERROR :: [getOffers] OTC`, {
-            error: serializeError(error),
-        });
+        logger.error(`ERROR :: [getOffers] OTC`, { error: serializeError(error) });
         return [];
     }
 }
@@ -61,9 +60,7 @@ async function getHistory(req) {
     try {
         return await getHistoryOffers(Number(req.params.id), req.query);
     } catch (error) {
-        logger.error(`ERROR :: [getHistory] OTC`, {
-            error: serializeError(error),
-        });
+        logger.error(`ERROR :: [getHistory] OTC`, { error: serializeError(error) });
         return [];
     }
 }
@@ -72,9 +69,7 @@ async function getLatestDeals(req) {
     try {
         return await getLatestOffers(req.query);
     } catch (error) {
-        logger.error(`ERROR :: [getLatestDeals] OTC`, {
-            error: serializeError(error),
-        });
+        logger.error(`ERROR :: [getLatestDeals] OTC`, { error: serializeError(error) });
         return [];
     }
 }

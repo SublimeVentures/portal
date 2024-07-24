@@ -3,19 +3,54 @@ import { useQuery } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
 
 import Table from "@/v2/components/Table/Table";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getOffers  } from "@/v2/fetchers/otc";
 import SingleOfferCard from "./SingleOfferCard";
 import CardSkeleton from "./CardSkeleton";
 import TableFilters from "./TableFilters";
 import useMarket from "../logic/useMarket";
 import { offerColumns as columns } from "../logic/columns";
+import { offersFilters } from "../logic/filters";
 
 export default function OffersTable() {
+    const { account } = useEnvironmentContext();
     const { currentMarket, isLoading: isMarketLoading } = useMarket();
     const otcId = currentMarket?.otc ?? null;
 
     const [filters, setFilters] = useState({});
     const [sorting, setSorting] = useState([]);
+
+    const handleToggleFilter = (filterId) => {
+        const selectedFilter = offersFilters.find((f) => f.id === filterId).filter;
+  
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            if (filterId === "only-me") {
+                if (newFilters.maker) {
+                    delete newFilters.maker;
+                } else {
+                    newFilters.maker = account.address;
+                }
+            } else {
+                if (newFilters.isSell !== undefined && newFilters.isSell === selectedFilter.isSell) {
+                    delete newFilters.isSell;
+                } else {
+                    newFilters.isSell = selectedFilter.isSell;
+                }
+            }
+  
+            return newFilters;
+        });
+    };
+  
+    const handleFilterRemove = (filterKey) => {
+        setFilters((prev) => {
+            const newFilters = { ...prev };
+            delete newFilters[filterKey];
+            return newFilters;
+        });
+    };
+  
     
     const { data = [], isLoading: isOffersLoading } = useQuery({
         queryKey: ["otcOffers", otcId, filters, sorting[0]?.id, sorting[0]?.desc],
@@ -52,9 +87,9 @@ export default function OffersTable() {
     const isLoading = isMarketLoading || isOffersLoading;
 
     return (
-        <div>
-            <TableFilters />
-            <div className="hidden md:block">
+        <div className="flex flex-col h-full">
+            <TableFilters filters={filters} handleToggleFilter={handleToggleFilter} handleFilterRemove={handleFilterRemove} />
+            <div className="hidden h-full md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
             
@@ -78,34 +113,3 @@ export default function OffersTable() {
         </div>
     );
 };
-
-  // const handleToggleFilter = (filterId) => {
-  //     const selectedFilter = offersFilters.find((f) => f.id === filterId).filter;
-
-  //     setFilters((prev) => {
-  //         const newFilters = { ...prev };
-  //         if (filterId === "only-me") {
-  //             if (newFilters.maker) {
-  //                 delete newFilters.maker;
-  //             } else {
-  //                 newFilters.maker = account.address;
-  //             }
-  //         } else {
-  //             if (newFilters.isSell !== undefined && newFilters.isSell === selectedFilter.isSell) {
-  //                 delete newFilters.isSell;
-  //             } else {
-  //                 newFilters.isSell = selectedFilter.isSell;
-  //             }
-  //         }
-
-  //         return newFilters;
-  //     });
-  // };
-
-  // const handleFilterRemove = (filterKey) => {
-  //     setFilters((prev) => {
-  //         const newFilters = { ...prev };
-  //         delete newFilters[filterKey];
-  //         return newFilters;
-  //     });
-  // };

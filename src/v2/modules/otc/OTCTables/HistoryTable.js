@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 
+import useMarket from "@/v2/modules/otc/logic/useMarket";
 import Table from "@/v2/components/Table/Table";
 import { getOffersHistory  } from "@/v2/fetchers/otc";
 import SingleHistoryCard from "./SingleHistoryCard";
 import CardSkeleton from "./CardSkeleton";
-import useMarket from "@/v2/modules/otc/logic/useMarket";
+import TableFilters from "./TableFilters";
 import { historyColumns as columns } from "../logic/columns";
 import useCurrentView from "../logic/useCurrentView";
 import { otcViews } from "../logic/constants";
@@ -16,15 +17,13 @@ export default function HistoryTable() {
     const { currentMarket, isLoading: isMarketLoading } = useMarket();
     const otcId = currentMarket?.otc ?? null;
 
-    const [filters, setFilters] = useState({});
     const [sorting, setSorting] = useState([]);
 
     const { data = [], isLoading: isHistoryLoading } = useQuery({
-        queryKey: ["otcHistory", otcId, filters, sorting[0]?.id, sorting[0]?.desc],
+        queryKey: ["otcHistory", otcId, sorting[0]?.id, sorting[0]?.desc],
         queryFn: () =>
             getOffersHistory({
                 offerId: currentMarket?.offerId,
-                filters,
                 sort: historySorting[0] && {
                     sortId: historySorting[0].id,
                     sortOrder: historySorting[0].desc ? "DESC" : "ASC",
@@ -34,7 +33,7 @@ export default function HistoryTable() {
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
         staleTime: 3 * 60 * 1000,
-        enabled: activeView === otcViews.HISTORY,
+        enabled: activeView === otcViews.history,
     });
 
     const table = useReactTable({
@@ -43,19 +42,18 @@ export default function HistoryTable() {
         state: {
             sorting,
         },
-        manualFiltering: true,
         manualSorting: true,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
     });
 
     const isLoading = isMarketLoading || isHistoryLoading;
   
     return (
-        <div>
-            <div className="hidden md:block">
+        <div className="flex flex-col h-full">
+            <TableFilters />
+            <div className="hidden h-full md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
             

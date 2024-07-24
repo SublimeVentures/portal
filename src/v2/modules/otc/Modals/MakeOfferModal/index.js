@@ -13,7 +13,7 @@ import SelectedMarket from "./SelectedMarket";
 import OfferTabs from "./OfferTabs";
 import OfferForm from "./OfferForm";
 
-export default function MakeOfferModal({ session }) {
+export default function MakeOfferModal() {
     const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
 
     const {

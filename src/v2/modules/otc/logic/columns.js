@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { createColumnHelper } from "@tanstack/react-table";
 import moment from "moment";
+import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 
 import TakeOfferModal from "../Modals/TakeOfferModal"
 import CancelOfferModal from "../Modals/CancelOfferModal"
@@ -9,9 +10,8 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 
-// @todo
+// @todo - refactor old components 
 import { ButtonIconSize } from "@/components/Button/RoundButton";
-import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import DynamicIcon from "@/components/Icon";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 
@@ -115,8 +115,7 @@ const actionColumn = columnHelper.accessor("action", {
                     )
                 )}
 
-                {/* {!ownership.ok && <TakeOfferModal offerDetails={offerDetails} />} */}
-                <CancelOfferModal offerDetails={offerDetails} />
+                {!ownership.ok && <TakeOfferModal offerDetails={offerDetails} />}
             </div>
         )
     },

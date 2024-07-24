@@ -20,7 +20,7 @@ export default function Overview() {
     }
     
     return (
-        <Card variant="none" className="p-4 flex flex-col w-full justify-between gap-4 bg-settings-gradient md:flex-row md:items-center">
+        <Card variant="none" className="p-4 h-max flex flex-col w-full justify-between gap-4 bg-settings-gradient md:flex-row md:items-center">
             {isLoading ? <Skeleton className="h-64 md:h-24" /> : (
                 <>
                     <div className="mb-2 flex items-center gap-4 2xl:gap-8">

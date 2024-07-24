@@ -16,10 +16,10 @@ function SkeletonTable({ span = 4, count = 5 }) {
 
 export default function Table({ table, isLoading, colCount = 4 }) {
     return (
-        <Card variant="static" className="p-0 h-full flex flex-col md:overflow-hidden">
+        <Card variant="static" className="p-0 flex flex-col h-full">
             <div className="p-2 h-5 rounded bg-primary-light-gradient" />
           
-            <div className="px-4 h-full min-h-96 md:overflow-y-auto">
+            <div className="py-2 px-4 h-full min-h-96 md:overflow-y-auto xl:min-h-max xl:h-auto">
                 <table className="table-inline md:table">
                     <thead className="table-head">
                         {table.getHeaderGroups().map(headerGroup => (

@@ -1,12 +1,10 @@
 import Image from "next/image";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 import useMarket from "@/v2/modules/otc/logic/useMarket";
 import { Button } from "@/v2/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetBody,
@@ -18,42 +16,17 @@ import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep
 import BlockchainSteps from "@/v2/components/BlockchainSteps"
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { queryClient } from "@/lib/queryCache";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
 import TransactionSuccess from "../TransactionSucces";
 
-// import { cn } from "@/lib/cn";
-// import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-// import { Button } from "@/v2/components/ui/button";
-// import {
-//   Sheet,
-//   SheetClose,
-//   SheetContent,
-//   SheetFooter,
-//   SheetHeader,
-//   SheetBody,
-//   SheetTitle,
-//   SheetTrigger,
-// } from "@/v2/components/ui/sheet";
-// // import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
-// // import BlockchainSteps from "@/v2/components/BlockchainSteps";
-// // import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
-// // import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
-
-// // import TransactionSuccess from "../TransactionSucces";
-// // import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
-// // import useMarket from "../../logic/useMarket";
-import { queryClient } from "@/lib/queryCache";
-// await Promise.all([refetchVault(), queryClient.invalidateQueries(["otcOffers"])]);
-
-queryClient.invalidateQueries(["otcOffers"])
-
 const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
 
 export default function CancelOfferModal({ offerDetails, className }) {
     const { currentMarket } = useMarket();
-    const { getCurrencySymbolByAddress, network, cdn } = useEnvironmentContext();
+    const { network, cdn } = useEnvironmentContext();
 
     const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } = useBlockchainCancelOfferTransaction({ otcId: currentMarket?.otc, dealId: offerDetails?.dealId, requiredNetwork: offerDetails?.chainId });
     const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({ data: blockchainInteractionData })

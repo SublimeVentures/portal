@@ -21,48 +21,14 @@ function constructOffersOrder(sortId = "date", sortOrder = "DESC") {
     return offerOrder;
 }
 
-async function getLatestOffers(query) {
-    const { sortId, sortOrder, ...filters } = query;
-
-    const offerOrder = constructOffersOrder(sortId, sortOrder);
-    const whereClause = getWhereClause(filters, [], ["isSell"]);
-
-    return models.otcDeal.findAll({
-        order: offerOrder,
-        limit: 10,
-        attributes: [
-            "id",
-            "offerId",
-            "isSell",
-            "price",
-            "amount",
-            "createdAt",
-            [db.literal('"offer"."name"'), "name"],
-            [db.literal('"offer"."slug"'), "slug"],
-            [Sequelize.literal("price / amount"), "multiplier"],
-        ],
-        where: {
-            ...whereClause,
-            isFilled: false,
-            isCancelled: false,
-        },
-        include: {
-            model: models.offer,
-            attributes: [],
-            required: true, // Ensures INNER JOIN
-        },
-        raw: true,
-    });
-}
-
 async function getActiveOffers(otcId, query) {
     const { sortId, sortOrder, ...filters } = query;
 
-    const offerOrder = constructOffersOrder(sortId, sortOrder);
+    const order = constructOffersOrder(sortId, sortOrder);
     const whereClause = getWhereClause(filters, ["maker"], ["isSell"]);
 
     return models.otcDeal.findAll({
-        order: offerOrder,
+        order,
         attributes: [
             "id",
             "offerId",
@@ -94,15 +60,15 @@ async function getActiveOffers(otcId, query) {
         },
         raw: true,
     });
-}
+};
 
 async function getHistoryOffers(offerId, query) {
     const { sortId, sortOrder } = query;
 
-    const historyOrder = constructOffersOrder(sortId, sortOrder);
+    const order = constructOffersOrder(sortId, sortOrder);
 
     return models.otcDeal.findAll({
-        order: historyOrder,
+        order,
         attributes: [
             "id",
             "offerId",
@@ -113,7 +79,10 @@ async function getHistoryOffers(offerId, query) {
             [Sequelize.literal("price / amount"), "multiplier"],
             "updatedAt",
         ],
-        where: { offerId, isFilled: true },
+        where: {
+            offerId,
+            isFilled: true,
+        },
         include: {
             model: models.onchain,
             attributes: [],
@@ -121,7 +90,39 @@ async function getHistoryOffers(offerId, query) {
         },
         raw: true,
     });
-}
+};
+
+async function getLatestOffers(query) {
+    const { sortId, sortOrder } = query;
+
+    const order = constructOffersOrder(sortId, sortOrder);
+
+    return models.otcDeal.findAll({
+        order,
+        limit: 10,
+        attributes: [
+            "id",
+            "offerId",
+            "isSell",
+            "price",
+            "amount",
+            "createdAt",
+            [db.literal('"offer"."name"'), "name"],
+            [db.literal('"offer"."slug"'), "slug"],
+            [Sequelize.literal("price / amount"), "multiplier"],
+        ],
+        where: {
+            isFilled: false,
+            isCancelled: false,
+        },
+        include: {
+            model: models.offer,
+            attributes: [],
+            required: true, // Ensures INNER JOIN
+        },
+        raw: true,
+    });
+};
 
 async function getUserPendingOffers(wallet) {
     return models.otcLock.findAll({

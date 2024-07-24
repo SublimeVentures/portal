@@ -39,9 +39,7 @@ export const getMarketsSsr = async (token) => {
 
 export const getUserAlocation = async () => {
     try {
-        console.log('11');
         const { data } = await axiosPrivate.get(API_ROUTES.otc.getUserAllocation);
-        console.log('22', data)
 
         return data;
     } catch (e) {
@@ -72,13 +70,14 @@ export const getOffers = async ({ otcId, filters = {}, sort }) => {
     return [];
 };
 
-export const getLatestDeals = async ({ otcId, filters = {}, sort }) => {
-    // const { sortId = "", sortOrder = "" } = sort || {};
-    // const queryParams = new URLSearchParams({ ...filters, sortId, sortOrder });
+export const getLatestDeals = async ({ sort }) => {
+    const { sortId = "", sortOrder = "" } = sort || {};
+    const queryParams = new URLSearchParams({ sortId, sortOrder });
 
     try {
-        const { data } = await axiosPrivate.get(API_ROUTES.otc.getLatest);
-        // const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getLatest}?${queryParams.toString()}`);
+        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getLatest}?${queryParams.toString()}`);
+        console.log('data1', data)
+
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -90,7 +89,7 @@ export const getLatestDeals = async ({ otcId, filters = {}, sort }) => {
 };
 
 export const getOffersHistory = async ({ offerId, sort }) => {
-    if (!offerId) return {};
+    if (!offerId) return;
 
     const { sortId = "", sortOrder = "" } = sort || {};
     const queryParams = new URLSearchParams({ sortId, sortOrder });

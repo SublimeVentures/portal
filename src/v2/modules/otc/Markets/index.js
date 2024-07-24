@@ -33,7 +33,7 @@ export default function Markets() {
     useEffect(() => setIsPopoverOpen(false), [currentMarket]);
 
     return (
-        <Card variant="static" className="flex flex-col flex-shrink-0 overflow-hidden xl:h-full xl:max-h-fit">
+        <Card variant="static" className="flex flex-col h-full flex-shrink-0 overflow-hidden">
             <div className="xl:mb-4">
                 <h3 className="hidden py-4 text-3xl font-bold text-foreground xl:block">Select Markets</h3>
                   <Search name="Search name" value={searchValue} onChange={handleSearchChange} onClick={togglePopover} className="w-full" />

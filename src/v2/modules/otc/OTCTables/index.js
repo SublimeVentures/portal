@@ -7,21 +7,21 @@ import { otcViews } from "../logic/constants";
 import useCurrentView from '../logic/useCurrentView';
 
 export default function OTCTables() {
-  const { currentMarket } = useMarket();
-  const { activeView } = useCurrentView();
+    const { currentMarket } = useMarket();
+    const { activeView } = useCurrentView();
 
-  const renderTable = () => {
-      if (!currentMarket) return <LatestDealsTable />;
+    const renderTable = () => {
+        if (!currentMarket) return <LatestDealsTable />;
 
-      switch (activeView) {
-          case otcViews.HISTORY:
-              return <HistoryTable />;
-          case otcViews.OFFERS:
-              return <OffersTable />;
-          default:
-              return <OffersTable />;
-      };
-  };
+        switch (activeView) {
+            case otcViews.history:
+                return <HistoryTable />;
+            case otcViews.offers:
+                return <OffersTable />;
+            default:
+                return <OffersTable />;
+        };
+    };
 
-  return renderTable();
+    return renderTable()
 }

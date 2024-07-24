@@ -33,6 +33,7 @@ router.get("/history/:id", async (req, res) => {
 router.get("/latest", async (req, res) => {
     const { auth } = await verifyID(req);
     if (!auth) return res.status(401).json({});
+
     return res.status(200).json(await getLatestDeals(req));
 });
 

@@ -8,10 +8,10 @@ import { otcViews } from "./constants";
 export default function useCurrentView() {
     const router = useRouter();
     const { view } = router.query;
-    const currentView = otcViews[view?.toUpperCase()] || otcViews.OFFERS;
+    const currentView = otcViews[view] ?? otcViews.offers;
 
     useEffect(() => {
-        if (!view || !otcViews[view?.toUpperCase()]) {
+        if (!view || !otcViews[view]) {
             if (router.pathname !== routes.OTC) {
                 router.replace(routes.OTC, undefined, { shallow: true });
             }
@@ -19,7 +19,7 @@ export default function useCurrentView() {
     }, [view, router]);
 
     useEffect(() => {
-        if (currentView === otcViews.OFFERS) {
+        if (currentView === otcViews.offers) {
             queryClient.invalidateQueries(["otcOffers"]);
         }
     }, [currentView]);

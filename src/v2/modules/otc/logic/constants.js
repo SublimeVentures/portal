@@ -1,4 +1,4 @@
 export const otcViews = Object.freeze({
-    OFFERS: "offers",
-    HISTORY: "history",
+    offers: "offers",
+    history: "history",
 });
