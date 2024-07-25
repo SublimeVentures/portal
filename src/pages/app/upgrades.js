@@ -15,6 +15,8 @@ import { cn } from "@/lib/cn";
 import { getCurrency } from "@/components/App/Store/helper";
 import { Button } from "@/v2/components/ui/button";
 import Header from "@/v2/components/App/Upgrades/Header";
+import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
+import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 
 const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
 
@@ -87,13 +89,13 @@ export default function AppUpgrades({ session }) {
                                 </h1>
                                 <p className="text-center text-lg">{data.description}</p>
                             </div>
-                            <div className="flex items-center px-11 py-6 rounded-md bg-white/5 backdrop-blur-2xl w-9/12 mx-auto">
-                                <dl className="grid grid-rows-2 grid-flow-col w-2/3">
+                            <BackdropCard className="w-9/12 mx-auto">
+                                <DefinitionList className="w-2/3">
                                     <Definition term="Type">{data.id === 1 ? "Not Stackable" : "Stackable"}</Definition>
                                     <Definition term="Price">
                                         {data.price} {currency && getCurrency(currency.symbol)}
                                     </Definition>
-                                </dl>
+                                </DefinitionList>
                                 <Button
                                     className="w-1/3"
                                     variant={data.id === 1 ? "accent" : "default"}
@@ -102,7 +104,7 @@ export default function AppUpgrades({ session }) {
                                 >
                                     Buy
                                 </Button>
-                            </div>
+                            </BackdropCard>
                         </Card>
                     ))}
             </div>
@@ -114,23 +116,6 @@ export default function AppUpgrades({ session }) {
                 buyModalProps={buyModalProps}
             />
         </div>
-    );
-}
-
-function DefinitionTerm({ children }) {
-    return <dt className="text-md font-light leading-5 self-end">{children}</dt>;
-}
-
-function DefinitionDescription({ children }) {
-    return <dd className="text-2xl leading-7">{children}</dd>;
-}
-
-function Definition({ children, term }) {
-    return (
-        <>
-            <DefinitionTerm>{term}</DefinitionTerm>
-            <DefinitionDescription>{children}</DefinitionDescription>
-        </>
     );
 }
 
