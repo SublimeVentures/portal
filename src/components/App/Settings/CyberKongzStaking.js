@@ -15,7 +15,7 @@ const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModa
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
 
 export default function CyberKongzStaking({ stakingProps }) {
-    const { session, account, stakingCurrency } = stakingProps;
+    const { session, account, stakingCurrency, userWallets } = stakingProps;
     const { diamonds } = useEnvironmentContext();
 
     const router = useRouter();
@@ -71,6 +71,7 @@ export default function CyberKongzStaking({ stakingProps }) {
         isS1: session.isS1,
         isStaked: session.isStaked,
         stakingCurrency,
+        userWallets,
         refreshSession,
     };
 
@@ -78,6 +79,7 @@ export default function CyberKongzStaking({ stakingProps }) {
         setStaked(session.isStaked);
     }, []);
 
+    console.log("session", session, userWallets);
     return (
         <div className={`relative offerWrap flex flex-1 max-w-[600px]`}>
             <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase"}>

@@ -18,8 +18,13 @@ export default function CitCapStakingModal({ model, setter, stakingModalProps })
         }, 400);
     };
 
-    console.log("currencyStaking", stakingCurrency);
-    console.log("activeDiamond", activeDiamond);
+    const registeredOriginalWallet = stakingModalProps?.userWallets?.find(
+        (el) => !el.isDelegate && el.isHolder,
+    )?.wallet;
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -32,6 +37,7 @@ export default function CitCapStakingModal({ model, setter, stakingModalProps })
                 account: account.address,
                 buttonText: "UnStake",
                 contract: activeDiamond,
+                delegated: wallet,
                 transactionType: METHOD.UNSTAKE,
             },
             setTransactionSuccessful,
