@@ -82,7 +82,7 @@ const TENANT_UNSTAKE = (params) => {
         default: {
             return {
                 name: "unstake",
-                inputs: [process.env.NEXT_PUBLIC_TENANT],
+                inputs: [process.env.NEXT_PUBLIC_TENANT, params.delegated],
                 abi: abi_staking_generic,
                 confirmations: 2,
                 contract: params.contract,
