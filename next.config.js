@@ -4,10 +4,18 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const nextConfig = {
     reactStrictMode: false,
     webpack(config) {
-        config.module.rules.push({
-            test: /\.svg$/,
-            use: ["@svgr/webpack"],
-        });
+        config.module.rules.push(
+            {
+                test: /\.svg$/i,
+                type: "asset",
+                resourceQuery: /url/, // *.svg?url
+            },
+            {
+                test: /\.svg$/i,
+                resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
+                use: ["@svgr/webpack"],
+            },
+        );
 
         return config;
     },

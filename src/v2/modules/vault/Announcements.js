@@ -1,25 +1,49 @@
+import { useQuery } from "@tanstack/react-query";
 import { PartnershipCard } from "@/v2/components/App/Vault";
 import { cn } from "@/lib/cn";
+import { fetchNews } from "@/v2/fetchers/news.fetcher";
+import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
+import { fetchOfferList } from "@/fetchers/offer.fetcher";
 
-const mockedPartnership = {
-    title: "Based.VC & Steady Stack",
-    description:
-        "The partnership operates in the technology sector, specializing in developing software solutions for small businesses.",
-    partners: [{ id: 1 }, { id: 2, styles: "bg-primary shadow-primary" }],
-};
+const useNewsQuery = () =>
+    useQuery({
+        queryKey: ["news"],
+        queryFn: fetchNews,
+    });
+
+const useOffersQuery = (query, options = {}) =>
+    useQuery({
+        queryKey: ["offerList", query],
+        queryFn: () => fetchOfferList(query),
+        ...options,
+    });
+
+const Title = ({ children, className }) => (
+    <h3 className={cn("text-nowrap text-md md:text-2xl text-foreground md:hidden 3xl:block md:mb-4", className)}>
+        {children}
+    </h3>
+);
 
 const Announcements = ({ className }) => {
+    const { data = {}, isLoading } = useNewsQuery();
+    const { data: { offers = [] } = {} } = useOffersQuery({ limit: 1 }, { disabled: !data });
+    if (!data) {
+        return (
+            <div className={cn("flex flex-col", className)}>
+                <Title>Offer</Title>
+                {offers.map((offer) => (
+                    <Card className="grow" key={offer.slug}>
+                        <CardTitle>{offer.ticker}</CardTitle>
+                        <CardDescription>{offer.name}</CardDescription>
+                    </Card>
+                ))}
+            </div>
+        );
+    }
     return (
         <div className={cn("flex flex-col", className)}>
-            <h3 className="text-nowrap text-md md:text-2xl text-foreground md:hidden 2xl:block">
-                Community Partnership
-            </h3>
-            <PartnershipCard
-                title={mockedPartnership.title}
-                description={mockedPartnership.description}
-                partners={mockedPartnership.partners}
-                isLoading={false}
-            />
+            <Title>Community Partnership</Title>
+            <PartnershipCard {...data} isLoading={isLoading} />
         </div>
     );
 };
