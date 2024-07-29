@@ -27,17 +27,21 @@ const MobileLayout = ({ children, isBlockedAlert }) => {
     );
 };
 
-const DesktopLayout = ({ children, isBlockedAlert, title }) => {
+const DesktopLayout = ({ children, isBlockedAlert, title, bg }) => {
     return (
         <div className={cn("flex h-full grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
             <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} />
 
             <div className="flex grow pl-[var(--sidebarWidth)] ml-0 m-6">
                 <div
-                    className={cn("grow bg-[#05060B] rounded-[33px] md:overflow-y-auto 2x:overflow-y-hidden", {
-                        "max-h-[calc(100vh_-_theme('spacing.12'))]": !isBlockedAlert,
-                        "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
-                    })}
+                    className={cn(
+                        "grow bg-[#05060B] rounded-[33px] md:overflow-y-auto 2x:overflow-y-hidden",
+                        {
+                            "max-h-[calc(100vh_-_theme('spacing.12'))]": !isBlockedAlert,
+                            "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
+                        },
+                        bg,
+                    )}
                 >
                     <main className="flex flex-col w-full h-full">
                         <DesktopHeader title={title} />
@@ -49,7 +53,7 @@ const DesktopLayout = ({ children, isBlockedAlert, title }) => {
     );
 };
 
-export default function LayoutApp({ children, title }) {
+export default function LayoutApp({ children, title, bg }) {
     const isDesktop = useMediaQuery(breakpoints.md);
 
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
@@ -63,12 +67,12 @@ export default function LayoutApp({ children, title }) {
     return (
         <div
             style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-            className="min-h-screen h-full w-full flex flex-col bg-[#082536]"
+            className="min-h-screen h-full w-full flex flex-col bg-[#082536] font-body"
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
 
             {isDesktop ? (
-                <DesktopLayout title={title} isBlockedAlert={isBlockedAlert}>
+                <DesktopLayout title={title} isBlockedAlert={isBlockedAlert} bg={bg}>
                     {children}
                 </DesktopLayout>
             ) : (

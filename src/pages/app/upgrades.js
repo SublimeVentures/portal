@@ -2,35 +2,33 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
-import { AiOutlineRead as ReadIcon } from "react-icons/ai";
-import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import routes, { ExternalLinks } from "@/routes";
-import { ButtonIconSize } from "@/components/Button/RoundButton";
-import Empty from "@/components/App/Empty";
-import LayoutApp from "@/components/Layout/LayoutApp";
-import Loader from "@/components/App/Loader";
+import Image from "next/image";
+import routes from "@/routes";
+import { AppLayout, Metadata } from "@/v2/components/Layout";
 import { PremiumItemsENUM } from "@/lib/enum/store";
-import StoreItem from "@/components/App/Store/StoreItem";
 import { fetchStore } from "@/fetchers/store.fetcher";
 import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { Card } from "@/v2/components/ui/card";
+import { cn } from "@/lib/cn";
+import { getCurrency } from "@/components/App/Store/helper";
+import { Button } from "@/v2/components/ui/button";
+import Header from "@/v2/components/App/Upgrades/Header";
+import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
+import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 
-const BuyStoreItemModal = dynamic(() => import("@/components/App/Store/BuyStoreItemModal"), { ssr: false });
+const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
 
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
-    const { cdn, network, getCurrencyStore } = useEnvironmentContext();
+    const { cdn, getCurrencyStore } = useEnvironmentContext();
     console.log("getCurrencyStore", getCurrencyStore());
 
     const [isBuyModal, setBuyModal] = useState(false);
     const [order, setOrder] = useState(null);
 
-    const {
-        isLoading,
-        data: response,
-        refetch,
-    } = useQuery({
+    const { data: response, refetch } = useQuery({
         queryKey: ["store", tenantId],
         queryFn: fetchStore,
         refetchOnMount: false,
@@ -40,20 +38,6 @@ export default function AppUpgrades({ session }) {
 
     const storeData = response?.filter((el) => el.id !== PremiumItemsENUM.MysteryBox);
     const currency = getCurrencyStore()[0];
-
-    const renderPage = () => {
-        if (isLoading) return <Loader />;
-        if (!storeData || storeData.length === 0) return <Empty />;
-
-        return (
-            <div className="grid grid-cols-12 gap-y-8 mobile:gap-10">
-                {!!storeData &&
-                    storeData.map((el) => (
-                        <StoreItem item={el} key={el.id} cdn={cdn} setOrder={setOrder} currency={currency} />
-                    ))}
-            </div>
-        );
-    };
 
     useEffect(() => {
         if (order) {
@@ -74,32 +58,55 @@ export default function AppUpgrades({ session }) {
     const title = `Upgrades - ${getCopy("NAME")}`;
 
     return (
-        <>
+        <div className="flex flex-col grow 3xl:px-19 3xl:py-12 3xl:gap-12">
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className="flex flex-col justify-between gap-7 sm:flex-row">
-                <div className="flex flex-col justify-center">
-                    <div className="glow text-3xl page-header-text">UPGRADES</div>
-                    <div className="text-outline text-md mt-2 white min-w-[250px]">Supercharge your investments.</div>
-                </div>
-                <div className="mx-auto flex items-center sm:ml-auto sm:mr-0">
-                    <div>
-                        <UniButton
-                            type={ButtonTypes.BASE}
-                            text="Learn more"
-                            isWide={true}
-                            size="text-sm sm"
-                            handler={() => {
-                                window.open(ExternalLinks.UPGRADES, "_blank");
-                            }}
-                            icon={<ReadIcon className={ButtonIconSize.hero} />}
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-1 flex-col select-none items-center gap-y-5 mobile:gap-y-10 mobile:gap-10 page-content-text">
-                {renderPage()}
+            <Header title="Supercharge your investments" />
+            <div className="flex grow 3xl:gap-11 pointer-events-none group">
+                {!!storeData &&
+                    storeData.map((data, index) => (
+                        <Card
+                            key={data.slug}
+                            variant={data.id === 1 ? "accent" : "static"}
+                            className="text-white flex-1 flex flex-col gap-11 py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100"
+                        >
+                            <Image
+                                src={`${cdn}/webapp/store/${data.img}`}
+                                className="rounded-full size-80"
+                                alt={data.name}
+                                width={320}
+                                height={320}
+                            />
+                            <div className="w-4/5 mx-auto">
+                                <h1
+                                    className={cn("text-center text-9xl mb-6", {
+                                        "text-accent": !index,
+                                        "text-primary": !!index,
+                                    })}
+                                >
+                                    {data.name}
+                                </h1>
+                                <p className="text-center text-lg">{data.description}</p>
+                            </div>
+                            <BackdropCard className="w-9/12 mx-auto">
+                                <DefinitionList className="w-2/3">
+                                    <Definition term="Type">{data.id === 1 ? "Not Stackable" : "Stackable"}</Definition>
+                                    <Definition term="Price">
+                                        {data.price} {currency && getCurrency(currency.symbol)}
+                                    </Definition>
+                                </DefinitionList>
+                                <Button
+                                    className="w-1/3"
+                                    variant={data.id === 1 ? "accent" : "default"}
+                                    disabled={data.availability < 1}
+                                    onClick={() => setOrder(data)}
+                                >
+                                    Buy
+                                </Button>
+                            </BackdropCard>
+                        </Card>
+                    ))}
             </div>
             <BuyStoreItemModal
                 model={isBuyModal}
@@ -108,7 +115,7 @@ export default function AppUpgrades({ session }) {
                 }}
                 buyModalProps={buyModalProps}
             />
-        </>
+        </div>
     );
 }
 
@@ -117,5 +124,5 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 AppUpgrades.getLayout = function (page) {
-    return <LayoutApp>{page}</LayoutApp>;
+    return <AppLayout>{page}</AppLayout>;
 };

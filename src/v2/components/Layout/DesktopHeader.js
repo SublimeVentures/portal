@@ -20,7 +20,7 @@ export default function Header({ title }) {
                 <div className="flex items-baseline">
                     <h2 className="text-7xl font-bold text-foreground">{title}</h2>
 
-                    <p className="text-4xl font-regular text-foreground">
+                    <p className="text-4xl font-normal text-foreground">
                         Welcome back, <span className="text-accent">{mockedUser.username}!</span>
                     </p>
                 </div>
