@@ -20,7 +20,7 @@ const iconButtonVariants = cva(
             },
             size: {
                 8: "size-8",
-                default: "size-[42px]",
+                default: "size-10",
             },
         },
         defaultVariants: {
@@ -39,7 +39,6 @@ const IconButton = forwardRef(
         </Comp>
     ),
 );
-
 
 IconButton.displayName = "IconButton";
 

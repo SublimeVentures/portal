@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    @apply overflow-hidden;
+    @apply overflow-hidden font-body #{!important};
   }
 }
 
@@ -20,7 +20,7 @@
     }
     
     .table-head-cell {
-      @apply pt-4 pl-2 pr-5 text-sm font-regular text-foreground normal-case text-left;
+      @apply pt-4 pl-2 pr-5 text-sm font-normal text-foreground normal-case text-left;
     }
 
     .table-body-row {
@@ -40,7 +40,7 @@
     }
 
     .table-head-cell {
-      @apply text-sm font-regular text-foreground normal-case text-left;
+      @apply text-sm font-normal text-foreground normal-case text-left;
     }
 
     .table-body-row {

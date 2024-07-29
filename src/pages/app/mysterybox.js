@@ -4,48 +4,26 @@ import Head from "next/head";
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import LayoutApp from "@/components/Layout/LayoutApp";
+import Link from "next/link";
+import Image from "next/image";
 import routes, { ExternalLinks } from "@/routes";
-import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import IconMysteryBox from "@/assets/svg/MysteryBox.svg";
-import Linker from "@/components/link";
 import { getCopy } from "@/lib/seoConfig";
 import { fetchStore, fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
-import BuyMysteryBoxModal from "@/components/App/MysteryBox/BuyMysteryBoxModal";
+import BuyMysteryBoxModal from "@/v2/components/App/MysteryBox/BuyMysteryBoxModal";
 import { claimMysterybox } from "@/fetchers/mysterbox.fetcher";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { TENANT } from "@/lib/tenantHelper";
+import { AppLayout, Metadata } from "@/v2/components/Layout";
+import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
+import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
+import { Button } from "@/v2/components/ui/button";
 const ErrorModal = dynamic(() => import("@/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
 const ClaimMysteryBoxModal = dynamic(() => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"), { ssr: false });
 
-const TENANT_MYSTERYBOX = () => {
-    switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
-        case TENANT.basedVC: {
-            return (
-                <div className={"video-wrapper"}>
-                    <video loop autoPlay muted playsInline className="">
-                        <source src="https://cdn.basedvc.fund/webapp/1.mp4" type="video/mp4" />
-                    </video>
-                </div>
-            );
-        }
-        case TENANT.NeoTokyo: {
-            return <IconMysteryBox className="w-[250px] sm:w-[450px] text-white" />;
-        }
-        case TENANT.CyberKongz: {
-            return (
-                <img
-                    src={"https://vc-cdn.s3.eu-central-1.amazonaws.com/webapp/store/0_14.png"}
-                    className={"max-w-[350px]"}
-                />
-            );
-        }
-    }
-};
-
-export default function AppLootbox({ session }) {
+export default function MysteryBoxPage({ session }) {
     const router = useRouter();
 
     const { settings } = useEnvironmentContext();
@@ -120,13 +98,13 @@ export default function AppLootbox({ session }) {
     }, []);
 
     useEffect(() => {
-        if (!!order) {
+        if (order) {
             setBuyModal(true);
         }
     }, [order]);
 
     const buyModalProps = {
-        order: !!order ? order : {},
+        order: order ? order : {},
         setOrder,
     };
 
@@ -136,45 +114,62 @@ export default function AppLootbox({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className="mystery flex flex-1 flex-col select-none justify-center items-center gap-10  relative">
-                {mysteryBoxOwnedAmount > 0 && (
-                    <div className="header-text-dedicated text-2xl flex absolute top-5 glow-normal pb-5 z-10">
-                        You have {mysteryBoxOwnedAmount} unopened MysteryBox!
+            <div className="grow flex flex-col items-start justify-center 3xl:px-19 3xl:py-12">
+                <div className="w-[532px]">
+                    <div className="flex flex-col items-start gap-4 mb-10">
+                        <h1 className="text-9xl text-accent">The Sunken Mystery Box</h1>
+                        <p className="text-lg text-white">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua.
+                        </p>
+                        <Link
+                            href={ExternalLinks.LOOTBOX}
+                            className="text-white inline-flex items-center gap-2 text-md"
+                            target="_blank"
+                        >
+                            Learn more
+                            <ArrowIcon className="size-2" />
+                        </Link>
                     </div>
-                )}
-                <div className="mt-[150px] sm:mt-0" ref={imageTilt}>
-                    {TENANT_MYSTERYBOX()}
-                </div>
-
-                <div className="flex gap-5 mt-5 z-10 absolute bottom-10">
-                    <UniButton
-                        type={ButtonTypes.BASE}
-                        text="OPEN"
-                        state="success"
-                        isDisabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
-                        isPrimary={true}
-                        isWide={true}
-                        zoom={1.05}
-                        size="text-sm xs"
-                        handler={() => {
-                            openMysteryBox();
-                        }}
-                    />
-                    <UniButton
-                        type={ButtonTypes.BASE}
-                        text={`BUY (${storeAvailable})`}
-                        isDisabled={storeAvailable <= 0}
-                        isWide={true}
-                        zoom={1.05}
-                        size="text-sm xs"
-                        handler={() => {
-                            setOrder(mysteryBox);
-                        }}
-                    />
-                </div>
-
-                <div className="absolute bottom-0 z-10">
-                    <Linker url={ExternalLinks.LOOTBOX} text="Learn more" />
+                    <BackdropCard className="mb-5">
+                        <DefinitionList className="grid-cols-2 w-2/3">
+                            <Definition term="Type">Stackable</Definition>
+                            <Definition term="Price">$150</Definition>
+                        </DefinitionList>
+                        <Button
+                            className="w-1/3"
+                            disabled={storeAvailable <= 0}
+                            onClick={() => {
+                                setOrder(mysteryBox);
+                            }}
+                        >
+                            Buy
+                        </Button>
+                    </BackdropCard>
+                    {mysteryBoxOwnedAmount > 0 && (
+                        <BackdropCard>
+                            <figure className="w-1/3">
+                                <Image
+                                    src="/img/icon-chest.webp"
+                                    className="rounded-md size-18 -my-2"
+                                    alt="a"
+                                    width={72}
+                                    height={72}
+                                />
+                            </figure>
+                            <DefinitionList className="w-1/3">
+                                <Definition term="Owned">{mysteryBoxOwnedAmount}</Definition>
+                            </DefinitionList>
+                            <Button
+                                variant="accent"
+                                className="w-1/3"
+                                disabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
+                                onClick={openMysteryBox}
+                            >
+                                Open
+                            </Button>
+                        </BackdropCard>
+                    )}
                 </div>
             </div>
             <BuyMysteryBoxModal
@@ -207,6 +202,6 @@ export const getServerSideProps = async ({ req, res }) => {
     return await processServerSideData(req, res, routes.Mysterybox);
 };
 
-AppLootbox.getLayout = function (page) {
-    return <LayoutApp>{page}</LayoutApp>;
+MysteryBoxPage.getLayout = function (page) {
+    return <AppLayout bg="bg-mystery-box bg-cover bg-right-bottom">{page}</AppLayout>;
 };

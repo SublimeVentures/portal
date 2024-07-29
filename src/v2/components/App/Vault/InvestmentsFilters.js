@@ -1,5 +1,5 @@
 import React from "react";
-import { ViewRadio, UpgradeBanner } from "@/v2/components/App/Vault";
+import { ViewRadio } from "@/v2/components/App/Vault";
 import {
     DropdownMenu,
     DropdownMenuButton,
@@ -12,8 +12,8 @@ import {
 } from "@/v2/components/ui/dropdown-menu";
 import { Button } from "@/v2/components/ui/button";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
-import { cn } from "@/lib/cn";
 import FilterAltIcon from "@/v2/assets/svg/filter-alt.svg";
+import Header from "@/v2/components/App/Upgrades/Header";
 
 const SORT_BY = {
     CREATED_AT: "createdAt",
@@ -45,16 +45,14 @@ export const FilterButton = ({ children, ...props }) => (
     </Button>
 );
 
-export default function InvestmentsList({ investments, views, query, onChange }) {
+export default function InvestmentsList({ investments, views, query, onChange, className }) {
     const { view, sortBy = DEFAULT_SORT_BY } = query;
     return (
-        <div className={cn("flex flex-col gap-4 md:flex-row md:items-center md:gap-5")}>
-            <div className="flex items-center justify-between gap-4">
-                <h3 className="text-2xl font-bold text-foreground lg:font-regular">
-                    My Investments ({investments.length + 1})
-                </h3>
-                <ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />
-            </div>
+        <Header
+            className={className}
+            title={`My Investments (${investments.length + 1})`}
+            affix={<ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />}
+        >
             <div className="flex items-center flex-wrap gap-2 md:gap-4">
                 <DropdownMenu>
                     <DropdownMenuButton variant="tertiary">Sort by</DropdownMenuButton>
@@ -129,7 +127,6 @@ export default function InvestmentsList({ investments, views, query, onChange })
                     return null;
                 })}
             </div>
-            <UpgradeBanner className="hidden ml-auto 2xl:block" />
-        </div>
+        </Header>
     );
 }

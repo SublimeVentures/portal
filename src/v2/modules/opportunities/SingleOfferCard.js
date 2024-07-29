@@ -32,7 +32,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}
-                            className="relative text-foreground text-6xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-sm after:font-regular after:p-4 after:absolute after:-bottom-1"
+                            className="relative text-foreground text-6xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-sm after:font-normal after:p-4 after:absolute after:-bottom-1"
                         >
                             {name}
                         </h3>
@@ -53,4 +53,4 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
             </div>
         </Card>
     );
-};
+}
