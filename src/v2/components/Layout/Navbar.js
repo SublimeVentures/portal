@@ -1,52 +1,31 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import PAGE from "@/routes";
 import { IconButton } from "@/v2/components/ui/icon-button";
-import NounStatisticsIcon from "@/v2/assets/svg/noun-statistics.svg";
-import NounVaultIcon from "@/v2/assets/svg/noun-vault.svg";
-import CourtIcon from "@/v2/assets/svg/court.svg";
-import DiamondIcon from "@/v2/assets/svg/diamond.svg";
+import { mainMenu } from "@/v2/menus";
+import { cn } from "@/lib/cn";
 
-const NavigationTabs = () => {
+export default function Navbar() {
     const router = useRouter();
 
     return (
-        <div className="fixed bottom-0 pt-2 flex flex-col h-[var(--navbarHeight)] w-full bg-[#082536] lg:hidden">
-            <ul className="px-9 flex items-center justify-between gap-4">
-                {menu.map(({ name, path, icon }) => (
-                    <li key={name}>
-                        <Link href={path}>
-                            <IconButton className="h-12 w-12 p-3" shape="circle" variant={router.pathname === path ? "gradient" : "transparent"} icon={icon} />
-                        </Link>
-                    </li>
-                ))}
+        <nav className="fixed bottom-0 h-[var(--navbarHeight)] w-full bg-[#082536] md:hidden">
+            <ul className="pt-4 px-4 mx-auto max-w-2xl flex items-center justify-between gap-4 sm:px-16">
+                {mainMenu.map(({ name, path, icon }) => {
+                    const isSelected = router.pathname === path;
+
+                    return (
+                        <li key={name}>
+                            <Link href={path} className="flex flex-col items-center">
+                                <IconButton icon={icon} className="h-12 w-12 p-4" shape="circle" variant={isSelected ? "gradient" : "transparent"} />
+                                <span className={cn("mt-1 text-[12px] text-foreground font-medium text-center", { "text-primary": isSelected })}>
+                                    {name}
+                                </span>
+                            </Link>
+                        </li>
+                    )
+                })}
             </ul>
-        </div>
-    )
+        </nav>
+    );
 };
-
-const menu = [
-    {
-        name: "1",
-        path: PAGE.App,
-        icon: NounStatisticsIcon,
-    },
-    {
-        name: "2",
-        path: "/",
-        icon: NounVaultIcon,
-    },
-    {
-        name: "3",
-        path: "/",
-        icon: CourtIcon,
-    },
-    {
-        name: "4",
-        path: "/",
-        icon: DiamondIcon,
-    },
-];
-
-export default NavigationTabs;

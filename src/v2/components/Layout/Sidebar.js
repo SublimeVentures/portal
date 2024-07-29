@@ -7,7 +7,7 @@ import ChangeAddress from "@/components/Navigation/ChangeAddress";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import { cn } from "@/lib/cn";
 import PAGE from "@/routes";
-import { mainMenu, socialMenu } from "@/v2/menus";
+import { mainMenu, profileMenu, socialMenu } from "@/v2/menus";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
 
 const renderLogo = (componentName) => {
@@ -17,7 +17,7 @@ const renderLogo = (componentName) => {
 
 export default function({ session, isBlockedAlert = false }) {
     const router = useRouter();
-    const { components } = useTenantSpecificData()
+    const { components } = useTenantSpecificData();
 
     const handleExternalLinkOpen = (evt, path) => {
         evt.preventDefault();
@@ -52,8 +52,8 @@ export default function({ session, isBlockedAlert = false }) {
                 </div>
 
                 <nav>
-                    {generateMenu("Menu", mainMenu.groupUser)}
-                    {generateMenu("Account", mainMenu.groupProfile)}
+                    {generateMenu("Menu", mainMenu)}
+                    {generateMenu("Account", profileMenu)}
                 </nav>
 
                 <div className="mt-auto flex flex-col items-center">

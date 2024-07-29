@@ -1,4 +1,4 @@
-import ChainsList from "@/v2/components/App/Vault/ChainsList";
+// import ChainsList from "@/v2/components/App/Vault/ChainsList";
 import { Button } from "@/v2/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/v2/components/ui/dialog";
  
@@ -19,7 +19,7 @@ const ChainListModal = () => {
                 </DialogHeader>
                 
                 <div className="flex items-center justify-center">
-                    <ChainsList />
+                    {/* <ChainsList /> */}
                 </div>
 
                 <p className="text-xxs text-white/[.7] text-center">Current selection: Ethereum</p>

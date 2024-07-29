@@ -1,17 +1,19 @@
 import AppLayout from "./AppLayout";
 import Metadata from "./Metadata";
-import DesktopHeader from "./DesktopHeader";
-import MobileHeader from "./MobileHeader";
-import MobileMenu from "./MobileMenu";
+import Header from "./Header";
 import Navbar from "./Navbar";
+
+import TabletNavbar from "./TabletNavbar";
+import MobileMenu from "./MobileMenu";
 import Sidebar from "./Sidebar";
 
 export {
     AppLayout,
     Metadata,
-    DesktopHeader,
-    MobileHeader,
-    MobileMenu,
     Navbar,
+    Header,
+
+    TabletNavbar,
+    MobileMenu,
     Sidebar,
 };
