@@ -52,13 +52,12 @@ export const getUserAlocation = async () => {
 };
 
 export const getOffers = async ({ otcId, filters = {}, sort }) => {
-    if (!otcId) return;
+    if (!otcId) return [];
 
-    const { sortId = "", sortOrder = "" } = sort || {};
-    const queryParams = new URLSearchParams({ ...filters, sortId, sortOrder });
+    const { sortId = "", sortOrder = "" } = sort ?? {};
 
     try {
-        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getOffers}/${otcId}?${queryParams.toString()}`);
+        const { data } = await axiosPrivate.get(API_ROUTES.otc.getOffers, { params: { ...filters, sortId, sortOrder } });
 
         return data;
     } catch (e) {
@@ -71,12 +70,10 @@ export const getOffers = async ({ otcId, filters = {}, sort }) => {
 };
 
 export const getLatestDeals = async ({ sort }) => {
-    const { sortId = "", sortOrder = "" } = sort || {};
-    const queryParams = new URLSearchParams({ sortId, sortOrder });
+    const { sortId = "", sortOrder = "" } = sort ?? {};
 
     try {
-        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getLatest}?${queryParams.toString()}`);
-        console.log('data1', data)
+        const { data } = await axiosPrivate.get(API_ROUTES.otc.getLatest, { params: { sortId, sortOrder } });
 
         return data;
     } catch (e) {
@@ -89,13 +86,12 @@ export const getLatestDeals = async ({ sort }) => {
 };
 
 export const getOffersHistory = async ({ offerId, sort }) => {
-    if (!offerId) return;
+    if (!offerId) return {};
 
-    const { sortId = "", sortOrder = "" } = sort || {};
-    const queryParams = new URLSearchParams({ sortId, sortOrder });
+    const { sortId = "", sortOrder = "" } = sort ?? {};
 
     try {
-        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getHistory}/${offerId}?${queryParams.toString()}`);
+        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getHistory}/${offerId}`, { params: { sortId, sortOrder } });
 
         return data;
     } catch (e) {

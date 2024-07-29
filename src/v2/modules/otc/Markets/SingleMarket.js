@@ -15,7 +15,13 @@ export default function SingleMarket({ name, genre, slug, currentMarket }) {
     return (
         <Link
             shallow
-            href={`${routes.OTC}?market=${slug}&view=offers`}
+            href={{
+                pathname: routes.OTC,
+                query: {
+                  market: slug,
+                  view: "offers"
+                }
+            }}
             className={cn("h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09] md:flex-row", { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected })}
         >
             <Image
@@ -31,13 +37,13 @@ export default function SingleMarket({ name, genre, slug, currentMarket }) {
               <p className="text-[14px] text-foreground/[.5] leading-none">{genre}</p>
               
               <div className="flex items-center gap-1">
-                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/[.5]">
+                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
                       <HiOutlineBuildingLibrary className="text-foreground size-2" />
                   </div>
-                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/[.5]">
+                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
                       <MdOutlineAttachMoney className="text-foreground size-2" />
                   </div>
-                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/[.5]">
+                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
                       <IoPricetagOutline className="text-foreground size-2" />
                   </div>
               </div>
