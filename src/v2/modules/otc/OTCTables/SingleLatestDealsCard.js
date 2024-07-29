@@ -1,10 +1,13 @@
+import Link from "next/link";
 import Image from "next/image";
 import moment from "moment";
 
+import { Button } from "@/v2/components/ui/button";
 import { Card } from "@/v2/components/ui/card";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
 import DefinitionItem from "./DefinitionItem";
+import { routes } from "@/v2/routes";
 
 export default function SingleLatestDealsCard({ slug, isSell, multiplier, updatedAt }) {
     const { cdn } = useEnvironmentContext();
@@ -31,6 +34,10 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
                         </DefinitionItem>
                         <DefinitionItem term="Multiplier">{multiplier.toFixed(2)}x</DefinitionItem>
                     </dl>
+                    
+                    <Button asChild variant="accent" className="w-full">
+                        <Link href={`${routes.Opportunities}/${slug}`}>Details</Link>
+                    </Button>
                 </div>
             </div>
         </Card>

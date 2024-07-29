@@ -1,14 +1,17 @@
 import Image from "next/image";
+import Link from "next/link";
 import { createColumnHelper } from "@tanstack/react-table";
 import moment from "moment";
 import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 
+import { Button } from "@/v2/components/ui/button";
 import TakeOfferModal from "../Modals/TakeOfferModal"
 import CancelOfferModal from "../Modals/CancelOfferModal"
 import { useSession } from "../logic/store";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
+import { routes } from "@/v2/routes";
 
 // @todo - refactor old components 
 import { ButtonIconSize } from "@/components/Button/RoundButton";
@@ -52,6 +55,20 @@ const dateColumn = columnHelper.accessor("date", {
     cell: info => moment(info.row.original.updatedAt).utc().local().format("YYYY-MM-DD"),
     filterFn: intFilter,
 });
+
+const detailsColumn = columnHelper.accessor("details", {
+    header: "Details",
+    cell: info => {
+        const slug = info.row.original.slug;
+
+        return (
+            <Button asChild size="small" variant="accent">
+                <Link href={`${routes.Opportunities}/${slug}`}>Details</Link>
+            </Button>
+        );
+    },
+});
+
 
 const chainColumn = columnHelper.accessor("chain", {
     header: "Chain",
@@ -126,4 +143,4 @@ export const offerColumns = [isSellColumn, allocationColumn, priceColumn, multip
 
 export const historyColumns = [isSellColumn, allocationColumn, priceColumn, multiplierColumn, chainColumn, dateColumn];
 
-export const latestDealsColumns = [marketColumn, isSellColumn, multiplierColumn, dateColumn];
+export const latestDealsColumns = [marketColumn, isSellColumn, multiplierColumn, dateColumn, detailsColumn];

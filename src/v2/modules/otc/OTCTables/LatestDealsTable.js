@@ -11,7 +11,7 @@ import { latestDealsColumns as columns } from "../logic/columns";
 import SingleLatestDealsCard from "./SingleLatestDealsCard";
 
 export default function LatestDealsTable() {
-    const { currentMarket, isLoading: isMarketLoading } = useMarket();
+    const { isLoading: isMarketLoading } = useMarket();
     const [sorting, setSorting] = useState([]);
     
     const { data = [], isLoading: isLatestLoading } = useQuery({
