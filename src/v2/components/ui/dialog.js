@@ -33,7 +33,7 @@ const dialogVariants = cva([], {
     },
 });
 
-const DialogContent = forwardRef(({ className, children, variant, ...props }, ref) => (
+const DialogContent = forwardRef(({ className, children, variant, handleClose, ...props }, ref) => (
     <DialogPortal>
         <DialogOverlay />
         <DialogPrimitive.Content
@@ -49,7 +49,7 @@ const DialogContent = forwardRef(({ className, children, variant, ...props }, re
             {children}
             <DialogPrimitive.Close
                 className="absolute right-13 top-8 p-3.5 rounded opacity-70 ring-offset-background transition-base hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-                onClick={props.handleClose}
+                onClick={handleClose}
                 asChild
             >
                 <IconButton name="Close" icon={CrossIcon} className="p-3 hidden md:block" />
