@@ -44,7 +44,7 @@ export default function LatestDealsTable() {
     const isLoading = isMarketLoading || isLatestLoading;
   
     return (
-        <div className="flex flex-col h-full">
+        <div className="relative flex flex-col h-full">
             <TableFilters />
             <div className="hidden overflow-hidden md:block">
                 <Table table={table} isLoading={isMarketLoading || isLatestLoading} colCount={columns.length} />

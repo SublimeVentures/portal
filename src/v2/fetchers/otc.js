@@ -57,7 +57,7 @@ export const getOffers = async ({ otcId, filters = {}, sort }) => {
     const { sortId = "", sortOrder = "" } = sort ?? {};
 
     try {
-        const { data } = await axiosPrivate.get(API_ROUTES.otc.getOffers, { params: { ...filters, sortId, sortOrder } });
+        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getOffers}/${otcId}`, { params: { ...filters, sortId, sortOrder } });
 
         return data;
     } catch (e) {

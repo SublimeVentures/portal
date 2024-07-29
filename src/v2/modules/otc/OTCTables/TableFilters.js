@@ -3,8 +3,10 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button } from "@/v2/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal } from "@/v2/components/ui/dropdown-menu";
 import useMarket from "@/v2/modules/otc/logic/useMarket";
+import { cn } from "@/lib/cn";
 import MakeOfferModal from "../Modals/MakeOfferModal";
 import useCurrentView from "../logic/useCurrentView";
+import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { otcViews } from "../logic/constants";
 import { offersFilters } from "../logic/filters";
 
@@ -31,12 +33,13 @@ const FiltersDropdown = ({ filters, handleToggleFilter }) => {
 }
 
 export default function TableFilters({ filters = {}, handleToggleFilter, handleFilterRemove }) {
+    const isDesktop = useMediaQuery(breakpoints.xl);
     const { currentMarket } = useMarket();
     const { activeView, handleChangeView } = useCurrentView();
     const isOffersView = activeView === otcViews.offers;
-    
+
     return (
-        <div className="my-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className={cn("my-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between", { "absolute -top-20": !currentMarket && isDesktop })}>
             <h3 className="text-[24px] text-foreground whitespace-nowrap md:text-[16px]">
                 {currentMarket ? (
                     <>

@@ -19,10 +19,22 @@ export default function useMarket() {
     });
 
     const currentMarket = markets?.find((el) => el.slug === market) ?? null;
+    
+    const marketsCount = markets?.length;
+
+    const handleResetMarket = () => {
+        const { market, ...restQuery } = router.query;
+        router.replace({
+            pathname: router.pathname,
+            query: restQuery,
+        }, undefined, { shallow: true });
+    };
 
     return {
         markets,
+        marketsCount,
         currentMarket,
         isLoading,
+        handleResetMarket,
     }
 };
