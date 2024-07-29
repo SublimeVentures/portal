@@ -4,7 +4,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/cn";
 
 const buttonVariants = cva(
-    "py-1.5 px-6 inline-flex items-center justify-center text-[16px] text-foreground rounded transition-all whitespace-nowrap cursor-pointer leading-5 disabled:opacity-50 disabled:cursor-not-allowed",
+    "box-border inline-flex items-center justify-center text-xs text-foreground rounded transition-all whitespace-nowrap cursor-pointer leading-5 md:text-md disabled:opacity-50 disabled:cursor-not-allowed",
     {
         variants: {
             variant: {
@@ -17,9 +17,14 @@ const buttonVariants = cva(
                 link: "p-0 text-accent hover:enabled:underline hover:enabled:underline-offset-4",
                 destructive: "bg-red-500 hover:enabled:bg-red-800",
             },
+            size: {
+                small: "py-1.5 px-6",
+                medium: "py-2 px-8",
+            }
         },
         defaultVariants: {
             variant: "default",
+            size: "medium",
         },
     },
 );

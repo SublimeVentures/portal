@@ -12,14 +12,14 @@ export default function NotificationFilters({ query, handleInputChange }) {
             <DatePicker
                 className="w-full md:w-auto"
                 date={startDate}
-                setDate={(value) => handleInputChange("startDate", format(value, "yyyy-MM-dd"))}
+                onSetDate={(value) => handleInputChange("startDate", format(value, "yyyy-MM-dd"))}
                 toDate={endDate && new Date()}
             />
             <span className="hidden text-white md:block">-</span>
             <DatePicker
                 className="w-full md:w-auto"
                 date={endDate}
-                setDate={(value) => handleInputChange("endDate", format(value, "yyyy-MM-dd"))}
+                onSetDate={(value) => handleInputChange("endDate", format(value, "yyyy-MM-dd"))}
                 fromDate={startDate ? new Date(startDate) : null}
                 toDate={new Date()}
             />

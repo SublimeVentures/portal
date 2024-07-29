@@ -4,11 +4,11 @@ import { DayPicker } from "react-day-picker";
 import { cn } from "@/lib/cn";
 import { buttonVariants } from "@/v2/components/ui/button";
 
-function Calendar({ label, classNames, showOutsideDays = true, ...props }) {
+function Calendar({ className, styles, showOutsideDays = true, ...props }) {
     return (
         <DayPicker
             showOutsideDays={showOutsideDays}
-            className="w-96"
+            className={cn("w-96", className)}
             classNames={{
                 caption: "mb-4 p-2 relative flex justify-center items-center bg-foreground/[.1] rounded",
                 caption_label: "text-sm font-medium",
@@ -36,7 +36,7 @@ function Calendar({ label, classNames, showOutsideDays = true, ...props }) {
                 day_disabled: "text-foreground opacity-50",
                 day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
                 day_hidden: "invisible",
-                ...classNames,
+                ...styles,
             }}
             components={{
                 IconLeft: () => <ChevronLeftIcon className="h-4 w-4" />,
