@@ -20,8 +20,11 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import { Button } from "@/v2/components/ui/button";
-const ErrorModal = dynamic(() => import("@/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
-const ClaimMysteryBoxModal = dynamic(() => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"), { ssr: false });
+
+const ErrorModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
+const ClaimMysteryBoxModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimMysteryBoxModal"), {
+    ssr: false,
+});
 
 export default function MysteryBoxPage({ session }) {
     const router = useRouter();
