@@ -43,7 +43,7 @@ const SheetContent = forwardRef(({ side, className, children, ...props }, ref) =
             {...props}
         >
             <SheetPrimitive.Close className="hidden absolute z-50 right-9 top-11 rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
-                <IconButton name="Close" comp='div' icon={CrossIcon} />
+                <IconButton name="Close" comp='div' icon={CrossIcon} className="p-3.5" />
             </SheetPrimitive.Close>
             
             {children}

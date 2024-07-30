@@ -10,13 +10,21 @@ export default function NotificationFilters({ query, handleInputChange }) {
     const unreadCount = 1;
 
     return (
-        <div className="mb-4 flex flex-col gap-8 2xl:mb-12 2xl:flex-row 2xl:items-center">
-            <div className="flex items-baseline text-foreground">
-                <h3 className="text-nowrap text-lg font-medium">
-                    My notifications {" "}
-                    {unreadCount ? <span className="text-white/50 font-light">({unreadCount} unread)</span> : null}
-                </h3>
-            </div>
+        <div className="flex flex-col items-center gap-4 md:flex-row">
+            <DatePicker
+                className="w-full md:w-auto"
+                date={startDate}
+                onSetDate={(value) => handleInputChange("startDate", format(value, "yyyy-MM-dd"))}
+                toDate={endDate && new Date()}
+            />
+            <span className="hidden text-white md:block">-</span>
+            <DatePicker
+                className="w-full md:w-auto"
+                date={endDate}
+                onSetDate={(value) => handleInputChange("endDate", format(value, "yyyy-MM-dd"))}
+                fromDate={startDate ? new Date(startDate) : null}
+                toDate={new Date()}
+            />
 
             <div className="flex flex-col gap-4 md:flex-row">
                 <div className="flex items-center gap-2">

@@ -1,31 +1,44 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import debounce from "lodash.debounce";
+import { Content as SheetContent, Close as SheetClose } from "@radix-ui/react-dialog";
 
+import { Sheet, SheetPortal, SheetTrigger } from "@/v2/components/ui/sheet";
+import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
+import { ChainSwitch } from "@/v2/components/App/Vault";  
 import { Button } from "@/v2/components/ui/button";
 import { Avatar } from "@/v2/components/ui/avatar";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { useOutsideClick, useEscapeKey } from "@/v2/hooks";
-import PAGE from "@/routes";
-import { cn } from "@/lib/cn";
 import { shortenAddress } from "@/v2/lib/helpers";
+import { cn } from "@/lib/cn";
+import { useTenantSpecificData } from "@/v2/helpers/tenant";
+import { useEscapeKey } from "@/v2/hooks";
 import tailwindConfig from "@/../tailwind/config.core";
-
 import MenuIcon from "@/v2/assets/svg/menu.svg";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
-import { socialMenu } from "@/v2/menus";
-const MobileMenu = () => {
+import { mainMenu, profileMenu, socialMenu } from "@/v2/menus";
+import PAGE from "@/routes";
+import { layoutStyles } from "./AppLayout";
+
+const renderLogo = (componentName) => {
+    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true })
+    return <TenantLogo />;
+};
+
+export default function MobileMenu({ isBlockedAlert }) {
     const { environmentCleanup } = useEnvironmentContext();
+    const { components } = useTenantSpecificData();
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [walletAddress] = useState("0x1234567890abcdef1234567890abcdef12345678"); // Mock address
 
-    const menuRef = useOutsideClick(() => setIsMobileMenuOpen(false));
     useEscapeKey(() => setIsMobileMenuOpen(false));
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth > parseInt(tailwindConfig.theme.extend.screens.lg) && isMobileMenuOpen)
+            if (window.innerWidth > parseInt(tailwindConfig.theme.extend.screens["2xl"]) && isMobileMenuOpen)
                 setIsMobileMenuOpen(false);
         };
 
@@ -63,89 +76,76 @@ const MobileMenu = () => {
     };
 
     return (
-        <div ref={menuRef} className="lg:hidden">
-            <IconButton
-                name="Toggle mobile menu"
-                onClick={() => setIsMobileMenuOpen((prevState) => !prevState)}
-                icon={isMobileMenuOpen ? CrossIcon : MenuIcon}
-                className="p-3 relative z-10"
-            />
-
-            <div
-                className={cn(
-                    "fixed inset-0 pt-24 pb-16 flex flex-col grow h-full w-full items-center bg-[#071321] overflow-auto transform -translate-x-full transition-transform duration-300 ease-in-out ",
-                    {
-                        "translate-x-0": isMobileMenuOpen,
-                    },
-                )}
-            >
-                <div className="px-4 w-full max-w-72 flex flex-col grow items-center gap-4">
-                    <nav className="flex flex-col items-center text-center">
-                        {generateMenu("Menu", menu.groupUser)}
-                        {generateMenu("Account", menu.groupProfile)}
-                    </nav>
-                    <div className="m-6 flex flex-col items-center">
-                        <h2 className="text-xxs font-light text-gray-100">Community</h2>
-                        <ul className="flex items-center gap-4">
-                            {socialMenu.map(({ icon, name, path }) => (
-                                <li key={name} className="pt-4">
-                                    <IconButton
-                                        variant="transparent"
-                                        shape="circle"
-                                        name={name}
-                                        icon={icon}
-                                        onClick={(evt) => handleExternalLinkOpen(evt, path)}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
+        <Sheet open={isMobileMenuOpen}>
+            <SheetTrigger asChild className="2xl:hidden">
+                <IconButton
+                    name="Toggle mobile menu"
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    icon={isMobileMenuOpen ? CrossIcon : MenuIcon}
+                    className="p-3 relative z-10"
+                />
+            </SheetTrigger>
+            
+            <SheetPortal>
+                <SheetContent
+                    style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
+                    className="fixed z-50 right-0 top-0 mt-[var(--alertHeight)] h-[calc(100vh_-_var(--alertHeight))] w-full flex flex-col bg-[#071321] transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
+                >
+                    <div className="p-4 w-full flex items-center justify-between">
+                        <Link href={PAGE.App}>
+                            <div className="flex items-center">{renderLogo(components.logo)}</div>
+                        </Link>
+                        <div className="flex items-center gap-4">
+                            <NotificationMenu />
+                            <ChainSwitch />
+                            <SheetClose onClick={() => setIsMobileMenuOpen(false)} className="rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                                <IconButton name="Close" comp='div' icon={CrossIcon} className="p-3.5" />
+                            </SheetClose>
+                        </div>
                     </div>
 
-                    <div className="mt-auto flex flex-col items-center w-full gap-4">
-                        <Avatar size="large" session={null} />
-                        <Button className="w-full" variant="secondary" onClick={handleLogout}>
-                            Logout
-                        </Button>
-                        <p className="text-md text-foreground">{shortenAddress(walletAddress)}</p>
+                    <div
+                        className={cn(
+                            "pb-12 flex flex-col h-full w-full items-center transform -translate-x-full transition-transform duration-300 ease-in-out ",
+                            {
+                                "translate-x-0": isMobileMenuOpen,
+                            },
+                        )}
+                    >
+                        <div className="px-4 w-full max-w-72 flex flex-col grow items-center gap-4">
+                            <nav className="flex flex-col items-center text-center">
+                                {generateMenu("Menu", mainMenu)}
+                                {generateMenu("Account", profileMenu)}
+                            </nav>
+                            <div className="m-6 flex flex-col items-center">
+                                <h2 className="text-xxs font-light text-gray-100">Community</h2>
+                                <ul className="flex items-center gap-4">
+                                    {socialMenu.map(({ icon, name, path }) => (
+                                        <li key={name} className="pt-4">
+                                            <IconButton
+                                                variant="transparent"
+                                                shape="circle"
+                                                name={name}
+                                                icon={icon}
+                                                onClick={(evt) => handleExternalLinkOpen(evt, path)}
+                                                className="p-3.5"
+                                            />
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div className="mt-auto flex flex-col items-center w-full gap-4">
+                                <Avatar size="large" session={null} />
+                                <Button className="w-full" variant="secondary" onClick={handleLogout}>
+                                    Logout
+                                </Button>
+                                <p className="text-md text-foreground">{shortenAddress(walletAddress)}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </SheetContent>
+            </SheetPortal>
+        </Sheet>
     );
 };
-const menu = {
-    groupUser: [
-        {
-            name: "Vault",
-            path: PAGE.App,
-        },
-        {
-            name: "Opportunities",
-            path: PAGE.Opportunities,
-        },
-        {
-            name: "OTC Market",
-            path: PAGE.OTC,
-        },
-        {
-            name: "Upgrades",
-            path: PAGE.Upgrades,
-        },
-    ],
-    groupProfile: [
-        {
-            name: "Mystery Box",
-            path: "/",
-        },
-        {
-            name: "Settings",
-            path: PAGE.Settings,
-        },
-        {
-            name: "History",
-            path: "/",
-        },
-    ],
-};
-
-export default MobileMenu;
