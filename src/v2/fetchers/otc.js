@@ -86,7 +86,7 @@ export const getLatestDeals = async ({ sort }) => {
 };
 
 export const getOffersHistory = async ({ offerId, sort }) => {
-    if (!offerId) return {};
+    if (!offerId) return [];
 
     const { sortId = "", sortOrder = "" } = sort ?? {};
 
@@ -100,5 +100,5 @@ export const getOffersHistory = async ({ offerId, sort }) => {
         }
     }
 
-    return {};
+    return [];
 };
