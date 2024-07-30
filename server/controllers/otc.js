@@ -1,6 +1,7 @@
 const {
     getActiveOffers,
     getHistoryOffers,
+    getLatestOffers,
     saveOtcHash,
     checkDealBeforeSigning,
     processSellOtcDeal,
@@ -14,13 +15,14 @@ const db = require("../services/db/definitions/db.init");
 const { isAddress } = require("web3-validator");
 const axios = require("axios");
 const { getOtcList } = require("../queries/offers.query");
+const { getAllocation } = require("../queries/offers.query");
 
 async function getMarkets(session) {
     try {
         const { tenantId, partnerId } = session;
         return await getOtcList(partnerId, tenantId);
     } catch (error) {
-        logger.error(`ERROR :: [getOffers] OTC`, {
+        logger.error(`ERROR :: [getMarkets] OTC`, {
             error: serializeError(error),
         });
         return {
@@ -29,13 +31,27 @@ async function getMarkets(session) {
     }
 }
 
+async function getUserAllocation(user) {
+    const { userId } = user;
+    
+    try {
+        return await getAllocation(userId);
+    } catch (error) {
+        logger.error(`ERROR :: [getUserAllocation] OTC`, {
+            error: serializeError(error),
+        });
+        return {
+            markets: [],
+        };
+    }
+}
+
+
 async function getOffers(req) {
     try {
         return await getActiveOffers(Number(req.params.id), req.query);
     } catch (error) {
-        logger.error(`ERROR :: [getOffers] OTC`, {
-            error: serializeError(error),
-        });
+        logger.error(`ERROR :: [getOffers] OTC`, { error: serializeError(error) });
         return [];
     }
 }
@@ -44,9 +60,16 @@ async function getHistory(req) {
     try {
         return await getHistoryOffers(Number(req.params.id), req.query);
     } catch (error) {
-        logger.error(`ERROR :: [getHistory] OTC`, {
-            error: serializeError(error),
-        });
+        logger.error(`ERROR :: [getHistory] OTC`, { error: serializeError(error) });
+        return [];
+    }
+}
+
+async function getLatestDeals(req) {
+    try {
+        return await getLatestOffers(req.query);
+    } catch (error) {
+        logger.error(`ERROR :: [getLatestDeals] OTC`, { error: serializeError(error) });
         return [];
     }
 }
@@ -163,4 +186,4 @@ async function signOffer(user, req) {
     }
 }
 
-module.exports = { getMarkets, getOffers, getHistory, createOffer, signOffer };
+module.exports = { getMarkets, getUserAllocation, getOffers, getHistory, getLatestDeals, createOffer, signOffer };

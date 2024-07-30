@@ -1,95 +1,51 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useQuery } from "@tanstack/react-query";
+import { dehydrate } from "@tanstack/react-query";
 
-import { fetchVault } from "@/fetchers/vault.fetcher";
-import { getMarkets } from "@/v2/fetchers/otc";
+import { getMarketsSsr } from "@/v2/fetchers/otc";
 import { queryClient } from "@/lib/queryCache";
 import { processServerSideData } from "@/lib/serverSideHelpers";
-import OTCMarket from "@/v2/modules/otc/OTCMarket";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
-import Empty from "@/components/App/Empty";
-import Loader from "@/components/App/Loader";
 import routes from "@/routes";
 
+import OTCLayout from "@/v2/modules/otc/OTCLayout";
+import Markets from "@/v2/modules/otc/Markets";
+import Overview from "@/v2/modules/otc/Overview";
+import OTCTables from "@/v2/modules/otc/OTCTables";
+
 export default function AppOtc({ session }) {
-    const router = useRouter();
-    const { market } = router.query;
-    const { userId: USER_ID } = session;
+    return (
+        <>
+            <Metadata title="OTC Market" />
+            <OTCLayout session={session}>
+                <Markets />
 
-    const { data: otc, isLoading: otcIsLoading, isSuccess: otcIsSuccess } = useQuery({
-        queryKey: ["otcMarkets", USER_ID],
-        queryFn: () => getMarkets(),
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        cacheTime: 4 * 60 * 60 * 1000,
-        staleTime: 3 * 60 * 60 * 1000,
-    });
-
-    const { data: vault, isLoading: vaultIsLoading, isSuccess: vaultIsSuccess, refetch: refetchVault } = useQuery({
-        queryKey: ["userVault", USER_ID],
-        queryFn: fetchVault,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        cacheTime: 0,
-        staleTime: 0,
-    });
-
-    const currentMarket = otc?.find((el) => el.slug === market) ?? null;
-
-    const { data: offers, isLoading: offersIsLoading, isSuccess: offersIsSuccess, refetch: refetchOffers } = useQuery({
-        queryKey: ["otcOffers", currentMarket?.otc],
-        queryFn: () => fetchOffers(currentMarket?.otc),
-        refetchOnMount: true,
-        refetchOnWindowFocus: true,
-        cacheTime: 0,
-        staleTime: 0,
-        enabled: !!currentMarket?.offerId,
-    });
-    
-    const haveAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
-    
-    const propOffers = {
-        refetchOffers,
-        refetchVault,
-        vault,
-        offersIsSuccess,
-        vaultIsSuccess,
-        offers,
-        currentMarket,
-        session,
-        allocation: haveAllocation,
-    };
-
-    useEffect(() => {
-        if (!currentMarket && otc && otc[0]?.slug) router.push(`${routes.OTC}/?market=${otc[0].slug}`, undefined, { shallow: true });
-    }, [otc, currentMarket]);
-
-    if (otcIsLoading || vaultIsLoading || !currentMarket) {
-        return (
-            <>
-                <Metadata title="Loading" />
-                <Loader />
-            </>
-        );
-    }
-
-    if (otc.length === 0) {
-        return (
-            <div className="col-span-12 max-h-[40vh]">
-                <Metadata title="OTC Market" />
-                <Empty />
-            </div>
-        );
-    }
-
-    return <OTCMarket session={session} otc={otc} vault={vault} currentMarket={currentMarket} propOffers={propOffers} />
+                <div className="flex flex-col h-full overflow-hidden">
+                    <Overview />
+                    <OTCTables />
+                </div>
+            </OTCLayout>
+        </>
+    )
 }
 
 export const getServerSideProps = async ({ req, res }) => {
-    await queryClient.prefetchQuery("otcMarkets", () => getMarkets(req.headers.cookie));
-    return await processServerSideData(req, res, routes.OTC);
+    const customLogicCallback = async (account, token) => {
+        const userId = account?.userId;
+
+        await queryClient.prefetchQuery({
+            queryKey: ["otcMarkets", userId],
+            queryFn: () => getMarketsSsr(token),
+        });
+
+        return {
+            additionalProps: {
+                dehydratedState: dehydrate(queryClient),
+            },
+        };
+    };
+
+    return await processServerSideData(req, res, routes.OTC, customLogicCallback);
 };
+
 
 AppOtc.getLayout = function (page) {
     return <AppLayout title="OTC Market">{page}</AppLayout>;

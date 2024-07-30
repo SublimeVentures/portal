@@ -1,5 +1,5 @@
 const { serializeError } = require("serialize-error");
-const { QueryTypes } = require("sequelize");
+const { Op, QueryTypes, Sequelize } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
 const db = require("../services/db/definitions/db.init");
@@ -348,6 +348,32 @@ async function getOfferWithLimits(offerId) {
     }
 }
 
+async function getAllocation(userId) {
+    try {
+        return models.vault.findAll({
+            attributes: [
+                "id",
+                "invested",
+                "locked",
+                [Sequelize.literal("invested - locked"), "allocation"],
+            ],
+            where: {
+                userId,
+                invested: {
+                    [Op.ne]: 0,
+                },
+            },
+            raw: true,
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getAllocation]", {
+            error: serializeError(error),
+        });
+
+        return [];
+    }
+}
+
 module.exports = {
     getOffersPublic,
     getOfferList,
@@ -356,4 +382,5 @@ module.exports = {
     getLaunchpadList,
     getOtcList,
     getOfferWithLimits,
+    getAllocation,
 };

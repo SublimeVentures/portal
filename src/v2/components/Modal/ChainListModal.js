@@ -18,9 +18,9 @@ const ChainListModal = () => {
                     </DialogDescription>
                 </DialogHeader>
                 
-                <div className="flex items-center justify-center">
-                    {/* <ChainsList /> */}
-                </div>
+                {/* <div className="flex items-center justify-center">
+                    <ChainsList />
+                </div> */}
 
                 <p className="text-xxs text-white/[.7] text-center">Current selection: Ethereum</p>
             </DialogContent>

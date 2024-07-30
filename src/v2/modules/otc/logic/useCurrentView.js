@@ -1,13 +1,14 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-import routes from "@/routes";
-import { otcViews } from "../utils/constants";
+import { queryClient } from "@/lib/queryCache";
+import { routes } from '@/v2/routes';
+import { otcViews } from "./constants";
 
 export default function useCurrentView() {
     const router = useRouter();
     const { view } = router.query;
-    const currentView = otcViews[view] || otcViews.offers;
+    const currentView = otcViews[view] ?? otcViews.offers;
 
     useEffect(() => {
         if (!view || !otcViews[view]) {
@@ -15,7 +16,13 @@ export default function useCurrentView() {
                 router.replace(routes.OTC, undefined, { shallow: true });
             }
         }
-    }, []);
+    }, [view, router]);
+
+    useEffect(() => {
+        if (currentView === otcViews.offers) {
+            queryClient.invalidateQueries(["otcOffers"]);
+        }
+    }, [currentView]);
 
     const handleChangeView = (view) => router.push({
         pathname: router.pathname,
@@ -25,10 +32,8 @@ export default function useCurrentView() {
     );
 
     return {
-        views: [otcViews.offers, otcViews.history],
+        views: Object.values(otcViews),
         activeView: currentView,
         handleChangeView, 
     };
 };
-
-export { otcViews };

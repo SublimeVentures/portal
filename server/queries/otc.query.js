@@ -4,18 +4,18 @@ const db = require("../services/db/definitions/db.init");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
 const { getWhereClause } = require("../utils");
 
-function constructOffersOrder(sortId, sortOrder) {
-    const validSortColumns = {
-        isSell: "isSell",
-        amount: "amount",
-        price: "price",
-        multiplier: Sequelize.literal("price / amount"),
-        chain: "chainId",
-        date: "updatedAt",
-    };
+const defaultSortColumns = {
+    isSell: "isSell",
+    amount: "amount",
+    price: "price",
+    multiplier: Sequelize.literal("price / amount"),
+    chain: "chainId",
+    updatedAt: "updatedAt",
+};
 
+function constructOffersOrder(sortBy = "updatedAt", sortOrder = "DESC", columns = defaultSortColumns) {
     const orderDirection = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
-    const orderColumn = validSortColumns[sortId] || "id";
+    const orderColumn = columns[sortBy] || "id";
     const offerOrder = [[orderColumn, orderDirection]];
 
     return offerOrder;
@@ -24,11 +24,11 @@ function constructOffersOrder(sortId, sortOrder) {
 async function getActiveOffers(otcId, query) {
     const { sortId, sortOrder, ...filters } = query;
 
-    const offerOrder = constructOffersOrder(sortId, sortOrder);
+    const order = constructOffersOrder(sortId, sortOrder);
     const whereClause = getWhereClause(filters, ["maker"], ["isSell"]);
 
     return models.otcDeal.findAll({
-        order: offerOrder,
+        order,
         attributes: [
             "id",
             "offerId",
@@ -39,6 +39,7 @@ async function getActiveOffers(otcId, query) {
             "currency",
             "isSell",
             "maker",
+            "updatedAt",
             [db.literal('"onchain"."chainId"'), "chainId"],
             [Sequelize.literal("price / amount"), "multiplier"],
         ],
@@ -59,15 +60,15 @@ async function getActiveOffers(otcId, query) {
         },
         raw: true,
     });
-}
+};
 
 async function getHistoryOffers(offerId, query) {
     const { sortId, sortOrder } = query;
 
-    const historyOrder = constructOffersOrder(sortId, sortOrder);
+    const order = constructOffersOrder(sortId, sortOrder);
 
     return models.otcDeal.findAll({
-        order: historyOrder,
+        order,
         attributes: [
             "id",
             "offerId",
@@ -78,7 +79,10 @@ async function getHistoryOffers(offerId, query) {
             [Sequelize.literal("price / amount"), "multiplier"],
             "updatedAt",
         ],
-        where: { offerId, isFilled: true },
+        where: {
+            offerId,
+            isFilled: true,
+        },
         include: {
             model: models.onchain,
             attributes: [],
@@ -86,7 +90,39 @@ async function getHistoryOffers(offerId, query) {
         },
         raw: true,
     });
-}
+};
+
+async function getLatestOffers(query) {
+    const { sortId, sortOrder } = query;
+
+    const order = constructOffersOrder(sortId, sortOrder);
+
+    return models.otcDeal.findAll({
+        order,
+        limit: 10,
+        attributes: [
+            "id",
+            "offerId",
+            "isSell",
+            "price",
+            "amount",
+            "createdAt",
+            [db.literal('"offer"."name"'), "name"],
+            [db.literal('"offer"."slug"'), "slug"],
+            [Sequelize.literal("price / amount"), "multiplier"],
+        ],
+        where: {
+            isFilled: false,
+            isCancelled: false,
+        },
+        include: {
+            model: models.offer,
+            attributes: [],
+            required: true, // Ensures INNER JOIN
+        },
+        raw: true,
+    });
+};
 
 async function getUserPendingOffers(wallet) {
     return models.otcLock.findAll({
@@ -211,6 +247,7 @@ async function saveOtcLock(userId, wallet, deal, expireDate, transaction) {
 }
 
 module.exports = {
+    getLatestOffers,
     getActiveOffers,
     getHistoryOffers,
     saveOtcHash,

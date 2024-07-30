@@ -83,7 +83,8 @@ export default function ChangeAddress({ session }) {
 
     return (
         <GenericModal
-            isOpen={!isAddressSupported}
+            // isOpen={!isAddressSupported}
+            isOpen={false}
             closeModal={() => {}}
             title={title()}
             content={content()}
