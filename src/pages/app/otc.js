@@ -18,7 +18,7 @@ export default function AppOtc({ session }) {
             <OTCLayout session={session}>
                 <Markets />
 
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full overflow-hidden">
                     <Overview />
                     <OTCTables />
                 </div>

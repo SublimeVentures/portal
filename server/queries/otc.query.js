@@ -4,18 +4,18 @@ const db = require("../services/db/definitions/db.init");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
 const { getWhereClause } = require("../utils");
 
-function constructOffersOrder(sortId = "date", sortOrder = "DESC") {
-    const validSortColumns = {
-        isSell: "isSell",
-        amount: "amount",
-        price: "price",
-        multiplier: Sequelize.literal("price / amount"),
-        chain: "chainId",
-        date: "createdAt",
-    };
+const defaultSortColumns = {
+    isSell: "isSell",
+    amount: "amount",
+    price: "price",
+    multiplier: Sequelize.literal("price / amount"),
+    chain: "chainId",
+    updatedAt: "updatedAt",
+};
 
+function constructOffersOrder(sortBy = "updatedAt", sortOrder = "DESC", columns = defaultSortColumns) {
     const orderDirection = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
-    const orderColumn = validSortColumns[sortId] || "id";
+    const orderColumn = columns[sortBy] || "id";
     const offerOrder = [[orderColumn, orderDirection]];
 
     return offerOrder;
@@ -39,7 +39,7 @@ async function getActiveOffers(otcId, query) {
             "currency",
             "isSell",
             "maker",
-            "createdAt",
+            "updatedAt",
             [db.literal('"onchain"."chainId"'), "chainId"],
             [Sequelize.literal("price / amount"), "multiplier"],
         ],

@@ -15,18 +15,18 @@ import { otcViews } from "../logic/constants";
 export default function HistoryTable() {
     const { activeView } = useCurrentView();
     const { currentMarket, isLoading: isMarketLoading } = useMarket();
-    const otcId = currentMarket?.otc ?? null;
+    const offerId = currentMarket?.offerId ?? null;
 
     const [sorting, setSorting] = useState([]);
 
     const { data = [], isLoading: isHistoryLoading } = useQuery({
-        queryKey: ["otcHistory", otcId, sorting[0]?.id, sorting[0]?.desc],
+        queryKey: ["otcHistory", offerId, sorting[0]?.id, sorting[0]?.desc],
         queryFn: () =>
             getOffersHistory({
-                offerId: currentMarket?.offerId,
-                sort: historySorting[0] && {
-                    sortId: historySorting[0].id,
-                    sortOrder: historySorting[0].desc ? "DESC" : "ASC",
+                offerId,
+                sort: sorting[0] && {
+                    sortId: sorting[0].id,
+                    sortOrder: sorting[0].desc ? "DESC" : "ASC",
                 },
             }),
         refetchOnMount: false,
@@ -51,9 +51,9 @@ export default function HistoryTable() {
     const isLoading = isMarketLoading || isHistoryLoading;
   
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-hidden">
             <TableFilters />
-            <div className="hidden h-full md:block">
+            <div className="hidden overflow-hidden md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
             

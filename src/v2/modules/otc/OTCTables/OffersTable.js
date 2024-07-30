@@ -87,9 +87,9 @@ export default function OffersTable() {
     const isLoading = isMarketLoading || isOffersLoading;
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-hidden">
             <TableFilters filters={filters} handleToggleFilter={handleToggleFilter} handleFilterRemove={handleFilterRemove} />
-            <div className="hidden h-full md:block">
+            <div className="hidden overflow-hidden md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
             

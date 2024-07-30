@@ -50,9 +50,9 @@ const multiplierColumn = columnHelper.accessor("multiplier", {
     filterFn: intFilter,
 });
 
-const dateColumn = columnHelper.accessor("date", {
+const dateColumn = columnHelper.accessor("updatedAt", {
     header: "Date",
-    cell: info => moment(info.row.original.updatedAt).utc().local().format("YYYY-MM-DD"),
+    cell: info => moment(info.getValue()).utc().local().format("YYYY-MM-DD"),
     filterFn: intFilter,
 });
 
