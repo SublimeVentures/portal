@@ -1,4 +1,5 @@
 import PAGE, { ExternalLinks } from "@/routes";
+
 import DiscordIcon from "@/v2/assets/svg/discord.svg";
 import GitbookIcon from "@/v2/assets/svg/gitbook.svg";
 import TwitterIcon from "@/v2/assets/svg/twitter.svg";
@@ -33,7 +34,7 @@ export const mainMenu = {
         },
         {
             name: "History",
-            path: "/",
+            path: PAGE.Notifications,
         },
     ],
 };

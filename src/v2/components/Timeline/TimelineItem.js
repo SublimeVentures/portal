@@ -1,3 +1,4 @@
+import Image from "next/image";
 import PropTypes from "prop-types";
 
 import TimelineTransaction from "./TimelineTransaction";
@@ -7,7 +8,9 @@ import { getFormattedDate } from "@/v2/lib/helpers";
 import { getNotificationTitle } from "@/v2/helpers/notifications";
 import { cn } from "@/lib/cn";
 
-export default function TimelineItem({ item, showTimeline = true }) {
+const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
+
+export default function TimelineItem({ item, showTimeline = true, isRead = true }) {
     return (
         <div className="flex text-sm">
             {showTimeline ? (
@@ -18,15 +21,30 @@ export default function TimelineItem({ item, showTimeline = true }) {
                 </div>
             ) : null}
 
-            <div className="my-2 py-4 px-8 w-full flex flex-col gap-2 bg-foreground/[.1] rounded">
-                <dl className="flex justify-between items-center">
-                    <dt className="text-md font-light text-foreground">{getNotificationTitle(item.typeId)}</dt>
-                    {/* <dd className="text-lg font-medium text-foreground">{getFormattedDate(item.onchain.createdAt)}</dd> */}
-                    <dd className="text-lg font-medium text-foreground">?</dd>
-                </dl>
+            <div className={cn("py-4 px-6 w-full flex flex-col gap-2 rounded", isRead ? "bg-foreground/[0.03]" : " bg-foreground/10")}>
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                        <Image
+                            src={mockedIcon}
+                            className="rounded-full"
+                            alt=""
+                            width={55}
+                            height={55}
+                        />
+                        
+                        <div>
+                            <div className="flex items-center">
+                                <h3 className="mr-1 text-md font-semibold text-foreground">{getNotificationTitle(item.typeId)}</h3>
+                                <TimelineItemDescription type={item.typeId} />
+                            </div>
 
-                <TimelineItemDescription type={item.typeId} />
-                {item.onchain?.txID ? <TimelineTransaction type={item.typeId} tx={item.onchain.txID} chainId={item.onchain.chainId} /> : null}
+                            {item.onchain?.txID ? <TimelineTransaction type={item.typeId} tx={item.onchain.txID} chainId={item.onchain.chainId} /> : null}                        
+                            <dd className="text-md text-foreground/40">{getFormattedDate(item.createdAt)}</dd>
+                        </div>
+                    </div>
+
+                    {!isRead ? <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-accent" /> : null}
+                </div>
             </div>
         </div>
     );

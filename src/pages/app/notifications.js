@@ -6,7 +6,7 @@ import useNotificationsLoader from '@/v2/modules/notifications/logic/useNotifica
 import routes from "@/routes";
 
 export default function AppNotifications() {
-    const { notifications, error, isLoading, isError, isFetching, getFiltersProps } = useNotificationsLoader();
+    const { data, error, isLoading, isError, isFetching, getFiltersProps } = useNotificationsLoader();
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -17,15 +17,9 @@ export default function AppNotifications() {
     }
 
     return (
-        <div className="p-2 h-full md:p-16">
-            <div className="mb-8 flex items-center gap-4">
-                <div className="flex items-baseline text-foreground">
-                    <h3 className="text-nowrap text-2xl">Notifications</h3>
-                </div>
-            </div>
-
+        <div className="md:p-12 xl:p-16 h-[75vh] overflow-hidden">
             <NotificationFilters {...getFiltersProps()} />
-            <Notifications data={notifications} isFetching={isFetching} />
+            <Notifications data={data[0].notifications} isFetching={isFetching} />
         </div>
     )
 }
@@ -36,5 +30,5 @@ export const getServerSideProps = async ({ req, res }) => {
 
 
 AppNotifications.getLayout = function (page) {
-    return <AppLayout title="Notifications">{page}</AppLayout>;
+    return <AppLayout title="History">{page}</AppLayout>;
 };
