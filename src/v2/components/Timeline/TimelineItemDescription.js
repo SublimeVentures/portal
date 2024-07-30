@@ -44,7 +44,7 @@ export default function TimelineItemDescription({ type, entry = {} }) {
     // const message = getDescriptionMessage(scopeId, mappedProps);
     const message = getDescriptionMessage(type, null);
 
-    return <p className="text-md font-light text-foreground/[.8]">{message}</p>
+    return <p className="text-md font-light text-foreground/80">{message}</p>
 }
 
 TimelineItemDescription.propTypes = {

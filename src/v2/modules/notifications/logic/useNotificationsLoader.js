@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { cacheOptions } from "@/v2/helpers/query";
 import { fetchNotificationList } from "@/fetchers/notifications.fetcher";
 import { mergeNestedArr } from '@/v2/modules/notifications/logic/helpers';
 
@@ -44,7 +45,7 @@ export default function useNotificationLoader() {
       isLoading: status === "pending",
       isError: status === "error",
       isFetching: isFetching && !isFetchingNextPage,
-      notifications: data ? mergeNestedArr(data.pages) : [],
+      data: data ? mergeNestedArr(data.pages) : [],
       error,
       getFiltersProps: useCallback(() => ({
           query,
