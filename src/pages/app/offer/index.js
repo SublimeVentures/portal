@@ -31,7 +31,6 @@ export default function AppOpportunities({ session }) {
         data: offersList,
         isLoading: isOffersLoading,
         isError: isOffersError,
-        error,
         isFetchingNextPage,
         hasNextPage,
         fetchNextPage,
