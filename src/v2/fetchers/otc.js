@@ -37,7 +37,7 @@ export const getMarketsSsr = async (token) => {
     return [];
 };
 
-export const getUserAlocation = async () => {
+export const getUserAllocation = async () => {
     try {
         const { data } = await axiosPrivate.get(API_ROUTES.otc.getUserAllocation);
 
