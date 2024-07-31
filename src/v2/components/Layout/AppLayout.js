@@ -1,6 +1,7 @@
 import { Sidebar, Navbar, Header, TabletNavbar } from "@/v2/components/Layout";
 import { BlockedAlert } from "@/v2/components/Alert";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import WalletErrorModal from "@/v2/components/Modal/WalletErrorModal";
 import { cn } from "@/lib/cn";
 
 export const layoutStyles = {
@@ -14,7 +15,6 @@ const DesktopLayout = ({ children, isBlockedAlert, title, bg }) => {
     return (
         <div className={cn("hidden h-full grow 2xl:flex", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
             <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} />
-
             <div className="flex grow pl-[var(--sidebarWidth)] ml-0 m-6">
                 <div
                     className={cn(
@@ -86,6 +86,7 @@ export default function LayoutApp({ children, title }) {
             style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
             className="relative min-h-screen h-full w-full flex flex-col bg-[#082536]"
         >
+            <WalletErrorModal session={children.props?.session} />
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
             <MobileLayout isBlockedAlert={isBlockedAlert}>{children}</MobileLayout>
             <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
