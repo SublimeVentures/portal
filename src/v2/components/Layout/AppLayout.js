@@ -3,6 +3,7 @@ import { BlockedAlert } from "@/v2/components/Alert";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import WalletErrorModal from "@/v2/components/Modal/WalletErrorModal";
 import { cn } from "@/lib/cn";
+import ChainListModal from "@/v2/components/Modal/ChainListModal";
 
 export const layoutStyles = {
     "--navbarHeight": "100px",
@@ -38,7 +39,11 @@ const DesktopLayout = ({ children, isBlockedAlert, title, bg }) => {
 
 const TabletLayout = ({ children, isBlockedAlert }) => {
     return (
-        <div className={cn("hidden p-4 flex-col gap-4 h-full grow md:flex 2xl:hidden", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
+        <div
+            className={cn("hidden p-4 flex-col gap-4 h-full grow md:flex 2xl:hidden", {
+                "mt-[var(--alertHeight)]": isBlockedAlert,
+            })}
+        >
             <Header isBlockedAlert={isBlockedAlert} />
             <TabletNavbar />
 
@@ -48,9 +53,7 @@ const TabletLayout = ({ children, isBlockedAlert }) => {
                     "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
                 })}
             >
-                <main className="flex flex-col w-full h-full">
-                    {children}
-                </main>
+                <main className="flex flex-col w-full h-full">{children}</main>
             </div>
         </div>
     );
@@ -64,7 +67,7 @@ const MobileLayout = ({ children, isBlockedAlert }) => {
                     <Header isBlockedAlert={isBlockedAlert} />
                     <main className="relative z-10 h-full mobile-scrollbar overflow-y-scroll">{children}</main>
                 </div>
-                
+
                 <div className="absolute z-20 bottom-0 h-8 w-full bg-navbar-gradient " />
             </div>
 
@@ -88,9 +91,12 @@ export default function LayoutApp({ children, title }) {
         >
             <WalletErrorModal session={children.props?.session} />
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
+            <ChainListModal />
             <MobileLayout isBlockedAlert={isBlockedAlert}>{children}</MobileLayout>
             <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title}>{children}</DesktopLayout>
+            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title}>
+                {children}
+            </DesktopLayout>
         </div>
     );
 }

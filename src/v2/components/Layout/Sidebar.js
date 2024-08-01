@@ -53,8 +53,6 @@ export default function Sidebar({ session, isBlockedAlert = false }) {
                     <Link href={PAGE.App}>
                         <div className="flex items-center">{renderLogo(components.logo)}</div>
                     </Link>
-
-                    <ChangeNetwork />
                 </div>
 
                 <nav>
