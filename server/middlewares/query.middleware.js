@@ -6,7 +6,7 @@ const { serializeError } = require("serialize-error");
  */
 module.exports = (schema) => async (req, res, next) => {
     try {
-        schema.parse(req.query);
+        req.parsedQuery = schema.parse(req.query);
         next();
     } catch (err) {
         return res.status(400).json({
