@@ -140,6 +140,16 @@
   }
 }
 
+.steps-gradient {
+  background: rgba(255, 255, 255, 0.05) no-repeat padding-box;
+  backdrop-filter: blur(44px);
+}
+
+.step-gradient {
+  box-shadow: 0 0 20px #0BB0C8;
+  background: transparent linear-gradient(180deg, #0BB0C8 0%, #163E60 100%) 0 0 no-repeat padding-box;
+}
+
 @media (max-width: 640px) {
   .gradient-border-sheet-header::before {
     display: none;
