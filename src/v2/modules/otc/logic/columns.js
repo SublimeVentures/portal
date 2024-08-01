@@ -5,6 +5,7 @@ import moment from "moment";
 import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 
 import { Button } from "@/v2/components/ui/button";
+import { DynamicIcon, DynamicIconGroup } from "@/v2/components/ui/dynamic-icon";
 import TakeOfferModal from "../Modals/TakeOfferModal"
 import CancelOfferModal from "../Modals/CancelOfferModal"
 import { useSession } from "../logic/store";
@@ -14,8 +15,6 @@ import { cn } from "@/lib/cn";
 import { routes } from "@/v2/routes";
 
 // @todo - refactor old components 
-import { ButtonIconSize } from "@/components/Button/RoundButton";
-import DynamicIcon from "@/components/Icon";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 
 const columnHelper = createColumnHelper();
@@ -76,10 +75,10 @@ const chainColumn = columnHelper.accessor("chain", {
         const { getCurrencySymbolByAddress } = useEnvironmentContext();
 
         return (
-            <span className="flex flex-row flex-1 justify-end gap-2 lg:justify-start">
-                <DynamicIcon name={getCurrencySymbolByAddress(info.row.original.currency)} style={ButtonIconSize.hero3} />
-                <DynamicIcon name={NETWORKS[info.row.original.chainId]} style={ButtonIconSize.hero3} />
-            </span>
+            <DynamicIconGroup>
+                <DynamicIcon name={getCurrencySymbolByAddress(info.row.original.currency)} />
+                <DynamicIcon name={NETWORKS[info.row.original.chainId]} />
+            </DynamicIconGroup>
         );
     },
 });
