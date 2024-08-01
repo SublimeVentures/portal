@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
-import { updateStaking } from "@/fetchers/settings.fetcher";
+import { updateStaking, getStakingWallet } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 import useGetStakeRequirements from "@/lib/hooks/useGetStakeRequirements";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -41,11 +41,10 @@ export default function CyberKongzStaking({ stakingProps }) {
     );
 
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
-    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(
-        unstakeDate,
-        staked,
-        stakeData?.stakeLength[0],
-        stakeData?.stakeWithdraw[0],
+
+    const unstakingData = useMemo(
+        () => timeUntilNextUnstakeWindow(unstakeDate, staked, stakeData?.stakeLength[0], stakeData?.stakeWithdraw[0]),
+        [stakeData?.stakeLength, stakeData?.stakeWithdraw, staked, unstakeDate],
     );
 
     const refreshSession = async (force) => {
@@ -130,15 +129,15 @@ export default function CyberKongzStaking({ stakingProps }) {
                 </div>
                 {Boolean(staked) && (
                     <div className={"detailRow text-app-success"}>
-                        <p>Next {unstake ? "re" : "un"}stake</p>
+                        <p>Next {unstakingData.unstake ? "re" : "un"}stake</p>
                         <hr className={"spacer"} />
                         <p>
                             in{" "}
-                            {nextDate > 3 ? (
-                                <>{nextDate} days</>
+                            {unstakingData.nextDate > 3 ? (
+                                <>{unstakingData.nextDate} days</>
                             ) : (
                                 <>
-                                    {nextDateH} hour{nextDateH > 1 ? "s" : ""}
+                                    {unstakingData.nextDateH} hour{unstakingData.nextDateH > 1 ? "s" : ""}
                                 </>
                             )}
                         </p>
@@ -162,7 +161,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                             setStakingModal(true);
                         }}
                     />
-                    {unstake && (
+                    {unstakingData.unstake && (
                         <UniButton
                             type={ButtonTypes.BASE}
                             text={"Unstake"}
@@ -181,13 +180,16 @@ export default function CyberKongzStaking({ stakingProps }) {
                     await refreshSession();
                 }}
             />
-            {unstake && (
+            {unstakingData.unstake && (
                 <UnStakingModal
                     stakingModalProps={stakingModalProps}
                     model={unstakingModal}
-                    setter={async () => {
+                    onSuccessClose={async () => {
                         setUnStakingModal(false);
                         await refreshSession(true);
+                    }}
+                    onClose={() => {
+                        setUnStakingModal(false);
                     }}
                 />
             )}

@@ -71,3 +71,15 @@ export const updateStaking = async (address) => {
     }
     return {};
 };
+
+export const getStakingWallet = async () => {
+    try {
+        const { data } = await axiosPrivate.get(API.settingsStakeCheck);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "getStakingWallet", e });
+        }
+        return {};
+    }
+};
