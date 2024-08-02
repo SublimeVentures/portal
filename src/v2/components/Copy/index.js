@@ -14,7 +14,7 @@ export default function Copy({ text }) {
 
     return (
         <CopyToClipboard text={text} onCopy={handleCopy}>
-            <span className="flex">
+            <span className="flex gap-3">
                 <span>{text}</span>{" "}
                 {showCopiedMessage ? <CheckIcon className="w-6 h-6" /> : <CopyIcon className="w-6 h-6" />}
             </span>

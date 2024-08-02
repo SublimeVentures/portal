@@ -63,7 +63,7 @@ export default function Settings({ session, wallets }) {
                 </TabsList>
 
                 {tabs.map(({ id, component: Comp }) => (
-                    <TabsContent key={id} className="mt-4 h-full" value={id}>
+                    <TabsContent key={id} className="mt-4" value={id}>
                         <Comp session={session} wallets={wallets} />
                     </TabsContent>
                 ))}

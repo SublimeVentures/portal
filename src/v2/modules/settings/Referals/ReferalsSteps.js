@@ -1,6 +1,6 @@
 import Copy from "@/v2/components/Copy";
 
-export default function ReferalSteps() {
+export default function ReferalsSteps() {
     return (
         <div className="rounded opacity-100 steps-gradient mt-8 py-12 px-9 flex flex-col">
             <div className="flex">
@@ -39,7 +39,7 @@ export default function ReferalSteps() {
                 </div>
             </div>
 
-            <div className="text-xl py-2 font-light text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-primary-light-gradient">
+            <div className="text-xl py-2 font-light text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-primary-light-gradient flex justify-center">
                 <Copy text={"0x12d...560eF/based.VC"} />
             </div>
         </div>
