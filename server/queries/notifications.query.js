@@ -4,15 +4,10 @@ const { NotificationTypes } = require("../../src/v2/enum/notifications");
 
 function buildWhereFromAuthorizedQuery(user, query) {
     const { userId, tenantId } = user;
-    const { size = 12, last = null, sort = "asc", ...whereQuery } = query;
+    const { limit = 12, offset = 0, sort = "asc", ...whereQuery } = query;
     const where = {};
     where["userId"] = userId;
     where["tenantId"] = { [Op.in]: [tenantId, null, 0] };
-    if (last) {
-        where["id"] = {
-            [sort === "asc" ? Op.gt : Op.lt]: last,
-        };
-    }
     if (whereQuery.before && whereQuery.after) {
         where["created_at"] = {
             [Op.between]: [whereQuery.before, whereQuery.after],
@@ -26,16 +21,17 @@ function buildWhereFromAuthorizedQuery(user, query) {
             where[key] = value;
         }
     }
-    return { size, where, sort };
+    return { limit, offset, where, sort };
 }
 
 async function getNotifications(user, query) {
     try {
-        const { where, size, sort } = buildWhereFromAuthorizedQuery(user, query);
+        const { where, limit, offset, sort } = buildWhereFromAuthorizedQuery(user, query);
         const notifications = await models.notification.findAll({
             where,
             raw: true,
-            limit: size,
+            limit,
+            offset,
             order: [["id", sort.toUpperCase()]],
         });
         if (!notifications.length) {
@@ -61,26 +57,65 @@ async function getNotifications(user, query) {
 async function buildFullNotifications(baseNotifications) {
     return Promise.all(
         baseNotifications.map((notif) => {
-            switch (notif.typeId) {
-                case NotificationTypes.MYSTERY_BUY:
-                    return enrichMysteryBuyNotification(notif);
-                case NotificationTypes.UPGRADE_BUY:
-                    return enrichUpgradeBuyNotification(notif);
-                case NotificationTypes.OTC_CANCEL:
-                case NotificationTypes.OTC_MADE:
-                case NotificationTypes.OTC_TAKE:
-                    return enrichOtcNotification(notif);
-                case NotificationTypes.INVESTMENT:
-                    return enrichInvestmentNotification(notif);
-                case NotificationTypes.REFUND:
-                    return enrichReturnNotification(notif);
-                case NotificationTypes.CLAIM:
-                    return enrichClaimNotification(notif);
-                default:
+            return enrichBaseNotification(notif)
+                .then((baseNotif) => {
+                    switch (baseNotif.typeId) {
+                        case NotificationTypes.MYSTERY_BUY:
+                            return enrichMysteryBuyNotification(baseNotif);
+                        case NotificationTypes.UPGRADE_BUY:
+                            return enrichUpgradeBuyNotification(baseNotif);
+                        case NotificationTypes.OTC_CANCEL:
+                        case NotificationTypes.OTC_MADE:
+                        case NotificationTypes.OTC_TAKE:
+                            return enrichOtcNotification(baseNotif);
+                        case NotificationTypes.INVESTMENT:
+                            return enrichInvestmentNotification(baseNotif);
+                        case NotificationTypes.REFUND:
+                            return enrichReturnNotification(baseNotif);
+                        case NotificationTypes.CLAIM:
+                            return enrichClaimNotification(baseNotif);
+                        default:
+                            return baseNotif;
+                    }
+                })
+                .catch((err) => {
+                    console.log("[Notifications] After-enrichment Processing Error:", err.message);
                     return notif;
-            }
+                });
         }),
     );
+}
+
+async function enrichBaseNotification(plainNotification) {
+    try {
+        const offer = await models.offer.findOne({
+            where: {
+                id: plainNotification.offerId,
+            },
+            raw: true,
+        });
+        const onchain = await models.onchain.findOne({
+            where: {
+                id: plainNotification.onchainId,
+            },
+            raw: true,
+        });
+        const chain = await models.network.findOne({
+            where: {
+                id: plainNotification.chainId,
+            },
+            raw: true,
+        });
+        return {
+            ...plainNotification,
+            offer,
+            onchain,
+            chain,
+        };
+    } catch (err) {
+        console.log("[Notifications] Base Enrichment Error:", err.message);
+        return plainNotification;
+    }
 }
 
 async function enrichMysteryBuyNotification(plainNotification) {
