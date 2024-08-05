@@ -3,12 +3,104 @@ import { useState } from "react";
 import Table from "@/v2/components/Table/Table";
 import { referalsColumns as columns } from "@/v2/modules/settings/logic/columns";
 
+let mockedReferals = [
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+    {
+        id: 1,
+        address: "x758878978978978977987897987897897897899201",
+        date: 1722851860008,
+        volume: 800,
+        totalInvestment: 2,
+        discount: 10,
+        rewards: 1,
+    },
+];
+
 export default function ReferalsTable() {
-    const data = [];
     const [sorting, setSorting] = useState([]);
 
     const table = useReactTable({
-        data,
+        data: mockedReferals,
         columns,
         state: {
             sorting,
