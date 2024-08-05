@@ -52,15 +52,17 @@ export default function Settings({ session, wallets }) {
     useEffect(() => setActiveTab(isDesktop ? "general" : "staking"), [isDesktop]);
 
     return (
-        <div className="px-4 md:px-16 md:h-[calc(100vh_-_250px)] overflow-y-auto">
+        <div className="p-4 mt-15 md:px-16 md:h-[calc(100vh_-_250px)] overflow-y-auto">
             <Tabs className="h-full" value={activeTab} onValueChange={setActiveTab}>
-                <TabsList aria-label="Settings tabs">
-                    {tabs.map((tab) => (
-                        <TabsTrigger key={tab.name} value={tab.id}>
-                            {tab.name}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+                <div>
+                    <TabsList aria-label="Settings tabs">
+                        {tabs.map((tab) => (
+                            <TabsTrigger key={tab.name} value={tab.id}>
+                                {tab.name}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                </div>
 
                 {tabs.map(({ id, component: Comp }) => (
                     <TabsContent key={id} className="mt-4" value={id}>

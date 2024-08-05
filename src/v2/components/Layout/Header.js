@@ -1,6 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
+import MobileMenu from "./MobileMenu";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
@@ -9,7 +10,6 @@ import { ChainSwitch } from "@/v2/components/App/Vault";
 import { Avatar } from "@/v2/components/ui/avatar";
 import { shortenAddress } from "@/v2/lib/helpers";
 import PAGE from "@/routes";
-import MobileMenu from "./MobileMenu";
 
 const mockedUser = {
     username: "Steady Stacker",
@@ -17,14 +17,14 @@ const mockedUser = {
 };
 
 const renderLogo = (componentName) => {
-    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true })
+    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
     return <TenantLogo />;
 };
 
 export default function Header({ title, isBlockedAlert }) {
     const { environmentCleanup } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
-    
+
     const handleLogout = () => environmentCleanup();
 
     return (
@@ -36,7 +36,7 @@ export default function Header({ title, isBlockedAlert }) {
             </div>
 
             <div className="hidden items-baseline 2xl:flex">
-                {title && <h2 className="text-7xl font-bold text-foreground">{title}</h2>}
+                {title && <h2 className="text-7xl font-semibold text-foreground">{title}</h2>}
             </div>
 
             <div className="flex items-center gap-4">
@@ -57,4 +57,4 @@ export default function Header({ title, isBlockedAlert }) {
             </div>
         </header>
     );
-};
+}
