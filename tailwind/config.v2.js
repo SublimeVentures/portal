@@ -44,6 +44,7 @@ module.exports = {
                 18: "4.5rem", // 72px
                 19: "4.75rem", // 76px
                 46: "11.5rem", // 184px
+                116: "29rem", // 464px
             },
             fontSize: {
                 "3xs": "10px",
@@ -80,8 +81,6 @@ module.exports = {
                 "navbar-gradient": "linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%)",
                 "settings-gradient": "linear-gradient(125deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)",
 
-                "upgrade-to-premium-pattern": "url('/img/upgrade-to-premium-bg.png')",
-                "upgrade-to-premium-banner-pattern": "url('/img/upgrade-to-premium-banner.png')",
                 "premium-banner": "url('/img/premium-banner.png')",
                 "empty-investment-pattern": "url('/img/empty-investment-pattern.png')",
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",

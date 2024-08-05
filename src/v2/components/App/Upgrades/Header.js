@@ -16,7 +16,7 @@ export default function UpgradesHeader({ title, children, affix, className }) {
                 {affix}
             </div>
             {children}
-            <UpgradeBanner className="ml-auto 2xl:block" />
+            <UpgradeBanner className="w-full md:w-auto md:ml-auto" variant="vertical" />
         </header>
     );
 }
