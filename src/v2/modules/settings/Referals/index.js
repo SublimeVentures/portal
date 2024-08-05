@@ -31,7 +31,7 @@ export default function Referals() {
             <div className="bg-gray-800 p-2 pb-0 rounded-lg col-span-1 3xl:col-span-2 max-h-28 flex gap-10">
                 <RewardStatisticCard />
                 <InvitersStatisticCard />
-                <DiscountsStatisticCard />
+                <DiscountsStatisticCard value="10%" />
             </div>
             <div className="bg-gray-800 p-2 rounded-lg col-span-1 3xl:col-span-2 md:row-span-11">
                 <ReferalsTable />
