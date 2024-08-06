@@ -1,11 +1,12 @@
 require("dotenv").config();
+const url = require("url");
 const express = require("express");
 const next = require("next");
-const url = require("url");
 
 const cookieParser = require("cookie-parser");
 const { serializeError } = require("serialize-error");
 const logger = require("./src/lib/logger");
+const authMiddleware = require("./server/middlewares/auth.middleware");
 
 const { connectDB } = require("./server/services/db");
 const { initCron } = require("./server/services/cron");
@@ -40,22 +41,23 @@ nextApp.prepare().then(async () => {
     server.use(cookieParser());
 
     server.use("/api/auth", authRoute);
-    server.use("/api/environment", envRoute);
     server.use("/api/public", publicRoute);
-    server.use("/api/offer", offerRoute);
-    server.use("/api/invest", investRoute);
-    server.use("/api/vault", vaultRoute);
-    server.use("/api/otc", otcRoute);
-    server.use("/api/mysterybox", mysteryboxRoute);
-    server.use("/api/store", storeRoute);
-    server.use("/api/settings", settingsRoute);
-    server.use("/api/payout", payoutRoute);
-    server.use("/api/claim", claimRoute);
+
+    server.use("/api/environment", authMiddleware, envRoute);
+    server.use("/api/offer", authMiddleware, offerRoute);
+    server.use("/api/invest", authMiddleware, investRoute);
+    server.use("/api/vault", authMiddleware, vaultRoute);
+    server.use("/api/otc", authMiddleware, otcRoute);
+    server.use("/api/mysterybox", authMiddleware, mysteryboxRoute);
+    server.use("/api/store", authMiddleware, storeRoute);
+    server.use("/api/settings", authMiddleware, settingsRoute);
+    server.use("/api/payout", authMiddleware, payoutRoute);
+    server.use("/api/claim", authMiddleware, claimRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
         res.set({
-            "Cache-Control": "public, maxAllocation-age=3600",
+            "Cache-Control": "public, max-age=3600",
         });
         const parsedUrl = url.parse(req.url, true);
         nextHandler(req, res, parsedUrl);

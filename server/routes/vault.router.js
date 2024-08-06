@@ -1,13 +1,41 @@
 const express = require("express");
 const router = express.Router();
+const { z } = require("zod");
 const { userVault } = require("../controllers/vault");
-const { verifyID } = require("../../src/lib/authHelpers");
+const queryMiddleware = require("../middlewares/query.middleware");
 
-router.get("/all", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+const requestSchema = z.object({
+    limit: z
+        .number({
+            invalid_type_error: "Invalid limit",
+        })
+        .optional(),
+    sortBy: z
+        .enum(["createdAt", "performance"], {
+            invalid_type_error: "Invalid sortBy",
+        })
+        .optional(),
+    sortOrder: z
+        .enum(["ASC", "DESC"], {
+            invalid_type_error: "Invalid sortOrder",
+        })
+        .optional(),
+    isUpcoming: z
+        .boolean({
+            invalid_type_error: "Invalid isUpcoming",
+        })
+        .optional(),
+    canClaim: z
+        .boolean({
+            invalid_type_error: "Invalid canClaim",
+        })
+        .optional(),
+});
 
-    return res.status(200).json(await userVault(user, req));
+router.get("/all", queryMiddleware(requestSchema), async (req, res) => {
+    const { user, ...request } = req;
+
+    return res.status(200).json(await userVault(user, request));
 });
 
 module.exports = { router };
