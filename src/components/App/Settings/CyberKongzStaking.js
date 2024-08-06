@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
+import Sentry from "@sentry/nextjs";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { IconButton } from "@/components/Button/IconButton";
 import { timeUntilNextUnstakeWindow } from "@/components/App/Settings/helper";
-import { updateStaking, getStakingWallet } from "@/fetchers/settings.fetcher";
+import { updateStaking } from "@/fetchers/settings.fetcher";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 import useGetStakeRequirements from "@/lib/hooks/useGetStakeRequirements";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -13,11 +14,12 @@ import { getTenantConfig } from "@/lib/tenantHelper";
 
 const StakingModal = dynamic(() => import("@/components/App/Settings/StakingModal"), { ssr: true });
 const UnStakingModal = dynamic(() => import("@/components/App/Settings/UnStakingModal"), { ssr: true });
+const StakingCheckModal = dynamic(() => import("@/components/App/Settings/StakingCheckModal"), { ssr: true });
 
 const { externalLinks } = getTenantConfig();
 
 export default function CyberKongzStaking({ stakingProps }) {
-    const { session, account, stakingCurrency } = stakingProps;
+    const { session, account, stakingCurrency, userWallets } = stakingProps;
     const { diamonds } = useEnvironmentContext();
 
     const router = useRouter();
@@ -25,6 +27,7 @@ export default function CyberKongzStaking({ stakingProps }) {
     const [staked, setStaked] = useState(false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
+    const [stakingCheckModal, setStakingCheckModal] = useState(false);
     const [stakingModal, setStakingModal] = useState(false);
     const [unstakingModal, setUnStakingModal] = useState(false);
     const isElite = session.isElite;
@@ -42,10 +45,9 @@ export default function CyberKongzStaking({ stakingProps }) {
 
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
 
-    const unstakingData = useMemo(
-        () => timeUntilNextUnstakeWindow(unstakeDate, staked, stakeData?.stakeLength[0], stakeData?.stakeWithdraw[0]),
-        [stakeData?.stakeLength, stakeData?.stakeWithdraw, staked, unstakeDate],
-    );
+    const unstakingData = useMemo(() => {
+        return timeUntilNextUnstakeWindow(unstakeDate, staked, stakeData?.stakeLength[0], stakeData?.stakeWithdraw[0]);
+    }, [stakeData?.stakeLength, stakeData?.stakeWithdraw, staked, unstakeDate]);
 
     const refreshSession = async (force) => {
         console.log("refreshSession");
@@ -73,6 +75,11 @@ export default function CyberKongzStaking({ stakingProps }) {
         isStaked: session.isStaked,
         stakingCurrency,
         refreshSession,
+    };
+
+    const handleSuccessfulStakingCheck = () => {
+        setStakingCheckModal(false);
+        setUnStakingModal(true);
     };
 
     useEffect(() => {
@@ -166,7 +173,7 @@ export default function CyberKongzStaking({ stakingProps }) {
                             type={ButtonTypes.BASE}
                             text={"Unstake"}
                             handler={() => {
-                                setUnStakingModal(true);
+                                setStakingCheckModal(true);
                             }}
                         />
                     )}
@@ -175,10 +182,20 @@ export default function CyberKongzStaking({ stakingProps }) {
             <StakingModal
                 stakingModalProps={stakingModalProps}
                 model={stakingModal}
-                setter={async () => {
+                onSuccessClose={async () => {
                     setStakingModal(false);
                     await refreshSession();
                 }}
+                onClose={() => {
+                    setStakingModal(false);
+                }}
+            />
+            <StakingCheckModal
+                address={account.address}
+                isOpen={stakingCheckModal}
+                onSuccess={handleSuccessfulStakingCheck}
+                userWallets={userWallets}
+                connector={account.connector}
             />
             {unstakingData.unstake && (
                 <UnStakingModal

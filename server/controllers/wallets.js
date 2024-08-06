@@ -53,13 +53,13 @@ async function refreshStaking(req, address) {
     }
 }
 
-async function getStakingWallet() {
+async function checkUserWalletsForStaking(req) {
     try {
         const token = req.cookies[authTokenName];
         const { data } = await axios.post(`${process.env.AUTHER}/session/stake/check`, { token });
         return data;
     } catch (error) {
-        logger.error("getStakingWallet", { error: serializeError(error) });
+        logger.error("checkStakingWallet", { error: serializeError(error) });
         return { ok: false, error: error?.shortMessage };
     }
 }
@@ -69,5 +69,5 @@ module.exports = {
     addUserWallet,
     removeUserWallet,
     refreshStaking,
-    getStakingWallet,
+    checkUserWalletsForStaking,
 };

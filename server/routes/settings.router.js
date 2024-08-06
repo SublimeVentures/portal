@@ -6,7 +6,7 @@ const {
     addUserWallet,
     removeUserWallet,
     refreshStaking,
-    getStakingWallet,
+    checkUserWalletsForStaking,
 } = require("../controllers/wallets");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
 
