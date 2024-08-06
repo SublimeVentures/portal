@@ -1,4 +1,4 @@
-import { dehydrate, useQuery } from "@tanstack/react-query";
+import { dehydrate } from "@tanstack/react-query";
 
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { queryClient } from "@/lib/queryCache";
@@ -6,20 +6,13 @@ import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetch
 import { AppLayout, Metadata } from "@/v2/components/Layout";
 import Settings from "@/v2/modules/settings/Settings";
 import routes from "@/routes";
+import { settingsKeys } from "@/v2/constants";
 
 export default function AppSettings({ session }) {
-    const userId = session?.userId;
-
-    const { data: userWallets, refetch: refetchUserWallets } = useQuery({
-        queryKey: ["userWallets", userId],
-        queryFn: () => fetchUserWallets(),
-        refetchOnWindowFocus: true,
-    });
-
     return (
         <>
             <Metadata title="Settings" />
-            <Settings session={session} wallets={userWallets} />
+            <Settings session={session} />
         </>
     );
 }
@@ -29,7 +22,7 @@ export const getServerSideProps = async ({ req, res }) => {
         const userId = account?.userId;
 
         await queryClient.prefetchQuery({
-            queryKey: ["userWallets", userId],
+            queryKey: settingsKeys.userWallets(userId),
             queryFn: () => fetchUserWalletsSsr(token),
         });
 

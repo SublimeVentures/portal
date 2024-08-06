@@ -1,14 +1,15 @@
 import { useState, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignMessage } from "wagmi";
+import { isAddress } from "web3-validator";
 
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { addUserWallet } from "@/fetchers/settings.fetcher";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/v2/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
 import { Input } from "@/v2/components/ui/input";
 import { Button } from "@/v2/components/ui/button";
+import { settingsKeys } from "@/v2/constants";
 import { createFormSchema } from "./schema";
 
 const FormStatusEnum = Object.freeze({
@@ -18,11 +19,8 @@ const FormStatusEnum = Object.freeze({
     ERROR: 'ERROR',
 })
 
-// example solana: 7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV
-export default function AddWalletForm({ networkList, wallets }) {
-    const { account } = useEnvironmentContext();
-    const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
-    // const newWallet = !wallets.find((el) => el.wallet === account?.address) && !!account?.address;
+export default function AddWalletForm({ wallets, networkList }) {
+    const queryClient = useQueryClient();
     
     const [status, setStatus] = useState(FormStatusEnum.IDLE);
     const [errorMessage, setErrorMessage] = useState('');
@@ -32,10 +30,6 @@ export default function AddWalletForm({ networkList, wallets }) {
     const { control, watch, setError, clearErrors, ...form } = useForm({
         resolver: zodResolver(schema),
         mode: "onBlur",
-        // defaultValues: {
-        //     address: 'H9swkY4JBxKfSMVTm8vzt5JFmQHTubsxsNwx6UgravF5',
-        //     network: networkList[0].chainId ?? 0,
-        // },
         defaultValues: {
             address: '',
             network: networkList[0].chainId ?? 0,
@@ -56,36 +50,34 @@ export default function AddWalletForm({ networkList, wallets }) {
     }, [schema, clearErrors, setError]);
 
     const handleSubmit = async (values) => {
-        // if (!newWallet) return
         setStatus('loading')
-        let signature;
 
-        try {
-            signature = await signMessageFn({
-                account: account?.address,
-                message: "I acknowledge that all linked wallets will have the capability to perform actions on my behalf, including selling assets and claiming allocations associated with my account.",
-            });
-
-        } catch (err) {
+        const isNewWallet = wallets.some((el) => el.wallet !== values.address);
+        
+        if (!isNewWallet) {
             setStatus(FormStatusEnum.ERROR);
-            setError(err.shortMessage);
-            
+            setError("Wallet already exists");
             return;
+        };
+
+        const isSupportedWallet = isAddress(values.address);
+
+        if (isSupportedWallet) {
+            setStatus(FormStatusEnum.ERROR);
+            setError("You have to provide airdrop walet");
+            return;
+        };
+
+        const result = await addUserWallet(values.address, values.network);
+
+        if (result?.ok) {
+            setStatus(FormStatusEnum.SUCCESS);
+            queryClient.invalidateQueries([settingsKeys.wallets]);
+        } else {
+            setErrorMessage(result?.error);
+            setStatus(FormStatusEnum.ERROR);
         }
 
-        if (!signature || !!signMessageError) return;
-        
-        console.log('signature', signature)
-        // @todo - backend
-        // const result = await addUserWallet(signature, values.address, values.network);
-        
-        // if (result?.ok) {
-        //     setStatus(FormStatusEnum.SUCCESS);
-        //     refetchUserWallets();
-        // } else {
-        //     setErrorMessage(result?.error);
-        //     setStatus(FormStatusEnum.ERROR);
-        // }
         return;
     }
 
@@ -97,23 +89,21 @@ export default function AddWalletForm({ networkList, wallets }) {
                         <div className="relative flex flex-col-reverse items-center md:flex-row">
                             <div className="flex items-center w-full">
                                 <FormField name="address" control={control} render={({ field }) => (
-                                    <FormItem className="h-24 w-full">
+                                    <FormItem className="h-24 flex flex-col w-full">
                                         <FormLabel>Address</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}
                                                 autoComplete="false"
                                                 onChange={evt => field.onChange(evt, field.onChange)}
-                                                // onChange={evt => handleAddressChange(evt, field.onChange)}
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
-                                    )}
-                                />
+                                )} />
                             </div>
                             <FormField name="network" control={control} render={({ field }) => (
-                                <FormItem className="my-2 w-full md:mt-2 md:ml-2 md:w-40">
+                                <FormItem className="my-1 flex flex-col w-full md:mt-2 md:ml-2 md:w-40">
                                     <FormLabel className="md:sr-only">Network</FormLabel>
                                     <FormControl>
                                         <Select {...field} onValueChange={(value) => handleNetworkChange(value, address, field.onChange)}>
@@ -137,7 +127,6 @@ export default function AddWalletForm({ networkList, wallets }) {
                     <Button
                         type="submit"
                         variant="gradient"
-                        // disabled={!newWallet}
                         className="mt-4 w-full"
                     >
                         Add Wallet

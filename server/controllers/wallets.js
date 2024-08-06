@@ -1,8 +1,18 @@
 const { serializeError } = require("serialize-error");
 const axios = require("axios");
 const logger = require("../../src/lib/logger");
-const { getUserLinkedWallets } = require("../queries/wallets.query");
+const { getUserAirdropWallets, getUserLinkedWallets } = require("../queries/wallets.query");
 const { authTokenName } = require("../../src/lib/authHelpers");
+
+async function getAirdropWallets(user) {
+    const { userId, tenantId } = user;
+    try {
+        return await getUserAirdropWallets(userId, tenantId);
+    } catch (error) {
+        logger.error("getAirdropWallets", { error: serializeError(error) });
+        return [];
+    }
+}
 
 async function getUserWallets(user) {
     const { userId, tenantId } = user;
@@ -14,15 +24,14 @@ async function getUserWallets(user) {
     }
 }
 
-async function addUserWallet(user, req) {
-    const { signature, address, network } = req.body;
+async function addUserWallet(req) {
+    const { address, network } = req.body;
 
     try {
         const token = req.cookies[authTokenName];
 
         const session = await axios.post(`${process.env.AUTHER}/session/addWallet`, {
             token,
-            signature,
             address,
             network,
         });
@@ -34,13 +43,14 @@ async function addUserWallet(user, req) {
     }
 }
 
-async function removeUserWallet(user, req) {
+async function removeUserWallet(req) {
     try {
         const token = req.cookies[authTokenName];
         const session = await axios.post(`${process.env.AUTHER}/session/removeWallet`, {
             token,
-            signature: req.body.signature,
+            address: req.body.address,
         });
+
         return session.data;
     } catch (error) {
         logger.error("removeUserWallet", { error: serializeError(error) });
@@ -60,6 +70,7 @@ async function refreshStaking(req, address) {
 }
 
 module.exports = {
+    getAirdropWallets,
     getUserWallets,
     addUserWallet,
     removeUserWallet,

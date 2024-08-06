@@ -13,15 +13,17 @@ router.get("/wallets", async (req, res) => {
 });
 
 router.post("/wallets/:operation", async (req, res) => {
-    const { auth, user } = await verifyID(req);
+    const { auth } = await verifyID(req);
     if (!auth) return res.status(401).json({});
+
+    const { operation } = req.params;
     
     try {
         let result;
-        if (req.params.operation === "add") {
-            result = await addUserWallet(user, req);
-        } else if (req.params.operation === "remove") {
-            result = await removeUserWallet(user, req);
+        if (operation === "add") {
+            result = await addUserWallet(req);
+        } else if (operation === "remove") {
+            result = await removeUserWallet(req);
         } else {
             return res.status(200).json({});
         }

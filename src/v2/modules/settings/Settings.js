@@ -45,7 +45,7 @@ export const desktopTabs = [
     },
 ]
 
-export default function Settings({ session, wallets }) {
+export default function Settings({ session }) {
     const isDesktop = useMediaQuery(breakpoints.md);
     const tabs = isDesktop ? desktopTabs : mobileTabs;
     const [activeTab, setActiveTab] = useState(isDesktop ? "general" : "staking");
@@ -64,8 +64,8 @@ export default function Settings({ session, wallets }) {
                 </TabsList>
 
                 {tabs.map(({ id, component: Comp }) => (
-                    <TabsContent className="mt-4 h-full" value={id}>
-                        <Comp session={session} wallets={wallets} />
+                    <TabsContent key={id} className="mt-4 h-full" value={id}>
+                        <Comp session={session} />
                     </TabsContent>
                 ))}
             </Tabs>
