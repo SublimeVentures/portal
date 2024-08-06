@@ -3,13 +3,20 @@ import { cn } from "@/lib/cn";
 
 export default function UpgradesHeader({ title, children, affix, className }) {
     return (
-        <header className={cn("flex flex-col gap-4 md:flex-row md:items-center md:gap-5", className)}>
+        <header
+            className={cn(
+                "flex flex-col gap-7 3xl:gap-4 md:flex-row md:items-center md:gap-5 mt-7 3xl:mt-0",
+                className,
+            )}
+        >
             <div className="flex items-center justify-between gap-4">
-                <h3 className="text-2xl font-bold text-foreground lg:font-normal">{title}</h3>
+                <h3 className="text-[14px] 3xl:text-2xl font-light 3xl:font-normal text-foreground/50 3xl:text-foreground lg:font-normal">
+                    {title}
+                </h3>
                 {affix}
             </div>
             {children}
-            <UpgradeBanner className="hidden ml-auto 2xl:block" />
+            <UpgradeBanner className="ml-auto 2xl:block" />
         </header>
     );
 }
