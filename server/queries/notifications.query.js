@@ -1,10 +1,13 @@
 const { Op } = require("sequelize");
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const { NotificationTypes } = require("../../src/v2/enum/notifications");
+const logger = require("../../src/lib/logger");
 
 function buildWhereFromAuthorizedQuery(user, query) {
     const { userId, tenantId } = user;
     const { limit = 12, offset = 0, sort = "asc", ...whereQuery } = query;
+
     const where = {};
     where["userId"] = userId;
     where["tenantId"] = { [Op.in]: [tenantId, null, 0] };
@@ -21,37 +24,37 @@ function buildWhereFromAuthorizedQuery(user, query) {
             where[key] = value;
         }
     }
-    return { limit, offset, where, sort };
+    
+    return {
+        limit: parseInt(limit, 10),
+        offset: parseInt(offset, 10),
+        where,
+        sort
+    };
 }
 
 async function getNotifications(user, query) {
     try {
         const { where, limit, offset, sort } = buildWhereFromAuthorizedQuery(user, query);
-        const notifications = await models.notification.findAll({
+
+        const notifications = await models.notification.findAndCountAll({
             where,
-            raw: true,
             limit,
             offset,
             order: [["id", sort.toUpperCase()]],
+            raw: true,
         });
-        if (!notifications.length) {
-            return {
-                last: null,
-                notifications: [],
-            };
-        }
-        const last = notifications[notifications.length - 1].id;
+
         return {
-            last,
-            notifications: await buildFullNotifications(notifications),
+            ...notifications,
+            limit,
+            offset,
         };
-    } catch (err) {
-        console.log("[Notifications] Fetch Error:", err.message);
-        return {
-            next: null,
-            notifications: [],
-        };
+    } catch (error) {
+        logger.error("QUERY :: [getNotifications]", { error: serializeError(error) });
     }
+    
+    return { count: 0, rows: [] };
 }
 
 async function buildFullNotifications(baseNotifications) {

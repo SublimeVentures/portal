@@ -37,106 +37,81 @@ async function getOffersPublic() {
 }
 
 const query_getOfferList = `
+    WITH filtered_offers AS (
+        SELECT
+            o.slug,
+            o.name,
+            o.genre,
+            o.ticker,
+            o."isLaunchpad",
+            ol.d_open,
+            ol.d_close,
+            ol."offerId",
+            ofr."isPaused",
+            ofr."isSettled"
+        FROM
+            "offer" o
+            LEFT JOIN LATERAL (
+                SELECT
+                    ol1.d_open,
+                    ol1.d_close,
+                    ol1."offerId"
+                FROM
+                    "offerLimit" ol1
+                WHERE
+                    ol1."offerId" = o.id AND (
+                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
+                        ol1."partnerId" = :tenantId
+                    )
+                ORDER BY
+                    CASE
+                        WHEN ol1."partnerId" = :tenantId THEN 1
+                        WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
+                        ELSE 3
+                    END
+                LIMIT 1
+            ) ol ON true
+            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
+        WHERE
+            o.display = true AND
+            o."isLaunchpad" = false AND
+            o."isAccelerator" = false AND
+            ol."offerId" IS NOT NULL AND
+            (COALESCE(:isSettled::boolean, ofr."isSettled") = ofr."isSettled")
+    )
     SELECT
-        o.slug,
-        o.name,
-        o.genre,
-        o.ticker,
-        o."isLaunchpad",
-        ol.d_open,
-        ol.d_close,
-        ol."offerId",
-        ofr."isPaused",
-        ofr."isSettled"
-    FROM
-        "offer" o
-            LEFT JOIN LATERAL (
-            SELECT
-                ol1.d_open,
-                ol1.d_close,
-                ol1."offerId"
-            FROM
-                "offerLimit" ol1
-            WHERE
-                ol1."offerId" = o.id AND (
-                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
-                        ol1."partnerId" = :tenantId
-                )
-            ORDER BY
-                CASE
-                    WHEN ol1."partnerId" = :tenantId THEN 1
-                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
-                    ELSE 3
-                    END
-            LIMIT 1
-            ) ol ON true
-            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
-    WHERE
-        o.display = true AND
-        o."isLaunchpad" = false AND
-        o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL AND
-        (COALESCE(:isSettled::boolean, ofr."isSettled") = ofr."isSettled")
-    ORDER BY
-        ol.d_open DESC
-    LIMIT :limit OFFSET :offset;
+        (SELECT COUNT(*) FROM filtered_offers) AS count,
+        json_agg(t) AS rows
+    FROM (
+        SELECT
+            *
+        FROM
+            filtered_offers
+        ORDER BY
+            d_open DESC
+        LIMIT :limit OFFSET :offset
+    ) t;
 `;
 
-const query_checkMore = `
-    SELECT 1 AS "exists"
-    FROM
-        "offer" o
-            LEFT JOIN LATERAL (
-            SELECT
-                ol1."offerId"
-            FROM
-                "offerLimit" ol1
-            WHERE
-                ol1."offerId" = o.id AND (
-                        (ol1."isTenantExclusive" = false AND ol1."partnerId" = :partnerId) OR
-                        ol1."partnerId" = :tenantId
-                )
-            ORDER BY
-                CASE
-                    WHEN ol1."partnerId" = :tenantId THEN 1
-                    WHEN ol1."partnerId" = :partnerId AND ol1."isTenantExclusive" = false THEN 2
-                    ELSE 3
-                    END
-            LIMIT 1
-            ) ol ON true
-            LEFT JOIN "offerFundraise" ofr ON ofr."offerId" = o.id
-    WHERE
-        o.display = true AND
-        o."isLaunchpad" = false AND
-        o."isAccelerator" = false AND
-        ol."offerId" IS NOT NULL
-    LIMIT 1 OFFSET :nextOffset;
-`;
-
-async function getOfferList(partnerId, tenantId, { limit = 6, page = 0, isSettled = null }) {
-    const offset = page * limit;
-    const nextOffset = offset + limit;
-
+async function getOfferList(partnerId, tenantId, { limit = 6, offset = 0, isSettled = null }) {
     try {
-        const offers = await db.query(query_getOfferList, {
+        const [offers] = await db.query(query_getOfferList, {
             type: QueryTypes.SELECT,
             replacements: { partnerId, tenantId, limit, offset, isSettled },
         });
 
-        const hasMoreResults = await db.query(query_checkMore, {
-            type: QueryTypes.SELECT,
-            replacements: { partnerId, tenantId, nextOffset, isSettled },
-        });
-
-        const nextPage = hasMoreResults.length > 0 ? page + 1 : null;
-
-        return { offers, nextPage };
+        return {
+            ...offers,
+            limit,
+            offset,
+        };
     } catch (error) {
         logger.error("QUERY :: [getOfferList]", {
             error: serializeError(error),
         });
     }
-    return [];
+    
+    return { count: 0, rows: [] };
 }
 
 const query_getOfferProgress = `
