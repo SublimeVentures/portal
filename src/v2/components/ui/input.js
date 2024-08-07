@@ -3,8 +3,9 @@ import { cva, cx } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const baseVariants = cva([
-    "inline-flex text-white rounded whitespace-nowrap cursor-pointer outline-none",
+    "inline-flex items-center text-white rounded whitespace-nowrap cursor-pointer outline-none",
     "transition-hover transition-colors border",
+    "px-6 py-2",
     "bg-white/5 border border-primary/30 hover:border-primary focus:border-primary",
     "data-[invalid]:bg-[#3F2334] data-[invalid]:border-[#D53839]",
 ]);
@@ -57,58 +58,61 @@ const controlVariants = (props) => {
 
 const wrapperVariants = (props) => cx(baseVariants(props), readOnlyVariants(props));
 
-const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, step, onValueChange, ...props }, ref) => {
-    const sizeClasses = controlsSize({ size });
-    ref = ref || createRef();
-    const handleStepUp = () => {
-        if (ref.current) {
-            ref.current.stepUp();
-            onValueChange?.(Number(ref.current.value));
-        }
-    };
+const InputNumber = forwardRef(
+    ({ className, size, readOnly, value, min, max, step, icon, onValueChange, ...props }, ref) => {
+        const sizeClasses = controlsSize({ size });
+        ref = ref || createRef();
+        const handleStepUp = () => {
+            if (ref.current) {
+                ref.current.stepUp();
+                onValueChange?.(Number(ref.current.value));
+            }
+        };
 
-    const handleStepDown = () => {
-        if (ref.current) {
-            ref.current.stepDown();
-            onValueChange?.(Number(ref.current.value));
-        }
-    };
+        const handleStepDown = () => {
+            if (ref.current) {
+                ref.current.stepDown();
+                onValueChange?.(Number(ref.current.value));
+            }
+        };
 
-    return (
-        <div className={cn("text-center", wrapperVariants({ size, readOnly }), className)}>
-            <button
-                className={cn(sizeClasses, buttonVariants({ size, readOnly: readOnly || min === value }))}
-                onClick={handleStepDown}
-                disabled={readOnly}
-            >
-                -
-            </button>
-            <input
-                type="number"
-                ref={ref}
-                readOnly={readOnly}
-                onChange={(e) => onValueChange?.(Number(e.target.value))}
-                min={min}
-                max={max}
-                step={step}
-                value={value}
-                {...props}
-                className={cn("bg-transparent w-full border-0 cursor-pointer outline-none text-center", sizeClasses)}
-            />
-            <button
-                className={cn(
-                    "text-center",
-                    sizeClasses,
-                    buttonVariants({ size, readOnly: readOnly || max === value }),
-                )}
-                onClick={handleStepUp}
-                disabled={readOnly}
-            >
-                +
-            </button>
-        </div>
-    );
-});
+        return (
+            <div className={cn("text-center", wrapperVariants({ size, readOnly }), className)}>
+                {icon}
+                <button
+                    className={cn(sizeClasses, buttonVariants({ size, readOnly: readOnly || min === value }), "hidden")}
+                    onClick={handleStepDown}
+                    disabled={readOnly}
+                >
+                    -
+                </button>
+                <input
+                    type="number"
+                    ref={ref}
+                    readOnly={readOnly}
+                    onChange={(e) => onValueChange?.(Number(e.target.value))}
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={value}
+                    {...props}
+                    className={cn("bg-transparent w-full border-0 cursor-pointer outline-none", sizeClasses)}
+                />
+                <button
+                    className={cn(
+                        "text-center hidden",
+                        sizeClasses,
+                        buttonVariants({ size, readOnly: readOnly || max === value }),
+                    )}
+                    onClick={handleStepUp}
+                    disabled={readOnly}
+                >
+                    +
+                </button>
+            </div>
+        );
+    },
+);
 
 InputNumber.displayName = "InputNumber";
 

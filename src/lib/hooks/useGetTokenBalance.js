@@ -4,7 +4,6 @@ import { erc20Abi } from "viem";
 import BigNumber from "bignumber.js";
 
 function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
-    if (!token || skipStep) return;
     const { contract, precision } = token;
 
     const scope = `${account}_liq_${contract}`;
@@ -33,16 +32,20 @@ function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
         },
     });
 
+    const balance = useMemo(() => {
+        if (typeof data !== "undefined") {
+            const power = new BigNumber(10).pow(precision);
+            const currentBalanceBN = new BigNumber(data);
+            return currentBalanceBN.dividedBy(power).toNumber();
+        }
+        return 0;
+    }, [data, precision]);
+
+    if (!token || skipStep) return;
+
     return {
         ...rest,
-        balance: useMemo(() => {
-            if (typeof data !== "undefined") {
-                const power = new BigNumber(10).pow(precision);
-                const currentBalanceBN = new BigNumber(data);
-                return currentBalanceBN.dividedBy(power).toNumber();
-            }
-            return 0;
-        }, [data]),
+        balance,
     };
 }
 
