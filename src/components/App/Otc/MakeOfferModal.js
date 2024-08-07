@@ -46,7 +46,7 @@ const TABS = {
 };
 
 export default function MakeOfferModal({ model, setter, props }) {
-    const { currentMarket, allocation, refetchVault, refetchOffers } = props;
+    const { currentMarket, allocation, refetchVault, refetchOffers, session } = props;
     const { getCurrencySettlement, account, activeOtcContract, network } = useEnvironmentContext();
     const { getExpireData, setExpireData } = useLocalStorage();
 
@@ -385,10 +385,11 @@ export default function MakeOfferModal({ model, setter, props }) {
     };
 
     const blocked = props?.session?.stakingEnabled && !props?.session?.isStaked;
+    const diffAccount = props?.session?.stakedOn !== account.address;
 
     return (
         <GenericRightModal
-            withTopMargin={blocked}
+            withTopMargin={blocked || diffAccount}
             isOpen={model}
             closeModal={() => closeModal()}
             title={title()}

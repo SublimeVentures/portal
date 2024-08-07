@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { useAccount } from "wagmi";
 import Sidebar from "@/components/Navigation/Sidebar";
 import routes from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
+import { logOut } from "@/fetchers/auth.fetcher";
 
 const alertHeight = "60px";
 
@@ -11,24 +13,35 @@ export default function LayoutApp({ children }) {
     const stakingEnabled = children.props?.session.stakingEnabled;
     const isStaked = children.props?.session.isStaked;
     const stakingCurrency = activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
+    const { account } = useEnvironmentContext();
 
+    const isDifferentAccount = account.address !== children.props?.session.stakedOn;
     const isBlockedAlert = stakingEnabled && !isStaked;
 
     return (
         <div style={{ "--alertHeight": alertHeight }}>
-            {isBlockedAlert && (
+            {isBlockedAlert ? (
                 <div className="fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
                     Investments are blocked!&nbsp;
                     <u>
                         <Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link>.
                     </u>
                 </div>
+            ) : (
+                isDifferentAccount && (
+                    <div className="fixed top-0 flex items-center justify-center bg-app-accent uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
+                        Your tokens are staked on another account!&nbsp;
+                        <button className="underline" onClick={() => logOut()}>
+                            Logout and choose a wallet with staked tokens.
+                        </button>
+                    </div>
+                )
             )}
 
             <div
                 className={cn(
                     "flex flex-col collap:flex-row bg-app-bg",
-                    isBlockedAlert
+                    isBlockedAlert || isDifferentAccount
                         ? "min-h-[calc(100vh_-_var(--alertHeight))] mt-[var(--alertHeight)]"
                         : "min-h-screen",
                 )}
@@ -36,7 +49,7 @@ export default function LayoutApp({ children }) {
                 <div
                     className={cn(
                         "sticky top-0 z-20",
-                        isBlockedAlert
+                        isBlockedAlert || isDifferentAccount
                             ? "max-h-[calc(100vh_-_var(--alertHeight))] top-[var(--alertHeight)]"
                             : "max-h-screen",
                     )}
