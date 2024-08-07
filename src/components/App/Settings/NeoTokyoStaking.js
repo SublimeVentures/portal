@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
@@ -25,8 +25,13 @@ export default function NeoTokyoStaking({ stakingProps }) {
     const [unstakingModal, setUnStakingModal] = useState(false);
     const isElite = session.isElite;
 
+    const stakeOnCurrentWallet = session.stakedOn === account.address;
+
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
-    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(unstakeDate, staked);
+
+    const unstakingData = useMemo(() => {
+        return timeUntilNextUnstakeWindow(unstakeDate, staked);
+    }, [staked, unstakeDate]);
 
     const refreshSession = async (force) => {
         const result = await updateStaking(account.address);
@@ -105,15 +110,15 @@ export default function NeoTokyoStaking({ stakingProps }) {
                 </div>
                 {staked && (
                     <div className={"detailRow text-app-success"}>
-                        <p>Next {unstake ? "re" : "un"}stake</p>
+                        <p>Next {unstakingData.unstake ? "re" : "un"}stake</p>
                         <hr className={"spacer"} />
                         <p>
                             in{" "}
-                            {nextDate > 3 ? (
-                                <>{nextDate} days</>
+                            {unstakingData.nextDate > 3 ? (
+                                <>{unstakingData.nextDate} days</>
                             ) : (
                                 <>
-                                    {nextDateH} hour{nextDateH > 1 ? "s" : ""}
+                                    {unstakingData.nextDateH} hour{unstakingData.nextDateH > 1 ? "s" : ""}
                                 </>
                             )}
                         </p>
@@ -139,13 +144,14 @@ export default function NeoTokyoStaking({ stakingProps }) {
                             }}
                         />
                     )}
-                    {unstake && (
+                    {unstakingData.unstake && (
                         <UniButton
                             type={ButtonTypes.BASE}
                             text={"Unstake"}
                             handler={() => {
                                 setUnStakingModal(true);
                             }}
+                            isDisabled={!stakeOnCurrentWallet}
                         />
                     )}
                 </div>
@@ -154,19 +160,25 @@ export default function NeoTokyoStaking({ stakingProps }) {
                 <StakingModal
                     stakingModalProps={stakingModalProps}
                     model={stakingModal}
-                    setter={async () => {
+                    onSuccessClose={async () => {
                         setStakingModal(false);
                         await refreshSession();
                     }}
+                    onClose={() => {
+                        setStakingModal(false);
+                    }}
                 />
             )}
-            {unstake && (
+            {unstakingData.unstake && (
                 <UnStakingModal
                     stakingModalProps={stakingModalProps}
                     model={unstakingModal}
-                    setter={async () => {
+                    onSuccessClose={async () => {
                         setUnStakingModal(false);
                         await refreshSession(true);
+                    }}
+                    onClose={() => {
+                        setUnStakingModal(false);
                     }}
                 />
             )}
