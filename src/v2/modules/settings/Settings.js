@@ -54,14 +54,17 @@ export default function Settings({ session, wallets }) {
     return (
         <div className="p-4 mt-15 md:px-16 md:h-[calc(100vh_-_250px)] overflow-y-auto">
             <Tabs className="h-full" value={activeTab} onValueChange={setActiveTab}>
-                <div>
-                    <TabsList aria-label="Settings tabs">
+                <div className="flex justify-between items-center">
+                    <TabsList aria-label="Settings tabs" className="pb-0">
                         {tabs.map((tab) => (
                             <TabsTrigger key={tab.name} value={tab.id}>
                                 {tab.name}
                             </TabsTrigger>
                         ))}
                     </TabsList>
+                    <button className="bg-turquoise text-white font-light text-nowrap py-2 px-6 rounded" type="button">
+                        Save Settings
+                    </button>
                 </div>
 
                 {tabs.map(({ id, component: Comp }) => (

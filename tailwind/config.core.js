@@ -33,6 +33,7 @@ module.exports = {
                 slides: "#101d2d",
                 white: "#ffffff",
                 warn: "#fff600",
+                turquoise: "#0BB0C8",
                 "gray-500": "rgba(188,188,188,0.5)",
             },
             screens: {
