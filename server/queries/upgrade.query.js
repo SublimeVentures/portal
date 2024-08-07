@@ -1,7 +1,6 @@
+const { Op, QueryTypes } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, QueryTypes } = require("sequelize");
-const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
 
 async function fetchUpgradeUsed(userId, offerId, tenantId, transaction) {
     return await models.upgrade.findAll({

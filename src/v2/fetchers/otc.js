@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 
-import { axiosPrivate  } from "@/lib/axios/axiosPrivate";
+import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { API_ROUTES } from "@/v2/routes";
 import { authTokenName } from "@/lib/authHelpers";
@@ -57,7 +57,9 @@ export const getOffers = async ({ otcId, filters = {}, sort }) => {
     const { sortId = "", sortOrder = "" } = sort ?? {};
 
     try {
-        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getOffers}/${otcId}`, { params: { ...filters, sortId, sortOrder } });
+        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getOffers}/${otcId}`, {
+            params: { ...filters, sortId, sortOrder },
+        });
 
         return data;
     } catch (e) {
@@ -91,7 +93,9 @@ export const getOffersHistory = async ({ offerId, sort }) => {
     const { sortId = "", sortOrder = "" } = sort ?? {};
 
     try {
-        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getHistory}/${offerId}`, { params: { sortId, sortOrder } });
+        const { data } = await axiosPrivate.get(`${API_ROUTES.otc.getHistory}/${offerId}`, {
+            params: { sortId, sortOrder },
+        });
 
         return data;
     } catch (e) {
