@@ -76,10 +76,35 @@
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
-}
+  }
   .no-scrollbar {
       -ms-overflow-style: none;
       scrollbar-width: none;
+  }
+  .bg-pattern-blue {
+    background-image: url('/img/bg/upgrades/blue@1.webp');
+  }
+  .bg-pattern-gold {
+    background-image: url('/img/bg/upgrades/gold@1.webp');
+  }
+
+  @media screen and (--webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
+    .bg-pattern-blue {
+      background-image: url('/img/bg/upgrades/blue@3.webp');
+    }
+    .bg-pattern-gold {
+      background-image: url('/img/bg/upgrades/gold@3.webp');
+    }
+  }
+
+  .bg-mystery-box {
+    background-image: linear-gradient(to bottom, #071321 0%, #071321 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+  }
+
+  @screen 3xl {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+    }
   }
 }
 

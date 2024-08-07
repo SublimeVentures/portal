@@ -28,7 +28,7 @@ export default function Header({ title, isBlockedAlert }) {
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="flex items-center justify-between text-white">
+        <header className="flex items-center justify-between text-white p-4 md:p-0">
             <div className="2xl:hidden">
                 <Link href={PAGE.App}>
                     <div className="flex items-center">{renderLogo(components.logo)}</div>

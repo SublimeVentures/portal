@@ -28,7 +28,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
 
     const { account, activeDiamond, network, getCurrencyStore } = useEnvironmentContext();
-    const [transactionSuccessful, setTransactionSuccessful] = useState(true);
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencyStore();
