@@ -125,7 +125,13 @@
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 3px;
+}
+
+@screen md {
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
 }
 
 .block-scrollbar::-webkit-scrollbar {
@@ -134,10 +140,24 @@
 
 ::-webkit-scrollbar-track {
   background: #082030;
+  border-radius: 999px;
+}
+
+@screen md {
+  ::-webkit-scrollbar-track {
+    border-radius: 0;
+  }
 }
 
 ::-webkit-scrollbar-thumb {
   background: transparent linear-gradient(180deg, #0D87A1 0%, #164062 100%) 0% 0% no-repeat padding-box;
+  border-radius: 999px;
+}
+
+@screen md {
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0;
+  }
 }
 
 ::-webkit-scrollbar-thumb:hover {

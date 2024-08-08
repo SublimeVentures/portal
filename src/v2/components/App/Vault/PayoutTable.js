@@ -51,11 +51,11 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
         "block w-auto": variant === PayoutTableVariants.vertical,
     });
 
-    const rowDdStyles = cn("text-lg font-medium text-foreground", {
+    const rowDdStyles = cn("md:text-base font-medium text-foreground", {
         "order-1": variant === PayoutTableVariants.vertical,
         "order-2": PayoutTableVariants.horizontal,
     });
-    const rowDtStyles = cn("text-md font-light text-foreground/[.25]", {
+    const rowDtStyles = cn("md:text-sm font-light text-foreground/[.25]", {
         "order-2": variant === PayoutTableVariants.vertical,
         "order-1": variant === PayoutTableVariants.horizontal,
     });
@@ -65,8 +65,10 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
             <div className="p-4 grow overflow-y-auto">
                 {!pages[0]?.rows?.length ? (
                     <div className="h-80 flex flex-col gap-4 justify-center items-center bg-foreground/[0.03]">
-                        <CardTitle className="text-2xl font-medium text-foreground">No payouts found</CardTitle>
-                        <CardDescription className="max-w-md text-xs font-light text-foreground text-center">
+                        <CardTitle className="text-base md:text-lg font-medium text-foreground">
+                            No payouts found
+                        </CardTitle>
+                        <CardDescription className="max-w-md text-xs md:text-sm font-light text-foreground/50 text-center">
                             The payout tab is currently empty, but don't worry! This space will fill up as your
                             investments mature and begin to pay out. Sit back, relax, and watch your returns grow over
                             time.

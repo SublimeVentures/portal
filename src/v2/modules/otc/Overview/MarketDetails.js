@@ -3,8 +3,12 @@ import { cn } from "@/lib/cn";
 
 export const DescriptionListHelper = ({ term, children }) => (
     <>
-        <dt className="mx-auto w-16 text-md text-foreground/[.5] leading-none whitespace-nowrap">{term}</dt>
-        <dd className="mx-auto w-16 text-md text-foreground leading-none whitespace-nowrap">{children}</dd>
+        <dt className="mx-auto w-16 text-xs 3xl:text-base font-light text-foreground/[.5] leading-none whitespace-nowrap">
+            {term}
+        </dt>
+        <dd className="mx-auto w-16 text-xs 3xl:text-base font-medium 3xl:font-light text-foreground leading-none whitespace-nowrap">
+            {children}
+        </dd>
     </>
 );
 
@@ -12,7 +16,12 @@ export default function MarketDetails({ src, alt, offer, className }) {
     const { ticker } = offer;
 
     return (
-        <dl className={cn("relative py-4 px-8 min-w-96 grid grid-flow-col items-center bg-foreground/[.1] rounded", className)}>
+        <dl
+            className={cn(
+                "relative py-4 px-8 3xl:min-w-96 grid grid-flow-col items-center bg-foreground/[.1] rounded",
+                className,
+            )}
+        >
             <DescriptionListHelper term="Payout">${ticker}</DescriptionListHelper>
             <DescriptionListHelper term="Price">$?</DescriptionListHelper>
             <DescriptionListHelper term="Listed">?</DescriptionListHelper>
@@ -30,4 +39,4 @@ export default function MarketDetails({ src, alt, offer, className }) {
             </dd>
         </dl>
     );
-};
+}

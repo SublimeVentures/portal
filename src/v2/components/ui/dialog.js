@@ -98,7 +98,7 @@ DialogFooter.displayName = "DialogFooter";
 const DialogTitle = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
         ref={ref}
-        className={cn("text-[20px] md:text-[30px] font-medium text-foreground", className)}
+        className={cn("text-xl md:text-3xl font-normal md:font-medium text-foreground", className)}
         {...props}
     />
 ));
@@ -108,7 +108,7 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName;
 const DialogDescription = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Description
         ref={ref}
-        className={cn("text-[12px] font-light text-foreground text-center md:text-[18px] md:text-left", className)}
+        className={cn("text-xs font-normal text-foreground text-center md:text-lg md:text-left", className)}
         {...props}
     />
 ));

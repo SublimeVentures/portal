@@ -14,6 +14,6 @@ function IndexPage() {
     );
 }
 
-IndexPage.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+IndexPage.getLayout = (page) => <AppLayout title="Vault Dashboard">{page}</AppLayout>;
 
 export default IndexPage;

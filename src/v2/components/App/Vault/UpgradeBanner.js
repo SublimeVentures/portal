@@ -60,8 +60,8 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                         />
                         <CardTitle
                             className={cn("font-normal italic text-accent", {
-                                "text-[16px] 3xl:text-6xl text-center mb-2": variant === VARIANTS.DEFAULT,
-                                "text-[14px]": variant === VARIANTS.VERTICAL,
+                                "text-base 3xl:text-2xl text-center mb-2": variant === VARIANTS.DEFAULT,
+                                "text-sm": variant === VARIANTS.VERTICAL,
                             })}
                         >
                             Upgrade to{" "}
@@ -84,11 +84,11 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                 ) : (
                     <>
                         {variant === VARIANTS.DEFAULT && (
-                            <CardTitle className="mb-2 text-[16px] 3xl:text-6xl font-normal italic text-accent text-center">
+                            <CardTitle className="mb-2 text-base 3xl:text-2xl font-normal italic text-accent text-center">
                                 Acquired <span className="3xl:block font-semibold">premium</span>
                             </CardTitle>
                         )}
-                        <dl className="text-[14px] text-white grid grid-cols-[auto_auto] leading-5 gap-x-4">
+                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-5 gap-x-4">
                             {items.map((item) => (
                                 <Fragment key={item.id}>
                                     <dt className="text-left">{item.name}</dt>

@@ -1,7 +1,8 @@
 import { UpgradeBanner } from "@/v2/components/App/Vault";
 import { cn } from "@/lib/cn";
+import Title from "@/v2/modules/opportunities/Title";
 
-export default function UpgradesHeader({ title, children, affix, className }) {
+export default function UpgradesHeader({ title, children, affix, className, count }) {
     return (
         <header
             className={cn(
@@ -10,9 +11,7 @@ export default function UpgradesHeader({ title, children, affix, className }) {
             )}
         >
             <div className="flex items-center justify-between gap-4">
-                <h3 className="text-[14px] 3xl:text-2xl font-light 3xl:font-normal text-foreground/50 3xl:text-foreground lg:font-normal">
-                    {title}
-                </h3>
+                <Title count={count}>{title}</Title>
                 {affix}
             </div>
             {children}

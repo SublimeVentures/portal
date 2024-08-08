@@ -43,27 +43,14 @@ module.exports = {
                 17: "4.25rem", // 68px
                 18: "4.5rem", // 72px
                 19: "4.75rem", // 76px
+                22: "5.5rem", // 88px
+                26: "6.5rem", // 104px
                 46: "11.5rem", // 184px
                 116: "29rem", // 464px
             },
             fontSize: {
-                "3xs": "10px",
-                xxs: "11px",
-                xs: "12px",
-                sm: "13px",
-                md: "14px",
-                lg: "16px",
-                xl: "17px",
-                "2xl": "18px",
-                "3xl": "20px",
-                "4xl": "21px",
-                "5xl": "22px",
-                "6xl": "23px",
-                "7xl": "26px",
-                "8xl": "28px",
-                "9xl": "29px",
-                "10xl": "34px",
-                "11xl": "39px",
+                "3xs": ".5rem",
+                "2xs": ".625rem",
             },
             fontFamily: {
                 body: ["Poppins", "sans-serif"],
