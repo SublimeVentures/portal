@@ -51,6 +51,7 @@ const BlockchainStep = ({ data }) => {
                                     wrapper={<DynamicIcon name={ICONS.ALERT} style={""} />}
                                     text={`${error?.text}`}
                                     type={TooltipType.Error}
+                                    data-tooltip-place="left"
                                 />
                             </div>
                         )}

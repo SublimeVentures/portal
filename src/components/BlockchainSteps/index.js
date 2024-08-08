@@ -117,7 +117,6 @@ const BlockchainSteps = ({ data }) => {
             dispatch({ type: "SET_ALLOWANCE_SET", payload: true });
         }
     }, [allowance_needIncrease]);
-
     const allowance_set_reset = useSendTransaction(
         allowance_needReset,
         allowance_methodReset.method,
@@ -301,7 +300,7 @@ const BlockchainSteps = ({ data }) => {
     }, [stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepPrerequisite.state, stepTransaction.state]);
 
     useEffect(() => {
-        if (!!transaction_isFinished) {
+        if (transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(transaction_isFinished);
         }
