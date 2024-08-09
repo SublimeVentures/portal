@@ -351,12 +351,7 @@ async function getOfferWithLimits(offerId) {
 async function getAllocation(userId) {
     try {
         return models.vault.findAll({
-            attributes: [
-                "id",
-                "invested",
-                "locked",
-                [Sequelize.literal("invested - locked"), "allocation"],
-            ],
+            attributes: ["id", "offerId", "invested", "locked", [Sequelize.literal("invested - locked"), "allocation"]],
             where: {
                 userId,
                 invested: {

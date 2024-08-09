@@ -1,3 +1,9 @@
+const moment = require("moment");
+const { serializeError } = require("serialize-error");
+const { isAddress } = require("web3-validator");
+const axios = require("axios");
+const db = require("../services/db/definitions/db.init");
+const logger = require("../../src/lib/logger");
 const {
     getActiveOffers,
     getHistoryOffers,
@@ -7,15 +13,9 @@ const {
     processSellOtcDeal,
     saveOtcLock,
 } = require("../queries/otc.query");
-const moment = require("moment");
-const { createHash } = require("./helpers");
-const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
-const db = require("../services/db/definitions/db.init");
-const { isAddress } = require("web3-validator");
-const axios = require("axios");
 const { getOtcList } = require("../queries/offers.query");
 const { getAllocation } = require("../queries/offers.query");
+const { createHash } = require("./helpers");
 
 async function getMarkets(session) {
     try {
@@ -33,7 +33,7 @@ async function getMarkets(session) {
 
 async function getUserAllocation(user) {
     const { userId } = user;
-    
+
     try {
         return await getAllocation(userId);
     } catch (error) {
@@ -45,7 +45,6 @@ async function getUserAllocation(user) {
         };
     }
 }
-
 
 async function getOffers(req) {
     try {

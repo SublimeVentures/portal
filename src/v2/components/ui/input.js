@@ -29,18 +29,6 @@ const controlsSize = cva("", {
     },
 });
 
-const buttonSize = cva("", {
-    variants: {
-        size: {
-            sm: "w-5",
-            md: "w-8",
-        },
-    },
-    defaultVariants: {
-        size: "md",
-    },
-});
-
 const buttonReadOnly = cva("", {
     variants: {
         readOnly: {
@@ -112,7 +100,6 @@ const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, st
 
 const InputFunds = forwardRef(
     ({ className, size, readOnly, value, min, max, step, icon, onValueChange, label, after, ...props }, ref) => {
-        const sizeClasses = controlsSize({ size });
         ref = ref || createRef();
 
         return (
@@ -156,6 +143,7 @@ const Input = forwardRef(({ className, type, size, readOnly, ...props }, ref) =>
     if (type === "fund") {
         return <InputFunds ref={ref} className={className} size={size} readOnly={readOnly} {...props} />;
     }
+
     return (
         <input
             type={type}
