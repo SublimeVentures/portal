@@ -29,25 +29,25 @@ export function parseVesting(offerVesting) {
 
         for (let i = 0; i < offerVesting.length; i++) {
             const vesting = offerVesting[i];
-            if (vesting.c === 0) break;
-            if (vesting.c > now) {
-                const unlockDateUnix = moment(vesting.u, "YYYY-MM-DD").unix();
+            if (vesting.claimDate === 0) break;
+            if (vesting.claimDate > now) {
+                const unlockDateUnix = moment(vesting.unlockDate, "YYYY-MM-DD").unix();
                 isSoon =
-                    vesting.c - now <= THREE_DAYS_IN_SECONDS ||
-                    vesting.s - now <= THREE_DAYS_IN_SECONDS ||
+                    vesting.claimDate - now <= THREE_DAYS_IN_SECONDS ||
+                    vesting.snapshotDate - now <= THREE_DAYS_IN_SECONDS ||
                     unlockDateUnix - now <= MONTH_IN_SECONDS;
-                nextUnlock = vesting.u;
-                nextSnapshot = moment.unix(vesting.s).utc().local().format("YYYY-MM-DD mm:SS");
-                nextClaim = moment.unix(vesting.c).utc().local().format("YYYY-MM-DD mm:SS");
+                nextUnlock = vesting.unlockDate;
+                nextSnapshot = moment.unix(vesting.snapshotDate).utc().local().format("YYYY-MM-DD mm:SS");
+                nextClaim = moment.unix(vesting.claimDate).utc().local().format("YYYY-MM-DD mm:SS");
 
-                if (now > unlockDateUnix && vesting.s !== 0) {
+                if (now > unlockDateUnix && vesting.snapshotDate !== 0) {
                     claimStage = STAGES.SNAPSHOT;
-                } else if (now > vesting.s && vesting.c !== 0) {
+                } else if (now > vesting.snapshotDate && vesting.claimDate !== 0) {
                     claimStage = STAGES.CLAIM;
                 }
                 break;
             }
-            vestedPercentage += vesting.p;
+            vestedPercentage += vesting.percentage;
             payoutId = i + 1;
         }
 

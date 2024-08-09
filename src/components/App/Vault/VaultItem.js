@@ -21,26 +21,24 @@ export default function VaultItem({ item, passData }) {
     const tgeParsed = tge > 0 ? `+${normalized_tgeDiff}%` : "TBA";
 
     const { vestedPercentage, nextUnlock, nextSnapshot, nextClaim, isInstant, isSoon, claimStage, payoutId } =
-        parseVesting(item.t_unlock);
+        parseVesting(item.payouts);
     const awaitingClaim = claims.some((claim) => !claim.isClaimed) && payoutId > 0;
     const performance = (claimed / invested) * 100;
 
-    const setPassData = () => {
-        return {
-            ...item,
-            participated,
-            normalized_tgeDiff,
-            normalized_invested,
-            tgeParsed,
-            vestedPercentage,
-            nextUnlock,
-            nextSnapshot,
-            nextClaim,
-            isInstant,
-            isSoon,
-            claimStage,
-        };
-    };
+    const setPassData = () => ({
+        ...item,
+        participated,
+        normalized_tgeDiff,
+        normalized_invested,
+        tgeParsed,
+        vestedPercentage,
+        nextUnlock,
+        nextSnapshot,
+        nextClaim,
+        isInstant,
+        isSoon,
+        claimStage,
+    });
 
     useEffect(() => {
         VanillaTilt.init(tilt.current, {
@@ -138,6 +136,14 @@ VaultItem.propTypes = {
         claims: PropTypes.arrayOf(
             PropTypes.shape({
                 isClaimed: PropTypes.bool,
+            }),
+        ),
+        payouts: PropTypes.arrayOf(
+            PropTypes.shape({
+                snapshotDate: PropTypes.number,
+                claimDate: PropTypes.number,
+                percentage: PropTypes.number,
+                unlockDate: PropTypes.string,
             }),
         ),
         createdAt: PropTypes.string,

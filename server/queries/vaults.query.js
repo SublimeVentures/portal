@@ -30,6 +30,12 @@ const query_getUserVault = `
     ORDER BY "vault"."createdAt" DESC;
 `;
 
+const query_getPayoutsFromVault = `
+    SELECT "payout".*
+    FROM "payout"
+    WHERE "payout"."offerId" = :offerId
+`;
+
 const query_getUserClaims = `
     SELECT "claim"."isClaimed"
     FROM "claim"
@@ -51,9 +57,14 @@ async function getUserVault(userId, partnerId, tenantId) {
                     type: QueryTypes.SELECT,
                     replacements: { userId, offerId: vault.offerId },
                 });
+                const payouts = await db.query(query_getPayoutsFromVault, {
+                    type: QueryTypes.SELECT,
+                    replacements: { offerId: vault.offerId },
+                });
                 return {
                     ...vault,
                     claims,
+                    payouts,
                 };
             }),
         );
