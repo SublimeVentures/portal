@@ -139,11 +139,13 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             if (userAllocation) {
                 const { invested, locked } = userAllocation;
                 const newAmount = Number(invested) - Number(locked);
-                setValue("amount", newAmount);
-                handleAmountChange({ target: { value: invested - locked } }, callback);
+                if (newAmount) {
+                    setValue("amount", newAmount);
+                    handleAmountChange({ target: { value: invested - locked } }, callback);
+                }
             }
         },
-        [handleAmountChange, userAllocation],
+        [handleAmountChange, setValue, userAllocation],
     );
 
     const handleSelectTab = useCallback(
