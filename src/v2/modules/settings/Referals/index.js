@@ -15,16 +15,18 @@ export default function Referals() {
         <div className="grid grid-cols-1 gap-5 box-border 3xl:grid-cols-3">
             <div className="bg-gray-800 rounded-lg col-span-1 md:row-span-12">
                 <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full bg-settings-gradient pb-23">
-                    <CardTitle className="text-2xl font-medium text-foreground leading-10">
-                        Join Based Referral program
-                    </CardTitle>
-                    <CardDescription className="text-md font-light">
-                        Get free discounts and earn allocations. For more information, please read the{" "}
-                        <Link className="text-[#4BD4E7] font-medium" href="/#">
-                            referral program
-                        </Link>{" "}
-                        details.
-                    </CardDescription>
+                    <div>
+                        <CardTitle className="text-base font-normal md:text-lg font-medium text-white mb-1">
+                            Join Based Referral program
+                        </CardTitle>
+                        <CardDescription className="text-xs md:text-sm font-light">
+                            Get free discounts and earn allocations. For more information, please read the{" "}
+                            <Link className="text-[#4BD4E7] font-normal" href="/#">
+                                referral program
+                            </Link>{" "}
+                            details.
+                        </CardDescription>
+                    </div>
                     <ReferalsSteps />
                 </Card>
             </div>

@@ -2,11 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import moment from "moment";
 
+import DefinitionItem from "./DefinitionItem";
 import { Button } from "@/v2/components/ui/button";
 import { Card } from "@/v2/components/ui/card";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
-import DefinitionItem from "./DefinitionItem";
 import { routes } from "@/v2/routes";
 
 export default function SingleLatestDealsCard({ slug, isSell, multiplier, updatedAt }) {
@@ -18,7 +18,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
-                    <dl class="py-2 px-4 grid grid-cols-2 grid-rows-4 grid-flow-col">
+                    <dl className="py-2 px-4 grid grid-cols-2 grid-rows-4 grid-flow-col">
                         <DefinitionItem valueOnly term="Market">
                             <Image
                                 src={`${cdn}/research/${slug}/icon.jpg`}
@@ -28,13 +28,17 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
                                 height={50}
                             />
                         </DefinitionItem>
-                        <DefinitionItem term="Date">{moment(updatedAt).utc().local().format("YYYY-MM-DD")}</DefinitionItem>
+                        <DefinitionItem term="Date">
+                            {moment(updatedAt).utc().local().format("YYYY-MM-DD")}
+                        </DefinitionItem>
                         <DefinitionItem term="Type">
-                          <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500" )}>{isSell ? "Sell" : "Buy"}</span>
+                            <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500")}>
+                                {isSell ? "Sell" : "Buy"}
+                            </span>
                         </DefinitionItem>
                         <DefinitionItem term="Multiplier">{multiplier.toFixed(2)}x</DefinitionItem>
                     </dl>
-                    
+
                     <Button asChild variant="accent" className="w-full">
                         <Link href={`${routes.Opportunities}/${slug}`}>Details</Link>
                     </Button>
@@ -42,4 +46,4 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
             </div>
         </Card>
     );
-};
+}

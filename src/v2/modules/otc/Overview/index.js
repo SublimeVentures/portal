@@ -43,7 +43,7 @@ export default function Overview() {
                                     ${ticker}
                                 </small>
                             </h3>
-                            <p className="text-xs 3xl:text-2xl font-light text-foreground">{genre}</p>
+                            <p className="text-xs 3xl:text-xl font-light text-foreground">{genre}</p>
                             <Button asChild variant="outline" className="3xl:hidden mt-2 w-full">
                                 <Link href={`${routes.Opportunities}/${slug}`}>
                                     Project Overview
