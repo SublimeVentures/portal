@@ -11,9 +11,9 @@ import Logo from "@/assets/svg/logo_1.svg";
 
 export const Image = forwardRef(({ className, ...props }, ref) => {
     return (
-        <div className="-ml-13 -my-8 relative w-3/5">
-            <NextImage fill {...props} ref={ref} className={cn("rounded-l object-cover", className)} />
-            <Logo className="absolute bottom-6 left-6 size-13" />
+        <div className="aspect-video -mx-4 -mt-8 3xl:mr-0 3xl:-ml-13 3xl:-my-8 relative 3xl:w-3/5">
+            <NextImage fill {...props} ref={ref} className={cn("rounded-t 3xl:rounded-l object-cover", className)} />
+            <Logo className="absolute bottom-3 left-3 3xl:bottom-6 3xl:left-6 size-9 3xl:size-13" />
         </div>
     );
 });
@@ -26,7 +26,7 @@ Content.displayName = "Content";
 
 export const Title = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <h1 {...props} ref={ref} className={cn("text-6xl mb-6", className)}>
+        <h1 {...props} ref={ref} className={cn("text-[22px] 3xl:text-6xl mb-2 3xl:mb-6", className)}>
             {children}
         </h1>
     );
@@ -35,7 +35,7 @@ Title.displayName = "Title";
 
 export const Description = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <p {...props} ref={ref} className={cn("text-md mb-10", className)}>
+        <p {...props} ref={ref} className={cn("text-[12px] 3xl:text-md mb-6 3xl:mb-10", className)}>
             {children}
         </p>
     );
@@ -44,7 +44,7 @@ Description.displayName = "Description";
 
 export const Grid = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <div {...props} ref={ref} className={cn("grid grid-cols-2 gap-5 mb-6", className)}>
+        <div {...props} ref={ref} className={cn("grid grid-cols-2 gap-4 3xl:gap-4 mb-6", className)}>
             {children}
         </div>
     );
@@ -72,7 +72,6 @@ const UpgradeCurrencyPicker = ({ symbol }) => {
 };
 
 export const SelectCurrency = forwardRef(({ className, options = [], ...props }, ref) => {
-    console.log("SelectCurrency", options, props);
     return (
         <Select {...props} ref={ref} className={cn("w-full", className)}>
             {options.map((currency) => {
@@ -101,7 +100,11 @@ Button.displayName = "Button";
 
 export const Label = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <FormLabel {...props} ref={ref} className={cn("block text-md leading-5 mb-3", className)}>
+        <FormLabel
+            {...props}
+            ref={ref}
+            className={cn("block text-[12px] 3xl:text-md leading-5 mb-1.5 3xl:mb-3", className)}
+        >
             {children}
         </FormLabel>
     );
@@ -110,7 +113,7 @@ Label.displayName = "Label";
 
 export const Kicker = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <p {...props} ref={ref} className={cn("text-md text-white leading-10 mb-5", className)}>
+        <p {...props} ref={ref} className={cn("hidden 3xl:text-md text-white leading-10 mb-2.5 3xl:mb-5", className)}>
             {children}
         </p>
     );
@@ -122,8 +125,12 @@ export default function Modal({ open, onClose, variant, children, className }) {
         <Dialog open={open}>
             <DialogContent
                 handleClose={onClose}
-                className={cn("flex max-w-5xl gap-13 text-white min-h-[556px]", className)}
+                className={cn(
+                    "flex flex-col 3xl:flex-row max-w-5xl gap-6 3xl:gap-13 text-white 3xl:min-h-[556px]",
+                    className,
+                )}
                 variant={variant}
+                closeClassName="size-7 3xl:size-10"
             >
                 {children}
             </DialogContent>

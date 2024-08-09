@@ -12,9 +12,9 @@ const Investments = ({ className }) => {
     return (
         <div className={cn("flex flex-col", className)}>
             <div className="h-10 md:h-20 shrink-0">
-                <div className="flex items-center gap-4 lg:block">
+                <div className="flex md:items-center gap-4 lg:block">
                     <h3 className="text-nowrap text-md md:text-2xl text-foreground">My Investments</h3>
-                    <div className="w-full flex items-center justify-between gap-4">
+                    <div className="w-full flex md:items-center justify-between gap-4">
                         {isDesktop ? (
                             <p className="text-md text-[#C4C4C4] whitespace-pre-line">
                                 Your Investment portfolio has a
@@ -28,7 +28,7 @@ const Investments = ({ className }) => {
                             </p>
                         )}
 
-                        <Button variant="link" className="ml-auto text-accent capitalize" asChild>
+                        <Button variant="link" className="!py-0 md:!py-2 ml-auto text-accent capitalize" asChild>
                             <Link href="/app/vault/investments">
                                 see all <ArrowIcon className="size-2.5 ml-2" />
                             </Link>

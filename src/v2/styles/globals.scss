@@ -106,6 +106,22 @@
       background-image: linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
     }
   }
+
+  .bg-banner-default {
+    background-image: linear-gradient(to left, #071321 0%, #071321 50%, rgba(0,0,0,0) 100%), url('/img/bg/banner/default@1.webp');
+  }
+
+  @screen 3xl {
+    .bg-banner-default {
+      background-image: url('/img/bg/banner/default@1.webp');
+    }
+  }
+
+  // @media screen and (--webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
+  //   .bg-banner-default {
+  //     background-image: url('/img/bg/banner/default@2.webp');
+  //   }
+  // }
 }
 
 ::-webkit-scrollbar {

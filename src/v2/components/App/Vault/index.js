@@ -14,7 +14,6 @@ import PayoutTable from "./PayoutTable";
 import ChainSwitch from "./ChainSwitch";
 import StatisticCard from "./StatisticsCard";
 import UpgradeBanner from "./UpgradeBanner";
-import UpgradeCard from "./UpgradeCard";
 import ViewRadio from "./ViewRadio";
 
 export {
@@ -33,6 +32,5 @@ export {
     ChainSwitch,
     StatisticCard,
     UpgradeBanner,
-    UpgradeCard,
     ViewRadio,
 };
