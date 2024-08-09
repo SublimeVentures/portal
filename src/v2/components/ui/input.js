@@ -110,11 +110,51 @@ const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, st
     );
 });
 
+const InputFunds = forwardRef(
+    ({ className, size, readOnly, value, min, max, step, icon, onValueChange, label, after, ...props }, ref) => {
+        const sizeClasses = controlsSize({ size });
+        ref = ref || createRef();
+
+        return (
+            <div
+                className={cn(
+                    "text-center px-6 py-3 items-center w-full",
+                    wrapperVariants({ size, readOnly }),
+                    className,
+                )}
+            >
+                {icon}
+                <label className="flex flex-col items-baseline">
+                    <div className="">{label}</div>
+                    <input
+                        type="number"
+                        ref={ref}
+                        readOnly={readOnly}
+                        onChange={(e) => onValueChange?.(Number(e.target.value))}
+                        min={min}
+                        max={max}
+                        step={step}
+                        value={value}
+                        {...props}
+                        className="bg-transparent w-full border-0 cursor-pointer outline-none font-light"
+                    />
+                </label>
+                {after}
+            </div>
+        );
+    },
+);
+
 InputNumber.displayName = "InputNumber";
+
+InputFunds.displayName = "InputFunds";
 
 const Input = forwardRef(({ className, type, size, readOnly, ...props }, ref) => {
     if (type === "number") {
         return <InputNumber ref={ref} className={className} size={size} readOnly={readOnly} {...props} />;
+    }
+    if (type === "fund") {
+        return <InputFunds ref={ref} className={className} size={size} readOnly={readOnly} {...props} />;
     }
     return (
         <input
