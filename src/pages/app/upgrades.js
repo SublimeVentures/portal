@@ -86,14 +86,14 @@ export default function AppUpgrades({ session }) {
                             />
                             <div className="w-4/5 mx-auto">
                                 <h1
-                                    className={cn("text-center text-[18px] 3xl:text-9xl mb-6", {
+                                    className={cn("text-center text-lg 3xl:text-3xl font-medium mb-4", {
                                         "text-accent": !index,
                                         "text-primary": !!index,
                                     })}
                                 >
                                     {data.name}
                                 </h1>
-                                <p className="text-center text-[12px] 3xl:text-lg">{data.description}</p>
+                                <p className="text-center text-xs 3xl:text-base font-light">{data.description}</p>
                             </div>
                             <BackdropCard className="w-11/12 3xl:w-9/12 3xl:mx-auto">
                                 <DefinitionList className="w-full 3xl:w-2/3">
@@ -130,5 +130,5 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 AppUpgrades.getLayout = function (page) {
-    return <AppLayout>{page}</AppLayout>;
+    return <AppLayout title="Upgrades">{page}</AppLayout>;
 };

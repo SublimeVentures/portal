@@ -26,14 +26,14 @@ export default function Sidebar({ session, isBlockedAlert = false }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="p-8 text-xxs text-foreground">{name}</h2>
+                <h2 className="p-8 text-sm font-light text-foreground">{name}</h2>
                 <ul className="flex flex-col gap-2">
                     {items.map(({ name, path }) => (
                         <li
                             key={path}
                             className={cn(
-                                "text-xl py-2 font-light text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
-                                { "bg-primary-light-gradient": router.pathname === path },
+                                "text-base py-2 font-normal text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
+                                { "bg-primary-light-gradient font-medium": router.pathname === path },
                             )}
                         >
                             <Link href={path} className="px-8">
@@ -61,7 +61,7 @@ export default function Sidebar({ session, isBlockedAlert = false }) {
                 </nav>
 
                 <div className="mt-auto flex flex-col items-center">
-                    <h2 className="text-xxs font-light text-gray-100">Community</h2>
+                    <h2 className="text-sm font-light text-gray-100">Community</h2>
                     <ul className="flex items-center gap-2">
                         {socialMenu.map(({ icon, name, path }) => (
                             <li key={name} className="pt-4">

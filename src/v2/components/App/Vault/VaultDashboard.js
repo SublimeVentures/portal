@@ -11,7 +11,7 @@ export default function VaultDashboard() {
             <Investments className="md:col-span-7 3xl:col-span-4" />
             <div className="flex flex-col gap-8 md:col-span-10 3xl:col-span-6 md:grid md:grid-cols-subgrid 3xl:grid-rows-1 3xl:gap-9 3xl:overflow-hidden">
                 <Announcements className="md:col-span-5 3xl:col-span-2 md:order-1 3xl:order-1" />
-                <UpgradeBanner className="md:col-span-5 3xl:col-span-1 3xl:mt-13 md:order-2 3xl:order-3" />
+                <UpgradeBanner className="md:col-span-5 3xl:col-span-1 3xl:mt-9 md:order-2 3xl:order-3" />
                 <Payouts className="md:col-span-10 3xl:col-span-3 flex flex-col md:order-3 3xl:order-2" />
             </div>
         </div>

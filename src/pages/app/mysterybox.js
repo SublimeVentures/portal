@@ -15,7 +15,7 @@ import { PremiumItemsENUM } from "@/lib/enum/store";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { TENANT } from "@/lib/tenantHelper";
-import { AppLayout, Metadata } from "@/v2/components/Layout";
+import { AppLayout } from "@/v2/components/Layout";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
@@ -120,16 +120,16 @@ export default function MysteryBoxPage({ session }) {
             <div className="grow flex flex-col items-start justify-center 3xl:py-12">
                 <div className="3xl:w-[532px]">
                     <div className="flex flex-col items-start 3xl:gap-4 mb-10 pt-10 3xl:pt-0">
-                        <h1 className="font-semibold 3xl:font-medium text-[16px] 3xl:text-9xl text-accent">
+                        <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-accent">
                             The Sunken Mystery Box
                         </h1>
-                        <p className="leading-7 3xl:leading-4 text-[14px] 3xl:text-lg text-white/50 3xl:text-white mb-8 3xl:mb-0">
+                        <p className="text-sm 3xl:text-base font-light leading-7 text-white/50 3xl:text-white mb-8 3xl:mb-0">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua.
                         </p>
                         <Link
                             href={ExternalLinks.LOOTBOX}
-                            className="text-white inline-flex items-center gap-2 text-md"
+                            className="text-white inline-flex items-center gap-2 text-sm"
                             target="_blank"
                         >
                             Learn more
@@ -162,7 +162,7 @@ export default function MysteryBoxPage({ session }) {
                                     height={72}
                                 />
                             </figure>
-                            <div className="w-3/5 3xl:w-2/3 flex flex-col 3xl:flex-row gap-5">
+                            <div className="w-3/5 3xl:w-2/3 flex flex-col 3xl:flex-row gap-5 3xl:items-center">
                                 <DefinitionList className="3xl:w-1/2">
                                     <Definition term="Owned">{mysteryBoxOwnedAmount}</Definition>
                                 </DefinitionList>
@@ -210,5 +210,9 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 MysteryBoxPage.getLayout = function (page) {
-    return <AppLayout contentClassName="bg-mystery-box bg-cover bg-right-bottom">{page}</AppLayout>;
+    return (
+        <AppLayout contentClassName="bg-mystery-box bg-cover bg-right-bottom" title="Mystery Box">
+            {page}
+        </AppLayout>
+    );
 };

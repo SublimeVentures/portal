@@ -7,6 +7,7 @@ import {
 import { fetchVaultStats } from "@/fetchers/vault.fetcher";
 import { shortCurrencyFormatterWithSuffix } from "@/v2/lib/currency";
 import { cn } from "@/lib/cn";
+import Title from "@/v2/modules/vault/components/Dashboard/Title";
 
 const useFetchVaultStatistics = () => {
     return useQuery({
@@ -19,10 +20,8 @@ export default function Statistics({ className }) {
     const { data: { invested = 0, count = 0, ...stats } = {}, isLoading } = useFetchVaultStatistics();
     return (
         <div className={cn("flex flex-col grow", className)}>
-            <div className="h-10 md:h-20">
-                <div className="flex items-center justify-between">
-                    <p className="text-md md:text-2xl text-foreground">My Statistics</p>
-                </div>
+            <div className="mb-5 md:mb-4 md:h-13">
+                <Title>My Statistics</Title>
             </div>
             <div className="flex flex-wrap gap-2 md:gap-4 grow lg:flex-col">
                 <InvestedStatisticCard value={shortCurrencyFormatterWithSuffix(invested)} isLoading={isLoading} />

@@ -60,8 +60,8 @@ const WalletErrorModal = ({ session: { wallets = [] } }) => {
                 <div className="py-4 px-6 flex flex-col md:flex-row gap-4 items-center justify-between bg-destructive-dark rounded">
                     {address && (
                         <div className="text-center md:text-left">
-                            <h3 className="text-destructive font-medium md:text-[16px]">Unknown Wallet</h3>
-                            <p className="text-[12px] md:text-[14px] text-destructive">{address}</p>
+                            <h3 className="text-destructive font-medium text-base">Unknown Wallet</h3>
+                            <p className="text-xs md:text-sm text-destructive">{address}</p>
                         </div>
                     )}
                     <Button variant="destructive" onClick={environmentCleanup} className="mx-auto">

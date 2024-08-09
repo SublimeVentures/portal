@@ -32,11 +32,11 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}
-                            className="relative text-foreground text-6xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-sm after:font-normal after:p-4 after:absolute after:-bottom-1"
+                            className="relative text-foreground text-2xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:p-4 after:absolute after:-bottom-1"
                         >
                             {name}
                         </h3>
-                        <p className="text-foreground text-lg font-light">{genre}</p>
+                        <p className="text-foreground text-base font-light">{genre}</p>
                     </div>
 
                     <Badge variant={btnVariant}>{state}</Badge>
