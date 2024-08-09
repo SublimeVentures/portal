@@ -30,7 +30,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         staleTime: 3 * 60 * 1000,
     });
 
-    const userAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
+    const userAllocation = vault && currentMarket ? vault.find((el) => el.offerId === currentMarket.offerId) : null;
     const allocationMax = userAllocation?.allocation;
 
     const amountStorageKey = `otc.${currentMarket?.offerId}.amount`;
@@ -104,7 +104,9 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             if (amount) calcPrice(multiplier, amount);
             setStatusAmount(true);
 
-            return callback(amount);
+            if (callback) {
+                return callback(amount);
+            }
         },
         [setExpireData, amountStorageKey, calcPrice, multiplier],
     );
@@ -116,7 +118,9 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             if (price && amount) calcMulti(price);
             setStatusPrice(true);
 
-            return callback(price);
+            if (callback) {
+                return callback(price);
+            }
         },
         [setExpireData, priceStorageKey, calcMulti, amount],
     );
@@ -130,9 +134,17 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         [setExpireData, currencyStorageKey],
     );
 
-    const handleSetMaxValue = useCallback((callback) => {
-        console.log(callback);
-    }, []);
+    const handleSetMaxValue = useCallback(
+        (event, callback) => {
+            if (userAllocation) {
+                const { invested, locked } = userAllocation;
+                const newAmount = Number(invested) - Number(locked);
+                setValue("amount", newAmount);
+                handleAmountChange({ target: { value: invested - locked } }, callback);
+            }
+        },
+        [handleAmountChange, userAllocation],
+    );
 
     const handleSelectTab = useCallback(
         (tabId) => {
