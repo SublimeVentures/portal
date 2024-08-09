@@ -12,6 +12,7 @@ import {
     PartnersStatisticCard,
     RaisedStatisticCard,
 } from "@/v2/components/App/Vault/StatisticsCard";
+import Title from "@/v2/modules/opportunities/Title";
 
 export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
     const { partners = 0, vc: investments = 0, funded: rawFunded = 0 } = stats;
@@ -30,11 +31,10 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
             <div className="flex items-center justify-center">
                 <div className="w-full p-4 lg:p-16">
                     <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center xl:gap-4">
-                        <div className="mb-8">
-                            <h3 className="text-nowrap text-2xl text-foreground">Funded Projects</h3>
-                            <p className="text-lg text-[#C4C4C4] whitespace-pre-line">
-                                We bring new industry giants to our community
-                            </p>
+                        <div className="mb-4 md:mb-0">
+                            <Title subtitle="We bring new industry giants to our community" count={offers.length + 1}>
+                                Funded Projects
+                            </Title>
                         </div>
                         <div className="flex flex-wrap gap-4 grow md:flex md:grow-0">
                             <InvestedStatisticCard value={investments} />

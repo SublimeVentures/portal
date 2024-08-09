@@ -66,10 +66,10 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
         <InvestmentCardWrapper>
             <div className="mb-4 md:mb-8 flex justify-between items-center">
                 <div>
-                    <CardTitle className="pb-2 text-md md:text-3xl font-medium text-foreground leading-none">
+                    <CardTitle className="text-sm font-semibold md:text-lg md:font-medium text-foreground leading-none">
                         {coin}
                     </CardTitle>
-                    <p className="text-xs md:text-md font-light text-foreground leading-none">{title}</p>
+                    <p className="text-xs font-light md:text-base text-foreground leading-none">{title}</p>
                 </div>
                 <Avatar
                     className="size-10"

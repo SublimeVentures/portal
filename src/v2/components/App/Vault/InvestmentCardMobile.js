@@ -67,7 +67,7 @@ const InvestmentCardMobile = ({ details, isLoading = false, isError = false }) =
                     <Avatar session={{ img: logo }} className="size-9" />
                 </div>
                 <h1 className="text-foreground flex flex-col-reverse pl-4 order-3">
-                    <span className="text-xs md:text-md font-light">{title}</span>
+                    <span className="text-xs md:text-base font-light">{title}</span>
                     <small className="text-xs md:text-lg font-medium">{coin}</small>
                 </h1>
                 <Attributes
@@ -76,7 +76,7 @@ const InvestmentCardMobile = ({ details, isLoading = false, isError = false }) =
                 />
             </div>
             <div className="mt-2 px-6 py-4 flex items-center bg-foreground/[.2] rounded">
-                <p className="w-full text-xxs font-light text-foreground/[.56]">
+                <p className="w-full text-2xs font-light text-foreground/[.56]">
                     {participatedDate && `Participated ${participatedDate}`}
                 </p>
                 <Button className="w-full" variant={canClaim ? "accent" : "outline"}>

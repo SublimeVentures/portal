@@ -51,8 +51,8 @@ const Definition = ({ title, children, disabled = false }) => {
                 disabledClassName,
             )}
         >
-            <div className={cn("text-xs md:text-md font-light")}>{title}</div>
-            <div className={cn("text-xs md:text-lg font-medium group-[.dg]:text-right")}>{children}</div>
+            <div className={cn("text-xs md:text-sm font-light")}>{title}</div>
+            <div className={cn("text-xs md:text-sm font-medium md:text-normal group-[.dg]:text-right")}>{children}</div>
         </div>
     );
 };
@@ -106,13 +106,15 @@ const InvestmentRow = ({ details, isLoading = false, isError = false }) => {
                 <Avatar session={{ img: logo }} />
 
                 <div>
-                    <CardTitle className="mb-1 text-2xl font-medium text-foreground leading-none">{coin}</CardTitle>
-                    <p className="text-md font-light text-foreground">{title}</p>
+                    <CardTitle className="mb-1 text-xs md:text-sm font-medium md:text-normal text-foreground leading-none">
+                        {coin}
+                    </CardTitle>
+                    <p className="text-xs md:text-sm font-light text-foreground">{title}</p>
                 </div>
 
                 <Attributes details={data} className="grid-cols-4 col-span-4" />
 
-                <p className="text-xxs font-light text-foreground/[.56]">
+                <p className="text-sm font-light text-foreground/[.56]">
                     {participatedDate && `Participated ${participatedDate}`}
                 </p>
 

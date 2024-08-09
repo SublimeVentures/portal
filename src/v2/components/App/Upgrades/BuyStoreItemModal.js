@@ -32,7 +32,7 @@ const UpgradeSymbol = ({ className }) => (
 export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
     const { getCurrencyStore, account, activeDiamond, network, cdn } = useEnvironmentContext();
-    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+    const [transactionSuccessful, setTransactionSuccessful] = useState(true);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const [amount, setAmount] = useState(1);
@@ -92,12 +92,16 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                     et dolore magna aliqua.
                 </Success.Description>
                 <Success.Article>
-                    <Success.Image src={`${cdn}/webapp/store/${order.img}`} alt={order.name} />
-                    <div className="grow">
-                        <h1 className="text-2xl">{order.name}</h1>
-                        <span className="text-md">Upgrade</span>
+                    <div className="flex items-center gap-5 grow w-full 3xl:w-auto">
+                        <Success.Image src={`${cdn}/webapp/store/${order.img}`} alt={order.name} />
+                        <div className="grow">
+                            <h1 className="text-[14px] 3xl:text-2xl">{order.name}</h1>
+                            <span className="text-[12px] 3xl:text-md">Upgrade</span>
+                        </div>
                     </div>
-                    <Button variant={order.id === 1 ? "accent" : "default"}>Upgrade store</Button>
+                    <Button className="w-full 3xl:w-auto" variant={order.id === 1 ? "accent" : "default"}>
+                        Upgrade store
+                    </Button>
                 </Success.Article>
                 <Success.Footer>You can find your upgrade in your inventory</Success.Footer>
             </Success.Content>

@@ -16,35 +16,50 @@ export const Image = forwardRef(({ className, ...props }, ref) => (
 Image.displayName = "Image";
 
 export const Kicker = forwardRef(({ children, className, ...props }, ref) => (
-    <p {...props} ref={ref} className={cn((className = "text-lg text-center leading-6 mb-3"), className)}>
+    <p
+        {...props}
+        ref={ref}
+        className={cn((className = "text-[12px] 3xl:text-lg text-center 3xl:leading-6 mb-2.5 3xl:mb-3"), className)}
+    >
         {children}
     </p>
 ));
 Kicker.displayName = "Kicker";
 
 export const Title = forwardRef(({ children, className, ...props }, ref) => (
-    <h1 {...props} ref={ref} className={cn("text-9xl text-center leading-11 mb-4 font-semibold", className)}>
+    <h1
+        {...props}
+        ref={ref}
+        className={cn(
+            "text-[22px] 3xl:text-9xl text-center 3xl:leading-11 mb-6 3xl:mb-4 font-semibold w-9/12 3xl:w-full",
+            className,
+        )}
+    >
         {children}
     </h1>
 ));
 Title.displayName = "Title";
 
 export const Description = forwardRef(({ children, className, ...props }, ref) => (
-    <p {...props} ref={ref} className={cn("text-md text-center leading-6 mb-10 w-8/12", className)}>
+    <p
+        {...props}
+        ref={ref}
+        className={cn("text-[12px] 3xl:text-md text-center 3xl:leading-6 mb-6 3xl:mb-10 w-11/12 3xl:w-8/12", className)}
+    >
         {children}
     </p>
 ));
 Description.displayName = "Description";
 
 export const Article = forwardRef(({ children, className, ...props }, ref) => (
-    <BackdropCard {...props} ref={ref} className={cn("gap-5 items-center w-8/12 mb-6 y-3 px-5", className)}>
+    <BackdropCard {...props} ref={ref} className={cn("gap-5 items-center w-full 3xl:w-8/12 mb-6 y-3 px-5", className)}>
         {children}
     </BackdropCard>
 ));
 Article.displayName = "Article";
 
 export const Footer = forwardRef(({ children, className, ...props }, ref) => (
-    <p {...props} ref={ref} className={cn("text-md text-white/50 text-center", className)}>
+    <p {...props} ref={ref} className={cn("text-[12px] 3xl:text-md text-white/50 text-center", className)}>
         {children}
     </p>
 ));
