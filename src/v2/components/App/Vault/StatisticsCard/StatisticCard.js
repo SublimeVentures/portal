@@ -29,8 +29,8 @@ const StatisticCard = ({ title, value = 0, icon, isLoading = false, isError = fa
                 icon={icon}
             />
             <div className={cn({ "text-center w-full md:text-left md:w-auto": last })}>
-                <CardTitle className="text-3xs md:text-md font-light text-foreground">{title}</CardTitle>
-                <p className="text-xl md:text-5xl font-medium text-foreground">{value}</p>
+                <CardTitle className="text-xs md:text-sm font-light text-foreground">{title}</CardTitle>
+                <p className="text-sm md:text-lg font-medium text-foreground">{value}</p>
             </div>
         </Card>
     );

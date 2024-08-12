@@ -5,6 +5,7 @@ import usePayoutsInfiniteQuery from "@/v2/modules/payouts/usePayoutsInfiniteQuer
 import PayoutTable, { PayoutTableVariants } from "@/v2/components/App/Vault/PayoutTable";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+import Title from "@/v2/modules/vault/components/Dashboard/Title";
 
 const Payouts = ({ className }) => {
     const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery({ limit: 5 });
@@ -12,9 +13,9 @@ const Payouts = ({ className }) => {
     const tableVariant = isLargeDesktop ? PayoutTableVariants.vertical : PayoutTableVariants.horizontal;
     return (
         <div className={cn("h-full", className)}>
-            <div className="mb-4 w-full flex items-center justify-between gap-4">
-                <h3 className="text-nowrap text-md md:text-2xl text-foreground">Payout table</h3>
-                <Button variant="link" className="ml-auto text-accent capitalize" asChild>
+            <div className="w-full flex items-center justify-between mb-5 md:mb-2">
+                <Title>Payout table</Title>
+                <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
                     <Link href="/app/vault/payouts">
                         see all <ArrowIcon className="size-2.5 ml-2" />
                     </Link>

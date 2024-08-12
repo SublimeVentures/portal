@@ -32,8 +32,8 @@ const colorSchemes = {
 export default function BlockchainSteps({ status, currentState, steps, extraState }) {
     return (
         <div className="mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded">
-            <h3 className="text-2xl font-medium text-foreground text-center">{currentState.content}</h3>
-            <p className="mb-2 text-md text-foreground text-center">
+            <h3 className="text-base md:text-lg font-medium text-foreground text-center">{currentState.content}</h3>
+            <p className="mb-2 text-sm font-light text-foreground text-center">
                 This will guide you through each step for a seamless purchase
             </p>
 

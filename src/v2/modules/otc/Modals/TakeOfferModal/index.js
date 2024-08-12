@@ -1,37 +1,41 @@
 import Image from "next/image";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 
+import TransactionSuccess from "../TransactionSucces";
+import useBlockchainTakeOfferTransaction from "./useBlockchainTakeOfferTransaction";
 import useMarket from "@/v2/modules/otc/logic/useMarket";
 import { Button } from "@/v2/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetBody,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetBody,
+    SheetTitle,
+    SheetTrigger,
+    SheetClose,
 } from "@/v2/components/ui/sheet";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
-import BlockchainSteps from "@/v2/components/BlockchainSteps"
+import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
-import useBlockchainTakeOfferTransaction from "./useBlockchainTakeOfferTransaction";
-import TransactionSuccess from "../TransactionSucces";
 
-const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
+const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`;
 
 export default function TakeOfferModal({ offerDetails, className }) {
     const { currentMarket } = useMarket();
     const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
 
-    const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } = useBlockchainTakeOfferTransaction({ offerDetails });
-    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({ data: blockchainInteractionData })
+    const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
+        useBlockchainTakeOfferTransaction({ offerDetails });
+    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+        data: blockchainInteractionData,
+    });
 
     if (!currentMarket?.name || !offerDetails?.currency) return;
 
@@ -40,9 +44,11 @@ export default function TakeOfferModal({ offerDetails, className }) {
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString();
 
     const handleModalClose = async () => {
-        if (transactionSuccessful) await Promise.all([queryClient.invalidateQueries(["otcOffers"]), queryClient.invalidateQueries(["userAllocation"])])
-            .finally(() => setTransactionSuccessful(false));
-        
+        if (transactionSuccessful)
+            await Promise.all([
+                queryClient.invalidateQueries(["otcOffers"]),
+                queryClient.invalidateQueries(["userAllocation"]),
+            ]).finally(() => setTransactionSuccessful(false));
         else setTransactionSuccessful(false);
 
         resetState();
@@ -74,26 +80,41 @@ export default function TakeOfferModal({ offerDetails, className }) {
                     <div className="mx-10 my-4 sm:px-10">
                         <div className="definition-section">
                             {transactionSuccessful ? (
-                                <TransactionSuccess title="OTC Offer filled" description="You have successfully filled OTC offer." />
+                                <TransactionSuccess
+                                    title="OTC Offer filled"
+                                    description="You have successfully filled OTC offer."
+                                />
                             ) : (
                                 <>
-                                    <h3 className="text-2xl font-medium text-foreground text-center">Take OTC Offer</h3>
-                                    <p className="mb-2 text-md text-foreground text-center">
+                                    <h3 className="text-base md:text-lg font-medium text-foreground text-center">
+                                        Take OTC Offer
+                                    </h3>
+                                    <p className="mb-2 text-sm font-light text-foreground text-center">
                                         {offerDetails.isSell
                                             ? "Are you sure you want to buy allocation from this SELL offer?"
-                                            : "Are you sure you want to sell your allocation to this BUY offer?"
-                                        }
+                                            : "Are you sure you want to sell your allocation to this BUY offer?"}
                                     </p>
                                     <dl className="definition-grid">
                                         <DefinitionItem term="Market">{currentMarket.name}</DefinitionItem>
                                         <DefinitionItem term="Type">
-                                            <span className={cn({ "text-red-500": offerDetails.isSell, "text-green-500": !offerDetails.isSell })}>
+                                            <span
+                                                className={cn({
+                                                    "text-red-500": offerDetails.isSell,
+                                                    "text-green-500": !offerDetails.isSell,
+                                                })}
+                                            >
                                                 {offerDetails.isSell ? "Sell" : "Buy"}
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">
                                             {/* <DynamicIcon name={NETWORKS[chainDesired?.id]} style={ButtonIconSize.hero4} /> */}
-                                            <Image src={mockedIcon} className="inline mx-2 rounded-full" alt="Cover image of selected blockchain" width={20} height={20} />
+                                            <Image
+                                                src={mockedIcon}
+                                                className="inline mx-2 rounded-full"
+                                                alt="Cover image of selected blockchain"
+                                                width={20}
+                                                height={20}
+                                            />
                                             <span>{chainDesired?.name}</span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
@@ -103,27 +124,43 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                 </>
                             )}
                         </div>
-                        
+
                         <BlockchainSteps {...getBlockchainStepsProps()} />
 
                         <div>
-                            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Overview</h3>
-                            <div className='py-4 px-8 flex justify-between items-center bg-foreground/[.1]'>
+                            <h3 className="pb-2 pt-4 px-8 text-base font-medium text-foreground hidden md:block">
+                                Overview
+                            </h3>
+                            <div className="py-4 px-8 flex justify-between items-center bg-foreground/[.1]">
                                 <div className="flex items-center">
                                     {/* <DynamicIcon name={getCurrencySymbolByAddress(offerDetails.currency)} style={"w-6"} /> */}
-                                    <Image src={mockedIcon} className="inline mx-2 rounded-full" alt="Cover image of ${name} token" width={35} height={35} />
+                                    <Image
+                                        src={mockedIcon}
+                                        className="inline mx-2 rounded-full"
+                                        alt="Cover image of ${name} token"
+                                        width={35}
+                                        height={35}
+                                    />
                                     <dl className="flex flex-col gap-2">
                                         <DefinitionItem term="You Pay">${totalPayment}</DefinitionItem>
                                     </dl>
                                 </div>
-                                <ChevronRightIcon className="text-foreground"/>
+                                <ChevronRightIcon className="text-foreground" />
                                 <div className="flex items-center">
-                                    <Image src={`${cdn}/research/${currentMarket.slug}/icon.jpg`} className="inline mx-2 rounded-full" alt="Cover image of ${name} token" width={35} height={35} />
+                                    <Image
+                                        src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
+                                        className="inline mx-2 rounded-full"
+                                        alt="Cover image of ${name} token"
+                                        width={35}
+                                        height={35}
+                                    />
                                     <dl className="flex flex-col gap-2">
-                                        <DefinitionItem DefinitionItem term="You Recieve">?</DefinitionItem>
+                                        <DefinitionItem DefinitionItem term="You Recieve">
+                                            ?
+                                        </DefinitionItem>
                                     </dl>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </SheetBody>
@@ -134,11 +171,13 @@ export default function TakeOfferModal({ offerDetails, className }) {
                             <Button variant="accent">Close</Button>
                         </SheetClose>
                     ) : (
-                        <BlockchainStepButton {...getBlockchainStepButtonProps()} />  
+                        <BlockchainStepButton {...getBlockchainStepButtonProps()} />
                     )}
-                    <p className="text-xxs text-foreground/[.5]">You will automatically receive ${currentMarket.ticker} tokens after settlement.</p>
-                </SheetFooter> 
+                    <p className="text-2xs md:text-sm font-light text-foreground/[.5]">
+                        You will automatically receive ${currentMarket.ticker} tokens after settlement.
+                    </p>
+                </SheetFooter>
             </SheetContent>
         </Sheet>
     );
-};
+}

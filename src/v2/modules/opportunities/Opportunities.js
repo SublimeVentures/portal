@@ -12,16 +12,16 @@ import {
     PartnersStatisticCard,
     RaisedStatisticCard,
 } from "@/v2/components/App/Vault/StatisticsCard";
+import Title from "@/v2/modules/opportunities/Title";
 
 export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
     const { partners = 0, vc: investments = 0, funded: rawFunded = 0 } = stats;
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
 
     const ref = useRef();
+
     useIntersectionObserver(ref, (isIntersecting) => {
-        if (isIntersecting && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage();
-        }
+        if (isIntersecting && !isFetchingNextPage && hasNextPage) fetchNextPage();
     });
 
     return (
@@ -30,11 +30,10 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
             <div className="flex items-center justify-center">
                 <div className="w-full">
                     <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center xl:gap-4">
-                        <div className="mb-8">
-                            <h3 className="text-nowrap text-2xl text-foreground">Funded Projects</h3>
-                            <p className="text-lg text-[#C4C4C4] whitespace-pre-line">
-                                We bring new industry giants to our community
-                            </p>
+                        <div className="mb-4 md:mb-0">
+                            <Title subtitle="We bring new industry giants to our community" count={offers.length + 1}>
+                                Funded Projects
+                            </Title>
                         </div>
                         <div className="flex flex-wrap gap-4 grow md:flex md:grow-0">
                             <InvestedStatisticCard value={investments} />
@@ -44,11 +43,21 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                     </div>
 
                     <ul className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
-                        {offers.map((offer) => (
-                            <li key={offer?.offerId}>
-                                <SingleOffer offer={offer} />
-                            </li>
-                        ))}
+                        {offers.map((offer, idx) => {  
+                            if (idx + 1 === offers.length && hasNextPage) {
+                                return (
+                                    <li ref={ref} key={offer?.offerId} className="text-red-500">
+                                        <SingleOffer offer={offer} />
+                                    </li>
+                                )
+                            }
+
+                            return (
+                                <li key={offer?.offerId}>
+                                    <SingleOffer offer={offer} />
+                                </li>
+                            )
+                        })}
                     </ul>
 
                     {isFetchingNextPage && (
@@ -60,14 +69,8 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                             ))}
                         </ul>
                     )}
-
-                    {hasNextPage ? (
-                        <div ref={ref} className="flex justify-center">
-                            {isFetchingNextPage && <p className="mt-12 text-2xl text-foreground">Loading...</p>}
-                        </div>
-                    ) : null}
                 </div>
             </div>
         </>
     );
-}
+};
