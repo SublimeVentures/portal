@@ -9,6 +9,7 @@ import { queryClient } from "@/lib/queryCache";
 import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetcher";
 import ManageWallets from "@/components/App/Settings/ManageWallets";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import NotificationsSettings from "@/components/App/Settings/Notifications/NotificationsSettings";
 
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });
 const StakeNeoTokyo = dynamic(() => import("@/components/App/Settings/NeoTokyoStaking"), { ssr: true });
@@ -77,6 +78,9 @@ export default function AppSettings({ session }) {
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
                     <ManageWallets walletProps={walletProps} />
+                </div>
+                <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
+                    <NotificationsSettings />
                 </div>
                 <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
             </div>
