@@ -28,7 +28,7 @@
     }
 
     .table-data {
-      @apply table-cell py-4 px-2 text-sm text-foreground text-left before:content-none first:rounded-l last:rounded-r;
+      @apply table-cell py-4 px-2 text-xs text-foreground text-left before:content-none first:rounded-l last:rounded-r;
     }
   }
 
@@ -44,11 +44,11 @@
     }
 
     .table-body-row {
-      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base ;
+      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base;
     }
 
     .table-data {
-      @apply block px-5 py-1 text-sm text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
+      @apply block px-5 py-1 text-xs text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
     }
   }
 

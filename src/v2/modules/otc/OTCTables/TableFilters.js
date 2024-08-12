@@ -51,9 +51,8 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                 {currentMarket ? (
                     <>
                         <span className="inline-block whitespace-nowrap">
-                            Offers <small className="text-3xs 3xl:text-xs align-super">{currentMarket.name}</small>
+                            Offers {!isOffersView && "History"} <small className="text-3xs 3xl:text-xs align-super">{currentMarket.name}</small>
                         </span>
-                        {!isOffersView && "History"}
                     </>
                 ) : null}
             </h3>
