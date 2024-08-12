@@ -9,10 +9,14 @@ import Image from "next/image";
 // import { Tooltiper, TooltipType } from "@/components/Tooltip";
 
 // import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
-// import { Tooltiper, TooltipType } from "@/components/Tooltip";
+import TakeOfferModal from "../Modals/TakeOfferModal";
+import CancelOfferModal from "../Modals/CancelOfferModal";
+import { useSession } from "../logic/store";
+import DefinitionItem from "./DefinitionItem";
+import { Tooltiper, TooltipType } from "@/components/Tooltip";
 
-// @todo 
-import { Button } from "@/v2/components/ui/button"
+// @todo
+import { Button } from "@/v2/components/ui/button";
 import { NETWORKS } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import DynamicIcon from "@/components/Icon";
@@ -20,12 +24,12 @@ import DynamicIcon from "@/components/Icon";
 import { Card } from "@/v2/components/ui/card";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
-import DefinitionItem from "./DefinitionItem";
-import TakeOfferModal from "../Modals/TakeOfferModal"
-import CancelOfferModal from "../Modals/CancelOfferModal"
-import { useSession } from "../logic/store";
+import IconCancel from "@/v2/assets/svg/cross.svg";
 
-const isUserOffer = (userWallets, checkWallet, account) => ({ ok: userWallets.includes(checkWallet), isActive: account?.address === checkWallet });
+const isUserOffer = (userWallets, checkWallet, account) => ({
+    ok: userWallets.includes(checkWallet),
+    isActive: account?.address === checkWallet,
+});
 
 export default function SingleOfferCard({ currentMarket, offer }) {
     const { isSell, amount, price, multiplier, currency, chainId, maker } = offer;
@@ -41,7 +45,7 @@ export default function SingleOfferCard({ currentMarket, offer }) {
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
-                    <dl class="px-4 py-2 grid grid-cols-3 grid-rows-4 grid-flow-col gap-x-12">
+                    <dl className="px-4 py-2 grid grid-cols-3 grid-rows-4 grid-flow-col gap-x-12">
                         <DefinitionItem valueOnly term="Market">
                             <Image
                                 src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
@@ -52,7 +56,9 @@ export default function SingleOfferCard({ currentMarket, offer }) {
                             />
                         </DefinitionItem>
                         <DefinitionItem term="Type">
-                          <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500" )}>{isSell ? "Sell" : "Buy"}</span>
+                            <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500")}>
+                                {isSell ? "Sell" : "Buy"}
+                            </span>
                         </DefinitionItem>
                         <DefinitionItem term="Allocation">${amount}</DefinitionItem>
                         <DefinitionItem term="Multiplier">{multiplier.toFixed(2)}x</DefinitionItem>
@@ -79,8 +85,7 @@ export default function SingleOfferCard({ currentMarket, offer }) {
                                     text="Created from other wallet"
                                     type={TooltipType.Error}
                                 />
-                            )
-                        )}
+                            ))}
 
                         {!ownership.ok && <TakeOfferModal className="w-full" offerDetails={offer} />}
                     </div>
@@ -88,4 +93,4 @@ export default function SingleOfferCard({ currentMarket, offer }) {
             </div>
         </Card>
     );
-};
+}

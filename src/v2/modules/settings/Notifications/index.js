@@ -7,10 +7,10 @@ export default function NotificationsSettings() {
     return (
         <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full w-full bg-settings-gradient">
             <div>
-                <CardTitle className="text-2xl font-medium text-foreground leading-10">
-                    Notifications Settings
+                <CardTitle className="text-base font-normal md:text-lg font-medium text-white">
+                    Notifications <span className="hidden md:inline">Settings</span>
                 </CardTitle>
-                <CardDescription className="text-md font-light">
+                <CardDescription className="hidden md:block text-xs md:text-sm font-light">
                     View and update your personal preference
                 </CardDescription>
             </div>
@@ -40,9 +40,9 @@ export default function NotificationsSettings() {
             </div>
 
             {/* Make element disabled for now */}
-            <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black/[.6] cursor-not-allowed select-none">
+            {/* <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black/[.6] cursor-not-allowed select-none">
                 <div className="bg-black/[.5] rounded p-4 text-white">Work in progress</div>
-            </div>
+            </div> */}
         </Card>
     );
 }

@@ -51,7 +51,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                 "absolute -top-20": !currentMarket && isDesktop,
             })}
         >
-            <h3 className="text-xs 3xl:text-lg text-foreground whitespace-nowrap md:text-base">
+            <h3 className="text-sm 3xl:text-lg text-foreground whitespace-nowrap md:text-base">
                 {currentMarket ? (
                     <>
                         <span className="inline-block whitespace-nowrap">

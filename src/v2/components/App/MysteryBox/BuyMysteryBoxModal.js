@@ -90,14 +90,14 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                     et dolore magna aliqua.
                 </Success.Description>
                 <Success.Article>
-                    <div className="flex items-center gap-5 grow w-full 3xl:w-auto">
+                    <div className="flex items-center gap-5 grow w-full md:w-auto">
                         <Success.Image src="/img/icon-chest.webp" alt={order.name} />
                         <div className="grow">
-                            <h1 className="text-[14px] 3xl:text-2xl">{order.name}</h1>
-                            <span className="text-[12px] 3xl:text-md">Mystery Box</span>
+                            <h1 className="text-sm font-medium md:text-xl">{order.name}</h1>
+                            <span className="text-xs font-light md:text-sm">Mystery Box</span>
                         </div>
                     </div>
-                    <Button className="w-full 3xl:w-auto" onClick={closeModal}>
+                    <Button className="w-full md:w-auto" onClick={closeModal}>
                         Check inventory
                     </Button>
                 </Success.Article>

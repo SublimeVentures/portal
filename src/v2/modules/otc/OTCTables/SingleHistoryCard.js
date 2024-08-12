@@ -16,7 +16,8 @@ import moment from "moment";
 // import TakeOfferModal from "@/v2/modules/otc/components/TakeOfferModal";
 // import CancelOfferModal from '@/v2/modules/otc/components/CancelOfferModal';
 
-// @todo 
+// @todo
+import DefinitionItem from "./DefinitionItem";
 import { NETWORKS } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import DynamicIcon from "@/components/Icon";
@@ -24,9 +25,17 @@ import DynamicIcon from "@/components/Icon";
 import { Card } from "@/v2/components/ui/card";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
-import DefinitionItem from "./DefinitionItem";
 
-export default function SingleHistoryCard({ currentMarket, isSell, amount, price, multiplier, currency, chainId, updatedAt }) {
+export default function SingleHistoryCard({
+    currentMarket,
+    isSell,
+    amount,
+    price,
+    multiplier,
+    currency,
+    chainId,
+    updatedAt,
+}) {
     const { cdn, getCurrencySymbolByAddress } = useEnvironmentContext();
 
     return (
@@ -35,7 +44,7 @@ export default function SingleHistoryCard({ currentMarket, isSell, amount, price
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
-                    <dl class="px-4 py-2 grid grid-cols-3 grid-rows-4 grid-flow-col gap-x-12">
+                    <dl className="px-4 py-2 grid grid-cols-3 grid-rows-4 grid-flow-col gap-x-12">
                         <DefinitionItem valueOnly term="Market">
                             <Image
                                 src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
@@ -46,7 +55,9 @@ export default function SingleHistoryCard({ currentMarket, isSell, amount, price
                             />
                         </DefinitionItem>
                         <DefinitionItem term="Type">
-                          <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500" )}>{isSell ? "Sell" : "Buy"}</span>
+                            <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500")}>
+                                {isSell ? "Sell" : "Buy"}
+                            </span>
                         </DefinitionItem>
                         <DefinitionItem term="Allocation">${amount}</DefinitionItem>
                         <DefinitionItem term="Multiplier">{multiplier.toFixed(2)}x</DefinitionItem>
@@ -57,10 +68,12 @@ export default function SingleHistoryCard({ currentMarket, isSell, amount, price
                                 <DynamicIcon name={NETWORKS[chainId]} style={ButtonIconSize.hero3} />
                             </span>
                         </DefinitionItem>
-                        <DefinitionItem term="Date">{moment(updatedAt).utc().local().format("YYYY-MM-DD")}</DefinitionItem>
+                        <DefinitionItem term="Date">
+                            {moment(updatedAt).utc().local().format("YYYY-MM-DD")}
+                        </DefinitionItem>
                     </dl>
                 </div>
             </div>
         </Card>
     );
-};
+}

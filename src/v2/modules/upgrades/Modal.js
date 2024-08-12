@@ -11,9 +11,9 @@ import Logo from "@/assets/svg/logo_1.svg";
 
 export const Image = forwardRef(({ className, ...props }, ref) => {
     return (
-        <div className="aspect-video -mx-4 -mt-8 3xl:mr-0 3xl:-ml-13 3xl:-my-8 relative 3xl:w-3/5">
-            <NextImage fill {...props} ref={ref} className={cn("rounded-t 3xl:rounded-l object-cover", className)} />
-            <Logo className="absolute bottom-3 left-3 3xl:bottom-6 3xl:left-6 size-9 3xl:size-13" />
+        <div className="aspect-video -mx-4 -mt-8 md:mr-0 md:-ml-13 md:-my-8 relative md:w-3/5">
+            <NextImage fill {...props} ref={ref} className={cn("rounded-t md:rounded-l object-cover", className)} />
+            <Logo className="absolute bottom-3 left-3 md:bottom-6 md:left-6 size-9 md:size-13" />
         </div>
     );
 });
@@ -26,7 +26,7 @@ Content.displayName = "Content";
 
 export const Title = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <h1 {...props} ref={ref} className={cn("text-[22px] 3xl:text-6xl mb-2 3xl:mb-6", className)}>
+        <h1 {...props} ref={ref} className={cn("text-xl md:text-2xl mb-2 md:mb-6", className)}>
             {children}
         </h1>
     );
@@ -35,7 +35,7 @@ Title.displayName = "Title";
 
 export const Description = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <p {...props} ref={ref} className={cn("text-[12px] 3xl:text-md mb-6 3xl:mb-10", className)}>
+        <p {...props} ref={ref} className={cn("text-xs md:text-sm mb-6 md:mb-10 md:font-light", className)}>
             {children}
         </p>
     );
@@ -44,7 +44,7 @@ Description.displayName = "Description";
 
 export const Grid = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <div {...props} ref={ref} className={cn("grid grid-cols-2 gap-4 3xl:gap-4 mb-6", className)}>
+        <div {...props} ref={ref} className={cn("grid grid-cols-2 gap-4 md:gap-4 mb-6", className)}>
             {children}
         </div>
     );
@@ -103,7 +103,7 @@ export const Label = forwardRef(({ className, children, ...props }, ref) => {
         <FormLabel
             {...props}
             ref={ref}
-            className={cn("block text-[12px] 3xl:text-md leading-5 mb-1.5 3xl:mb-3", className)}
+            className={cn("!font-normal block text-xs md:text-sm leading-5 mb-1.5 md:mb-3", className)}
         >
             {children}
         </FormLabel>
@@ -113,7 +113,11 @@ Label.displayName = "Label";
 
 export const Kicker = forwardRef(({ className, children, ...props }, ref) => {
     return (
-        <p {...props} ref={ref} className={cn("hidden 3xl:text-md text-white leading-10 mb-2.5 3xl:mb-5", className)}>
+        <p
+            {...props}
+            ref={ref}
+            className={cn("hidden md:block md:text-sm text-white leading-10 mb-2.5 md:mb-5", className)}
+        >
             {children}
         </p>
     );
@@ -126,11 +130,11 @@ export default function Modal({ open, onClose, variant, children, className }) {
             <DialogContent
                 handleClose={onClose}
                 className={cn(
-                    "flex flex-col 3xl:flex-row max-w-5xl gap-6 3xl:gap-13 text-white 3xl:min-h-[556px]",
+                    "flex flex-col md:flex-row max-w-5xl gap-6 md:gap-13 text-white md:min-h-[556px]",
                     className,
                 )}
                 variant={variant}
-                closeClassName="size-7 3xl:size-10"
+                closeClassName="size-7 md:size-10"
             >
                 {children}
             </DialogContent>

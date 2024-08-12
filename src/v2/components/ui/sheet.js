@@ -14,7 +14,9 @@ const SheetClose = SheetPrimitive.Close;
 
 const SheetPortal = SheetPrimitive.Portal;
 
-const SheetOverlay = forwardRef(({ className, ...props }, ref) => <SheetPrimitive.Overlay className={cn("overlay", className)} {...props} ref={ref} />)
+const SheetOverlay = forwardRef(({ className, ...props }, ref) => (
+    <SheetPrimitive.Overlay className={cn("overlay", className)} {...props} ref={ref} />
+));
 
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
@@ -31,69 +33,61 @@ const sheetVariants = cva(
         defaultVariants: {
             side: "right",
         },
-    }
-)
+    },
+);
 
 const SheetContent = forwardRef(({ side, className, children, ...props }, ref) => (
     <SheetPortal>
         <SheetOverlay className="hidden sm:block" />
-        <SheetPrimitive.Content
-            ref={ref}
-            className={cn(sheetVariants({ side }), className)}
-            {...props}
-        >
+        <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
             <SheetPrimitive.Close className="hidden absolute z-50 right-9 top-11 rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
-                <IconButton name="Close" comp='div' icon={CrossIcon} className="p-3.5" />
+                <IconButton name="Close" comp="div" icon={CrossIcon} className="p-3.5" />
             </SheetPrimitive.Close>
-            
+
             {children}
         </SheetPrimitive.Content>
     </SheetPortal>
-))
+));
 
-SheetContent.displayName = SheetPrimitive.Content.displayName
+SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({ className, ...props }) => (
     <div className="p-4 gradient-border-sheet-header sm:p-0">
         <div className="bg-sheet-pattern bg-cover bg-center bg-no-repeat ] rounded-lg sm:m-[2px] sm:rounded-tr-none sm:rounded-b-none">
             <div className="bg-gray-400/[.6] rounded-lg sm:m-[2px] sm:rounded-tr-none sm:rounded-b-none">
-                <div className={cn("min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center text-center", className)} {...props} />
+                <div
+                    className={cn(
+                        "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center text-center",
+                        className,
+                    )}
+                    {...props}
+                />
             </div>
         </div>
     </div>
-)
+);
 
 SheetHeader.displayName = "SheetHeader";
 
 const SheetFooter = ({ className, ...props }) => (
-    <div className={cn("px-20 py-4 mt-auto flex flex-col space-y-4 text-center", className )} {...props} />
-)
+    <div className={cn("px-20 py-4 mt-auto flex flex-col space-y-4 text-center", className)} {...props} />
+);
 
 SheetFooter.displayName = "SheetFooter";
 
-const SheetBody = ({ className, ...props }) => (
-    <div className={cn("relative grow w-full overflow-hidden", className )} {...props} />
-)
+const SheetBody = ({ className, ...props }) => <div className={cn("relative grow w-full", className)} {...props} />;
 
 SheetBody.displayName = "SheetBody";
 
 const SheetTitle = forwardRef(({ className, ...props }, ref) => (
-    <SheetPrimitive.Title
-        ref={ref}
-        className={cn("text-10xl font-medium text-foreground", className)}
-        {...props}
-    />
-))
+    <SheetPrimitive.Title ref={ref} className={cn("text-10xl font-medium text-foreground", className)} {...props} />
+));
 
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
 const SheetDescription = forwardRef(({ className, ...props }, ref) => (
-    <SheetPrimitive.Description
-        ref={ref}
-        className={cn("text-xl text-foreground", className)}
-        {...props}
-    />
-))
+    <SheetPrimitive.Description ref={ref} className={cn("text-xl text-foreground", className)} {...props} />
+));
 
 SheetDescription.displayName = SheetPrimitive.Description.displayName;
 
@@ -109,4 +103,4 @@ export {
     SheetBody,
     SheetTitle,
     SheetDescription,
-}
+};
