@@ -19,10 +19,9 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
 
     const ref = useRef();
+
     useIntersectionObserver(ref, (isIntersecting) => {
-        if (isIntersecting && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage();
-        }
+        if (isIntersecting && !isFetchingNextPage && hasNextPage) fetchNextPage();
     });
 
     return (
@@ -44,11 +43,21 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                     </div>
 
                     <ul className="mt-8 grid grid-cols-cards gap-y-6 gap-x-8">
-                        {offers.map((offer) => (
-                            <li key={offer?.offerId}>
-                                <SingleOffer offer={offer} />
-                            </li>
-                        ))}
+                        {offers.map((offer, idx) => {  
+                            if (idx + 1 === offers.length && hasNextPage) {
+                                return (
+                                    <li ref={ref} key={offer?.offerId} className="text-red-500">
+                                        <SingleOffer offer={offer} />
+                                    </li>
+                                )
+                            }
+
+                            return (
+                                <li key={offer?.offerId}>
+                                    <SingleOffer offer={offer} />
+                                </li>
+                            )
+                        })}
                     </ul>
 
                     {isFetchingNextPage && (
@@ -60,14 +69,8 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                             ))}
                         </ul>
                     )}
-
-                    {hasNextPage ? (
-                        <div ref={ref} className="flex justify-center">
-                            {isFetchingNextPage && <p className="mt-12 text-2xl text-foreground">Loading...</p>}
-                        </div>
-                    ) : null}
                 </div>
             </div>
         </>
     );
-}
+};
