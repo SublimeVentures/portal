@@ -46,9 +46,9 @@ export default function Markets() {
                 <Search ref={inputRef} name="Search name" value={searchValue} onChange={handleSearchChange} onClick={togglePopover} className="w-full" />
             </div>
 
-            <div className="relative xl:hidden w-full">
+            <div className="relative 2xl:hidden w-full">
                 <Popover open={isPopoverOpen} onOpenChange={togglePopover}>
-                    <PopoverTrigger className="absolute w-full top-4 left-0" />
+                    <PopoverTrigger className="absolute w-full top-4 left-4" />
                     <PopoverContent style={{ width: "calc(var(--radix-popper-anchor-width) + 36px)" }} onOpenAutoFocus={(evt) => evt.preventDefault()}>
                       <div className="h-80">
                         {isLoading ? (

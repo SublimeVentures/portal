@@ -89,7 +89,7 @@ export default function OffersTable() {
     return (
         <div className="flex flex-col h-full overflow-hidden">
             <TableFilters filters={filters} handleToggleFilter={handleToggleFilter} handleFilterRemove={handleFilterRemove} />
-            <div className="hidden overflow-hidden md:block">
+            <div className="hidden grow overflow-hidden md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
             

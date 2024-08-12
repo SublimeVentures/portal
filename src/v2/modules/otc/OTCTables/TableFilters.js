@@ -39,14 +39,14 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
     const isOffersView = activeView === otcViews.offers;
 
     return (
-        <div className={cn("my-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between", { "absolute -top-20": !currentMarket && isDesktop })}>
+        <div className={cn("my-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between", { "hidden": !currentMarket && isDesktop })}>
             <h3 className="text-[24px] text-foreground whitespace-nowrap md:text-[16px]">
                 {currentMarket ? (
                     <>
                         <span className="inline-block whitespace-nowrap">{currentMarket.name}</span>
                         {!isOffersView && "History"}
                     </>
-                ) : "Latest deals"}
+                ) : null}
             </h3>
 
             <div className="flex flex-wrap gap-4 md:flex-row-reverse">

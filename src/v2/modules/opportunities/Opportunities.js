@@ -28,7 +28,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
         <>
             <Metadata title="Opportunities" />
             <div className="flex items-center justify-center">
-                <div className="w-full p-4 lg:p-16">
+                <div className="w-full">
                     <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center xl:gap-4">
                         <div className="mb-8">
                             <h3 className="text-nowrap text-2xl text-foreground">Funded Projects</h3>
@@ -43,7 +43,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                         </div>
                     </div>
 
-                    <ul className="mt-8 grid grid-cols-cards gap-y-6 gap-x-8">
+                    <ul className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
                         {offers.map((offer) => (
                             <li key={offer?.offerId}>
                                 <SingleOffer offer={offer} />
@@ -52,7 +52,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                     </ul>
 
                     {isFetchingNextPage && (
-                        <ul className="mt-8 grid grid-cols-cards gap-y-6 gap-x-8">
+                        <ul className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
                             {Array.from({ length: 6 }, (_, index) => (
                                 <li key={index} className="min-h-[305px] h-full lg:min-h-[355px]">
                                     <SingleOfferLoader />

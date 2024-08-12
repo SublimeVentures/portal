@@ -53,7 +53,7 @@ export default function HistoryTable() {
     return (
         <div className="flex flex-col h-full overflow-hidden">
             <TableFilters />
-            <div className="hidden overflow-hidden md:block">
+            <div className="hidden grow overflow-hidden md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
             

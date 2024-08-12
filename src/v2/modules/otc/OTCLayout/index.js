@@ -10,10 +10,10 @@ export default function Markets({ children, session }) {
         setSession(session);
     }, [session, setSession]);
 
-    const { marketsCount } = useMarket();
+    const { currentMarket, marketsCount } = useMarket();
 
     return (
-        <div className="p-4 pt-0 flex flex-col gap-4 md:p-16 md:pt-0 xl:h-[70vh]">
+        <div className="relative flex flex-col gap-4 h-full xl:h-[calc(100vh_-_var(--headerHeight)_-160px)]">
             <div>
                 <h3 data-market-count={marketsCount || null} className="relative text-[18px] text-foreground text-nowrap after:content-[attr(data-market-count)] after:absolute after:top-0 after:ml-1.5 after:text-[14px]">
                     OTC Market
@@ -23,7 +23,9 @@ export default function Markets({ children, session }) {
                 </p>
             </div>
 
-            <div className="flex flex-col gap-8 xl:grid xl:grid-cols-[420px_1fr] xl:grid-rows-1 xl:h-[60vh]">
+            {!currentMarket && <h3 className="hidden absolute text-white left-[450px] xl:block">Latest deals</h3>}
+
+            <div className="flex flex-col h-full gap-8 overflow-hidden xl:grid xl:grid-cols-[420px_1fr] xl:grid-rows-1">
                 {children}
             </div>
         </div>

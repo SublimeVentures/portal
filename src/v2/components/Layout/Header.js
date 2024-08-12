@@ -28,32 +28,34 @@ export default function Header({ title, isBlockedAlert }) {
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="flex items-center justify-between text-white p-4 md:p-0">
-            <div className="2xl:hidden">
-                <Link href={PAGE.App}>
-                    <div className="flex items-center">{renderLogo(components.logo)}</div>
-                </Link>
-            </div>
-
-            <div className="hidden items-baseline 2xl:flex">
-                {title && <h2 className="text-7xl font-semibold text-foreground">{title}</h2>}
-            </div>
-
-            <div className="flex items-center gap-4">
-                <div className="hidden items-center gap-4 md:flex">
-                    <p className="text-md text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
-                    <Avatar className="bg-white" />
-                    <div className="mx-2 h-6 w-0.5 bg-foreground" />
-                    <p>+4</p>
+        <header className="mt-4 flex justify-between shrink-0 h-[var(--headerHeight)]">
+            <div className="flex justify-between items-center w-full h-max text-white">
+                <div className="2xl:hidden">
+                    <Link href={PAGE.App}>
+                        <div className="flex items-center">{renderLogo(components.logo)}</div>
+                    </Link>
                 </div>
 
-                <NotificationMenu />
-                <ChainSwitch />
-                <Button className="hidden 2xl:block" variant="secondary" onClick={handleLogout}>
-                    Logout
-                </Button>
+                <div className="hidden items-baseline 2xl:flex">
+                    {title && <h2 className="text-7xl font-semibold text-foreground">{title}</h2>}
+                </div>
 
-                <MobileMenu isBlockedAlert={isBlockedAlert} />
+                <div className="flex items-center gap-4">
+                    <div className="hidden items-center gap-4 md:flex">
+                        <p className="text-md text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
+                        <Avatar className="bg-white" />
+                        <div className="mx-2 h-6 w-0.5 bg-foreground" />
+                        <p>+4</p>
+                    </div>
+
+                    <NotificationMenu />
+                    <ChainSwitch />
+                    <Button className="hidden 2xl:block" variant="secondary" onClick={handleLogout}>
+                        Logout
+                    </Button>
+
+                    <MobileMenu isBlockedAlert={isBlockedAlert} />
+                </div>
             </div>
         </header>
     );

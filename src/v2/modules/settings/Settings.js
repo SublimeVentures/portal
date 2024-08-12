@@ -52,7 +52,7 @@ export default function Settings({ session, wallets }) {
     useEffect(() => setActiveTab(isDesktop ? "general" : "staking"), [isDesktop]);
 
     return (
-        <div className="p-4 mt-15 md:px-16 md:h-[calc(100vh_-_250px)] overflow-y-auto">
+        <div className="md:h-[calc(100vh_-_250px)] overflow-y-auto">
             <Tabs className="h-full" value={activeTab} onValueChange={setActiveTab}>
                 <div className="flex justify-between items-center">
                     <TabsList aria-label="Settings tabs" className="pb-0">
@@ -62,9 +62,6 @@ export default function Settings({ session, wallets }) {
                             </TabsTrigger>
                         ))}
                     </TabsList>
-                    <button className="bg-turquoise text-white font-light text-nowrap py-2 px-6 rounded" type="button">
-                        Save Settings
-                    </button>
                 </div>
 
                 {tabs.map(({ id, component: Comp }) => (

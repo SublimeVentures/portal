@@ -23,7 +23,7 @@ export default function Table({ table, isLoading, colCount = 4 }) {
         <Card variant="static" className="p-0 flex flex-col h-full">
             <div className="p-2 h-5 rounded-t bg-primary-light-gradient" />
 
-            <div className="py-2 px-4 h-full min-h-96 block-scrollbar overflow-hidden md:overflow-y-auto xl:min-h-max xl:h-auto">
+            <div className="py-2 px-4 h-full min-h-96 block-scrollbar overflow-hidden md:overflow-y-auto">
                 <table className="table-inline md:table">
                     <thead className="table-head">
                         {table.getHeaderGroups().map((headerGroup) => (

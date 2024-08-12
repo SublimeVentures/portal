@@ -112,10 +112,6 @@
   width: 10px;
 }
 
-.block-scrollbar::-webkit-scrollbar {
-  width: 5px;
-}
-
 ::-webkit-scrollbar-track {
   background: #082030;
 }
@@ -126,6 +122,25 @@
 
 ::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
+}
+
+.block-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.page-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.page-scrollbar::-webkit-scrollbar-thumb {
+  border-right: 4px transparent solid;
+  border-top: 32px transparent solid;
+  border-bottom: 32px transparent solid;
+  background-clip: padding-box;
+}
+
+.page-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 input::-webkit-outer-spin-button,
