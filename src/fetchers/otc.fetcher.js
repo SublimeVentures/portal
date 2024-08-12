@@ -26,8 +26,8 @@ export const fetchOTCOffers = async ({ otcId, filters = {}, sort }) => {
         return data;
     } catch (error) {
         handleError(ErrorType.FETCHER, error, { methodName: "fetchOTCOffers", enableSentry: true });
-        return [];
     }
+    return [];
 };
 
 export const fetchOTCHistory = async (offerId) => {

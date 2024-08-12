@@ -1,5 +1,7 @@
+import ErrorType from "../../shared/enum/errorType.enum";
 import { API } from "@/routes";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
+import { handleError } from "@/v2/lib/error";
 
 export const fetchEnvironment = async (token, authTokenName) => {
     try {
@@ -9,8 +11,7 @@ export const fetchEnvironment = async (token, authTokenName) => {
             },
         });
         return data;
-    } catch (e) {
-        console.log("ERRROR!fetch env failed");
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchEnvironment", enableSentry: true });
     }
-    return { ok: false };
 };

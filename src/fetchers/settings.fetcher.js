@@ -1,19 +1,17 @@
-import * as Sentry from "@sentry/nextjs";
+import ErrorType from "../../shared/enum/errorType.enum";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
-import { authTokenName, refreshTokenName } from "@/lib/authHelpers";
+import { authTokenName } from "@/lib/authHelpers";
+import { handleError } from "@/v2/lib/error";
 
 export const fetchUserWallets = async () => {
     try {
         const { data } = await axiosPrivate.get(API.fetchWallets);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchUserWallets", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchUserWallets", enableSentry: true });
     }
-    return {};
 };
 
 export const fetchUserWalletsSsr = async (token) => {
@@ -24,37 +22,27 @@ export const fetchUserWalletsSsr = async (token) => {
             },
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchUserWalletsSsr", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchUserWalletsSsr", enableSentry: true });
     }
-    return {};
 };
 
 export const addUserWallet = async (signature, address, network) => {
     try {
         const { data } = await axiosPrivate.post(`${API.settingsWallet}add`, { signature, address, network });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "addUserWallet", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "addUserWallet", enableSentry: true });
     }
-
-    return {};
 };
 
 export const removeUserWallet = async (signature) => {
     try {
         const { data } = await axiosPrivate.post(`${API.settingsWallet}remove`, { signature });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "removeUserWallet", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "removeUserWallet", enableSentry: true });
     }
-    return {};
 };
 
 export const updateStaking = async (address) => {
@@ -63,10 +51,7 @@ export const updateStaking = async (address) => {
             address,
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "updateStaking", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "updateStaking", enableSentry: true });
     }
-    return {};
 };
