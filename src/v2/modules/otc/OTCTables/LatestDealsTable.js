@@ -45,8 +45,8 @@ export default function LatestDealsTable() {
   
     return (
         <div className="relative flex flex-col h-full">
-            <TableFilters />
-            <div className="hidden overflow-hidden md:block">
+            <h3 className="mb-4 text-white xl:hidden">Latest deals</h3>
+            <div className="hidden grow overflow-hidden md:block">
                 <Table table={table} isLoading={isMarketLoading || isLatestLoading} colCount={columns.length} />
             </div>
             

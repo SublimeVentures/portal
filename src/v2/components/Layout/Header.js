@@ -28,32 +28,34 @@ export default function Header({ title, isBlockedAlert }) {
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="flex items-center justify-between text-white p-4 md:p-0">
-            <div className="2xl:hidden">
-                <Link href={PAGE.App}>
-                    <div className="flex items-center">{renderLogo(components.logo)}</div>
-                </Link>
-            </div>
-
-            <div className="hidden items-baseline 2xl:flex">
-                {title && <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground">{title}</h2>}
-            </div>
-
-            <div className="flex items-center gap-4">
-                <div className="hidden items-center gap-4 md:flex">
-                    <p className="text-sm font-light text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
-                    <Avatar className="bg-white" />
-                    <div className="mx-2 h-6 w-0.5 bg-foreground" />
+        <header className="mt-4 flex justify-between shrink-0 h-[var(--headerHeight)]">
+            <div className="flex justify-between items-center w-full h-max text-white">
+                <div className="2xl:hidden">
+                    <Link href={PAGE.App}>
+                        <div className="flex items-center">{renderLogo(components.logo)}</div>
+                    </Link>
                 </div>
-                <div className="flex items-center lg:flex-row-reverse">
+
+                <div className="hidden items-baseline 2xl:flex">
+                    {title && <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground">{title}</h2>}
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <div className="hidden items-center gap-4 md:flex">
+                        <p className="text-md text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
+                        <Avatar className="bg-white" />
+                        <div className="mx-2 h-6 w-0.5 bg-foreground" />
+                        <p>+4</p>
+                    </div>
+
                     <NotificationMenu />
                     <ChainSwitch />
-                </div>
-                <Button className="hidden 2xl:block" variant="secondary" onClick={handleLogout}>
-                    Logout
-                </Button>
+                    <Button className="hidden 2xl:block" variant="secondary" onClick={handleLogout}>
+                        Logout
+                    </Button>
 
-                <MobileMenu isBlockedAlert={isBlockedAlert} />
+                    <MobileMenu isBlockedAlert={isBlockedAlert} />
+                </div>
             </div>
         </header>
     );

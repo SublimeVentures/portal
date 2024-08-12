@@ -60,20 +60,17 @@ export default function Markets() {
                 />
             </div>
 
-            <div className="relative xl:hidden w-full">
+            <div className="relative 2xl:hidden w-full">
                 <Popover open={isPopoverOpen} onOpenChange={togglePopover}>
-                    <PopoverTrigger className="absolute w-full top-4 left-0" />
-                    <PopoverContent
-                        style={{ width: "calc(var(--radix-popper-anchor-width) + 36px)" }}
-                        onOpenAutoFocus={(evt) => evt.preventDefault()}
-                    >
-                        <div className="h-80">
-                            {isLoading ? (
-                                <MarketLoader count={3} />
-                            ) : (
-                                <MarketList markets={filteredMarkets} currentMarket={currentMarket} />
-                            )}
-                        </div>
+                    <PopoverTrigger className="absolute w-full top-4 left-4" />
+                    <PopoverContent style={{ width: "calc(var(--radix-popper-anchor-width) + 36px)" }} onOpenAutoFocus={(evt) => evt.preventDefault()}>
+                      <div className="h-80">
+                        {isLoading ? (
+                          <MarketLoader count={3} />
+                        ) : (
+                          <MarketList markets={filteredMarkets} currentMarket={currentMarket} />
+                        )}
+                      </div>
                     </PopoverContent>
                 </Popover>
             </div>
