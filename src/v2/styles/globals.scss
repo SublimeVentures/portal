@@ -20,7 +20,7 @@
     }
     
     .table-head-cell {
-      @apply pt-4 pl-2 pr-5 text-sm font-normal text-foreground normal-case text-left;
+      @apply pt-4 pl-2 pr-5 text-base font-medium text-foreground normal-case text-left;
     }
 
     .table-body-row {
@@ -28,7 +28,7 @@
     }
 
     .table-data {
-      @apply table-cell py-4 px-2 text-sm text-foreground text-left before:content-none;
+      @apply table-cell py-4 px-2 text-sm font-medium text-foreground text-left before:content-none;
     }
   }
 
