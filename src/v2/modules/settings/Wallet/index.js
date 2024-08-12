@@ -24,6 +24,8 @@ export default function WalletSettings({ session }) {
         refetchOnWindowFocus: true,
     });
 
+    console.log('wallets', wallets)
+
     const isMaxWallets = wallets?.length >= maxWallets;
 
     const [isAddWalletModalOpen, setIsAddWalletModalOpen] = useState(false);
@@ -33,8 +35,9 @@ export default function WalletSettings({ session }) {
       updateEnvironmentProps([{ path: "walletGuard", value: false }]);
     }, [isAddWalletModalOpen, isRemoveWalletModalOpen])
 
+    // @todo - add skeleton loading
     if (isLoading) {
-        return <div>loading...</div>
+        return <div className='text-white'>loading...</div>
     }
     
     return (

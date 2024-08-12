@@ -55,7 +55,7 @@ export default function Staking({ session }) {
 
                     {stakingEnabled 
                         ? <StakingDetails session={session} stakingDetails={{ staked, unstake, ...rest }} />
-                        : <div class="mmb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-foreground font-medium bg-foreground/[.02] text-center rounded">Staking available soon</div>
+                        : <div className="mmb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-foreground font-medium bg-foreground/[.02] text-center rounded">Staking available soon</div>
                     }
 
                     <div className=' md:hidden'>

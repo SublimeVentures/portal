@@ -41,7 +41,7 @@ export default function SingleOfferCard({ currentMarket, offer }) {
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
-                    <dl class="px-4 py-2 grid grid-cols-3 grid-rows-4 grid-flow-col gap-x-12">
+                    <dl className="px-4 py-2 grid grid-cols-3 grid-rows-4 grid-flow-col gap-x-12">
                         <DefinitionItem valueOnly term="Market">
                             <Image
                                 src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}

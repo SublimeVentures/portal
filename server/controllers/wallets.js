@@ -1,18 +1,18 @@
 const { serializeError } = require("serialize-error");
 const axios = require("axios");
 const logger = require("../../src/lib/logger");
-const { getUserAirdropWallets, getUserLinkedWallets } = require("../queries/wallets.query");
+const { getUserLinkedWallets } = require("../queries/wallets.query");
 const { authTokenName } = require("../../src/lib/authHelpers");
 
-async function getAirdropWallets(user) {
-    const { userId, tenantId } = user;
-    try {
-        return await getUserAirdropWallets(userId, tenantId);
-    } catch (error) {
-        logger.error("getAirdropWallets", { error: serializeError(error) });
-        return [];
-    }
-}
+// async function getAirdropWallets(req) {
+//     const { userId, tenantId } = req;
+//     try {
+//         return await getUserLinkedWallets(userId, tenantId, true);
+//     } catch (error) {
+//         logger.error("getAirdropWallets", { error: serializeError(error) });
+//         return [];
+//     }
+// }
 
 async function getUserWallets(user) {
     const { userId, tenantId } = user;
@@ -70,7 +70,7 @@ async function refreshStaking(req, address) {
 }
 
 module.exports = {
-    getAirdropWallets,
+    // getAirdropWallets,
     getUserWallets,
     addUserWallet,
     removeUserWallet,

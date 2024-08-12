@@ -8,7 +8,7 @@ export default function CardSkeleton() {
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
-                    <dl class="grid grid-cols-3 grid-rows-2 grid-flow-col gap-x-12">
+                    <dl className="grid grid-cols-3 grid-rows-2 grid-flow-col gap-x-12">
                         <SkeletonCircle className="mb-2 p-6" />
                         <Skeleton className="p-4" />
                         <Skeleton className="p-4" />

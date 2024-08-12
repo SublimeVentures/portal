@@ -18,7 +18,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
-                    <dl class="py-2 px-4 grid grid-cols-2 grid-rows-4 grid-flow-col">
+                    <dl className="py-2 px-4 grid grid-cols-2 grid-rows-4 grid-flow-col">
                         <DefinitionItem valueOnly term="Market">
                             <Image
                                 src={`${cdn}/research/${slug}/icon.jpg`}
