@@ -24,7 +24,7 @@ export default function useNotificationInfiniteLoader() {
         },
         getNextPageParam: ({ limit, offset, count }) => {
             const cursor = limit + offset;
-            const allItems = parseInt(count, 10) ?? 0
+            const allItems = parseInt(count, 10) ?? 0;
 
             if (cursor >= allItems) return undefined;
 
@@ -36,15 +36,18 @@ export default function useNotificationInfiniteLoader() {
 
             return newOffset;
         },
-        select: data => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
     });
 
-    const handleInputChange = useCallback((name, value) => {
-        router.push({
-            pathname: router.pathname,
-            query: { ...query, [name]: value },
-        });
-    }, [router, query]);
+    const handleInputChange = useCallback(
+        (name, value) => {
+            router.push({
+                pathname: router.pathname,
+                query: { ...query, [name]: value },
+            });
+        },
+        [router, query],
+    );
 
     return {
         data: pages,
@@ -54,10 +57,13 @@ export default function useNotificationInfiniteLoader() {
         error,
         hasNextPage,
         fetchNextPage,
-        getFiltersProps: useCallback(() => ({
-            query,
-            handleInputChange,
-            fetchPreviousPage,
-        }), [query, handleInputChange])
+        getFiltersProps: useCallback(
+            () => ({
+                query,
+                handleInputChange,
+                fetchPreviousPage,
+            }),
+            [query, handleInputChange],
+        ),
     };
-};
+}

@@ -22,14 +22,14 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
                                 <li ref={ref} key={notification.id} className="group">
                                     <TimelineItem item={notification} />
                                 </li>
-                            )
+                            );
                         }
-                        
+
                         return (
                             <li key={notification.id} className="group">
                                 <TimelineItem item={notification} />
                             </li>
-                        )
+                        );
                     })}
 
                     {isFetching && <TimelineSkeleton />}
@@ -37,4 +37,4 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
             </div>
         </Card>
     );
-};
+}

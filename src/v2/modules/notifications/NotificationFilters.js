@@ -30,21 +30,27 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Select size="sm" value={type} onValueChange={(value) => handleInputChange('type', value)}>
+                    <Select size="sm" value={type} onValueChange={(value) => handleInputChange("type", value)}>
                         <SelectTrigger className="px-8 w-full md:w-auto">
                             <SelectValue placeholder="Event type" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem key={0} value={null}>All</SelectItem>
+                            <SelectItem key={0} value={null}>
+                                All
+                            </SelectItem>
                             {Object.entries(NotificationTypeNames).map(([key, value]) => (
-                                <SelectItem key={key} value={key}>{value}</SelectItem>
+                                <SelectItem key={key} value={key}>
+                                    {value}
+                                </SelectItem>
                             ))}
                         </SelectContent>
-                    </Select> 
+                    </Select>
 
-                    <Button className="w-full md:w-auto" variant="secondary" onClick={fetchPreviousPage}>Get older</Button>
+                    <Button className="w-full md:w-auto" variant="secondary" onClick={fetchPreviousPage}>
+                        Get older
+                    </Button>
                 </div>
             </div>
         </div>
     );
-};
+}

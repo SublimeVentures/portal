@@ -48,13 +48,7 @@ export default function useAllowanceStep(state, data, dispatch) {
         allowance_current.allowance > 0 &&
         token?.contract.toLowerCase() === ETH_USDT.toLowerCase() &&
         allowance_methodReset.ok;
-    const allowance_needIncrease = !allowance_needReset && allowance_mustRun && allowance_method.ok;
-
-    useEffect(() => {
-        if (allowance_needIncrease) {
-            dispatch({ type: allowanceAction.SET_ALLOWANCE_SET, payload: true });
-        }
-    }, [allowance_needIncrease]);
+    const allowance_needIncrease = !allowance_needReset && !!allowance_mustRun && !!allowance_method.ok;
 
     const allowance_set_reset = useSendTransaction(
         allowance_needReset,
@@ -72,12 +66,18 @@ export default function useAllowanceStep(state, data, dispatch) {
             dispatch({
                 type: allowanceAction.SET_ALLOWANCE,
                 payload: {
-                    current: allowance_current?.allowance,
+                    current: allowance_current.allowance,
                     isFinished: allowance_isFinished,
                 },
             });
         }
     }, [allowance_current?.allowance, allowance_shouldRun, allowance_set?.confirm?.data]);
+
+    useEffect(() => {
+        if (allowance_needIncrease) {
+            dispatch({ type: allowanceAction.SET_ALLOWANCE_SET, payload: true });
+        }
+    }, [allowance_needIncrease, dispatch]);
 
     return {
         allowance_set_reset,

@@ -1,9 +1,9 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
- 
+
 import { cn } from "@/lib/cn";
- 
+
 const Pagination = ({ className, ...props }) => (
     <nav
         role="navigation"
@@ -11,10 +11,10 @@ const Pagination = ({ className, ...props }) => (
         className={cn("mx-auto flex w-full justify-center", className)}
         {...props}
     />
-)
+);
 
-Pagination.displayName = "Pagination"
- 
+Pagination.displayName = "Pagination";
+
 const PaginationContent = forwardRef(({ className, ...props }, ref) => (
     <ul
         ref={ref}
@@ -24,7 +24,7 @@ const PaginationContent = forwardRef(({ className, ...props }, ref) => (
 ));
 
 PaginationContent.displayName = "PaginationContent";
- 
+
 const PaginationItem = forwardRef(({ className, ...props }, ref) => <li ref={ref} className={className} {...props} />);
 
 PaginationItem.displayName = "PaginationItem";
@@ -41,11 +41,14 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }) => (
 );
 
 PaginationLink.displayName = "PaginationLink";
- 
+
 const PaginationPrevious = ({ className, ...props }) => (
     <Link
         aria-label="Go to previous page"
-        className={cn("absolute -left-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-[#082131] rounded hover:bg-primary-700", className)}
+        className={cn(
+            "absolute -left-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-[#082131] rounded hover:bg-primary-700",
+            className,
+        )}
         {...props}
     >
         <ChevronLeftIcon />
@@ -53,11 +56,14 @@ const PaginationPrevious = ({ className, ...props }) => (
 );
 
 PaginationPrevious.displayName = "PaginationPrevious";
- 
+
 const PaginationNext = ({ className, ...props }) => (
     <Link
         aria-label="Go to next page"
-        className={cn("absolute -right-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-[#082131] rounded hover:bg-primary-700", className)}
+        className={cn(
+            "absolute -right-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-[#082131] rounded hover:bg-primary-700",
+            className,
+        )}
         {...props}
     >
         <ChevronRightIcon />
@@ -65,16 +71,23 @@ const PaginationNext = ({ className, ...props }) => (
 );
 
 PaginationNext.displayName = "PaginationNext";
- 
+
 const PaginationEllipsis = ({ className, ...props }) => (
-    <span aria-hidden className={cn("p-3 h-10 w-10 flex items-center justify-center text-sm text-foreground pointer-events-none", className)} {...props}>
+    <span
+        aria-hidden
+        className={cn(
+            "p-3 h-10 w-10 flex items-center justify-center text-sm text-foreground pointer-events-none",
+            className,
+        )}
+        {...props}
+    >
         <span className="sr-only">More pages</span>
         <span>...</span>
     </span>
 );
 
 PaginationEllipsis.displayName = "PaginationEllipsis";
- 
+
 export {
     Pagination,
     PaginationContent,

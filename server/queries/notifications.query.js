@@ -24,12 +24,12 @@ function buildWhereFromAuthorizedQuery(user, query) {
             where[key] = value;
         }
     }
-    
+
     return {
         limit: parseInt(limit, 10),
         offset: parseInt(offset, 10),
         where,
-        sort
+        sort,
     };
 }
 
@@ -53,7 +53,7 @@ async function getNotifications(user, query) {
     } catch (error) {
         logger.error("QUERY :: [getNotifications]", { error: serializeError(error) });
     }
-    
+
     return { count: 0, rows: [] };
 }
 

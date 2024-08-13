@@ -37,7 +37,9 @@ export default function Header({ title, isBlockedAlert }) {
                 </div>
 
                 <div className="hidden items-baseline 2xl:flex">
-                    {title && <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground">{title}</h2>}
+                    {title && (
+                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground">{title}</h2>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-4">

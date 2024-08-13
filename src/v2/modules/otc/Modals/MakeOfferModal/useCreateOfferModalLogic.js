@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 import useMarket from "@/v2/modules/otc/logic/useMarket";
 import { METHOD } from "@/components/BlockchainSteps/utils";
@@ -14,7 +14,7 @@ import { getUserAllocation } from "@/v2/fetchers/otc";
 import { millisecondsInHour } from "@/constants/datetime";
 
 export const TABS = Object.freeze({ BUY: 0, SELL: 1 });
-export const DEFAULT_VALUES = Object.freeze({ MULTIPLIER: 1, MIN_ALLOCATION: 10, MAX_PRICE: 1000000 })
+export const DEFAULT_VALUES = Object.freeze({ MULTIPLIER: 1, MIN_ALLOCATION: 10, MAX_PRICE: 1000000 });
 
 export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const { currentMarket } = useMarket();
@@ -30,7 +30,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         staleTime: 3 * 60 * 1000,
     });
 
-    const userAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
+    const userAllocation = vault && currentMarket ? vault.find((el) => el.offerId === currentMarket.offerId) : null;
     const allocationMax = userAllocation?.allocation;
 
     const amountStorageKey = `otc.${currentMarket?.offerId}.amount`;
@@ -56,11 +56,15 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
 
     const formSchema = z.object({
         currency: z.string(),
-        amount: z.number()
+        amount: z
+            .number()
             .min(DEFAULT_VALUES.MIN_ALLOCATION, { message: `Minimum amount: ${DEFAULT_VALUES.MIN_ALLOCATION}` })
-            .max(isSeller ? allocationMax : DEFAULT_VALUES.MAX_PRICE, { message: `Maximum amount: ${isSeller ? allocationMax : DEFAULT_VALUES.MAX_PRICE}` })
-            .refine(val => val % 10 === 0, { message: 'Amount has to be divisible by 10' }),
-        price: z.number()
+            .max(isSeller ? allocationMax : DEFAULT_VALUES.MAX_PRICE, {
+                message: `Maximum amount: ${isSeller ? allocationMax : DEFAULT_VALUES.MAX_PRICE}`,
+            })
+            .refine((val) => val % 10 === 0, { message: "Amount has to be divisible by 10" }),
+        price: z
+            .number()
             .min(DEFAULT_VALUES.MIN_ALLOCATION, { message: `Price must be at least ${DEFAULT_VALUES.MIN_ALLOCATION}` })
             .max(DEFAULT_VALUES.MAX_PRICE, { message: `Price must be at most ${DEFAULT_VALUES.MAX_PRICE}` }),
     });
@@ -68,67 +72,103 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const { setValue, watch, reset, clearErrors, ...form } = useForm({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
-        onSubmit: (values) => console.log('Submit:', values),
+        onSubmit: (values) => console.log("Submit:", values),
         defaultValues: {
             amount: getExpireData(amountStorageKey) ?? 10,
             price: getExpireData(priceStorageKey) ?? 10,
             currency: getExpireData(currencyStorageKey)?.symbol ?? dropdownCurrencyOptions[0].symbol,
         },
-    })
+    });
 
-    const [amount, price] = watch(["amount", "price"])
+    const [amount, price] = watch(["amount", "price"]);
 
-    const calcMulti = useCallback((price_) => setMultiplier(Number(Number(price_) / Number(amount).toFixed(2))), [amount]);
+    const calcMulti = useCallback(
+        (price_) => setMultiplier(Number(Number(price_) / Number(amount).toFixed(2))),
+        [amount],
+    );
 
-    const calcPrice = useCallback((multiplier, amount) => {
-        const newPrice = Number(Number(amount * multiplier).toFixed(2));
+    const calcPrice = useCallback(
+        (multiplier, amount) => {
+            const newPrice = Number(Number(amount * multiplier).toFixed(2));
 
-        setExpireData(priceStorageKey, newPrice, new Date().getTime() + millisecondsInHour);
-        setValue('price', newPrice);
-    }, [setExpireData, priceStorageKey, setValue]);
+            setExpireData(priceStorageKey, newPrice, new Date().getTime() + millisecondsInHour);
+            setValue("price", newPrice);
+        },
+        [setExpireData, priceStorageKey, setValue],
+    );
 
-    const handleAmountChange = useCallback((evt, callback) => {
-        const amount = +evt.target.value;
-        setExpireData(amountStorageKey, amount, new Date().getTime() + millisecondsInHour);
-        if (amount) calcPrice(multiplier, amount);
-        setStatusAmount(true);
+    const handleAmountChange = useCallback(
+        (evt, callback) => {
+            const amount = +evt.target.value;
+            setExpireData(amountStorageKey, amount, new Date().getTime() + millisecondsInHour);
+            if (amount) calcPrice(multiplier, amount);
+            setStatusAmount(true);
 
-        return callback(amount);
-    }, [setExpireData, amountStorageKey, calcPrice, multiplier]);
+            if (callback) {
+                return callback(amount);
+            }
+        },
+        [setExpireData, amountStorageKey, calcPrice, multiplier],
+    );
 
-    const handlePriceChange = useCallback((evt, callback) => {
-        const price = +evt.target.value;
-        setExpireData(priceStorageKey, price, new Date().getTime() + millisecondsInHour);
-        if (price && amount) calcMulti(price);
-        setStatusPrice(true);
+    const handlePriceChange = useCallback(
+        (evt, callback) => {
+            const price = +evt.target.value;
+            setExpireData(priceStorageKey, price, new Date().getTime() + millisecondsInHour);
+            if (price && amount) calcMulti(price);
+            setStatusPrice(true);
 
-        return callback(price);
-    }, [setExpireData, priceStorageKey, calcMulti, amount]);
+            if (callback) {
+                return callback(price);
+            }
+        },
+        [setExpireData, priceStorageKey, calcMulti, amount],
+    );
 
-    const handleCurrencyChange = useCallback((currency, callback) => {
-        setExpireData(currencyStorageKey, currency, new Date().getTime() + millisecondsInHour);
+    const handleCurrencyChange = useCallback(
+        (currency, callback) => {
+            setExpireData(currencyStorageKey, currency, new Date().getTime() + millisecondsInHour);
 
-        return callback(currency);
-    }, [setExpireData, currencyStorageKey]);
+            return callback(currency);
+        },
+        [setExpireData, currencyStorageKey],
+    );
 
-    const handleSelectTab = useCallback((tabId) => {
-        if (allocationMax === 0 && tabId === TABS.SELL) return;
-        setSelectedTab(tabId);
-    }, [allocationMax]);
+    const handleSetMaxValue = useCallback(
+        (event, callback) => {
+            if (userAllocation) {
+                const { invested, locked } = userAllocation;
+                const newAmount = Number(invested) - Number(locked);
+                if (newAmount) {
+                    setValue("amount", newAmount);
+                    handleAmountChange({ target: { value: invested - locked } }, callback);
+                }
+            }
+        },
+        [handleAmountChange, setValue, userAllocation],
+    );
+
+    const handleSelectTab = useCallback(
+        (tabId) => {
+            if (allocationMax === 0 && tabId === TABS.SELL) return;
+            setSelectedTab(tabId);
+        },
+        [allocationMax],
+    );
 
     useEffect(() => {
         const closeModal = async () => {
             await Promise.all([refetchVault(), queryClient.invalidateQueries(["otcOffers"])]);
-            
+
             reset();
             setMultiplier(DEFAULT_VALUES.MULTIPLIER);
             setTransactionSuccessful(false);
-            
+
             setIsModalOpen(false);
         };
 
-        if (!isModalOpen) closeModal()
-    }, [isModalOpen])
+        if (!isModalOpen) closeModal();
+    }, [isModalOpen]);
 
     const customLocks = () => {
         if (statusCheck) return { lock: true, text: "Bad parameters" };
@@ -143,7 +183,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             if (data) calcPrice(multiplier, data);
         }
     }, [isSeller]);
-  
+
     const { lock, text } = customLocks();
     const token = useGetToken(selectedCurrency?.contract);
 
@@ -203,20 +243,47 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         };
     }, [selectedCurrency?.contract, price, amount, account, activeOtcContract, isModalOpen, text]);
 
-    const getOfferFieldProps = (name) => {
-        const fields = {
-            amount: { name, control: form.control, handleChange: handleAmountChange, placeholder: `${titleCopy} allocation`, label: "Your offer" },
-            price: { name, control: form.control, handleChange: handlePriceChange, placeholder: "For price", label: "You receive" },
-            currency: { name, control: form.control, handleChange: handleCurrencyChange, placeholder: null, label: null, options: dropdownCurrencyOptions },
-        };
+    const getOfferFieldProps = useCallback(
+        (name) => {
+            const fields = {
+                amount: {
+                    name,
+                    control: form.control,
+                    handleChange: handleAmountChange,
+                    placeholder: "Offer amount",
+                    label: "Your offer",
+                },
+                price: {
+                    name,
+                    control: form.control,
+                    handleChange: handlePriceChange,
+                    placeholder: "Desired amount",
+                    label: "You receive",
+                },
+                currency: {
+                    name,
+                    control: form.control,
+                    handleChange: handleCurrencyChange,
+                    placeholder: null,
+                    label: null,
+                    options: dropdownCurrencyOptions,
+                },
+                max: {
+                    name,
+                    control: form.control,
+                    handleChange: handleSetMaxValue,
+                },
+            };
 
-        return fields[name];
-    };
+            return fields[name];
+        },
+        [form, handleSetMaxValue, handleCurrencyChange, handleAmountChange],
+    );
 
     const blockchainData = {
         [TABS.SELL]: blockchainInteractionDataSELL,
         [TABS.BUY]: blockchainInteractionDataBUY,
-    }
+    };
 
     return {
         transactionSuccessful,
@@ -224,23 +291,32 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         textCopy,
         selectedTab,
         blockchainInteractionData: blockchainData[selectedTab],
-        getSelectedMarketProps: useCallback(() => ({
-            name: currentMarket.name,
-            ticker: currentMarket.ticker,
-            slug: currentMarket.slug,
-            cdn, 
-        }), [currentMarket.name, currentMarket.ticker, currentMarket.slug, cdn]),
-        getOfferTabsProps: useCallback(() => ({
-            allocationMax,
-            selectedTab,
-            handleSelectTab,
-        }), [allocationMax, selectedTab, handleSelectTab]),
-        getOfferFormProps: useCallback(() => ({
-            form,
-            cdn,
-            multiplierParsed,
-            market: { name: currentMarket.name, slug: currentMarket.slug },
-            getOfferFieldProps,
-        }), [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps]),
+        getSelectedMarketProps: useCallback(
+            () => ({
+                name: currentMarket.name,
+                ticker: currentMarket.ticker,
+                slug: currentMarket.slug,
+                cdn,
+            }),
+            [currentMarket.name, currentMarket.ticker, currentMarket.slug, cdn],
+        ),
+        getOfferTabsProps: useCallback(
+            () => ({
+                allocationMax,
+                selectedTab,
+                handleSelectTab,
+            }),
+            [allocationMax, selectedTab, handleSelectTab],
+        ),
+        getOfferFormProps: useCallback(
+            () => ({
+                form,
+                cdn,
+                multiplierParsed,
+                market: { name: currentMarket.name, slug: currentMarket.slug },
+                getOfferFieldProps,
+            }),
+            [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps],
+        ),
     };
-};
+}

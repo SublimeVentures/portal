@@ -2,15 +2,15 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 
-import useMarket from "@/v2/modules/otc/logic/useMarket";
-import Table from "@/v2/components/Table/Table";
-import { getOffersHistory  } from "@/v2/fetchers/otc";
-import SingleHistoryCard from "./SingleHistoryCard";
-import CardSkeleton from "./CardSkeleton";
-import TableFilters from "./TableFilters";
 import { historyColumns as columns } from "../logic/columns";
 import useCurrentView from "../logic/useCurrentView";
 import { otcViews } from "../logic/constants";
+import SingleHistoryCard from "./SingleHistoryCard";
+import CardSkeleton from "./CardSkeleton";
+import TableFilters from "./TableFilters";
+import useMarket from "@/v2/modules/otc/logic/useMarket";
+import Table from "@/v2/components/Table/Table";
+import { getOffersHistory } from "@/v2/fetchers/otc";
 
 export default function HistoryTable() {
     const { activeView } = useCurrentView();
@@ -49,16 +49,16 @@ export default function HistoryTable() {
     });
 
     const isLoading = isMarketLoading || isHistoryLoading;
-  
+
     return (
         <div className="flex flex-col h-full overflow-hidden">
             <TableFilters />
             <div className="hidden grow overflow-hidden md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
-            
+
             <div className="md:hidden">
-                {isLoading? (
+                {isLoading ? (
                     <div className="flex flex-col gap-4">
                         <CardSkeleton />
                         <CardSkeleton />
@@ -66,9 +66,9 @@ export default function HistoryTable() {
                     </div>
                 ) : (
                     <ul className="flex flex-col gap-6">
-                        {data.map(offer => (
+                        {data.map((offer) => (
                             <li key={offer.offerId}>
-                                <SingleHistoryCard currentMarket={currentMarket}  {...offer} />
+                                <SingleHistoryCard currentMarket={currentMarket} {...offer} />
                             </li>
                         ))}
                     </ul>
@@ -76,4 +76,4 @@ export default function HistoryTable() {
             </div>
         </div>
     );
-};
+}

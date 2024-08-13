@@ -4,8 +4,6 @@ import BigNumber from "bignumber.js";
 import useGetTokenAbi from "@/lib/hooks/useGetTokenAbi";
 
 function useGetTokenAllowance(isEnabled, token, owner, spender, chainId, skipStep) {
-    if (!token || skipStep) return;
-
     const { contract, precision } = token;
 
     const scope = `${owner}_allowance_${contract}`;
@@ -38,17 +36,21 @@ function useGetTokenAllowance(isEnabled, token, owner, spender, chainId, skipSte
         },
     });
 
+    const allowance = useMemo(() => {
+        if (typeof data !== "undefined" && !!contract && precision) {
+            const power = new BigNumber(10).pow(precision);
+            const currentBalanceBN = new BigNumber(data);
+            return currentBalanceBN.dividedBy(power).toNumber();
+        }
+        return 0;
+    }, [contract, data, precision]);
+
+    if (!token || skipStep) return null;
+
     return {
         ...rest,
         refetch,
-        allowance: useMemo(() => {
-            if (typeof data !== "undefined" && !!contract && precision) {
-                const power = new BigNumber(10).pow(precision);
-                const currentBalanceBN = new BigNumber(data);
-                return currentBalanceBN.dividedBy(power).toNumber();
-            }
-            return 0;
-        }, [data]),
+        allowance,
     };
 }
 

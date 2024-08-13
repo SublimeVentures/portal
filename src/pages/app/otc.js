@@ -24,7 +24,7 @@ export default function AppOtc({ session }) {
                 </div>
             </OTCLayout>
         </>
-    )
+    );
 }
 
 export const getServerSideProps = async ({ req, res }) => {
@@ -45,7 +45,6 @@ export const getServerSideProps = async ({ req, res }) => {
 
     return await processServerSideData(req, res, routes.OTC, customLogicCallback);
 };
-
 
 AppOtc.getLayout = function (page) {
     return <AppLayout title="OTC Market">{page}</AppLayout>;

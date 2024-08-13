@@ -8,7 +8,7 @@ export default function useOffersInfiniteQuery(query = {}) {
         queryFn: ({ pageParam: offset = 0 }) => fetchOfferList({ ...query, offset }),
         getNextPageParam: ({ limit, offset, count }) => {
             const cursor = limit + offset;
-            const allItems = parseInt(count, 10) ?? 0
+            const allItems = parseInt(count, 10) ?? 0;
 
             if (cursor >= allItems) {
                 return undefined;
@@ -16,6 +16,6 @@ export default function useOffersInfiniteQuery(query = {}) {
 
             return cursor;
         },
-        select: data => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
     });
-};
+}

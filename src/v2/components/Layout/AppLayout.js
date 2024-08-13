@@ -63,9 +63,7 @@ const MobileLayout = ({ children, isBlockedAlert, className }) => {
             <div className="flex flex-col mt-[var(--alertHeight)] h-[calc(100vh_-_var(--navbarHeight)_-_var(--alertHeight))] relative rounded-b-lg overflow-hidden md:hidden">
                 <div className="pb-16 px-4 z-10 bg-[#071321] page-scrollbar overflow-y-auto sm:px-8">
                     <Header isBlockedAlert={isBlockedAlert} />
-                    <main className={cn("relative z-10", className)}>
-                        {children}
-                    </main>
+                    <main className={cn("relative z-10", className)}>{children}</main>
                 </div>
 
                 <div className="absolute z-20 bottom-0 h-8 w-full bg-navbar-gradient " />

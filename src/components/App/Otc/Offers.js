@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { IoCartOutline as IconCart, IoCloseCircleOutline as IconCancel } from "react-icons/io5";
@@ -7,7 +6,7 @@ import { GoHistory as IconHistory } from "react-icons/go";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import Empty from "@/components/App/Empty";
 import { IconButton } from "@/components/Button/IconButton";
-import { fetchHistory } from "@/fetchers/otc.fetcher";
+import { fetchOTCHistory } from "@/fetchers/otc.fetcher";
 import Loader from "@/components/App/Loader";
 import MakeOfferModal from "@/components/App/Otc/MakeOfferModal";
 import CancelOfferModal from "@/components/App/Otc/CancelOfferModal";
@@ -36,7 +35,7 @@ export default function OtcOffers({ propOffers }) {
 
     const { isSuccess: historyIsSuccess, data: history } = useQuery({
         queryKey: ["otcHistory", currentMarket?.offerId],
-        queryFn: () => fetchHistory(currentMarket?.offerId),
+        queryFn: () => fetchOTCHistory(currentMarket?.offerId),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,

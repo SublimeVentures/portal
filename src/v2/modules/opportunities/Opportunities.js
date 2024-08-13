@@ -43,20 +43,20 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                     </div>
 
                     <ul className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
-                        {offers.map((offer, idx) => {  
+                        {offers.map((offer, idx) => {
                             if (idx + 1 === offers.length && hasNextPage) {
                                 return (
                                     <li ref={ref} key={offer?.offerId} className="text-red-500">
                                         <SingleOffer offer={offer} />
                                     </li>
-                                )
+                                );
                             }
 
                             return (
                                 <li key={offer?.offerId}>
                                     <SingleOffer offer={offer} />
                                 </li>
-                            )
+                            );
                         })}
                     </ul>
 
@@ -73,4 +73,4 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
             </div>
         </>
     );
-};
+}

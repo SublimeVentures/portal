@@ -110,7 +110,7 @@ async function getOfferList(partnerId, tenantId, { limit = 6, offset = 0, isSett
             error: serializeError(error),
         });
     }
-    
+
     return { count: 0, rows: [] };
 }
 
@@ -326,12 +326,7 @@ async function getOfferWithLimits(offerId) {
 async function getAllocation(userId) {
     try {
         return models.vault.findAll({
-            attributes: [
-                "id",
-                "invested",
-                "locked",
-                [Sequelize.literal("invested - locked"), "allocation"],
-            ],
+            attributes: ["id", "offerId", "invested", "locked", [Sequelize.literal("invested - locked"), "allocation"]],
             where: {
                 userId,
                 invested: {
