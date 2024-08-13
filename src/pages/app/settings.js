@@ -79,10 +79,10 @@ export default function AppSettings({ session }) {
                 <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
                     <ManageWallets walletProps={walletProps} />
                 </div>
+                <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
                 <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
                     <NotificationsSettings />
                 </div>
-                <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
             </div>
         </>
     );
