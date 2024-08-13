@@ -1,26 +1,12 @@
 import Image from "next/image";
 
-// import { Card } from "@/v2/components/ui/card";
-// import DynamicIcon from "@/components/Icon";
-// import { ButtonIconSize } from "@/components/Button/RoundButton";
-// import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-// import { NETWORKS } from "@/lib/utils";
-// import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
-// import { Tooltiper, TooltipType } from "@/components/Tooltip";
-
-// import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
 import TakeOfferModal from "../Modals/TakeOfferModal";
 import CancelOfferModal from "../Modals/CancelOfferModal";
 import { useSession } from "../logic/store";
 import DefinitionItem from "./DefinitionItem";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
-
-// @todo
-import { Button } from "@/v2/components/ui/button";
 import { NETWORKS } from "@/lib/utils";
-import { ButtonIconSize } from "@/components/Button/RoundButton";
-import DynamicIcon from "@/components/Icon";
-
+import { DynamicIconGroup, DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 import { Card } from "@/v2/components/ui/card";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
@@ -40,7 +26,7 @@ export default function SingleOfferCard({ currentMarket, offer }) {
     const ownership = isUserOffer(wallets, maker, account);
 
     return (
-        <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b-[25px]">
+        <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b">
             <div className="h-2 rounded bg-primary-light-gradient" />
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
@@ -64,10 +50,10 @@ export default function SingleOfferCard({ currentMarket, offer }) {
                         <DefinitionItem term="Multiplier">{multiplier.toFixed(2)}x</DefinitionItem>
                         <DefinitionItem term="Price">${price}</DefinitionItem>
                         <DefinitionItem valueOnly term="Chain">
-                            <span className="flex flex-row flex-1 h-full">
-                                <DynamicIcon name={getCurrencySymbolByAddress(currency)} style={ButtonIconSize.hero3} />
-                                <DynamicIcon name={NETWORKS[chainId]} style={ButtonIconSize.hero3} />
-                            </span>
+                            <DynamicIconGroup className="mt-2">
+                                <DynamicIcon name={getCurrencySymbolByAddress(currency)} />
+                                <DynamicIcon name={NETWORKS[chainId]} />
+                            </DynamicIconGroup>
                         </DefinitionItem>
                     </dl>
 
@@ -93,4 +79,4 @@ export default function SingleOfferCard({ currentMarket, offer }) {
             </div>
         </Card>
     );
-}
+};

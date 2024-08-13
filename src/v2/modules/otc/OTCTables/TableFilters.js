@@ -56,7 +56,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                     <>
                         <span className="inline-block whitespace-nowrap">
                             Offers {!isOffersView && "History"}{" "}
-                            <small className="text-3xs 3xl:text-xs align-super">{currentMarket.name}</small>
+                            <small className="text-2xs 3xl:text-xs align-super">{currentMarket.name}</small>
                         </span>
                     </>
                 ) : null}

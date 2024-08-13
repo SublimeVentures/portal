@@ -1,8 +1,8 @@
 import NextImage from "next/image";
 import { forwardRef } from "react";
 import { cn } from "@/lib/cn";
-import USDCIcon from "@/v2/assets/svg/usdc.svg";
-import USDTIcon from "@/v2/assets/svg/usdt.svg";
+import USDCIcon from "@/v2/assets/svg/USDC.svg";
+import USDTIcon from "@/v2/assets/svg/USDT.svg";
 import { SelectSimple as Select, SelectItem as Option } from "@/v2/components/ui/select";
 import { Label as FormLabel } from "@/v2/components/ui/label";
 import { Button as BaseButton } from "@/v2/components/ui/button";

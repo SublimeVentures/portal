@@ -27,7 +27,7 @@ export const DynamicIcon = ({ name, color, size, className, ...props }) => {
     useEffect(() => {
         (async () => {
             try {
-                const icon = (await import(`@/assets/svg/${name}.svg`)).default;
+                const icon = (await import(`@/v2/assets/svg/${name}.svg`)).default;
                 setIcon(() => icon);
             } catch (error) {
                 console.error(`Failed to load icon: ${name}`, error);
@@ -40,6 +40,6 @@ export const DynamicIcon = ({ name, color, size, className, ...props }) => {
     return <Icon className={cn(IconVariants({ color, size, className }))} {...props} />
 };
 
-export const DynamicIconGroup = ({ children }) => {
-    return <div className="flex items-center -space-x-2">{children}</div>
+export const DynamicIconGroup = ({ children, className }) => {
+    return <div className={cn("flex items-center -space-x-2", className)}>{children}</div>
 };

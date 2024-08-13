@@ -1,11 +1,23 @@
 import Image from "next/image";
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/v2/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/v2/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
 import { Input } from "@/v2/components/ui/input";
 import { Button } from "@/v2/components/ui/button";
+import USDCIcon from "@/v2/assets/svg/USDC.svg";
+import USDTIcon from "@/v2/assets/svg/USDT.svg";
+import { cn } from "@/lib/cn"; 
 
-const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`;
+const CURRENCY_ICON = {
+    USDC: USDCIcon,
+    USDT: USDTIcon,
+};
+
+const CurrencyIcon = ({ className, icon: Icon }) => (
+    <span className={cn("inline w-10 h-10 mr-4 rounded shrink-0 bg-gradient-to-b from-[#164062] to-[#0BB0C8] p-1.5", className)}>
+        <Icon />
+    </span>
+);
 
 const OfferField = ({ name, control, handleChange, ...props }) => {
     return (
@@ -65,7 +77,7 @@ const OfferMaxValue = ({ name, control, handleChange }) => {
                 <FormItem className="w-[80px] self-center">
                     <FormControl>
                         <Button
-                            className="pl-10 pr-0 pt-6 pb-0 text-primary hover:enabled:text-white hover:enabled:bg-transparent hover:enabled:bg-transparent bg-transparent border-none"
+                            className="pl-10 pr-0 pt-6 pb-0 text-primary bg-transparent border-none hover:enabled:text-white hover:enabled:bg-transparent"
                             onClick={handleChange}
                         >
                             max
@@ -78,6 +90,10 @@ const OfferMaxValue = ({ name, control, handleChange }) => {
 };
 
 export default function OfferForm({ form, cdn, market, multiplierParsed, getOfferFieldProps }) {
+    const selectedCurrency = getOfferFieldProps("currency").value;
+
+    console.log('selectedCurrency', selectedCurrency)
+    
     return (
         <>
             <Form {...form}>
@@ -109,15 +125,7 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
                     <div className="relative flex items-center">
                         <div className="flex items-center">
                             <OfferField
-                                icon={
-                                    <Image
-                                        src={mockedIcon}
-                                        className="inline w-10 h-10 mr-4 rounded"
-                                        alt="Avatar of selected currency"
-                                        width={40}
-                                        height={40}
-                                    />
-                                }
+                                icon={<CurrencyIcon icon={CURRENCY_ICON[selectedCurrency]} />}
                                 after={<OfferSelect {...getOfferFieldProps("currency")} />}
                                 {...getOfferFieldProps("price")}
                             />

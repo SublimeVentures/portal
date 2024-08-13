@@ -80,7 +80,8 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         },
     });
 
-    const [amount, price] = watch(["amount", "price"]);
+
+    const [amount, price, currency] = watch(["amount", "price", "currency"]);
 
     const calcMulti = useCallback(
         (price_) => setMultiplier(Number(Number(price_) / Number(amount).toFixed(2))),
@@ -262,6 +263,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
                 },
                 currency: {
                     name,
+                    value: currency,
                     control: form.control,
                     handleChange: handleCurrencyChange,
                     placeholder: null,

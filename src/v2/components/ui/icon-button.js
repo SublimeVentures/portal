@@ -19,7 +19,7 @@ const iconButtonVariants = cva(
                 circle: "rounded-full",
             },
             size: {
-                8: "size-8 p-2.5",
+                8: "size-8 p-2",
                 default: "size-10 p-3.5",
             },
         },
