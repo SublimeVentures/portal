@@ -73,7 +73,7 @@ export const Attributes = ({ details, className, grid }) => {
     return (
         <DefinitionList className={className} grid={grid}>
             <Definition title="Invested">{formatCurrency(details.invested)}</Definition>
-            <Definition title="Vested">{formatPercentage(details.vested / 100)}</Definition>
+            <Definition title="Vested">{formatPercentage(details.progress / 100)}</Definition>
             {details.isManaged ? (
                 <Definition title="Performance">
                     {performance === 0 ? "TBA" : formatPercentage(details.performance / 100, true)}
