@@ -23,7 +23,7 @@ export default function SingleMarket({ name, genre, slug, currentMarket }) {
                 },
             }}
             className={cn(
-                "h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09] md:flex-row",
+                "h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover rounded hover:bg-foreground/[0.09] md:flex-row",
                 { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected },
             )}
         >

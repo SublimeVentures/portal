@@ -24,11 +24,11 @@
     }
 
     .table-body-row {
-      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base;
+      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base first:rounded-l last:rounded-r;
     }
 
     .table-data {
-      @apply table-cell py-4 px-2 text-sm font-medium text-foreground text-left before:content-none;
+      @apply table-cell py-4 px-2 text-xs text-foreground text-left before:content-none first:rounded-l last:rounded-r;
     }
   }
 
@@ -48,7 +48,7 @@
     }
 
     .table-data {
-      @apply block px-5 py-1 text-sm text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
+      @apply block px-5 py-1 text-xs text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
     }
   }
 
@@ -134,10 +134,6 @@
   }
 }
 
-.block-scrollbar::-webkit-scrollbar {
-  width: 5px;
-}
-
 ::-webkit-scrollbar-track {
   background: #082030;
   border-radius: 999px;
@@ -162,6 +158,25 @@
 
 ::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
+}
+
+.block-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.page-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.page-scrollbar::-webkit-scrollbar-thumb {
+  border-right: 4px transparent solid;
+  border-top: 32px transparent solid;
+  border-bottom: 32px transparent solid;
+  background-clip: padding-box;
+}
+
+.page-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 input::-webkit-outer-spin-button,

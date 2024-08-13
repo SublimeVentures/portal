@@ -19,19 +19,18 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
 
     const ref = useRef();
+
     useIntersectionObserver(ref, (isIntersecting) => {
-        if (isIntersecting && !isFetchingNextPage && hasNextPage) {
-            fetchNextPage();
-        }
+        if (isIntersecting && !isFetchingNextPage && hasNextPage) fetchNextPage();
     });
 
     return (
         <>
             <Metadata title="Opportunities" />
             <div className="flex items-center justify-center">
-                <div className="w-full p-4 lg:p-16">
+                <div className="w-full">
                     <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center xl:gap-4">
-                        <div className="mb-4 md:mb-0">
+                        <div className="mb-4 2xl:mb-0">
                             <Title subtitle="We bring new industry giants to our community" count={offers.length + 1}>
                                 Funded Projects
                             </Title>
@@ -43,16 +42,26 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                         </div>
                     </div>
 
-                    <ul className="mt-8 grid grid-cols-cards gap-y-6 gap-x-8">
-                        {offers.map((offer) => (
-                            <li key={offer?.offerId}>
-                                <SingleOffer offer={offer} />
-                            </li>
-                        ))}
+                    <ul className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
+                        {offers.map((offer, idx) => {
+                            if (idx + 1 === offers.length && hasNextPage) {
+                                return (
+                                    <li ref={ref} key={offer?.offerId} className="text-red-500">
+                                        <SingleOffer offer={offer} />
+                                    </li>
+                                );
+                            }
+
+                            return (
+                                <li key={offer?.offerId}>
+                                    <SingleOffer offer={offer} />
+                                </li>
+                            );
+                        })}
                     </ul>
 
                     {isFetchingNextPage && (
-                        <ul className="mt-8 grid grid-cols-cards gap-y-6 gap-x-8">
+                        <ul className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
                             {Array.from({ length: 6 }, (_, index) => (
                                 <li key={index} className="min-h-[305px] h-full lg:min-h-[355px]">
                                     <SingleOfferLoader />
@@ -60,12 +69,6 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                             ))}
                         </ul>
                     )}
-
-                    {hasNextPage ? (
-                        <div ref={ref} className="flex justify-center">
-                            {isFetchingNextPage && <p className="mt-12 text-2xl text-foreground">Loading...</p>}
-                        </div>
-                    ) : null}
                 </div>
             </div>
         </>
