@@ -1,23 +1,58 @@
 import { useEffect, useState } from "react";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { fetchNotificationChannels } from "@/fetchers/notifications.fetcher";
+import {
+    fetchNotificationChannels,
+    fetchNotificationPreferences,
+    updateNotificationPreferences,
+} from "@/fetchers/notifications.fetcher";
 import NotificationPreferenceRow from "@/components/App/Settings/Notifications/NotificationPreferenceRow";
 
-export default function NotificationsSettings() {
+/**
+ * @typedef {{ [channelId]: boolean }} ChannelStatus
+ */
+
+/**
+ * @typedef {{ [categoryId]: ChannelStatus }} NotificationPreferences
+ */
+
+/**
+ * @typedef {{ channelId: string; categoryId: string; enabled: boolean; }[]} NotificationPreferenceUpdates
+ */
+
+export default function NotificationsSettings({ userData }) {
+    const [submitState, setSubmitState] = useState("idle");
+    const [disabledNotificationChannels, setDisabledNotificationChannels] = useState([]);
     const [notificationOptions, setNotificationOptions] = useState({
         channels: [],
         categories: [],
     });
 
     const [form, setForm] = useState({
-        email: "",
-        phone: "",
+        email: userData.email ?? "",
+        phone: userData.phoneNumberE164 ?? "",
     });
 
-    const [preferences, setPreferences] = useState({});
+    const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
 
     useEffect(() => {
+        if (!form.email) {
+            setDisabledNotificationChannels((prev) => {
+                if (!prev.includes("email")) {
+                    prev.push("email");
+                }
+                return prev;
+            });
+        }
+        if (!form.phone) {
+            setDisabledNotificationChannels((prev) => {
+                if (!prev.includes("sms")) {
+                    prev.push("sms");
+                }
+                return prev;
+            });
+        }
         fetchNotificationChannels().then(setNotificationOptions);
+        fetchNotificationPreferences().then(setPreferenceMap);
     }, []);
 
     const handleChange = (ev) => {
@@ -31,14 +66,41 @@ export default function NotificationsSettings() {
 
     const handleSubmit = (ev) => {
         ev.preventDefault();
-        const entries = Object.entries(preferences).filter(([_k, val]) => val);
-        console.log(entries);
+        setSubmitState("pending");
+        const prefEntries = Object.entries(preferenceMap);
+
+        /**
+         * @type {NotificationPreferenceUpdates}
+         */
+        const preferenceUpdates = prefEntries.reduce((acc, [categoryId, channels]) => {
+            for (const [channelId, enabled] of Object.entries(channels)) {
+                acc.push({ categoryId, channelId, enabled });
+            }
+            return acc;
+        }, []);
+
+        updateNotificationPreferences(preferenceUpdates)
+            .then(() => {
+                setSubmitState("fulfilled");
+            })
+            .catch((_err) => {
+                setSubmitState("rejected");
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    setSubmitState("idle");
+                }, 1500);
+            });
     };
 
     const handlePreferenceChange = (categoryId) => (channels) => {
-        setPreferences((prev) => {
-            for (const [key, val] of Object.entries(channels)) {
-                prev[`${categoryId}_${key}`] = val;
+        setPreferenceMap((prev) => {
+            const prefEntries = Object.entries(channels);
+            for (const [channelId, enabled] of prefEntries) {
+                if (!prev[categoryId]) {
+                    prev[categoryId] = {};
+                }
+                prev[categoryId][channelId] = enabled;
             }
             return prev;
         });
@@ -70,6 +132,8 @@ export default function NotificationsSettings() {
                         <tbody>
                             {notificationOptions.categories.map((category) => (
                                 <NotificationPreferenceRow
+                                    disabledKeys={disabledNotificationChannels}
+                                    selection={preferenceMap[category.id] ?? {}}
                                     key={category.id}
                                     channels={notificationOptions.channels}
                                     category={category}
@@ -105,7 +169,13 @@ export default function NotificationsSettings() {
                                 className="bg-app-bg py-1 px-2 border-app-success rounded-md"
                             />
                         </div>
-                        <UniButton handler={void 0} size="xs" isWide text="Update" type={ButtonTypes.BASE} />
+                        <UniButton
+                            size="xs"
+                            isWide
+                            text="Update"
+                            type={ButtonTypes.BASE}
+                            isLoading={submitState === "pending"}
+                        />
                     </form>
                 </div>
             </div>

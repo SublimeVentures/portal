@@ -56,7 +56,7 @@ export function UniButton({
                 } else {
                     return (
                         <CitCapGlitchButton
-                            text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${text}`}
+                            text={`${Number(process.env.NEXT_PUBLIC_TENANT) === 6 ? "_" : ""}${text}`}
                             isLarge={isLarge}
                             isDisabled={isDisabled}
                             isLoading={isLoading}

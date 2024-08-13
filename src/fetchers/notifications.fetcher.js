@@ -17,9 +17,21 @@ export const fetchNotificationChannels = async () => {
     }
 };
 
-export const setNotificationPreferences = async (preferences) => {
+export const fetchNotificationPreferences = async () => {
     try {
-        await axiosPrivate.post(API.setNotificationPreferences, preferences);
+        const { data } = await axiosPrivate.get(API.notificationPreferences);
+        return data.preferences;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchNotificationChannels", e });
+        }
+        return {};
+    }
+};
+
+export const updateNotificationPreferences = async (updates) => {
+    try {
+        await axiosPrivate.post(API.notificationPreferences, { updates });
         return true;
     } catch (e) {
         if (e?.status && e.status !== 401) {
