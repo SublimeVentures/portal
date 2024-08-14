@@ -3,24 +3,14 @@ const axios = require("axios");
 const logger = require("../../src/lib/logger");
 const { getUserLinkedWallets } = require("../queries/wallets.query");
 const { authTokenName } = require("../../src/lib/authHelpers");
-
-// async function getAirdropWallets(req) {
-//     const { userId, tenantId } = req;
-//     try {
-//         return await getUserLinkedWallets(userId, tenantId, true);
-//     } catch (error) {
-//         logger.error("getAirdropWallets", { error: serializeError(error) });
-//         return [];
-//     }
-// }
+const { constructError } = require("../utils/index");
 
 async function getUserWallets(user) {
     const { userId, tenantId } = user;
     try {
         return await getUserLinkedWallets(userId, tenantId);
     } catch (error) {
-        logger.error("getUserWallets", { error: serializeError(error) });
-        return [];
+        return constructError("QUERY", error, { isLog: true, methodName: "getUserWallets" });
     }
 }
 
@@ -38,23 +28,18 @@ async function addUserWallet(req) {
 
         return session.data;
     } catch (error) {
-        logger.error("addUserWallet", { error: serializeError(error) });
-        return { ok: false, error: error?.shortMessage };
+        return constructError("QUERY", error, { isLog: true, methodName: "addUserWallet" });
     }
 }
 
 async function removeUserWallet(req) {
     try {
         const token = req.cookies[authTokenName];
-        const session = await axios.post(`${process.env.AUTHER}/session/removeWallet`, {
-            token,
-            address: req.body.address,
-        });
+        const session = await axios.post(`${process.env.AUTHER}/session/removeWallet`, { token, address: req.params.address });
 
         return session.data;
     } catch (error) {
-        logger.error("removeUserWallet", { error: serializeError(error) });
-        return { ok: false, error: error?.shortMessage };
+        return constructError("QUERY", error, { isLog: true, methodName: "removeUserWallet" });
     }
 }
 
@@ -70,7 +55,6 @@ async function refreshStaking(req, address) {
 }
 
 module.exports = {
-    // getAirdropWallets,
     getUserWallets,
     addUserWallet,
     removeUserWallet,

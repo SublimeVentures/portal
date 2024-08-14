@@ -5,7 +5,7 @@ const logger = require("../../src/lib/logger");
 async function getUserLinkedWallets(userId, tenantId) {
     try {
         return models.userWallet.findAll({
-            attributes: ["wallet", "isStaking", "isDelegate", "isHolder", "isAirdrop"],
+            attributes: ["wallet", "chainId", "isStaking", "isDelegate", "isHolder", "isAirdrop"],
             where: {
                 tenantId,
                 userId,

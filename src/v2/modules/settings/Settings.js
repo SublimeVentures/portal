@@ -53,7 +53,7 @@ export default function Settings({ session }) {
     useEffect(() => setActiveTab(isDesktop ? "general" : "staking"), [isDesktop]);
     
     return (
-        <div className="px-4 md:px-16 md:h-[calc(100vh_-_250px)] overflow-y-auto">
+        <div>
             <Tabs className="h-full" value={activeTab} onValueChange={setActiveTab}>
                 <TabsList aria-label="Settings tabs">
                     {tabs.map(tab => (

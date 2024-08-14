@@ -15,5 +15,5 @@ export const AirdropNetworkEnum = Object.freeze({
 });
 
 export const AIRDROP_NETWORKS = Object.freeze({
-    [NetworkEnum.sol]: "solana",
+    [AirdropNetworkEnum.sol]: "solana",
 });

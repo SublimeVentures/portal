@@ -68,9 +68,9 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
             
                 <DialogFooter>
                     {isSuccess ? (
-                      <Button variant="outline" className="md:hidden" onClick={() => setIsOpen(false)}>Close</Button>
+                      <Button variant="outline" onClick={() => setIsOpen(false)}>Close</Button>
                     ) : (
-                      <Button variant="destructive" className="md:hidden" onClick={handleRemoveWallet}>Remove wallet</Button>
+                      <Button variant="destructive" onClick={handleRemoveWallet}>Remove wallet</Button>
                     )}
                 </DialogFooter>
             </DialogContent>

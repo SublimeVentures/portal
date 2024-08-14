@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useNetworkList } from "./useNetworkList";
 import AddWalletForm from "./AddWalletForm";
  
-export default function AddWalletModal({ isOpen, setIsOpen, isMaxWallets, wallets }) {
+export default function AddWalletModal({ isOpen, setIsOpen, disabled, wallets }) {
     const { data: networkList = [], isLoading } = useNetworkList();
     const filteredNetworks = useMemo(() => networkList.filter(n => !n.isSupported), [networkList]);
 
@@ -20,7 +20,7 @@ export default function AddWalletModal({ isOpen, setIsOpen, isMaxWallets, wallet
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" disabled={isMaxWallets} onClick={() => setIsOpen(true)} className="w-full">
+                <Button variant="outline" disabled={disabled} onClick={() => setIsOpen(true)} className="w-full">
                     Add wallet
                 </Button>
             </DialogTrigger>

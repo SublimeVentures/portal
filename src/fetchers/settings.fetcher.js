@@ -6,7 +6,7 @@ import { authTokenName } from "@/lib/authHelpers";
 
 export const fetchUserWallets = async () => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchWallets);
+        const { data } = await axiosPrivate.get(API.settingsWallets);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -19,7 +19,7 @@ export const fetchUserWallets = async () => {
 
 export const fetchUserWalletsSsr = async (token) => {
     try {
-        const { data } = await axiosPublic.get(API.fetchWallets, {
+        const { data } = await axiosPublic.get(API.settingsWallets, {
             headers: {
                 Cookie: `${authTokenName}=${token}`,
             },
@@ -36,7 +36,7 @@ export const fetchUserWalletsSsr = async (token) => {
 
 export const addUserWallet = async (address, network) => {
     try {
-        const { data } = await axiosPrivate.post(`${API.settingsWallet}add`, { address, network });
+        const { data } = await axiosPrivate.post(API.settingsWallets, { address, network });
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
@@ -49,14 +49,16 @@ export const addUserWallet = async (address, network) => {
 
 export const removeUserWallet = async (address) => {
     try {
-        const { data } = await axiosPrivate.post(`${API.settingsWallet}remove`, { address });
-        return data;
+        await axiosPrivate.delete(`${API.settingsWallets}/${address}`);
+        
+        return { ok: true };
     } catch (e) {
         if (e?.status && e.status !== 401) {
             Sentry.captureException({ location: "removeUserWallet", e });
         }
+
+        return { ok: false, error: e.message || "Unknown error" };
     }
-    return {};
 };
 
 export const updateStaking = async (address) => {

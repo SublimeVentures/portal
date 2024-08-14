@@ -50,36 +50,23 @@ export default function AddWalletForm({ wallets, networkList }) {
     }, [schema, clearErrors, setError]);
 
     const handleSubmit = async (values) => {
-        setStatus('loading')
+        setStatus('loading');
 
-        const isNewWallet = wallets.some((el) => el.wallet !== values.address);
-        
-        if (!isNewWallet) {
-            setStatus(FormStatusEnum.ERROR);
-            setError("Wallet already exists");
-            return;
-        };
+        try {
+            const isNewWallet = wallets.some((el) => el.wallet !== values.address);            
+            if (!isNewWallet) throw new Error("Wallet already exists");
 
-        const isSupportedWallet = isAddress(values.address);
-
-        if (isSupportedWallet) {
-            setStatus(FormStatusEnum.ERROR);
-            setError("You have to provide airdrop walet");
-            return;
-        };
-
-        const result = await addUserWallet(values.address, values.network);
-
-        if (result?.ok) {
+            const isSupportedWallet = isAddress(values.address);
+            if (isSupportedWallet) throw new Error("You have to provide airdrop wallet");
+    
+            await addUserWallet(values.address, values.network);
             setStatus(FormStatusEnum.SUCCESS);
             queryClient.invalidateQueries([settingsKeys.wallets]);
-        } else {
-            setErrorMessage(result?.error);
+        } catch (error) {
+            setErrorMessage(error.message ?? "An unknown error occurred");
             setStatus(FormStatusEnum.ERROR);
-        }
-
-        return;
-    }
+        };
+    };
 
     return (
         <>
@@ -132,6 +119,8 @@ export default function AddWalletForm({ wallets, networkList }) {
                         Add Wallet
                     </Button>
                 </form>
+
+                {status === FormStatusEnum.ERROR && <div className="text-red-500 text-center">{errorMessage}</div>}
             </Form>
         </>      
     );
