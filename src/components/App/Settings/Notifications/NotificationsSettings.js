@@ -32,7 +32,7 @@ export default function NotificationsSettings({ session }) {
 
     const [form, setForm] = useState({
         email: session.email ?? "",
-        phone: session.phoneNumberE164 ?? "",
+        phoneNumberE164: session.phoneNumberE164 ?? "",
     });
 
     const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
@@ -56,7 +56,7 @@ export default function NotificationsSettings({ session }) {
         }
         fetchNotificationChannels().then(setNotificationOptions);
         fetchNotificationPreferences().then(setPreferenceMap);
-    }, []);
+    }, [session.email, session.phoneNumberE164]);
 
     const handleChange = (ev) => {
         const { checked, name, value, type } = ev.target;
@@ -132,7 +132,7 @@ export default function NotificationsSettings({ session }) {
                                 name="phone"
                                 type="tel"
                                 pattern="^\+[0-9]{0,15}$"
-                                value={form.phone}
+                                value={form.phoneNumberE164}
                                 onChange={handleChange}
                                 className="bg-app-bg py-1 px-2 border-app-success rounded-md"
                             />

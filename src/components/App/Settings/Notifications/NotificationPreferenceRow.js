@@ -1,17 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Switch from "@/components/Switch";
+import { Checkbox } from "@/components/Checkbox";
+import useFirebase from "@/lib/hooks/useFirebase";
 
 export default function NotificationPreferenceRow({ disabledKeys, selection, category, channels, onChange }) {
     const [chosenChannels, setChosenChannels] = useState(/** @type {Record<string, boolean>} */ selection);
+    const [allDisabledKeys, setAllDisabledKeys] = useState(disabledKeys);
+    const [notificationsToken, setNotificationsToken] = useState(null);
+
+    const { setup } = useFirebase();
+
+    useEffect(() => {
+        setup.then((token) => {
+            setNotificationsToken(token ?? null);
+            if (!token) {
+                setAllDisabledKeys((prev) => {
+                    const updated = [...prev];
+                    if (!updated.includes("push")) {
+                        updated.push("push");
+                    }
+                    return updated;
+                });
+            } else {
+                setAllDisabledKeys((prev) => {
+                    const updated = [...prev];
+                    return updated.filter((chId) => chId !== "push");
+                });
+            }
+        });
+    }, [setup]);
 
     const handleChange = (channelId) => (checked) => {
-        setChosenChannels((prev) => {
-            prev[channelId] = checked;
-            return prev;
-        });
-        onChange(chosenChannels);
+        if (channelId === "push") {
+            setChosenChannels((prev) => {
+                const updated = { ...prev };
+                updated[channelId] = checked ? !!notificationsToken : checked;
+                return updated;
+            });
+        } else {
+            setChosenChannels((prev) => {
+                const updated = { ...prev };
+                updated[channelId] = checked;
+                return updated;
+            });
+        }
     };
+
+    useEffect(() => {
+        onChange(chosenChannels);
+    }, [chosenChannels, onChange]);
 
     return (
         <tr>
@@ -19,13 +56,14 @@ export default function NotificationPreferenceRow({ disabledKeys, selection, cat
                 {category.name.toUpperCase()}
             </td>
             {channels.map((channel) => {
-                const checked = chosenChannels[channel.id] ? chosenChannels[channel.id] : false;
+                const checked = chosenChannels[channel.id] ?? false;
                 return (
-                    <td key={`${category.id}|${channel.id}`} className="text-center">
-                        <Switch
+                    <td key={`${category.id}_${channel.id}`} className="text-center">
+                        <Checkbox
+                            className="mx-auto sm:my-4"
                             checked={checked}
-                            onChange={handleChange(channel.id)}
-                            disabled={disabledKeys.includes(channel.id)}
+                            onCheckedChange={handleChange(channel.id)}
+                            disabled={allDisabledKeys.includes(channel.id)}
                         />
                     </td>
                 );

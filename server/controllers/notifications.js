@@ -1,6 +1,8 @@
 const { z } = require("zod");
+const axios = require("axios");
 const queries = require("../queries/notifications.query");
 const logger = require("../services/logger");
+const { tenantIndex } = require("../../src/lib/utils");
 
 async function getNotificationChannels(req, res) {
     const result = await queries.getNotificationChannels();
@@ -53,8 +55,42 @@ async function setNotificationPreferences(req, res) {
     }
 }
 
+async function subscribeToTopic(req, res) {
+    try {
+        const schema = z.object({
+            categoryId: z.string(),
+            token: z.string(),
+        });
+        const { categoryId, token } = schema.parse(req.body);
+        return axios
+            .post(process.env.MESSENGER_PUSH_SUBSCRIBE_URL, {
+                categoryId,
+                token,
+                tenantId: tenantIndex,
+            })
+            .then(({ data }) => {
+                return res.json({
+                    ok: data.ok,
+                    message: data.message ?? data.error,
+                });
+            })
+            .catch((err) => {
+                return res.status(400).json({
+                    ok: false,
+                    error: err.message,
+                });
+            });
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            error: err.message,
+        });
+    }
+}
+
 module.exports = {
     getNotificationChannels,
     getNotificationPreferences,
     setNotificationPreferences,
+    subscribeToTopic,
 };

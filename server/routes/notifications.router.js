@@ -1,21 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {
-    getNotificationChannels,
-    getNotificationPreferences,
-    setNotificationPreferences,
-} = require("../controllers/notifications");
+const notificationsController = require("../controllers/notifications");
 
-router.get("/channels", async (req, res) => {
-    return getNotificationChannels(req, res);
-});
+router.get("/channels", notificationsController.getNotificationChannels);
 
-router.get("/preferences", async (req, res) => {
-    return getNotificationPreferences(req, res);
-});
+router.get("/preferences", notificationsController.getNotificationPreferences);
 
-router.post("/preferences", async (req, res) => {
-    return setNotificationPreferences(req, res);
-});
+router.post("/preferences", notificationsController.setNotificationPreferences);
+
+router.post("/subscription", notificationsController.subscribeToTopic);
 
 module.exports = { router };

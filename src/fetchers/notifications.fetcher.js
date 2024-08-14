@@ -23,7 +23,7 @@ export const fetchNotificationPreferences = async () => {
         return data.preferences;
     } catch (e) {
         if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchNotificationChannels", e });
+            Sentry.captureException({ location: "fetchNotificationPreferences", e });
         }
         return {};
     }
@@ -35,8 +35,26 @@ export const updateNotificationPreferences = async (updates) => {
         return true;
     } catch (e) {
         if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchNotificationChannels", e });
+            Sentry.captureException({ location: "updateNotificationPreferences", e });
         }
         return false;
+    }
+};
+
+export const subscribeToPushCategory = async (categoryId, token) => {
+    try {
+        const { data } = await axiosPrivate.post(API.subscribeToPush, {
+            categoryId,
+            token,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "subscribeToPushTopic", e });
+        }
+        return {
+            ok: false,
+            error: e.message,
+        };
     }
 };
