@@ -80,7 +80,6 @@ const chainColumn = columnHelper.accessor("chain", {
     header: "Chain",
     cell: (info) => {
         const { getCurrencySymbolByAddress } = useEnvironmentContext();
-
         return (
             <DynamicIconGroup>
                 <DynamicIcon name={getCurrencySymbolByAddress(info.row.original.currency)} />
@@ -97,7 +96,7 @@ const marketColumn = columnHelper.accessor("name", {
         const slug = info.row.original.slug;
 
         return (
-            <span className="flex items-center gap-2 text-base font-normal">
+            <span className="flex items-center gap-2">
                 <Image src={`${cdn}/research/${slug}/icon.jpg`} className="rounded" alt={slug} width={30} height={30} />
                 {info.getValue()}
             </span>

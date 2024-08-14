@@ -16,16 +16,16 @@ import {
     SheetTrigger,
     SheetClose,
 } from "@/v2/components/ui/sheet";
+import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
+import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
-
-const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`;
 
 export default function TakeOfferModal({ offerDetails, className }) {
     const { currentMarket } = useMarket();
@@ -107,14 +107,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">
-                                            {/* <DynamicIcon name={NETWORKS[chainDesired?.id]} style={ButtonIconSize.hero4} /> */}
-                                            <Image
-                                                src={mockedIcon}
-                                                className="inline mx-2 rounded-full"
-                                                alt="Cover image of selected blockchain"
-                                                width={20}
-                                                height={20}
-                                            />
+                                            <DynamicIcon className="size-6 inline mx-2 rounded-full" name={NETWORKS[chainDesired?.id]} />
                                             <span>{chainDesired?.name}</span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
@@ -133,14 +126,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                             </h3>
                             <div className="py-4 px-8 flex justify-between items-center bg-foreground/[.1]">
                                 <div className="flex items-center">
-                                    {/* <DynamicIcon name={getCurrencySymbolByAddress(offerDetails.currency)} style={"w-6"} /> */}
-                                    <Image
-                                        src={mockedIcon}
-                                        className="inline mx-2 rounded-full"
-                                        alt="Cover image of ${name} token"
-                                        width={35}
-                                        height={35}
-                                    />
+                                    <DynamicIcon className="mx-2 size-8 inline text-white rounded-full" name={getCurrencySymbolByAddress(offerDetails.currency)} />
                                     <dl className="flex flex-col gap-2">
                                         <DefinitionItem term="You Pay">${totalPayment}</DefinitionItem>
                                     </dl>

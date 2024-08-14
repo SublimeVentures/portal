@@ -6,7 +6,7 @@ const DynamicIcon = ({ name, style, color }) => {
     useEffect(() => {
         (async () => {
             try {
-                const icon = (await import(`@/assets/svg/${name}.svg`)).default;
+                const icon = (await import(`@/v2/assets/svg/${name}.svg`)).default;
                 setIcon(() => icon);
             } catch (error) {
                 console.error(`Failed to load icon: ${name}`, error);

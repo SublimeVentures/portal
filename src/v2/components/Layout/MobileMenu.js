@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import debounce from "lodash.debounce";
@@ -28,6 +29,7 @@ const renderLogo = (componentName) => {
 };
 
 export default function MobileMenu({ isBlockedAlert }) {
+    const router = useRouter();
     const { environmentCleanup } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
 
@@ -45,6 +47,16 @@ export default function MobileMenu({ isBlockedAlert }) {
         window.addEventListener("resize", debounce(handleResize, 500));
         return () => window.removeEventListener("resize", debounce(handleResize, 500));
     }, [isMobileMenuOpen]);
+
+    useEffect(() => {
+        const handleRouteChange = () => setIsMobileMenuOpen(false);
+
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [router.events]); 
 
     const handleExternalLinkOpen = (evt, path) => {
         evt.preventDefault();

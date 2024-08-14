@@ -13,9 +13,9 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
     });
 
     return (
-        <Card variant="none" className="px-4 flex flex-col h-full overflow-hidden bg-settings-gradient">
-            <div className="py-4 flex flex-col h-full block-scrollbar overflow-y-auto">
-                <ol className="flex flex-col grow gap-4 overflow-y-auto block-scrollbar overflow-x-hidden">
+        <Card variant="none" className="px-2 flex flex-col h-full overflow-hidden bg-settings-gradient">
+            <div className="py-4 flex flex-col h-full overflow-y-auto">
+                <ol className="px-2 flex flex-col grow gap-4 overflow-x-hidden">
                     {data.map((notification, idx) => {
                         if (idx + 1 === data.length && hasNextPage) {
                             return (

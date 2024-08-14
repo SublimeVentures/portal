@@ -39,7 +39,7 @@ export default function Overview() {
                         <div className="w-full">
                             <h3 className="text-base font-medium 3xl:text-3xl text-foreground leading-none">
                                 {name}
-                                <small className="ml-1.5 font-light align-super text-3xs 3xl:text-base">
+                                <small className="ml-1.5 font-light align-super text-2xs 3xl:text-base">
                                     ${ticker}
                                 </small>
                             </h3>

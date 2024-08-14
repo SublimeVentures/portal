@@ -13,7 +13,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
     const { cdn } = useEnvironmentContext();
 
     return (
-        <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b-[25px]">
+        <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b">
             <div className="h-2 rounded bg-primary-light-gradient" />
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">

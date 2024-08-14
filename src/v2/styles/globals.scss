@@ -20,7 +20,7 @@
     }
     
     .table-head-cell {
-      @apply pt-4 pl-2 pr-5 text-base font-medium text-foreground normal-case text-left;
+      @apply px-6 pr-5 text-base font-medium text-foreground normal-case text-left;
     }
 
     .table-body-row {
@@ -28,7 +28,7 @@
     }
 
     .table-data {
-      @apply table-cell py-4 px-2 text-xs text-foreground text-left before:content-none first:rounded-l last:rounded-r;
+      @apply table-cell py-4 px-6 text-xs text-foreground text-left before:content-none first:rounded-l last:rounded-r;
     }
   }
 

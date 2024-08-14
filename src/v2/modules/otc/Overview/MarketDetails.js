@@ -3,10 +3,10 @@ import { cn } from "@/lib/cn";
 
 export const DescriptionListHelper = ({ term, children }) => (
     <>
-        <dt className="mx-auto w-16 text-xs 3xl:text-base font-light text-foreground/[.5] leading-none whitespace-nowrap">
+        <dt className="mx-auto w-16 text-sm 3xl:text-base font-light text-foreground/[.5] leading-none whitespace-nowrap">
             {term}
         </dt>
-        <dd className="mx-auto w-16 text-xs 3xl:text-base font-medium 3xl:font-light text-foreground leading-none whitespace-nowrap">
+        <dd className="mx-auto w-16 text-sm 3xl:text-base font-medium 3xl:font-light text-foreground leading-none whitespace-nowrap">
             {children}
         </dd>
     </>

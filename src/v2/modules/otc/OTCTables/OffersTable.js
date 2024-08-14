@@ -92,7 +92,7 @@ export default function OffersTable() {
                 handleToggleFilter={handleToggleFilter}
                 handleFilterRemove={handleFilterRemove}
             />
-            <div className="hidden overflow-hidden md:block">
+            <div className="hidden grow overflow-hidden md:block">
                 <Table table={table} isLoading={isLoading} colCount={columns.length} />
             </div>
 
