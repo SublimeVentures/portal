@@ -29,8 +29,8 @@ const EmptyInvestmentsEnhanced = () => {
             border="none"
             className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat"
         >
-            <CardTitle className="text-md md:text-4xl text-center">No investments found</CardTitle>
-            <CardDescription className="max-w-2xl text-2xl md:text-11xl font-semibold text-center">
+            <CardTitle className="text-sm md:text-base text-center font-normal">No investments found</CardTitle>
+            <CardDescription className="max-w-2xl text-lg md:text-3xl font-semibold text-center">
                 Explore elite investment avenues curated for the astute investor
             </CardDescription>
             <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
@@ -43,17 +43,17 @@ const EmptyInvestmentsEnhanced = () => {
                 <Link
                     key={offer.slug}
                     href={`/app/offers/${offer.slug}`}
-                    className="p-3.5 flex flex-col items-center gap-4 bg-navy-800 rounded collap:flex-row collap:gap-12 group/button"
+                    className="p-3.5 flex flex-row md:flex-col w-full md:w-auto items-center gap-4 bg-navy-800 rounded collap:flex-row collap:gap-12 group/button"
                 >
                     <AvatarRoot variant="block" className="bg-black size-[72px]">
                         <AvatarImage src={`${cdn}/research/${offer.slug}/icon.jpg`} />
                         <AvatarFallback>CN</AvatarFallback>
                     </AvatarRoot>
-                    <div className="text-center collap:text-start">
-                        <h4 className="text-3xl font-medium text-foreground">{offer.ticker}</h4>
-                        <p className="text-md font-light text-foreground">{offer.name}</p>
+                    <div className="text-left grow">
+                        <h4 className="text-lg font-medium text-foreground">{offer.ticker}</h4>
+                        <p className="text-sm font-light text-foreground">{offer.name}</p>
                     </div>
-                    <p className="max-w-[20ch] text-2xl text-foreground italic text-center collap:text-left">
+                    <p className="max-w-[20ch] text-base text-foreground italic text-center md:text-left hidden md:block">
                         Latest exclusive investment opportunity
                     </p>
                     <IconButton
