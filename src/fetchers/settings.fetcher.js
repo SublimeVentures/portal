@@ -7,7 +7,7 @@ import { handleError } from "@/v2/lib/error";
 
 export const fetchUserWallets = async () => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchWallets);
+        const { data } = await axiosPrivate.get(API.settingsWallets);
         return data;
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchUserWallets", enableSentry: true });
@@ -16,7 +16,7 @@ export const fetchUserWallets = async () => {
 
 export const fetchUserWalletsSsr = async (token) => {
     try {
-        const { data } = await axiosPublic.get(API.fetchWallets, {
+        const { data } = await axiosPublic.get(API.settingsWallets, {
             headers: {
                 Cookie: `${authTokenName}=${token}`,
             },
@@ -27,19 +27,19 @@ export const fetchUserWalletsSsr = async (token) => {
     }
 };
 
-export const addUserWallet = async (signature, address, network) => {
+export const addUserWallet = async (address, network) => {
     try {
-        const { data } = await axiosPrivate.post(`${API.settingsWallet}add`, { signature, address, network });
+        const { data } = await axiosPrivate.post(API.settingsWallets, { address, network });
         return data;
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "addUserWallet", enableSentry: true });
     }
 };
 
-export const removeUserWallet = async (signature) => {
+export const removeUserWallet = async (address) => {
     try {
-        const { data } = await axiosPrivate.post(`${API.settingsWallet}remove`, { signature });
-        return data;
+        await axiosPrivate.delete(`${API.settingsWallets}/${address}`);
+        return { ok: true };
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "removeUserWallet", enableSentry: true });
     }

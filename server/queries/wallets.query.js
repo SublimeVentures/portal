@@ -5,7 +5,7 @@ const logger = require("../../src/lib/logger");
 async function getUserLinkedWallets(userId, tenantId) {
     try {
         return models.userWallet.findAll({
-            attributes: ["wallet", "isStaking", "isDelegate", "isHolder"],
+            attributes: ["wallet", "chainId", "isStaking", "isDelegate", "isHolder", "isAirdrop"],
             where: {
                 tenantId,
                 userId,
@@ -14,7 +14,7 @@ async function getUserLinkedWallets(userId, tenantId) {
             raw: true,
         });
     } catch (error) {
-        logger.error("QUERY :: [getOffersPublic]", {
+        logger.error("QUERY :: [getUserLinkedWallets]", {
             error: serializeError(error),
         });
     }

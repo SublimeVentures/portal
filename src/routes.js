@@ -20,8 +20,7 @@ const PAGE = {
 };
 
 export const API = {
-    fetchWallets: "/api/settings/wallets",
-    settingsWallet: "/api/settings/wallets/",
+    settingsWallets: "/api/settings/wallets",
     settingsStake: "/api/settings/stake",
     fetchVault: "/api/vault",
     fetchPayout: "/api/payout/",

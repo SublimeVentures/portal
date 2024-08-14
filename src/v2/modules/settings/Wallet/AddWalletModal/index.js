@@ -1,33 +1,31 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
 import { Button } from "@/v2/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/v2/components/ui/dialog";
 import { useNetworkList } from "./useNetworkList";
 import AddWalletForm from "./AddWalletForm";
  
-export default function AddWalletModal({ isMaxWallets, wallets }) {
-    const [open, setOpen] = useState(false);
-
+export default function AddWalletModal({ isOpen, setIsOpen, disabled, wallets }) {
     const { data: networkList = [], isLoading } = useNetworkList();
-    const filteredNetwors = useMemo(() => networkList.filter(n => !n.isSupported), [networkList]);
+    const filteredNetworks = useMemo(() => networkList.filter(n => !n.isSupported), [networkList]);
 
     if (isLoading) {
         return <div>loading...</div>
     }
     
-    if (!filteredNetwors.length) {
+    if (!filteredNetworks.length) {
         return null;
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" disabled={isMaxWallets}  onClick={() => setOpen(true)} className="w-full">
+                <Button variant="outline" disabled={disabled} onClick={() => setIsOpen(true)} className="w-full">
                     Add wallet
                 </Button>
             </DialogTrigger>
 
-            <DialogContent handleClose={() => setOpen(false)}>
+            <DialogContent handleClose={() => setIsOpen(false)}>
                 <DialogHeader>
                     <div className="h-8 w-8 flex items-center justify-center bg-destructive/[.25] text-destructive rounded-full md:hidden">!</div>
                     <DialogTitle>Add Wallet</DialogTitle>
@@ -39,10 +37,10 @@ export default function AddWalletModal({ isMaxWallets, wallets }) {
                     <p className="ml-2 text-md font-light text-destructive text-center md:text-lg md:text-left">Wallet can be assigned only to one account.</p>
                 </div>
 
-                <AddWalletForm networkList={filteredNetwors} wallets={wallets} />
+                <AddWalletForm networkList={filteredNetworks} wallets={wallets} />
             
                 <DialogFooter>
-                    <Button variant="secondary" className="md:hidden" onClick={() => setOpen(false)}>Close</Button>
+                    <Button variant="secondary" className="md:hidden" onClick={() => setIsOpen(false)}>Close</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
