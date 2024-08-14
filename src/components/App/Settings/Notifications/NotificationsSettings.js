@@ -6,6 +6,8 @@ import {
     updateNotificationPreferences,
 } from "@/fetchers/notifications.fetcher";
 import NotificationPreferenceRow from "@/components/App/Settings/Notifications/NotificationPreferenceRow";
+import GenericModal from "@/components/Modal/GenericModal";
+import { updateUser } from "@/fetchers/auth.fetcher";
 
 /**
  * @typedef {{ [channelId]: boolean }} ChannelStatus
@@ -19,8 +21,9 @@ import NotificationPreferenceRow from "@/components/App/Settings/Notifications/N
  * @typedef {{ channelId: string; categoryId: string; enabled: boolean; }[]} NotificationPreferenceUpdates
  */
 
-export default function NotificationsSettings({ userData }) {
-    const [submitState, setSubmitState] = useState("idle");
+export default function NotificationsSettings({ session }) {
+    const [successDialog, setSuccessDialog] = useState(false);
+    const [errorDialog, setErrorDialog] = useState(false);
     const [disabledNotificationChannels, setDisabledNotificationChannels] = useState([]);
     const [notificationOptions, setNotificationOptions] = useState({
         channels: [],
@@ -28,14 +31,14 @@ export default function NotificationsSettings({ userData }) {
     });
 
     const [form, setForm] = useState({
-        email: userData.email ?? "",
-        phone: userData.phoneNumberE164 ?? "",
+        email: session.email ?? "",
+        phone: session.phoneNumberE164 ?? "",
     });
 
     const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
 
     useEffect(() => {
-        if (!form.email) {
+        if (!session.email) {
             setDisabledNotificationChannels((prev) => {
                 if (!prev.includes("email")) {
                     prev.push("email");
@@ -43,7 +46,7 @@ export default function NotificationsSettings({ userData }) {
                 return prev;
             });
         }
-        if (!form.phone) {
+        if (!session.phoneNumberE164) {
             setDisabledNotificationChannels((prev) => {
                 if (!prev.includes("sms")) {
                     prev.push("sms");
@@ -66,7 +69,6 @@ export default function NotificationsSettings({ userData }) {
 
     const handleSubmit = (ev) => {
         ev.preventDefault();
-        setSubmitState("pending");
         const prefEntries = Object.entries(preferenceMap);
 
         /**
@@ -79,17 +81,12 @@ export default function NotificationsSettings({ userData }) {
             return acc;
         }, []);
 
-        updateNotificationPreferences(preferenceUpdates)
+        Promise.all([updateNotificationPreferences(preferenceUpdates), updateUser(form)])
             .then(() => {
-                setSubmitState("fulfilled");
+                setSuccessDialog(true);
             })
-            .catch((_err) => {
-                setSubmitState("rejected");
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    setSubmitState("idle");
-                }, 1500);
+            .catch(() => {
+                setErrorDialog(true);
             });
     };
 
@@ -108,9 +105,42 @@ export default function NotificationsSettings({ userData }) {
 
     return (
         <div className="bordered-container boxshadow relative offerWrap flex flex-1 max-w-[600px]">
-            <div className="relative bg-navy-accent flex flex-1 flex-col items-stretch">
+            <form onSubmit={handleSubmit} className="relative bg-navy-accent flex flex-1 flex-col items-stretch">
                 <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
                     <div className="flex flex-1 font-bold">NOTIFICATIONS</div>
+                </div>
+                <div className="flex w-full flex-row ml-auto p-5 mt-auto">
+                    <div className="block basis-full flex flex-col gap-5">
+                        <div className="flex flex-col gap-1">
+                            <label htmlFor="email">Email address for notifications</label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                className="bg-app-bg py-1 px-2 border-app-success rounded-md"
+                            />
+                            {!session.email && (
+                                <small className="text-app-error">Required to enable the email notifications</small>
+                            )}
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label htmlFor="phone">Phone with country code</label>
+                            <input
+                                id="phone"
+                                name="phone"
+                                type="tel"
+                                pattern="^\+[0-9]{0,15}$"
+                                value={form.phone}
+                                onChange={handleChange}
+                                className="bg-app-bg py-1 px-2 border-app-success rounded-md"
+                            />
+                            {!session.phoneNumberE164 && (
+                                <small className="text-app-error">Required to enable the SMS notifications</small>
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <div className="border-b border-b-navy-accent pb-4">
                     <table>
@@ -143,42 +173,22 @@ export default function NotificationsSettings({ userData }) {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex w-full flex-row ml-auto p-5 mt-auto">
-                    <form onSubmit={handleSubmit} className="block basis-full flex flex-col gap-5">
-                        <h3 className="font-bold uppercase text-xl">Settings</h3>
-                        <div className="flex flex-col gap-1">
-                            <label htmlFor="email">Email address for notifications</label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                value={form.email}
-                                onChange={handleChange}
-                                className="bg-app-bg py-1 px-2 border-app-success rounded-md"
-                            />
-                        </div>
-                        <div className="flex flex-col gap-1">
-                            <label htmlFor="phone">Phone with country code</label>
-                            <input
-                                id="phone"
-                                name="phone"
-                                type="tel"
-                                pattern="^\+[0-9]{0,15}$"
-                                value={form.phone}
-                                onChange={handleChange}
-                                className="bg-app-bg py-1 px-2 border-app-success rounded-md"
-                            />
-                        </div>
-                        <UniButton
-                            size="xs"
-                            isWide
-                            text="Update"
-                            type={ButtonTypes.BASE}
-                            isLoading={submitState === "pending"}
-                        />
-                    </form>
+                <div className="mb-8">
+                    <UniButton size="xs" isWide text="Update" type={ButtonTypes.BASE} />
                 </div>
-            </div>
+            </form>
+            <GenericModal
+                isOpen={successDialog}
+                title={<span className="text-app-success">Success</span>}
+                content="Your notification preferences and settings has been saved."
+                closeModal={() => setSuccessDialog(false)}
+            />
+            <GenericModal
+                isOpen={errorDialog}
+                title={<span className="text-app-error">Error</span>}
+                content="There was an error while saving the settings. Please try again later."
+                closeModal={() => setErrorDialog(false)}
+            />
         </div>
     );
 }

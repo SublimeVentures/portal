@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Switch from "@/components/Switch";
 
-export default function NotificationPreferenceRow({ selection, category, channels, onChange }) {
+export default function NotificationPreferenceRow({ disabledKeys, selection, category, channels, onChange }) {
     const [chosenChannels, setChosenChannels] = useState(/** @type {Record<string, boolean>} */ selection);
 
     const handleChange = (channelId) => (checked) => {
@@ -21,8 +21,12 @@ export default function NotificationPreferenceRow({ selection, category, channel
             {channels.map((channel) => {
                 const checked = chosenChannels[channel.id] ? chosenChannels[channel.id] : false;
                 return (
-                    <td key={`${category}|${channel.id}`} className="text-center">
-                        <Switch checked={checked} onChange={handleChange(channel.id)} />
+                    <td key={`${category.id}|${channel.id}`} className="text-center">
+                        <Switch
+                            checked={checked}
+                            onChange={handleChange(channel.id)}
+                            disabled={disabledKeys.includes(channel.id)}
+                        />
                     </td>
                 );
             })}
@@ -38,4 +42,5 @@ NotificationPreferenceRow.propTypes = {
         name: PropTypes.string.isRequired,
     }),
     selection: PropTypes.object,
+    disabledKeys: PropTypes.arrayOf(PropTypes.string),
 };

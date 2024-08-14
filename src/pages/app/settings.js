@@ -10,6 +10,7 @@ import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetch
 import ManageWallets from "@/components/App/Settings/ManageWallets";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import NotificationsSettings from "@/components/App/Settings/Notifications/NotificationsSettings";
+import { fetchUser } from "@/fetchers/auth.fetcher";
 
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });
 const StakeNeoTokyo = dynamic(() => import("@/components/App/Settings/NeoTokyoStaking"), { ssr: true });
@@ -46,6 +47,13 @@ export default function AppSettings({ session }) {
     const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
     const userId = session?.userId;
 
+    const {
+        data: { user },
+    } = useQuery({
+        queryKey: ["fetchUser", userId],
+        queryFn: () => fetchUser(),
+    });
+
     const { data: userWallets, refetch: refetchUserWallets } = useQuery({
         queryKey: ["userWallets", userId],
         queryFn: () => fetchUserWallets(),
@@ -81,7 +89,7 @@ export default function AppSettings({ session }) {
                 </div>
                 <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
                 <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
-                    <NotificationsSettings />
+                    <NotificationsSettings session={user} />
                 </div>
             </div>
         </>
@@ -95,6 +103,11 @@ export const getServerSideProps = async ({ req, res }) => {
         await queryClient.prefetchQuery({
             queryKey: ["userWallets", userId],
             queryFn: () => fetchUserWalletsSsr(token),
+        });
+
+        await queryClient.prefetchQuery({
+            queryKey: ["fetchUser", userId],
+            queryFn: () => fetchUser({ token }),
         });
 
         return {
