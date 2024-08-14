@@ -1,17 +1,17 @@
+import useStakingSettings from "./useStakingSettings";
+import StakingDetails from "./StakingDetails";
+import StakingActions from "./StakingActions";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { Card, CardTitle } from "@/v2/components/ui/card";
 import { Badge } from "@/v2/components/ui/badge";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
-import useStakingSettings from "./useStakingSettings";
-import StakingDetails from "./StakingDetails";
-import StakingActions from "./StakingActions";
 
 export default function Staking({ session }) {
     const { currencyStaking, activeCurrencyStaking, account } = useEnvironmentContext();
     const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
     // const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
 
-    const { staked, unstake, ...rest } = useStakingSettings({ session, account })
+    const { staked, unstake, ...rest } = useStakingSettings({ session, account });
     const isNew = true;
     const isElite = session.isElite;
 
@@ -22,7 +22,9 @@ export default function Staking({ session }) {
 
                 <div className="flex flex-col justify-center w-full gap-4">
                     <div className="flex items-center gap-4 md:hidden">
-                        <CardTitle className="text-2xl font-medium text-foreground leading-10">Staking</CardTitle>
+                        <CardTitle className="text-base font-normal md:text-lg md:font-medium text-foreground leading-10">
+                            Staking
+                        </CardTitle>
                         {isNew ? <Badge variant="warning">New</Badge> : null}
                     </div>
 
@@ -43,26 +45,31 @@ export default function Staking({ session }) {
                                 </dl>
                                 <dl className="flex gap-2">
                                     <DefinitionItem className="font-bold" term="Season:">
-                                        <span className="font-light">{isElite ? "Season 1 - Elite" : session.isS1 ? "Season 1" : "Season 2"}</span>
+                                        <span className="font-light">
+                                            {isElite ? "Season 1 - Elite" : session.isS1 ? "Season 1" : "Season 2"}
+                                        </span>
                                     </DefinitionItem>
                                 </dl>
                             </div>
                         </div>
-                        <div className='hidden ml-auto md:block'>
+                        <div className="hidden ml-auto md:block">
                             {stakingEnabled && <StakingActions staked={staked} unstake={unstake} />}
                         </div>
                     </div>
 
-                    {stakingEnabled 
-                        ? <StakingDetails session={session} stakingDetails={{ staked, unstake, ...rest }} />
-                        : <div className="mmb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-foreground font-medium bg-foreground/[.02] text-center rounded">Staking available soon</div>
-                    }
+                    {stakingEnabled ? (
+                        <StakingDetails session={session} stakingDetails={{ staked, unstake, ...rest }} />
+                    ) : (
+                        <div className="mb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-foreground font-medium bg-foreground/[.02] text-center rounded">
+                            Staking available soon
+                        </div>
+                    )}
 
-                    <div className=' md:hidden'>
+                    <div className=" md:hidden">
                         {stakingEnabled && <StakingActions staked={staked} unstake={unstake} />}
                     </div>
                 </div>
             </div>
         </Card>
     );
-};
+}

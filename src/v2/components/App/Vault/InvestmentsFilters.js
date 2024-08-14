@@ -50,7 +50,8 @@ export default function InvestmentsList({ investments, views, query, onChange, c
     return (
         <Header
             className={className}
-            title={`My Investments (${investments.length + 1})`}
+            title="My Investments"
+            count={investments.length + 1}
             affix={<ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />}
         >
             <div className="flex items-center flex-wrap gap-2 md:gap-4">

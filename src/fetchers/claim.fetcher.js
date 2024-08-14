@@ -1,8 +1,7 @@
-import * as Sentry from "@sentry/nextjs";
+import ErrorType from "../../shared/enum/errorType.enum";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
-import { authTokenName } from "@/lib/authHelpers";
-import { axiosPublic } from "@/lib/axios/axiosPublic";
+import { handleError } from "@/v2/lib/error";
 
 export const getSignature = async (claimId, wallet) => {
     try {
@@ -11,10 +10,7 @@ export const getSignature = async (claimId, wallet) => {
             wallet,
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "getSignature", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "getSignature", enableSentry: true });
     }
-    return {};
 };

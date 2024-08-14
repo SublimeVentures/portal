@@ -22,4 +22,4 @@ export default function CardSkeleton() {
             </div>
         </Card>
     );
-};
+}

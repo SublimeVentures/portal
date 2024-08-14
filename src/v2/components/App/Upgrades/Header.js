@@ -1,15 +1,21 @@
 import { UpgradeBanner } from "@/v2/components/App/Vault";
 import { cn } from "@/lib/cn";
+import Title from "@/v2/modules/opportunities/Title";
 
-export default function UpgradesHeader({ title, children, affix, className }) {
+export default function UpgradesHeader({ title, children, affix, className, count }) {
     return (
-        <header className={cn("flex flex-col gap-4 md:flex-row md:items-center md:gap-5", className)}>
+        <header
+            className={cn(
+                "flex flex-col gap-7 3xl:gap-4 md:flex-row md:items-center md:gap-5 mt-7 3xl:mt-0",
+                className,
+            )}
+        >
             <div className="flex items-center justify-between gap-4">
-                <h3 className="text-2xl font-bold text-foreground lg:font-normal">{title}</h3>
+                <Title count={count}>{title}</Title>
                 {affix}
             </div>
             {children}
-            <UpgradeBanner className="hidden ml-auto 2xl:block" />
+            <UpgradeBanner className="w-full md:w-auto md:ml-auto" variant="vertical" />
         </header>
     );
 }

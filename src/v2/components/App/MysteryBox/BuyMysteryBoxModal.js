@@ -28,7 +28,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
 
     const { account, activeDiamond, network, getCurrencyStore } = useEnvironmentContext();
-    const [transactionSuccessful, setTransactionSuccessful] = useState(true);
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencyStore();
@@ -90,12 +90,16 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                     et dolore magna aliqua.
                 </Success.Description>
                 <Success.Article>
-                    <Success.Image src="/img/icon-chest.webp" alt={order.name} />
-                    <div className="grow">
-                        <h1 className="text-2xl">{order.name}</h1>
-                        <span className="text-md">Mystery Box</span>
+                    <div className="flex items-center gap-5 grow w-full md:w-auto">
+                        <Success.Image src="/img/icon-chest.webp" alt={order.name} />
+                        <div className="grow">
+                            <h1 className="text-sm font-medium md:text-xl">{order.name}</h1>
+                            <span className="text-xs font-light md:text-sm">Mystery Box</span>
+                        </div>
                     </div>
-                    <Button onClick={closeModal}>Check inventory</Button>
+                    <Button className="w-full md:w-auto" onClick={closeModal}>
+                        Check inventory
+                    </Button>
                 </Success.Article>
                 <Success.Footer>You can find your upgrade in your inventory</Success.Footer>
             </Success.Content>
@@ -110,7 +114,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                     <Title className="text-primary">{order.name}</Title>
                     <Description>{order.description}</Description>
                     <Grid>
-                        <div>
+                        <div className="col-span-2">
                             <Label>Quantity</Label>
                             <Input
                                 type="number"
@@ -123,7 +127,6 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                                 size="sm"
                             />
                         </div>
-                        <div></div>
                         <div>
                             <Label>Select token</Label>
                             <SelectCurrency

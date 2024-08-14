@@ -11,7 +11,7 @@ module.exports = {
                 "app-error": "#b92551",
             },
             fontFamily: {
-                body: ["Montserrat", "sans-serif"],
+                // body: ["Montserrat", "sans-serif"],
                 accent: ["Work Sans", "sans-serif"],
             },
             fontSize: {

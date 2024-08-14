@@ -23,7 +23,7 @@ function PayoutsPage() {
     );
 }
 
-PayoutsPage.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+PayoutsPage.getLayout = (page) => <AppLayout title="Vault Payouts">{page}</AppLayout>;
 
 export const getServerSideProps = async ({ req, res }) => await processServerSideData(req, res, routes.App);
 

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/v2/components/ui/tabs";
-import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import Notifications from "./Notifications";
 import Staking from "./Staking";
 import Wallet from "./Wallet";
 import General from "./General";
-
-const Referals = () => <div className="text-white">Referals view</div>
+import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/v2/components/ui/tabs";
+import Referals from "@/v2/modules/settings/Referals";
 
 export const mobileTabs = [
     {
@@ -30,7 +29,7 @@ export const mobileTabs = [
         name: "Referals",
         component: Referals,
     },
-]
+];
 
 export const desktopTabs = [
     {
@@ -43,7 +42,7 @@ export const desktopTabs = [
         name: "Referals",
         component: Referals,
     },
-]
+];
 
 export default function Settings({ session }) {
     const isDesktop = useMediaQuery(breakpoints.md);
@@ -51,17 +50,19 @@ export default function Settings({ session }) {
     const [activeTab, setActiveTab] = useState(isDesktop ? "general" : "staking");
 
     useEffect(() => setActiveTab(isDesktop ? "general" : "staking"), [isDesktop]);
-    
+
     return (
-        <div>
+        <div className="md:h-[calc(100vh_-_250px)] overflow-y-auto">
             <Tabs className="h-full" value={activeTab} onValueChange={setActiveTab}>
-                <TabsList aria-label="Settings tabs">
-                    {tabs.map(tab => (
-                        <TabsTrigger key={tab.name} value={tab.id}>
-                            {tab.name}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+                <div className="flex justify-between items-center">
+                    <TabsList aria-label="Settings tabs" className="pb-0">
+                        {tabs.map((tab) => (
+                            <TabsTrigger key={tab.name} value={tab.id}>
+                                {tab.name}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                </div>
 
                 {tabs.map(({ id, component: Comp }) => (
                     <TabsContent key={id} className="mt-4 h-full" value={id}>
@@ -71,4 +72,4 @@ export default function Settings({ session }) {
             </Tabs>
         </div>
     );
-};
+}

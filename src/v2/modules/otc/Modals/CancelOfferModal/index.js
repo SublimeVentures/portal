@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/v2/components/ui/sheet";
+import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import BlockchainSteps from "@/v2/components/BlockchainSteps"
@@ -21,8 +22,6 @@ import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
 import TransactionSuccess from "../TransactionSucces";
-
-const mockedIcon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
 
 export default function CancelOfferModal({ offerDetails, className }) {
     const { currentMarket } = useMarket();
@@ -81,16 +80,14 @@ export default function CancelOfferModal({ offerDetails, className }) {
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">
-                                            {/* <DynamicIcon name={NETWORKS[chainDesired?.id]} style={ButtonIconSize.hero4} /> */}
-                                            <Image src={mockedIcon} className="inline mx-2 rounded-full" alt="Cover image of selected blockchain" width={20} height={20} />
+                                            <DynamicIcon className="inline size-6 mx-2 rounded-full" name={NETWORKS[chainDesired?.id]} />
                                             <span>{chainDesired?.name}</span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
                                         <DefinitionItem term="Price">${cancelOfferPrice_parsed}</DefinitionItem>
                                         {!offerDetails?.isSell && (
                                             <DefinitionItem term="Funds returned">
-                                                {/* <DynamicIcon name={offerDetails?.currency} style={ButtonIconSize.hero4} /> */}
-                                                <Image src={mockedIcon} className="inline mx-2 rounded-full" alt="Cover image of selected blockchain" width={20} height={20} />
+                                                <DynamicIcon className="inline size-8 mx-2 text-white rounded-full" name={offerDetails?.currency} style={ButtonIconSize.hero4} />
                                                 <span>${cancelOfferPrice_parsed}</span>
                                             </DefinitionItem>
                                         )}

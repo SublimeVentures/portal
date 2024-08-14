@@ -18,36 +18,31 @@ export default function SingleMarket({ name, genre, slug, currentMarket }) {
             href={{
                 pathname: routes.OTC,
                 query: {
-                  market: slug,
-                  view: "offers"
-                }
+                    market: slug,
+                    view: "offers",
+                },
             }}
-            className={cn("h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09] md:flex-row", { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected })}
+            className={cn(
+                "h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover rounded hover:bg-foreground/[0.09] md:flex-row",
+                { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected },
+            )}
         >
-            <Image
-                src={`${cdn}/research/${slug}/icon.jpg`}
-                className="rounded"
-                alt={slug}
-                width={70}
-                height={70}
-            />
-
-          <div className="ml-4 flex flex-col gap-2">
-              <h4 className="text-[16px] font-semibold text-foreground leading-none">{name}</h4>
-              <p className="text-[14px] text-foreground/[.5] leading-none">{genre}</p>
-              
-              <div className="flex items-center gap-1">
-                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
-                      <HiOutlineBuildingLibrary className="text-foreground size-2" />
-                  </div>
-                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
-                      <MdOutlineAttachMoney className="text-foreground size-2" />
-                  </div>
-                  <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
-                      <IoPricetagOutline className="text-foreground size-2" />
-                  </div>
-              </div>
+            <Image src={`${cdn}/research/${slug}/icon.jpg`} className="rounded" alt={slug} width={70} height={70} />
+            <div className="ml-4 flex flex-col gap-0.5">
+                <h4 className="text-base font-medium text-foreground leading-none">{name}</h4>
+                <p className="text-xs 3xl:text-sm font-light text-foreground/[.5] leading-none">{genre}</p>
+                <div className="flex items-center gap-1">
+                    <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
+                        <HiOutlineBuildingLibrary className="text-foreground size-2" />
+                    </div>
+                    <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
+                        <MdOutlineAttachMoney className="text-foreground size-2" />
+                    </div>
+                    <div className="size-5 flex items-center justify-center rounded-full border border-foreground/50">
+                        <IoPricetagOutline className="text-foreground size-2" />
+                    </div>
+                </div>
             </div>
         </Link>
     );
-};
+}

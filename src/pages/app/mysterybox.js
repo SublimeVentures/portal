@@ -15,13 +15,16 @@ import { PremiumItemsENUM } from "@/lib/enum/store";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { TENANT } from "@/lib/tenantHelper";
-import { AppLayout, Metadata } from "@/v2/components/Layout";
+import { AppLayout } from "@/v2/components/Layout";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import { Button } from "@/v2/components/ui/button";
-const ErrorModal = dynamic(() => import("@/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
-const ClaimMysteryBoxModal = dynamic(() => import("@/components/App/MysteryBox/ClaimMysteryBoxModal"), { ssr: false });
+
+const ErrorModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
+const ClaimMysteryBoxModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimMysteryBoxModal"), {
+    ssr: false,
+});
 
 export default function MysteryBoxPage({ session }) {
     const router = useRouter();
@@ -114,17 +117,19 @@ export default function MysteryBoxPage({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className="grow flex flex-col items-start justify-center 3xl:px-19 3xl:py-12">
-                <div className="w-[532px]">
-                    <div className="flex flex-col items-start gap-4 mb-10">
-                        <h1 className="text-9xl text-accent">The Sunken Mystery Box</h1>
-                        <p className="text-lg text-white">
+            <div className="grow flex flex-col items-start justify-center 3xl:py-12">
+                <div className="3xl:w-[532px]">
+                    <div className="flex flex-col items-start 3xl:gap-4 mb-10 pt-10 3xl:pt-0">
+                        <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-accent">
+                            The Sunken Mystery Box
+                        </h1>
+                        <p className="text-sm 3xl:text-base font-light leading-7 text-white/50 3xl:text-white mb-8 3xl:mb-0">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua.
                         </p>
                         <Link
                             href={ExternalLinks.LOOTBOX}
-                            className="text-white inline-flex items-center gap-2 text-md"
+                            className="text-white inline-flex items-center gap-2 text-sm"
                             target="_blank"
                         >
                             Learn more
@@ -132,12 +137,12 @@ export default function MysteryBoxPage({ session }) {
                         </Link>
                     </div>
                     <BackdropCard className="mb-5">
-                        <DefinitionList className="grid-cols-2 w-2/3">
+                        <DefinitionList className="grid-cols-2 w-full 3xl:w-2/3">
                             <Definition term="Type">Stackable</Definition>
                             <Definition term="Price">$150</Definition>
                         </DefinitionList>
                         <Button
-                            className="w-1/3"
+                            className="w-full 3xl:w-1/3"
                             disabled={storeAvailable <= 0}
                             onClick={() => {
                                 setOrder(mysteryBox);
@@ -147,27 +152,29 @@ export default function MysteryBoxPage({ session }) {
                         </Button>
                     </BackdropCard>
                     {mysteryBoxOwnedAmount > 0 && (
-                        <BackdropCard>
-                            <figure className="w-1/3">
+                        <BackdropCard className="!flex-row">
+                            <figure className="w-2/5 3xl:w-1/3">
                                 <Image
                                     src="/img/icon-chest.webp"
-                                    className="rounded-md size-18 -my-2"
-                                    alt="a"
+                                    className="rounded-md w-full 3xl:size-18 3xl:-my-2"
+                                    alt="Mystery Box"
                                     width={72}
                                     height={72}
                                 />
                             </figure>
-                            <DefinitionList className="w-1/3">
-                                <Definition term="Owned">{mysteryBoxOwnedAmount}</Definition>
-                            </DefinitionList>
-                            <Button
-                                variant="accent"
-                                className="w-1/3"
-                                disabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
-                                onClick={openMysteryBox}
-                            >
-                                Open
-                            </Button>
+                            <div className="w-3/5 3xl:w-2/3 flex flex-col 3xl:flex-row gap-5 3xl:items-center">
+                                <DefinitionList className="3xl:w-1/2">
+                                    <Definition term="Owned">{mysteryBoxOwnedAmount}</Definition>
+                                </DefinitionList>
+                                <Button
+                                    variant="accent"
+                                    className="3xl:w-1/2"
+                                    disabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
+                                    onClick={openMysteryBox}
+                                >
+                                    Open
+                                </Button>
+                            </div>
                         </BackdropCard>
                     )}
                 </div>
@@ -203,5 +210,9 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 MysteryBoxPage.getLayout = function (page) {
-    return <AppLayout bg="bg-mystery-box bg-cover bg-right-bottom">{page}</AppLayout>;
+    return (
+        <AppLayout contentClassName="bg-mystery-box bg-cover bg-right-bottom" title="Mystery Box">
+            {page}
+        </AppLayout>
+    );
 };

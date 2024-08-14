@@ -5,42 +5,44 @@ import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { Button } from "@/v2/components/ui/button";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+import Title from "@/v2/modules/vault/components/Dashboard/Title";
 
 const Investments = ({ className }) => {
     const isDesktop = useMediaQuery(breakpoints.md);
     const { data: investments = [], isLoading } = useInvestments({ limit: 4 });
     return (
         <div className={cn("flex flex-col", className)}>
-            <div className="h-10 md:h-20 shrink-0">
-                <div className="flex items-center gap-4 lg:block">
-                    <h3 className="text-nowrap text-md md:text-2xl text-foreground">My Investments</h3>
-                    <div className="w-full flex items-center justify-between gap-4">
-                        {isDesktop ? (
-                            <p className="text-md text-[#C4C4C4] whitespace-pre-line">
-                                Your Investment portfolio has a
-                                <span className="text-[#4BD4E7] font-medium"> +20% </span>
-                                growth since last month
-                            </p>
-                        ) : (
-                            <p className="text-xs text-[#C4C4C4] whitespace-pre-line">
-                                <span className="text-primary font-medium"> +20% </span>
-                                growth
-                            </p>
-                        )}
-
-                        <Button variant="link" className="ml-auto text-accent capitalize" asChild>
-                            <Link href="/app/vault/investments">
-                                see all <ArrowIcon className="size-2.5 ml-2" />
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
+            <div className="flex justify-between items-center mb-5 md:mb-4">
+                <Title
+                    subtitle={
+                        <>
+                            {isDesktop ? (
+                                <>
+                                    Your Investment portfolio has a<span className="text-[#4BD4E7]"> +20% </span>
+                                    growth since last month
+                                </>
+                            ) : (
+                                <>
+                                    <span className="text-primary"> +20% </span>
+                                    growth
+                                </>
+                            )}
+                        </>
+                    }
+                >
+                    My Investments
+                </Title>
+                <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
+                    <Link href="/app/vault/investments">
+                        see all <ArrowIcon className="size-2.5 ml-2" />
+                    </Link>
+                </Button>
             </div>
 
             {investments.length <= 0 && !isLoading ? (
                 <EmptyInvestments />
             ) : (
-                <div className="relative">
+                <div className="relative md:grow md:flex md:flex-col">
                     <ul className="-m-4 p-4 grid grid-cols-[repeat(4,50%)] grid-test grow overflow-x-auto no-scrollbar gap-2.5 md:grid-cols-3 3xl:grid-cols-4 3xl:gap-9">
                         {isLoading ? (
                             <>

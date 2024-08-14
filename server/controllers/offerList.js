@@ -16,12 +16,12 @@ const offerTypeToFunction = {
 async function getParamOfferList(user, req) {
     try {
         const { tenantId, partnerId } = user;
-        const { type, limit, isSettled, page } = req.query;
+        const { type, limit, isSettled, offset } = req.query;
         const fetchFunction = offerTypeToFunction[type];
         if (!fetchFunction) throw Error("Bad type");
 
         const result = await fetchFunction(partnerId, tenantId, {
-            ...(page && { page: parseInt(page, 10) }),
+            ...(offset && { offset: parseInt(offset, 10) }),
             ...(limit && { limit: parseInt(limit, 10) }),
             ...(isSettled && { isSettled: isSettled === "true" }),
         });

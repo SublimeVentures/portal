@@ -1,11 +1,11 @@
 import { cn } from "@/lib/cn";
 
 export function DefinitionTerm({ children }) {
-    return <dt className="text-md font-light leading-5 self-end">{children}</dt>;
+    return <dt className="text-xs 3xl:text-sm font-light leading-7 self-end">{children}</dt>;
 }
 
 export function DefinitionDescription({ children }) {
-    return <dd className="text-2xl leading-7">{children}</dd>;
+    return <dd className="text-sm 3xl:text-lg leading-7 font-medium">{children}</dd>;
 }
 
 export function Definition({ children, term }) {

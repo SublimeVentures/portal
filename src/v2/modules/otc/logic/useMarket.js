@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
-import { getMarkets } from "@/v2/fetchers/otc";
 import { useSession } from "../logic/store";
+import { getMarkets } from "@/v2/fetchers/otc";
 
 export default function useMarket() {
     const { userId: USER_ID } = useSession();
@@ -19,15 +19,19 @@ export default function useMarket() {
     });
 
     const currentMarket = markets?.find((el) => el.slug === market) ?? null;
-    
+
     const marketsCount = markets?.length;
 
     const handleResetMarket = () => {
         const { market, ...restQuery } = router.query;
-        router.replace({
-            pathname: router.pathname,
-            query: restQuery,
-        }, undefined, { shallow: true });
+        router.replace(
+            {
+                pathname: router.pathname,
+                query: restQuery,
+            },
+            undefined,
+            { shallow: true },
+        );
     };
 
     return {
@@ -36,5 +40,5 @@ export default function useMarket() {
         currentMarket,
         isLoading,
         handleResetMarket,
-    }
-};
+    };
+}

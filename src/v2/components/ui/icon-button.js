@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const iconButtonVariants = cva(
-    "h-[42px] w-[42px] flex items-center justify-center shrink-0 transition-hover text-white cursor-pointer outline-none",
+    "flex items-center justify-center shrink-0 transition-hover text-white cursor-pointer outline-none",
     {
         variants: {
             variant: {
@@ -19,8 +19,8 @@ const iconButtonVariants = cva(
                 circle: "rounded-full",
             },
             size: {
-                8: "size-8",
-                default: "size-10",
+                8: "size-8 p-2",
+                default: "size-10 p-3.5",
             },
         },
         defaultVariants: {

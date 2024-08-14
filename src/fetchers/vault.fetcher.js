@@ -1,17 +1,16 @@
-import * as Sentry from "@sentry/nextjs";
+import ErrorType from "../../shared/enum/errorType.enum";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
 import { authTokenName } from "@/lib/authHelpers";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
+import { handleError } from "@/v2/lib/error";
 
 export const fetchUserInvestment = async (offerId) => {
     try {
         const { data } = await axiosPrivate.get(`${API.offerDetails}${offerId}/state`);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchUserInvestment", e });
-        }
+    } catch (error) {
+        handleError(ErrorType.FETCHER, error, { methodName: "fetchUserInvestment", enableSentry: true });
     }
     return 0;
 };
@@ -24,10 +23,8 @@ export const fetchUserInvestmentSsr = async (offerId, token) => {
             },
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchUserInvestment", e });
-        }
+    } catch (error) {
+        handleError(ErrorType.FETCHER, error, { methodName: "fetchUserInvestmentSsr", enableSentry: true });
     }
     return 0;
 };
@@ -36,12 +33,9 @@ export const fetchVault = async (query = {}) => {
     try {
         const { data } = await axiosPrivate.get(API.fetchVault + "/all", { params: query });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchVault", e });
-        }
+    } catch (error) {
+        handleError(ErrorType.FETCHER, error, { methodName: "fetchVault", enableSentry: true });
     }
-
     return [];
 };
 
@@ -49,10 +43,7 @@ export const fetchVaultStats = async () => {
     try {
         const { data } = await axiosPrivate.get(API.fetchVault + "/stats");
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchVaultStats", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchUserInvestmentSsr", enableSentry: true });
     }
-    return {};
 };

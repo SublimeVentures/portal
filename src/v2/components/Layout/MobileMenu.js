@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import debounce from "lodash.debounce";
 import { Content as SheetContent, Close as SheetClose } from "@radix-ui/react-dialog";
 
+import { layoutStyles } from "./AppLayout";
 import { Sheet, SheetPortal, SheetTrigger } from "@/v2/components/ui/sheet";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
-import { ChainSwitch } from "@/v2/components/App/Vault";  
+import { ChainSwitch } from "@/v2/components/App/Vault";
 import { Button } from "@/v2/components/ui/button";
 import { Avatar } from "@/v2/components/ui/avatar";
 import { IconButton } from "@/v2/components/ui/icon-button";
@@ -20,14 +22,14 @@ import MenuIcon from "@/v2/assets/svg/menu.svg";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
 import { mainMenu, profileMenu, socialMenu } from "@/v2/menus";
 import PAGE from "@/routes";
-import { layoutStyles } from "./AppLayout";
 
 const renderLogo = (componentName) => {
-    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true })
+    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
     return <TenantLogo />;
 };
 
 export default function MobileMenu({ isBlockedAlert }) {
+    const router = useRouter();
     const { environmentCleanup } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
 
@@ -46,6 +48,16 @@ export default function MobileMenu({ isBlockedAlert }) {
         return () => window.removeEventListener("resize", debounce(handleResize, 500));
     }, [isMobileMenuOpen]);
 
+    useEffect(() => {
+        const handleRouteChange = () => setIsMobileMenuOpen(false);
+
+        router.events.on('routeChangeStart', handleRouteChange);
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChange);
+        };
+    }, [router.events]); 
+
     const handleExternalLinkOpen = (evt, path) => {
         evt.preventDefault();
         window.open(path, "_blank");
@@ -56,16 +68,16 @@ export default function MobileMenu({ isBlockedAlert }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="p-4 mt-8 text-xxs text-foreground">{name}</h2>
-                <ul className="flex flex-col gap-2">
+                <h2 className="p-4 mt-8 text-xs font-normal text-foreground">{name}</h2>
+                <ul className="flex flex-col gap-1">
                     {items.map(({ name, path }) => (
                         <li
                             key={name}
                             className={cn(
-                                "text-xl py-2 font-normal text-foreground hover:bg-[#164062] rounded cursor-pointer",
+                                "text-xl leading-8 font-normal text-foreground hover:bg-[#164062] rounded cursor-pointer",
                             )}
                         >
-                            <Link href={path} className="px-8">
+                            <Link href={path} className="block px-8">
                                 {name}
                             </Link>
                         </li>
@@ -85,7 +97,7 @@ export default function MobileMenu({ isBlockedAlert }) {
                     className="p-3 relative z-10"
                 />
             </SheetTrigger>
-            
+
             <SheetPortal>
                 <SheetContent
                     style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
@@ -98,8 +110,11 @@ export default function MobileMenu({ isBlockedAlert }) {
                         <div className="flex items-center gap-4">
                             <NotificationMenu />
                             <ChainSwitch />
-                            <SheetClose onClick={() => setIsMobileMenuOpen(false)} className="rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary">
-                                <IconButton name="Close" comp='div' icon={CrossIcon} className="p-3.5" />
+                            <SheetClose
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary"
+                            >
+                                <IconButton name="Close" comp="div" icon={CrossIcon} className="p-3.5" />
                             </SheetClose>
                         </div>
                     </div>
@@ -118,7 +133,7 @@ export default function MobileMenu({ isBlockedAlert }) {
                                 {generateMenu("Account", profileMenu)}
                             </nav>
                             <div className="m-6 flex flex-col items-center">
-                                <h2 className="text-xxs font-light text-gray-100">Community</h2>
+                                <h2 className="text-xs font-normal text-gray-100">Community</h2>
                                 <ul className="flex items-center gap-4">
                                     {socialMenu.map(({ icon, name, path }) => (
                                         <li key={name} className="pt-4">
@@ -128,7 +143,7 @@ export default function MobileMenu({ isBlockedAlert }) {
                                                 name={name}
                                                 icon={icon}
                                                 onClick={(evt) => handleExternalLinkOpen(evt, path)}
-                                                className="p-3.5"
+                                                className="p-2.5"
                                             />
                                         </li>
                                     ))}
@@ -140,7 +155,7 @@ export default function MobileMenu({ isBlockedAlert }) {
                                 <Button className="w-full" variant="secondary" onClick={handleLogout}>
                                     Logout
                                 </Button>
-                                <p className="text-md text-foreground">{shortenAddress(walletAddress)}</p>
+                                <p className="text-sm font-light text-foreground">{shortenAddress(walletAddress)}</p>
                             </div>
                         </div>
                     </div>
@@ -148,4 +163,4 @@ export default function MobileMenu({ isBlockedAlert }) {
             </SheetPortal>
         </Sheet>
     );
-};
+}

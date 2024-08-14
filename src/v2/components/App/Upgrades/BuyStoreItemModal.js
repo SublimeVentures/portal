@@ -92,12 +92,16 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                     et dolore magna aliqua.
                 </Success.Description>
                 <Success.Article>
-                    <Success.Image src={`${cdn}/webapp/store/${order.img}`} alt={order.name} />
-                    <div className="grow">
-                        <h1 className="text-2xl">{order.name}</h1>
-                        <span className="text-md">Upgrade</span>
+                    <div className="flex items-center gap-5 grow w-full md:w-auto">
+                        <Success.Image src={`${cdn}/webapp/store/${order.img}`} alt={order.name} />
+                        <div className="grow">
+                            <h1 className="text-sm font-medium md:text-xl">{order.name}</h1>
+                            <span className="text-xs font-light md:text-sm">Upgrade</span>
+                        </div>
                     </div>
-                    <Button variant={order.id === 1 ? "accent" : "default"}>Upgrade store</Button>
+                    <Button className="w-full md:w-auto" variant={order.id === 1 ? "accent" : "default"}>
+                        Upgrade store
+                    </Button>
                 </Success.Article>
                 <Success.Footer>You can find your upgrade in your inventory</Success.Footer>
             </Success.Content>

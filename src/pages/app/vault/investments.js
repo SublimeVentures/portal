@@ -70,7 +70,7 @@ function InvestmentsPage() {
     );
 }
 
-InvestmentsPage.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+InvestmentsPage.getLayout = (page) => <AppLayout title="Vault Investments">{page}</AppLayout>;
 
 export const getServerSideProps = async ({ req, res }) => await processServerSideData(req, res, routes.App);
 

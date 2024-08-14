@@ -1,5 +1,6 @@
-import * as Sentry from "@sentry/nextjs";
+import ErrorType from "../../shared/enum/errorType.enum";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
+import { handleError } from "@/v2/lib/error";
 
 export const fetchMarkets = async () => {
     try {
@@ -7,17 +8,14 @@ export const fetchMarkets = async () => {
         const { data } = await axiosPrivate.get(url);
 
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchMarkets", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchMarkets", enableSentry: true });
     }
-    return {};
 };
 
-export const fetchOffers = async ({ otcId, filters = {}, sort }) => {
+export const fetchOTCOffers = async ({ otcId, filters = {}, sort }) => {
     if (!otcId) return [];
-    
+
     const { sortId = "", sortOrder = "" } = sort || {};
     const queryParams = new URLSearchParams({ ...filters, sortId, sortOrder });
 
@@ -26,28 +24,20 @@ export const fetchOffers = async ({ otcId, filters = {}, sort }) => {
         const { data } = await axiosPrivate.get(url);
 
         return data;
-    } catch (e) {
-        console.log('offers-err', e)
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOffers", e });
-        }
+    } catch (error) {
+        handleError(ErrorType.FETCHER, error, { methodName: "fetchOTCOffers", enableSentry: true });
     }
-    
     return [];
 };
 
-export const fetchHistory = async (offerId) => {
+export const fetchOTCHistory = async (offerId) => {
     try {
         const url = `/api/otc/history/${offerId}`;
         const { data } = await axiosPrivate.get(url);
         return data;
-    } catch (e) {
-        console.log('fetchHistory-err', e)
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchHistory", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOTCHistory", enableSentry: true });
     }
-    return {};
 };
 
 export const saveTransaction = async (offerId, networkChainId, price, amount, isSell, account) => {
@@ -60,12 +50,9 @@ export const saveTransaction = async (offerId, networkChainId, price, amount, is
             account,
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "saveTransaction", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "saveTransaction", enableSentry: true });
     }
-    return {};
 };
 export const getSignature = async (offerId, chainId, otcId, dealId, wallet) => {
     try {
@@ -76,12 +63,9 @@ export const getSignature = async (offerId, chainId, otcId, dealId, wallet) => {
             wallet,
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "getSignature", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "getSignature", enableSentry: true });
     }
-    return {};
 };
 
 export const removeTransaction = async (offerId, hash) => {
@@ -90,10 +74,7 @@ export const removeTransaction = async (offerId, hash) => {
             hash,
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "removeTransaction", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "removeTransaction", enableSentry: true });
     }
-    return {};
 };

@@ -1,33 +1,28 @@
 import * as Sentry from "@sentry/nextjs";
+import ErrorType from "../../shared/enum/errorType.enum";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { authTokenName } from "@/lib/authHelpers";
+import { handleError } from "@/v2/lib/error";
 
 export const fetchOfferList = async (query) => {
     try {
         const { data } = await axiosPrivate.get(API.offerList, { params: { type: "vc", ...query } });
 
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferList" });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferList", enableSentry: true });
     }
-    return {};
 };
 
 export const fetchOfferStats = async () => {
     try {
         const { data } = await axiosPrivate.get(API.offerStats);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferList" });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferStats", enableSentry: true });
     }
-
-    return {};
 };
 
 export const fetchOfferProgress = async (offerId) => {
@@ -40,24 +35,18 @@ export const fetchOfferProgress = async (offerId) => {
             },
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferProgress" });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferProgress", enableSentry: true });
     }
-    return {};
 };
 
 export const fetchLaunchpadList = async () => {
     try {
         const { data } = await axiosPrivate.get(`${API.offerList}/?type=launchpad`);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchLaunchpadList" });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchLaunchpadList", enableSentry: true });
     }
-    return {};
 };
 
 export const fetchOfferDetails = async (slug) => {
@@ -65,10 +54,8 @@ export const fetchOfferDetails = async (slug) => {
     try {
         const { data } = await axiosPrivate.get(`${API.offerDetails}${slug}`);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferDetails", slug });
-        }
+    } catch (error) {
+        handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferDetails", enableSentry: true });
     }
     return null;
 };
@@ -82,10 +69,8 @@ export const fetchOfferDetailsSsr = async (slug, token) => {
             },
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferDetails", slug });
-        }
+    } catch (error) {
+        handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferDetailsSsr", enableSentry: true });
     }
     return null;
 };
@@ -95,12 +80,9 @@ export const fetchOfferAllocation = async (id) => {
     try {
         const { data } = await axiosPrivate.get(`${API.offerAllocation}${id}`);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferAllocation", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferAllocation", enableSentry: true });
     }
-    return {};
 };
 export const fetchOfferAllocationSsr = async (id, token) => {
     if (!id) return {};
@@ -111,12 +93,9 @@ export const fetchOfferAllocationSsr = async (id, token) => {
             },
         });
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "fetchOfferAllocation", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferAllocationSsr", enableSentry: true });
     }
-    return {};
 };
 
 export const useUpgrade = async (offerId, upgradeId) => {
@@ -124,10 +103,7 @@ export const useUpgrade = async (offerId, upgradeId) => {
     try {
         const { data } = await axiosPrivate.get(`${API.offerList}/${offerId}/upgrade/${upgradeId}`);
         return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "useUpgrade", e });
-        }
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "useUpgrade", enableSentry: true });
     }
-    return {};
 };

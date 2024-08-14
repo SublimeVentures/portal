@@ -1,10 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const { getMarkets, getUserAlocation, getOffers, getHistory, getLatestDeals, createOffer, signOffer } = require("../controllers/otc");
+const {
+    getMarkets,
+    getUserAllocation,
+    getOffers,
+    getHistory,
+    getLatestDeals,
+    createOffer,
+    signOffer,
+} = require("../controllers/otc");
 const { verifyID } = require("../../src/lib/authHelpers");
 
 router.get("/markets", async (req, res) => {
     const { auth, user } = await verifyID(req);
+
     if (!auth) return res.status(401).json({});
     return res.status(200).json(await getMarkets(user));
 });
@@ -12,8 +21,8 @@ router.get("/markets", async (req, res) => {
 router.get("/allocation", async (req, res) => {
     const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
-    
-    return res.status(200).json(await getUserAlocation(user));
+
+    return res.status(200).json(await getUserAllocation(user));
 });
 
 router.get("/offers/:id", async (req, res) => {
