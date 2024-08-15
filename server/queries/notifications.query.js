@@ -37,7 +37,7 @@ async function getNotifications(user, query) {
     try {
         const { where, limit, offset, sort } = buildWhereFromAuthorizedQuery(user, query);
 
-        const notifications = await models.notification.findAndCountAll({
+        const { rows, count } = await models.notification.findAndCountAll({
             where,
             limit,
             offset,
@@ -45,8 +45,13 @@ async function getNotifications(user, query) {
             raw: true,
         });
 
+        if (count === 0) return { count: 0, rows: [] };
+
+        const enrichedNotifications = await buildFullNotifications(rows);
+
         return {
-            ...notifications,
+            rows: enrichedNotifications,
+            count,
             limit,
             offset,
         };
@@ -78,7 +83,7 @@ async function buildFullNotifications(baseNotifications) {
                         case NotificationTypes.CLAIM:
                             return enrichClaimNotification(baseNotif);
                         default:
-                            return baseNotif;
+                            return null;
                     }
                 })
                 .catch((err) => {
@@ -222,6 +227,4 @@ async function enrichClaimNotification(plainNotification) {
     }
 }
 
-module.exports = {
-    getNotifications,
-};
+module.exports = { getNotifications };
