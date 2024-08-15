@@ -21,14 +21,15 @@ import { updateUser } from "@/fetchers/auth.fetcher";
  * @typedef {{ channelId: string; categoryId: string; enabled: boolean; }[]} NotificationPreferenceUpdates
  */
 
-export default function NotificationsSettings({ session }) {
+export default function NotificationsSettings({ session, onNewSettings }) {
     const [successDialog, setSuccessDialog] = useState(false);
     const [errorDialog, setErrorDialog] = useState(false);
-    const [disabledNotificationChannels, setDisabledNotificationChannels] = useState([]);
+    const [disabledNotificationChannels, setDisabledNotificationChannels] = useState({});
     const [notificationOptions, setNotificationOptions] = useState({
         channels: [],
         categories: [],
     });
+    const [forceDisablePush, setForceDisablePush] = useState(false);
 
     const [form, setForm] = useState({
         email: session.email ?? "",
@@ -38,33 +39,24 @@ export default function NotificationsSettings({ session }) {
     const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
 
     useEffect(() => {
-        if (!session.email) {
-            setDisabledNotificationChannels((prev) => {
-                if (!prev.includes("email")) {
-                    prev.push("email");
-                }
-                return prev;
-            });
-        }
-        if (!session.phoneNumberE164) {
-            setDisabledNotificationChannels((prev) => {
-                if (!prev.includes("sms")) {
-                    prev.push("sms");
-                }
-                return prev;
-            });
-        }
+        setDisabledNotificationChannels((prev) => {
+            const updated = { ...prev };
+            updated.email = !session.email;
+            updated.sms = !session.phoneNumberE164;
+            updated.push = forceDisablePush;
+            return updated;
+        });
         fetchNotificationChannels().then(setNotificationOptions);
         fetchNotificationPreferences().then(setPreferenceMap);
-    }, [session.email, session.phoneNumberE164]);
+    }, [forceDisablePush, session.email, session.phoneNumberE164]);
+
+    useEffect(() => {
+        setForceDisablePush(Notification.permission === "denied");
+    }, []);
 
     const handleChange = (ev) => {
-        const { checked, name, value, type } = ev.target;
-        if (type === "checkbox") {
-            setForm((prev) => ({ ...prev, [name]: checked }));
-        } else {
-            setForm((prev) => ({ ...prev, [name]: value }));
-        }
+        const { name, value } = ev.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (ev) => {
@@ -81,13 +73,29 @@ export default function NotificationsSettings({ session }) {
             return acc;
         }, []);
 
-        Promise.all([updateNotificationPreferences(preferenceUpdates), updateUser(form)])
+        updateNotificationPreferences(preferenceUpdates)
+            .then(() => updateUser(form))
             .then(() => {
+                onNewSettings();
                 setSuccessDialog(true);
             })
             .catch(() => {
                 setErrorDialog(true);
             });
+    };
+
+    const requestNotificationPermission = async () => {
+        if (Notification.permission !== "granted") {
+            return Notification.requestPermission().then((perm) => perm === "granted");
+        } else {
+            return Notification.permission === "granted";
+        }
+    };
+
+    const handlePushRequest = async () => {
+        const isPushAllowed = await requestNotificationPermission();
+        setForceDisablePush(!isPushAllowed);
+        return isPushAllowed;
     };
 
     const handlePreferenceChange = (categoryId) => (channels) => {
@@ -119,7 +127,7 @@ export default function NotificationsSettings({ session }) {
                                 type="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                className="bg-app-bg py-1 px-2 border-app-success rounded-md"
+                                className="bg-app-bg autofill:bg-app-bg py-1 px-2 border-app-success rounded-md"
                             />
                             {!session.email && (
                                 <small className="text-app-error">Required to enable the email notifications</small>
@@ -129,12 +137,12 @@ export default function NotificationsSettings({ session }) {
                             <label htmlFor="phone">Phone with country code</label>
                             <input
                                 id="phone"
-                                name="phone"
+                                name="phoneNumberE164"
                                 type="tel"
                                 pattern="^\+[0-9]{0,15}$"
                                 value={form.phoneNumberE164}
                                 onChange={handleChange}
-                                className="bg-app-bg py-1 px-2 border-app-success rounded-md"
+                                className="bg-app-bg autofill:bg-app-bg py-1 px-2 border-app-success rounded-md"
                             />
                             {!session.phoneNumberE164 && (
                                 <small className="text-app-error">Required to enable the SMS notifications</small>
@@ -162,6 +170,7 @@ export default function NotificationsSettings({ session }) {
                         <tbody>
                             {notificationOptions.categories.map((category) => (
                                 <NotificationPreferenceRow
+                                    onPushRequest={handlePushRequest}
                                     disabledKeys={disabledNotificationChannels}
                                     selection={preferenceMap[category.id] ?? {}}
                                     key={category.id}

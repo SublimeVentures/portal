@@ -49,6 +49,7 @@ export default function AppSettings({ session }) {
 
     const {
         data: { user },
+        refetch: refetchUser,
     } = useQuery({
         queryKey: ["fetchUser", userId],
         queryFn: () => fetchUser(),
@@ -89,7 +90,7 @@ export default function AppSettings({ session }) {
                 </div>
                 <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
                 <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
-                    <NotificationsSettings session={user} />
+                    <NotificationsSettings session={user} onNewSettings={refetchUser} />
                 </div>
             </div>
         </>

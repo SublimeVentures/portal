@@ -44,31 +44,28 @@ async function requestPushPermission(fcmInstance) {
     return true;
 }
 
-async function setupPushNotifications(fcmInstance) {
-    const allowed = await requestPushPermission(fcmInstance);
-    if (allowed) {
-        return getToken(fcmInstance, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY }).then((token) => {
-            return token ?? null;
-        });
-    }
-    return null;
-}
+export function useFirebase() {
+    const [firebase, setFirebase] = useState(/** @type {import("firebase/app").FirebaseApp | null} */ null);
 
-export default function useFirebase() {
-    const [fcm, setFCM] = useState(null);
-    const [setup, setSetupFunction] = useState(/** @type {() => Promise<string | null>} */ Promise.resolve(null));
+    const setupPushNotifications = async () => {
+        if (firebase) {
+            const messaging = getMessaging(firebase);
+            const allowed = await requestPushPermission(messaging);
+            if (allowed) {
+                return getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY }).then((token) => {
+                    return token ?? null;
+                });
+            }
+        }
+        return null;
+    };
 
     useEffect(() => {
-        if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-            const app = Firebase.getInstance();
-            const fcm = getMessaging(app);
-            setFCM(fcm);
-            setSetupFunction(() => setupPushNotifications(fcm));
-        }
+        setFirebase(Firebase.getInstance());
     }, []);
 
     return {
-        fcm,
-        setup,
+        fcm: firebase ? getMessaging(firebase) : null,
+        setupPushNotifications,
     };
 }

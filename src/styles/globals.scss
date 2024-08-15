@@ -246,3 +246,14 @@ body {
         object-fit: cover;
     }
 }
+
+.autofill\:bg-app-bg {
+    &:-webkit-autofill,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:hover {
+        background-color: rgb(14 17 24 / var(--tw-bg-opacity)) !important;
+        -webkit-text-fill-color: white;
+        -webkit-box-shadow: 0 0 0 1000px rgb(14 17 24 / var(--tw-bg-opacity)) inset;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+}

@@ -1,40 +1,26 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "@/components/Checkbox";
-import useFirebase from "@/lib/hooks/useFirebase";
+import { useFirebase } from "@/lib/hooks/useFirebase";
 
-export default function NotificationPreferenceRow({ disabledKeys, selection, category, channels, onChange }) {
+export default function NotificationPreferenceRow({
+    disabledKeys,
+    selection,
+    category,
+    channels,
+    onChange,
+    onPushRequest,
+}) {
     const [chosenChannels, setChosenChannels] = useState(/** @type {Record<string, boolean>} */ selection);
-    const [allDisabledKeys, setAllDisabledKeys] = useState(disabledKeys);
-    const [notificationsToken, setNotificationsToken] = useState(null);
 
-    const { setup } = useFirebase();
+    const { fcm } = useFirebase();
 
-    useEffect(() => {
-        setup.then((token) => {
-            setNotificationsToken(token ?? null);
-            if (!token) {
-                setAllDisabledKeys((prev) => {
-                    const updated = [...prev];
-                    if (!updated.includes("push")) {
-                        updated.push("push");
-                    }
-                    return updated;
-                });
-            } else {
-                setAllDisabledKeys((prev) => {
-                    const updated = [...prev];
-                    return updated.filter((chId) => chId !== "push");
-                });
-            }
-        });
-    }, [setup]);
-
-    const handleChange = (channelId) => (checked) => {
+    const handleChange = (channelId) => async (checked) => {
         if (channelId === "push") {
+            const token = checked ? await onPushRequest() : checked;
             setChosenChannels((prev) => {
                 const updated = { ...prev };
-                updated[channelId] = checked ? !!notificationsToken : checked;
+                updated[channelId] = checked ? !!token : checked;
                 return updated;
             });
         } else {
@@ -63,7 +49,7 @@ export default function NotificationPreferenceRow({ disabledKeys, selection, cat
                             className="mx-auto sm:my-4"
                             checked={checked}
                             onCheckedChange={handleChange(channel.id)}
-                            disabled={allDisabledKeys.includes(channel.id)}
+                            disabled={disabledKeys[channel.id]}
                         />
                     </td>
                 );
@@ -80,5 +66,6 @@ NotificationPreferenceRow.propTypes = {
         name: PropTypes.string.isRequired,
     }),
     selection: PropTypes.object,
-    disabledKeys: PropTypes.arrayOf(PropTypes.string),
+    disabledKeys: PropTypes.object,
+    onPushRequest: PropTypes.func.isRequired,
 };
