@@ -18,7 +18,7 @@ export const API = {
     environment: "/api/environment",
     notificationChannels: "/api/notifications/channels",
     notificationPreferences: "/api/notifications/preferences",
-    subscribeToPush: "/api/notifications/topic",
+    subscribeToPush: "/api/notifications/subscription",
     publicPartners: "/api/public/partners",
     publicNeoTokyoEnvs: "/api/public/nt-calculator",
     publicKongzEnvs: "/api/public/kongz-calculator",

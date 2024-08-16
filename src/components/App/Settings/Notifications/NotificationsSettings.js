@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { deleteToken, getToken } from "firebase/messaging";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import {
     fetchNotificationChannels,
     fetchNotificationPreferences,
+    subscribeToPushCategory,
     updateNotificationPreferences,
 } from "@/fetchers/notifications.fetcher";
 import NotificationPreferenceRow from "@/components/App/Settings/Notifications/NotificationPreferenceRow";
 import GenericModal from "@/components/Modal/GenericModal";
 import { updateUser } from "@/fetchers/auth.fetcher";
+import { tenantIndex } from "@/lib/utils";
+import { useFirebase } from "@/lib/hooks/useFirebase";
 
 /**
- * @typedef {{ [channelId]: boolean }} ChannelStatus
+ * @typedef {{ [channelId: string]: boolean }} ChannelStatus
  */
 
 /**
- * @typedef {{ [categoryId]: ChannelStatus }} NotificationPreferences
+ * @typedef {{ [categoryId: string]: ChannelStatus }} NotificationPreferences
  */
 
 /**
@@ -25,18 +30,20 @@ export default function NotificationsSettings({ session, onNewSettings }) {
     const [successDialog, setSuccessDialog] = useState(false);
     const [errorDialog, setErrorDialog] = useState(false);
     const [disabledNotificationChannels, setDisabledNotificationChannels] = useState({});
+    const [forceDisablePush, setForceDisablePush] = useState(false);
+    const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
+
     const [notificationOptions, setNotificationOptions] = useState({
         channels: [],
         categories: [],
     });
-    const [forceDisablePush, setForceDisablePush] = useState(false);
 
     const [form, setForm] = useState({
         email: session.email ?? "",
         phoneNumberE164: session.phoneNumberE164 ?? "",
     });
 
-    const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
+    const { fcm } = useFirebase();
 
     useEffect(() => {
         setDisabledNotificationChannels((prev) => {
@@ -47,7 +54,17 @@ export default function NotificationsSettings({ session, onNewSettings }) {
             return updated;
         });
         fetchNotificationChannels().then(setNotificationOptions);
-        fetchNotificationPreferences().then(setPreferenceMap);
+        fetchNotificationPreferences()
+            .then((prefs) => setPreferenceMap(prefs))
+            .then(() =>
+                setPreferenceMap((prev) => {
+                    const updated = { ...prev };
+                    for (const category of Object.keys(prev)) {
+                        updated[category]["push"] = !!localStorage.getItem(`push_token_${category}_${tenantIndex}`);
+                    }
+                    return prev;
+                }),
+            );
     }, [forceDisablePush, session.email, session.phoneNumberE164]);
 
     useEffect(() => {
@@ -104,6 +121,35 @@ export default function NotificationsSettings({ session, onNewSettings }) {
             for (const [channelId, enabled] of prefEntries) {
                 if (!prev[categoryId]) {
                     prev[categoryId] = {};
+                }
+                if (channelId === "push") {
+                    if (enabled) {
+                        if (fcm) {
+                            console.log("SHOULD_GET_TOKEN");
+                            getToken(fcm, {
+                                vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
+                            })
+                                .then((token) => {
+                                    subscribeToPushCategory(categoryId, token).then((res) => {
+                                        if (res.ok) {
+                                            localStorage.setItem(`push_token_${categoryId}_${tenantIndex}`, token);
+                                        }
+                                    });
+                                })
+                                .catch(console.error);
+                        } else {
+                            console.warn("Firebase Messaging is not initialized!");
+                        }
+                    } else {
+                        if (fcm) {
+                            deleteToken(fcm).then((done) => {
+                                console.log("FCM token removal:", done);
+                            });
+                        } else {
+                            console.warn("Firebase Messaging is not initialized!");
+                        }
+                        localStorage.removeItem(`push_token_${categoryId}_${tenantIndex}`);
+                    }
                 }
                 prev[categoryId][channelId] = enabled;
             }
@@ -201,3 +247,11 @@ export default function NotificationsSettings({ session, onNewSettings }) {
         </div>
     );
 }
+
+NotificationsSettings.propTypes = {
+    session: PropTypes.shape({
+        email: PropTypes.string,
+        phoneNumberE164: PropTypes.string,
+    }).isRequired,
+    onNewSettings: PropTypes.func.isRequired,
+};

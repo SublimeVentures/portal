@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "@/components/Checkbox";
-import { useFirebase } from "@/lib/hooks/useFirebase";
 
 export default function NotificationPreferenceRow({
     disabledKeys,
@@ -13,28 +12,24 @@ export default function NotificationPreferenceRow({
 }) {
     const [chosenChannels, setChosenChannels] = useState(/** @type {Record<string, boolean>} */ selection);
 
-    const { fcm } = useFirebase();
-
     const handleChange = (channelId) => async (checked) => {
         if (channelId === "push") {
             const token = checked ? await onPushRequest() : checked;
             setChosenChannels((prev) => {
                 const updated = { ...prev };
                 updated[channelId] = checked ? !!token : checked;
+                onChange(updated);
                 return updated;
             });
         } else {
             setChosenChannels((prev) => {
                 const updated = { ...prev };
                 updated[channelId] = checked;
+                onChange(updated);
                 return updated;
             });
         }
     };
-
-    useEffect(() => {
-        onChange(chosenChannels);
-    }, [chosenChannels, onChange]);
 
     return (
         <tr>
