@@ -8,13 +8,12 @@ import { ChainIcon, ChainButton, ChainGroup } from "@/v2/components/App/Vault/Ch
 
 const ChainListModal = () => {
     const { isConnected, chainId } = useAccount();
-    const { network, isLoading } = useEnvironmentContext();
-    const { chains: current = [], isSupported } = network;
-    const isOpen = !isSupported && isConnected && !isLoading;
-    const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
+    const { network } = useEnvironmentContext();
     const { switchChain, error } = useSwitchChain();
-
-    console.log('---TEST---', isConnected, chainId, network, isLoading)
+    
+    const { chains: current = [], isSupported, isLoading } = network;
+    const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
+    const isOpen = !isSupported && isConnected && !isLoading;
 
     return (
         <Dialog open={isOpen}>
