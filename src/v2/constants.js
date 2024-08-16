@@ -3,11 +3,11 @@ const settingsKeyValues = {
     wallets: "wallets",
 };
 
-export const notificationsKeyValues = {
+const notificationsKeyValues = {
     notifications: "notifications",
 };
 
-const settingsKeys = {
+export const settingsKeys = {
     wallets: [settingsKeyValues.wallets],
     userWallets: (userId) => [...settingsKeys.wallets, { userId }],
 };
