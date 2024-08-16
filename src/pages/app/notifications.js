@@ -6,8 +6,7 @@ import useNotificationInfiniteLoader from "@/v2/modules/notifications/logic/useN
 import routes from "@/routes";
 
 export default function AppNotifications() {
-    const { data, isFetching, hasNextPage, fetchNextPage, fetchPreviousPage, getFiltersProps } =
-        useNotificationInfiniteLoader();
+    const { data, isFetching, hasNextPage, fetchNextPage, getFiltersProps } = useNotificationInfiniteLoader();
 
     return (
         <div className="flex flex-col gap-8 h-[75vh] overflow-hidden">

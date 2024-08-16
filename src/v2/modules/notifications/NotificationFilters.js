@@ -30,7 +30,7 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Select size="sm" value={type} onValueChange={(value) => handleInputChange("type", value)}>
+                    <Select value={type} onValueChange={(value) => handleInputChange("type", value)}>
                         <SelectTrigger className="px-8 w-full md:w-auto">
                             <SelectValue placeholder="Event type" />
                         </SelectTrigger>

@@ -10,44 +10,48 @@ export function getNotificationTitle(type) {
     return NotificationTypeNames[type] || "UNKNOWN NOTIFICATION";
 }
 
-// Needs cdn and slug - src={`${cdn}/research/${slug}/icon.jpg`}
-const values = { value: '2', amount: '20', otcDeal: { amount: '20', price: 20 }, claim: { isClaimed: true }, payout: { totalAmount: '200', currencySymbol: 'GMRX' } }
-
-export function getDescriptionMessage(type) {    
+export function getDescriptionMessage(type, values) {
     switch (type) {
-        case NotificationTypes.INVESTMENT:
-            return `Invested $${values.value}`;
-        case NotificationTypes.CLAIM:
-            return `${values.claim?.isClaimed ? "Claimed" : "Not claimed"} with total amount of ${parseFloat(values.payout?.totalAmount).toFixed(2)} ${values.payout?.currencySymbol}`;
-        case NotificationTypes.REFUND:
-            return `Issued refund for: ${values.amount}`
-        case NotificationTypes.OTC_MADE:
-            return <OtcMessage action="Made" values={values} />
-        case NotificationTypes.OTC_TAKE:
-            return <OtcMessage action="Take" values={values} />
-        case NotificationTypes.OTC_CANCEL:
-            return <OtcMessage action="Cancel" values={values} />
+        case NotificationTypes.MYSTERY_BUY:
+            return null;
         case NotificationTypes.UPGRADE_BUY:
             return "Increased Allocation";
-        case NotificationTypes.MYSTERY_BUY:
+        case NotificationTypes.OTC_CANCEL:
+            return <OtcMessage action="Cancel" values={values.otcDeal} />
+        case NotificationTypes.OTC_MADE:
+            return <OtcMessage action="Made" values={values.otcDeal} />
+        case NotificationTypes.OTC_TAKE:
+            return <OtcMessage action="Take" values={values.otcDeal} />
+        case NotificationTypes.INVESTMENT:
+            return `Invested $${values.data.value}`;
+        case NotificationTypes.REFUND:
+            return `Issued refund for $${values.data.amount}`
+        case NotificationTypes.CLAIM:
+            return `
+                ${values.claim?.isClaimed ? "Claimed" : "Not claimed"}
+                with total amount of
+                ${parseFloat(values.payout?.totalAmount).toFixed(2)} ${values.payout?.currencySymbol}
+            `;
         default:
             return null;
-    }
-}
+    };
+};
 
-export function getRedirectMessage(type) {
+export function getRedirectMessage(type, values) {
     switch (type) {
-        case NotificationTypes.CLAIM:
-            return `Claimed ${values.payoutCount} payout on ${values.currencySymbol} chain`;
         case NotificationTypes.MYSTERY_BUY:
         case NotificationTypes.UPGRADE_BUY:
             return null;
-        case NotificationTypes.INVESTMENT:
-        case NotificationTypes.REFUND:
+        case NotificationTypes.OTC_CANCEL:
         case NotificationTypes.OTC_MADE:
         case NotificationTypes.OTC_TAKE:
-        case NotificationTypes.OTC_CANCEL:
-        default:
             return "See on Block Explorer";
-      }
-}
+        case NotificationTypes.INVESTMENT:
+        case NotificationTypes.REFUND:
+            return null;
+        case NotificationTypes.CLAIM:
+            return `Claimed ${values.offerPayout} payout on ${values.currencySymbol} chain`;
+        default:
+            return null;
+    };
+};
