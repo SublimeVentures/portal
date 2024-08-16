@@ -87,16 +87,13 @@ export default function LayoutApp({ children, title, contentClassName }) {
             style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
             className={cn("relative min-h-screen h-full w-full flex flex-col bg-[#082536]")}
         >
-            <WalletErrorModal session={children.props?.session} />
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <ChainListModal />
-            <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>
-                {children}
-            </MobileLayout>
+            <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>{children}</MobileLayout>
             <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
-                {children}
-            </DesktopLayout>
+            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>{children}</DesktopLayout>
+
+            <WalletErrorModal session={children.props?.session} />
+            <ChainListModal />
         </div>
     );
 }
