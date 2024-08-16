@@ -55,7 +55,8 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                             className={cn("absolute", {
                                 "p-3.5 bottom-2.5 left-2.5 3xl:top-4 3xl:right-4 3xl:bottom-auto 3xl:left-auto":
                                     variant === VARIANTS.DEFAULT,
-                                "p-2.5 left-6 top-1/2 transform -translate-y-1/2": variant === VARIANTS.VERTICAL,
+                                "p-2.5 md:left-6 top-1/2 transform -translate-y-1/2 right-6":
+                                    variant === VARIANTS.VERTICAL,
                             })}
                         />
                         <CardTitle
