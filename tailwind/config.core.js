@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 module.exports = {
     content: [
         "./app/**/*.{js,ts,jsx,tsx}",
@@ -85,6 +85,20 @@ module.exports = {
             fontFamily: {
                 body: ["Inter", "sans-serif"],
                 accent: ["Roboto Mono", "sans-serif"],
+            },
+            animation: {
+                in: "fadeIn .5s ease-out",
+                out: "fadeOut .5s ease-out",
+            },
+            keyframes: {
+                fadeIn: {
+                    from: { opacity: 0 },
+                    to: { opacity: 1 },
+                },
+                fadeOut: {
+                    from: { opacity: 1 },
+                    to: { opacity: 0 },
+                },
             },
         },
     },

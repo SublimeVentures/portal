@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import NotificationToast from "../../components/App/Settings/Notifications/NotificationToast";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAO8LMDvud_ol6HsbjA0B_Z1Ogd3X_HL4c",
@@ -64,8 +66,19 @@ export function useFirebase() {
         setFirebase(Firebase.getInstance());
     }, []);
 
+    const getFCM = () => {
+        if (!firebase) return null;
+        const fcm = getMessaging(firebase);
+        onMessage(fcm, (payload) => {
+            toast.custom((t) => <NotificationToast t={t} notification={payload.notification} />, {
+                duration: Infinity,
+            });
+        });
+        return fcm;
+    };
+
     return {
-        fcm: firebase ? getMessaging(firebase) : null,
+        fcm: getFCM(),
         setupPushNotifications,
     };
 }

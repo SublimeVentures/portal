@@ -10,4 +10,6 @@ router.post("/preferences", notificationsController.setNotificationPreferences);
 
 router.post("/subscription", notificationsController.subscribeToTopic);
 
+router.delete("/subscription", notificationsController.unsubscribeFromTopic);
+
 module.exports = { router };

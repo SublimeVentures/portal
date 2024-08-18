@@ -1,34 +1,21 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "@/components/Checkbox";
+import { cn } from "@/lib/cn";
 
-export default function NotificationPreferenceRow({
-    disabledKeys,
-    selection,
-    category,
-    channels,
-    onChange,
-    onPushRequest,
-}) {
-    const [chosenChannels, setChosenChannels] = useState(/** @type {Record<string, boolean>} */ selection);
-
+export default function NotificationPreferenceRow({ disabledKeys, selection, category, channels, onChange }) {
+    const [loading, setLoading] = useState(false);
     const handleChange = (channelId) => async (checked) => {
         if (channelId === "push") {
-            const token = checked ? await onPushRequest() : checked;
-            setChosenChannels((prev) => {
-                const updated = { ...prev };
-                updated[channelId] = checked ? !!token : checked;
-                onChange(updated);
-                return updated;
-            });
-        } else {
-            setChosenChannels((prev) => {
-                const updated = { ...prev };
-                updated[channelId] = checked;
-                onChange(updated);
-                return updated;
-            });
+            setLoading(true);
         }
+        const updated = { ...selection };
+        updated[channelId] = checked;
+        onChange(updated);
+        if (channelId === "push") {
+            setLoading(false);
+        }
+        return updated;
     };
 
     return (
@@ -37,14 +24,14 @@ export default function NotificationPreferenceRow({
                 {category.name.toUpperCase()}
             </td>
             {channels.map((channel) => {
-                const checked = chosenChannels[channel.id] ?? false;
+                const checked = selection[channel.id] ?? false;
                 return (
                     <td key={`${category.id}_${channel.id}`} className="text-center">
                         <Checkbox
                             className="mx-auto sm:my-4"
                             checked={checked}
                             onCheckedChange={handleChange(channel.id)}
-                            disabled={disabledKeys[channel.id]}
+                            disabled={disabledKeys[channel.id] || loading}
                         />
                     </td>
                 );
@@ -62,5 +49,4 @@ NotificationPreferenceRow.propTypes = {
     }),
     selection: PropTypes.object,
     disabledKeys: PropTypes.object,
-    onPushRequest: PropTypes.func.isRequired,
 };

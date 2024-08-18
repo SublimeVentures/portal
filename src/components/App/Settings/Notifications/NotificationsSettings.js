@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { deleteToken, getToken } from "firebase/messaging";
+import { useCookies } from "react-cookie";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import {
     fetchNotificationChannels,
     fetchNotificationPreferences,
     subscribeToPushCategory,
+    unsubscribeFromPushCategory,
     updateNotificationPreferences,
 } from "@/fetchers/notifications.fetcher";
 import NotificationPreferenceRow from "@/components/App/Settings/Notifications/NotificationPreferenceRow";
@@ -32,6 +34,7 @@ export default function NotificationsSettings({ session, onNewSettings }) {
     const [disabledNotificationChannels, setDisabledNotificationChannels] = useState({});
     const [forceDisablePush, setForceDisablePush] = useState(false);
     const [preferenceMap, setPreferenceMap] = useState(/** @type NotificationPreferences */ {});
+    const [cookies, setCookie, removeCookie] = useCookies();
 
     const [notificationOptions, setNotificationOptions] = useState({
         channels: [],
@@ -53,19 +56,37 @@ export default function NotificationsSettings({ session, onNewSettings }) {
             updated.push = forceDisablePush;
             return updated;
         });
-        fetchNotificationChannels().then(setNotificationOptions);
-        fetchNotificationPreferences()
-            .then((prefs) => setPreferenceMap(prefs))
-            .then(() =>
+        fetchNotificationChannels()
+            .then((res) => {
+                setNotificationOptions(res);
+                return res;
+            })
+            .then((opts) => {
+                return fetchNotificationPreferences().then((prefs) => ({
+                    prefs,
+                    opts,
+                }));
+            })
+            .then(({ prefs, opts }) => {
+                setPreferenceMap(prefs);
+                return { opts };
+            })
+            .then(({ opts }) => {
                 setPreferenceMap((prev) => {
                     const updated = { ...prev };
-                    for (const category of Object.keys(prev)) {
-                        updated[category]["push"] = !!localStorage.getItem(`push_token_${category}_${tenantIndex}`);
+                    for (const categoryId of Object.keys(updated)) {
+                        updated[categoryId]["push"] = !!cookies[`push_token_${categoryId}_${tenantIndex}`];
                     }
-                    return prev;
-                }),
-            );
-    }, [forceDisablePush, session.email, session.phoneNumberE164]);
+                    for (const category of opts.categories) {
+                        if (!updated[category.id]) {
+                            updated[category.id] = {};
+                        }
+                        updated[category.id]["push"] = !!cookies[`push_token_${category.id}_${tenantIndex}`];
+                    }
+                    return updated;
+                });
+            });
+    }, [cookies, forceDisablePush, session.email, session.phoneNumberE164]);
 
     useEffect(() => {
         setForceDisablePush(Notification.permission === "denied");
@@ -117,22 +138,22 @@ export default function NotificationsSettings({ session, onNewSettings }) {
 
     const handlePreferenceChange = (categoryId) => (channels) => {
         setPreferenceMap((prev) => {
+            const updated = { ...prev };
             const prefEntries = Object.entries(channels);
             for (const [channelId, enabled] of prefEntries) {
-                if (!prev[categoryId]) {
-                    prev[categoryId] = {};
+                if (!updated[categoryId]) {
+                    updated[categoryId] = {};
                 }
-                if (channelId === "push") {
+                if (channelId === "push" && updated[categoryId]["push"] !== enabled) {
                     if (enabled) {
                         if (fcm) {
-                            console.log("SHOULD_GET_TOKEN");
                             getToken(fcm, {
                                 vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
                             })
                                 .then((token) => {
                                     subscribeToPushCategory(categoryId, token).then((res) => {
                                         if (res.ok) {
-                                            localStorage.setItem(`push_token_${categoryId}_${tenantIndex}`, token);
+                                            setCookie(`push_token_${categoryId}_${tenantIndex}`, token);
                                         }
                                     });
                                 })
@@ -142,18 +163,22 @@ export default function NotificationsSettings({ session, onNewSettings }) {
                         }
                     } else {
                         if (fcm) {
-                            deleteToken(fcm).then((done) => {
-                                console.log("FCM token removal:", done);
+                            const token = cookies[`push_token_${categoryId}_${tenantIndex}`];
+                            unsubscribeFromPushCategory(categoryId, token).then(() => {
+                                deleteToken(fcm).then((done) => {
+                                    console.log("FCM token removal:", done);
+                                });
                             });
                         } else {
                             console.warn("Firebase Messaging is not initialized!");
                         }
-                        localStorage.removeItem(`push_token_${categoryId}_${tenantIndex}`);
+                        removeCookie(`push_token_${categoryId}_${tenantIndex}`);
                     }
+                } else {
+                    updated[categoryId][channelId] = enabled;
                 }
-                prev[categoryId][channelId] = enabled;
             }
-            return prev;
+            return updated;
         });
     };
 
@@ -173,7 +198,7 @@ export default function NotificationsSettings({ session, onNewSettings }) {
                                 type="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                className="bg-app-bg autofill:bg-app-bg py-1 px-2 border-app-success rounded-md"
+                                className="bg-app-bg autofill:bg-app-bg py-1 px-2 border-app-success rounded-md offerWrap"
                             />
                             {!session.email && (
                                 <small className="text-app-error">Required to enable the email notifications</small>
@@ -188,7 +213,7 @@ export default function NotificationsSettings({ session, onNewSettings }) {
                                 pattern="^\+[0-9]{0,15}$"
                                 value={form.phoneNumberE164}
                                 onChange={handleChange}
-                                className="bg-app-bg autofill:bg-app-bg py-1 px-2 border-app-success rounded-md"
+                                className="bg-app-bg autofill:bg-app-bg py-1 px-2 border-app-success rounded-md offerWrap"
                             />
                             {!session.phoneNumberE164 && (
                                 <small className="text-app-error">Required to enable the SMS notifications</small>
@@ -228,7 +253,7 @@ export default function NotificationsSettings({ session, onNewSettings }) {
                         </tbody>
                     </table>
                 </div>
-                <div className="mb-8">
+                <div className="mb-8 mx-auto">
                     <UniButton size="xs" isWide text="Update" type={ButtonTypes.BASE} />
                 </div>
             </form>

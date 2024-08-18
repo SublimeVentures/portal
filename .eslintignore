@@ -6,3 +6,4 @@ dist/
 node_modules/
 
 .next/
+public/firebase-messaging-sw.js

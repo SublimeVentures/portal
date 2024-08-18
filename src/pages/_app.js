@@ -1,5 +1,6 @@
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
+import { Toaster } from "react-hot-toast";
 import { config } from "@/lib/wagmi";
 import { queryClient } from "@/lib/queryCache";
 
@@ -50,6 +51,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                 </WagmiProvider>
             </ClientErrorBoundary>
             <Gtag />
+            <Toaster position="top-right" gutter={15} />
         </>
     );
 }

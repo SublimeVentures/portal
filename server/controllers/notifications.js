@@ -88,9 +88,44 @@ async function subscribeToTopic(req, res) {
     }
 }
 
+async function unsubscribeFromTopic(req, res) {
+    try {
+        const schema = z.object({
+            categoryId: z.string(),
+            tenantId: z.number(),
+            token: z.string(),
+        });
+        const body = schema.parse(req.body);
+        return axios
+            .delete(process.env.MESSENGER_PUSH_SUBSCRIBE_URL, {
+                data: {
+                    ...body,
+                },
+            })
+            .then(({ data }) => {
+                return res.json({
+                    ok: data.ok,
+                    message: data.message ?? data.error,
+                });
+            })
+            .catch((err) => {
+                return res.status(400).json({
+                    ok: false,
+                    error: err.message,
+                });
+            });
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            error: err.message,
+        });
+    }
+}
+
 module.exports = {
     getNotificationChannels,
     getNotificationPreferences,
     setNotificationPreferences,
     subscribeToTopic,
+    unsubscribeFromTopic,
 };

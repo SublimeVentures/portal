@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
+import { tenantIndex } from "@/lib/utils";
 
 export const fetchNotificationChannels = async () => {
     try {
@@ -43,9 +44,30 @@ export const updateNotificationPreferences = async (updates) => {
 
 export const subscribeToPushCategory = async (categoryId, token) => {
     try {
-        const { data } = await axiosPrivate.post(API.subscribeToPush, {
+        const { data } = await axiosPrivate.post(API.pushSubscription, {
             categoryId,
             token,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "subscribeToPushTopic", e });
+        }
+        return {
+            ok: false,
+            error: e.message,
+        };
+    }
+};
+
+export const unsubscribeFromPushCategory = async (categoryId, token) => {
+    try {
+        const { data } = await axiosPrivate.delete(API.pushSubscription, {
+            data: {
+                categoryId,
+                token,
+                tenantId: tenantIndex,
+            },
         });
         return data;
     } catch (e) {
