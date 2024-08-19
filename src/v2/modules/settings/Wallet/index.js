@@ -82,7 +82,7 @@ export default function WalletSettings({ session }) {
             </div>
 
             <div className="w-full mt-auto md:hidden">
-                <AddWalletModal isOpen={isAddWalletModalOpen} setIsOpen={setIsAddWalletModalOpen} isMaxWallets={isMaxWallets} wallets={wallets} />
+                {!!isLoading && <AddWalletModal isOpen={isAddWalletModalOpen} setIsOpen={setIsAddWalletModalOpen} isMaxWallets={isMaxWallets} wallets={wallets} />}
             </div>
         </Card>
     );

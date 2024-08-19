@@ -7,7 +7,7 @@ import { getNotificationTitle, getDescriptionMessage } from "@/v2/helpers/notifi
 import TimelineSVG from "@/v2/assets/svg/timeline.svg";
 import TimelineTransaction from "./TimelineTransaction";
 
-export default function TimelineItem({ item, showTimeline = true, isRead = true }) {
+export default function TimelineItem({ item, showTimeline = true, isRead = true, className }) {
     const { cdn } = useEnvironmentContext();
 
     return (
@@ -20,7 +20,7 @@ export default function TimelineItem({ item, showTimeline = true, isRead = true 
                 </div>
             ) : null}
 
-            <div className={cn("py-4 px-6 w-full flex flex-col gap-2 rounded", isRead ? "bg-foreground/[0.03]" : " bg-foreground/10")}>
+            <div className={cn("py-4 px-6 w-full flex flex-col gap-2 rounded", isRead ? "bg-foreground/[0.03]" : " bg-foreground/10", className)}>
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         {/* <Image
@@ -32,9 +32,9 @@ export default function TimelineItem({ item, showTimeline = true, isRead = true 
                         /> */}
                         
                         <div>
-                            <div className="flex items-center">
-                                <h3 className="mr-1 text-md font-semibold text-foreground">{getNotificationTitle(item.typeId)}</h3>
-                                <p className="text-md font-light text-foreground/80">{getDescriptionMessage(item.typeId, item)}</p>
+                            <div>
+                                <h3 className="inline mr-1 text-md font-semibold text-foreground">{getNotificationTitle(item.typeId)}</h3>
+                                <p className="inline text-md font-light text-foreground/80">{getDescriptionMessage(item.typeId, item)}</p>
                             </div>
 
                             {item.onchain?.txID ? <TimelineTransaction item={item} /> : null}                        

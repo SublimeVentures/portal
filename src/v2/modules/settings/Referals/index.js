@@ -1,14 +1,8 @@
 import Link from "next/link";
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import ReferalsSteps from "@/v2/modules/settings/Referals/ReferalsSteps";
-import Table from "@/v2/components/Table/Table";
-import { offerColumns as columns } from "@/v2/modules/otc/logic/columns";
 import ReferalsTable from "@/v2/modules/settings/Referals/ReferalsTable";
-import {
-    RewardStatisticCard,
-    DiscountsStatisticCard,
-    InvitersStatisticCard,
-} from "@/v2/components/App/Vault/StatisticsCard";
+import { RewardStatisticCard, DiscountsStatisticCard, InvitersStatisticCard } from "@/v2/components/App/Vault/StatisticsCard";
 
 export default function Referals() {
     return (
@@ -16,7 +10,7 @@ export default function Referals() {
             <div className="bg-gray-800 rounded-lg col-span-1 md:row-span-12">
                 <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full bg-settings-gradient pb-23">
                     <div>
-                        <CardTitle className="text-base font-normal md:text-lg font-medium text-white mb-1">
+                        <CardTitle className="text-base md:text-lg font-medium text-white mb-1">
                             Join Based Referral program
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm font-light">
@@ -30,14 +24,16 @@ export default function Referals() {
                     <ReferalsSteps />
                 </Card>
             </div>
+
             <div className="bg-gray-800 pb-0 rounded-lg col-span-1 3xl:col-span-2 max-h-28 flex gap-10">
                 <RewardStatisticCard />
                 <InvitersStatisticCard />
                 <DiscountsStatisticCard value="10%" />
             </div>
+
             <div className="bg-gray-800 rounded-lg col-span-1 3xl:col-span-2 md:row-span-11">
                 <ReferalsTable />
             </div>
         </div>
     );
-}
+};

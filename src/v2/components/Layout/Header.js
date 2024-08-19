@@ -47,7 +47,6 @@ export default function Header({ title, isBlockedAlert }) {
                         <p className="text-md text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
                         <Avatar className="bg-white" />
                         <div className="mx-2 h-6 w-0.5 bg-foreground" />
-                        <p>+4</p>
                     </div>
 
                     <NotificationMenu />
