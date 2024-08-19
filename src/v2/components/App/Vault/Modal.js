@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Button } from "@/v2/components/ui/button";
 import {
     Sheet,
     SheetContent,
@@ -9,8 +8,8 @@ import {
     SheetBody,
     SheetTitle,
     SheetTrigger,
-    SheetClose,
 } from "@/v2/components/ui/sheet";
+import { Button as ModalButton } from "@/v2/modules/upgrades/Modal";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
@@ -18,6 +17,8 @@ import { METHOD } from "@/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import { cn } from "@/lib/cn";
+import useGetToken from "@/lib/hooks/useGetToken";
+import { useNotificationInfiniteQuery } from "@/v2/modules/notifications/logic/useNotificationInfiniteLoader";
 
 const Title = ({ children }) => (
     <h3 className="text-xs md:text-base font-medium text-white px-8 mb-3 md:mb-1">{children}</h3>
@@ -35,8 +36,11 @@ const PercentWrapper = ({ value }) => (
 );
 
 export default function ClaimModal({ className, children, data }) {
-    const { account, activeInvestContract } = useEnvironmentContext();
-    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { account, activeInvestContract, getCurrencySettlement } = useEnvironmentContext();
+    const nextPayout = data.currentPayout ?? {};
+    const symbol = nextPayout?.currencySymbol ?? (data?.isManaged ? "USD" : data.coin);
+    const token = useGetToken(getCurrencySettlement()[0].contract);
+    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: {
             steps: {
                 network: true,
@@ -57,7 +61,7 @@ export default function ClaimModal({ className, children, data }) {
                 prerequisiteTextError: "Invalid transaction data",
                 transactionType: METHOD.CLAIM,
             },
-            token: data.coin,
+            token,
             setTransactionSuccessful: () => {},
         },
     });
@@ -83,7 +87,7 @@ export default function ClaimModal({ className, children, data }) {
                             <dl className="definition-grid">
                                 <DefinitionItem term="Progress">{formatPercentage(data.progress / 100)}</DefinitionItem>
                                 <DefinitionItem term="Invested">{formatCurrency(data.invested)}</DefinitionItem>
-                                <DefinitionItem term="Vested">{formatCurrency(data.vested)}</DefinitionItem>
+                                <DefinitionItem term="Vested">{formatCurrency(data.vested, symbol)}</DefinitionItem>
                             </dl>
                         </div>
                     </div>
@@ -111,41 +115,26 @@ export default function ClaimModal({ className, children, data }) {
                         <div className="definition-section my-0">
                             <dl className="definition-grid">
                                 <DefinitionItem term="Participated">{data.participatedDate}</DefinitionItem>
-                                {data.currentPayout ? (
-                                    <>
-                                        <DefinitionItem term="Current unlock">
-                                            {data.currentPayout.unlockDate}
-                                        </DefinitionItem>
-                                        <DefinitionItem term="Allocation Snapshot">
-                                            {data.currentPayout.snapshotDate}
-                                        </DefinitionItem>
-                                        <DefinitionItem term="Claim date">
-                                            {data.currentPayout.claimDate}
-                                        </DefinitionItem>
-                                    </>
-                                ) : (
-                                    <>
-                                        <DefinitionItem term="Current unlock">
-                                            {data.nextPayout.unlockDate || "TBA"}
-                                        </DefinitionItem>
-                                        <DefinitionItem term="Allocation Snapshot">
-                                            {data.nextPayout.snapshotDate || "TBA"}
-                                        </DefinitionItem>
-                                        <DefinitionItem term="Claim date">
-                                            {data.nextPayout.claimDate || "TBA"}
-                                        </DefinitionItem>
-                                    </>
-                                )}
+                                <DefinitionItem term="Next unlock">
+                                    {data.nextPayout?.unlockDate || "TBA"}
+                                </DefinitionItem>
+                                <DefinitionItem term="Allocation Snapshot">
+                                    {data.nextPayout?.snapshotDate || "TBA"}
+                                </DefinitionItem>
+                                <DefinitionItem term="Claim date">{data.nextPayout?.claimDate || "TBA"}</DefinitionItem>
                             </dl>
                         </div>
                     </div>
-                    <BlockchainSteps {...getBlockchainStepsProps()} />
+                    {/* <div>
+                        <Title>Timeline</Title>
+                        <div className="definition-section my-0 !bg-white/10">fdsfs</div>
+                    </div> */}
+                    <BlockchainSteps className="mt-auto" {...getBlockchainStepsProps()} />
                 </SheetBody>
                 {data.canClaim && (
-                    <SheetFooter>
-                        <Button variant="accent" onClick={() => {}}>
-                            Claim
-                        </Button>
+                    <SheetFooter className="px-4 md:px-30 md:pb-11">
+                        <ModalButton variant="accent" {...getBlockchainStepButtonProps()} />
+                        <p className="text-white/50 text-sm">You will receive {symbol} after settlement.</p>
                     </SheetFooter>
                 )}
             </SheetContent>

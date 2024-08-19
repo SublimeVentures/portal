@@ -17,7 +17,8 @@ export default function useInvestmentsData(details) {
         canClaim: details.canClaim,
         ath: details.ath || 0,
         tgeGain: details.tge_gain || 0,
-        nextPayout: details.nextPayout || {},
+        nextPayout: details.nextPayout,
         currentPayout: details.currentPayout,
+        offer: details.offer,
     };
 }
