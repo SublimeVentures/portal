@@ -5,7 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchNotificationList } from "@/fetchers/notifications.fetcher";
 import { notificationKeys } from "@/v2/constants";
 
-export const useNotificationInfiniteQuery = (query) =>
+export const useNotificationInfiniteQuery = (query, options = {}) =>
     useInfiniteQuery({
         queryKey: notificationKeys.queryNotifications(query),
         queryFn: ({ pageParam: offset = 6 }) => {
@@ -26,6 +26,7 @@ export const useNotificationInfiniteQuery = (query) =>
             return newOffset;
         },
         select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        ...options,
     });
 
 export default function useNotificationInfiniteLoader() {

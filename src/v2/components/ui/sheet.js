@@ -27,7 +27,7 @@ const sheetVariants = cva(
         variants: {
             side: {
                 left: "bottom-0 left-0 h-full w-3/4 rounded-lg data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-lg sm:rounded-l-none",
-                right: "bottom-0 right-0 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right md:rounded-l-lg",
+                right: "bottom-0 right-0 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:rounded-l-4xl",
             },
         },
         defaultVariants: {
@@ -52,9 +52,9 @@ const SheetContent = forwardRef(({ side, className, children, ...props }, ref) =
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({ className, ...props }) => (
-    <div className="gradient-border-sheet-header">
-        <div className="bg-sheet-pattern bg-cover bg-center bg-no-repeat md:rounded-l-lg md:mt-0.5 md:ml-0.5">
-            <div className="bg-gray-400/[.6] md:rounded-l-lg">
+    <div className="gradient-border-sheet-header before:rounded-l-4xl">
+        <div className="bg-sheet-pattern bg-cover bg-center bg-no-repeat sm:rounded-l-4xl sm:mt-0.5 sm:ml-0.5">
+            <div className="bg-gray-400/[.6] sm:rounded-l-4xl">
                 <div
                     className={cn(
                         "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center text-center",

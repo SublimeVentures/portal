@@ -7,7 +7,7 @@ import useInvestmentsData from "@/v2/hooks/useInvestmentsData";
 import { cn } from "@/lib/cn";
 import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
 import { Button } from "@/v2/components/ui/button";
-import Modal from "@/v2/components/App/Vault/Modal";
+import Modal from "@/v2/components/App/Vault/ClaimModal";
 
 // aspect-[5/8]
 const InvestmentCardWrapper = ({ children, className }) => {

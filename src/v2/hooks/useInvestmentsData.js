@@ -19,6 +19,6 @@ export default function useInvestmentsData(details) {
         tgeGain: details.tge_gain || 0,
         nextPayout: details.nextPayout,
         currentPayout: details.currentPayout,
-        offer: details.offer,
+        offerId: details?.offer?.id,
     };
 }
