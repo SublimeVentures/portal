@@ -14,7 +14,7 @@ const renderLogo = (componentName) => {
     return <TenantLogo />;
 };
 
-export default function Sidebar({ session, isBlockedAlert = false }) {
+export default function Sidebar({ isBlockedAlert = false }) {
     const router = useRouter();
     const { components } = useTenantSpecificData();
 
@@ -26,17 +26,17 @@ export default function Sidebar({ session, isBlockedAlert = false }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="p-8 text-sm font-light text-foreground">{name}</h2>
+                <h2 className="p-6 text-sm font-light text-foreground">{name}</h2>
                 <ul className="flex flex-col gap-2">
                     {items.map(({ name, path }) => (
                         <li
                             key={path}
                             className={cn(
                                 "text-base py-2 font-normal text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
-                                { "bg-primary-light-gradient font-medium": router.pathname === path },
+                                { "bg-primary-light-gradient": router.pathname === path },
                             )}
                         >
-                            <Link href={path} className="px-8">
+                            <Link href={path} className="px-6">
                                 {name}
                             </Link>
                         </li>
@@ -51,7 +51,7 @@ export default function Sidebar({ session, isBlockedAlert = false }) {
             <div className={cn("py-16 flex flex-col grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
-                        <div className="flex items-center">{renderLogo(components.logo)}</div>
+                        <div className="flex items-center px-6 pb-12">{renderLogo(components.logo)}</div>
                     </Link>
                 </div>
 

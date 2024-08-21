@@ -36,11 +36,11 @@ const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
 const TabletLayout = ({ children, isBlockedAlert, className }) => {
     return (
         <div
-            className={cn("hidden flex-col gap-4 h-full grow md:flex 2xl:hidden", {
+            className={cn("hidden flex-col gap-4 h-full grow px-4 md:flex 2xl:hidden", {
                 "mt-[var(--alertHeight)]": isBlockedAlert,
             })}
         >
-            <div className="px-4">
+            <div>
                 <Header isBlockedAlert={isBlockedAlert} />
                 <TabletNavbar />
             </div>
