@@ -14,22 +14,15 @@ export const layoutStyles = {
 
 const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
     return (
-        <div className={cn("hidden h-full grow 2xl:flex", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
-            <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} />
-            <div className="m-6 ml-0 flex grow pl-[var(--sidebarWidth)]">
-                <div
-                    className={cn("grow bg-[#05060B] rounded-[33px] overflow-y-auto page-scrollbar", {
-                        "max-h-[calc(100vh_-_theme('spacing.12'))]": !isBlockedAlert,
-                        "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
-                    })}
-                >
-                    <main className={cn("py-12 px-16 flex flex-col w-full h-max", className)}>
-                        <Header title={title} />
-                        {children}
-                    </main>
-                </div>
+        <>
+            <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} className="w-60" />
+            <div className="grow lg:p-3 3xl:p-7 lg:pl-60 3xl:pl-60 overflow-hidden h-screen box-border">
+                <main className="bg-[#05060B] lg:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col lg:gap-6 3xl:gap-8 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12">
+                    <Header title={title} />
+                    {children}
+                </main>
             </div>
-        </div>
+        </>
     );
 };
 
@@ -83,14 +76,13 @@ export default function LayoutApp({ children, title, contentClassName }) {
     const isBlockedAlert = stakingEnabled && !isStaked;
 
     return (
-        <div
-            style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-            className={cn("relative min-h-screen h-full w-full flex flex-col bg-[#082536]")}
-        >
+        <div className={cn("bg-gradient angle-30 to-[#082536] from-[#0A1728] flex")}>
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>{children}</MobileLayout>
-            <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>{children}</DesktopLayout>
+            {/* <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>{children}</MobileLayout> */}
+            {/* <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout> */}
+            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
+                {children}
+            </DesktopLayout>
 
             <WalletErrorModal session={children.props?.session} />
             <ChainListModal />

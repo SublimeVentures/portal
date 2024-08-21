@@ -5,17 +5,20 @@ import { CheckboxField } from "@/v2/components/ui/checkbox";
 
 export default function NotificationsSettings() {
     return (
-        <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full w-full bg-settings-gradient">
+        <Card
+            variant="none"
+            className="py-6 px-12 lg:py-3 lg:px-6 3xl:py-6 3xl:px-12 flex flex-col gap-8 lg:gap-4 3xl:gap-8 h-full w-full bg-settings-gradient"
+        >
             <div>
-                <CardTitle className="text-base font-medium text-white md:text-lg">
+                <CardTitle className="text-base font-medium text-white 3xl:text-lg">
                     Notifications <span className="hidden md:inline">Settings</span>
                 </CardTitle>
-                <CardDescription className="hidden md:block text-xs md:text-sm font-light">
+                <CardDescription className="hidden lg:block text-xs 3xl:text-sm font-light">
                     View and update your personal preference
                 </CardDescription>
             </div>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-1 3xl:grid-cols-2 gap-8 lg:gap-2 3xl:gap-8">
                 <CheckboxField id="announcements">Announcements</CheckboxField>
                 <CheckboxField id="offer_updates">Offer updates</CheckboxField>
                 <CheckboxField id="payouts">Payouts</CheckboxField>
@@ -45,4 +48,4 @@ export default function NotificationsSettings() {
             </div>
         </Card>
     );
-};
+}

@@ -4,12 +4,7 @@ import Title from "@/v2/modules/opportunities/Title";
 
 export default function UpgradesHeader({ title, children, affix, className, count }) {
     return (
-        <header
-            className={cn(
-                "flex flex-col gap-7 3xl:gap-4 md:flex-row md:items-center md:gap-5 mt-7 3xl:mt-0",
-                className,
-            )}
-        >
+        <header className={cn("flex flex-col gap-7 3xl:gap-4 md:flex-row md:items-center md:gap-5", className)}>
             <div className="flex items-center justify-between gap-4">
                 <Title count={count}>{title}</Title>
                 {affix}

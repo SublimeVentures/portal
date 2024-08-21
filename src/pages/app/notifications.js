@@ -9,7 +9,7 @@ export default function AppNotifications() {
     const { data, isFetching, hasNextPage, fetchNextPage, getFiltersProps } = useNotificationInfiniteLoader();
 
     return (
-        <div className="flex flex-col gap-8 h-[75vh] overflow-hidden">
+        <>
             <NotificationFilters {...getFiltersProps()} />
             <Notifications
                 data={data}
@@ -17,7 +17,7 @@ export default function AppNotifications() {
                 hasNextPage={hasNextPage}
                 fetchNextPage={fetchNextPage}
             />
-        </div>
+        </>
     );
 }
 

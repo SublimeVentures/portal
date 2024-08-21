@@ -51,12 +51,12 @@ export default function MobileMenu({ isBlockedAlert }) {
     useEffect(() => {
         const handleRouteChange = () => setIsMobileMenuOpen(false);
 
-        router.events.on('routeChangeStart', handleRouteChange);
+        router.events.on("routeChangeStart", handleRouteChange);
 
         return () => {
-            router.events.off('routeChangeStart', handleRouteChange);
+            router.events.off("routeChangeStart", handleRouteChange);
         };
-    }, [router.events]); 
+    }, [router.events]);
 
     const handleExternalLinkOpen = (evt, path) => {
         evt.preventDefault();
@@ -89,7 +89,7 @@ export default function MobileMenu({ isBlockedAlert }) {
 
     return (
         <Sheet open={isMobileMenuOpen}>
-            <SheetTrigger asChild className="2xl:hidden">
+            <SheetTrigger asChild className="lg:hidden">
                 <IconButton
                     name="Toggle mobile menu"
                     onClick={() => setIsMobileMenuOpen(true)}

@@ -28,15 +28,15 @@ export default function Header({ title, isBlockedAlert }) {
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="mt-4 flex justify-between shrink-0 h-[var(--headerHeight)]">
+        <header className="flex justify-between shrink-0">
             <div className="flex justify-between items-center w-full h-max text-white">
-                <div className="2xl:hidden">
+                <div className="lg:hidden">
                     <Link href={PAGE.App}>
                         <div className="flex items-center">{renderLogo(components.logo)}</div>
                     </Link>
                 </div>
 
-                <div className="hidden items-baseline 2xl:flex">
+                <div className="hidden items-baseline lg:flex">
                     {title && (
                         <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground">{title}</h2>
                     )}
@@ -44,14 +44,14 @@ export default function Header({ title, isBlockedAlert }) {
 
                 <div className="flex items-center gap-4">
                     <div className="hidden items-center gap-4 md:flex">
-                        <p className="text-md text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
-                        <Avatar className="bg-white" />
+                        <p className="text-sm font-light text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
+                        <Avatar className="bg-white size-13" />
                         <div className="mx-2 h-6 w-0.5 bg-foreground" />
                     </div>
 
                     <NotificationMenu />
                     <ChainSwitch />
-                    <Button className="hidden 2xl:block" variant="secondary" onClick={handleLogout}>
+                    <Button className="hidden lg:block" variant="secondary" onClick={handleLogout}>
                         Logout
                     </Button>
 

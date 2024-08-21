@@ -58,19 +58,19 @@ export default function AppUpgrades({ session }) {
     const title = `Upgrades - ${getCopy("NAME")}`;
 
     return (
-        <div className="flex flex-col grow 3xl:pt-11 gap-7 3xl:gap-11">
+        <>
             <Head>
                 <title>{title}</title>
             </Head>
             <Header title="Supercharge your investments" />
-            <div className="flex flex-col 3xl:flex-row 3xl:grow gap-7 3xl:gap-11 pointer-events-none group mb-20 3xl:mb-0">
+            <div className="flex flex-col lg:flex-row lg:grow gap-7 lg:gap-6 3xl:gap-11 pointer-events-none group mb-12">
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
                             key={data.slug}
                             variant={data.id === 1 ? "accent" : "static"}
                             className={cn(
-                                "text-white flex-1 flex flex-col gap-4 3xl:gap-11 py-8 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
+                                "text-white flex-1 flex flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
                                 {
                                     "!bg-pattern-gold": data.id === 1,
                                     "!bg-pattern-blue": data.id !== 1,
@@ -121,7 +121,7 @@ export default function AppUpgrades({ session }) {
                 }}
                 buyModalProps={buyModalProps}
             />
-        </div>
+        </>
     );
 }
 
