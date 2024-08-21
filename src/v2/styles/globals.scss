@@ -100,12 +100,12 @@
   }
 
   .bg-mystery-box {
-    background-image: linear-gradient(to bottom, #071321 0%, #071321 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+    background-image: linear-gradient(to bottom, #071321 0%, #071321 5%, rgba(0,0,0,0) 50%), url('/img/underwater_chest.png');
   }
 
   @screen 3xl {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+      background-image: linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/underwater_chest.png');
     }
   }
 

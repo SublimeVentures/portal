@@ -33,7 +33,7 @@ const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
     );
 };
 
-const TabletLayout = ({ children, isBlockedAlert }) => {
+const TabletLayout = ({ children, isBlockedAlert, className }) => {
     return (
         <div
             className={cn("hidden flex-col gap-4 h-full grow md:flex 2xl:hidden", {
@@ -46,12 +46,17 @@ const TabletLayout = ({ children, isBlockedAlert }) => {
             </div>
 
             <div
-                className={cn("grow bg-[#05060B] rounded-t-[33px] overflow-y-auto page-scrollbar h-max p-12", {
-                    "h-[calc(100vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
-                    "h-[calc(100vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]": isBlockedAlert,
-                })}
+                className={cn(
+                    "grow bg-[#05060B] rounded-t-[33px] overflow-y-auto page-scrollbar h-max p-12",
+                    className,
+                    {
+                        "h-[calc(100vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
+                        "h-[calc(100vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]":
+                            isBlockedAlert,
+                    },
+                )}
             >
-                <main className="flex flex-col w-full">{children}</main>
+                <main className={`flex flex-col w-full`}>{children}</main>
             </div>
         </div>
     );
@@ -61,9 +66,14 @@ const MobileLayout = ({ children, isBlockedAlert, className }) => {
     return (
         <div className="relative">
             <div className="flex flex-col mt-[var(--alertHeight)] h-[calc(100vh_-_var(--navbarHeight)_-_var(--alertHeight))] relative rounded-b-lg overflow-hidden md:hidden">
-                <div className="pb-16 px-4 z-10 bg-[#071321] page-scrollbar overflow-y-auto sm:px-8">
+                <div
+                    className={cn(
+                        "pb-16 px-4 z-10 bg-[#071321] page-scrollbar overflow-y-auto sm:px-8 h-full",
+                        className,
+                    )}
+                >
                     <Header isBlockedAlert={isBlockedAlert} />
-                    <main className={cn("relative z-10", className)}>{children}</main>
+                    <main className={cn("relative z-10")}>{children}</main>
                 </div>
 
                 <div className="absolute z-20 bottom-0 h-8 w-full bg-navbar-gradient " />
@@ -93,7 +103,9 @@ export default function LayoutApp({ children, title, contentClassName }) {
             <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>
                 {children}
             </MobileLayout>
-            <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
+            <TabletLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>
+                {children}
+            </TabletLayout>
             <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
                 {children}
             </DesktopLayout>

@@ -76,7 +76,7 @@ module.exports = {
                 pattern:
                     "linear-gradient(0deg, rgba(9, 32, 57, 1) 0%, rgba(9, 32, 57, 1) 60%, rgba(9, 29, 51, 0.85) 70%, rgba(10, 12, 14, 0.75) 100%), url('/img/sheet-pattern.png')",
                 "mystery-box":
-                    "linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp')",
+                    "linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/underwater_chest.png')",
             },
             gridTemplateColumns: {
                 cards: "repeat(auto-fill, minmax(450px, 1fr))",

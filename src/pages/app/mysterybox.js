@@ -112,13 +112,14 @@ export default function MysteryBoxPage({ session }) {
     };
 
     const title = `Mystery Box - ${getCopy("NAME")}`;
+
     return (
         <>
             <Head>
                 <title>{title}</title>
             </Head>
             <div className="grow flex flex-col items-start justify-center 3xl:py-12">
-                <div className="3xl:w-[532px]">
+                <div className="3xl:w-[532px] md:max-w-[45%]">
                     <div className="flex flex-col items-start 3xl:gap-4 mb-10 pt-10 3xl:pt-0">
                         <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-accent">
                             The Sunken Mystery Box
@@ -211,7 +212,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
 MysteryBoxPage.getLayout = function (page) {
     return (
-        <AppLayout contentClassName="bg-mystery-box bg-cover bg-right-bottom" title="Mystery Box">
+        <AppLayout contentClassName="bg-mystery-box h-full bg-cover bg-center md:bg-left-bottom" title="Mystery Box">
             {page}
         </AppLayout>
     );

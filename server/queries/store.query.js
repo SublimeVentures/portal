@@ -1,7 +1,6 @@
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
-const { Op } = require("sequelize");
 const db = require("../services/db/definitions/db.init");
 async function getStore(partnerId, tenantId) {
     try {
