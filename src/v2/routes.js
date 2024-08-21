@@ -31,4 +31,5 @@ export const routes = Object.freeze({
     Mysterybox: "/app/mysterybox",
     Upgrades: "/app/upgrades",
     Settings: "/app/settings",
+    Notifications: "/app/notifications",
 });

@@ -29,7 +29,7 @@ export const DropdownMenuButton = React.forwardRef(
 );
 
 // eslint-disable-next-line react/display-name
-export const DropdownMenuContent = React.forwardRef(({ children, ...props }, forwardedRef) => {
+export const DropdownMenuContent = React.forwardRef(({ children, className, ...props }, forwardedRef) => {
     return (
         <DropdownMenuPrimitive.Portal className="z-50">
             <DropdownMenuPrimitive.Content
@@ -37,7 +37,7 @@ export const DropdownMenuContent = React.forwardRef(({ children, ...props }, for
                 align="start"
                 sideOffset={26}
                 ref={forwardedRef}
-                className="z-10 py-10 min-w-60 bg-navy-600 rounded [box-shadow:0px_0px_58px_rgba(0,_0,_0,_0.39)]"
+                className={cn("z-10 py-10 min-w-60 bg-navy-600 rounded [box-shadow:0px_0px_58px_rgba(0,_0,_0,_0.39)]", className)}
             >
                 {children}
             </DropdownMenuPrimitive.Content>
@@ -64,7 +64,7 @@ export const DropdownMenuLabel = React.forwardRef(({ children, ...props }, forwa
         <DropdownMenuPrimitive.Label
             {...props}
             ref={forwardedRef}
-            className="mb-4 px-8 flex items-baseline justify-between text-foreground text-2xl leading-none"
+            className="mb-4 px-8 flex items-baseline justify-between text-foreground text-base leading-none"
         >
             {children}
         </DropdownMenuPrimitive.Label>

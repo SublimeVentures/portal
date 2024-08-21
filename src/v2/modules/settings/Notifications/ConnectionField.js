@@ -11,7 +11,7 @@ export default function ConnectionField({ id, name, placeholder, isConnected = f
 
     return (
         <div className="p-4 bg-foreground/[.05] rounded shadow-lg">
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center">
                     <Image
                         src={`/img/icons/${id}.png`}
@@ -31,17 +31,15 @@ export default function ConnectionField({ id, name, placeholder, isConnected = f
             </div>
 
             {isConnected ? (
-                <Button variant="outline" className="w-full">
-                    Disconnect
-                </Button>
+                <Button variant="outline" className="w-full">Disconnect</Button>
             ) : (
-                <div className="relative">
-                    <Input type="text" placeholder={placeholder} />
+                <div className="relative flex items-center justify-center">
+                    <Input type="text" placeholder={placeholder} className="w-full" />
                     <IconButton
                         variant="primary"
                         name="Connect"
                         icon={ArrowRightIcon}
-                        className="absolute top-2 right-2 w-6 h-6"
+                        className="p-0 absolute top-3 right-2 w-6 h-6"
                     />
                 </div>
             )}

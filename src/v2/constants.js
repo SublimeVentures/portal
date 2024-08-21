@@ -5,6 +5,7 @@ const settingsKeyValues = {
 
 const notificationsKeyValues = {
     notifications: "notifications",
+    lastNotifications: "last-notifications",
 };
 
 export const settingsKeys = {
@@ -15,4 +16,5 @@ export const settingsKeys = {
 export const notificationKeys = {
     notifications: [notificationsKeyValues.notifications],
     queryNotifications: (query) => [...notificationKeys.notifications, query],
+    lastNotifications: [notificationsKeyValues.lastNotifications],
 };
