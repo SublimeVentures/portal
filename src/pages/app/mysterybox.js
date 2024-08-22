@@ -212,7 +212,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
 MysteryBoxPage.getLayout = function (page) {
     return (
-        <AppLayout contentClassName="bg-mystery-box h-full bg-cover bg-center md:bg-left-bottom" title="Mystery Box">
+        <AppLayout contentClassName="bg-mystery-box h-full bg-cover bg-center md:bg-left" title="Mystery Box">
             {page}
         </AppLayout>
     );

@@ -36,7 +36,7 @@ const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
 const TabletLayout = ({ children, isBlockedAlert, className }) => {
     return (
         <div
-            className={cn("hidden flex-col gap-4 h-full grow px-4 md:flex 2xl:hidden", {
+            className={cn("hidden flex-col gap-4 grow px-4 md:flex 2xl:hidden", {
                 "mt-[var(--alertHeight)]": isBlockedAlert,
             })}
         >
@@ -46,18 +46,14 @@ const TabletLayout = ({ children, isBlockedAlert, className }) => {
             </div>
 
             <div
-                className={cn(
-                    "grow bg-[#05060B] rounded-t-[33px] overflow-y-auto page-scrollbar h-max p-12",
-                    className,
-                    {
-                        "h-[calc(100vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
-                        "h-[calc(100vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]":
-                            isBlockedAlert,
-                    },
-                )}
+                className={cn("grow bg-[#05060B] rounded-[33px] overflow-y-auto page-scrollbar h-max p-12", className, {
+                    "h-[calc(80vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
+                    "h-[calc(80vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]": isBlockedAlert,
+                })}
             >
                 <main className={`flex flex-col w-full`}>{children}</main>
             </div>
+            <div />
         </div>
     );
 };
@@ -95,7 +91,7 @@ export default function LayoutApp({ children, title, contentClassName }) {
     return (
         <div
             style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-            className={cn("relative min-h-screen h-full w-full flex flex-col bg-[#082536]")}
+            className={cn("relative min-h-screen max-h-screen h-full w-full flex flex-col bg-[#082536]")}
         >
             <WalletErrorModal session={children.props?.session} />
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
