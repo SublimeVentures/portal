@@ -5,7 +5,9 @@ import { STEPS } from "../enums";
 import { liquidityAction } from "./reducer";
 import useGetTokenBalance from "@/lib/hooks/useGetTokenBalance";
 
-export default function useLiquidityStep(state, data, dispatch) {
+export default function useLiquidityStep(isActive, state, data, dispatch) {
+    if (!isActive) return {};
+
     const chainId = useChainId();
     const { steps, token, params } = data;
 

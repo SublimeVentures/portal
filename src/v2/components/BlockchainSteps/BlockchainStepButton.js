@@ -4,6 +4,7 @@ import { cn } from "@/lib/cn";
 
 export default function BlockchainStepButton({ run, status, buttonLock, buttonText, className, variant }) {
     const isIdle = status === stepsStatus.IDLE;
+
     return (
         <Button
             variant={isIdle ? variant : "outline"}

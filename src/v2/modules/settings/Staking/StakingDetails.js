@@ -1,8 +1,8 @@
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import { cn } from "@/lib/cn";
 
-export default function StakingDetails({ session, stakingDetails }) {
-    const { allocationBonus, staked, unstake, stakeReq, nextDate, nextDateH } = stakingDetails;
+export default function StakingDetails({ session, staking }) {
+    const { allocationBonus, staked, unstake, stakeReq, nextDate, nextDateH } = staking;
 
     return (
         <>
@@ -13,6 +13,7 @@ export default function StakingDetails({ session, stakingDetails }) {
                         ${allocationBonus}
                     </span>
                 </DefinitionItem>
+                <DefinitionItem term="Allocation max">${session.stakeSize}</DefinitionItem>
                 <DefinitionItem term="Staked">
                     <span className={cn(staked > 0 ? "text-green-500" : "text-red-500")}>
                         {staked ? (session.stakeSize || stakeReq) : session.stakeReq}

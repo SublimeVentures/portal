@@ -27,16 +27,15 @@ export default function WalletSettings({ session }) {
       updateEnvironmentProps([{ path: "walletGuard", value: false }]);
     }, [isAddWalletModalOpen, isRemoveWalletModalOpen])
     
-
     const { userId } = session ?? {};
-    const { data: wallets, isLoading } = useQuery({
+    const { data: wallets = [], isLoading } = useQuery({
         queryKey: settingsKeys.userWallets(userId),
         queryFn: () => fetchUserWallets(),
         refetchOnWindowFocus: true,
     });
 
-    const sortedWallets = wallets?.sort((a, b) => a.isAirdrop - b.isAirdrop);
-    const isMaxWallets = wallets?.length >= maxWallets;
+    const sortedWallets = wallets.sort((a, b) => a.isAirdrop - b.isAirdrop);
+    const isMaxWallets = wallets.length >= maxWallets;
 
     return (
         <Card variant="none" className="flex flex-col gap-8 h-full w-full bg-settings-gradient md:py-6 md:px-12">

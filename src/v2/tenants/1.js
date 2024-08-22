@@ -6,6 +6,7 @@ export default {
         landing: "Home",
         login: "loginGlobal",
     },
+    nft: [],
     externalLinks: {
         BOOKING_SYSTEM: "https://info.basedvc.fund/Allocation-Booking-System-2f93893f882c49d0ab305159aa7099c4",
         OFFER_PHASES: "https://info.basedvc.fund/Offer-phases-cf284a30c16f4586a8f2fa6b49df1e8d",
