@@ -53,7 +53,11 @@ export default function Settings({ session }) {
 
     return (
         <>
-            <Tabs className="grow overflow-hidden lg:mb-6 3xl:mb-14" value={activeTab} onValueChange={setActiveTab}>
+            <Tabs
+                className="grow overflow-hidden flex flex-col gap-3 lg:-mr-5 lg:pr-5"
+                value={activeTab}
+                onValueChange={setActiveTab}
+            >
                 <div className="flex justify-between items-center">
                     <TabsList aria-label="Settings tabs" className="pb-0">
                         {tabs.map((tab) => (
@@ -65,8 +69,10 @@ export default function Settings({ session }) {
                 </div>
 
                 {tabs.map(({ id, component: Comp }) => (
-                    <TabsContent key={id} className="lg:mt-6 3xl:mt-8 h-full" value={id}>
-                        <Comp session={session} />
+                    <TabsContent key={id} className="grow lg:overflow-x-auto lg:-mr-5 lg:pr-3 mt-0" value={id}>
+                        <div className="lg:mt-3 lg:mb-6 3xl:my-0 3xl:pb-12 3xl:h-full">
+                            <Comp session={session} />
+                        </div>
                     </TabsContent>
                 ))}
             </Tabs>

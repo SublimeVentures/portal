@@ -13,7 +13,10 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
     });
 
     return (
-        <Card variant="none" className="px-2 flex flex-col h-full overflow-hidden bg-settings-gradient mb-12">
+        <Card
+            variant="none"
+            className="px-2 flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12"
+        >
             <div className="py-4 flex flex-col h-full overflow-y-auto">
                 <ol className="px-2 flex flex-col grow gap-4 overflow-x-hidden">
                     {data.map((notification, idx) => {
