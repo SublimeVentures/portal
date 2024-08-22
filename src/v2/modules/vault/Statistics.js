@@ -20,7 +20,7 @@ export default function Statistics({ className }) {
     const { data: { invested = 0, count = 0, ...stats } = {}, isLoading } = useFetchVaultStatistics();
     return (
         <div className={cn("flex flex-col grow", className)}>
-            <div className="mb-5 md:mb-4 md:h-13">
+            <div className="mb-5 sm:mb-4 lg:h-13">
                 <Title>My Statistics</Title>
             </div>
             <div className="flex flex-wrap gap-2 md:gap-4 grow lg:flex-col">

@@ -10,6 +10,7 @@ import { ChainSwitch } from "@/v2/components/App/Vault";
 import { Avatar } from "@/v2/components/ui/avatar";
 import { shortenAddress } from "@/v2/lib/helpers";
 import PAGE from "@/routes";
+import { cn } from "@/lib/cn";
 
 const mockedUser = {
     username: "Steady Stacker",
@@ -21,14 +22,14 @@ const renderLogo = (componentName) => {
     return <TenantLogo />;
 };
 
-export default function Header({ title, isBlockedAlert }) {
+export default function Header({ title, isBlockedAlert, className }) {
     const { environmentCleanup } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
 
     const handleLogout = () => environmentCleanup();
 
     return (
-        <header className="flex justify-between shrink-0">
+        <header className={cn("flex justify-between shrink-0", className)}>
             <div className="flex justify-between items-center w-full h-max text-white">
                 <div className="lg:hidden">
                     <Link href={PAGE.App}>

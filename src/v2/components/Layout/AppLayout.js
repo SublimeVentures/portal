@@ -15,10 +15,18 @@ export const layoutStyles = {
 const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
     return (
         <>
-            <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} className="w-60" />
-            <div className="grow lg:p-3 3xl:p-7 lg:pl-60 3xl:pl-60 overflow-hidden h-screen box-border">
-                <main className="bg-[#05060B] lg:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col lg:gap-6 3xl:gap-8 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12">
-                    <Header title={title} />
+            <div className="sm:px-4 sm:pt-4 flex flex-col gap-4 lg:hidden">
+                <Header isBlockedAlert={isBlockedAlert} />
+                <TabletNavbar />
+            </div>
+            <Sidebar
+                session={children.props?.session}
+                isBlockedAlert={isBlockedAlert}
+                className="hidden lg:flex w-60"
+            />
+            <div className="grow sm:p-4 lg:p-3 3xl:p-7 lg:pl-60 3xl:pl-60 overflow-hidden lg:h-screen box-border">
+                <main className="bg-[#05060B] sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col sm:overflow-y-auto lg:overflow-auto lg:gap-6 3xl:gap-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12">
+                    <Header title={title} className="hidden lg:flex" />
                     {children}
                 </main>
             </div>
@@ -76,10 +84,9 @@ export default function LayoutApp({ children, title, contentClassName }) {
     const isBlockedAlert = stakingEnabled && !isStaked;
 
     return (
-        <div className={cn("bg-gradient angle-30 to-[#082536] from-[#0A1728] flex")}>
+        <div className={cn("bg-gradient angle-30 to-[#082536] from-[#0A1728] flex flex-col lg:flex-row sm:h-screen")}>
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
             {/* <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>{children}</MobileLayout> */}
-            {/* <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout> */}
             <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
                 {children}
             </DesktopLayout>

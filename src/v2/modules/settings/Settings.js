@@ -54,7 +54,7 @@ export default function Settings({ session }) {
     return (
         <>
             <Tabs
-                className="grow overflow-hidden flex flex-col gap-3 lg:-mr-5 lg:pr-5"
+                className="grow lg:overflow-hidden flex flex-col gap-3 lg:-mr-5 lg:pr-5"
                 value={activeTab}
                 onValueChange={setActiveTab}
             >

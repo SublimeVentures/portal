@@ -15,14 +15,14 @@ function PayoutsPage() {
     const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery(query);
     return (
         <>
-            <Header title="Payouts">
+            <Header title="Payouts" className="sm:mb-4 lg:mb-0">
                 <Filters />
             </Header>
             <PayoutTable
                 variant={tableVariant}
                 isLoading={isLoading}
                 pages={pages}
-                className="grow overflow-hidden lg:mb-6 3xl:mb-14"
+                className="grow lg:overflow-hidden lg:mb-6 3xl:mb-14"
             />
         </>
     );

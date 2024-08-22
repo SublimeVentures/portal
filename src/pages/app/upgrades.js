@@ -62,15 +62,15 @@ export default function AppUpgrades({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <Header title="Supercharge your investments" />
-            <div className="flex flex-col lg:flex-row lg:grow gap-7 lg:gap-6 3xl:gap-11 pointer-events-none group mb-12">
+            <Header title="Supercharge your investments" className="sm:mb-4 lg:mb-0" />
+            <div className="flex flex-col sm:flex-row sm:grow sm:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12">
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
                             key={data.slug}
                             variant={data.id === 1 ? "accent" : "static"}
                             className={cn(
-                                "text-white flex-1 flex flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
+                                "text-white flex-1 flex sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
                                 {
                                     "!bg-pattern-gold": data.id === 1,
                                     "!bg-pattern-blue": data.id !== 1,
@@ -79,31 +79,31 @@ export default function AppUpgrades({ session }) {
                         >
                             <Image
                                 src={`${cdn}/webapp/store/${data.img}`}
-                                className="rounded-full size-46 3xl:size-80"
+                                className="rounded-full size-46 sm:size-32 3xl:size-80"
                                 alt={data.name}
                                 width={320}
                                 height={320}
                             />
-                            <div className="w-4/5 mx-auto">
+                            <div className="w-4/5 sm:w-1/2 lg:w-4/5 mx-auto sm:mx-0 lg:mx-auto text-center sm:text-left lg:text-center">
                                 <h1
-                                    className={cn("text-center text-lg 3xl:text-3xl font-medium mb-4", {
+                                    className={cn("text-lg 3xl:text-3xl font-medium mb-4", {
                                         "text-accent": !index,
                                         "text-primary": !!index,
                                     })}
                                 >
                                     {data.name}
                                 </h1>
-                                <p className="text-center text-xs 3xl:text-base font-light">{data.description}</p>
+                                <p className=" text-xs 3xl:text-base font-light">{data.description}</p>
                             </div>
-                            <BackdropCard className="w-11/12 3xl:w-9/12 3xl:mx-auto">
-                                <DefinitionList className="w-full 3xl:w-2/3">
+                            <BackdropCard className="w-11/12 sm:w-full 3xl:w-9/12 3xl:mx-auto">
+                                <DefinitionList className="w-full sm:w-2/3">
                                     <Definition term="Type">{data.id === 1 ? "Not Stackable" : "Stackable"}</Definition>
                                     <Definition term="Price">
                                         {data.price} {currency && getCurrency(currency.symbol)}
                                     </Definition>
                                 </DefinitionList>
                                 <Button
-                                    className="w-full 3xl:w-1/3"
+                                    className="w-full sm:w-1/3"
                                     variant={data.id === 1 ? "accent" : "default"}
                                     disabled={data.availability < 1}
                                     onClick={() => setOrder(data)}

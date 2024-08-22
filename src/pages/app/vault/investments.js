@@ -40,7 +40,7 @@ function InvestmentsPage() {
         <>
             <Metadata title="My Investments" />
             <InvestmentsFilters
-                className="md:flex-initial"
+                className="sm:flex-initial sm:mb-4 lg:mb-0"
                 investments={investments}
                 views={VIEWS}
                 query={{ view, ...query }}
@@ -53,7 +53,7 @@ function InvestmentsPage() {
                     <EmptyInvestmentsEnhanced />
                 </div>
             ) : (
-                <div className="grow overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 lg:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4">
+                <div className="grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 lg:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4">
                     {view === VIEW_TYPES.LIST && <InvestmentsList investments={investments} isLoading={isLoading} />}
                     {view === VIEW_TYPES.GRID && <InvestmentsGrid investments={investments} isLoading={isLoading} />}
                 </div>

@@ -18,7 +18,7 @@ export default function NotificationsSettings() {
                 </CardDescription>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-1 3xl:grid-cols-2 gap-8 lg:gap-2 3xl:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-1 3xl:grid-cols-2 gap-8 sm:gap-2 3xl:gap-8">
                 <CheckboxField id="announcements">Announcements</CheckboxField>
                 <CheckboxField id="offer_updates">Offer updates</CheckboxField>
                 <CheckboxField id="payouts">Payouts</CheckboxField>
