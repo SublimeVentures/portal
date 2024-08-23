@@ -2,7 +2,7 @@ import { dehydrate } from "@tanstack/react-query";
 
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { queryClient } from "@/lib/queryCache";
-import { fetchUserWallets, fetchUserWalletsSsr } from "@/fetchers/settings.fetcher";
+import { fetchUserWalletsSsr } from "@/fetchers/settings.fetcher";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
 import Settings from "@/v2/modules/settings/Settings";
 import routes from "@/routes";

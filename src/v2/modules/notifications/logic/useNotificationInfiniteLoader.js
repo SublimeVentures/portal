@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { fetchNotificationList } from "@/fetchers/notifications.fetcher";
+import { notificationKeys } from "@/v2/constants";
 
 export default function useNotificationInfiniteLoader() {
     const router = useRouter();
@@ -18,7 +19,7 @@ export default function useNotificationInfiniteLoader() {
         fetchNextPage,
         fetchPreviousPage,
     } = useInfiniteQuery({
-        queryKey: ["notifications", query],
+        queryKey: notificationKeys.queryNotifications(query),
         queryFn: ({ pageParam: offset = 6 }) => {
             return fetchNotificationList({ ...query, offset });
         },

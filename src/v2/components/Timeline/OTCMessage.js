@@ -1,22 +1,17 @@
-import Image from "next/image";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 
-const icon = `https://cdn.basedvc.fund/research/blockgames/icon.jpg`
+export default function OtcMessage({ action, values = {} }) {
+    const { getCurrencySymbolByAddress } = useEnvironmentContext();
+    const { amount = 0, currency = "", price = 0 } = values;
 
-// @TODO - Values will be adjusted when the backend will be ready
-export default function OtcMessage({ action, values }) {
+    const symbol = getCurrencySymbolByAddress(currency);
+
     return (
-        <>
-            {`${action} ${values.otcDeal?.amount} ${values.payout?.currencySymbol}`}
-            <span className="rounded-lg">
-                <Image
-                    src={icon}
-                    className="inline mx-2 rounded-full"
-                    alt=""
-                    width={25}
-                    height={25}
-                />
-            </span>
-            {` units at $${values.otcDeal?.price.toFixed(2)} each.`}
-        </>
-    )
+        <span className="flex items-center">
+            {`${action} ${amount} ${symbol}`}
+            <DynamicIcon className="mx-2 p-1 w-6 h-6 inline rounded-full" name={symbol} />
+            {` units at $${price.toFixed(2)} each.`}
+        </span>
+    );
 }

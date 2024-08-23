@@ -1,79 +1,73 @@
-import { Button } from "@/v2/components/ui/button";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/v2/components/ui/dropdown-menu";
-
 import { IconButton } from "@/v2/components/ui/icon-button";
-import SingleNotification from "@/v2/components/Notification/SingleNotification";
 import bellIcon from "@/v2/assets/svg/bell.svg";
 import { layoutStyles } from "@/v2/components/Layout/AppLayout";
+import { routes } from "@/v2/routes";
+import { notificationKeys } from "@/v2/constants";
+import { fetchNotificationList } from "@/fetchers/notifications.fetcher";
+import TimelineItem from "@/v2/components/Timeline/TimelineItem";
 
+// @TODO - Backend logic for new notifications
 const NotificationMenu = ({ isBlockedAlert }) => {
-    const notifications = mockedNotifications;
-    const newCount = notifications.filter((notification) => !notification.seen).length;
+    const { data } = useQuery({
+        queryKey: [notificationKeys.lastNotifications],
+        queryFn: () => fetchNotificationList({ limit: 8, offset: 0 }),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1 * 30 * 1000,
+    });
+
+    const newCount = 0;
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <IconButton icon={bellIcon} variant="transparent" shape="circle" className="p-3 outline-none" />
             </DropdownMenuTrigger>
-            
+
             <DropdownMenuContent
                 style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                className="rounded-b-lg w-screen h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] overflow-auto sm:max-w-[315px] sm:h-auto sm:rounded-b"
+                className="w-screen h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto"
             >
-                <div className="px-8 flex justify-between sm:flex-col">
-                    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                    <div className="flex items-center">
-                        <h3 className="mr-2 text-lg font-medium text-foreground">
-                            New <span className="font-light">({newCount})</span>
-                        </h3>
-                        <Button variant="link">Show All</Button>
+                <div className="mb-4 px-8 flex items-baseline justify-between text-foreground text-base leading-none">
+                    <div>
+                        <h3 className="inline text-foreground text-xl leading-none">Notifications</h3>
+                        <p className="ml-2 inline">
+                            New <span className="font-light">(2)</span>
+                        </p>
                     </div>
+
+                    <Link href={routes.Notifications} className="text-accent font-light leading-none hover:underline">
+                        Show all
+                    </Link>
                 </div>
 
                 <DropdownMenuGroup>
-                    {mockedNotifications.map((item) => (
-                        <DropdownMenuItem key={item.date}>
-                            <SingleNotification {...item} />
-                        </DropdownMenuItem>
-                    ))}
+                    {data?.rows.length
+                        ? data?.rows.map((notification) => (
+                              <DropdownMenuItem key={notification.date}>
+                                  <TimelineItem
+                                      className="px-8 bg-transparent"
+                                      showTimeline={false}
+                                      item={notification}
+                                  />
+                              </DropdownMenuItem>
+                          ))
+                        : null}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     );
 };
-
-const mockedNotifications = [
-    {
-        date: "12.04.2024",
-        avatar: "",
-        content: "Limewire payout complete: $20,000.00",
-        seen: false,
-    },
-    {
-        date: "11.04.2024",
-        avatar: "",
-        content: "Based.VC 10 year anniversary!",
-        seen: false,
-    },
-    {
-        date: "29.03.2024",
-        avatar: "",
-        content: "Ethereum new ATH! $10K+",
-        seen: true,
-    },
-    {
-        date: "27.03.2024",
-        avatar: "",
-        content: "Amazon payout complete: $15,600.00",
-        seen: true,
-    },
-];
 
 export default NotificationMenu;

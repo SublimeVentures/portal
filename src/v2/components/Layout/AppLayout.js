@@ -69,7 +69,7 @@ const MobileLayout = ({ children, isBlockedAlert, className }) => {
             <div className="flex flex-col mt-[var(--alertHeight)] h-[calc(100vh_-_var(--navbarHeight)_-_var(--alertHeight))] relative rounded-b-lg overflow-hidden md:hidden">
                 <div
                     className={cn(
-                        "pb-16 px-4 z-10 bg-[#071321] page-scrollbar overflow-y-auto sm:px-8 h-full",
+                        "pb-16 px-4 z-10 grow bg-[#071321] page-scrollbar overflow-y-auto sm:px-8 h-full",
                         className,
                     )}
                 >
@@ -77,7 +77,7 @@ const MobileLayout = ({ children, isBlockedAlert, className }) => {
                     <main className={cn("relative z-10")}>{children}</main>
                 </div>
 
-                <div className="absolute z-20 bottom-0 h-8 w-full bg-navbar-gradient " />
+                <div className="absolute z-10 bottom-0 h-8 w-full bg-navbar-gradient " />
             </div>
 
             <Navbar />
@@ -98,18 +98,17 @@ export default function LayoutApp({ children, title, contentClassName }) {
             style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
             className={cn("relative min-h-screen max-h-screen h-full w-full flex flex-col bg-[#082536]")}
         >
-            <WalletErrorModal session={children.props?.session} />
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <ChainListModal />
             <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>
                 {children}
             </MobileLayout>
-            <TabletLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>
-                {children}
-            </TabletLayout>
+            <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
             <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
                 {children}
             </DesktopLayout>
+
+            <WalletErrorModal session={children.props?.session} />
+            <ChainListModal />
         </div>
     );
 }
