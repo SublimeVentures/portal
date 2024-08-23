@@ -92,8 +92,8 @@ export default function LayoutApp({ children, title, contentClassName }) {
             <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
             <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>{children}</DesktopLayout>
 
-            {/* <WalletErrorModal session={children.props?.session} /> */}
-            {/* <ChainListModal /> */}
+            <WalletErrorModal session={children.props?.session} />
+            <ChainListModal />
         </div>
     );
 }
