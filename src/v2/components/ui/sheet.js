@@ -76,7 +76,7 @@ const SheetFooter = ({ className, ...props }) => (
 SheetFooter.displayName = "SheetFooter";
 
 const SheetBody = ({ className, ...props }) => (
-    <div className={cn("relative grow w-full max-h-[72vh]", className)} {...props} />
+    <div className={cn("relative grow w-full max-h-[66vh]", className)} {...props} />
 );
 
 SheetBody.displayName = "SheetBody";

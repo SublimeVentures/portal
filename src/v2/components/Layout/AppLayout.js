@@ -46,10 +46,15 @@ const TabletLayout = ({ children, isBlockedAlert, className }) => {
             </div>
 
             <div
-                className={cn("grow bg-[#05060B] rounded-[33px] overflow-y-auto page-scrollbar h-max p-12", className, {
-                    "h-[calc(80vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
-                    "h-[calc(80vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]": isBlockedAlert,
-                })}
+                className={cn(
+                    "grow bg-[#05060B] rounded-[33px] overflow-y-auto page-scrollbar h-max p-12 py-8",
+                    className,
+                    {
+                        "h-[calc(10vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
+                        "h-[calc(10vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]":
+                            isBlockedAlert,
+                    },
+                )}
             >
                 <main className={`flex flex-col w-full`}>{children}</main>
             </div>
