@@ -49,15 +49,14 @@ module.exports = {
                 116: "29rem", // 464px
             },
             fontSize: {
-                "3xs": ".5rem",
-                "2xs": ".625rem",
+                "3xs": ".5rem", // 8px
+                "2xs": ".625rem", // 10px
             },
             fontFamily: {
                 body: ["Poppins", "sans-serif"],
             },
             borderRadius: {
-                DEFAULT: "5px",
-                lg: "64px",
+                "4xl": "2rem",
             },
             backgroundImage: {
                 "primary-gradient": `linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%)`,
@@ -101,6 +100,7 @@ module.exports = {
             "accordion-up": "accordion-up 0.1s ease-out",
         },
         angle: {
+            30: "30deg",
             80: "80deg",
             130: "130deg",
             140: "140deg",

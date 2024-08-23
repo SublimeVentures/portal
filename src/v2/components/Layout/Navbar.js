@@ -9,7 +9,25 @@ export default function Navbar() {
     const router = useRouter();
 
     return (
-        <nav className="fixed bottom-0 h-[var(--navbarHeight)] w-full bg-[#082536] md:hidden">
+        <nav className="fixed bottom-0 h-24 w-full bg-[#082536] md:hidden z-10">
+            <div className="absolute z-10 -top-8 h-8 w-full bg-gradient-to-b from-transparent to-[#05060B] flex justify-between">
+                <div
+                    style={{
+                        background: "radial-gradient(100% 0, circle, rgba(255,0,0,0) 32px, #082536 10px)",
+                        backgroundPosition: "top right",
+                        backgroundRepeat: "no-repeat",
+                    }}
+                    className="size-8 bg-[#082536]"
+                />
+                <div
+                    style={{
+                        background: "-webkit-radial-gradient(0 0, circle, rgba(255,0,0,0) 32px, #082536 10px)",
+                        backgroundPosition: "top left",
+                        backgroundRepeat: "no-repeat",
+                    }}
+                    className="size-8 bg-[#082536]"
+                />
+            </div>
             <ul className="pt-4 px-4 mx-auto max-w-2xl flex items-center justify-between gap-4 sm:px-16">
                 {mainMenu.map(({ name, path, icon }) => {
                     const isSelected = router.pathname === path;
@@ -17,15 +35,24 @@ export default function Navbar() {
                     return (
                         <li key={name}>
                             <Link href={path} className="flex flex-col items-center">
-                                <IconButton icon={icon} className="h-12 w-12 p-4" shape="circle" variant={isSelected ? "gradient" : "transparent"} />
-                                <span className={cn("mt-1 text-[12px] text-foreground font-medium text-center", { "text-primary": isSelected })}>
+                                <IconButton
+                                    icon={icon}
+                                    className="h-12 w-12 p-4"
+                                    shape="circle"
+                                    variant={isSelected ? "gradient" : "transparent"}
+                                />
+                                <span
+                                    className={cn("mt-1 text-[12px] text-foreground font-medium text-center", {
+                                        "text-primary": isSelected,
+                                    })}
+                                >
                                     {name}
                                 </span>
                             </Link>
                         </li>
-                    )
+                    );
                 })}
             </ul>
         </nav>
     );
-};
+}
