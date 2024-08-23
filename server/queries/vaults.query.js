@@ -13,22 +13,23 @@ async function getUserVault(
         // Optimize the vested calculation
         const vestedSubquery = `
         (
-            SELECT COALESCE(SUM((elem->>'p')::numeric), 0)
-            FROM unnest("offer"."t_unlock") AS elem
-            WHERE (elem->>'c')::numeric != 0
+            SELECT COALESCE(SUM("payout"."percentage"), 0)
+            FROM "payout"
+            WHERE "payout"."offerId" = "offer"."id"
+                AND "payout"."claimDate" != 0
         )`;
 
         // Simplified nextClaimDate calculation
         const nextClaimDateSubquery = `
         (
             SELECT MIN(GREATEST(
-                COALESCE(NULLIF((elem->>'c')::bigint, 0), 0), 
-                COALESCE(NULLIF((elem->>'s')::bigint, 0), 0)
+                COALESCE(NULLIF("payout"."snapshotDate", 0), 0), 
+                COALESCE(NULLIF("payout"."claimDate", 0), 0)
             ))
-            FROM unnest("offer"."t_unlock") AS elem
-            WHERE 
-                (elem->>'c')::bigint > EXTRACT(EPOCH FROM NOW())
-                OR (elem->>'s')::bigint > EXTRACT(EPOCH FROM NOW())
+            FROM "payout"
+            WHERE "payout"."offerId" = "offer"."id"
+                AND "payout"."snapshotDate" > EXTRACT(EPOCH FROM NOW())
+                    OR "payout"."claimDate" > EXTRACT(EPOCH FROM NOW())
         )`;
 
         const nextClaimDateFilter = `
@@ -36,37 +37,21 @@ async function getUserVault(
             ${nextClaimDateSubquery} <= EXTRACT(EPOCH FROM NOW()) + 1209600
         )`;
 
-        // Optimize lastNonZeroCIndexSubquery
-        const lastNonZeroCIndexSubquery = `
-        (
-            SELECT idx
-            FROM (
-                SELECT 
-                    row_number() OVER () - 1 AS idx,
-                    (elem->>'c')::numeric AS c
-                FROM unnest("offer"."t_unlock") AS elem
-                ORDER BY idx DESC
-            ) AS sub
-            WHERE sub.c != 0
-            LIMIT 1
-        )`;
-
         const isClaimedCheckSubquery = `
         (
             SELECT COUNT(*)
             FROM claim
-            WHERE
-                claim."payoutId" = (${lastNonZeroCIndexSubquery})
-                AND claim."offerId" = "offer"."id"
+            WHERE claim."offerId" = "offer"."id"
                 AND claim."userId" = :userId
-                AND claim."isClaimed" = true
+                AND claim."isClaimed" = false
         ) > 0`;
 
         const athSubquery = `
         (
             SELECT COALESCE(SUM("claim"."amount" * "offer"."ath"), 0)
             FROM "claim"
-            WHERE "claim"."offerId" = "vault"."offerId" AND "claim"."userId" = :userId
+            WHERE "claim"."offerId" = "vault"."offerId"
+                AND "claim"."userId" = :userId
         )`;
 
         const result = await models.vault.findAndCountAll({
@@ -81,11 +66,12 @@ async function getUserVault(
                 [Sequelize.literal(`${isClaimedCheckSubquery}`), "canClaim"],
                 [Sequelize.literal(`${nextClaimDateSubquery}`), "nextClaimDate"],
                 [Sequelize.literal(`${athSubquery}`), "ath"],
+                [Sequelize.literal(`((("offer"."tge" - "offer"."ppu") / NULLIF("offer"."ppu", 0)) * 100)`), "tge_gain"],
             ],
             include: [
                 {
                     model: models.offer,
-                    attributes: ["slug", "name", "tge", "id", "ppu", "ticker", "t_unlock", "isManaged"],
+                    attributes: ["slug", "name", "tge", "id", "ppu", "ticker", "isManaged"],
                     required: true,
                     include: [
                         {
@@ -97,6 +83,21 @@ async function getUserVault(
                                 },
                             },
                             required: true,
+                        },
+                        {
+                            model: models.payout,
+                            required: false,
+                            separate: true,
+                            order: [["offerPayout", "ASC"]],
+                            include: [
+                                {
+                                    model: models.claim,
+                                    where: {
+                                        userId,
+                                    },
+                                    required: false,
+                                },
+                            ],
                         },
                     ],
                 },
@@ -121,7 +122,33 @@ async function getUserVault(
             offset,
         });
 
-        return result; // Return the result here
+        const processedRows = result.rows.map((vault) => {
+            const offer = vault.offer;
+
+            // Find the nextPayout based on future snapshotDate or claimDate
+            const nextPayout =
+                offer.payouts
+                    .filter(
+                        (payout) =>
+                            payout.snapshotDate > Math.floor(Date.now() / 1000) ||
+                            payout.claimDate > Math.floor(Date.now() / 1000),
+                    )
+                    .sort((a, b) => b.offerPayout - a.offerPayout)[0] || null;
+
+            // Find the currentPayout based on the highest offerPayout where claim.isClaimed is false
+            const currentPayout =
+                offer.payouts
+                    .filter((payout) => payout.claims.some((claim) => !claim.isClaimed))
+                    .sort((a, b) => b.offerPayout - a.offerPayout)[0] || null;
+
+            return {
+                ...vault.toJSON(),
+                nextPayout, // Add filtered nextPayout
+                currentPayout, // Add filtered currentPayout
+            };
+        });
+
+        return { count: result.count, rows: processedRows };
     } catch (error) {
         logger.error("QUERY :: [getUserVault]", {
             error: serializeError(error),

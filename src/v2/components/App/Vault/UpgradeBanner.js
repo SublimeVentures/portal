@@ -3,7 +3,7 @@ import { useMemo, Fragment } from "react";
 import Link from "next/link";
 import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
 import { IconButton } from "@/v2/components/ui/icon-button";
-import ArrowIcon from "@/v2/assets/svg/arrow-2.svg";
+import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { cn } from "@/lib/cn";
 import { routes } from "@/v2/routes";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";

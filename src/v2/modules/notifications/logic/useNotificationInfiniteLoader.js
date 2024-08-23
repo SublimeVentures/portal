@@ -5,20 +5,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchNotificationList } from "@/fetchers/notifications.fetcher";
 import { notificationKeys } from "@/v2/constants";
 
-export default function useNotificationInfiniteLoader() {
-    const router = useRouter();
-    const { query } = router;
-
-    const {
-        data: { pages = [] } = [],
-        isLoading,
-        isFetching,
-        isError,
-        error,
-        hasNextPage,
-        fetchNextPage,
-        fetchPreviousPage,
-    } = useInfiniteQuery({
+export const useNotificationInfiniteQuery = (query, options = {}) =>
+    useInfiniteQuery({
         queryKey: notificationKeys.queryNotifications(query),
         queryFn: ({ pageParam: offset = 6 }) => {
             return fetchNotificationList({ ...query, offset });
@@ -38,7 +26,23 @@ export default function useNotificationInfiniteLoader() {
             return newOffset;
         },
         select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        ...options,
     });
+
+export default function useNotificationInfiniteLoader() {
+    const router = useRouter();
+    const { query } = router;
+
+    const {
+        data: { pages = [] } = [],
+        isLoading,
+        isFetching,
+        isError,
+        error,
+        hasNextPage,
+        fetchNextPage,
+        fetchPreviousPage,
+    } = useNotificationInfiniteQuery(query);
 
     const handleInputChange = useCallback(
         (name, value) => {

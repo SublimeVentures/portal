@@ -12,10 +12,11 @@ export function formatPercentage(value, witSign = false) {
 }
 
 export function formatCurrency(value, currency = "USD") {
-    return Number(value).toLocaleString("en-US", {
-        style: "currency",
-        currency,
+    const isToken = currency !== "USD";
+    const number = Number(value).toLocaleString("en-US", {
+        ...(isToken ? {} : { style: "currency", currency }),
         minimumFractionDigits: value % 1 ? 2 : 0,
         maximumFractionDigits: 2,
     });
+    return isToken ? `${number} ${currency}` : number;
 }
