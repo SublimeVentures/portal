@@ -34,6 +34,12 @@ const nextConfig = {
                 port: "",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "neo-tokyo.nyc3.cdn.digitaloceanspaces.com",
+                port: "",
+                pathname: "/**",
+            },
         ],
     },
     env: {

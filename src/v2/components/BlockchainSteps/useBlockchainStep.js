@@ -42,11 +42,11 @@ export default function useBlockchainStep({ data }) {
         token?.contract,
     ]);
 
-    const { stepNetwork, network_current } = useNetworkStep(state, data, dispatch);
-    const { stepLiquidity } = useLiquidityStep(state, data, dispatch);
-    const { stepAllowance, allowance_set_reset, allowance_set } = useAllowanceStep(state, data, dispatch);
+    const { stepNetwork, network_current } = useNetworkStep(!!steps.network, state, data, dispatch);
+    const { stepLiquidity } = useLiquidityStep(!!steps.liquidity, state, data, dispatch);
+    const { stepAllowance, allowance_set_reset, allowance_set } = useAllowanceStep(!!steps.allowance, state, data, dispatch);
     const { stepPrerequisite } = usePrerequisiteStep(state, data, network_current, dispatch);
-    const { stepTransaction, transaction } = useTransactionStep(state, data, dispatch);
+    const { stepTransaction, transaction } = useTransactionStep(!!steps.transaction, state, data, dispatch);
 
     const resetState = () => {
         console.log("BIX :: PARAM CHANGED - reset writers");

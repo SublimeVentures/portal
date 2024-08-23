@@ -7,7 +7,7 @@ import ChainListModal from "@/v2/components/Modal/ChainListModal";
 
 export const layoutStyles = {
     "--navbarHeight": "100px",
-    "--alertHeight": "60px",
+    "--alertHeight": "50px",
     "--headerHeight": "100px",
     "--sidebarWidth": "260px",
 };

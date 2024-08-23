@@ -5,7 +5,9 @@ import { STEPS } from "../enums";
 import { transactionAction } from "./reducer";
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 
-export default function useTransactionStep(state, data, dispatch) {
+export default function useTransactionStep(isActive, state, data, dispatch) {
+    if (!isActive) return {};
+    
     const chainId = useChainId();
     const { steps, token, params } = data;
 

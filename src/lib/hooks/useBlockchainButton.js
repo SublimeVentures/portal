@@ -66,8 +66,8 @@ function useBlockchainButton(steps, state, params, extraState) {
             return () => clearTimeout(timeoutId);
         }
     }, [
-        extraState.stepNetwork.state,
-        extraState.stepLiquidity.state,
+        extraState.stepNetwork?.state,
+        extraState.stepLiquidity?.state,
         extraState?.stepAllowance?.state,
         extraState?.stepPrerequisite?.state,
         extraState?.stepTransaction?.state,

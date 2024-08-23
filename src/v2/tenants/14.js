@@ -6,6 +6,7 @@ export default {
         landing: "HomeKongzCapital",
         login: "loginCyberKongz",
     },
+    nft: ["Genesis Kong", "Baby Kong"],
     externalLinks: {
         WIKI: "#",
         DISCORD: "https://discord.com/invite/cyberkongz",
