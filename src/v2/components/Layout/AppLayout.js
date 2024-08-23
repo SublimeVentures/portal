@@ -7,7 +7,7 @@ import ChainListModal from "@/v2/components/Modal/ChainListModal";
 
 export const layoutStyles = {
     "--navbarHeight": "100px",
-    "--alertHeight": "60px",
+    "--alertHeight": "50px",
     "--headerHeight": "100px",
     "--sidebarWidth": "260px",
 };
@@ -92,8 +92,8 @@ export default function LayoutApp({ children, title, contentClassName }) {
             <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
             <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>{children}</DesktopLayout>
 
-            <WalletErrorModal session={children.props?.session} />
-            <ChainListModal />
+            {/* <WalletErrorModal session={children.props?.session} /> */}
+            {/* <ChainListModal /> */}
         </div>
     );
 }

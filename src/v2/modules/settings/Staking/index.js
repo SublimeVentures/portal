@@ -52,8 +52,8 @@ export default function Staking({ session }) {
     
     return (
         <Card variant="none" className="py-6 px-12 h-full flex flex-col w-full bg-settings-gradient md:flex-row">
-            <div className="h-full flex flex-col gap-8 w-full md:flex-row md:h-max">
-                <Image src={session.img ?? session.img_fallback} alt="" width={240} height={240} className="hidden shrink-0 rounded md:block" />
+            <div className="h-full flex flex-col items-center gap-8 w-full md:flex-row md:h-max">
+                <Image src={session.img ?? session.img_fallback} alt="" width={240} height={240} className="hidden h-max w-max shrink-0 rounded md:block" />
 
                 <div className="flex flex-col justify-center w-full gap-4">
                     <div className="flex items-center gap-4 md:hidden">
