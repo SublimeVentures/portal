@@ -15,7 +15,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
     return (
         <Card variant="none" className="px-2 flex flex-col h-full overflow-hidden bg-settings-gradient">
             <div className="py-4 flex flex-col h-full overflow-y-auto">
-                <ol className="px-2 flex flex-col grow gap-4 overflow-x-hidden">
+                <ol className="px-2 flex flex-col grow overflow-x-hidden">
                     {data.map((notification, idx) => {
                         if (idx + 1 === data.length && hasNextPage) {
                             return (
@@ -27,7 +27,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
 
                         return (
                             <li key={notification.id} className="group">
-                                <TimelineItem item={notification} />
+                                <TimelineItem item={notification} className={idx === 0 && "mt-0"} />
                             </li>
                         );
                     })}
@@ -37,4 +37,4 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
             </div>
         </Card>
     );
-}
+};
