@@ -70,7 +70,7 @@ export default function AppUpgrades({ session }) {
                             key={data.slug}
                             variant={data.id === 1 ? "accent" : "static"}
                             className={cn(
-                                "text-white flex-1 flex sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
+                                "text-white flex-1 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
                                 {
                                     "!bg-pattern-gold": data.id === 1,
                                     "!bg-pattern-blue": data.id !== 1,

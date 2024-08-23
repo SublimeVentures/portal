@@ -15,7 +15,7 @@ function PayoutsPage() {
     const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery(query);
     return (
         <>
-            <Header title="Payouts" className="sm:mb-4 lg:mb-0">
+            <Header title="Payouts" className="mb-4 lg:mb-0" bannerClassName="hidden sm:block">
                 <Filters />
             </Header>
             <PayoutTable

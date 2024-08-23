@@ -40,7 +40,7 @@ function InvestmentsPage() {
         <>
             <Metadata title="My Investments" />
             <InvestmentsFilters
-                className="sm:flex-initial sm:mb-4 lg:mb-0"
+                className="sm:flex-initial mb-4 lg:mb-0"
                 investments={investments}
                 views={VIEWS}
                 query={{ view, ...query }}

@@ -42,7 +42,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                 </div>
             </div>
             <div className="grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 sm:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4">
-                <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-2 sm:gap-4 lg:gap-y-6 lg:gap-x-8 2xl:grid-cols-cards">
+                <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-2 gap-4 lg:gap-y-6 lg:gap-x-8 2xl:grid-cols-cards">
                     {offers.map((offer, idx) => {
                         if (idx + 1 === offers.length && hasNextPage) {
                             return (
