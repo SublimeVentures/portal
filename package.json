@@ -31,6 +31,7 @@
     "@sentry/nextjs": "7.105.0",
     "@tanstack/react-query": "5.28.4",
     "@tanstack/react-query-devtools": "5.28.4",
+    "@tanstack/react-table": "8.16.0",
     "@walletconnect/modal": "2.6.2",
     "axios": "1.6.8",
     "bignumber.js": "9.1.2",
