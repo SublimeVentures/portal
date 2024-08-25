@@ -6,8 +6,12 @@ export const logIn = async (message, signature, tenant, partner, type, referralC
     try {
         const { data } = await axiosPublic.post(API.auth, { message, signature, tenant, partner, type, referralCode });
         return data;
-    } catch (e) {}
-    return false;
+    } catch (e) {
+        return {
+            ok: false,
+            error: e.response?.data?.error || "Error processing login",
+        };
+    }
 };
 
 export const logOut = async () => {

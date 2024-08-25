@@ -34,8 +34,8 @@ export default function AppVault({ session }) {
         queryFn: fetchVault,
         refetchOnMount: true,
         refetchOnWindowFocus: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 30 * 1000,
+        gcTime: 5 * 60 * 1000,
+        staleTime: 30 * 1000,
     });
 
     const { data: premiumData } = useQuery({
@@ -43,8 +43,8 @@ export default function AppVault({ session }) {
         queryFn: fetchStoreItemsOwned,
         refetchOnMount: true,
         refetchOnWindowFocus: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 1 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+        staleTime: 60 * 1000,
     });
 
     const closeClaimModal = () => {
@@ -60,7 +60,7 @@ export default function AppVault({ session }) {
 
     const renderList = () => {
         if (!vault) return;
-        return vault.map((el, i) => {
+        return vault.map((el) => {
             return <VaultItem item={el} key={el.name} passData={openClaimModal} />;
         });
     };

@@ -1,15 +1,14 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { fetchPartners } from "@/fetchers/public.fecher";
 import { PAGE } from "@/lib/enum/route";
 import { queryClient } from "@/lib/queryCache";
 import { verifyID } from "@/lib/authHelpers";
-import ErrorModal from "@/components/SignupFlow/ErrorModal";
+import ErrorProvider from "@/components/SignupFlow/ErrorProvider";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
-import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
 const LoginBased = dynamic(() => import("@/components/Login/loginGlobal"), {
     ssr: true,
@@ -46,7 +45,6 @@ const {
 } = getTenantConfig().seo;
 
 export default function Login({ isAuthenticated }) {
-    let [errorModal, setErrorModal] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -54,12 +52,6 @@ export default function Login({ isAuthenticated }) {
             router.replace("/app");
         }
     }, []);
-
-    useEffect(() => {
-        if (router?.query?.error === LoginErrorsEnum.CREDENTIALS_ERROR) {
-            setErrorModal(true);
-        }
-    }, [router.query]);
 
     const { data } = useQuery({
         queryKey: ["partnerList"],
@@ -71,11 +63,10 @@ export default function Login({ isAuthenticated }) {
     });
 
     return (
-        <>
+        <ErrorProvider>
             <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             {TENANTS_LOGIN(data)}
-            <ErrorModal model={errorModal} setter={() => setErrorModal(false)} />
-        </>
+        </ErrorProvider>
     );
 }
 

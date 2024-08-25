@@ -15,16 +15,10 @@ const { externalLinks } = getTenantConfig();
 export default function ManageWallets({ walletProps }) {
     const { updateEnvironmentProps } = useEnvironmentContext();
     const { wallets } = walletProps;
-    const [walletAdd, setWalletAdd] = useState(false);
     const [walletRemove, setWalletRemove] = useState(false);
 
-    const maxWallets = 3;
+    const maxWallets = 2;
 
-    const openWalletAdd = () => {
-        if (wallets.length >= maxWallets) return;
-        setWalletAdd(true);
-        updateEnvironmentProps([{ path: "walletGuard", value: false }]);
-    };
     const openWalletRemove = () => {
         if (wallets.length === 1) return;
         setWalletRemove(true);
@@ -112,17 +106,6 @@ export default function ManageWallets({ walletProps }) {
                         </table>
                     </div>
                     <div className={"flex flex-row gap-5 ml-auto p-5 mt-auto"}>
-                        <UniButton
-                            type={ButtonTypes.BASE}
-                            text={"ADD"}
-                            size={"text-sm xs"}
-                            isWide={true}
-                            isLarge={true}
-                            isDisabled={wallets.length >= maxWallets}
-                            handler={() => {
-                                openWalletAdd();
-                            }}
-                        />
                         {wallets.length > 1 && (
                             <UniButton
                                 type={ButtonTypes.BASE}
@@ -140,15 +123,6 @@ export default function ManageWallets({ walletProps }) {
                 </div>
             </div>
 
-            <WalletAddModal
-                addProps={addProps}
-                model={walletAdd}
-                setter={async () => {
-                    setWalletAdd(false);
-                    updateEnvironmentProps([{ path: "walletGuard", value: true }]);
-                    // await refreshSession()
-                }}
-            />
             <WalletRemoveModal
                 addProps={addProps}
                 model={walletRemove}

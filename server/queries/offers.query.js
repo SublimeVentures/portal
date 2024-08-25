@@ -46,6 +46,8 @@ const query_getOfferList = `
         ol.d_open,
         ol.d_close,
         ol."offerId",
+        ol."lengthFCFS",
+        ol."lengthGuaranteed",
         ofr."isPaused",
         ofr."isSettled"
     FROM
@@ -54,7 +56,9 @@ const query_getOfferList = `
             SELECT
                 ol1.d_open,
                 ol1.d_close,
-                ol1."offerId"
+                ol1."offerId",
+                ol1."lengthFCFS",
+                ol1."lengthGuaranteed"
             FROM
                 "offerLimit" ol1
             WHERE
