@@ -14,7 +14,7 @@ const renderLogo = (componentName) => {
     return <TenantLogo />;
 };
 
-export default function Sidebar({ session, isBlockedAlert = false, className }) {
+export default function Sidebar({ isBlockedAlert = false, className }) {
     const router = useRouter();
     const { components } = useTenantSpecificData();
 
@@ -33,10 +33,10 @@ export default function Sidebar({ session, isBlockedAlert = false, className }) 
                             key={path}
                             className={cn(
                                 "text-base font-normal text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
-                                { "bg-primary-light-gradient font-medium": router.pathname === path },
+                                { "bg-primary-light-gradient": router.pathname === path },
                             )}
                         >
-                            <Link href={path} className="px-8 block lg:py-1.5 3xl:py-2">
+                            <Link href={path} className="px-6 block lg:py-1.5 3xl:py-2">
                                 {name}
                             </Link>
                         </li>
@@ -51,7 +51,7 @@ export default function Sidebar({ session, isBlockedAlert = false, className }) 
             <div className={cn("lg:py-9 3xl:py-19 flex flex-col grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
-                        <div className="flex items-center">{renderLogo(components.logo)}</div>
+                        <div className="flex items-center pb-12">{renderLogo(components.logo)}</div>
                     </Link>
                 </div>
 

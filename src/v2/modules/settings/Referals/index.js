@@ -2,7 +2,11 @@ import Link from "next/link";
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import ReferalsSteps from "@/v2/modules/settings/Referals/ReferalsSteps";
 import ReferalsTable from "@/v2/modules/settings/Referals/ReferalsTable";
-import { RewardStatisticCard, DiscountsStatisticCard, InvitersStatisticCard } from "@/v2/components/App/Vault/StatisticsCard";
+import {
+    RewardStatisticCard,
+    DiscountsStatisticCard,
+    InvitersStatisticCard,
+} from "@/v2/components/App/Vault/StatisticsCard";
 
 export default function Referals() {
     return (
@@ -36,4 +40,4 @@ export default function Referals() {
             </div>
         </div>
     );
-};
+}

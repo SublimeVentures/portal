@@ -7,7 +7,7 @@ import useSendTransaction from "@/lib/hooks/useSendTransaction";
 
 export default function useTransactionStep(isActive, state, data, dispatch) {
     if (!isActive) return {};
-    
+
     const chainId = useChainId();
     const { steps, token, params } = data;
 

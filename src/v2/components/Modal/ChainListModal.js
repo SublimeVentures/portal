@@ -10,7 +10,7 @@ const ChainListModal = () => {
     const { isConnected, chainId } = useAccount();
     const { network } = useEnvironmentContext();
     const { switchChain, error } = useSwitchChain();
-    
+
     const { chains: current = [], isSupported, isLoading } = network;
     const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
     const isOpen = !isSupported && isConnected && !isLoading;

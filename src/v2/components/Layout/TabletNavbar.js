@@ -15,7 +15,7 @@ export default function TabletNavbar() {
                         key={path}
                         className={cn(
                             "py-2 px-4 text-xs text-foreground whitespace-nowrap rounded cursor-pointer hover:bg-primary/[.5]",
-                            { "bg-primary-light-gradient font-medium": router.pathname === path },
+                            { "bg-primary-light-gradient": router.pathname === path },
                         )}
                     >
                         <Link href={path}>{name}</Link>

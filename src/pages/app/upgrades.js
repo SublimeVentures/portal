@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import routes from "@/routes";
-import { AppLayout, Metadata } from "@/v2/components/Layout";
+import { AppLayout } from "@/v2/components/Layout";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { fetchStore } from "@/fetchers/store.fetcher";
 import { getCopy } from "@/lib/seoConfig";
@@ -23,6 +23,7 @@ const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/Buy
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
     const { cdn, getCurrencyStore } = useEnvironmentContext();
+
     console.log("getCurrencyStore", getCurrencyStore());
 
     const [isBuyModal, setBuyModal] = useState(false);

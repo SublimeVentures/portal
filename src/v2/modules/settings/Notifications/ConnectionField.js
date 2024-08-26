@@ -31,7 +31,9 @@ export default function ConnectionField({ id, name, placeholder, isConnected = f
             </div>
 
             {isConnected ? (
-                <Button variant="outline" className="w-full">Disconnect</Button>
+                <Button variant="outline" className="w-full">
+                    Disconnect
+                </Button>
             ) : (
                 <div className="relative flex items-center justify-center">
                     <Input type="text" placeholder={placeholder} className="w-full" />

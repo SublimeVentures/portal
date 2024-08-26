@@ -9,7 +9,7 @@ import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 
 export default function useAllowanceStep(isActive, state, data, dispatch) {
     if (!isActive) return {};
-    
+
     const chainId = useChainId();
     const { steps, token, params } = data;
 

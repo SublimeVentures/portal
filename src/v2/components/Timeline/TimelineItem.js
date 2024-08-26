@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import Image from "next/image";
+
 import TimelineTransaction from "./TimelineTransaction";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getFormattedDate } from "@/v2/lib/helpers";
@@ -28,6 +29,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
                 className={cn(
                     "py-4 px-6 w-full flex flex-col gap-2 rounded",
                     isRead ? "bg-foreground/[0.03]" : " bg-foreground/10",
+                    className,
                 )}
             >
                 <div className="flex justify-between items-center">
@@ -61,6 +63,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
         </div>
     );
 });
+
 TimelineItem.displayName = "TimelineItem";
 
 export default TimelineItem;
