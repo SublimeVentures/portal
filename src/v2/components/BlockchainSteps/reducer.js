@@ -7,6 +7,8 @@ import { transactionReducer, defaultTransactionStep } from "./transaction/reduce
 export const stepsAction = Object.freeze({
     START: "START",
     RESET: "RESET",
+    ERROR: "ERROR",
+    SUCCESS: "SUCCESS",
 });
 
 export const stepsStatus = Object.freeze({

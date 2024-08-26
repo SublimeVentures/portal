@@ -136,13 +136,20 @@ export default function useBlockchainStep({ data }) {
     const buttonState = useBlockchainButton(steps, state, params, extraState);
 
     // @TODO - Refactor, maybe put it in useBlockchainButton?
-    const states = Object.values(extraState)
+    const statuses = Object.values(extraState)
         .map((item) => item?.state)
         .filter(Boolean);
     const processingState = Object.keys(extraState).find((key) => extraState[key]?.state === STEP_STATE.PROCESSING);
-    const isProcessing = states.includes(STEP_STATE.PROCESSING);
-    const isSuccess = states.every((state) => state === STEP_STATE.SUCCESS);
-    const hasError = states.includes(STEP_STATE.ERROR);
+    const errorState = extraState[Object.keys(extraState).find((key) => extraState[key].state === STEP_STATE.ERROR)];
+    const isProcessing = statuses.includes(STEP_STATE.PROCESSING);
+    const isSuccess = statuses.every((state) => state === STEP_STATE.SUCCESS);
+    const hasError = statuses.includes(STEP_STATE.ERROR);
+
+    useEffect(() => {
+        if (hasError) dispatch({ type: stepsAction.ERROR });
+        if (isSuccess) dispatch({ type: stepsAction.SUCCESS });
+        if (isProcessing) dispatch({ type: stepsAction.PROCESSING });
+    }, [hasError, isProcessing, isSuccess]);
 
     const currentState = extraState[processingState] ?? defaultState;
 
@@ -150,6 +157,7 @@ export default function useBlockchainStep({ data }) {
         resetState,
         getBlockchainStepsProps: () => ({
             status: state.status,
+            errorState,
             currentState,
             extraState,
             steps,

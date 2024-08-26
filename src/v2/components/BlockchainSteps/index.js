@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { stepsStatus } from "./reducer";
 import BlockchainStep from "@/v2/components/BlockchainSteps/BlockchainStep";
 
@@ -7,7 +8,6 @@ import AccountBalanceIcon from "@/v2/assets/svg/account-balance.svg";
 import PriorityIcon from "@/v2/assets/svg/priority.svg";
 import RocketLaunchIcon from "@/v2/assets/svg/rocket.svg";
 import FiveChainsIcon from "@/v2/assets/svg/five-chains.svg";
-import { cn } from "@/lib/cn";
 
 const successColors = {
     "--start-color": "rgba(64, 206, 96, .22)",
@@ -30,18 +30,18 @@ const colorSchemes = {
 // @TODO
 // -> Get description for each step
 // -> Get svg from designer for chains with different amount of circles and create dynamic component with it
-export default function BlockchainSteps({ status, currentState, steps, extraState, className }) {
+export default function BlockchainSteps({ status, currentState, steps, extraState, errorState }) {
+    const content = useMemo(() => {
+        if (errorState?.error?.text) {
+            return errorState.error.text;
+        }
+        return "This will guide you through each step for a seamless purchase";
+    }, [errorState]);
+
     return (
-        <div
-            className={cn(
-                "mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded",
-                className,
-            )}
-        >
+        <div className="mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded">
             <h3 className="text-base md:text-lg font-medium text-foreground text-center">{currentState.content}</h3>
-            <p className="mb-2 text-sm font-light text-foreground text-center">
-                This will guide you through each step for a seamless purchase
-            </p>
+            <p className="mb-2 text-sm font-light text-foreground text-center">{content}</p>
 
             <div className="relative h-[43px]">
                 <FiveChainsIcon style={colorSchemes[status]} className="absolute z-0" />
