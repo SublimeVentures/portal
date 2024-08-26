@@ -112,19 +112,18 @@ export default function MysteryBoxPage({ session }) {
     };
 
     const title = `Mystery Box - ${getCopy("NAME")}`;
-
     return (
         <>
             <Head>
                 <title>{title}</title>
             </Head>
-            <div className="grow flex flex-col items-start justify-center 3xl:py-12">
+            <div className="grow flex flex-col items-start justify-center lg:py-6 3xl:py-12">
                 <div className="3xl:w-[532px] md:max-w-[45%]">
-                    <div className="flex flex-col items-start 3xl:gap-4 mb-10 pt-10 3xl:pt-0">
+                    <div className="flex flex-col items-start lg:gap-2 3xl:gap-4 mb-10 lg:mb-4 3xl:mb-10 pt-10 sm:pt-0">
                         <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-accent">
                             The Sunken Mystery Box
                         </h1>
-                        <p className="text-sm 3xl:text-base font-light leading-7 text-white/50 3xl:text-white mb-8 3xl:mb-0">
+                        <p className="text-sm lg:text-xs 3xl:text-base font-light leading-7 lg:leading-4 3xl:leading-7 text-white/50 3xl:text-white mb-8 lg:mb-0">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua.
                         </p>
@@ -138,12 +137,12 @@ export default function MysteryBoxPage({ session }) {
                         </Link>
                     </div>
                     <BackdropCard className="mb-5">
-                        <DefinitionList className="grid-cols-2 w-full 3xl:w-2/3">
+                        <DefinitionList className="grid-cols-2 w-full sm:w-2/3">
                             <Definition term="Type">Stackable</Definition>
                             <Definition term="Price">$150</Definition>
                         </DefinitionList>
                         <Button
-                            className="w-full 3xl:w-1/3"
+                            className="w-full sm:w-1/3"
                             disabled={storeAvailable <= 0}
                             onClick={() => {
                                 setOrder(mysteryBox);
@@ -154,22 +153,22 @@ export default function MysteryBoxPage({ session }) {
                     </BackdropCard>
                     {mysteryBoxOwnedAmount > 0 && (
                         <BackdropCard className="!flex-row">
-                            <figure className="w-2/5 3xl:w-1/3">
+                            <figure className="w-2/5 sm:w-1/3">
                                 <Image
                                     src="/img/icon-chest.webp"
-                                    className="rounded-md w-full 3xl:size-18 3xl:-my-2"
+                                    className="rounded-md w-full sm:size-18 lg:-my-2"
                                     alt="Mystery Box"
                                     width={72}
                                     height={72}
                                 />
                             </figure>
-                            <div className="w-3/5 3xl:w-2/3 flex flex-col 3xl:flex-row gap-5 3xl:items-center">
-                                <DefinitionList className="3xl:w-1/2">
+                            <div className="w-3/5 sm:w-2/3 flex flex-col sm:flex-row gap-5 sm:items-center">
+                                <DefinitionList className="sm:w-1/2">
                                     <Definition term="Owned">{mysteryBoxOwnedAmount}</Definition>
                                 </DefinitionList>
                                 <Button
                                     variant="accent"
-                                    className="3xl:w-1/2"
+                                    className="sm:w-1/2"
                                     disabled={mysteryBoxOwnedAmount < 1 || claimProcessing}
                                     onClick={openMysteryBox}
                                 >

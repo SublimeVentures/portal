@@ -6,6 +6,7 @@ export default {
         landing: "HomeCitCap",
         login: "loginCitCap",
     },
+    nft: ["S1", "S2"],
     externalLinks: {
         WIKI: "https://info.citizencapital.fund",
         DISCORD: "https://discord.com/invite/neotokyocitadel",

@@ -6,6 +6,7 @@ export default {
         landing: "HomeApesCapital",
         login: "loginApes",
     },
+    nft: ["BAYC", "MAYC"],
     externalLinks: {
         WIKI: "https://info.apes.capital/",
         DISCORD: "https://discord.gg/apesplus",

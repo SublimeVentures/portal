@@ -1,3 +1,4 @@
+import React, { forwardRef } from "react";
 import Image from "next/image";
 
 import TimelineTransaction from "./TimelineTransaction";
@@ -7,11 +8,11 @@ import { cn } from "@/lib/cn";
 import { getNotificationTitle, getDescriptionMessage } from "@/v2/helpers/notifications";
 import TimelineSVG from "@/v2/assets/svg/timeline.svg";
 
-export default function TimelineItem({ item, showTimeline = true, isRead = true, className }) {
+const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, className }, ref) => {
     const { cdn } = useEnvironmentContext();
 
     return (
-        <div className="flex text-sm">
+        <div ref={ref} className={cn("flex text-sm", className)}>
             {showTimeline ? (
                 <div
                     className={cn(
@@ -61,4 +62,8 @@ export default function TimelineItem({ item, showTimeline = true, isRead = true,
             </div>
         </div>
     );
-}
+});
+
+TimelineItem.displayName = "TimelineItem";
+
+export default TimelineItem;

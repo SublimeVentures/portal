@@ -14,7 +14,7 @@ const renderLogo = (componentName) => {
     return <TenantLogo />;
 };
 
-export default function Sidebar({ isBlockedAlert = false }) {
+export default function Sidebar({ isBlockedAlert = false, className }) {
     const router = useRouter();
     const { components } = useTenantSpecificData();
 
@@ -26,17 +26,17 @@ export default function Sidebar({ isBlockedAlert = false }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="p-6 text-sm font-light text-foreground">{name}</h2>
+                <h2 className="p-8 lg:py-5 3xl:py-8 text-sm font-light text-foreground">{name}</h2>
                 <ul className="flex flex-col gap-2">
                     {items.map(({ name, path }) => (
                         <li
                             key={path}
                             className={cn(
-                                "text-base py-2 font-normal text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
+                                "text-base font-normal text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
                                 { "bg-primary-light-gradient": router.pathname === path },
                             )}
                         >
-                            <Link href={path} className="px-6">
+                            <Link href={path} className="px-6 block lg:py-1.5 3xl:py-2">
                                 {name}
                             </Link>
                         </li>
@@ -47,8 +47,8 @@ export default function Sidebar({ isBlockedAlert = false }) {
     };
 
     return (
-        <aside className="p-6 fixed w-[var(--sidebarWidth)] inset-y-0 left-0 z-10 flex flex-col overflow-y-auto">
-            <div className={cn("py-16 flex flex-col grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
+        <aside className={cn("px-6 fixed inset-y-0 left-0 z-10 flex flex-col overflow-y-auto", className)}>
+            <div className={cn("lg:py-9 3xl:py-19 flex flex-col grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
                         <div className="flex items-center px-6 pb-12">{renderLogo(components.logo)}</div>
@@ -62,12 +62,12 @@ export default function Sidebar({ isBlockedAlert = false }) {
 
                 <div className="mt-auto flex flex-col items-center">
                     <h2 className="text-sm font-light text-gray-100">Community</h2>
-                    <ul className="flex items-center gap-2">
+                    <ul className="flex items-center lg:gap-4 3xl:gap-2 pt-4">
                         {socialMenu.map(({ icon, name, path }) => (
-                            <li key={name} className="pt-4">
+                            <li key={name}>
                                 <IconButton
                                     variant="transparent"
-                                    className="p-3"
+                                    className="lg:size-4 3xl:size-10 lg:p-0 3xl:p-3"
                                     shape="circle"
                                     name={name}
                                     icon={icon}

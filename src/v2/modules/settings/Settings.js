@@ -52,8 +52,12 @@ export default function Settings({ session }) {
     useEffect(() => setActiveTab(isDesktop ? "general" : "staking"), [isDesktop]);
 
     return (
-        <div className="relative flex flex-col gap-4 h-full xl:h-[calc(100vh_-_var(--headerHeight)_-160px)]">
-            <Tabs className="h-full" value={activeTab} onValueChange={setActiveTab}>
+        <>
+            <Tabs
+                className="grow lg:overflow-hidden flex flex-col gap-3 lg:-mr-5 lg:pr-5"
+                value={activeTab}
+                onValueChange={setActiveTab}
+            >
                 <div className="flex justify-between items-center">
                     <TabsList aria-label="Settings tabs" className="pb-0">
                         {tabs.map((tab) => (
@@ -64,14 +68,14 @@ export default function Settings({ session }) {
                     </TabsList>
                 </div>
 
-                <div>
-                    {tabs.map(({ id, component: Comp }) => (
-                        <TabsContent key={id} className="mt-4 h-full" value={id}>
+                {tabs.map(({ id, component: Comp }) => (
+                    <TabsContent key={id} className="grow lg:overflow-x-auto lg:-mr-5 lg:pr-3 mt-0" value={id}>
+                        <div className="lg:mt-3 lg:mb-6 3xl:my-0 3xl:pb-12 3xl:h-full">
                             <Comp session={session} />
-                        </TabsContent>
-                    ))}
-                </div>
+                        </div>
+                    </TabsContent>
+                ))}
             </Tabs>
-        </div>
+        </>
     );
 }
