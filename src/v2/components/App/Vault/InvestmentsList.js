@@ -8,7 +8,7 @@ export default function InvestmentsList({ investments = [], isLoading = false })
     const isRowView = (isMobile && !isDesktop) || isLargeDesktop;
 
     return (
-        <ul className="h-full flex flex-col gap-4 md:gap-8 -mr-2">
+        <ul className="h-full flex flex-col gap-4 md:gap-8">
             {investments.map((item) => (
                 <li key={item.slug}>
                     {isRowView ? (

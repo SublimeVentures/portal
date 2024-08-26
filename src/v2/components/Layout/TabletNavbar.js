@@ -8,7 +8,7 @@ export default function TabletNavbar() {
     const router = useRouter();
 
     return (
-        <nav className="py-2 bg-navy-500 rounded">
+        <nav className="py-2 bg-navy-500 rounded hidden sm:block">
             <ul className="px-2 flex items-center justify-between">
                 {tabletMenu.map(({ name, path }) => (
                     <li

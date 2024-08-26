@@ -7,7 +7,9 @@ import { ETH_USDT, getMethod, METHOD } from "@/components/BlockchainSteps/utils"
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 
-export default function useAllowanceStep(state, data, dispatch) {
+export default function useAllowanceStep(isActive, state, data, dispatch) {
+    if (!isActive) return {};
+
     const chainId = useChainId();
     const { steps, token, params } = data;
 

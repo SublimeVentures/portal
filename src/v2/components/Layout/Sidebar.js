@@ -51,7 +51,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
             <div className={cn("lg:py-9 3xl:py-19 flex flex-col grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
                 <div className="flex justify-between">
                     <Link href={PAGE.App}>
-                        <div className="flex items-center px-6 pb-12">{renderLogo(components.logo)}</div>
+                        <div className="flex items-center pb-12">{renderLogo(components.logo)}</div>
                     </Link>
                 </div>
 

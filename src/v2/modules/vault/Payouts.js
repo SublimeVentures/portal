@@ -13,7 +13,7 @@ const Payouts = ({ className }) => {
     const tableVariant = isLargeDesktop ? PayoutTableVariants.vertical : PayoutTableVariants.horizontal;
     return (
         <div className={cn("h-full", className)}>
-            <div className="w-full flex items-center justify-between mb-5 md:mb-2">
+            <div className="w-full flex items-center justify-between mb-5 sm:mb-4 lg:mb-2">
                 <Title>Payout table</Title>
                 <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
                     <Link href="/app/vault/payouts">

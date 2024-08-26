@@ -39,33 +39,25 @@ function InvestmentsPage() {
     return (
         <>
             <Metadata title="My Investments" />
-            <div className="flex flex-col grow gap-5 md:h-full md:pt-9 md:gap-9 md:px-12 3xl:px-19">
-                <InvestmentsFilters
-                    className="md:flex-initial"
-                    investments={investments}
-                    views={VIEWS}
-                    query={{ view, ...query }}
-                    onChange={(query) => {
-                        router.replace({ query });
-                    }}
-                />
-                {investments?.length <= 0 && !isLoading ? (
-                    <div className="md:flex-auto md:pb-13">
-                        <EmptyInvestmentsEnhanced />
-                    </div>
-                ) : (
-                    <div className="md:flex-auto md:px-12 md:-mx-12 3xl:px-19 3xl:-mx-19 md:pt-2 md:pb-13 md:overflow-x-hidden md:overflow-y-auto">
-                        <div>
-                            {view === VIEW_TYPES.LIST && (
-                                <InvestmentsList investments={investments} isLoading={isLoading} />
-                            )}
-                            {view === VIEW_TYPES.GRID && (
-                                <InvestmentsGrid investments={investments} isLoading={isLoading} />
-                            )}
-                        </div>
-                    </div>
-                )}
-            </div>
+            <InvestmentsFilters
+                className="sm:flex-initial mb-4 lg:mb-0"
+                investments={investments}
+                views={VIEWS}
+                query={{ view, ...query }}
+                onChange={(query) => {
+                    router.replace({ query });
+                }}
+            />
+            {investments?.length <= 0 && !isLoading ? (
+                <div className="md:flex-auto md:pb-13">
+                    <EmptyInvestmentsEnhanced />
+                </div>
+            ) : (
+                <div className="grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 lg:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4">
+                    {view === VIEW_TYPES.LIST && <InvestmentsList investments={investments} isLoading={isLoading} />}
+                    {view === VIEW_TYPES.GRID && <InvestmentsGrid investments={investments} isLoading={isLoading} />}
+                </div>
+            )}
         </>
     );
 }
