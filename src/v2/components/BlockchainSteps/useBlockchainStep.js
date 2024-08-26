@@ -140,7 +140,7 @@ export default function useBlockchainStep({ data }) {
         .map((item) => item?.state)
         .filter(Boolean);
     const processingState = Object.keys(extraState).find((key) => extraState[key]?.state === STEP_STATE.PROCESSING);
-    const errorState = extraState[Object.keys(extraState).find((key) => extraState[key].state === STEP_STATE.ERROR)];
+    const errorState = extraState[Object.keys(extraState).find((key) => extraState[key]?.state === STEP_STATE.ERROR)];
     const isProcessing = statuses.includes(STEP_STATE.PROCESSING);
     const isSuccess = statuses.every((state) => state === STEP_STATE.SUCCESS);
     const hasError = statuses.includes(STEP_STATE.ERROR);
