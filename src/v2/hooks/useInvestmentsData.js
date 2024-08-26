@@ -7,7 +7,8 @@ export default function useInvestmentsData(details) {
         title: details?.offer?.name,
         coin: details?.offer?.ticker,
         invested: details.invested || 0,
-        vested: details.vested || 0,
+        vested: details.claimed || 0,
+        progress: details.vested || 0,
         logo: `${cdn}/research/${details?.offer?.slug}/icon.jpg`,
         isManaged: details?.offer?.isManaged,
         performance: details.performance * 100,
@@ -15,5 +16,9 @@ export default function useInvestmentsData(details) {
         isClaimSoon: details.nextClaimDate !== null,
         canClaim: details.canClaim,
         ath: details.ath || 0,
+        tgeGain: details.tge_gain || 0,
+        nextPayout: details.nextPayout,
+        currentPayout: details.currentPayout,
+        offerId: details?.offer?.id,
     };
 }

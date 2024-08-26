@@ -12,7 +12,7 @@ const Investments = ({ className }) => {
     const { data: investments = [], isLoading } = useInvestments({ limit: 4 });
     return (
         <div className={cn("flex flex-col", className)}>
-            <div className="flex justify-between items-center mb-5 md:mb-4">
+            <div className="flex justify-between items-center mb-5 sm:mb-4">
                 <Title
                     subtitle={
                         <>

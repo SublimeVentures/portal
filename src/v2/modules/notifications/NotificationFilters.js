@@ -10,7 +10,7 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
     const unreadCount = 1;
 
     return (
-        <div className="flex flex-col items-center gap-4 md:flex-row">
+        <div className="flex flex-col items-center gap-4 md:flex-row sm:mb-4 lg:mb-0">
             <div className="flex flex-col gap-4 md:flex-row">
                 <div className="flex items-center gap-2">
                     <DatePicker

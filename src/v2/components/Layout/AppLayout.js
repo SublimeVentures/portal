@@ -14,63 +14,24 @@ export const layoutStyles = {
 
 const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
     return (
-        <div className={cn("hidden h-full grow 2xl:flex", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
-            <Sidebar session={children.props?.session} isBlockedAlert={isBlockedAlert} />
-            <div className="m-6 ml-0 flex grow pl-[var(--sidebarWidth)]">
-                <div
-                    className={cn("grow bg-[#05060B] rounded-[33px] overflow-y-auto page-scrollbar", {
-                        "max-h-[calc(100vh_-_theme('spacing.12'))]": !isBlockedAlert,
-                        "max-h-[calc(100vh_-_theme('spacing.12')_-_var(--alertHeight))]": isBlockedAlert,
-                    })}
-                >
-                    <main className={cn("py-12 px-16 flex flex-col w-full h-max", className)}>
-                        <Header title={title} />
-                        {children}
-                    </main>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const TabletLayout = ({ children, isBlockedAlert }) => {
-    return (
-        <div
-            className={cn("hidden flex-col gap-4 h-full grow md:flex 2xl:hidden", {
-                "mt-[var(--alertHeight)]": isBlockedAlert,
-            })}
-        >
-            <div className="px-4">
+        <>
+            <div className="px-4 pt-4 flex flex-col gap-4 lg:hidden">
                 <Header isBlockedAlert={isBlockedAlert} />
                 <TabletNavbar />
             </div>
-
-            <div
-                className={cn("grow bg-[#05060B] rounded-t-[33px] overflow-y-auto page-scrollbar h-max p-12", {
-                    "h-[calc(100vh_-_theme('spacing.16')_-_var(--headerHeight))]": !isBlockedAlert,
-                    "h-[calc(100vh_-_theme('spacing.16')_-_var(--alertHeight)_-_var(--headerHeight))]": isBlockedAlert,
-                })}
-            >
-                <main className="flex flex-col w-full">{children}</main>
+            <Sidebar
+                session={children.props?.session}
+                isBlockedAlert={isBlockedAlert}
+                className="hidden lg:flex w-60"
+            />
+            <div className="grow mb-24 sm:mb-0 sm:p-4 lg:p-3 3xl:p-7 lg:pl-60 3xl:pl-60 overflow-hidden lg:h-screen box-border">
+                <main className="sm:bg-[#05060B] sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col overflow-y-auto lg:overflow-auto gap-4 lg:gap-6 3xl:gap-8 p-4 pb-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12">
+                    <Header title={title} className="hidden lg:flex" />
+                    {children}
+                </main>
             </div>
-        </div>
-    );
-};
-
-const MobileLayout = ({ children, isBlockedAlert, className }) => {
-    return (
-        <div className="relative">
-            <div className="flex flex-col mt-[var(--alertHeight)] h-[calc(100vh_-_var(--navbarHeight)_-_var(--alertHeight))] relative rounded-b-lg overflow-hidden md:hidden">
-                <div className="pb-16 px-4 z-10 grow bg-[#071321] page-scrollbar overflow-y-auto sm:px-8">
-                    <Header isBlockedAlert={isBlockedAlert} />
-                    <main className={cn("relative z-10", className)}>{children}</main>
-                </div>
-
-                <div className="absolute z-10 bottom-0 h-8 w-full bg-navbar-gradient " />
-            </div>
-
             <Navbar />
-        </div>
+        </>
     );
 };
 
@@ -84,13 +45,14 @@ export default function LayoutApp({ children, title, contentClassName }) {
 
     return (
         <div
-            style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-            className={cn("relative min-h-screen h-full w-full flex flex-col bg-[#082536]")}
+            className={cn(
+                "bg-[#05060B] sm:bg-gradient angle-30 to-[#082536] from-[#0A1728] flex flex-col lg:flex-row h-screen relative",
+            )}
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <MobileLayout isBlockedAlert={isBlockedAlert} className={contentClassName}>{children}</MobileLayout>
-            <TabletLayout isBlockedAlert={isBlockedAlert}>{children}</TabletLayout>
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>{children}</DesktopLayout>
+            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
+                {children}
+            </DesktopLayout>
 
             <WalletErrorModal session={children.props?.session} />
             <ChainListModal />

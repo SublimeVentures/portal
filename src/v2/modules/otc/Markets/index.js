@@ -42,15 +42,18 @@ export default function Markets() {
 
     useEffect(() => {
         const handleRouteChange = () => setIsPopoverOpen(false);
-        router.events.on('routeChangeStart', handleRouteChange);
-        
-        return () => router.events.off('routeChangeStart', handleRouteChange);
+        router.events.on("routeChangeStart", handleRouteChange);
+
+        return () => router.events.off("routeChangeStart", handleRouteChange);
     }, [router]);
 
     useEffect(() => setIsPopoverOpen(false), [currentMarket]);
 
     return (
-        <Card variant={isDesktop ? "static" : "none"} className="p-0 flex flex-col h-full flex-shrink-0 overflow-hidden xl:py-3.5 xl:px-5">
+        <Card
+            variant={isDesktop ? "static" : "none"}
+            className="p-0 flex flex-col lg:h-full flex-shrink-0 overflow-hidden xl:py-3.5 xl:px-5"
+        >
             <div className="xl:mb-4">
                 <div className="hidden items-center justify-between 2xl:flex">
                     <h3 className="py-4 text-1xl font-medium text-foreground md:text-lg 2xl:block">Select Markets</h3>
@@ -88,7 +91,6 @@ export default function Markets() {
                     </Popover>
                 </div>
             </div>
-
 
             <div className="hidden xl:flex flex-col flex-grow overflow-hidden">
                 {isLoading ? <MarketLoader /> : <MarketList markets={filteredMarkets} currentMarket={currentMarket} />}
