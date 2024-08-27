@@ -8,6 +8,9 @@ import AccountBalanceIcon from "@/v2/assets/svg/account-balance.svg";
 import PriorityIcon from "@/v2/assets/svg/priority.svg";
 import RocketLaunchIcon from "@/v2/assets/svg/rocket.svg";
 import FiveChainsIcon from "@/v2/assets/svg/five-chains.svg";
+import FourChainsIcon from "@/v2/assets/svg/four-chains.svg";
+import TreeChainsIcon from "@/v2/assets/svg/tree-chains.svg";
+import { countSteps } from "@/v2/components/BlockchainSteps/helpers";
 
 const successColors = {
     "--start-color": "rgba(64, 206, 96, .22)",
@@ -38,13 +41,24 @@ export default function BlockchainSteps({ status, currentState, steps, extraStat
         return "This will guide you through each step for a seamless purchase";
     }, [errorState]);
 
+    const chainIcon = useMemo(() => {
+        const stepsNumber = countSteps(steps);
+        if (stepsNumber === 3) {
+            return <TreeChainsIcon style={colorSchemes[status]} className="absolute z-0" />;
+        }
+        if (stepsNumber === 4) {
+            return <FourChainsIcon style={colorSchemes[status]} className="absolute z-0" />;
+        }
+        return <FiveChainsIcon style={colorSchemes[status]} className="absolute z-0" />;
+    }, [steps]);
+
     return (
         <div className="mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded">
             <h3 className="text-base md:text-lg font-medium text-foreground text-center">{currentState.content}</h3>
             <p className="mb-2 text-sm font-light text-foreground text-center">{content}</p>
 
             <div className="relative h-[43px]">
-                <FiveChainsIcon style={colorSchemes[status]} className="absolute z-0" />
+                {chainIcon}
 
                 <ul className="relative flex items-center h-full justify-center w-max gap-3 overflow-hidden">
                     {steps.network && <BlockchainStep data={extraState.stepNetwork} icon={LinkIcon} />}
