@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useAccount } from "wagmi";
 import Sidebar from "@/components/Navigation/Sidebar";
 import routes from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -15,29 +14,32 @@ export default function LayoutApp({ children }) {
     const stakingCurrency = activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
     const { account } = useEnvironmentContext();
 
-    const isDifferentAccount = account.address !== children.props?.session.stakedOn;
     const isBlockedAlert = stakingEnabled && !isStaked;
+    const isDifferentAccount = !isBlockedAlert && account.address !== children.props?.session.stakedOn;
 
+    const BlockedAlert = () => (
+        <div className="fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
+            Investments are blocked!&nbsp;
+            <u>
+                <Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link>.
+            </u>
+        </div>
+    );
+
+    const DifferentAccountAlert = () => (
+        <div className="fixed top-0 flex items-center justify-center bg-app-accent uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
+            Your tokens are staked on another account!&nbsp;
+            <button className="underline" onClick={() => logOut()}>
+                Logout and choose a wallet with staked tokens.
+            </button>
+        </div>
+    );
+
+    // noinspection JSValidateTypes / JS does not validate custom vars
     return (
         <div style={{ "--alertHeight": alertHeight }}>
-            {isBlockedAlert ? (
-                <div className="fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
-                    Investments are blocked!&nbsp;
-                    <u>
-                        <Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link>.
-                    </u>
-                </div>
-            ) : (
-                isDifferentAccount && (
-                    <div className="fixed top-0 flex items-center justify-center bg-app-accent uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
-                        Your tokens are staked on another account!&nbsp;
-                        <button className="underline" onClick={() => logOut()}>
-                            Logout and choose a wallet with staked tokens.
-                        </button>
-                    </div>
-                )
-            )}
-
+            {isBlockedAlert && <BlockedAlert />}
+            {isDifferentAccount && <DifferentAccountAlert />}
             <div
                 className={cn(
                     "flex flex-col collap:flex-row bg-app-bg",
