@@ -1,4 +1,42 @@
 /** @type {import('tailwindcss').Config} */
+
+const primary = {
+    DEFAULT: "#0BB0C8",
+    500: "#0BB0C8",
+    600: "#174763",
+    700: "#113651",
+    800: "#082536",
+    900: "#0A1728",
+    950: "#05060B",
+};
+
+const accent = {
+    DEFAULT: "#DBB479",
+    500: "#DBB479",
+    600: "#BC9F72",
+};
+
+const success = {
+    DEFAULT: "#44DA66",
+    500: "#44DA66",
+    800: "#226D33",
+};
+
+const error = {
+    50: "#FCEDED",
+    100: "#F9D7D7",
+    200: "#F3AFAF",
+    300: "#ED8787",
+    400: "#E76060",
+    500: "#E13A3A",
+    600: "#C31E1E",
+    700: "#921616",
+    800: "#610F0F",
+    900: "#3F2334",
+    950: "#1B0404",
+    DEFAULT: "#E13A3A",
+};
+
 module.exports = {
     content: ["app/**/*.js", "src/components/**/*.js"],
     theme: {
@@ -10,33 +48,10 @@ module.exports = {
             },
             colors: {
                 foreground: "hsla(0, 0%, 100%)",
-                accent: "hsla(36, 65%, 71%)",
-                "accent-light": "hsla(34, 97%, 72%)",
-                destructive: "hsla(0, 74%, 55%)",
-                "destructive-dark": "hsla(324, 29%, 19%)",
-
-                "navy-50": "hsla(188, 91%, 38%)", // #09A0B8
-                "navy-100": "hsla(188, 91%, 37%)", // #099DB5
-                "navy-200": "hsla(194, 96%, 22%)", // #025770;
-                "navy-300": "hsla(206, 64%, 24%)", // #164263
-                "navy-400": "hsla(207, 64%, 24%)", // #164062
-                "navy-500": "hsla(205, 65%, 19%)", // #113651
-                "navy-600": "hsla(211, 62%, 11%)", // #0A1A2B
-                "navy-700": "hsla(214, 60%, 10%)", // #0A1728
-                "navy-800": "hsla(211, 58%, 15%)", // #10263d
-                "gray-100": "hsla(210, 7%, 70%)", // #AEB3B8
-                "gray-200": "hsla(206, 18%, 46%)", // #60788a
-                "gray-300": "hsla(203, 72%, 11%)", // #082131
-                "gray-400": "hsla(209, 77%, 9%)", // #051626
-
-                primary: {
-                    DEFAULT: "#0BB0C8",
-                    500: "#099DB5",
-                    600: "#086377",
-                    700: "#095A6E",
-                    800: "#08374A",
-                    900: "#092B3D",
-                },
+                primary,
+                accent,
+                success,
+                error,
             },
             spacing: {
                 13: "3.25rem", // 52px
@@ -60,13 +75,12 @@ module.exports = {
                 "4xl": "2rem",
             },
             backgroundImage: {
-                "primary-gradient": `linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%)`,
-                "primary-light-gradient": `linear-gradient(324deg, #164062 0%, hsl(188, 91%, 38%) 100%)`,
+                "primary-gradient": `linear-gradient(122deg, ${primary[900]} 0%, ${primary[600]} 47%, ${primary[900]} 100%)`,
                 "primary-dark-gradient": `linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%)`,
                 "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
-                "sheet-gradient": `linear-gradient(151deg, #051626 0%, #1A3754 49%, #051626 100%)`,
-                "navbar-gradient": "linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%)",
-                "settings-gradient": "linear-gradient(125deg, #06162E 0%, #11364B 49%, #11354B 50%, #06162E 100%)",
+                "sheet-gradient": `linear-gradient(151deg, ${primary[950]} 0%, ${primary[700]} 49%, ${primary[950]} 100%)`,
+                "navbar-gradient": `linear-gradient(to top, ${primary[950]} 0%, ${primary[950]} 50%, transparent 100%)`,
+                "settings-gradient": `linear-gradient(125deg, ${primary[900]} 0%, ${primary[700]} 49%, ${primary[700]} 50%, ${primary[900]} 100%)`,
 
                 "premium-banner": "url('/img/premium-banner.png')",
                 "empty-investment-pattern": "url('/img/empty-investment-pattern.png')",
@@ -75,8 +89,6 @@ module.exports = {
                 gradient: "linear-gradient(var(--tw-gradient-angle), var(--tw-gradient-stops))",
                 pattern:
                     "linear-gradient(0deg, rgba(9, 32, 57, 1) 0%, rgba(9, 32, 57, 1) 60%, rgba(9, 29, 51, 0.85) 70%, rgba(10, 12, 14, 0.75) 100%), url('/img/sheet-pattern.png')",
-                "mystery-box":
-                    "linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp')",
             },
             gridTemplateColumns: {
                 cards: "repeat(auto-fill, minmax(450px, 1fr))",

@@ -1,7 +1,15 @@
 import { useMemo, useState } from "react";
 
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogFooter, DialogTitle, DialogTrigger } from "@/v2/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogFooter,
+    DialogTitle,
+    DialogTrigger,
+} from "@/v2/components/ui/dialog";
 import { Button } from "@/v2/components/ui/button";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
@@ -46,14 +54,13 @@ export default function UnstakingModal({ staking = {} }) {
             <DialogContent>
                 <DialogHeader className="md:items-center">
                     <DialogTitle className="w-full text-center">
-                        {transactionSuccessful ? `${stakingCurrency?.symbol} unstaked successfully.` : `Unstake ${stakingCurrency?.symbol}` }
+                        {transactionSuccessful
+                            ? `${stakingCurrency?.symbol} unstaked successfully.`
+                            : `Unstake ${stakingCurrency?.symbol}`}
                     </DialogTitle>
                     <DialogDescription className="max-w-96 text-center md:text-center">
-                        To partake in {" "}
-                        <span className="text-green-500">BasedVC</span>
-                        {" "} investments, every investor must stake {" "}
-                        <span className="text-green-500">$</span>
-                        {" "} token.
+                        To partake in <span className="text-success-500">BasedVC</span> investments, every investor must
+                        stake <span className="text-success-500">$</span> token.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -67,7 +74,9 @@ export default function UnstakingModal({ staking = {} }) {
                     <>
                         <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
                             <dt className="text-foreground text-lg font-semibold">Current Stake</dt>
-                            <dd className="mt-2 text-foreground text-4xl">{stakeSize} {stakingCurrency?.symbol}</dd>
+                            <dd className="mt-2 text-foreground text-4xl">
+                                {stakeSize} {stakingCurrency?.symbol}
+                            </dd>
                         </dl>
 
                         {/* <BlockchainSteps {...getBlockchainStepsProps()} /> */}
@@ -81,4 +90,4 @@ export default function UnstakingModal({ staking = {} }) {
             </DialogContent>
         </Dialog>
     );
-};
+}

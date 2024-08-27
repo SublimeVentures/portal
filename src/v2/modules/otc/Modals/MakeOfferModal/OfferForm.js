@@ -6,7 +6,7 @@ import { Input } from "@/v2/components/ui/input";
 import { Button } from "@/v2/components/ui/button";
 import USDCIcon from "@/v2/assets/svg/USDC.svg";
 import USDTIcon from "@/v2/assets/svg/USDT.svg";
-import { cn } from "@/lib/cn"; 
+import { cn } from "@/lib/cn";
 
 const CURRENCY_ICON = {
     USDC: USDCIcon,
@@ -14,7 +14,12 @@ const CURRENCY_ICON = {
 };
 
 const CurrencyIcon = ({ className, icon: Icon }) => (
-    <span className={cn("inline w-10 h-10 mr-4 rounded shrink-0 bg-gradient-to-b from-[#164062] to-[#0BB0C8] p-1.5", className)}>
+    <span
+        className={cn(
+            "inline w-10 h-10 mr-4 rounded shrink-0 bg-gradient-to-b from-primary-600 to-primary p-1.5",
+            className,
+        )}
+    >
         <Icon />
     </span>
 );
@@ -92,8 +97,8 @@ const OfferMaxValue = ({ name, control, handleChange }) => {
 export default function OfferForm({ form, cdn, market, multiplierParsed, getOfferFieldProps }) {
     const selectedCurrency = getOfferFieldProps("currency").value;
 
-    console.log('selectedCurrency', selectedCurrency)
-    
+    console.log("selectedCurrency", selectedCurrency);
+
     return (
         <>
             <Form {...form}>

@@ -24,7 +24,7 @@ const dialogVariants = cva([], {
     variants: {
         variant: {
             accent: "dialog-gradient",
-            default: "bg-gradient angle-[114deg] from-[#06162E] via-[#11354B] to-[#06162E]",
+            default: "bg-gradient angle-[114deg] from-primary-900 via-primary-700 to-primary-900",
             pattern: "bg-pattern",
         },
     },

@@ -10,7 +10,7 @@ const Search = forwardRef(({ name, className, isOpen, onClick, onClose, ...props
     return (
         <div
             className={cn(
-                "py-2 px-4 flex justify-between border border-navy-100/[.5] bg-foreground/[.1] rounded",
+                "py-2 px-4 flex justify-between border border-primary/[.5] bg-foreground/[.1] rounded",
                 className,
             )}
         >
@@ -25,7 +25,14 @@ const Search = forwardRef(({ name, className, isOpen, onClick, onClose, ...props
                     {...props}
                 />
 
-                <IconButton variant="transparent" size="8" name="Close popover" icon={Cross1Icon} onClick={onClose} className={cn("hidden", { "block": isOpen })} />
+                <IconButton
+                    variant="transparent"
+                    size="8"
+                    name="Close popover"
+                    icon={Cross1Icon}
+                    onClick={onClose}
+                    className={cn("hidden", { block: isOpen })}
+                />
                 <Button variant="gradient" size="small" onClick={onClick}>
                     Search
                 </Button>

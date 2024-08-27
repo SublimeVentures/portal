@@ -27,10 +27,10 @@ export const ErrorPartnershipCard = () => {
     return (
         <Card variant="static" className="pt-20 flex flex-col items-center gap-2">
             <div className="absolute top-0 translate-y-[-50%] flex -space-x-4">
-                <AlertIcon icon={ExclamationMark} className="bg-destructive size-24 p-2 pb-3" />
+                <AlertIcon icon={ExclamationMark} className="bg-error size-24 p-2 pb-3" />
             </div>
 
-            <div className="p-4 pb-8 flex flex-col items-center bg-destructive-dark rounded">
+            <div className="p-4 pb-8 flex flex-col items-center bg-error-800 rounded">
                 <AlertTitle className="">Error</AlertTitle>
                 <AlertDescription className="mt-2 text-center">
                     Unable to fetch data. Please try again.
@@ -72,7 +72,7 @@ const PartnershipCard = ({ title, content, logos = [], isLoading, isError }) => 
                             size="large"
                             className={cn("shadow-[4px_3px_22px] p-4", {
                                 "bg-black shadow-black": !!index,
-                                "bg-gradient-to-b from-navy-200 to-[#0BB0C8] shadow-[#0BB0C8]": !index,
+                                "bg-gradient-to-b from-primary-700 to-primary shadow-primary": !index,
                             })}
                         >
                             <AvatarImage src={logo} alt="" />

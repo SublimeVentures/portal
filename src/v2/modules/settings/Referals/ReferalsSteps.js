@@ -37,7 +37,7 @@ export default function ReferalsSteps() {
                 </div>
             </div>
 
-            <div className="text-base font-normal py-2 text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-primary-light-gradient flex justify-center">
+            <div className="text-base font-normal py-2 text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-gradient-to-r from-primary to-primary-600 flex justify-center">
                 <Copy text={"0x12d...560eF/based.VC"} />
             </div>
         </div>

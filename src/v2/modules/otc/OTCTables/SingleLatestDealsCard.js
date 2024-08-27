@@ -14,7 +14,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
 
     return (
         <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b">
-            <div className="h-2 rounded bg-primary-light-gradient" />
+            <div className="h-2 rounded bg-gradient-to-r from-primary to-primary-600" />
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
@@ -32,7 +32,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
                             {moment(updatedAt).utc().local().format("YYYY-MM-DD")}
                         </DefinitionItem>
                         <DefinitionItem term="Type">
-                            <span className={cn("font-bold", isSell ? "text-destructive" : "text-green-500")}>
+                            <span className={cn("font-bold", isSell ? "text-error" : "text-success-500")}>
                                 {isSell ? "Sell" : "Buy"}
                             </span>
                         </DefinitionItem>

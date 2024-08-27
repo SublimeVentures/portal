@@ -10,7 +10,7 @@ const ChainListModal = () => {
     const { isConnected, chainId } = useAccount();
     const { network } = useEnvironmentContext();
     const { switchChain, error } = useSwitchChain();
-    
+
     const { chains: current = [], isSupported, isLoading } = network;
     const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
     const isOpen = !isSupported && isConnected && !isLoading;
@@ -40,7 +40,7 @@ const ChainListModal = () => {
                             ))}
                         </ChainGroup>
                     </div>
-                    {error && <p className="text-red-500 text-center w-full mt-3">{error?.shortMessage}</p>}
+                    {error && <p className="text-error-500 text-center w-full mt-3">{error?.shortMessage}</p>}
                 </div>
                 <p className="text-xxs text-white/[.7] text-center">
                     Current selection: {chain?.name || "Unknown chain"}

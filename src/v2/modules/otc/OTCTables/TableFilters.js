@@ -86,7 +86,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                                 return (
                                     <div
                                         key={key}
-                                        className="px-4 flex items-center text-white text-xs 3xl:text-sm font-light bg-gray-300 rounded"
+                                        className="px-4 flex items-center text-white text-xs 3xl:text-sm font-light bg-primary-800 rounded"
                                     >
                                         {filter.name}
                                         <button className="ml-2" onClick={() => handleFilterRemove(key)}>

@@ -51,8 +51,8 @@ export const Grid = forwardRef(({ className, children, ...props }, ref) => {
 });
 Grid.displayName = "Grid";
 
-const UpgradeCurrency = ({ className, icon: Icon }) => (
-    <span className={cn("rounded size-5 inline-block p-1 shrink-0", className)}>
+const UpgradeCurrency = ({ className, icon: Icon, style }) => (
+    <span className={cn("rounded size-5 inline-block p-1 shrink-0", className)} style={style}>
         <Icon />
     </span>
 );
@@ -63,12 +63,12 @@ const CURRENCY_ICON = {
 };
 
 const CURRENCY_BG_COLOR = {
-    USDC: "bg-[#2775CA]",
-    USDT: "bg-[#53AE94]",
+    USDC: "#2775CA",
+    USDT: "#53AE94",
 };
 
 const UpgradeCurrencyPicker = ({ symbol }) => {
-    return <UpgradeCurrency className={cn(CURRENCY_BG_COLOR[symbol])} icon={CURRENCY_ICON[symbol]} />;
+    return <UpgradeCurrency icon={CURRENCY_ICON[symbol]} style={{ backgroundColor: CURRENCY_BG_COLOR[symbol] }} />;
 };
 
 export const SelectCurrency = forwardRef(({ className, options = [], ...props }, ref) => {
