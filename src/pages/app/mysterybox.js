@@ -118,7 +118,7 @@ export default function MysteryBoxPage({ session }) {
                 <title>{title}</title>
             </Head>
             <div className="grow flex flex-col items-start justify-center lg:py-6 3xl:py-12">
-                <div className="3xl:w-[532px] md:max-w-[45%]">
+                <div className="3xl:w-[532px] sm:max-w-[45%]">
                     <div className="flex flex-col items-start lg:gap-2 3xl:gap-4 mb-10 lg:mb-4 3xl:mb-10 pt-10 sm:pt-0">
                         <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-accent">
                             The Sunken Mystery Box
@@ -211,7 +211,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
 MysteryBoxPage.getLayout = function (page) {
     return (
-        <AppLayout contentClassName="bg-mystery-box h-full bg-cover bg-center md:bg-left" title="Mystery Box">
+        <AppLayout contentClassName="bg-mystery-box bg-cover bg-center md:bg-left" title="Mystery Box">
             {page}
         </AppLayout>
     );
