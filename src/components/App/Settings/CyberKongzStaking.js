@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
@@ -63,6 +63,24 @@ export default function CyberKongzStaking({ stakingProps }) {
         } else if (force) {
             router.reload();
         }
+    };
+
+    const onSuccessStakingClose = useCallback(async () => {
+        setStakingModal(false);
+        await refreshSession();
+    }, [refreshSession]);
+
+    const onSuccessUnstakingClose = useCallback(async () => {
+        setUnStakingModal(false);
+        await refreshSession();
+    }, [refreshSession]);
+
+    const onStakingClose = () => {
+        setStakingModal(false);
+    };
+
+    const onUnstakingClose = () => {
+        setUnStakingModal(false);
     };
 
     const stakingModalProps = {
@@ -177,25 +195,15 @@ export default function CyberKongzStaking({ stakingProps }) {
             <StakingModal
                 stakingModalProps={stakingModalProps}
                 model={stakingModal}
-                onSuccessClose={async () => {
-                    setStakingModal(false);
-                    await refreshSession();
-                }}
-                onClose={() => {
-                    setStakingModal(false);
-                }}
+                onSuccessClose={onSuccessStakingClose}
+                onClose={onStakingClose}
             />
             {unstakingData.unstake && (
                 <UnStakingModal
                     stakingModalProps={stakingModalProps}
                     model={unstakingModal}
-                    onSuccessClose={async () => {
-                        setUnStakingModal(false);
-                        await refreshSession(true);
-                    }}
-                    onClose={() => {
-                        setUnStakingModal(false);
-                    }}
+                    onSuccessClose={onSuccessUnstakingClose}
+                    onClose={onUnstakingClose}
                 />
             )}
         </div>
