@@ -11,6 +11,7 @@ import { routes } from "@/v2/routes";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import Title from "@/v2/modules/vault/components/Dashboard/Title";
+import { offersKeys } from "@/v2/constants";
 
 const useNewsQuery = () =>
     useQuery({
@@ -18,9 +19,10 @@ const useNewsQuery = () =>
         queryFn: fetchNews,
     });
 
+// @todo
 const useOffersQuery = (query, options = {}) =>
     useQuery({
-        queryKey: ["offerList", query],
+        queryKey: offersKeys.queryOffersVc(query),
         queryFn: () => fetchOfferList(query),
         ...options,
     });

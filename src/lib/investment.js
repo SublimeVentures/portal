@@ -9,7 +9,7 @@ function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
 }
 
-function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedUsed) {
+function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min;
     const allocation_min = offer?.alloMin || MIN_ALLOCATION;
     if (offer.isLaunchpad) {
@@ -24,7 +24,7 @@ function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedU
                 break;
             }
             case TENANT.NeoTokyo: {
-                allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus;
+                allocationUser_base = account.multi * offer?.alloTotal + account.allocationBonus;
                 if (allocationUser_base < allocation_min) allocationUser_base = allocation_min;
                 if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
                 allocationUser_min = allocation_min;
@@ -67,8 +67,8 @@ function getUserAllocationGuaranteed(guaranteedUsed) {
     }
 }
 
-function getAllocationLeft(allocationOffer_left, allocationUser_left) {
-    return allocationOffer_left < allocationUser_left ? allocationOffer_left : allocationUser_left;
+function getAllocationLeft(offer_left, allocationUser_left) {
+    return offer_left < allocationUser_left ? offer_left : allocationUser_left;
 }
 
 function allocationParseUnlimited(params) {

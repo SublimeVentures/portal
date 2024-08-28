@@ -7,16 +7,18 @@ import { AvatarRoot, AvatarImage, AvatarFallback } from "@/v2/components/ui/avat
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { offersKeys } from "@/v2/constants";
 
 const EmptyInvestmentsEnhanced = () => {
     const { cdn } = useEnvironmentContext();
     const query = { limit: 1, isSettled: false };
+
     const {
         isLoading,
         data: { offers = [] } = {},
         isError,
     } = useQuery({
-        queryKey: ["offerList", query],
+        queryKey: offersKeys.queryOffersVc(query),
         queryFn: () => fetchOfferList(query),
         cacheTime: 5 * 60 * 1000,
         staleTime: 1 * 60 * 1000,

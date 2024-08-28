@@ -11,6 +11,8 @@ import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
 import routes from "@/routes";
 
+import { offersKeys } from "@/v2/constants";
+
 export default function AppOpportunities({ session }) {
     const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = session;
 
@@ -28,10 +30,12 @@ export default function AppOpportunities({ session }) {
         isLoading: isStatsLoading,
         isError: isStatsError,
     } = useQuery({
-        queryKey: ["offerStats", TENANT_ID, PARTNER_ID],
+        queryKey: offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }),
         queryFn: fetchOfferStats,
         ...cacheOptions,
     });
+
+    console.log('stats22', stats, isStatsLoading, isStatsError)
 
     if (isOffersLoading || isStatsLoading) {
         return (
@@ -63,7 +67,10 @@ export default function AppOpportunities({ session }) {
 export const getServerSideProps = async ({ req, res }) => {
     const customLogicCallback = async (account) => {
         const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = account;
-        await queryClient.prefetchQuery(["offerList", TENANT_ID, PARTNER_ID], fetchOfferList);
+        
+        await queryClient.prefetchQuery(offersKeys.queryOffersVc({ TENANT_ID, PARTNER_ID }), fetchOfferList);
+
+        // @TODO:
         await queryClient.prefetchQuery(["offerStats", TENANT_ID, PARTNER_ID], fetchOfferStats);
 
         return {

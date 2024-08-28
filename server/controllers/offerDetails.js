@@ -57,7 +57,7 @@ async function getOfferAllocation(req) {
             isRefund: allocation.isRefund,
         };
     } catch (error) {
-        logger.error(`Can't fetch offerFundraise`, {
+        logger.error(`Can't fetch offerLimit`, {
             error: serializeError(error),
             params: req.params,
         });
