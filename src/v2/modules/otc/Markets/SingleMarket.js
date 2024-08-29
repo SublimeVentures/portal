@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CiBitcoin, CiDollar, CiCircleInfo } from "react-icons/ci";
+import { CiBitcoin, CiDollar, CiCircleInfo, CiCircleMore } from "react-icons/ci";
 
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -22,7 +22,7 @@ export default function SingleMarket({ name, genre, slug, currentMarket, isManag
                 },
             }}
             className={cn(
-                "h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover rounded hover:bg-foreground/[0.09] md:flex-row",
+                "group h-24 p-4 mr-2 flex items-center bg-foreground/[0.03] transition-hover rounded hover:bg-foreground/[0.09] md:flex-row",
                 { "bg-foreground/[0.15] hover:bg-foreground/[0.15]": isSelected },
             )}
         >
@@ -45,13 +45,21 @@ export default function SingleMarket({ name, genre, slug, currentMarket, isManag
                         }
                         text="Listed offers"
                         type={TooltipType.Primary}
-                    />    
+                    />
+                    <Tooltiper
+                        wrapper={
+                            <Link href={`${routes.OTC}/${slug}`}>
+                                <CiCircleMore className="text-2xl text-foreground/50 opacity-0 group-hover:opacity-100 transition duration-300" />
+                            </Link>
+                        }
+                        text="Offer details"
+                        type={TooltipType.Primary}
+                    />
                 </div>
             </div>
         </Link>
     );
 }
-
 
 const getPayoutStructure = (isManaged, ticker) => {
     return isManaged ? (
