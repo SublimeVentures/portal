@@ -52,7 +52,7 @@ export default function Markets() {
     return (
         <Card
             variant={isDesktop ? "static" : "none"}
-            className="p-0 flex flex-col lg:h-full flex-shrink-0 overflow-hidden xl:py-3.5 xl:px-5"
+            className="p-0 flex flex-col xl:h-full flex-shrink-0 overflow-hidden xl:py-3.5 xl:px-5"
         >
             <div className="xl:mb-4">
                 <div className="hidden items-center justify-between 2xl:flex">

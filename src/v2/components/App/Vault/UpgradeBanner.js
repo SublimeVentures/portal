@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useMemo, Fragment } from "react";
 import Link from "next/link";
 import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
@@ -6,13 +5,7 @@ import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { cn } from "@/lib/cn";
 import { routes } from "@/v2/routes";
-import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
-
-const useStoreItemsOwnedQuery = () =>
-    useQuery({
-        queryKey: ["premiumOwned"],
-        queryFn: fetchStoreItemsOwned,
-    });
+import useStoreOwnedItemsQuery from "@/v2/hooks/useStoreOwnedItemsQuery";
 
 const VARIANTS = {
     DEFAULT: "default",
@@ -20,22 +13,18 @@ const VARIANTS = {
 };
 
 const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
-    const { data = [] } = useStoreItemsOwnedQuery();
+    const { data = [] } = useStoreOwnedItemsQuery();
     const items = useMemo(() => data?.filter((el) => el.name !== "MysteryBox"), [data]);
     const isPremium = items?.length > 0;
     return (
         <Card
             variant="none"
             border="none"
-            className={cn(
-                "bg-banner-default relative flex bg-left bg-cover 3xl:bg-center bg-no-repeat group/button",
-                className,
-                {
-                    "py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
-                        variant === VARIANTS.DEFAULT,
-                    "p-3 md:justify-end md:w-116": variant === VARIANTS.VERTICAL,
-                },
-            )}
+            className={cn("relative flex group/button", className, {
+                "bg-banner-default bg-left bg-cover 3xl:bg-center bg-no-repeat py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
+                    variant === VARIANTS.DEFAULT,
+                "bg-banner-vertical p-3 md:justify-end lg:w-116": variant === VARIANTS.VERTICAL,
+            })}
         >
             <Link
                 href={routes.Upgrades}

@@ -5,7 +5,7 @@ import { fetchOfferList } from "@/fetchers/offer.fetcher";
 export default function useOffersInfiniteQuery(query = {}) {
     return useInfiniteQuery({
         queryKey: ["offers", query],
-        queryFn: ({ pageParam: offset = 0 }) => fetchOfferList({ ...query, offset }),
+        queryFn: ({ pageParam: offset }) => fetchOfferList({ ...query, offset }),
         getNextPageParam: ({ limit, offset, count }) => {
             const cursor = limit + offset;
             const allItems = parseInt(count, 10) ?? 0;
@@ -16,6 +16,11 @@ export default function useOffersInfiniteQuery(query = {}) {
 
             return cursor;
         },
-        select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        select: (data) => {
+            return {
+                count: data.pages[0]?.count ?? 0,
+                pages: data.pages.flatMap((page) => page.rows),
+            };
+        },
     });
 }

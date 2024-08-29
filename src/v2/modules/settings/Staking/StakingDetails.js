@@ -6,7 +6,7 @@ export default function StakingDetails({ session, staking }) {
 
     return (
         <>
-            <dl className="definition-section my-0 grid grid-cols-2 gap-4">
+            <dl className="2xl:py-3 2xl:px-8 2xl:bg-white/[.03] grid grid-cols-2 gap-4 rounded w-fit">
                 <DefinitionItem term="Allocation base">{session.multi * 100}%</DefinitionItem>
                 <DefinitionItem term="Allocation bonus">
                     <span className={cn(allocationBonus > 0 ? "text-success-500" : "text-foreground")}>
