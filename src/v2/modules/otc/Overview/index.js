@@ -12,7 +12,7 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 
 export default function Overview() {
     const { currentMarket, isLoading } = useMarket();
-    const { name, ticker, genre, slug } = currentMarket ?? {};
+    const { name, ticker, genre, slug, dealStructure, ppu, activeDealsCount, partnerLogo, partnerName } = currentMarket ?? {};
     const { cdn } = useEnvironmentContext();
 
     if (!currentMarket) {
@@ -54,12 +54,12 @@ export default function Overview() {
                     </div>
 
                     <MarketDetails
-                        src={`${cdn}/research/${slug}/icon.jpg`}
-                        alt={`Icon of ${name}`}
-                        offer={{ ticker }}
+                        src={`${cdn}/research/${partnerLogo}/icon.jpg`}
+                        alt={`Launched in ${partnerName}`}
+                        offer={{ ticker, dealStructure, ppu, activeDealsCount, partnerLogo }}
                     />
                 </>
             )}
         </Card>
     );
-}
+};

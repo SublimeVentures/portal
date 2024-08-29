@@ -20,8 +20,13 @@ async function getOffersPublic() {
                 SELECT o.name, o.genre, o.url_web, o.slug
                 FROM offer o
                 INNER JOIN "offerLimit" ol ON o.id = ol."offerId"
-                WHERE o."displayPublic" = true
-                AND (o."isOtcExclusive" = false OR  (o."isOtcExclusive" = true AND CAST(o."broughtBy" AS INTEGER) = :tenantId))
+                WHERE o."displayPublic" = true 
+                    AND (
+                            (ol."isTenantExclusive" = true AND ol."partnerId" = ${NEXT_PUBLIC_TENANT} AND ${tenantId} = ${NEXT_PUBLIC_TENANT})
+                            OR (ol."isTenantExclusive" = false)
+                            OR (o."isOtcExclusive" = true AND o."broughtBy" = ${tenantId})
+                        )
+                    AND (ol."partnerId" = ${partnerId} OR ol."partnerId" = ${tenantId})
                 ORDER BY o."createdAt" DESC;
             `;
 
@@ -208,42 +213,39 @@ const query_getOtcList = `
     SELECT
         o.slug,
         o.name,
+        o.ppu,
         o.genre,
-        o.otc,
         o.ticker,
-        o."isAccelerator",
-        ol.d_open,
-        ol.d_close,
-        ol."offerId"
+        o.otc,
+        o."dealStructure",
+        o."isManaged",
+        o."broughtBy",
+        MAX(ol.d_close) AS "closedAt",
+        p.logo AS "partnerLogo",
+        p.name AS "partnerName",
+        p.slug AS "partnerSlug",
+        (
+            SELECT COUNT(*)
+            FROM "otcDeal" od
+            WHERE od."offerId" = o.id
+              AND od."isFilled" = FALSE
+              AND od."isCancelled" = FALSE
+              AND od."onchainIdMaker" IS NOT NULL
+        ) AS "activeDealsCount"
     FROM
         "offer" o
-        LEFT JOIN LATERAL (
-            SELECT
-                ol1.d_open,
-                ol1.d_close,
-                ol1."offerId"
-            FROM
-                "offerLimit" ol1
-            WHERE
-                ol1."offerId" = o.id AND (
-                    (o."isOtcExclusive" = true AND CAST(o."broughtBy" AS INTEGER) = :tenantId) OR
-                    (o."isOtcExclusive" = false AND ol1."partnerId" IN (:partnerId, :tenantId))
-                )
-            ORDER BY
-                CASE
-                    WHEN o."isOtcExclusive" = true AND CAST(o."broughtBy" AS INTEGER) = :tenantId THEN 0
-                    WHEN ol1."partnerId" = :partnerId THEN 1
-                    WHEN ol1."partnerId" = :tenantId THEN 2
-                    ELSE 3
-                END
-            LIMIT 1
-        ) ol ON true
+            LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
+            LEFT JOIN "partner" p ON CAST(o."broughtBy" AS INTEGER) = p.id
     WHERE
-        o.display = true AND
         o.otc != 0 AND
-        ol."offerId" IS NOT NULL
+        (
+                (o."isOtcExclusive" = FALSE) OR
+                (o."isOtcExclusive" = TRUE AND ol."partnerId" = :tenantId)
+        )
+    GROUP BY
+        o.id, p.id
     ORDER BY
-        ol.d_open DESC;
+        MAX(ol.d_close) DESC NULLS LAST;
 `;
 
 async function getOtcList(partnerId, tenantId) {
@@ -309,6 +311,54 @@ async function getOfferDetails(slug, partnerId, tenantId) {
     return {};
 }
 
+const query_getOfferFunding = `
+    SELECT
+        ol."alloRes",
+        ol."alloFilled",
+        ol."alloGuaranteed",
+        ol."alloResInjected",
+        ol."alloFilledInjected",
+        ol."alloGuaranteedInjected",
+        ol."alloRaised",
+        ol."isPaused",
+        ol."isSettled",
+        ol."isRefund"
+    FROM
+        "offerLimit" ol
+    WHERE
+        ol."offerId" = :offerId
+        AND (
+            (ol."isTenantExclusive" = true AND :tenantId IS NOT NULL AND ol."partnerId" = :tenantId)
+            OR (ol."isTenantExclusive" = false)
+        )
+        AND (
+            (ol."isOtcExclusive" = true AND :tenantId = ol."broughtBy")
+            OR (ol."isOtcExclusive" = false)
+        )
+    ORDER BY
+        CASE
+            WHEN ol."partnerId" = :tenantId THEN 1
+            WHEN ol."partnerId" = :partnerId THEN 2
+            ELSE 3
+        END
+    LIMIT 1;
+`;
+
+async function getOfferFunding(offerId, partnerId, tenantId) {
+    try {
+        return await db.query(query_getOfferFunding, {
+            type: QueryTypes.SELECT,
+            replacements: { offerId, partnerId, tenantId },
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getOfferFunding]", {
+            error: serializeError(error),
+            slug,
+        });
+    }
+    return {};
+}
+
 async function getOfferWithLimits(offerId) {
     try {
         const offer = await models.offer.findOne({
@@ -354,6 +404,7 @@ module.exports = {
     getOfferList,
     getOfferProgress,
     getOfferDetails,
+    getOfferFunding,
     getLaunchpadList,
     getOtcList,
     getOfferWithLimits,

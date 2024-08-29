@@ -13,7 +13,7 @@ export const DescriptionListHelper = ({ term, children }) => (
 );
 
 export default function MarketDetails({ src, alt, offer, className }) {
-    const { ticker } = offer;
+    const { ticker, ppu, dealStructure, activeDealsCount } = offer;
 
     return (
         <dl
@@ -23,8 +23,8 @@ export default function MarketDetails({ src, alt, offer, className }) {
             )}
         >
             <DescriptionListHelper term="Payout">${ticker}</DescriptionListHelper>
-            <DescriptionListHelper term="Price">$?</DescriptionListHelper>
-            <DescriptionListHelper term="Listed">?</DescriptionListHelper>
+            <DescriptionListHelper term="Price">{dealStructure ? `${dealStructure}, ` : ""} {ppu ? `$${ppu}` : "TBA"}</DescriptionListHelper>
+            <DescriptionListHelper term="Listed">{activeDealsCount}</DescriptionListHelper>
             <dt className="absolute">
                 <span className="sr-only">Icon</span>
             </dt>
@@ -39,4 +39,4 @@ export default function MarketDetails({ src, alt, offer, className }) {
             </dd>
         </dl>
     );
-}
+};
