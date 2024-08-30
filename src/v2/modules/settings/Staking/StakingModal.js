@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { useTenantSpecificData, TENANT } from "@/v2/helpers/tenant";
+import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
 import {
@@ -27,6 +27,7 @@ export default function StakingModal({ session = {}, staking = {} }) {
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
     const { stakeReq, isS1, isStaked } = staking;
 
+    const [isOpen, setIsOpen] = useState(false);
     const [stakeSize, setStakeSize] = useState(stakeReq);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
@@ -37,10 +38,11 @@ export default function StakingModal({ session = {}, staking = {} }) {
     });
 
     const registeredOriginalWallet = wallets?.find((el) => el.isHolder)?.wallet;
-    const wallet =
-        registeredOriginalWallet === account.address
-            ? "0x0000000000000000000000000000000000000000"
-            : registeredOriginalWallet;
+    
+    const wallet = registeredOriginalWallet === account.address
+        ? "0x0000000000000000000000000000000000000000"
+        : registeredOriginalWallet;
+    
     const token = useGetToken(stakingCurrency?.contract);
 
     const blockchainInteractionData = useMemo(() => {
@@ -65,16 +67,14 @@ export default function StakingModal({ session = {}, staking = {} }) {
             token,
             setTransactionSuccessful,
         };
-    }, [stakingCurrency?.contract, activeDiamond, stakeSize]);
+    }, [stakingCurrency?.contract, activeDiamond, stakeSize, isOpen]);
 
-    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
-        data: blockchainInteractionData,
-    });
+    const { getBlockchainStepsProps, getBlockchainStepButtonProps } = useBlockchainStep({ data: blockchainInteractionData, deps: [isOpen] });
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" aria-label="Stake">
+                <Button variant="outline" aria-label="Open stake modal" onClick={() => setIsOpen(true)} >
                     Stake
                 </Button>
             </DialogTrigger>
@@ -132,4 +132,4 @@ export default function StakingModal({ session = {}, staking = {} }) {
             </DialogContent>
         </Dialog>
     );
-}
+};

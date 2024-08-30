@@ -10,59 +10,38 @@ import usePrerequisiteStep, { prerequisiteAction } from "./prerequisite";
 import useTransactionStep, { transactionAction } from "./transaction";
 import { STEP_STATE } from "./enums";
 import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
+import { getTextContent } from "./helpers";
 
-const defaultState = Object.freeze({
-    content: "Analyser Tool",
-    description: "This will guide you through each step for a seamless purchase",
-});
-
-export default function useBlockchainStep({ data }) {
+export default function useBlockchainStep({ data, deps = [] }) {
     const chainId = useChainId();
     const { steps, token, params, setTransactionSuccessful } = data;
     const [state, dispatch] = useReducer(mainReducer, initialState);
-
-    const {
-        price,
-        liquidity,
-        allowance,
-        amount,
-        account,
-        spender,
-        contract,
-        isSeller,
-        otcId,
-        offerDetails = {},
-    } = params;
 
     useEffect(() => {
         dispatch({ type: stepsAction.RESET });
         resetState();
     }, [
-        price,
-        liquidity,
-        allowance,
-        amount,
-        account,
-        spender,
-        contract,
-        isSeller,
-        otcId,
-        offerDetails?.otcId,
-        offerDetails?.dealId,
+        params.price,
+        params.liquidity,
+        params.allowance,
+        params.amount,
+        params.account,
+        params.spender,
+        params.contract,
+        params.isSeller,
+        params.otcId,
+        params?.offerDetails?.otcId,
+        params?.offerDetails?.dealId,
         chainId,
         token?.contract,
+        ...deps,
     ]);
 
-    const { stepNetwork, network_current } = useNetworkStep(!!steps.network, state, data, dispatch);
-    const { stepLiquidity } = useLiquidityStep(!!steps.liquidity, state, data, dispatch);
-    const { stepAllowance, allowance_set_reset, allowance_set } = useAllowanceStep(
-        !!steps.allowance,
-        state,
-        data,
-        dispatch,
-    );
+    const { stepNetwork, network_current } = useNetworkStep(state, data, dispatch);
+    const { stepLiquidity } = useLiquidityStep(state, data, dispatch);
+    const { stepAllowance, allowance_set_reset, allowance_set } = useAllowanceStep(state, data, dispatch);
     const { stepPrerequisite } = usePrerequisiteStep(state, data, network_current, dispatch);
-    const { stepTransaction, transaction } = useTransactionStep(!!steps.transaction, state, data, dispatch);
+    const { stepTransaction, transaction } = useTransactionStep(state, data, dispatch);
 
     const resetState = () => {
         console.log("BIX :: PARAM CHANGED - reset writers");
@@ -134,38 +113,30 @@ export default function useBlockchainStep({ data }) {
     };
 
     const buttonState = useBlockchainButton(steps, state, params, extraState);
+    const content = getTextContent(extraState);
 
-    // @TODO - Refactor, maybe put it in useBlockchainButton?
-    const statuses = Object.values(extraState)
-        .map((item) => item?.state)
-        .filter(Boolean);
-    const processingState = Object.keys(extraState).find((key) => extraState[key]?.state === STEP_STATE.PROCESSING);
-    const errorState = extraState[Object.keys(extraState).find((key) => extraState[key]?.state === STEP_STATE.ERROR)];
+    const statuses = Object.values(extraState).map((item) => item?.state).filter(Boolean);
     const isProcessing = statuses.includes(STEP_STATE.PROCESSING);
-    const isSuccess = statuses.every((state) => state === STEP_STATE.SUCCESS);
-    const hasError = statuses.includes(STEP_STATE.ERROR);
+    const isSuccess = statuses.length > 0 && statuses.every((state) => state === STEP_STATE.SUCCESS);
+    const isError = statuses.includes(STEP_STATE.ERROR);
 
     useEffect(() => {
-        if (hasError) dispatch({ type: stepsAction.ERROR });
-        if (isSuccess) dispatch({ type: stepsAction.SUCCESS });
         if (isProcessing) dispatch({ type: stepsAction.PROCESSING });
-    }, [hasError, isProcessing, isSuccess]);
-
-    const currentState = extraState[processingState] ?? defaultState;
+        if (isSuccess) dispatch({ type: stepsAction.SUCCESS });
+        if (isError) dispatch({ type: stepsAction.ERROR });
+    }, [isError, isProcessing, isSuccess]);
 
     return {
         resetState,
         getBlockchainStepsProps: () => ({
-            status: state.status,
-            errorState,
-            currentState,
-            extraState,
+            content,
             steps,
+            status: state.status,
+            extraState,
         }),
         getBlockchainStepButtonProps: () => ({
             run: debouncedRunProcess,
-            status: state.status,
             ...buttonState,
         }),
     };
-}
+};

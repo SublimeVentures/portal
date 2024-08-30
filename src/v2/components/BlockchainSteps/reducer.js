@@ -27,7 +27,7 @@ export const initialState = {
     transaction: defaultTransactionStep,
 };
 
-const statusReducer = (state = "IDLE", action) => {
+const statusReducer = (state = stepsStatus.IDLE, action) => {
     switch (action.type) {
         case stepsAction.START:
             return stepsStatus.PROCESSING;
@@ -39,7 +39,7 @@ const statusReducer = (state = "IDLE", action) => {
             return stepsStatus.IDLE;
         default:
             return state;
-    }
+    };
 };
 
 export const combineReducers = (slices) => (state, action) => {
