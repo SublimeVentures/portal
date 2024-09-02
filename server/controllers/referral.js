@@ -5,9 +5,9 @@ const crypto = require('crypto');
 
 const SALT = 'sublime';
 
-async function getReferralCode(user, req) {
+async function getReferralCode(req) {
     try {
-        const { userId } = user;
+        const { userId } = req.user;
         return await queryReferralCode(userId);
     } catch (error) {
         logger.error(`Can't fetch referral code`, {
@@ -18,9 +18,9 @@ async function getReferralCode(user, req) {
     }
 }
 
-async function getReferrals(user, req) {
+async function getReferrals(req) {
     try {
-        const { userId } = user;
+        const { userId } = req.user;
         return await queryReferrals(userId);
     } catch (error) {
         logger.error(`Can't fetch referral code`, {
@@ -31,18 +31,18 @@ async function getReferrals(user, req) {
     }
 }
 
-async function createReferral(user, req) {
+async function createReferral(req) {
     try {
-        const { userId } = user;
+        const { userId } = req.user;
         const hashSource = String(userId) + SALT + new Date().getTime();
-        const hash = crypto.createHash('sha256').update(hashSource).digest('hex').substring(0, 7);
+        let hash = crypto.createHash('sha256').update(hashSource).digest('hex').substring(0, 7);
         let isUnique = await checkReferralHashUniqueness(hash);
         let attempts = 0;
 
         while (!isUnique && attempts < 3) {
             attempts++;
             hash = crypto.createHash('sha256').update(String(userId) + attempts).digest('hex').substring(0, 7);
-            isUnique = await checkHashUniqueness(hash);
+            isUnique = await checkReferralHashUniqueness(hash);
         }
 
         if (isUnique) {

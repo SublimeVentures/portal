@@ -9,9 +9,7 @@ const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 router.post("/sign", async (req, res) => {
     if (isBaseVCTenant) {
-        const { auth, user } = await verifyID(req);
-        if (!auth) return res.status(401).json({});
-
+        const { user } = req;
         return res.status(200).json(await signUserReferralClaim(user, req));
     } else {
         return res.status(403).json({ error: "Not allowed on current tenant" });
@@ -20,9 +18,7 @@ router.post("/sign", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     if (isBaseVCTenant) {
-        const { auth, user } = await verifyID(req);
-        if (!auth) return res.status(401).json({});
-
+        const { user } = req;
         return res.status(200).json(await userReferralClaim(user, req));
     } else {
         return res.status(403).json({ error: "Not allowed on current tenant" });

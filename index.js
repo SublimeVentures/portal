@@ -55,14 +55,14 @@ nextApp.prepare().then(async () => {
     server.use("/api/settings", authMiddleware, settingsRoute);
     server.use("/api/payout", authMiddleware, payoutRoute);
     server.use("/api/claim", authMiddleware, claimRoute);
-    server.use("/api/referral", referralRoute);
-    server.use("/api/referral-claim", referralClaimRoute);
+    server.use("/api/referral", authMiddleware, referralRoute);
+    server.use("/api/referral-claim", authMiddleware, referralClaimRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
-        res.set({
-            "Cache-Control": "public, max-age=3600",
-        });
+        // res.set({
+        //     "Cache-Control": "public, max-age=3600",
+        // });
         const parsedUrl = url.parse(req.url, true);
         nextHandler(req, res, parsedUrl);
     });

@@ -1,6 +1,4 @@
-const db = require("../services/db/definitions/db.init");
 const { models } = require("../services/db/definitions/db.init");
-const { QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
 
