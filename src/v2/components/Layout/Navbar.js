@@ -9,23 +9,23 @@ export default function Navbar() {
     const router = useRouter();
 
     return (
-        <nav className="fixed bottom-0 h-24 w-full bg-[#082536] md:hidden z-10">
-            <div className="absolute z-10 -top-8 h-8 w-full bg-gradient-to-b from-transparent to-[#05060B] flex justify-between">
+        <nav className="fixed bottom-0 h-24 w-full bg-primary-800 md:hidden z-10">
+            <div className="absolute z-10 -top-8 h-8 w-full bg-gradient-to-b from-transparent to-primary-950 flex justify-between">
                 <div
                     style={{
-                        background: "radial-gradient(100% 0, circle, rgba(255,0,0,0) 32px, #082536 10px)",
+                        background: "-webkit-radial-gradient(100% 0, circle, rgba(255,0,0,0) 32px, currentColor 10px)",
                         backgroundPosition: "top right",
                         backgroundRepeat: "no-repeat",
                     }}
-                    className="size-8 bg-[#082536]"
+                    className="size-8 bg-primary-800 text-primary-800"
                 />
                 <div
                     style={{
-                        background: "-webkit-radial-gradient(0 0, circle, rgba(255,0,0,0) 32px, #082536 10px)",
+                        background: "-webkit-radial-gradient(0 0, circle, rgba(255,0,0,0) 32px, currentColor 10px)",
                         backgroundPosition: "top left",
                         backgroundRepeat: "no-repeat",
                     }}
-                    className="size-8 bg-[#082536]"
+                    className="size-8 bg-primary-800 text-primary-800"
                 />
             </div>
             <ul className="pt-4 px-4 mx-auto max-w-2xl flex items-center justify-between gap-4 sm:px-16">

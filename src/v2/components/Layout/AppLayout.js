@@ -25,7 +25,12 @@ const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
                 className="hidden lg:flex w-60"
             />
             <div className="grow mb-24 sm:mb-0 sm:p-4 lg:p-3 3xl:p-7 lg:pl-60 3xl:pl-60 overflow-hidden lg:h-screen box-border">
-                <main className="sm:bg-[#05060B] sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col overflow-y-auto lg:overflow-auto gap-4 lg:gap-6 3xl:gap-8 p-4 pb-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12">
+                <main
+                    className={cn(
+                        "sm:bg-primary-950 sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col overflow-y-auto lg:overflow-auto gap-4 lg:gap-6 3xl:gap-8 p-4 pb-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12",
+                        className,
+                    )}
+                >
                     <Header title={title} className="hidden lg:flex" />
                     {children}
                 </main>
@@ -46,7 +51,7 @@ export default function LayoutApp({ children, title, contentClassName }) {
     return (
         <div
             className={cn(
-                "bg-[#05060B] sm:bg-gradient angle-30 to-[#082536] from-[#0A1728] flex flex-col lg:flex-row h-screen relative",
+                "bg-primary-950 sm:bg-gradient angle-30 to-primary-800 from-primary-900 flex flex-col lg:flex-row h-screen relative",
             )}
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}

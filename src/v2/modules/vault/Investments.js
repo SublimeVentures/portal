@@ -18,7 +18,7 @@ const Investments = ({ className }) => {
                         <>
                             {isDesktop ? (
                                 <>
-                                    Your Investment portfolio has a<span className="text-[#4BD4E7]"> +20% </span>
+                                    Your Investment portfolio has a<span className="text-primary"> +20% </span>
                                     growth since last month
                                 </>
                             ) : (
@@ -64,7 +64,7 @@ const Investments = ({ className }) => {
                             ))
                         )}
                     </ul>
-                    <div className="absolute inset-y-0 right-0 -mr-4 w-1/3 z-10 md:hidden pointer-events-none bg-gradient-to-l to-transparent from-[#071321]"></div>
+                    <div className="absolute inset-y-0 right-0 -mr-4 w-1/3 z-10 md:hidden pointer-events-none bg-gradient-to-l to-transparent from-primary-950"></div>
                 </div>
             )}
         </div>

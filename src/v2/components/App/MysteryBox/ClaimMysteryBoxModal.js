@@ -62,7 +62,7 @@ export default function ClaimMysteryBoxModal({ model, setter, claimData }) {
                         <Success.Article>
                             <code className="font-mono text-lg text-center w-full">#{claimData.code}</code>
                         </Success.Article>
-                        <Success.Footer className="text-red-500">
+                        <Success.Footer className="text-error-500">
                             The redeem code won't appear again, save it before closing!
                         </Success.Footer>
                     </>

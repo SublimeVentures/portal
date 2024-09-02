@@ -2,7 +2,11 @@ import Link from "next/link";
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import ReferalsSteps from "@/v2/modules/settings/Referals/ReferalsSteps";
 import ReferalsTable from "@/v2/modules/settings/Referals/ReferalsTable";
-import { RewardStatisticCard, DiscountsStatisticCard, InvitersStatisticCard } from "@/v2/components/App/Vault/StatisticsCard";
+import {
+    RewardStatisticCard,
+    DiscountsStatisticCard,
+    InvitersStatisticCard,
+} from "@/v2/components/App/Vault/StatisticsCard";
 
 export default function Referals() {
     return (
@@ -15,7 +19,7 @@ export default function Referals() {
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm font-light">
                             Get free discounts and earn allocations. For more information, please read the{" "}
-                            <Link className="text-[#4BD4E7] font-normal" href="/#">
+                            <Link className="text-primary font-normal" href="/#">
                                 referral program
                             </Link>{" "}
                             details.
@@ -36,4 +40,4 @@ export default function Referals() {
             </div>
         </div>
     );
-};
+}

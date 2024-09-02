@@ -18,7 +18,7 @@ Pagination.displayName = "Pagination";
 const PaginationContent = forwardRef(({ className, ...props }, ref) => (
     <ul
         ref={ref}
-        className={cn("relative flex flex-row items-center gap-4 bg-[#082131] rounded", className)}
+        className={cn("relative flex flex-row items-center gap-4 bg-primary-800 rounded", className)}
         {...props}
     />
 ));
@@ -34,7 +34,7 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }) => (
         aria-current={isActive ? "page" : undefined}
         className={cn(
             "p-3 h-10 w-10 flex items-center justify-center text-sm text-foreground rounded cursor-pointer",
-            isActive ? "bg-accent shadow-accent" : "bg-[#082131] hover:bg-primary-700",
+            isActive ? "bg-accent shadow-accent" : "bg-primary-800 hover:bg-primary-700",
         )}
         {...props}
     />
@@ -46,7 +46,7 @@ const PaginationPrevious = ({ className, ...props }) => (
     <Link
         aria-label="Go to previous page"
         className={cn(
-            "absolute -left-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-[#082131] rounded hover:bg-primary-700",
+            "absolute -left-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-primary-800 rounded hover:bg-primary-700",
             className,
         )}
         {...props}
@@ -61,7 +61,7 @@ const PaginationNext = ({ className, ...props }) => (
     <Link
         aria-label="Go to next page"
         className={cn(
-            "absolute -right-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-[#082131] rounded hover:bg-primary-700",
+            "absolute -right-13 p-3 h-10 w-10 flex items-center justify-center text-foreground bg-primary-800 rounded hover:bg-primary-700",
             className,
         )}
         {...props}

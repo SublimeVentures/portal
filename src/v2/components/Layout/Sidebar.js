@@ -32,8 +32,11 @@ export default function Sidebar({ session, isBlockedAlert = false, className }) 
                         <li
                             key={path}
                             className={cn(
-                                "text-base font-normal text-foreground hover:bg-primary/[.5] rounded cursor-pointer",
-                                { "bg-primary-light-gradient font-medium": router.pathname === path },
+                                "text-base font-normal text-foreground hover:bg-primary/30 rounded cursor-pointer",
+                                {
+                                    "bg-gradient-to-r from-primary to-primary-600 font-medium":
+                                        router.pathname === path,
+                                },
                             )}
                         >
                             <Link href={path} className="px-8 block lg:py-1.5 3xl:py-2">
@@ -61,7 +64,7 @@ export default function Sidebar({ session, isBlockedAlert = false, className }) 
                 </nav>
 
                 <div className="mt-auto flex flex-col items-center">
-                    <h2 className="text-sm font-light text-gray-100">Community</h2>
+                    <h2 className="text-sm font-light text-white/60">Community</h2>
                     <ul className="flex items-center lg:gap-4 3xl:gap-2 pt-4">
                         {socialMenu.map(({ icon, name, path }) => (
                             <li key={name}>
