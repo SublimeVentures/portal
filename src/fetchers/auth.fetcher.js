@@ -34,3 +34,22 @@ export const logOutRefresh = async () => {
     }
     return false;
 };
+
+export const fetchUser = async (config) => {
+    try {
+        const queryConfig = config?.token
+            ? {
+                  headers: {
+                      Cookie: `${authTokenName}=${config.token}`,
+                  },
+              }
+            : {};
+        const { data } = await axiosPrivate.get(API.user, { ...queryConfig });
+        return data;
+    } catch (error) {
+        return {
+            ok: false,
+            error,
+        };
+    }
+};

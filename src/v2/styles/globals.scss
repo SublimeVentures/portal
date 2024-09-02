@@ -20,7 +20,7 @@
     .table-head {
       @apply relative;
     }
-    
+
     .table-head-cell {
       @apply px-6 pr-5 text-base font-medium text-foreground normal-case text-left;
     }
@@ -50,7 +50,7 @@
     }
 
     .table-data {
-      @apply block px-5 py-1 text-xs text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
+      @apply block px-5 py-1 text-xs text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground;
     }
   }
 
@@ -67,25 +67,32 @@
   .transition-base {
     @apply transition-all duration-500 ease-in-out;
   }
+
   .transition-hover {
     @apply transition-all duration-100 ease-in-out;
   }
+
   .overlay {
     @apply fixed inset-0 z-50 bg-primary-900/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
+
   .flex-center {
     @apply flex items-center justify-center;
   }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
+
   .bg-pattern-blue {
     background-image: url('/img/bg/upgrades/blue@1.webp');
   }
+
   .bg-pattern-gold {
     background-image: url('/img/bg/upgrades/gold@1.webp');
   }
@@ -100,17 +107,17 @@
   }
 
   .bg-mystery-box {
-    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0, 0, 0, 0) 50%), url('/img/bg-mystery-box.webp');
   }
 
   @screen 3xl {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0, 0, 0, 0) 50%), url('/img/bg-mystery-box.webp');
     }
   }
 
   .bg-banner-default {
-    background-image: linear-gradient(to left, theme('colors.primary.900') 0%, theme('colors.primary.900') 50%, rgba(0,0,0,0) 100%), url('/img/bg/banner/default@1.webp');
+    background-image: linear-gradient(to left, theme('colors.primary.900') 0%, theme('colors.primary.900') 50%, rgba(0, 0, 0, 0) 100%), url('/img/bg/banner/default@1.webp');
   }
 
   @screen 3xl {
@@ -183,12 +190,12 @@
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+  -moz-appearance: textfield; /* Firefox */
 }
 
 .vault-investment::-webkit-scrollbar-track {
@@ -210,7 +217,16 @@ input[type=number] {
 .tabs-scrollbar::-webkit-scrollbar {
   height: 4px;
 }
+
 .tabs-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #0D87A1 transparent;
+}
+
+.accordion-chevron {
+  transition: transform 300ms;
+}
+
+.accordion-trigger[data-state='open'] > .accordion-chevron {
+  transform: rotate(180deg);
 }

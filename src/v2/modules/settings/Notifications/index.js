@@ -1,9 +1,47 @@
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { CONNECTION_TYPE } from "./helpers";
 import ConnectionField from "./ConnectionField";
-import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
-import { CheckboxField } from "@/v2/components/ui/checkbox";
+import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
+import {
+    fetchNotificationChannelsWithCategories,
+    fetchNotificationPreferences,
+} from "@/fetchers/notifications.fetcher";
+import { fetchUser } from "@/fetchers/auth.fetcher";
+import { Accordion, AccordionItem } from "@/v2/components/ui/accordion";
 
 export default function NotificationsSettings() {
+    const [currentTab, setCurrentTab] = useState(/** @type {string} */ null);
+
+    const { data: userData } = useQuery({
+        queryKey: ["fetchUser"],
+        queryFn: fetchUser,
+        gcTime: 60_000,
+        staleTime: 60_000,
+    });
+
+    const { data: preferences } = useQuery({
+        queryFn: fetchNotificationPreferences,
+        queryKey: ["preferences"],
+        gcTime: 30_000,
+        staleTime: 30_000,
+    });
+
+    const { data } = useQuery({
+        queryKey: ["notifChannelsWithCategories"],
+        queryFn: fetchNotificationChannelsWithCategories,
+        gcTime: 120_000,
+        staleTime: 60_000,
+        placeholderData: {
+            channels: [],
+            categories: [],
+        },
+    });
+
+    useEffect(() => {
+        console.log("PREFS", preferences);
+    }, [preferences]);
+
     return (
         <Card
             variant="none"
@@ -18,34 +56,32 @@ export default function NotificationsSettings() {
                 </CardDescription>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-1 3xl:grid-cols-2 gap-8 sm:gap-2 3xl:gap-8">
-                <CheckboxField id="announcements">Announcements</CheckboxField>
-                <CheckboxField id="offer_updates">Offer updates</CheckboxField>
-                <CheckboxField id="payouts">Payouts</CheckboxField>
-                <CheckboxField id="otc">OTC</CheckboxField>
-            </div>
-
-            <div className="flex flex-col gap-4">
-                <ConnectionField
-                    isConnected
-                    name="Webpush"
-                    id={CONNECTION_TYPE.WEBPUSH}
-                    placeholder="Fill in username"
-                />
-                <ConnectionField
-                    isConnected
-                    name="Discord"
-                    id={CONNECTION_TYPE.DISCORD}
-                    placeholder="Fill in discord username"
-                />
-                <ConnectionField name="SMS" id={CONNECTION_TYPE.SMS} placeholder="Fill in phone number" />
-                <ConnectionField name="Email" id={CONNECTION_TYPE.EMAIL} placeholder="Fill in email address" />
-            </div>
-
-            {/* Make element disabled for now */}
-            <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-black/[.6] cursor-not-allowed select-none">
-                <div className="bg-black/[.5] rounded p-4 text-white">Work in progress</div>
-            </div>
+            <Accordion type="single" onValueChange={setCurrentTab}>
+                {data?.categories.map((cat, _, arr) => (
+                    <AccordionItem title={cat.name} key={cat.id} value={cat.id}>
+                        <div className="flex flex-col gap-8 sm:gap-2 3xl:gap-4">
+                            <ConnectionField
+                                isConnected
+                                name="Webpush"
+                                id={CONNECTION_TYPE.WEBPUSH}
+                                placeholder="Fill in username"
+                            />
+                            <ConnectionField
+                                isConnected
+                                name="Discord"
+                                id={CONNECTION_TYPE.DISCORD}
+                                placeholder="Fill in discord username"
+                            />
+                            <ConnectionField name="SMS" id={CONNECTION_TYPE.SMS} placeholder="Fill in phone number" />
+                            <ConnectionField
+                                name="Email"
+                                id={CONNECTION_TYPE.EMAIL}
+                                placeholder="Fill in email address"
+                            />
+                        </div>
+                    </AccordionItem>
+                ))}
+            </Accordion>
         </Card>
     );
 }
