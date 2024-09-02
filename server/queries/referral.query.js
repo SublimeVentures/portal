@@ -4,7 +4,7 @@ const { serializeError } = require("serialize-error");
 
 async function queryReferralCode(userId) {
     try {
-        return await models.referralCode.findOne({
+        return await models.referralCodes.findOne({
             where: {
                 userId: userId,
             },
@@ -22,7 +22,7 @@ async function queryReferralCode(userId) {
 
 async function checkReferralHashUniqueness(hash) {
     try {
-        const referral = await models.referralCode.findOne({
+        const referral = await models.referralCodes.findOne({
             where: { hash: hash },
         });
         return referral === null
@@ -38,7 +38,7 @@ async function checkReferralHashUniqueness(hash) {
 
 async function createReferralCode(userId, hash) {
     try {
-        return await models.referralCode.create({
+        return await models.referralCodes.create({
             userId: userId,
             hash: hash
         });

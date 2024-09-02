@@ -12,6 +12,7 @@ import ClaimItem from "@/components/App/Referral/ClaimItem";
 import DetailsSidebar from "@/components/App/Referral/DetailsSidebar";
 import ReferralsTable from "@/components/App/Referral/ReferralsTable";
 import { getTenantConfig } from "@/lib/tenantHelper";
+import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 const {
     seo: { NAME }
@@ -142,6 +143,7 @@ export default function AppReferral({ session }) {
 
                                     <div className="font-bold text-center py-2 my-6 w-full mt-auto bordered-container">
                                         <input className="w-3/4 text-white p-2" disabled={true} type="text" value={referral} />
+                                        <InlineCopyButton copiable={referral} />
                                     </div>}
                             </div>
                         </div>
