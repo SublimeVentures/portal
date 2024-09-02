@@ -1,3 +1,4 @@
+import { views } from "./DetailsSidebar";
 import { Button } from "@/v2/components/ui/button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
@@ -7,15 +8,30 @@ import { NETWORKS } from "@/lib/utils";
 import { updateToLocalString, getFormattedDate } from "@/v2/lib/helpers";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
 import { cn } from "@/lib/cn";
-import { views } from "./DetailsSidebar";
 
 const DetailsView = ({ setView, ...props }) => {
-    const { vestedPercentage, invested, claimed, availablePayouts, currency, isManaged, tgeParsed, performance, participated, nextUnlock, nextSnapshot, nextClaim, notifications, ticker, createdAt } = props;
+    const {
+        vestedPercentage,
+        invested,
+        claimed,
+        availablePayouts,
+        currency,
+        isManaged,
+        tgeParsed,
+        performance,
+        participated,
+        nextUnlock,
+        nextSnapshot,
+        nextClaim,
+        notifications,
+        ticker,
+        createdAt,
+    } = props;
 
     return (
         <>
             <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Status</h3>
-            <dl className='definition-grid definition-section'>
+            <dl className="definition-grid definition-section">
                 <DefinitionItem term="Progress">{vestedPercentage}%</DefinitionItem>
                 <DefinitionItem term="Invested">{updateToLocalString(invested)}</DefinitionItem>
                 <DefinitionItem term="Vested">{updateToLocalString(claimed, currency?.symbol)}</DefinitionItem>
@@ -26,23 +42,34 @@ const DetailsView = ({ setView, ...props }) => {
             </dl>
 
             <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Performance</h3>
-            <dl className='definition-grid definition-section'>
-                <DefinitionItem term="TGE gain" className={cn(tgeParsed !== "TBA" ? "text-green-500" : "text-foreground")}>{tgeParsed}</DefinitionItem>
-                {isManaged
-                    ? <DeinitionItem term="Return" className={cn(tgeParsed !== "TBA" ? "text-green-500" : "text-foreground")}>+{updateToLocalString(performance, '%')}</DeinitionItem> 
-                    : <DefinitionItem term="ATH Profit">Soon</DefinitionItem>
-                }
+            <dl className="definition-grid definition-section">
+                <DefinitionItem
+                    term="TGE gain"
+                    className={cn(tgeParsed !== "TBA" ? "text-success-500" : "text-foreground")}
+                >
+                    {tgeParsed}
+                </DefinitionItem>
+                {isManaged ? (
+                    <DefinitionItem
+                        term="Return"
+                        className={cn(tgeParsed !== "TBA" ? "text-success-500" : "text-foreground")}
+                    >
+                        +{updateToLocalString(performance, "%")}
+                    </DefinitionItem>
+                ) : (
+                    <DefinitionItem term="ATH Profit">Soon</DefinitionItem>
+                )}
             </dl>
 
             <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Dates</h3>
-            <dl className='definition-grid definition-section'>
+            <dl className="definition-grid definition-section">
                 <DefinitionItem term="Participated">{getFormattedDate(participated)}</DefinitionItem>
                 <DefinitionItem term="Next Unlock">{nextUnlock !== 0 ? nextUnlock : "TBA"}</DefinitionItem>
                 <DefinitionItem term="Allocation Snapshot">{nextSnapshot !== 0 ? nextSnapshot : "TBA"}</DefinitionItem>
                 <DefinitionItem term="Claim Date">{nextClaim !== 0 ? nextClaim : "TBA"}</DefinitionItem>
             </dl>
 
-            {(notifications && notifications.length > 0) ? (
+            {notifications && notifications.length > 0 ? (
                 <>
                     <div className="pb-2 pt-4 px-8 flex items-center">
                         <h3 className="mr-4 text-lg font-medium text-foreground">Timeline</h3>

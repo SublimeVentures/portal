@@ -40,7 +40,7 @@ const ChainListModal = () => {
                             ))}
                         </ChainGroup>
                     </div>
-                    {error && <p className="text-red-500 text-center w-full mt-3">{error?.shortMessage}</p>}
+                    {error && <p className="text-error-500 text-center w-full mt-3">{error?.shortMessage}</p>}
                 </div>
                 <p className="text-xxs text-white/[.7] text-center">
                     Current selection: {chain?.name || "Unknown chain"}

@@ -36,9 +36,9 @@ export const ChainButton = ({ children, className, active, invalid, ...props }) 
             className={cn(
                 "size-9 rounded-full flex-center outline-none",
                 {
-                    "bg-gradient-to-t from-[#099FB7] to-[#164062]": active,
-                    "bg-[#113651]": !active,
-                    "bg-red-800 animate-pulse": invalid,
+                    "bg-gradient-to-t from-primary to-primary-600": active,
+                    "bg-primary-700": !active,
+                    "bg-gradient-to-t from-error to-error-700 animate-pulse": invalid,
                 },
                 className,
             )}

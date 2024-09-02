@@ -88,12 +88,12 @@ export default function StakingModal({ session = {}, staking = {} }) {
                     <DialogDescription className="max-w-96 text-center md:text-center">
                         {transactionSuccessful ? (
                             <>
-                                Welcome to <span className="text-green-500">{tenantName}</span>
+                                Welcome to <span className="text-success-500">{tenantName}</span>
                             </>
                         ) : (
                             <>
-                                To partake in <span className="text-green-500">{tenantName}</span> investments, every
-                                investor must stake <span className="text-green-500">$</span> token.
+                                To partake in <span className="text-success-500">{tenantName}</span> investments, every
+                                investor must stake <span className="text-success-500">$</span> token.
                             </>
                         )}
                     </DialogDescription>

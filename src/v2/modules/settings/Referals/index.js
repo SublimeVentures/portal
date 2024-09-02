@@ -19,7 +19,7 @@ export default function Referals() {
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm font-light">
                             Get free discounts and earn allocations. For more information, please read the{" "}
-                            <Link className="text-[#4BD4E7] font-normal" href="/#">
+                            <Link className="text-primary font-normal" href="/#">
                                 referral program
                             </Link>{" "}
                             details.

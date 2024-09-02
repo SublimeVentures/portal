@@ -74,7 +74,7 @@ export default function MobileMenu({ isBlockedAlert }) {
                         <li
                             key={name}
                             className={cn(
-                                "text-xl leading-8 font-normal text-foreground hover:bg-[#164062] rounded cursor-pointer",
+                                "text-xl leading-8 font-normal text-foreground hover:bg-primary-600 rounded cursor-pointer",
                             )}
                         >
                             <Link href={path} className="block px-8">
@@ -101,7 +101,7 @@ export default function MobileMenu({ isBlockedAlert }) {
             <SheetPortal>
                 <SheetContent
                     style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                    className="fixed z-50 right-0 top-0 mt-[var(--alertHeight)] h-[calc(100vh_-_var(--alertHeight))] w-full flex flex-col bg-[#071321] transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
+                    className="fixed z-50 right-0 top-0 mt-[var(--alertHeight)] h-[calc(100vh_-_var(--alertHeight))] w-full flex flex-col bg-primary-950 transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
                 >
                     <div className="p-4 w-full flex items-center justify-between">
                         <Link href={PAGE.App}>

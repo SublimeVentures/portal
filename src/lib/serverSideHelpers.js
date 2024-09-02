@@ -21,7 +21,7 @@ async function processServerSideData(req, res, route, customLogicCallback) {
     let accountData = session.user;
     if (session.auth) {
         const { additionalProps, redirect } = await handleCustomLogic(accountData, accessToken, customLogicCallback);
-        if (redirect) return redirect;
+        if (redirect) return { redirect };
 
         const env = await fetchEnvironment(req.cookies[authTokenName], authTokenName);
         if (!env.ok) {

@@ -46,7 +46,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                     {offers.map((offer, idx) => {
                         if (idx + 1 === offers.length && hasNextPage) {
                             return (
-                                <li ref={ref} key={offer?.offerId} className="text-red-500">
+                                <li ref={ref} key={offer?.offerId} className="text-error-500">
                                     <SingleOffer offer={offer} />
                                 </li>
                             );

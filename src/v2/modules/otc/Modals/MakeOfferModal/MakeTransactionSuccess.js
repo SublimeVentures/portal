@@ -8,10 +8,10 @@ export default function TransactionSuccess({ market, textCopy, amount }) {
             <h3 className="text-3xl font-medium px-4 text-foreground">Congratulations!</h3>
             <p className="my-4 text-lg text-foreground/[.9]">
                 You have successfully created OTC offer to{" "}
-                <span className="text-green-500 font-bold">
+                <span className="text-success-500 font-bold">
                     {textCopy} ${amount}
                 </span>{" "}
-                allocation in <span className="font-bold text-green-500">{market}</span>.
+                allocation in <span className="font-bold text-success-500">{market}</span>.
             </p>
 
             <div className={"flex flex-1 justify-center items-center"}>
@@ -23,5 +23,5 @@ export default function TransactionSuccess({ market, textCopy, amount }) {
                 />
             </div>
         </div>
-    )
-};
+    );
+}

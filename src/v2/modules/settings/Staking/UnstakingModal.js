@@ -59,8 +59,8 @@ export default function UnstakingModal({ staking = {} }) {
                             : `Unstake ${stakingCurrency?.symbol}`}
                     </DialogTitle>
                     <DialogDescription className="max-w-96 text-center md:text-center">
-                        To partake in <span className="text-green-500">BasedVC</span> investments, every investor must
-                        stake <span className="text-green-500">$</span> token.
+                        To partake in <span className="text-success-500">BasedVC</span> investments, every investor must
+                        stake <span className="text-success-500">$</span> token.
                     </DialogDescription>
                 </DialogHeader>
 

@@ -71,7 +71,7 @@
     @apply transition-all duration-100 ease-in-out;
   }
   .overlay {
-    @apply fixed inset-0 z-50 bg-navy-700/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
+    @apply fixed inset-0 z-50 bg-primary-900/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
   .flex-center {
     @apply flex items-center justify-center;
@@ -100,17 +100,29 @@
   }
 
   .bg-mystery-box {
-    background-image: linear-gradient(to bottom, #071321 0%, #071321 5%, rgba(0,0,0,0) 50%), url('/img/mysterybox.png');
+    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@640.jpg');
+  }
+
+  @screen sm {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1280.jpg');
+    }
+  }
+
+  @screen lg {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1920.jpg');
+    }
   }
 
   @screen 3xl {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, #05060B 0%, #05060B 5%, rgba(0,0,0,0) 50%), url('/img/mysterybox.png');
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@3840.jpg');
     }
   }
 
   .bg-banner-default {
-    background-image: linear-gradient(to left, #071321 0%, #071321 50%, rgba(0,0,0,0) 100%), url('/img/bg/banner/default@1.webp');
+    background-image: linear-gradient(to left, theme('colors.primary.900') 0%, theme('colors.primary.900') 50%, rgba(0,0,0,0) 100%), url('/img/bg/banner/default@1.webp');
   }
 
   @screen 3xl {
@@ -118,12 +130,6 @@
       background-image: url('/img/bg/banner/default@1.webp');
     }
   }
-
-  // @media screen and (--webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-  //   .bg-banner-default {
-  //     background-image: url('/img/bg/banner/default@2.webp');
-  //   }
-  // }
 }
 
 ::-webkit-scrollbar {
@@ -137,7 +143,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #082030;
+  background: theme('colors.primary.900');
   border-radius: 999px;
 }
 
@@ -148,7 +154,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: transparent linear-gradient(180deg, #0D87A1 0%, #164062 100%) 0% 0% no-repeat padding-box;
+  background: transparent linear-gradient(180deg, theme('colors.primary.500') 0%, theme('colors.primary.600') 100%) 0% 0% no-repeat padding-box;
   border-radius: 999px;
 }
 
@@ -203,10 +209,8 @@ input[type=number] {
 }
 
 .test6 {
-  // background: linear-gradient(to top, #071321, transparent);
-  // background: linear-gradient(131deg, transparent 0%, #099FB7 0%, transparent 25%);
-  // background-image: linear-gradient(122deg, #06162E 0%, #184A66 47%, #06162E 100%);
-  background: linear-gradient(to top, #071321 0%, #071321 50%, transparent 100%);
+  // background: linear-gradient(to top, theme('colors.primary.950'), transparent);
+  background: linear-gradient(to top, theme('colors.primary.950') 0%, theme('colors.primary.950') 50%, transparent 100%);
 }
 
 .tabs-scrollbar::-webkit-scrollbar {

@@ -47,7 +47,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                 <Progress value={progress} />
             </div>
 
-            <div className="m-4 px-2.5 flex justify-between items-center bg-[#174763] rounded-full">
+            <div className="m-4 px-2.5 flex justify-between items-center bg-primary-600 rounded-full">
                 <p className="text-xs text-foreground lg:text-md">{dateLabel}</p>
                 <time className="text-xs text-foreground lg:text-md">{date}</time>
             </div>
