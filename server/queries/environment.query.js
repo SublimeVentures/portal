@@ -108,11 +108,14 @@ async function getEnvironment() {
             ? funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
             : funded;
 
-    environment.stats.launchpad = offers.filter(
-        (offer) =>
-            offer.isLaunchpad && Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
-    ).length;
-
+    environment.stats.launchpad = offers.filter((offer) => {
+        const hasOfferLimits = Array.isArray(offer.offerlimits);
+        const isTenantAllowed = hasOfferLimits ? offer.offerlimits.includes(parseInt(TENANT_ID)) : true;
+        const isNotTenantExclusive = !offer.isTenantExclusive;
+    
+        return offer.isLaunchpad && (isTenantAllowed || isNotTenantExclusive);
+    }).length;
+    
     environment.stats.vc = offers.filter(
         (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
     ).length;
