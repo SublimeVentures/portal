@@ -45,6 +45,17 @@ export const fetchNotificationPreferences = async () => {
     }
 };
 
+/**
+ * @typedef {object} NotificationPreferenceUpdate
+ * @property {string} categoryId
+ * @property {string} channelId
+ * @property {boolean} enabled
+ */
+
+/**
+ * @param {NotificationPreferenceUpdate[]} updates
+ * @returns {Promise<boolean>}
+ */
 export const updateNotificationPreferences = async (updates) => {
     try {
         await axiosPrivate.post(API.notificationPreferences, { updates });
