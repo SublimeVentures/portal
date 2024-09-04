@@ -2,7 +2,7 @@ import { WagmiProvider } from "wagmi";
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 
 import { Toaster } from "react-hot-toast";
-import { useTenantSpecificData, TENANT } from "@/v2/helpers/tenant";
+import { TENANT } from "@/v2/helpers/tenant";
 import Layout from "@/components/Layout/Layout";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 import Gtag from "@/components/gtag";

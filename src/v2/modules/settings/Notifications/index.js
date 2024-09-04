@@ -11,25 +11,30 @@ import {
     subscribeToPushCategory,
     unsubscribeFromPushCategory,
 } from "@/fetchers/notifications.fetcher";
-import { fetchUser } from "@/fetchers/auth.fetcher";
+import { fetchUser, updateUser } from "@/fetchers/auth.fetcher";
 import { Accordion, AccordionItem } from "@/v2/components/ui/accordion";
 import { useFirebase } from "@/lib/hooks/useFirebase";
 import { tenantIndex } from "@/lib/utils";
+import { Input } from "@/v2/components/ui/input";
+import { IconButton } from "@/v2/components/ui/icon-button";
+import ArrowRightIcon from "@/v2/assets/svg/arrow-right.svg";
 
 export default function NotificationsSettings() {
-    const [currentTab, setCurrentTab] = useState(/** @type {string} */ null);
     const [forceDisablePush, setForceDisablePush] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies();
+    const [userForm, setUserForm] = useState({
+        email: "",
+        phoneNumberE164: "",
+    });
 
     const { fcm } = useFirebase();
 
     const {
         data: { user: userData },
+        status,
     } = useQuery({
         queryKey: ["fetchUser"],
         queryFn: fetchUser,
-        gcTime: 60_000,
-        staleTime: 60_000,
         initialData: {
             user: {
                 phoneNumberE164: "",
@@ -43,7 +48,30 @@ export default function NotificationsSettings() {
         queryKey: ["preferences"],
         gcTime: 30_000,
         staleTime: 30_000,
+        initialData: {},
     });
+
+    const handleInputChange = (ev) => {
+        const { name, value } = ev.target;
+        setUserForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    useEffect(() => {
+        if (status === "success") {
+            setUserForm({
+                email: userData?.email ?? "",
+                phoneNumberE164: userData?.phoneNumberE164 ?? "",
+            });
+        }
+    }, [status, userData]);
+
+    const onUpdate = (key) => () =>
+        updateUser({
+            [key]: userForm[key],
+        });
 
     const requestNotificationPermission = async () => {
         if (Notification.permission !== "granted") {
@@ -55,6 +83,9 @@ export default function NotificationsSettings() {
 
     const handleBeforePushRequest = async (enabling, categoryId) => {
         const isPushAllowed = await requestNotificationPermission();
+        if (!isPushAllowed) {
+            setForceDisablePush(true);
+        }
         if (enabling && isPushAllowed) {
             if (fcm) {
                 return getToken(fcm, {
@@ -109,10 +140,6 @@ export default function NotificationsSettings() {
         },
     });
 
-    useEffect(() => {
-        console.log("PREFS", preferences);
-    }, [preferences]);
-
     return (
         <Card
             variant="none"
@@ -127,11 +154,60 @@ export default function NotificationsSettings() {
                 </CardDescription>
             </div>
 
-            <Accordion type="single" onValueChange={setCurrentTab}>
-                {data?.categories.map((cat, _, arr) => {
+            <div>
+                <label htmlFor="user_email" className="text-app-white">
+                    Email address
+                </label>
+                <div className="relative flex items-center justify-center">
+                    <Input
+                        id="user_email"
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        className="w-full"
+                        value={userForm.email}
+                        onChange={handleInputChange}
+                    />
+                    <IconButton
+                        variant="primary"
+                        name="email_set"
+                        icon={ArrowRightIcon}
+                        className="p-0 absolute top-3 right-2 w-6 h-6"
+                        onClick={onUpdate("email")}
+                    />
+                </div>
+            </div>
+
+            <div>
+                <label htmlFor="user_phoneNumberE164" className="text-app-white">
+                    Phone number with prefix
+                </label>
+                <div className="relative flex items-center justify-center">
+                    <Input
+                        id="user_phoneNumberE164"
+                        type="text"
+                        name="phoneNumberE164"
+                        placeholder="Enter your phone number"
+                        className="w-full"
+                        pattern="/^\+[0-9]{3,15}$/"
+                        value={userForm.phoneNumberE164 ?? userData?.phoneNumberE164}
+                        onChange={handleInputChange}
+                    />
+                    <IconButton
+                        variant="primary"
+                        name="phone_set"
+                        icon={ArrowRightIcon}
+                        className="p-0 absolute top-3 right-2 w-6 h-6"
+                        onClick={onUpdate("phoneNumberE164")}
+                    />
+                </div>
+            </div>
+
+            <Accordion type="single">
+                {data?.categories.map((cat) => {
                     return (
                         <AccordionItem title={cat.name} key={cat.id} value={cat.id}>
-                            <div className="flex flex-col gap-8 sm:gap-2 3xl:gap-4">
+                            <div className="flex flex-col gap-2">
                                 <ConnectionField
                                     name="Push"
                                     id={`${cat.id}|${CONNECTION_TYPE.WEBPUSH}`}
@@ -140,26 +216,16 @@ export default function NotificationsSettings() {
                                     onUpdate={refetchPreferences}
                                     disabled={forceDisablePush}
                                 />
-                                {/*<ConnectionField
-                                isConnected
-                                name="Discord"
-                                id={CONNECTION_TYPE.DISCORD}
-                                placeholder="Fill in discord username"
-                            />*/}
                                 <ConnectionField
+                                    disabled={!userData?.phoneNumberE164}
                                     name="SMS"
-                                    fieldKey="phoneNumberE164"
-                                    fieldValue={userData.phoneNumberE164}
                                     id={`${cat.id}|${CONNECTION_TYPE.SMS}`}
-                                    placeholder="Fill in phone number"
                                     onUpdate={refetchPreferences}
                                 />
                                 <ConnectionField
+                                    disabled={!userData?.email}
                                     name="Email"
-                                    fieldKey="email"
-                                    fieldValue={userData.email}
                                     id={`${cat.id}|${CONNECTION_TYPE.EMAIL}`}
-                                    placeholder="Fill in email address"
                                     onUpdate={refetchPreferences}
                                 />
                             </div>

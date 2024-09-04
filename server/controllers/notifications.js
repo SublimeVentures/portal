@@ -96,12 +96,14 @@ async function subscribeToTopic(req, res) {
                 return res.json({
                     ok: data.ok,
                     message: data.message ?? data.error,
+                    details: data.details ?? null,
                 });
             })
             .catch((err) => {
                 return res.status(400).json({
                     ok: false,
                     error: err.message,
+                    details: err.response?.details ?? null,
                 });
             });
     } catch (err) {
