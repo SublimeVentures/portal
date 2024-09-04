@@ -3,7 +3,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { offersKeys } from "@/v2/constants";
 
-// @todo
 export default function useOffersInfiniteQuery(query = {}) {
     return useInfiniteQuery({
         queryKey: offersKeys.queryOffersVc(query),

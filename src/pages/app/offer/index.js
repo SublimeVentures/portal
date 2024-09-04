@@ -35,8 +35,6 @@ export default function AppOpportunities({ session }) {
         ...cacheOptions,
     });
 
-    console.log('stats22', stats, isStatsLoading, isStatsError)
-
     if (isOffersLoading || isStatsLoading) {
         return (
             <div className="col-span-12 max-h-[40vh]">
@@ -69,9 +67,7 @@ export const getServerSideProps = async ({ req, res }) => {
         const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = account;
         
         await queryClient.prefetchQuery(offersKeys.queryOffersVc({ TENANT_ID, PARTNER_ID }), fetchOfferList);
-
-        // @TODO:
-        await queryClient.prefetchQuery(["offerStats", TENANT_ID, PARTNER_ID], fetchOfferStats);
+        await queryClient.prefetchQuery(offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }), fetchOfferStats);
 
         return {
             additionalProps: {

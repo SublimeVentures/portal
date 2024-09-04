@@ -19,7 +19,6 @@ const useNewsQuery = () =>
         queryFn: fetchNews,
     });
 
-// @todo
 const useOffersQuery = (query, options = {}) =>
     useQuery({
         queryKey: offersKeys.queryOffersVc(query),
