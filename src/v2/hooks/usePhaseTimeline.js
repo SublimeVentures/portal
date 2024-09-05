@@ -1,18 +1,20 @@
-import moment from "moment";
-import { PhaseId, Phases } from "@/v2/lib/phases";
 import { useMemo } from "react";
+import moment from "moment";
 
-// Questions
-// -> Should phases.sort function return phases from 1+ based on ids?
-// -> Whale phase - Do we need to check isBasedVCTenant besided of isLaunchpad && lengthWhales values?
-// -> Pending phase - I added it after whale phase. I'm not quite sure if it's applied correct though
-// -> To clarify: fix existing phase rotation system - it's not refreshing on production or it takes extra long to refresh, it should be almost instant ie. at 23:59 and switch phase at 00:00 or 00:01 (the sooner the better). Currently it is switched like at 00:05
+import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
+import { PhaseId, Phases } from "@/v2/lib/phases";
 
 // Notes
 // 1. Whales - Phase visible only for basedVc whale holders. they can fill only half of the progress bar. only whales can invest. Default users see pending phase
 // 2. Pending - Last 6h 
 // 3. Raffle - Ensured allocation for raffle winners. users can register during pending phase. last 24h
-// 4, Open / 5. FCFS - User can invest. Last about 6h 
+// 4, Open / 5. FCFS - User can invest. Last about 6h
+
+// - tiery sa przetrzymwane w session, na tej podstawie decydowane jest co beda userzy widzeieli
+// - raffle - jesli jest wlaczony, to w trakcie pending moga sie zapisac 
+// fcfs vs open
+// - fcfs - maksymalna inwestycja z danych z session
+// - open - bezposrednio z offer - offerFundraise / offerDetails - alloMax - zhardcodowana max wartosc
 
 const createPhase = (phaseId, startDate = null) => ({ ...Phases[phaseId], startDate });
 
@@ -59,7 +61,9 @@ const unlimitedSlowdownStrategy = (offer, phases) => {
 
 const closedStrategy = (offer, phases) => phases.push(createPhase(PhaseId.Closed, offer.d_close));
 
-export default function usePhaseTimeline(offer) {
+export default function usePhaseTimeline() {
+    const { data } = useOfferDetailsQuery();
+
     const phaseStrategies = [
         whaleStrategy,
         pendingStrategy,
@@ -71,8 +75,8 @@ export default function usePhaseTimeline(offer) {
 
     return useMemo(() => {
         const phases = [];
-        phaseStrategies.forEach(strategy => strategy(offer, phases));
+        phaseStrategies.forEach(strategy => strategy(data, phases));
 
         return phases.sort((a, b) => a.startDate - b.startDate);
-    }, [offer]);
+    }, [data]);
 };

@@ -1,6 +1,6 @@
 export const PhaseId = {
-    Pending: 1,
-    Whale: 2,
+    Whale: 1,
+    Pending: 2,
     Raffle: 3,
     Open: 4,
     FCFS: 5,
@@ -10,16 +10,16 @@ export const PhaseId = {
 };
 
 export const Phases = {
-    [PhaseId.Pending]: {
-        phase: PhaseId.Pending,
-        phaseName: "Pending",
+    [PhaseId.Whale]: {
+        phase: PhaseId.Whale,
+        phaseName: "Whale",
         button: "Open Soon",
         controlsDisabled: true,
         startDate: 0,
     },
-    [PhaseId.Whale]: {
-        phase: PhaseId.Whale,
-        phaseName: "Whale",
+    [PhaseId.Pending]: {
+        phase: PhaseId.Pending,
+        phaseName: "Pending",
         button: "Open Soon",
         controlsDisabled: true,
         startDate: 0,
