@@ -40,10 +40,7 @@ async function requestPushPermission(fcmInstance) {
     if (!fcmInstance) {
         return false;
     }
-    if (Notification.permission !== "granted") {
-        return Notification.requestPermission().then((perm) => perm === "granted");
-    }
-    return true;
+    return Notification.permission === "granted";
 }
 
 export function useFirebase() {
@@ -55,8 +52,11 @@ export function useFirebase() {
             const allowed = await requestPushPermission(messaging);
             if (allowed) {
                 return getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY }).then((token) => {
+                    console.log("[FCM] Token received on hook");
                     return token ?? null;
                 });
+            } else {
+                console.log("[FCM] Token blocked on hook");
             }
         }
         return null;
@@ -70,11 +70,12 @@ export function useFirebase() {
         if (!firebase) return null;
         const fcm = getMessaging(firebase);
         onMessage(fcm, (payload) => {
-            console.log("FCM_onMessage");
+            console.log("[FCM] onMessage fired");
             toast.custom((t) => <NotificationToast t={t} notification={payload.notification} />, {
                 duration: Infinity,
             });
         });
+        console.log("[FCM] onMessage hook is set up");
         return fcm;
     };
 

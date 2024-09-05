@@ -46,8 +46,6 @@ export default function NotificationsSettings() {
     const { data: preferences, refetch: refetchPreferences } = useQuery({
         queryFn: fetchNotificationPreferences,
         queryKey: ["preferences"],
-        gcTime: 30_000,
-        staleTime: 30_000,
         initialData: {},
     });
 
