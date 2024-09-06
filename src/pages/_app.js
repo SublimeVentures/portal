@@ -1,14 +1,12 @@
 import { WagmiProvider } from "wagmi";
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
-
-import { useTenantSpecificData } from "@/v2/helpers/tenant";
+import { TENANT } from "@/v2/helpers/tenant";
 import Layout from "@/components/Layout/Layout";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 import Gtag from "@/components/gtag";
 import { config } from "@/lib/wagmi";
 import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
-import { TENANT } from "@/v2/helpers/tenant";
 import "react-tooltip/dist/react-tooltip.css";
 import "@/v2/styles/globals.scss";
 

@@ -12,21 +12,22 @@ export const layoutStyles = {
     "--sidebarWidth": "260px",
 };
 
-const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
+const DesktopLayout = ({ children, isBlockedAlert, title, contentClassName, session }) => {
     return (
         <>
             <div className="px-4 pt-4 flex flex-col gap-4 lg:hidden">
-                <Header isBlockedAlert={isBlockedAlert} />
+                <Header isBlockedAlert={isBlockedAlert} session={session} />
                 <TabletNavbar />
             </div>
-            <Sidebar
-                session={children.props?.session}
-                isBlockedAlert={isBlockedAlert}
-                className="hidden lg:flex w-60"
-            />
+            <Sidebar session={session} isBlockedAlert={isBlockedAlert} className="hidden lg:flex w-60" />
             <div className="grow mb-24 sm:mb-0 sm:p-4 lg:p-3 3xl:p-7 lg:pl-60 3xl:pl-60 overflow-hidden lg:h-screen box-border">
-                <main className="sm:bg-[#05060B] sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col overflow-y-auto lg:overflow-auto gap-4 lg:gap-6 3xl:gap-8 p-4 pb-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12">
-                    <Header title={title} className="hidden lg:flex" />
+                <main
+                    className={cn(
+                        "sm:bg-primary-950/30 sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col overflow-y-auto lg:overflow-auto gap-4 lg:gap-6 3xl:gap-8 p-4 pb-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12",
+                        contentClassName,
+                    )}
+                >
+                    <Header title={title} className="hidden lg:flex" session={session} />
                     {children}
                 </main>
             </div>
@@ -36,25 +37,25 @@ const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
 };
 
 export default function LayoutApp({ children, title, contentClassName }) {
+    const { session } = children.props || {};
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
-    const stakingEnabled = children.props?.session.stakingEnabled;
-    const isStaked = children.props?.session.isStaked;
+    const stakingEnabled = session.stakingEnabled;
+    const isStaked = session.isStaked;
     const stakingCurrency = activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
 
     const isBlockedAlert = stakingEnabled && !isStaked;
-
     return (
         <div
             className={cn(
-                "bg-[#05060B] sm:bg-gradient angle-30 to-[#082536] from-[#0A1728] flex flex-col lg:flex-row h-screen relative",
+                "bg-primary-950 sm:bg-gradient angle-30 to-primary-800 from-primary-900 flex flex-col lg:flex-row h-screen relative",
             )}
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
+            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} contentClassName={contentClassName} session={session}>
                 {children}
             </DesktopLayout>
 
-            <WalletErrorModal session={children.props?.session} />
+            <WalletErrorModal session={session} />
             <ChainListModal />
         </div>
     );

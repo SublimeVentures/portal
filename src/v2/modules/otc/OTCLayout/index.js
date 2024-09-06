@@ -21,9 +21,9 @@ export default function Markets({ children, session }) {
                 </Title>
             </div>
 
-            {!currentMarket && <h3 className="hidden absolute text-white left-[450px] xl:block">Latest deals</h3>}
+            {!currentMarket && <h3 className="hidden absolute text-white left-[450px] md:block">Latest deals</h3>}
 
-            <div className="flex flex-col lg:h-full gap-8 lg:overflow-hidden lg:grid lg:grid-cols-[35%_1fr] 3xl:grid-cols-[420px_1fr] lg:grid-rows-1">
+            <div className="flex flex-col xl:h-full gap-8 xl:overflow-hidden xl:grid xl:grid-cols-[35%_1fr] 3xl:grid-cols-[420px_1fr] xl:grid-rows-1">
                 {children}
             </div>
         </div>

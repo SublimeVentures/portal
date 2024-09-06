@@ -10,7 +10,7 @@ import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 
 export const SkeletonPayoutTable = ({ count = 3 }) => (
     <Card variant="static" className="p-0">
-        <div className="h-5 p-2 rounded bg-primary-light-gradient" />
+        <div className="h-5 p-2 rounded bg-gradient-to-r from-primary to-primary-600" />
         <div className="p-4">
             {Array.from({ length: count }).map((_, index) => (
                 <Skeleton key={index} className="h-20 my-4" />
@@ -21,7 +21,7 @@ export const SkeletonPayoutTable = ({ count = 3 }) => (
 
 export const ErrorPayoutTable = () => (
     <Card variant="static" className="p-0">
-        <div className="p-2 h-5 rounded bg-primary-light-gradient" />
+        <div className="p-2 h-5 rounded bg-gradient-to-r from-primary to-primary-600" />
 
         <div className="p-12">
             <AlertDestructive
@@ -61,10 +61,10 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
     });
     return (
         <Card variant="static" className={cn("p-0 flex flex-col", className)}>
-            <div className="p-2 h-5 rounded bg-primary-light-gradient" />
-            <div className="p-4 grow overflow-y-auto">
-                {!pages[0]?.rows?.length ? (
-                    <div className="h-80 flex flex-col gap-4 justify-center items-center bg-foreground/[0.03]">
+            <div className="p-2 h-5 rounded bg-gradient-to-r from-primary to-primary-600" />
+            {!pages[0]?.rows?.length ? (
+                <div className="grow p-4">
+                    <div className="h-full flex flex-col gap-4 justify-center items-center bg-foreground/[0.03] py-10">
                         <CardTitle className="text-base md:text-lg font-medium text-foreground">
                             No payouts found
                         </CardTitle>
@@ -74,7 +74,9 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                             time.
                         </CardDescription>
                     </div>
-                ) : (
+                </div>
+            ) : (
+                <div className="p-4 grow overflow-y-auto">
                     <ul className="flex flex-col gap-y-4">
                         {pages.map(({ rows }, index) => (
                             <Fragment key={index}>
@@ -148,8 +150,8 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                             </Fragment>
                         ))}
                     </ul>
-                )}
-            </div>
+                </div>
+            )}
         </Card>
     );
 };

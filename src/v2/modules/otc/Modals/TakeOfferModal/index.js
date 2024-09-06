@@ -99,15 +99,18 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                         <DefinitionItem term="Type">
                                             <span
                                                 className={cn({
-                                                    "text-red-500": offerDetails.isSell,
-                                                    "text-green-500": !offerDetails.isSell,
+                                                    "text-error-500": offerDetails.isSell,
+                                                    "text-success-500": !offerDetails.isSell,
                                                 })}
                                             >
                                                 {offerDetails.isSell ? "Sell" : "Buy"}
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">
-                                            <DynamicIcon className="size-6 inline mx-2 rounded-full" name={NETWORKS[chainDesired?.id]} />
+                                            <DynamicIcon
+                                                className="size-6 inline mx-2 rounded-full"
+                                                name={NETWORKS[chainDesired?.id]}
+                                            />
                                             <span>{chainDesired?.name}</span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
@@ -126,7 +129,10 @@ export default function TakeOfferModal({ offerDetails, className }) {
                             </h3>
                             <div className="py-4 px-8 flex justify-between items-center bg-foreground/[.1]">
                                 <div className="flex items-center">
-                                    <DynamicIcon className="mx-2 size-8 inline text-white rounded-full" name={getCurrencySymbolByAddress(offerDetails.currency)} />
+                                    <DynamicIcon
+                                        className="mx-2 size-8 inline text-white rounded-full"
+                                        name={getCurrencySymbolByAddress(offerDetails.currency)}
+                                    />
                                     <dl className="flex flex-col gap-2">
                                         <DefinitionItem term="You Pay">${totalPayment}</DefinitionItem>
                                     </dl>

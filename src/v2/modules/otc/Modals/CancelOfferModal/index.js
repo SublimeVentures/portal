@@ -1,44 +1,55 @@
 import Image from "next/image";
 
+import TransactionSuccess from "../TransactionSucces";
+import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
 import useMarket from "@/v2/modules/otc/logic/useMarket";
 import { Button } from "@/v2/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetBody,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetFooter,
+    SheetHeader,
+    SheetBody,
+    SheetTitle,
+    SheetTrigger,
+    SheetClose,
 } from "@/v2/components/ui/sheet";
 import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
-import BlockchainSteps from "@/v2/components/BlockchainSteps"
+import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
-import useBlockchainCancelOfferTransaction from "./useBlockchainCancelOfferTransaction";
-import TransactionSuccess from "../TransactionSucces";
 
 export default function CancelOfferModal({ offerDetails, className }) {
     const { currentMarket } = useMarket();
     const { network, cdn } = useEnvironmentContext();
 
-    const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } = useBlockchainCancelOfferTransaction({ otcId: currentMarket?.otc, dealId: offerDetails?.dealId, requiredNetwork: offerDetails?.chainId });
-    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({ data: blockchainInteractionData })
+    const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } =
+        useBlockchainCancelOfferTransaction({
+            otcId: currentMarket?.otc,
+            dealId: offerDetails?.dealId,
+            requiredNetwork: offerDetails?.chainId,
+        });
+    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+        data: blockchainInteractionData,
+    });
 
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString();
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString();
     const chainDesired = network?.chains?.find((el) => el.id === offerDetails?.chainId);
 
     const handleModalClose = async () => {
-        if (transactionSuccessful) await Promise.all([queryClient.invalidateQueries(["otcOffers"]), queryClient.invalidateQueries(["userAllocation"])])
-            .finally(() => setTransactionSuccessful(false));
+        if (transactionSuccessful)
+            await Promise.all([
+                queryClient.invalidateQueries(["otcOffers"]),
+                queryClient.invalidateQueries(["userAllocation"]),
+            ]).finally(() => setTransactionSuccessful(false));
         else setTransactionSuccessful(false);
-        
+
         resetState();
     };
 
@@ -66,28 +77,47 @@ export default function CancelOfferModal({ offerDetails, className }) {
                 <SheetBody>
                     <div className="mx-10 my-4 sm:px-10">
                         {transactionSuccessful ? (
-                            <TransactionSuccess title="OTC Offer cancelled" description="You have successfully cancelled OTC offer." />
+                            <TransactionSuccess
+                                title="OTC Offer cancelled"
+                                description="You have successfully cancelled OTC offer."
+                            />
                         ) : (
                             <>
                                 <div className="definition-section">
-                                    <h3 className="text-2xl font-medium text-foreground text-center">Cancel OTC Offer</h3>
-                                    <p className="mb-2 text-md text-foreground text-center">Are you sure you want to cancel this offer?</p>
+                                    <h3 className="text-2xl font-medium text-foreground text-center">
+                                        Cancel OTC Offer
+                                    </h3>
+                                    <p className="mb-2 text-md text-foreground text-center">
+                                        Are you sure you want to cancel this offer?
+                                    </p>
                                     <dl className="definition-grid">
                                         <DefinitionItem term="Market">{currentMarket.name}</DefinitionItem>
                                         <DefinitionItem term="Type">
-                                            <span className={cn({ "text-red-500": offerDetails.isSell, "text-green-500": !offerDetails.isSell })}>
+                                            <span
+                                                className={cn({
+                                                    "text-error-500": offerDetails.isSell,
+                                                    "text-success-500": !offerDetails.isSell,
+                                                })}
+                                            >
                                                 {offerDetails.isSell ? "Sell" : "Buy"}
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">
-                                            <DynamicIcon className="inline size-6 mx-2 rounded-full" name={NETWORKS[chainDesired?.id]} />
+                                            <DynamicIcon
+                                                className="inline size-6 mx-2 rounded-full"
+                                                name={NETWORKS[chainDesired?.id]}
+                                            />
                                             <span>{chainDesired?.name}</span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
                                         <DefinitionItem term="Price">${cancelOfferPrice_parsed}</DefinitionItem>
                                         {!offerDetails?.isSell && (
                                             <DefinitionItem term="Funds returned">
-                                                <DynamicIcon className="inline size-8 mx-2 text-white rounded-full" name={offerDetails?.currency} style={ButtonIconSize.hero4} />
+                                                <DynamicIcon
+                                                    className="inline size-8 mx-2 text-white rounded-full"
+                                                    name={offerDetails?.currency}
+                                                    style={ButtonIconSize.hero4}
+                                                />
                                                 <span>${cancelOfferPrice_parsed}</span>
                                             </DefinitionItem>
                                         )}
@@ -106,12 +136,14 @@ export default function CancelOfferModal({ offerDetails, className }) {
                             <Button variant="accent">Close</Button>
                         </SheetClose>
                     ) : (
-                        <BlockchainStepButton {...getBlockchainStepButtonProps()} />  
-                    )}          
-    
-                    <p className="text-xxs text-foreground/[.5]">You will automatically lose ${currentMarket.ticker} tokens after settlement.</p>
-                </SheetFooter> 
+                        <BlockchainStepButton {...getBlockchainStepButtonProps()} />
+                    )}
+
+                    <p className="text-xxs text-foreground/[.5]">
+                        You will automatically lose ${currentMarket.ticker} tokens after settlement.
+                    </p>
+                </SheetFooter>
             </SheetContent>
         </Sheet>
     );
-};
+}

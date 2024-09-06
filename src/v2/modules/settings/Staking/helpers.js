@@ -21,12 +21,13 @@ export function timeUntilNextUnstakeWindow(stakedAt, staked) {
         };
     } else {
         let timeUntilUnstakeWindow = (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_DAY;
-        let timeUntilUnstakeWindowHours = (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
+        let timeUntilUnstakeWindowHours =
+            (PERIOD_LENGTH - UNSTAKING_WINDOW_LENGTH - periodPosition) / SECONDS_IN_A_HOUR;
 
         return {
             unstake: false,
             nextDate: timeUntilUnstakeWindow.toFixed(0),
             nextDateH: timeUntilUnstakeWindowHours.toFixed(0),
         };
-    };
-};
+    }
+}

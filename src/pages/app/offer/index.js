@@ -17,13 +17,15 @@ export default function AppOpportunities({ session }) {
     const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = session;
 
     const {
-        data: { pages = [] } = [],
+        data,
         isLoading: isOffersLoading,
         isError: isOffersError,
         isFetchingNextPage,
         hasNextPage,
         fetchNextPage,
     } = useOffersInfiniteQuery();
+
+    const { pages = [], count } = data || {};
 
     const {
         data: stats = {},
@@ -57,6 +59,7 @@ export default function AppOpportunities({ session }) {
         <Opportunities
             offers={pages}
             stats={stats}
+            count={count}
             infiniteLoaderOpts={{ isFetchingNextPage, hasNextPage, fetchNextPage }}
         />
     );

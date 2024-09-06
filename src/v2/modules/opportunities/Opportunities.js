@@ -14,7 +14,7 @@ import {
 } from "@/v2/components/App/Vault/StatisticsCard";
 import Title from "@/v2/modules/opportunities/Title";
 
-export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
+export default function Opportunities({ offers, stats, infiniteLoaderOpts, count }) {
     const { partners = 0, vc: investments = 0, funded: rawFunded = 0 } = stats;
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
 
@@ -29,7 +29,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
             <Metadata title="Opportunities" />
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center lg:gap-4">
                 <div className="mb-4 3xl:mb-0">
-                    <Title subtitle="We bring new industry giants to our community" count={offers.length + 1}>
+                    <Title subtitle="We bring new industry giants to our community" count={count}>
                         Funded Projects
                     </Title>
                 </div>
@@ -42,11 +42,11 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
                 </div>
             </div>
             <div className="grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 sm:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4">
-                <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-2 gap-4 lg:gap-y-6 lg:gap-x-8 2xl:grid-cols-cards">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-y-6 lg:gap-x-8 2xl:grid-cols-cards">
                     {offers.map((offer, idx) => {
                         if (idx + 1 === offers.length && hasNextPage) {
                             return (
-                                <li ref={ref} key={offer?.offerId} className="text-red-500">
+                                <li ref={ref} key={offer?.offerId} className="text-error-500">
                                     <SingleOffer offer={offer} />
                                 </li>
                             );

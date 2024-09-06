@@ -32,9 +32,7 @@ const isSellColumn = columnHelper.accessor("isSell", {
     cell: (info) => {
         const isSell = info.getValue();
         return (
-            <span className={cn("text-base", isSell ? "text-destructive" : "text-green-500")}>
-                {isSell ? "Sell" : "Buy"}
-            </span>
+            <span className={cn("text-base", isSell ? "text-error" : "text-success")}>{isSell ? "Sell" : "Buy"}</span>
         );
     },
 });
@@ -121,7 +119,7 @@ const actionColumn = columnHelper.accessor("action", {
                     ) : (
                         <Tooltiper
                             wrapper={
-                                <div className="disabled duration-300 hover:text-destructive cursor-pointer">
+                                <div className="disabled duration-300 hover:text-error cursor-pointer">
                                     <IconCancel className="w-6 h-6" />
                                 </div>
                             }

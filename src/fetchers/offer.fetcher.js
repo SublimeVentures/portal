@@ -6,9 +6,9 @@ import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { authTokenName } from "@/lib/authHelpers";
 import { handleError } from "@/v2/lib/error";
 
-export const fetchOfferList = async (query) => {
+export const fetchOfferList = async (query, config = {}) => {
     try {
-        const { data } = await axiosPrivate.get(API.offerList, { params: { type: "vc", ...query } });
+        const { data } = await axiosPrivate.get(API.offerList, { params: { type: "vc", ...query }, ...config });
 
         return data;
     } catch (error) {

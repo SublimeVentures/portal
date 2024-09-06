@@ -117,7 +117,11 @@ async function getUserVault(
                     : {}),
             },
             replacements: { userId, partnerId, tenantId },
-            order: [[sortBy, sortOrder]],
+            order: [
+                sortBy === "performance"
+                    ? [Sequelize.literal(`"vault"."claimed" / NULLIF("vault"."invested", 0)`), sortOrder]
+                    : [sortBy, sortOrder],
+            ],
             limit,
             offset,
         });

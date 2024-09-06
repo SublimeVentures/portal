@@ -12,12 +12,24 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuPortal,
+    DropdownMenuRadioItem,
+    DropdownMenuRadioGroup,
+    DropdownMenuCheckboxItem,
 } from "@/v2/components/ui/dropdown-menu";
 import useMarket from "@/v2/modules/otc/logic/useMarket";
 import { cn } from "@/lib/cn";
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 
-const FiltersDropdown = ({ filters, handleToggleFilter }) => {
+const FiltersDropdown = ({ filters, options, handleToggleFilter }) => {
+    const grouped = options.reduce((acc, option) => {
+        const key = Object.keys(option.filter)[0];
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+
+        acc[key].push(option);
+        return acc;
+    }, {});
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -25,14 +37,33 @@ const FiltersDropdown = ({ filters, handleToggleFilter }) => {
             </DropdownMenuTrigger>
 
             <DropdownMenuPortal>
-                <DropdownMenuContent className="w-56">
-                    <DropdownMenuGroup>
-                        {filters.map((filter) => (
-                            <DropdownMenuItem key={filter.id} onClick={() => handleToggleFilter(filter.id)}>
-                                {filter.name}
-                            </DropdownMenuItem>
-                        ))}
-                    </DropdownMenuGroup>
+                <DropdownMenuContent className="w-56 py-4 px-2">
+                    {Object.entries(grouped).map(([key, value]) => {
+                        if (value.length > 1) {
+                            return (
+                                <DropdownMenuRadioGroup
+                                    key={key}
+                                    onValueChange={handleToggleFilter}
+                                    value={options.find((option) => option.filter[key] === filters[key])?.id}
+                                >
+                                    {value.map((option) => (
+                                        <DropdownMenuRadioItem key={option.id} value={option.id}>
+                                            {option.name}
+                                        </DropdownMenuRadioItem>
+                                    ))}
+                                </DropdownMenuRadioGroup>
+                            );
+                        }
+                        return value.map((option) => (
+                            <DropdownMenuCheckboxItem
+                                key={option.id}
+                                checked={filters[key] ? true : false}
+                                onCheckedChange={() => handleToggleFilter(option.id)}
+                            >
+                                {option.name}
+                            </DropdownMenuCheckboxItem>
+                        ));
+                    })}
                 </DropdownMenuContent>
             </DropdownMenuPortal>
         </DropdownMenu>
@@ -70,7 +101,11 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                         </Button>
                         <MakeOfferModal />
                         {isOffersView && (
-                            <FiltersDropdown filters={offersFilters} handleToggleFilter={handleToggleFilter} />
+                            <FiltersDropdown
+                                filters={filters}
+                                options={offersFilters}
+                                handleToggleFilter={handleToggleFilter}
+                            />
                         )}
 
                         <div className="flex flex-wrap items-stretch gap-4 2xl:flex-row-reverse">
@@ -86,7 +121,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                                 return (
                                     <div
                                         key={key}
-                                        className="px-4 flex items-center text-white text-xs 3xl:text-sm font-light bg-gray-300 rounded"
+                                        className="px-4 flex items-center text-white text-xs 3xl:text-sm font-light bg-primary-800 rounded"
                                     >
                                         {filter.name}
                                         <button className="ml-2" onClick={() => handleFilterRemove(key)}>

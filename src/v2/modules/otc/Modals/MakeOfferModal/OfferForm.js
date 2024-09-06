@@ -6,7 +6,7 @@ import { Input } from "@/v2/components/ui/input";
 import { Button } from "@/v2/components/ui/button";
 import USDCIcon from "@/v2/assets/svg/USDC.svg";
 import USDTIcon from "@/v2/assets/svg/USDT.svg";
-import { cn } from "@/lib/cn"; 
+import { cn } from "@/lib/cn";
 
 const CURRENCY_ICON = {
     USDC: USDCIcon,
@@ -14,8 +14,13 @@ const CURRENCY_ICON = {
 };
 
 const CurrencyIcon = ({ className, icon: Icon }) => (
-    <span className={cn("inline w-10 h-10 mr-4 rounded shrink-0 bg-gradient-to-b from-[#164062] to-[#0BB0C8] p-1.5", className)}>
-        <Icon />
+    <span
+        className={cn(
+            "inline w-10 h-10 mr-4 rounded shrink-0 bg-gradient-to-b from-primary-600 to-primary p-1.5",
+            className,
+        )}
+    >
+        {Icon ? <Icon /> : "X"}
     </span>
 );
 
@@ -25,7 +30,7 @@ const OfferField = ({ name, control, handleChange, ...props }) => {
             name={name}
             control={control}
             render={({ field }) => (
-                <FormItem className="h-24 w-full">
+                <FormItem className="w-full">
                     <FormControl>
                         <Input
                             {...field}
@@ -50,7 +55,7 @@ const OfferSelect = ({ name, control, options, handleChange }) => {
                 <FormItem className="w-[80px] self-center">
                     <FormControl>
                         <Select {...field} onValueChange={(val) => handleChange(val, field.onChange)}>
-                            <SelectTrigger className="text-md border-none bg-transparent text-foreground/[.6]">
+                            <SelectTrigger className="text-xs md:text-sm border-none bg-transparent text-foreground/[.6] p-0 gap-1 md:gap-2">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -91,15 +96,12 @@ const OfferMaxValue = ({ name, control, handleChange }) => {
 
 export default function OfferForm({ form, cdn, market, multiplierParsed, getOfferFieldProps }) {
     const selectedCurrency = getOfferFieldProps("currency").value;
-
-    console.log('selectedCurrency', selectedCurrency)
-    
     return (
         <>
             <Form {...form}>
                 <div className="pt-2 pb-4 px-8 flex flex-col bg-foreground/[.06] rounded">
-                    <h3 className="pt-4 pb-4 text-lg font-medium text-foreground">Your offer</h3>
-                    <div className="w-full flex items-center">
+                    <h3 className="pt-4 pb-4 text-base font-medium text-foreground">Your offer</h3>
+                    <div className="w-full flex items-center pb-2">
                         <div className="w-full flex items-center">
                             <div className="relative w-full">
                                 <OfferField
@@ -107,7 +109,7 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
                                     icon={
                                         <Image
                                             src={`${cdn}/research/${market.slug}/icon.jpg`}
-                                            className="inline w-10 h-10 mr-4 rounded"
+                                            className="inline w-10 mr-4 rounded"
                                             alt={`Avatar of ${market.name} market`}
                                             width={40}
                                             height={40}
@@ -120,10 +122,10 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
                         </div>
                     </div>
 
-                    <span className="text-lg pb-4 text-foreground text-center">x {multiplierParsed}</span>
+                    <span className="text-base font-light pb-2 text-foreground text-center">x {multiplierParsed}</span>
 
                     <div className="relative flex items-center">
-                        <div className="flex items-center">
+                        <div className="flex items-center w-full">
                             <OfferField
                                 icon={<CurrencyIcon icon={CURRENCY_ICON[selectedCurrency]} />}
                                 after={<OfferSelect {...getOfferFieldProps("currency")} />}

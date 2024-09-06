@@ -41,7 +41,7 @@ const SheetContent = forwardRef(({ side, className, children, ...props }, ref) =
         <SheetOverlay className="hidden sm:block" />
         <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
             <SheetPrimitive.Close className="hidden absolute z-50 right-9 top-11 rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
-                <IconButton name="Close" comp="div" icon={CrossIcon} className="p-3.5" />
+                <IconButton name="Close" variant="secondary" comp="div" icon={CrossIcon} className="p-3.5" />
             </SheetPrimitive.Close>
 
             {children}
@@ -54,10 +54,10 @@ SheetContent.displayName = SheetPrimitive.Content.displayName;
 const SheetHeader = ({ className, ...props }) => (
     <div className="gradient-border-sheet-header before:rounded-l-4xl">
         <div className="bg-sheet-pattern bg-cover bg-center bg-no-repeat sm:rounded-l-4xl sm:mt-0.5 sm:ml-0.5">
-            <div className="bg-gray-400/[.6] sm:rounded-l-4xl">
+            <div className="bg-primary-950/[.6] sm:rounded-l-4xl">
                 <div
                     className={cn(
-                        "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center text-center",
+                        "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center justify-center text-center",
                         className,
                     )}
                     {...props}
@@ -75,7 +75,9 @@ const SheetFooter = ({ className, ...props }) => (
 
 SheetFooter.displayName = "SheetFooter";
 
-const SheetBody = ({ className, ...props }) => <div className={cn("relative grow w-full", className)} {...props} />;
+const SheetBody = ({ className, ...props }) => (
+    <div className={cn("relative grow w-full max-h-[66vh]", className)} {...props} />
+);
 
 SheetBody.displayName = "SheetBody";
 

@@ -39,7 +39,7 @@ const NotificationTypeNames = {
     [NotificationTypes.OTC_TAKE]: "OTC Take",
     [NotificationTypes.OTC_CANCEL]: "OTC Cancelled",
     [NotificationTypes.MYSTERY_BUY]: "Mystery Box obtained",
-    [NotificationTypes.UPGRADE_BUY]: "Acquired premium",
+    [NotificationTypes.UPGRADE_BUY]: "Acquired upgrade",
 };
 
 module.exports = {

@@ -1,10 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { useTenantSpecificData, TENANT } from "@/v2/helpers/tenant";
+import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/v2/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/v2/components/ui/dialog";
 import { Button } from "@/v2/components/ui/button";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
@@ -19,6 +27,7 @@ export default function StakingModal({ session = {}, staking = {} }) {
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
     const { stakeReq, isS1, isStaked } = staking;
 
+    const [isOpen, setIsOpen] = useState(false);
     const [stakeSize, setStakeSize] = useState(stakeReq);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
@@ -29,9 +38,13 @@ export default function StakingModal({ session = {}, staking = {} }) {
     });
 
     const registeredOriginalWallet = wallets?.find((el) => el.isHolder)?.wallet;
-    const wallet = registeredOriginalWallet === account.address ? "0x0000000000000000000000000000000000000000" : registeredOriginalWallet;
-    const token = useGetToken(stakingCurrency?.contract);
     
+    const wallet = registeredOriginalWallet === account.address
+        ? "0x0000000000000000000000000000000000000000"
+        : registeredOriginalWallet;
+    
+    const token = useGetToken(stakingCurrency?.contract);
+
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
@@ -54,36 +67,33 @@ export default function StakingModal({ session = {}, staking = {} }) {
             token,
             setTransactionSuccessful,
         };
-    }, [stakingCurrency?.contract, activeDiamond, stakeSize]);
+    }, [stakingCurrency?.contract, activeDiamond, stakeSize, isOpen]);
 
-    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
-        data: blockchainInteractionData,
-    });
-    
+    const { getBlockchainStepsProps, getBlockchainStepButtonProps } = useBlockchainStep({ data: blockchainInteractionData, deps: [isOpen] });
+
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" aria-label="Stake">
+                <Button variant="outline" aria-label="Open stake modal" onClick={() => setIsOpen(true)} >
                     Stake
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="md:items-center">
                     <DialogTitle className="w-full text-center">
-                        {transactionSuccessful ? `${stakingCurrency?.name} staked successfully.` : `Stake ${stakingCurrency?.name}` }
+                        {transactionSuccessful
+                            ? `${stakingCurrency?.name} staked successfully.`
+                            : `Stake ${stakingCurrency?.name}`}
                     </DialogTitle>
                     <DialogDescription className="max-w-96 text-center md:text-center">
                         {transactionSuccessful ? (
                             <>
-                                Welcome to <span className="text-green-500">{tenantName}</span>
+                                Welcome to <span className="text-success-500">{tenantName}</span>
                             </>
                         ) : (
                             <>
-                                To partake in {" "}
-                                <span className="text-green-500">{tenantName}</span>
-                                {" "} investments, every investor must stake {" "}
-                                <span className="text-green-500">$</span>
-                                {" "} token.
+                                To partake in <span className="text-success-500">{tenantName}</span> investments, every
+                                investor must stake <span className="text-success-500">$</span> token.
                             </>
                         )}
                     </DialogDescription>
@@ -98,14 +108,18 @@ export default function StakingModal({ session = {}, staking = {} }) {
                 ) : (
                     <>
                         <div className="grid grid-cols-2 gap-4 text-center">
-                          <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
-                            <dt className="text-foreground text-lg font-semibold">Detected NFTs</dt>
-                            <dd className="mt-2 text-foreground text-4xl">{nft[isS1 ? 0 : 1]}</dd>
-                          </dl>
-                          <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
-                            <dt className="text-foreground text-lg font-semibold">{isStaked ? "Add" : "Required"} Stake</dt>
-                            <dd className="mt-2 text-foreground text-4xl">{stakeSize} {stakingCurrency?.name}</dd>
-                          </dl>
+                            <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
+                                <dt className="text-foreground text-lg font-semibold">Detected NFTs</dt>
+                                <dd className="mt-2 text-foreground text-4xl">{nft[isS1 ? 0 : 1]}</dd>
+                            </dl>
+                            <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
+                                <dt className="text-foreground text-lg font-semibold">
+                                    {isStaked ? "Add" : "Required"} Stake
+                                </dt>
+                                <dd className="mt-2 text-foreground text-4xl">
+                                    {stakeSize} {stakingCurrency?.name}
+                                </dd>
+                            </dl>
                         </div>
 
                         <BlockchainSteps {...getBlockchainStepsProps()} />
@@ -116,6 +130,6 @@ export default function StakingModal({ session = {}, staking = {} }) {
                     </>
                 )}
             </DialogContent>
-      </Dialog>
+        </Dialog>
     );
 };

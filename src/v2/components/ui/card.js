@@ -55,10 +55,7 @@ const CardButton = forwardRef(({ className, ...props }, ref) => (
     <Button
         ref={ref}
         variant="outline"
-        className={cn(
-            "group-hover/card:bg-accent hover:!bg-accent-light group-hover/card:border-transparent",
-            className,
-        )}
+        className={cn("group-hover/card:bg-accent hover:!bg-accent-600 group-hover/card:border-transparent", className)}
         {...props}
     />
 ));

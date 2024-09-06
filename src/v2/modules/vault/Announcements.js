@@ -1,40 +1,30 @@
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { PartnershipCard } from "@/v2/components/App/Vault";
 import { cn } from "@/lib/cn";
-import { fetchNews } from "@/v2/fetchers/news.fetcher";
 import { Card } from "@/v2/components/ui/card";
-import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { routes } from "@/v2/routes";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import Title from "@/v2/modules/vault/components/Dashboard/Title";
-import { offersKeys } from "@/v2/constants";
 
-const useNewsQuery = () =>
-    useQuery({
-        queryKey: ["news"],
-        queryFn: fetchNews,
-    });
+import useNewsQuery from "@/v2/hooks/useNewsQuery";
+import useOffersQuery from "@/v2/hooks/useOffersQuery";
 
-const useOffersQuery = (query, options = {}) =>
-    useQuery({
-        queryKey: offersKeys.queryOffersVc(query),
-        queryFn: () => fetchOfferList(query),
-        ...options,
-    });
+export const OFFERS_QUERY = {
+    limit: 1,
+};
 
 const Announcements = ({ className }) => {
     const { data = {}, isLoading } = useNewsQuery();
-    const { data: { offers = [] } = {} } = useOffersQuery({ limit: 1 }, { disabled: !data });
+    const { data: offers = {} } = useOffersQuery(OFFERS_QUERY, { disabled: !data });
     const { cdn } = useEnvironmentContext();
     if (!data) {
         return (
             <div className={cn("flex flex-col", className)}>
                 <Title className="mb-5 md:mb-2 md:hidden 3xl:flex">Offer</Title>
-                {offers.map((offer) => (
+                {offers?.rows?.map((offer) => (
                     <Link href={`${routes.Opportunities}/${offer.slug}`} key={offer.slug} className="grow flex">
                         <Card className="grow p-6 group/button">
                             <div className="bg-white/5 backdrop-blur-2xl rounded h-full relative flex 3xl:block">

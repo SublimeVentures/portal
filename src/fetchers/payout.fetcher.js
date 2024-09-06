@@ -13,9 +13,9 @@ export const fetchInvestmentPayout = async (offerId) => {
     return [];
 };
 
-export const fetchAllPayouts = async (query) => {
+export const fetchAllPayouts = async (query, config) => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchPayout, { params: query });
+        const { data } = await axiosPrivate.get(API.fetchPayout, { params: query, ...config });
         return data;
     } catch (error) {
         handleError(ErrorType.FETCHER, error, { methodName: "fetchAllPayouts", enableSentry: true });

@@ -6,17 +6,17 @@ export default function StakingDetails({ session, staking }) {
 
     return (
         <>
-            <dl className="definition-section my-0 grid grid-cols-2 gap-4">
+            <dl className="2xl:py-3 2xl:px-8 2xl:bg-white/[.03] grid grid-cols-2 gap-4 rounded w-fit">
                 <DefinitionItem term="Allocation base">{session.multi * 100}%</DefinitionItem>
                 <DefinitionItem term="Allocation bonus">
-                    <span className={cn(allocationBonus > 0 ? "text-green-500" : "text-foreground" )}>
+                    <span className={cn(allocationBonus > 0 ? "text-success-500" : "text-foreground")}>
                         ${allocationBonus}
                     </span>
                 </DefinitionItem>
                 <DefinitionItem term="Allocation max">${session.stakeSize}</DefinitionItem>
                 <DefinitionItem term="Staked">
-                    <span className={cn(staked > 0 ? "text-green-500" : "text-red-500")}>
-                        {staked ? (session.stakeSize || stakeReq) : session.stakeReq}
+                    <span className={cn(staked > 0 ? "text-success-500" : "text-error-500")}>
+                        {staked ? session.stakeSize || stakeReq : session.stakeReq}
                     </span>
                 </DefinitionItem>
                 {staked ? (
@@ -27,4 +27,4 @@ export default function StakingDetails({ session, staking }) {
             </dl>
         </>
     );
-};
+}

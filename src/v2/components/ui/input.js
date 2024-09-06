@@ -20,8 +20,8 @@ const readOnlyVariants = cva("", {
 const controlsSize = cva("", {
     variants: {
         size: {
-            sm: "py-2 px-3 !leading-5 text-md",
-            md: "py-2 px-3 text-md !leading-8",
+            sm: "py-2 px-3 !leading-6 text-sm",
+            md: "py-2 px-3 text-base !leading-8",
         },
     },
     defaultVariants: {
@@ -111,8 +111,8 @@ const InputFunds = forwardRef(
                 )}
             >
                 {icon}
-                <label className="flex flex-col items-baseline">
-                    <div className="">{label}</div>
+                <label className="flex flex-col items-baseline w-full">
+                    <div className="text-sm">{label}</div>
                     <input
                         type="number"
                         ref={ref}

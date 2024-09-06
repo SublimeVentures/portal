@@ -12,7 +12,7 @@ const Bullet = ({ children }) => (
 
 export default function ReferalsSteps() {
     return (
-        <div className="rounded opacity-100 steps-gradient mt-8 py-12 px-9 flex flex-col">
+        <div className="rounded opacity-100 steps-gradient mt-8 md:mt-0 py-12 px-9 flex flex-col">
             <div className="flex">
                 <div className="flex flex-col items-center">
                     <Bullet>1</Bullet>
@@ -37,7 +37,7 @@ export default function ReferalsSteps() {
                 </div>
             </div>
 
-            <div className="text-base font-normal py-2 text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-primary-light-gradient flex justify-center">
+            <div className="text-base font-normal py-2 text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-gradient-to-r from-primary to-primary-600 flex justify-center">
                 <Copy text={"0x12d...560eF/based.VC"} />
             </div>
         </div>

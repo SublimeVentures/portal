@@ -17,7 +17,6 @@ const getStatusColor = (status) => colors[status] || "";
 
 const BlockchainStep = ({ data }) => {
     const { state, content, icon, iconPadding, error, colorOverride } = data;
-
     return (
         <>
             <motion.div className="flex flex-row items-center text-[14px]" layout>

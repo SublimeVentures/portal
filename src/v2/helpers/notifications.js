@@ -1,5 +1,6 @@
 import OtcMessage from "@/v2/components/Timeline/OTCMessage";
-import { NotificationTypes, NotificationTypeNames } from "@/v2/enum/notifications"
+import { NotificationTypes, NotificationTypeNames } from "@/v2/enum/notifications";
+import { PremiumItemsENUM } from "@/lib/enum/store";
 
 /**
  * @description Get the notification title based on the type
@@ -15,17 +16,17 @@ export function getDescriptionMessage(type, values) {
         case NotificationTypes.MYSTERY_BUY:
             return null;
         case NotificationTypes.UPGRADE_BUY:
-            return "Increased Allocation";
+            return `${PremiumItemsENUM.Guaranteed === values?.upgrade?.storeId ? "Guaranteed" : "Increased"} Allocation`;
         case NotificationTypes.OTC_CANCEL:
-            return <OtcMessage action="Cancel" values={values.otcDeal} />
+            return <OtcMessage action="Cancel" values={values.otcDeal} />;
         case NotificationTypes.OTC_MADE:
-            return <OtcMessage action="Made" values={values.otcDeal} />
+            return <OtcMessage action="Made" values={values.otcDeal} />;
         case NotificationTypes.OTC_TAKE:
-            return <OtcMessage action="Take" values={values.otcDeal} />
+            return <OtcMessage action="Take" values={values.otcDeal} />;
         case NotificationTypes.INVESTMENT:
-            return `Invested $${values.data.value}`;
+            return `$${values.data.value} in ${values?.offer?.name}`;
         case NotificationTypes.REFUND:
-            return `Issued refund for $${values.data.amount}`
+            return `Issued refund for $${values.data.amount}`;
         case NotificationTypes.CLAIM:
             return `
                 ${values.claim?.isClaimed ? "Claimed" : "Not claimed"}
@@ -34,8 +35,8 @@ export function getDescriptionMessage(type, values) {
             `;
         default:
             return null;
-    };
-};
+    }
+}
 
 export function getRedirectMessage(type, values) {
     switch (type) {
@@ -53,5 +54,15 @@ export function getRedirectMessage(type, values) {
             return `Claimed ${values.offerPayout} payout on ${values.currencySymbol} chain`;
         default:
             return null;
-    };
-};
+    }
+}
+
+export function getImageSrc({ typeId, offer, upgrade }, { getResearchIconSrc, getStoreSrc }) {
+    switch (typeId) {
+        case NotificationTypes.MYSTERY_BUY:
+        case NotificationTypes.UPGRADE_BUY:
+            return getStoreSrc(upgrade?.img);
+        default:
+            return getResearchIconSrc(offer?.slug);
+    }
+}

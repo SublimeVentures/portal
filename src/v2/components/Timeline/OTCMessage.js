@@ -4,7 +4,7 @@ import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 export default function OtcMessage({ action, values = {} }) {
     const { getCurrencySymbolByAddress } = useEnvironmentContext();
     const { amount = 0, currency = "", price = 0 } = values;
-    
+
     const symbol = getCurrencySymbolByAddress(currency);
 
     return (
@@ -14,4 +14,4 @@ export default function OtcMessage({ action, values = {} }) {
             {` units at $${price.toFixed(2)} each.`}
         </span>
     );
-};
+}

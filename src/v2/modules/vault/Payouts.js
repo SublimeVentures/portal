@@ -1,14 +1,18 @@
 import Link from "next/link";
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { Button } from "@/v2/components/ui/button";
-import usePayoutsInfiniteQuery from "@/v2/modules/payouts/usePayoutsInfiniteQuery";
 import PayoutTable, { PayoutTableVariants } from "@/v2/components/App/Vault/PayoutTable";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import Title from "@/v2/modules/vault/components/Dashboard/Title";
+import usePayoutsInfiniteQuery from "@/v2/hooks/usePayoutsInfiniteQuery";
+
+export const PAYOUTS_QUERY = {
+    limit: 5,
+};
 
 const Payouts = ({ className }) => {
-    const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery({ limit: 5 });
+    const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery(PAYOUTS_QUERY);
     const isLargeDesktop = useMediaQuery(breakpoints.md);
     const tableVariant = isLargeDesktop ? PayoutTableVariants.vertical : PayoutTableVariants.horizontal;
     return (

@@ -25,7 +25,7 @@ const StatisticCard = ({ title, value = 0, icon, isLoading = false, isError = fa
     return (
         <Card variant="accent" className={cn("min-w-32 grow flex items-center", className)}>
             <CardIcon
-                className={cn("bg-accent/[.1] text-accent mr-5", { "hidden md:inline-block": last })}
+                className={cn("bg-accent/[.1] text-accent mr-5 shrink-0", { "hidden md:inline-block": last })}
                 icon={icon}
             />
             <div className={cn({ "text-center w-full md:text-left md:w-auto": last })}>

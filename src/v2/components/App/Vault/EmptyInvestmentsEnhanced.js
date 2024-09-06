@@ -45,7 +45,7 @@ const EmptyInvestmentsEnhanced = () => {
                 <Link
                     key={offer.slug}
                     href={`/app/offers/${offer.slug}`}
-                    className="p-3.5 flex flex-row md:flex-col w-full md:w-auto items-center gap-4 bg-navy-800 rounded collap:flex-row collap:gap-12 group/button"
+                    className="p-3.5 flex flex-row md:flex-col w-full md:w-auto items-center gap-4 bg-primary-900 rounded collap:flex-row collap:gap-12 group/button"
                 >
                     <AvatarRoot variant="block" className="bg-black size-[72px]">
                         <AvatarImage src={`${cdn}/research/${offer.slug}/icon.jpg`} />

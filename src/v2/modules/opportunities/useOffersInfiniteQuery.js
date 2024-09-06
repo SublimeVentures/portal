@@ -17,6 +17,11 @@ export default function useOffersInfiniteQuery(query = {}) {
 
             return cursor;
         },
-        select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        select: (data) => {
+            return {
+                count: data.pages[0]?.count ?? 0,
+                pages: data.pages.flatMap((page) => page.rows),
+            };
+        },
     });
 }

@@ -67,7 +67,10 @@ function createConditions(userId, now, upcomingThreshold, { isSoon, isUpcoming, 
 
     if (isPending !== undefined) {
         andConditions.push({
-            claimDate: { [Op.notBetween]: [now, upcomingThreshold] },
+            [Op.and]: [
+                { claimDate: { [Op.notBetween]: [now, upcomingThreshold] } },
+                Sequelize.literal(`"claims"."isClaimed" = FALSE`),
+            ],
         });
     }
 

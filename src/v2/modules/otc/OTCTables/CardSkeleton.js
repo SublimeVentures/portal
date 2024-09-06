@@ -4,7 +4,7 @@ import { Skeleton, SkeletonCircle } from "@/v2/components/ui/skeleton";
 export default function CardSkeleton() {
     return (
         <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b-[25px]">
-            <div className="h-2 rounded bg-primary-light-gradient" />
+            <div className="h-2 rounded bg-gradient-to-r from-primary to-primary-600" />
 
             <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
                 <div className="p-4">
