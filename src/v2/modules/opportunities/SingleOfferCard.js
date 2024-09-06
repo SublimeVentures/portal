@@ -1,26 +1,25 @@
 import Image from "next/image";
-
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { Card } from "@/v2/components/ui/card";
 import { Badge } from "@/v2/components/ui/badge";
 import { Progress } from "@/v2/components/ui/progress";
+import useImage from "@/v2/hooks/useImage";
 
 export default function SingleOfferCard({ name, slug, genre, ticker, state, btnVariant, progress, dateLabel, date }) {
-    const { cdn } = useEnvironmentContext();
+    const { getResearchIconSrc, getResearchBgSrc } = useImage();
 
     return (
         <Card variant="dark" className="h-full flex flex-col">
             <div className="grow">
                 <div className="relative h-24 flex gap-2 lg:mb-12 lg:h-32">
                     <Image
-                        src={`${cdn}/research/${slug}/icon.jpg`}
+                        src={getResearchIconSrc(slug)}
                         className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg"
                         alt={`Avatar for ${name} offer`}
                         width={90}
                         height={90}
                     />
                     <Image
-                        src={`${cdn}/research/${slug}/bg.jpg`}
+                        src={getResearchBgSrc(slug)}
                         alt={`Background image for ${name} offer`}
                         className="object-cover rounded"
                         width={1000}
