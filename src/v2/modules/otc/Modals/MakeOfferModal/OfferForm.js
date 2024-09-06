@@ -4,8 +4,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/v2/compon
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
 import { Input } from "@/v2/components/ui/input";
 import { Button } from "@/v2/components/ui/button";
-import USDCIcon from "@/v2/assets/svg/USDC.svg";
-import USDTIcon from "@/v2/assets/svg/USDT.svg";
+import USDCIcon from "@/v2/assets/svg/usdc.svg";
+import USDTIcon from "@/v2/assets/svg/usdt.svg";
 import { cn } from "@/lib/cn";
 
 const CURRENCY_ICON = {
