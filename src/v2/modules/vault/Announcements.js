@@ -8,6 +8,7 @@ import { routes } from "@/v2/routes";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import Title from "@/v2/modules/vault/components/Dashboard/Title";
+
 import useNewsQuery from "@/v2/hooks/useNewsQuery";
 import useOffersQuery from "@/v2/hooks/useOffersQuery";
 

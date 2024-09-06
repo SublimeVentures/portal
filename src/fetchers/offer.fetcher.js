@@ -84,6 +84,7 @@ export const fetchOfferAllocation = async (id) => {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferAllocation", enableSentry: true });
     }
 };
+
 export const fetchOfferAllocationSsr = async (id, token) => {
     if (!id) return {};
     try {

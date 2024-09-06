@@ -5,6 +5,7 @@ import { OfferStatus, OfferDateText, BadgeVariants, getStatus, formatDate } from
 import { fetchOfferProgress } from "@/fetchers/offer.fetcher";
 import { phases } from "@/lib/phases";
 import { cacheOptions } from "@/v2/helpers/query";
+import { offersKeys } from "@/v2/constants";
 
 export default function useSingleOfferLogic(offer) {
     const { offerId, name, slug, genre, ticker, d_open: starts, d_close: ends } = offer || {};
@@ -14,7 +15,7 @@ export default function useSingleOfferLogic(offer) {
     const status = getStatus(phaseCurrent);
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["offerProgress", { offerId }],
+        queryKey: offersKeys.queryOfferProgress(offerId),
         queryFn: () => fetchOfferProgress(offerId),
         ...cacheOptions,
         refetchOnMount: true,
@@ -23,7 +24,6 @@ export default function useSingleOfferLogic(offer) {
 
     const formatKey = status === OfferStatus.CLOSED ? "LL" : "lll";
     const timestamp = status === OfferStatus.PENDING ? starts : ends;
-
     const progress = data?.progress ?? 0;
 
     return {
