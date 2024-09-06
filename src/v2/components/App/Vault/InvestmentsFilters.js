@@ -52,7 +52,7 @@ export default function InvestmentsList({ investments, views, query, onChange, c
             className={className}
             title="My Investments"
             count={investments.length + 1}
-            bannerClassName="hidden sm:block"
+            bannerClassName="hidden sm:flex lg:hidden 2xl:flex"
             affix={<ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />}
         >
             <div className="flex items-center flex-wrap gap-2 sm:gap-4">

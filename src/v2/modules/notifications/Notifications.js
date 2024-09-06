@@ -1,9 +1,10 @@
 import { useRef } from "react";
 
 import { useIntersectionObserver } from "@/v2/hooks";
-import { Card } from "@/v2/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
 import TimelineSkeleton from "@/v2/components/Timeline/TimelineSkeleton";
+import { Button } from "@/v2/components/ui/button";
 
 export default function NotificationList({ data = [], isFetching, hasNextPage, fetchNextPage }) {
     const ref = useRef();
@@ -13,31 +14,54 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
     });
 
     return (
-        <Card
-            variant="none"
-            className="px-2 flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12"
-        >
-            <div className="py-4 flex flex-col h-full overflow-y-auto">
-                <ol className="px-2 flex flex-col grow overflow-x-hidden">
-                    {data.map((notification, idx) => {
-                        if (idx + 1 === data.length && hasNextPage) {
-                            return (
-                                <li ref={ref} key={notification.id} className="group">
-                                    <TimelineItem item={notification} />
-                                </li>
-                            );
-                        }
+        <>
+            {data.length > 0 || isFetching ? (
+                <Card
+                    variant="none"
+                    className="flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12 p-0"
+                >
+                    <div className="py-4 flex flex-col h-full overflow-y-auto pr-4">
+                        <ol className="px-4 flex flex-col grow overflow-x-hidden py-2">
+                            {data.map((notification, idx) => {
+                                if (idx + 1 === data.length && hasNextPage) {
+                                    return (
+                                        <li ref={ref} key={notification.id} className="group">
+                                            <TimelineItem item={notification} />
+                                        </li>
+                                    );
+                                }
 
-                        return (
-                            <li key={notification.id} className="group">
-                                <TimelineItem item={notification} className={idx === 0 && "mt-0"} />
-                            </li>
-                        );
-                    })}
+                                return (
+                                    <li key={notification.id} className="group">
+                                        <TimelineItem item={notification} />
+                                    </li>
+                                );
+                            })}
 
-                    {isFetching && <TimelineSkeleton />}
-                </ol>
-            </div>
-        </Card>
+                            {isFetching && <TimelineSkeleton />}
+                        </ol>
+                    </div>
+                </Card>
+            ) : (
+                <Card
+                    variant="none"
+                    border="none"
+                    className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat lg:mb-6 3xl:mb-12"
+                >
+                    <CardTitle className="text-sm md:text-base text-center font-normal">
+                        No notifications found
+                    </CardTitle>
+                    <CardDescription className="max-w-2xl text-lg md:text-3xl font-semibold text-center">
+                        Explore elite investment avenues curated for the astute investor
+                    </CardDescription>
+                    <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
+                        <Button className="w-full collap:w-auto" variant="outline">
+                            OTC market
+                        </Button>
+                        <Button className="w-full collap:w-auto">Opportunities</Button>
+                    </div>
+                </Card>
+            )}
+        </>
     );
 }

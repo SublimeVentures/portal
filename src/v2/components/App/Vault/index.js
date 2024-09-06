@@ -1,4 +1,3 @@
-import VaultDashboard from "./VaultDashboard";
 import InvestmentsGrid from "./InvestmentsGrid";
 import InvestmentsList from "./InvestmentsList";
 import InvestmentsFilters from "./InvestmentsFilters";
@@ -17,7 +16,6 @@ import UpgradeBanner from "./UpgradeBanner";
 import ViewRadio from "./ViewRadio";
 
 export {
-    VaultDashboard,
     InvestmentsGrid,
     InvestmentsList,
     InvestmentsFilters,

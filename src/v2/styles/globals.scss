@@ -22,7 +22,7 @@
     }
     
     .table-head-cell {
-      @apply px-6 pr-5 text-base font-medium text-foreground normal-case text-left;
+      @apply px-6 pr-5 text-sm font-medium text-foreground normal-case text-left;
     }
 
     .table-body-row {
@@ -127,8 +127,16 @@
 
   @screen 3xl {
     .bg-banner-default {
-      background-image: url('/img/bg/banner/default@1.webp');
+      background-image: url('/img/bg/banner/default@2.webp');
     }
+  }
+
+  .bg-banner-vertical {
+    background-color: theme('colors.primary.900');
+    background-image: url('/img/bg/banner/vertical@2x.jpg');
+    background-position: left center;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
   }
 }
 

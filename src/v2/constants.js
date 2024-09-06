@@ -18,3 +18,24 @@ export const notificationKeys = {
     queryNotifications: (query) => [...notificationKeys.notifications, query],
     lastNotifications: [notificationsKeyValues.lastNotifications],
 };
+
+export const newsKeys = {
+    news: (query) => ["news", ...(query ? [query] : [])],
+};
+
+export const vaultKeys = {
+    vault: (query) => ["vault", ...(query ? [query] : [])],
+    vaultStats: (query) => [...vaultKeys.vault(null), "stats", ...(query ? [query] : [])],
+};
+
+export const offersKeys = {
+    offers: (query) => ["offers", ...(query ? [query] : [])],
+};
+
+export const storeOwnedItemsKeys = {
+    storeOwnedItems: (query) => ["store-items", "owned", ...(query ? [query] : [])],
+};
+
+export const payoutsKeys = {
+    payouts: (query) => ["payouts", ...(query ? [query] : [])],
+};

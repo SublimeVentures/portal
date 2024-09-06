@@ -22,12 +22,13 @@ const renderLogo = (componentName) => {
     return <TenantLogo />;
 };
 
-export default function Header({ title, isBlockedAlert, className }) {
-    const { environmentCleanup } = useEnvironmentContext();
+export default function Header({ title, isBlockedAlert, className, session }) {
+    const {
+        environmentCleanup,
+        account: { address },
+    } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
-
     const handleLogout = () => environmentCleanup();
-
     return (
         <header className={cn("flex justify-between shrink-0", className)}>
             <div className="flex justify-between items-center w-full h-max text-white">
@@ -45,8 +46,8 @@ export default function Header({ title, isBlockedAlert, className }) {
 
                 <div className="flex items-center gap-4">
                     <div className="hidden items-center gap-4 md:flex">
-                        <p className="text-sm font-light text-foreground">{shortenAddress(mockedUser.walletAddress)}</p>
-                        <Avatar className="bg-white size-13" />
+                        <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
+                        <Avatar className="bg-white size-13" session={session} />
                         <div className="mx-2 h-6 w-0.5 bg-foreground" />
                     </div>
 

@@ -2,15 +2,14 @@ import React, { forwardRef } from "react";
 import Image from "next/image";
 
 import TimelineTransaction from "./TimelineTransaction";
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getFormattedDate } from "@/v2/lib/helpers";
 import { cn } from "@/lib/cn";
-import { getNotificationTitle, getDescriptionMessage } from "@/v2/helpers/notifications";
+import { getNotificationTitle, getDescriptionMessage, getImageSrc } from "@/v2/helpers/notifications";
 import TimelineSVG from "@/v2/assets/svg/timeline.svg";
+import useImage from "@/v2/hooks/useImage";
 
 const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, className }, ref) => {
-    const { cdn } = useEnvironmentContext();
-
+    const image = useImage();
     return (
         <div ref={ref} className={cn("flex text-sm", className)}>
             {showTimeline ? (
@@ -34,13 +33,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
             >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
-                        {/* <Image
-                            src={`${cdn}/research/1.jpg`}
-                            className="rounded-full"
-                            alt=""
-                            width={55}
-                            height={55}
-                        /> */}
+                        <Image src={getImageSrc(item, image)} className="rounded-full" alt="" width={55} height={55} />
 
                         <div>
                             <div>

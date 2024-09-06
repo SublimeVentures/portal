@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
 import {
@@ -9,7 +8,7 @@ import {
 } from "@/v2/components/App/Vault";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
-import { fetchVault } from "@/fetchers/vault.fetcher";
+import useInvestmentsQuery from "@/v2/hooks/useInvestmentsQuery";
 
 const VIEW_TYPES = {
     LIST: "list",
@@ -18,23 +17,12 @@ const VIEW_TYPES = {
 
 const VIEWS = [VIEW_TYPES.GRID, VIEW_TYPES.LIST];
 
-const fetchInvestments = async (query) => {
-    const data = await fetchVault(query);
-    return data?.rows || [];
-};
-
-export const useInvestments = (query) =>
-    useQuery({
-        queryKey: ["investments", query],
-        queryFn: () => fetchInvestments(query),
-    });
-
 const loadingInvestments = Array.from({ length: 10 }, (_, index) => ({ slug: index }));
 
 function InvestmentsPage() {
     const router = useRouter();
     const { view = VIEW_TYPES.GRID, ...query } = router.query;
-    const { data: investments = loadingInvestments, isLoading } = useInvestments(query);
+    const { data: investments = loadingInvestments, isLoading } = useInvestmentsQuery(query);
 
     return (
         <>

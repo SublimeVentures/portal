@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const { NotificationTypes } = require("../../src/v2/enum/notifications");
@@ -33,25 +33,97 @@ function buildWhereFromAuthorizedQuery(user, query) {
     };
 }
 
+function includeToNotification({
+    model,
+    attributes = [],
+    dataId,
+    typeIds = [],
+    as,
+    where = "",
+    modelAttribute = "id",
+}) {
+    return [
+        Sequelize.literal(`(
+            SELECT row_to_json(sub)
+            FROM (
+                SELECT ${attributes.length > 0 ? `"${attributes.join('", "')}"` : "*"}
+                FROM "${model}" AS "item"
+                WHERE "item"."${modelAttribute}" = ("notification"."data"->>'${dataId}')::integer
+                AND notification."typeId" IN (${typeIds.join(", ")})${where}
+                LIMIT 1
+            ) sub
+        )`),
+        as,
+    ];
+}
+
 async function getNotifications(user, query) {
     try {
         const { where, limit, offset, sort } = buildWhereFromAuthorizedQuery(user, query);
 
-        const { rows, count } = await models.notification.findAndCountAll({
+        const data = await models.notification.findAndCountAll({
             where,
             limit,
             offset,
             order: [["id", sort.toUpperCase()]],
-            raw: true,
+            include: [
+                {
+                    model: models.offer,
+                    attributes: ["id", "name", "slug", "ticker"],
+                },
+                {
+                    model: models.onchain,
+                    attributes: ["id", "txID", "createdAt", "chainId"],
+                },
+                {
+                    model: models.notificationType,
+                    attributes: ["id", "name"],
+                },
+            ],
+            attributes: {
+                include: [
+                    includeToNotification({
+                        model: "storePartner",
+                        modelAttribute: "storeId",
+                        attributes: ["id", "img", "storeId"],
+                        dataId: "item",
+                        typeIds: [NotificationTypes.MYSTERY_BUY, NotificationTypes.UPGRADE_BUY],
+                        where: ` AND "item"."tenantId" = "notification"."tenantId"`,
+                        as: "upgrade",
+                    }),
+                    includeToNotification({
+                        model: "otcDeal",
+                        attributes: [],
+                        dataId: "otcDealId",
+                        typeIds: [NotificationTypes.OTC_CANCEL, NotificationTypes.OTC_MADE, NotificationTypes.OTC_TAKE],
+                        as: "otcDeal",
+                    }),
+                    includeToNotification({
+                        model: "partner",
+                        attributes: [],
+                        dataId: "partnerId",
+                        typeIds: [NotificationTypes.INVESTMENT],
+                        as: "partner",
+                    }),
+                    includeToNotification({
+                        model: "payout",
+                        attributes: [],
+                        dataId: "payoutId",
+                        typeIds: [NotificationTypes.CLAIM],
+                        as: "payout",
+                    }),
+                    includeToNotification({
+                        model: "claim",
+                        attributes: [],
+                        dataId: "claimId",
+                        typeIds: [NotificationTypes.CLAIM],
+                        as: "claim",
+                    }),
+                ],
+            },
         });
-
-        if (count === 0) return { count: 0, rows: [] };
-
-        const enrichedNotifications = await buildFullNotifications(rows);
-
         return {
-            rows: enrichedNotifications,
-            count,
+            ...data,
             limit,
             offset,
         };
@@ -60,171 +132,6 @@ async function getNotifications(user, query) {
     }
 
     return { count: 0, rows: [] };
-}
-
-async function buildFullNotifications(baseNotifications) {
-    return Promise.all(
-        baseNotifications.map((notif) => {
-            return enrichBaseNotification(notif)
-                .then((baseNotif) => {
-                    switch (baseNotif.typeId) {
-                        case NotificationTypes.MYSTERY_BUY:
-                            return enrichMysteryBuyNotification(baseNotif);
-                        case NotificationTypes.UPGRADE_BUY:
-                            return enrichUpgradeBuyNotification(baseNotif);
-                        case NotificationTypes.OTC_CANCEL:
-                        case NotificationTypes.OTC_MADE:
-                        case NotificationTypes.OTC_TAKE:
-                            return enrichOtcNotification(baseNotif);
-                        case NotificationTypes.INVESTMENT:
-                            return enrichInvestmentNotification(baseNotif);
-                        case NotificationTypes.REFUND:
-                            return enrichReturnNotification(baseNotif);
-                        case NotificationTypes.CLAIM:
-                            return enrichClaimNotification(baseNotif);
-                        default:
-                            return null;
-                    }
-                })
-                .catch((err) => {
-                    console.log("[Notifications] After-enrichment Processing Error:", err.message);
-                    return notif;
-                });
-        }),
-    );
-}
-
-async function enrichBaseNotification(plainNotification) {
-    try {
-        const offer = await models.offer.findOne({
-            where: {
-                id: plainNotification.offerId,
-            },
-            raw: true,
-        });
-        const onchain = await models.onchain.findOne({
-            where: {
-                id: plainNotification.onchainId,
-            },
-            raw: true,
-        });
-        const chain = await models.network.findOne({
-            where: {
-                id: plainNotification.chainId,
-            },
-            raw: true,
-        });
-        return {
-            ...plainNotification,
-            offer,
-            onchain,
-            chain,
-        };
-    } catch (err) {
-        console.log("[Notifications] Base Enrichment Error:", err.message);
-        return plainNotification;
-    }
-}
-
-async function enrichMysteryBuyNotification(plainNotification) {
-    try {
-        const item = await models.storePartner.findOne({
-            where: {
-                id: plainNotification.data.item,
-            },
-            raw: true,
-        });
-        return {
-            ...plainNotification,
-            item,
-        };
-    } catch (err) {
-        console.log("[Notifications] MYSTERY_BUY Enrichment Error:", err.message);
-        return plainNotification;
-    }
-}
-
-async function enrichUpgradeBuyNotification(plainNotification) {
-    try {
-        const item = await models.storePartner.findOne({
-            where: {
-                id: plainNotification.data.item,
-            },
-            raw: true,
-        });
-        return {
-            ...plainNotification,
-            item,
-        };
-    } catch (err) {
-        console.log("[Notifications] UPGRADE_BUY Enrichment Error:", err.message);
-        return plainNotification;
-    }
-}
-
-async function enrichOtcNotification(plainNotification) {
-    try {
-        const otcDeal = await models.otcDeal.findOne({
-            where: {
-                id: plainNotification.data.otcDealId,
-            },
-            raw: true,
-        });
-        return {
-            ...plainNotification,
-            otcDeal,
-        };
-    } catch (err) {
-        console.log("[Notifications] OTC Enrichment Error:", err.message);
-        return plainNotification;
-    }
-}
-
-async function enrichInvestmentNotification(plainNotification) {
-    try {
-        const partner = await models.partner.findOne({
-            where: {
-                id: plainNotification.data.partnerId,
-            },
-            raw: true,
-        });
-        return {
-            ...plainNotification,
-            partner,
-        };
-    } catch (err) {
-        console.log("[Notifications] INVEST Enrichment Error:", err.message);
-        return plainNotification;
-    }
-}
-
-async function enrichReturnNotification(plainNotification) {
-    return plainNotification;
-}
-
-async function enrichClaimNotification(plainNotification) {
-    try {
-        const claim = await models.claim.findOne({
-            where: {
-                id: plainNotification.data.claimId,
-            },
-            raw: true,
-        });
-        const payout = await models.payout.findOne({
-            where: {
-                id: plainNotification.data.payoutId,
-            },
-            raw: true,
-        });
-        return {
-            ...plainNotification,
-            claim,
-            payout,
-        };
-    } catch (err) {
-        console.log("[Notifications] CLAIM Enrichment Error:", err.message);
-        return plainNotification;
-    }
 }
 
 module.exports = { getNotifications };
