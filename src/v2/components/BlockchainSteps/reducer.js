@@ -7,6 +7,8 @@ import { transactionReducer, defaultTransactionStep } from "./transaction/reduce
 export const stepsAction = Object.freeze({
     START: "START",
     RESET: "RESET",
+    ERROR: "ERROR",
+    SUCCESS: "SUCCESS",
 });
 
 export const stepsStatus = Object.freeze({
@@ -25,7 +27,7 @@ export const initialState = {
     transaction: defaultTransactionStep,
 };
 
-const statusReducer = (state = "IDLE", action) => {
+const statusReducer = (state = stepsStatus.IDLE, action) => {
     switch (action.type) {
         case stepsAction.START:
             return stepsStatus.PROCESSING;
@@ -37,7 +39,7 @@ const statusReducer = (state = "IDLE", action) => {
             return stepsStatus.IDLE;
         default:
             return state;
-    }
+    };
 };
 
 export const combineReducers = (slices) => (state, action) => {

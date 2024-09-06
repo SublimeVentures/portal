@@ -40,9 +40,9 @@ export default function UnstakingModal({ staking = {} }) {
         };
     }, [stakingCurrency?.contract, activeDiamond]);
 
-    // const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
-    //     data: blockchainInteractionData,
-    // });
+    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+        data: blockchainInteractionData,
+    });
 
     return (
         <Dialog>
@@ -79,11 +79,10 @@ export default function UnstakingModal({ staking = {} }) {
                             </dd>
                         </dl>
 
-                        {/* <BlockchainSteps {...getBlockchainStepsProps()} /> */}
+                        <BlockchainSteps {...getBlockchainStepsProps()} />
 
                         <DialogFooter className="items-center">
-                            {/* <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} /> */}
-                            <Button className="w-full md:w-64">Unstake</Button>
+                            <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
                         </DialogFooter>
                     </>
                 )}
