@@ -40,4 +40,4 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
             </div>
         </Card>
     );
-};
+}

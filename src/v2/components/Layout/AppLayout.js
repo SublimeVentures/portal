@@ -12,7 +12,7 @@ export const layoutStyles = {
     "--sidebarWidth": "260px",
 };
 
-const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
+const DesktopLayout = ({ children, isBlockedAlert, title, contentClassName }) => {
     return (
         <>
             <div className="px-4 pt-4 flex flex-col gap-4 lg:hidden">
@@ -28,7 +28,7 @@ const DesktopLayout = ({ children, isBlockedAlert, title, className }) => {
                 <main
                     className={cn(
                         "sm:bg-primary-950 sm:rounded-2xl 3xl:rounded-4xl w-full h-full flex flex-col overflow-y-auto lg:overflow-auto gap-4 lg:gap-6 3xl:gap-8 p-4 pb-8 sm:py-4 lg:py-0 sm:px-9 lg:px-9 3xl:px-18 lg:pt-6 3xl:pt-12",
-                        className,
+                        contentClassName,
                     )}
                 >
                     <Header title={title} className="hidden lg:flex" />
@@ -55,7 +55,7 @@ export default function LayoutApp({ children, title, contentClassName }) {
             )}
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} className={contentClassName}>
+            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} contentClassName={contentClassName}>
                 {children}
             </DesktopLayout>
 

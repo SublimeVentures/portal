@@ -5,9 +5,7 @@ import { STEPS } from "../enums";
 import { transactionAction } from "./reducer";
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 
-export default function useTransactionStep(isActive, state, data, dispatch) {
-    if (!isActive) return {};
-    
+export default function useTransactionStep(state, data, dispatch) {
     const chainId = useChainId();
     const { steps, token, params } = data;
 
@@ -27,6 +25,7 @@ export default function useTransactionStep(isActive, state, data, dispatch) {
         state.prerequisite.isFinished;
 
     console.log("BIX :: TRANSACTION - shouldRun / isReady", transaction_shouldRun, transaction_isReady);
+
     console.log(
         "BIX :: TRANSACTION - shouldRun split",
         steps.transaction,
@@ -35,12 +34,14 @@ export default function useTransactionStep(isActive, state, data, dispatch) {
         transaction_isReady,
         state.prerequisite.isFinished,
     );
+
     const transaction = useSendTransaction(
         transaction_shouldRun,
         state.prerequisite.method || {},
         chainId,
         params.account,
     );
+
     console.log(`BIX :: TRANSACTION - HOOK STATE`, transaction);
 
     const transaction_isFinished = transaction.confirm?.data?.transactionHash;
@@ -67,4 +68,4 @@ export default function useTransactionStep(isActive, state, data, dispatch) {
             transaction_isReady,
         }),
     };
-}
+};

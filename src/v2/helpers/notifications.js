@@ -1,5 +1,5 @@
 import OtcMessage from "@/v2/components/Timeline/OTCMessage";
-import { NotificationTypes, NotificationTypeNames } from "@/v2/enum/notifications"
+import { NotificationTypes, NotificationTypeNames } from "@/v2/enum/notifications";
 
 /**
  * @description Get the notification title based on the type
@@ -17,15 +17,15 @@ export function getDescriptionMessage(type, values) {
         case NotificationTypes.UPGRADE_BUY:
             return "Increased Allocation";
         case NotificationTypes.OTC_CANCEL:
-            return <OtcMessage action="Cancel" values={values.otcDeal} />
+            return <OtcMessage action="Cancel" values={values.otcDeal} />;
         case NotificationTypes.OTC_MADE:
-            return <OtcMessage action="Made" values={values.otcDeal} />
+            return <OtcMessage action="Made" values={values.otcDeal} />;
         case NotificationTypes.OTC_TAKE:
-            return <OtcMessage action="Take" values={values.otcDeal} />
+            return <OtcMessage action="Take" values={values.otcDeal} />;
         case NotificationTypes.INVESTMENT:
             return `Invested $${values.data.value}`;
         case NotificationTypes.REFUND:
-            return `Issued refund for $${values.data.amount}`
+            return `Issued refund for $${values.data.amount}`;
         case NotificationTypes.CLAIM:
             return `
                 ${values.claim?.isClaimed ? "Claimed" : "Not claimed"}
@@ -34,8 +34,8 @@ export function getDescriptionMessage(type, values) {
             `;
         default:
             return null;
-    };
-};
+    }
+}
 
 export function getRedirectMessage(type, values) {
     switch (type) {
@@ -53,5 +53,5 @@ export function getRedirectMessage(type, values) {
             return `Claimed ${values.offerPayout} payout on ${values.currencySymbol} chain`;
         default:
             return null;
-    };
-};
+    }
+}

@@ -3,10 +3,6 @@ import React from "react";
 import { cn } from "@/lib/cn";
 import { STEP_STATE } from "./enums";
 
-// import { AnimatePresence, motion } from "framer-motion";
-// import { ICONS } from "@/lib/icons";
-// import DynamicIcon from "@/components/Icon";
-
 const BlockchainStep = ({ data, icon: Icon }) => {
     const { state } = data;
 

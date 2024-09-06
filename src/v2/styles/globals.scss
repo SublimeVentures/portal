@@ -100,12 +100,24 @@
   }
 
   .bg-mystery-box {
-    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@640.jpg');
+  }
+
+  @screen sm {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1280.jpg');
+    }
+  }
+
+  @screen lg {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1920.jpg');
+    }
   }
 
   @screen 3xl {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg-mystery-box.webp');
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@3840.jpg');
     }
   }
 
@@ -118,12 +130,6 @@
       background-image: url('/img/bg/banner/default@1.webp');
     }
   }
-
-  // @media screen and (--webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-  //   .bg-banner-default {
-  //     background-image: url('/img/bg/banner/default@2.webp');
-  //   }
-  // }
 }
 
 ::-webkit-scrollbar {

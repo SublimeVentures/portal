@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import Image from "next/image";
+
 import TimelineTransaction from "./TimelineTransaction";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { getFormattedDate } from "@/v2/lib/helpers";
@@ -13,14 +14,24 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
     return (
         <div ref={ref} className={cn("flex text-sm", className)}>
             {showTimeline ? (
-                <div className={cn("mx-4 flex flex-col justify-between items-center gap-3 before:w-0 before:border-foreground/[.2] before:border before:h-[95%] after:w-0 after:border after:border-foreground/[.2] after:h-full group-first:before:border-none group-last:after:border-none")}>
+                <div
+                    className={cn(
+                        "mx-4 flex flex-col justify-between items-center gap-3 before:w-0 before:border-foreground/[.2] before:border before:h-[95%] after:w-0 after:border after:border-foreground/[.2] after:h-full group-first:before:border-none group-last:after:border-none",
+                    )}
+                >
                     <div>
                         <TimelineSVG />
                     </div>
                 </div>
             ) : null}
 
-            <div className={cn("my-2 py-4 px-6 w-full flex flex-col gap-2 rounded", isRead ? "bg-foreground/[0.03]" : " bg-foreground/10", className)}>
+            <div
+                className={cn(
+                    "my-2 py-4 px-6 w-full flex flex-col gap-2 rounded",
+                    isRead ? "bg-foreground/[0.03]" : " bg-foreground/10",
+                    className,
+                )}
+            >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         {/* <Image
@@ -52,6 +63,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
         </div>
     );
 });
+
 TimelineItem.displayName = "TimelineItem";
 
 export default TimelineItem;

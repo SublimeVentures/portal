@@ -9,6 +9,6 @@ export default function BlockedAlert({ currency = "" }) {
             <u>
                 <Link href={routes.Settings}>Stake {currency} to unlock</Link>.
             </u>
-        </div> 
-    )
+        </div>
+    );
 }
