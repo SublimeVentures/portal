@@ -61,6 +61,7 @@ async function getUserVault(
                 "locked",
                 "createdAt",
                 "refund",
+                "id",
                 [Sequelize.literal(`${vestedSubquery}`), "vested"],
                 [Sequelize.literal(`"vault"."claimed" / NULLIF("vault"."invested", 0)`), "performance"],
                 [Sequelize.literal(`${isClaimedCheckSubquery}`), "canClaim"],

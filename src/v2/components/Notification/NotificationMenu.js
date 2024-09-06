@@ -55,7 +55,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                 <DropdownMenuGroup>
                     {data?.rows.length
                         ? data?.rows.map((notification) => (
-                              <DropdownMenuItem key={notification.date}>
+                              <DropdownMenuItem key={notification.id}>
                                   <TimelineItem
                                       className="px-8 bg-transparent"
                                       showTimeline={false}
