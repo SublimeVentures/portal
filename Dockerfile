@@ -1,6 +1,7 @@
 FROM node:18-alpine
 
 RUN apk add -q --no-cache python3 py3-pip make g++
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 
 WORKDIR /usr/src/app
 
