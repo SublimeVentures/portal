@@ -33,7 +33,6 @@ async function useGuaranteed(offerId, user, transaction) {
     const { allocationUser_max } = getUserAllocationMax(
         user,
         { ...offer, ...offerLimit },
-        offer.offerFundraise,
         upgradeIncreased,
     );
 
@@ -42,7 +41,7 @@ async function useGuaranteed(offerId, user, transaction) {
     const increaseGuaranteedReservations = await bookAllocationGuaranteed(
         offerId,
         amount,
-        offer.offerFundraise.alloTotal,
+        offer.offerLimit.alloTotal,
         transaction,
     );
 
