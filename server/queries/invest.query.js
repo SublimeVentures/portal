@@ -6,7 +6,7 @@ const { serializeError } = require("serialize-error");
 
 async function getOfferRaise(id) {
     try {
-        return await models.offerFundraise.findOne({
+        return await models.offerLimit.findOne({
             where: { offerId: id },
         });
     } catch (error) {
@@ -33,14 +33,14 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
             alloGuaranteed = wantedAllocation;
         }
 
-        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerFundraise?.alloTotal}`;
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerLimit?.alloTotal}`;
     } else {
         effectiveAllocationReserved = wantedAllocation;
-        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerFundraise?.alloTotal}`;
+        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerLimit?.alloTotal}`;
     }
 
     const updateQuery = `
-        UPDATE "offerFundraise"
+        UPDATE "offerLimit"
         SET "alloRes" = "alloRes" + ${effectiveAllocationReserved}
         WHERE "offerId" = ${offer.id}
           AND ${sumFilter}
@@ -134,7 +134,7 @@ async function expireAllocation(offerId, userId, hash) {
 async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transaction) {
     let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`;
 
-    const booked = await models.offerFundraise.increment(
+    const booked = await models.offerLimit.increment(
         { alloGuaranteed: amount },
         {
             where: {
