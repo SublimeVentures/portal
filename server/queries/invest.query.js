@@ -8,6 +8,15 @@ async function getOfferRaise(id) {
     try {
         return await models.offerLimit.findOne({
             where: { offerId: id },
+            attributes: [
+                'alloRes',
+                'alloFilled',
+                'alloGuaranteed',
+                'alloTotal',
+                'isPaused',
+                'isSettled',
+                'isRefund',
+            ]
         });
     } catch (error) {
         logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
