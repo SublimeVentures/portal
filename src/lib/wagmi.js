@@ -1,5 +1,5 @@
 import { http, createConfig, fallback } from "wagmi";
-import { mainnet, polygon, bsc, avalanche } from "wagmi/chains";
+import { mainnet, polygon, bsc, avalanche, sepolia } from "wagmi/chains";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
 import { RPCs } from "@/lib/blockchain";
 import { getTenantConfig } from "@/lib/tenantHelper";
@@ -18,8 +18,10 @@ const fallbackOptions = {
     retryDelay: 150,
 };
 
+const isProductionEnv = process.env.ENV === "production";
+
 export const config = createConfig({
-    chains: [mainnet, polygon, bsc],
+    chains: [...(isProductionEnv ? [mainnet] : [sepolia]), polygon, bsc],
     batch: { multicall: true },
     ssr: true,
     cacheTime: 0, //default: 4_000
@@ -33,15 +35,21 @@ export const config = createConfig({
         }),
     ],
     transports: {
-        [mainnet.id]: fallback(
-            [
-                http(RPCs[mainnet.id].main, retryOptions),
-                http(RPCs[mainnet.id].fallback1, retryOptions),
-                http(RPCs[mainnet.id].fallback2, retryOptions),
-                http(RPCs[mainnet.id].fallback3, retryOptions),
-            ],
-            fallbackOptions,
-        ),
+        ...(isProductionEnv
+            ? {
+                  [mainnet.id]: fallback(
+                      [
+                          http(RPCs[mainnet.id].main, retryOptions),
+                          http(RPCs[mainnet.id].fallback1, retryOptions),
+                          http(RPCs[mainnet.id].fallback2, retryOptions),
+                          http(RPCs[mainnet.id].fallback3, retryOptions),
+                      ],
+                      fallbackOptions,
+                  ),
+              }
+            : {
+                  [sepolia.id]: fallback([http(RPCs[sepolia.id].main, retryOptions)], fallbackOptions),
+              }),
         [polygon.id]: fallback(
             [
                 http(RPCs[polygon.id].main, retryOptions),
