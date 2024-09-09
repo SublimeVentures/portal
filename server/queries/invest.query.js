@@ -8,6 +8,32 @@ async function getOfferRaise(id) {
     try {
         return await models.offerLimit.findOne({
             where: { offerId: id },
+            attributes: [
+                "id",
+                "offerId",
+                "partnerId",
+                "isTenantExclusive",
+                "alloFilled",
+                "alloGuaranteed",
+                "alloFilledInjected",
+                "alloGuaranteedInjected",
+                "alloMin",
+                "alloMax",
+                "alloTotal",
+                "alloRes",
+                "d_open",
+                "d_close",
+                "lengthWhales",
+                "lengthRaffle",
+                "lengthFCFS",
+                "lengthGuaranteed",
+                "guaranteedIsExpired",
+                "isPaused",
+                "isSettled",
+                "isRefund",
+                "createdAt",
+                "updatedAt",
+            ]
         });
     } catch (error) {
         logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
