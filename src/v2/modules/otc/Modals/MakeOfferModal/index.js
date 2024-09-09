@@ -25,7 +25,6 @@ import { ExternalLinks } from "@/routes";
 
 export default function MakeOfferModal() {
     const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
-    console.log("MakeOfferModal");
 
     const {
         transactionSuccessful,
@@ -41,15 +40,13 @@ export default function MakeOfferModal() {
         data: blockchainInteractionData,
     });
 
-    useEffect(() => {
-        if (!isMakeModalOpen) resetState();
-    }, [isMakeModalOpen]);
-
-    console.log("getBlockchainStepsProps");
-    console.log(getBlockchainStepsProps());
+    const handleModalChange = (isOpen) => {
+        if (!isOpen) resetState();
+        setIsMakeModalOpen(isOpen)
+    };
 
     return (
-        <Sheet open={isMakeModalOpen} onOpenChange={setIsMakeModalOpen}>
+        <Sheet open={isMakeModalOpen} onOpenChange={handleModalChange}>
             <SheetTrigger asChild>
                 <Button>Create offer</Button>
             </SheetTrigger>
