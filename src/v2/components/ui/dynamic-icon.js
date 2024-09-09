@@ -18,13 +18,13 @@ const IconVariants = cva("relative flex justify-center items-center rounded-full
     },
 });
 
-export const DynamicIcon = ({ name, color, size, className, ...props }) => {
+export const DynamicIcon = ({ name = "", color, size, className, ...props }) => {
     const [Icon, setIcon] = useState(null);
 
     useEffect(() => {
         (async () => {
             try {
-                const icon = (await import(`@/v2/assets/svg/${name}.svg`)).default;
+                const icon = (await import(`@/v2/assets/svg/${name.toLowerCase()}.svg`)).default;
                 setIcon(() => icon);
             } catch (error) {
                 console.error(`Failed to load icon: ${name}`, error);

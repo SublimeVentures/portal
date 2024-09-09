@@ -17,7 +17,7 @@ const VIEW_TYPES = {
 
 const VIEWS = [VIEW_TYPES.GRID, VIEW_TYPES.LIST];
 
-const loadingInvestments = Array.from({ length: 10 }, (_, index) => ({ slug: index }));
+const loadingInvestments = Array.from({ length: 10 }, (_, index) => ({ id: index }));
 
 function InvestmentsPage() {
     const router = useRouter();

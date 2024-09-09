@@ -92,8 +92,6 @@ export const EnvironmentProvider = ({ children, initialData }) => {
                 }
             }
 
-            console.log("currencyAvailable", currencyAvailable);
-
             updateEnvironmentProps(
                 [
                     { path: "diamonds", value: initialData.diamonds },
