@@ -22,6 +22,9 @@ const RPCs = {
         fallback2:
             "https://late-solemn-mansion.avalanche-mainnet.quiknode.pro/42db2654cb19ee23c3fc9b8a78bb3c33e22d141c/ext/bc/C/rpc/",
     },
+    11155111: {
+        main: "https://eth-sepolia.g.alchemy.com/v2/VrSBLHsE-sneszBX7QjdCQqD7pZmpoXY",
+    },
 };
 
 const KNOWN_CONNECTORS = ["Coinbase Wallet", "Ledger", "MetaMask", "WalletConnect"];
