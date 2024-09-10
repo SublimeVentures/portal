@@ -12,13 +12,13 @@ function buildWhereFromAuthorizedQuery(user, query) {
     where["userId"] = userId;
     where["tenantId"] = { [Op.in]: [tenantId, null, 0] };
     if (whereQuery.before && whereQuery.after) {
-        where["created_at"] = {
+        where["createdAt"] = {
             [Op.between]: [whereQuery.before, whereQuery.after],
         };
     } else if ("before" in whereQuery) {
-        where["created_at"] = { [Op.lte]: new Date(whereQuery.before) };
+        where["createdAt"] = { [Op.lte]: new Date(whereQuery.before) };
     } else if ("after" in whereQuery) {
-        where["created_at"] = { [Op.gte]: new Date(whereQuery.after) };
+        where["createdAt"] = { [Op.gte]: new Date(whereQuery.after) };
     } else {
         for (const [key, value] of Object.entries(whereQuery)) {
             where[key] = value;

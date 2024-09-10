@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import moment from "moment";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/cn";
@@ -27,10 +27,10 @@ export function DatePicker({
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {value ? (
                         <>
-                            {format(parseISO(value), "PPP")}
+                            {moment(value).format("LL")}
                             <Button variant="secondary" className="px-2 -mr-5 ml-3" onClick={handleReset} asChild>
                                 <span>
-                                    <CrossIcon class="size-2" />
+                                    <CrossIcon className="size-2" />
                                 </span>
                             </Button>
                         </>
