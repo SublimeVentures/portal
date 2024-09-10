@@ -23,7 +23,8 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ based, citcap, generic ]
+        tenant: [ based ]
+#        tenant: [ based, citcap, generic ]
         include:
           - tenant: based
             cluster: based-staging-webapp-cluster
