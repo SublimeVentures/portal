@@ -1,5 +1,7 @@
 import { WagmiProvider } from "wagmi";
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
+
+import { TooltipProvider } from "@/v2/components/ui/tooltip";
 import { TENANT } from "@/v2/helpers/tenant";
 import Layout from "@/components/Layout/Layout";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
@@ -39,9 +41,11 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                 <WagmiProvider config={config}>
                     <QueryClientProvider client={queryClient}>
                         <EnvironmentProvider initialData={environmentData}>
-                            <HydrationBoundary state={pageProps.dehydratedState}>
-                                {renderWithLayout(<Component {...pageProps} />)}
-                            </HydrationBoundary>
+                            <TooltipProvider>
+                                <HydrationBoundary state={pageProps.dehydratedState}>
+                                    {renderWithLayout(<Component {...pageProps} />)}
+                                </HydrationBoundary>
+                            </TooltipProvider>
                         </EnvironmentProvider>
                     </QueryClientProvider>
                 </WagmiProvider>
