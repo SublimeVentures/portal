@@ -39,6 +39,9 @@ jobs:
             tenant_id: 14
 
     steps:
+      - name: Set up NODE_OPTIONS
+        run: |
+          NODE_OPTIONS="--max-old-space-size=4096"
       - name: Checkout code
         uses: actions/checkout@v4
         with:
