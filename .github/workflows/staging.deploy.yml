@@ -19,7 +19,7 @@ env:
 jobs:
   deploy:
     name: Deploy
-    runs-on: linux
+    runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
