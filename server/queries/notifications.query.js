@@ -88,7 +88,7 @@ async function getNotifications(user, query) {
                         attributes: ["id", "img", "storeId"],
                         dataId: "item",
                         typeIds: [NotificationTypes.MYSTERY_BUY, NotificationTypes.UPGRADE_BUY],
-                        where: `AND "item"."tenantId" = "notification"."tenantId"`,
+                        where: ` AND "item"."tenantId" = "notification"."tenantId"`,
                         as: "upgrade",
                     }),
 
