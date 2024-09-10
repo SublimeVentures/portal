@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import moment from "moment";
 
 import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
@@ -44,12 +44,14 @@ export default function usePhaseInvestment() {
 
     const [phaseData, setPhaseData] = useState(() => calculatePhaseData(phases, offer));
 
-    useEffect(() => {
-        const updatePhase = () => {
-            const newPhaseData = calculatePhaseData(phases, offer);
-            if (JSON.stringify(newPhaseData) !== JSON.stringify(phaseData)) setPhaseData(newPhaseData);
+    const updatePhase = useCallback(() => {
+        const newPhaseData = calculatePhaseData(phases, offer);
+        if (JSON.stringify(newPhaseData) !== JSON.stringify(phaseData)) {
+            setPhaseData(newPhaseData);
         }
+    }, [phases, offer, phaseData]);
 
+    useEffect(() => {
         // Update on mount
         updatePhase();
 
@@ -63,7 +65,10 @@ export default function usePhaseInvestment() {
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [phases, offer]);
+    }, [phaseData, updatePhase]);
 
-    return useMemo(() => phaseData, [phaseData]);
+    return useMemo(() => ({
+        ...phaseData,
+        updatePhase
+    }), [phaseData, updatePhase]);
 };
