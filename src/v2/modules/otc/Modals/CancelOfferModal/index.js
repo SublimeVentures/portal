@@ -34,6 +34,7 @@ export default function CancelOfferModal({ offerDetails, className }) {
             dealId: offerDetails?.dealId,
             requiredNetwork: offerDetails?.chainId,
         });
+
     const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
     });

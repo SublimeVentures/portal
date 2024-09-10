@@ -48,7 +48,7 @@ export default function SingleMarket({ name, genre, slug, currentMarket, isManag
                     />
                     <Tooltiper
                         wrapper={
-                            <Link href={`${routes.OTC}/${slug}`}>
+                            <Link href={`${routes.Opportunities}/${slug}`}>
                                 <CiCircleMore className="text-2xl text-foreground/50 opacity-0 group-hover:opacity-100 transition duration-300" />
                             </Link>
                         }

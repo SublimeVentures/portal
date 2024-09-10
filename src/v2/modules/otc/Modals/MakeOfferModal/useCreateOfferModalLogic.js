@@ -18,7 +18,7 @@ export const DEFAULT_VALUES = Object.freeze({ MULTIPLIER: 1, MIN_ALLOCATION: 10,
 
 export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const { currentMarket } = useMarket();
-    const { cdn, account, activeOtcContract, network, getCurrencySettlement } = useEnvironmentContext();
+    const { cdn, account, activeOtcContract, getCurrencySettlement } = useEnvironmentContext();
     const { getExpireData, setExpireData } = useLocalStorage();
 
     const { data: vault, refetch: refetchVault } = useQuery({
@@ -51,7 +51,6 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const statusCheck = statusAmount || statusPrice;
 
     const isSeller = selectedTab === TABS.SELL;
-    const titleCopy = isSeller ? "Selling" : "Buying";
     const textCopy = isSeller ? "sell" : "buy";
 
     const formSchema = z.object({
@@ -79,7 +78,6 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             currency: getExpireData(currencyStorageKey)?.symbol ?? dropdownCurrencyOptions[0].symbol,
         },
     });
-
 
     const [amount, price, currency] = watch(["amount", "price", "currency"]);
 
@@ -282,17 +280,14 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         [form, handleSetMaxValue, handleCurrencyChange, handleAmountChange],
     );
 
-    const blockchainData = {
-        [TABS.SELL]: blockchainInteractionDataSELL,
-        [TABS.BUY]: blockchainInteractionDataBUY,
-    };
 
     return {
         transactionSuccessful,
         currentMarket,
         textCopy,
         selectedTab,
-        blockchainInteractionData: blockchainData[selectedTab],
+        blockchainInteractionDataSELL,
+        blockchainInteractionDataBUY,
         getSelectedMarketProps: useCallback(
             () => ({
                 name: currentMarket.name,
@@ -321,4 +316,4 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps],
         ),
     };
-}
+};

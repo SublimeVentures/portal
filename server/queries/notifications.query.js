@@ -91,6 +91,13 @@ async function getNotifications(user, query) {
                         where: ` AND "item"."tenantId" = "notification"."tenantId"`,
                         as: "upgrade",
                     }),
+
+                    // data powinno miec otcId, otcId, otcDealId
+                    // otcDealId = otcDeal.id - tylko to jest potrzebne, lecz nie wszystko w db to posiada
+
+                    // dealId = otcDeal.dealId -> prawdopodobnie deal nadrzędny, czyli nie-cancel
+                    // otcId = otcDeal.otcId
+                    // Które pobrac?
                     includeToNotification({
                         model: "otcDeal",
                         attributes: [],

@@ -10,6 +10,7 @@ import useImage from "@/v2/hooks/useImage";
 
 const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, className }, ref) => {
     const image = useImage();
+
     return (
         <div ref={ref} className={cn("flex text-sm", className)}>
             {showTimeline ? (

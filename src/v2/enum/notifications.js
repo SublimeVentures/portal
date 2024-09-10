@@ -1,12 +1,12 @@
 /**
  * @typedef {object} NotificationType
- * @property {3} OTC_CANCEL
- * @property {7} REFUND
  * @property {1} MYSTERY_BUY
- * @property {5} OTC_TAKE
  * @property {2} UPGRADE_BUY
- * @property {6} INVESTMENT
+ * @property {3} OTC_CANCEL
  * @property {4} OTC_MADE
+ * @property {5} OTC_TAKE
+ * @property {6} INVESTMENT
+ * @property {7} REFUND
  * @property {8} CLAIM
  * @property {[3, 4, 5]} OTCS
  */
