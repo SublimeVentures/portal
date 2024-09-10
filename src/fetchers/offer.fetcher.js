@@ -16,9 +16,9 @@ export const fetchOfferList = async (query, config = {}) => {
     }
 };
 
-export const fetchOfferStats = async () => {
+export const fetchOfferStats = async (query, config) => {
     try {
-        const { data } = await axiosPrivate.get(API.offerStats);
+        const { data } = await axiosPrivate.get(API.offerStats, { params: query, ...config });
         return data;
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferStats", enableSentry: true });

@@ -1,5 +1,4 @@
-import { format } from "date-fns";
-
+import moment from "moment";
 import { Button } from "@/v2/components/ui/button";
 import { DatePicker } from "@/v2/components/ui/date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
@@ -7,7 +6,7 @@ import { NotificationTypeNames } from "@/v2/enum/notifications";
 import Title from "@/v2/modules/opportunities/Title";
 
 export default function NotificationFilters({ query, handleInputChange, fetchPreviousPage }) {
-    const { startDate, endDate, typeId } = query;
+    const { after, before, typeId } = query;
     const unreadCount = 0;
     const props = unreadCount > 0 ? { count: `${unreadCount} unread` } : {};
 
@@ -18,16 +17,20 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
                 <div className="flex items-center gap-2">
                     <DatePicker
                         className="w-full md:w-auto"
-                        value={startDate}
-                        onChange={(value) => handleInputChange("startDate", value ? format(value, "yyyy-MM-dd") : null)}
-                        toDate={endDate && new Date()}
+                        value={after}
+                        onChange={(value) =>
+                            handleInputChange("after", value ? moment(value).format("YYYY-MM-DD") : null)
+                        }
+                        toDate={before && new Date()}
                     />
                     <span className="text-white">-</span>
                     <DatePicker
                         className="w-full md:w-auto"
-                        value={endDate}
-                        onChange={(value) => handleInputChange("endDate", value ? format(value, "yyyy-MM-dd") : null)}
-                        fromDate={startDate ? new Date(startDate) : null}
+                        value={before}
+                        onChange={(value) =>
+                            handleInputChange("before", value ? moment(value).format("YYYY-MM-DD") : null)
+                        }
+                        fromDate={after ? new Date(after) : null}
                         toDate={new Date()}
                     />
                 </div>

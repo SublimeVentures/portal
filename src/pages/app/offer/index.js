@@ -1,5 +1,5 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
-
+import { authTokenName } from "@/lib/authHelpers";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { cacheOptions } from "@/v2/helpers/query";
@@ -66,11 +66,21 @@ export default function AppOpportunities({ session }) {
 }
 
 export const getServerSideProps = async ({ req, res }) => {
-    const customLogicCallback = async (account) => {
+    const customLogicCallback = async (account, token) => {
         const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = account;
-        
-        await queryClient.prefetchQuery(offersKeys.queryOffersVc({ TENANT_ID, PARTNER_ID }), fetchOfferList);
-        await queryClient.prefetchQuery(offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }), fetchOfferStats);
+        const config = {
+            headers: {
+                Cookie: `${authTokenName}=${token}`,
+            },
+        };
+        await queryClient.prefetchQuery({
+            queryKey: offersKeys.queryOffersVc({ TENANT_ID, PARTNER_ID }),
+            queryFn: () => fetchOfferList(null, config),
+        });
+        await queryClient.prefetchQuery({
+            queryKey: offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }),
+            queryFn: () => fetchOfferStats(null, config),
+        });
 
         return {
             additionalProps: {
