@@ -10,6 +10,7 @@ import RocketLaunchIcon from "@/v2/assets/svg/rocket.svg";
 import FiveChainsIcon from "@/v2/assets/svg/five-chains.svg";
 import FourChainsIcon from "@/v2/assets/svg/four-chains.svg";
 import TreeChainsIcon from "@/v2/assets/svg/tree-chains.svg";
+import TwoChainsIcon from "@/v2/assets/svg/two-chains.svg";
 import { stepsStatus } from "./reducer";
 
 const successColors = { "--start-color": "rgba(64, 206, 96, .22)", "--end-color": "rgba(32, 103, 48, .22)" };
@@ -26,6 +27,9 @@ const ChainIcon = ({ steps, status = colorSchemes.IDLE }) => {
     let IconComponent;
     
     switch (stepsNumber) {
+        case 2:
+            IconComponent = TwoChainsIcon;
+            break;
         case 3:
             IconComponent = TreeChainsIcon;
             break;

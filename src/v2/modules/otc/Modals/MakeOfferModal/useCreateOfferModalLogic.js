@@ -40,7 +40,6 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const [selectedTab, setSelectedTab] = useState(TABS.BUY);
     const [selectedCurrency, setSelectedCurrency] = useState(null);
     const dropdownCurrencyOptions = getCurrencySettlement();
-    console.log('getCurrencySettlement', dropdownCurrencyOptions, dropdownCurrencyOptions[0], dropdownCurrencyOptions[0]?.symbol)
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
@@ -281,17 +280,14 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         [form, handleSetMaxValue, handleCurrencyChange, handleAmountChange],
     );
 
-    const blockchainData = {
-        [TABS.SELL]: blockchainInteractionDataSELL,
-        [TABS.BUY]: blockchainInteractionDataBUY,
-    };
 
     return {
         transactionSuccessful,
         currentMarket,
         textCopy,
         selectedTab,
-        blockchainInteractionData: blockchainData[selectedTab],
+        blockchainInteractionDataSELL,
+        blockchainInteractionDataBUY,
         getSelectedMarketProps: useCallback(
             () => ({
                 name: currentMarket.name,
