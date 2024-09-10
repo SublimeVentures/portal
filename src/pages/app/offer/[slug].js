@@ -32,7 +32,7 @@ const { NAME } = getTenantConfig().seo;
 export const AppOfferDetails = ({ session }) => {
     const router = useRouter();
     const { slug } = router.query;
-    const { userId, tenantId } = session;
+    const { userId, tenantId, partnerId } = session;
 
     let [phaseIsClosed, setPhaseIsClosed] = useState(false);
     let [phaseCurrent, setPhaseCurrent] = useState(false);
@@ -151,6 +151,7 @@ export const AppOfferDetails = ({ session }) => {
         phaseCurrent,
         premiumData,
         refetchPremiumData,
+        partnerId,
     };
 
     const paramsParams = {

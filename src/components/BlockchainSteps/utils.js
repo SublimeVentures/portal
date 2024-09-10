@@ -182,11 +182,21 @@ const getTokenInWei = (amount, token) => {
 };
 
 export const getMethod = (type, token, params) => {
+    console.log("params getMethod", params, [
+        params.booking.code,
+        params.partnerId,
+        params.offerId,
+        params.amount,
+        params.booking.expires,
+        token.contract,
+        params.booking.signature,
+    ]);
     switch (type) {
         case METHOD.INVEST: {
             const isValid =
                 validAddress(token?.contract) &&
                 validNumber(params?.offerId) &&
+                validNumber(params?.partnerId) &&
                 validAddress(params?.spender) &&
                 validHash(params?.booking?.code) &&
                 validHash(params?.booking?.signature) &&
@@ -199,6 +209,7 @@ export const getMethod = (type, token, params) => {
                           name: "invest",
                           inputs: [
                               params.booking.code,
+                              params.partnerId,
                               params.offerId,
                               params.amount,
                               params.booking.expires,

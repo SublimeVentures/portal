@@ -44,6 +44,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         upgradesUse,
         premiumData,
         refetchPremiumData,
+        partnerId,
     } = paramsInvestPhase;
     const amountStorageKey = `offer.${offer.id}.amount`;
     const currencyStorageKey = `offer.${offer.id}.currency`;
@@ -144,9 +145,23 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     };
 
     const startInvestmentProcess = async () => {
+        console.log(
+            "startInvestmentProcess",
+            investmentAmount,
+            allocationData,
+            userInvested?.invested.total,
+            userInvested?.invested.invested,
+            (investmentAmount > 0 &&
+                allocationData.allocationUser_max >= 0 &&
+                allocationData.allocationUser_min > 0 &&
+                allocationData.allocationUser_left > 0 &&
+                investmentAmount <= allocationData.allocationUser_left) ||
+                userInvested?.invested.total - userInvested?.invested.invested > 0,
+        );
+
         if (
             (investmentAmount > 0 &&
-                allocationData.allocationUser_max > 0 &&
+                allocationData.allocationUser_max >= 0 &&
                 allocationData.allocationUser_min > 0 &&
                 allocationData.allocationUser_left > 0 &&
                 investmentAmount <= allocationData.allocationUser_left) ||
@@ -194,6 +209,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
 
     const makeInvestment = async () => {
         const test = getSavedBooking();
+        console.log("test", test);
         if (getSavedBooking().ok) {
             await processExistingSession();
         } else {
@@ -335,6 +351,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         selectedCurrency,
         bookingExpire,
         afterInvestmentCleanup,
+        partnerId,
     };
 
     const defaultSelected = dropdownCurrencyOptions.findIndex((el) => {
