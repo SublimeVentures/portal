@@ -18,6 +18,8 @@ export default function AppOfferDetails({ session, state }) {
     const { userId, tenantId } = session;
     const { offerId } = state;
 
+    console.log('session', session)
+
     // @TODO 
     // Data for queries based on phase - Store in zustand?
     // const isExtraQueryEnabled = !!offerDetails?.id;

@@ -33,7 +33,7 @@ const calculatePhaseData = (phases, offer) => {
     return {
         phases: data.phases,
         isClosed: (!!data.phases && data.isLast) || offer.isSettled,
-        // phaseCurrent: data.phases[data.activeId],
+        phaseCurrent: data.phases[data.activeId],
         phaseNext: data.isLast ? data.phases[data.activeId] : data.phases[data.activeId + 1],
     };
 }
