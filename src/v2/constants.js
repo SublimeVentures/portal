@@ -27,9 +27,9 @@ const offersKeyValues = {
 
 export const offersKeys = {
     offers: (query) => ["offers", ...(query ? [query] : [])],
-    queryOffersVc: (query) => [...offersKeyValues.offersVc, query],
-    queryOffersStats: (query) => [...offersKeyValues.offerStats, query],
-    queryOfferProgress: (query) => [...offersKeyValues.offerProgress, query],
+    queryOffersVc: (query) => [offersKeyValues.offersVc, query],
+    queryOffersStats: (query) => [offersKeyValues.offerStats, query],
+    queryOfferProgress: (query) => [offersKeyValues.offerProgress, query],
 };
 
 export const newsKeys = {

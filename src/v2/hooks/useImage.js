@@ -1,4 +1,4 @@
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import useResearchAssets from "@/v2/hooks/useResearchAssets";
 
 const IMG = {
     ICON: "icon.jpg",
@@ -7,9 +7,7 @@ const IMG = {
 };
 
 const useImage = () => {
-    const { cdn } = useEnvironmentContext();
-    const getSrc = (src) => `${cdn}${src}`;
-    const getResearchSrc = (slug, img) => getSrc(`/research/${slug}/${img}`);
+    const { getSrc, getResearchSrc } = useResearchAssets();
     const getResearchIconSrc = (slug) => getResearchSrc(slug, IMG.ICON);
     const getResearchBgSrc = (slug) => getResearchSrc(slug, IMG.BG);
     const getResearchLogoSrc = (slug) => getResearchSrc(slug, IMG.LOGO);
