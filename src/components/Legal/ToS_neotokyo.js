@@ -1,4 +1,4 @@
-export default function ToS_neotokyo({}) {
+export default function ToS_neotokyo() {
     return (
         <div
             className={"flex flex-1 justify-between flex-wrap gap-10 max-w-[1000px] text-sm flex-col"}
@@ -10,7 +10,7 @@ export default function ToS_neotokyo({}) {
                 </p>
                 <p>
                     <span style={{ fontWeight: 400 }}>
-                        These Terms of Service were last updated on October 27, 2023.
+                        These Terms of Service were last updated on August 11, 2024.
                     </span>
                     <strong>
                         <br />
@@ -34,8 +34,7 @@ export default function ToS_neotokyo({}) {
                     <span style={{ fontWeight: 400 }}> (“</span>
                     <strong>Citizen Capital</strong>
                     <span style={{ fontWeight: 400 }}>
-                        ”) a limited liability DAO company incorporated and registered under the laws of the Republic of
-                        the Marshall Islands.
+                        ”) a Foundation Company incorporated and registered under the laws of the Republic of Panama.
                     </span>
                     <span style={{ fontWeight: 400 }}>
                         <br />
@@ -300,9 +299,9 @@ export default function ToS_neotokyo({}) {
                         <span style={{ fontWeight: 400 }}>“</span>
                         <strong>Citizen Capital</strong>
                         <span style={{ fontWeight: 400 }}>
-                            ” refers to BasedVC DAO LLC., a limited liability partnership incorporated and registered
-                            under the laws of the Republic of the Marshall Islands. Hereinafter referred to as Citizen
-                            Capital, we, us, our in this Terms;
+                            ” refers to the BasedVC Foundation., a Foundation Company incorporated and registered under
+                            the laws of the Republic of the Panama. Hereinafter referred to as Citizen Capital, we, us,
+                            our in this Terms;
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
@@ -322,7 +321,7 @@ export default function ToS_neotokyo({}) {
                             ” refers to the non-fungible token of Citizen Capital Partners on the Ethereum blockchain.
                             Users need to hold Partner NFT to participate in any Services on the website including
                             IGO/ICO/IDO sale of Projects selected for the Launchpad, vesting of project tokens, yield
-                            box etc.;
+                            box etc;
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
@@ -640,15 +639,13 @@ export default function ToS_neotokyo({}) {
                 <ol>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            infringe any proprietary rights, including but not limited to copyrights, patents,
+                            i.infringe any proprietary rights, including but not limited to copyrights, patents,
                             trademarks, or trade secrets of Citizen Capital.
                         </span>
                     </li>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            use the Website or the Services to transmit any data or send or upload any material or
+                            ii.use the Website or the Services to transmit any data or send or upload any material or
                             content that contains viruses, Trojan horses, worms, time-bombs, keystroke loggers, spyware,
                             adware, or any other harmful programs or similar computer code designed to adversely affect
                             the operation of the Website and/or the Services.
@@ -665,24 +662,21 @@ export default function ToS_neotokyo({}) {
                 <ol>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            modify, make any back-up or archival copies of the Platform or any part thereof including
+                            iv.modify, make any back-up or archival copies of the Platform or any part thereof including
                             disassembling, and you will also not adapt, hack the Website or modify another website to
                             falsely imply that it is associated with the Website falsely.
                         </span>
                     </li>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            crawl, scrape, or otherwise cache any content from the Website, and you agree not to use any
-                            automated data collection methods, data mining, robots, or scraping or any data gathering
-                            methods of any kind on the Website.
+                            v.crawl, scrape, or otherwise cache any content from the Website, and you agree not to use
+                            any automated data collection methods, data mining, robots, or scraping or any data
+                            gathering methods of any kind on the Website.
                         </span>
                     </li>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            use the Website or any of its contents for advertising or soliciting, for any other
+                            vi.use the Website or any of its contents for advertising or soliciting, for any other
                             commercial, political, or religious purpose, or to compete, either directly or indirectly
                             with Citizen Capital.
                         </span>
@@ -769,15 +763,14 @@ export default function ToS_neotokyo({}) {
                 <p>
                     <span style={{ fontWeight: 400 }}>
                         These Terms of Service shall be governed by and construed and enforced in accordance with the
-                        Laws of the Republic of Marshall Islands, and shall be interpreted in all respects as a Republic
-                        of Marshall Islands contract. You irrevocably agree that, any dispute, controversy, claim or
-                        action arising from or related to your access or use of the Website or these Terms of Service
-                        likewise shall be governed by the Laws of the Republic of Marshall Islands, exclusive of
-                        choice-of-law principles. Nothing in this clause shall limit the right of Citizen Capital to
-                        take proceedings against you in any other court of competent jurisdiction, nor shall the taking
-                        of proceedings in any one or more jurisdictions preclude the taking of proceedings in any other
-                        jurisdictions, whether concurrently or not, to the extent permitted by the law of such other
-                        jurisdiction.
+                        Laws of the Republic of Panama, and shall be interpreted in all respects as a Republic of Panama
+                        contract. You irrevocably agree that, any dispute, controversy, claim or action arising from or
+                        related to your access or use of the Website or these Terms of Service likewise shall be
+                        governed by the Laws of the Republic of Panama, exclusive of choice-of-law principles. Nothing
+                        in this clause shall limit the right of Citizen Capital to take proceedings against you in any
+                        other court of competent jurisdiction, nor shall the taking of proceedings in any one or more
+                        jurisdictions preclude the taking of proceedings in any other jurisdictions, whether
+                        concurrently or not, to the extent permitted by the law of such other jurisdiction.
                     </span>
                 </p>
                 <p>
@@ -994,19 +987,19 @@ export default function ToS_neotokyo({}) {
                             Service or the existence, breach, termination, enforcement, interpretation or validity
                             thereof, or (ii) your Crypto Tokens the operations and Services of the Website, or (iii)
                             your access to or use of the Services at any time, shall be subject to the exclusive
-                            jurisdiction of the courts of the Republic of Marshall Islands. For the avoidance of doubt,
-                            and without limiting the generality of the foregoing, this provision expressly applies to
-                            any claim, whether in tort, contract or otherwise, against Citizen Capital.
+                            jurisdiction of the courts of the Republic of Panama. For the avoidance of doubt, and
+                            without limiting the generality of the foregoing, this provision expressly applies to any
+                            claim, whether in tort, contract or otherwise, against Citizen Capital.
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
                         <span style={{ fontWeight: 400 }}>
                             you irrevocably and unconditionally agree and consent to the exclusive jurisdiction and
-                            venue of the courts of the Republic of Marshall Islands, and you waive any objections
-                            thereto. Nothing in this clause shall limit the right of Company to take proceedings against
-                            you in any other court of competent jurisdiction, nor shall the taking of proceedings in any
-                            one or more jurisdictions preclude the taking of proceedings in any other jurisdictions,
-                            whether concurrently or not, to the extent permitted by the law of such other jurisdiction.
+                            venue of the courts of the Republic of Panama, and you waive any objections thereto. Nothing
+                            in this clause shall limit the right of Company to take proceedings against you in any other
+                            court of competent jurisdiction, nor shall the taking of proceedings in any one or more
+                            jurisdictions preclude the taking of proceedings in any other jurisdictions, whether
+                            concurrently or not, to the extent permitted by the law of such other jurisdiction.
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
@@ -1186,15 +1179,13 @@ export default function ToS_neotokyo({}) {
                 <ol>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            your use of, inability to use, or availability or unavailability of the Services, including
-                            any Third Party Services made available through the Services;
+                            i.your use of, inability to use, or availability or unavailability of the Services,
+                            including any Third Party Services made available through the Services;
                         </span>
                     </li>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            the occurrence or existence of any defect, interruption, deletion of files, delays in the
+                            ii.the occurrence or existence of any defect, interruption, deletion of files, delays in the
                             operation or transmission of information to, from, or through the Services, communications
                             failure, theft, destruction or unauthorized access to Company’s records, programs, services,
                             server, or other infrastructure relating to the Services;
@@ -1209,8 +1200,7 @@ export default function ToS_neotokyo({}) {
                 <ol>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            the failure of the Services to remain operational for any period of time.
+                            iv.the failure of the Services to remain operational for any period of time.
                         </span>
                     </li>
                 </ol>
