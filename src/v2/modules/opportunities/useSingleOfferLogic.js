@@ -15,14 +15,19 @@ export const useOfferStatus = (offer) => {
     return { state, status, variant };
 };
 
+export const offerProgressQueryOptions = (id) => ({
+    queryKey: offersKeys.queryOfferProgress(id),
+    queryFn: () => fetchOfferProgress(id),
+});
+
+export const useOfferProgressQuery = (id, options) => useQuery({ ...offerProgressQueryOptions(id), ...options });
+
 export default function useSingleOfferLogic(offer) {
     const { offerId, name, slug, genre, ticker, d_open: starts, d_close: ends } = offer || {};
 
     const { state, status, variant } = useOfferStatus(offer);
 
-    const { data, isLoading, isError } = useQuery({
-        queryKey: offersKeys.queryOfferProgress(offerId),
-        queryFn: () => fetchOfferProgress(offerId),
+    const { data, isLoading, isError } = useOfferProgressQuery(offerId, {
         ...cacheOptions,
         refetchOnMount: true,
         enabled: status === OfferStatus.IN_PROGRESS,

@@ -6,10 +6,10 @@ import { queryClient } from "@/lib/queryCache";
 import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.fetcher";
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
+import { useUserAllocationQuery } from "@/v2/modules/offer/queries";
 
 import { Overview, Phases, Invest, Fundraise, Vesting, History } from "@/v2/modules/offer";
 export default function AppOfferDetails({ session, state }) {
-
     // @TODO
     // Prefetched data - Can we set it in store without re-render?
     // const offerId = offerDetails?.id;
@@ -17,32 +17,33 @@ export default function AppOfferDetails({ session, state }) {
     // const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
     const { userId, tenantId } = session;
     const { offerId } = state;
+    const userAllocation = useUserAllocationQuery(offerId, userId);
 
-    console.log('session', session)
+    console.log("session", session);
 
-    // @TODO 
+    // @TODO
     // Data for queries based on phase - Store in zustand?
     // const isExtraQueryEnabled = !!offerDetails?.id;
     // const offerIsClosed = phasesData?.offerClosed;
     // const isAllocationRefetchEnabled = offerIsClosed ? false : 15000;
 
-    // @Todo - Use in correct module 
+    // @Todo - Use in correct module
     // const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     // const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
-    
+
     return (
         <>
             <Metadata title="Opportunity" />
-            <div className="text-white space-y-4">
-                <Overview />
-                <Phases />
-                <Invest />
-                <Fundraise />
-                <Vesting />
-                <History />
+            <div className="text-white flex flex-col md:grid md:grid-cols-12 gap-4">
+                <Overview className="col-span-12" />
+                <Phases className="col-span-12" />
+                <Invest className="col-span-7" />
+                <Fundraise className="col-span-5" userAllocation={userAllocation} />
+                <Vesting className="col-span-4" />
+                <History className="col-span-8" />
             </div>
         </>
-    )
+    );
 }
 
 export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
@@ -56,7 +57,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 cacheTime: 30 * 60 * 1000,
                 staleTime: 15 * 60 * 1000,
             });
-            
+
             const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
             const offerId = offerDetails.id;
 
@@ -66,7 +67,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 queryKey: ["offerAllocation", offerId],
                 queryFn: () => fetchOfferAllocationSsr(offerId, token),
             });
-            
+
             const userId = account.userId;
             await queryClient.prefetchQuery({
                 queryKey: ["userAllocation", offerId, userId],
@@ -85,7 +86,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                     dehydratedState: dehydrate(queryClient),
                     state: {
                         offerId,
-                    }
+                    },
                 },
             };
         } catch (error) {

@@ -11,6 +11,7 @@ import DownloadIcon from "@/v2/assets/svg/download.svg";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 import { Badge } from "@/v2/components/ui/badge";
 import { useOfferStatus } from "@/v2/modules/opportunities/useSingleOfferLogic";
+import { cn } from "@/lib/cn";
 
 const SocialButton = ({ href, icon: Icon }) => (
     <Button variant="secondary" className="px-2" asChild>
@@ -20,7 +21,7 @@ const SocialButton = ({ href, icon: Icon }) => (
     </Button>
 );
 
-export default function Overview() {
+export default function Overview({ className }) {
     const { data: offer, isLoading } = useOfferDetailsQuery();
     const { getResearchIconSrc, getResearchBgSrc } = useImage();
     const { getResearchReportSrc } = useResearchAssets();
@@ -31,7 +32,12 @@ export default function Overview() {
     ].filter(({ href }) => href);
     const { state, variant } = useOfferStatus(offer);
     return (
-        <div className="p-6 rounded flex flex-col 3xl:flex-row gap-4 md:gap-6 bg-white/[.07] backdrop-blur-3xl">
+        <div
+            className={cn(
+                "p-6 rounded flex flex-col 3xl:flex-row gap-4 md:gap-6 bg-white/[.07] backdrop-blur-3xl",
+                className,
+            )}
+        >
             <div className="flex gap-6 md:gap-8 flex-1 flex-wrap">
                 <div className="flex grow gap-6 md:gap-8 items-center h-19 md:size-26">
                     <div className="relative size-19 md:size-26">

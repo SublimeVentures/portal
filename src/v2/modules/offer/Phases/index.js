@@ -1,22 +1,28 @@
 import moment from "moment";
 
+import SinglePhase from "./SinglePhase";
 import Countdown from "@/v2/components/Countdown";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
-import SinglePhase from "./SinglePhase";
+import { cn } from "@/lib/cn";
 
-// @TODO 
+// @TODO
 // - Show 'Whale' phase based on value from session - Currently I cannot see matching value in session. Should it be here as a filter or or in v2/hooks/usePhaseTimeline.js
 // - What information should tooltip show?
-export default function Phases() {
+export default function Phases({ className }) {
     const { phases, phaseNext, phaseCurrent, isClosed, updatePhase } = usePhaseInvestment();
     const countStart = moment.unix(phaseNext.startDate).valueOf();
-    
+
     return (
-        <div className="p-4 flex flex-col items-center justify-between rounded bg-[#12202C] 2xl:flex-row">
+        <div
+            className={cn(
+                "p-4 flex flex-col items-center justify-between rounded bg-[#12202C] 2xl:flex-row",
+                className,
+            )}
+        >
             <div className="flex flex-col items-center space-y-4 2xl:flex-row 2xl:space-y-0">
                 <h2 className="text-lg font-semibold 2xl:mr-4">Phases</h2>
                 <ul className="flex flex-wrap justify-center items-center gap-4">
-                    {phases.map(phase => (
+                    {phases.map((phase) => (
                         <li key={phase.phase}>
                             <SinglePhase currentPhase={phaseCurrent.phase} {...phase} />
                         </li>
@@ -29,4 +35,4 @@ export default function Phases() {
             </div>
         </div>
     );
-};
+}
