@@ -4,6 +4,18 @@ import moment from "moment";
 import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 import { PhaseId, Phases } from "@/v2/lib/phases";
 
+// Mocked values for phases testing purposes
+// const targetDate = moment("2024-09-10 15:05", "YYYY-MM-DD HH:mm"), countStart = targetDate.unix(), duration = 60;
+// const useOfferDetailsQuery = () => ({ data: {
+//     d_open: countStart,
+//     isLaunchpad: true,
+//     lengthWhales: duration,
+//     lengthRaffle: duration,
+//     lengthFCFS: duration,
+//     lengthUnlimitedSlowdown: duration,
+//     d_close: moment.unix(countStart).add(6 * duration, "seconds").unix(),
+// }});
+
 // Notes
 // 1. Whales - Phase visible only for basedVc whale holders. they can fill only half of the progress bar. only whales can invest. Default users see pending phase
 // 2. Pending - Last 6h 
