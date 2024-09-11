@@ -15,6 +15,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   HUSKY: 0
+  NODE_OPTIONS: "--max-old-space-size=7168" # Setting NODE_OPTIONS globally for all steps
 
 jobs:
   deploy:
@@ -23,20 +24,21 @@ jobs:
     if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        tenant: [ based, citcap, generic ]
+        tenant: [ based ]
+        # tenant: [ based, citcap, generic ]
         include:
           - tenant: based
             cluster: based-staging-webapp-cluster
             service: based-staging-webapp-service
             tenant_id: 1
-          - tenant: citcap
-            cluster: citcap-staging-webapp-cluster
-            service: citcap-staging-webapp-service
-            tenant_id: 6
-          - tenant: generic
-            cluster: generic-staging-webapp-cluster
-            service: generic-staging-webapp-service
-            tenant_id: 14
+          # - tenant: citcap
+          #   cluster: citcap-staging-webapp-cluster
+          #   service: citcap-staging-webapp-service
+          #   tenant_id: 6
+          # - tenant: generic
+          #   cluster: generic-staging-webapp-cluster
+          #   service: generic-staging-webapp-service
+          #   tenant_id: 14
 
     steps:
       - name: Checkout code
