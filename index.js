@@ -27,7 +27,7 @@ const { router: networkRoute } = require("./server/routes/network.router.js");
 const { router: newsRoute } = require("./server/routes/news.router.js");
 
 const port = process.env.PORT || 3000;
-const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
+const dev = (process.env.ENV !== "production" && process.env.ENV !== "staging") || process.env.FORCE_DEV === "true";
 const hostname = process.env.HOSTNAME;
 
 const nextApp = next({ dir: ".", dev, hostname, port });
@@ -60,11 +60,11 @@ nextApp.prepare().then(async () => {
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
-        if (!dev) {
-            res.set({
-                "Cache-Control": "public, max-age=3600",
-            });
-        }
+        // if (!dev) {
+        //     res.set({
+        //         "Cache-Control": "public, max-age=3600",
+        //     });
+        // }
         const parsedUrl = url.parse(req.url, true);
         nextHandler(req, res, parsedUrl);
     });
