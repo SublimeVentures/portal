@@ -12,7 +12,6 @@ pnpm dev
 
 #
 
-
 ## Envs
 Example env file
 ```DATABASE=postgresql://username:password@host:port/db
