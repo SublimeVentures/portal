@@ -1,22 +1,14 @@
+const { Op, QueryTypes } = require("sequelize");
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
 async function getOfferRaise(id) {
     try {
         return await models.offerLimit.findOne({
             where: { offerId: id },
-            attributes: [
-                'alloRes',
-                'alloFilled',
-                'alloGuaranteed',
-                'alloTotal',
-                'isPaused',
-                'isSettled',
-                'isRefund',
-            ]
+            attributes: ["alloRes", "alloFilled", "alloGuaranteed", "alloTotal", "isPaused", "isSettled", "isRefund"],
         });
     } catch (error) {
         logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
@@ -42,10 +34,10 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
             alloGuaranteed = wantedAllocation;
         }
 
-        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerLimit?.alloTotal}`;
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerLimits?.[0].alloTotal}`;
     } else {
         effectiveAllocationReserved = wantedAllocation;
-        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerLimit?.alloTotal}`;
+        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerLimits?.[0]?.alloTotal}`;
     }
 
     const updateQuery = `
