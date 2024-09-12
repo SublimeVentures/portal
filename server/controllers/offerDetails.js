@@ -39,6 +39,7 @@ async function getParamOfferDetails(user, req) {
         d_close: offer.d_close,
         lengthFCFS: offer.lengthFCFS,
         lengthGuaranteed: offer.lengthGuaranteed,
+        payouts: offer.payouts,
         participants: offer.participants,
     };
 }

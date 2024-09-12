@@ -268,7 +268,13 @@ const query_getOfferDetails = `
     SELECT
         o.*,
         ol.*,
-        od.description
+        od.description,
+        ARRAY(
+            SELECT row_to_json(p)
+            FROM "payout" p
+            WHERE p."offerId" = o.id
+            ORDER BY p."offerPayout" 
+        ) AS payouts
     FROM
         "offer" o
         LEFT JOIN "offerDescription" od ON o."descriptionId" = od.id
