@@ -9,14 +9,15 @@ async function getOffersPublic() {
     try {
         const tenantId = Number(process.env.NEXT_PUBLIC_TENANT);
 
-        let sqlQuery = tenantId === TENANT.basedVC
-            ? `
+        let sqlQuery =
+            tenantId === TENANT.basedVC
+                ? `
                 SELECT name, genre, url_web, slug
                 FROM offer
                 WHERE "displayPublic" = true
                 ORDER BY "createdAt" DESC;
             `
-            : `
+                : `
                 SELECT o.name, o.genre, o.url_web, o.slug
                 FROM offer o
                 INNER JOIN "offerLimit" ol ON o.id = ol."offerId"
@@ -126,7 +127,8 @@ const query_getOfferProgress = `
         CASE 
             WHEN ol."alloTotal" > 0 THEN (ol."alloFilled" / ol."alloTotal") * 100
             ELSE 0
-        END AS progress
+        END AS progress,
+        ol."alloFilled" AS filled
     FROM
         "offerLimit" ol
     WHERE

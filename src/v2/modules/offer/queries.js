@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,7 +10,7 @@ import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 export function useOfferDetailsQuery() {
     const router = useRouter();
     const { slug } = router.query;
-    
+
     const { error, refetch, ...data } = useQuery({
         queryKey: ["offerDetails", slug],
         queryFn: () => fetchOfferDetails(slug),
@@ -35,7 +35,7 @@ export function useOfferDetailsQuery() {
     }, [error, refetch]);
 
     return data;
-};
+}
 
 export function useOfferAllocationQuery() {
     const router = useRouter();
@@ -43,7 +43,7 @@ export function useOfferAllocationQuery() {
 
     // console.log('---TEST---', offerId)
     // const { offerId, isAllocationRefetchEnabled, isExtraQueryEnabled } = useStore();
-    
+
     const { error, refetch, ...data } = useQuery({
         queryKey: ["offerAllocation", offerId],
         queryFn: () => fetchOfferAllocation(offerId),
@@ -68,20 +68,22 @@ export function useOfferAllocationQuery() {
     }, [error, refetch]);
 
     return data;
-};
+}
 
-export function useUserAllocationQuery() {
-    // const { offerId, userId, offerIsClosed, isExtraQueryEnabled } = useStore();
-    
-    const { error, refetch, ...data } = useQuery({
-        queryKey: ["userAllocation", offerId, userId],
-        queryFn: () => fetchUserInvestment(offerDetails?.id),
-        refetchOnMount: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 15 * 1000,
-        // refetchOnWindowFocus: !offerIsClosed,
-        // enabled: isExtraQueryEnabled,
-    });
+export const userAllocationQueryOptions = (offerId, userID, options) => ({
+    queryKey: ["userAllocation", offerId, userID],
+    queryFn: () => fetchUserInvestment(offerId),
+    ...options,
+});
+
+export function useUserAllocationQuery(offerId, userId) {
+    const { error, refetch, ...data } = useQuery(
+        userAllocationQueryOptions(offerId, userId, {
+            refetchOnMount: false,
+            cacheTime: 5 * 60 * 1000,
+            staleTime: 15 * 1000,
+        }),
+    );
 
     useEffect(() => {
         try {
@@ -98,11 +100,11 @@ export function useUserAllocationQuery() {
     }, [error, refetch]);
 
     return data;
-};
+}
 
 export function useUserPremiumQuery() {
     // const { userId, tenantId } = useStore();
-    
+
     const { error, refetch, ...data } = useQuery({
         queryKey: ["premiumOwned", userId, tenantId],
         queryFn: fetchStoreItemsOwned,
@@ -113,4 +115,4 @@ export function useUserPremiumQuery() {
     });
 
     return data;
-};
+}
