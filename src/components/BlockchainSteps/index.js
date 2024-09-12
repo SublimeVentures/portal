@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import debounce from "lodash.debounce";
 import { useChainId } from "wagmi";
 import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
@@ -53,7 +53,13 @@ const BlockchainSteps = ({ data }) => {
                 },
             });
         }
-    }, [network_current.isValid, network_current?.network, network_shouldRun]);
+    }, [
+        network_current.chainId,
+        network_current.isValid,
+        network_current.network,
+        network_isFinished,
+        network_shouldRun,
+    ]);
 
     const liquidity_isReady = steps.liquidity && (steps.network ? state.network.isFinished : !state.liquidity.lock);
     const liquidity_shouldRun = !state.liquidity.isFinished && liquidity_isReady;

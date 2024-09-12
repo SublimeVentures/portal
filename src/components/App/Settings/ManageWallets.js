@@ -2,7 +2,6 @@ import { useState } from "react";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
-import WalletAddModal from "@/components/App/Settings/WalletAddModal";
 import DynamicIcon from "@/components/Icon";
 import { ICONS } from "@/lib/icons";
 import WalletRemoveModal from "@/components/App/Settings/WalletRemoveModal";
