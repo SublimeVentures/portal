@@ -108,3 +108,12 @@ export const useUpgrade = async (offerId, upgradeId) => {
         return handleError(ErrorType.FETCHER, error, { methodName: "useUpgrade", enableSentry: true });
     }
 };
+
+export const fetchOfferParticipants = async (offerId, config) => {
+    try {
+        const { data } = await axiosPrivate.get(`${API.offerList}/${offerId}/participants`, config);
+        return data;
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferParticipants", enableSentry: true });
+    }
+};
