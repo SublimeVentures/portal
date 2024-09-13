@@ -1,35 +1,19 @@
 import { dehydrate } from "@tanstack/react-query";
 
+import { initStore } from "@/v2/modules/offer/store";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.fetcher";
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
-import { useUserAllocationQuery } from "@/v2/modules/offer/queries";
 
 import { Overview, Phases, Invest, Fundraise, Vesting, History } from "@/v2/modules/offer";
 export default function AppOfferDetails({ session, state }) {
-    // @TODO
-    // Prefetched data - Can we set it in store without re-render?
-    // const offerId = offerDetails?.id;
-    // const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
-    // const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
-    const { userId, tenantId } = session;
-    const { offerId } = state;
-    const userAllocation = useUserAllocationQuery(offerId, userId);
-
-    console.log("session", session);
-
-    // @TODO
-    // Data for queries based on phase - Store in zustand?
-    // const isExtraQueryEnabled = !!offerDetails?.id;
-    // const offerIsClosed = phasesData?.offerClosed;
-    // const isAllocationRefetchEnabled = offerIsClosed ? false : 15000;
-
-    // @Todo - Use in correct module
-    // const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
-    // const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
+    initStore({
+        offerId: state.offerId,
+        userAllocation: state.userAllocation,
+    });
 
     return (
         <>
@@ -37,8 +21,8 @@ export default function AppOfferDetails({ session, state }) {
             <div className="text-white flex flex-col md:grid md:grid-cols-12 gap-4">
                 <Overview className="col-span-12" />
                 <Phases className="col-span-12" />
-                <Invest className="col-span-7" />
-                <Fundraise className="col-span-5" userAllocation={userAllocation} />
+                <Invest className="col-span-7" session={session} />
+                <Fundraise className="col-span-5" />
                 <Vesting className="col-span-4" />
                 <History className="col-span-8" />
             </div>
@@ -86,7 +70,9 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                     dehydratedState: dehydrate(queryClient),
                     state: {
                         offerId,
-                    },
+                        offerAllocation,
+                        userAllocation,
+                    }
                 },
             };
         } catch (error) {
@@ -105,3 +91,82 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 AppOfferDetails.getLayout = function (page) {
     return <AppLayout title="Opportunities">{page}</AppLayout>;
 };
+
+// @TODO - Store
+
+// paramsInvestPhase
+// - offer - query
+// - phaseCurrent - phase hook
+// - session - env hook?
+// - refetchOfferAllocation - query / invalidate func
+// - refetchUserAllocation - query / invalidate func
+// - allocation - query
+// - premiumData - query 
+// - refetchPremiumData - query / invalidate func
+
+// - userInvested - investment context?
+// - userAllocationState - ?
+
+// calculateModalProps
+// - offer - query
+
+// - investmentAmount - ?
+// - allocationData - ? zustand ?
+
+    // const restoreModalProps = {
+    //     allocationOld: isRestoreModal.amount,
+    //     investmentAmount,
+    //     bookingExpire,
+    //     bookingRestore,
+    //     bookingCreateNew,
+    // };
+    // const errorModalProps = {
+    //     code: isErrorModal.code,
+    // };
+    // const upgradesModalProps = {
+    //     phaseCurrent,
+    //     offer: offer,
+    //     refetchUserAllocation,
+    //     userAllocationState,
+    //     upgradesUse,
+    //     premiumData,
+    //     refetchPremiumData,
+    //     allocationUserLeft: allocationData.allocationUser_left,
+    // };
+
+    // const investModalProps = {
+    //     investmentAmount,
+    //     offer,
+    //     selectedCurrency,
+    //     bookingExpire,
+    //     afterInvestmentCleanup,
+    // };
+
+
+//             <RestoreHashModal
+//                 restoreModalProps={restoreModalProps}
+//                 model={isRestoreModal.open}
+//                 setter={() => {
+//                     setRestoreModal({ open: false, amount: 0 });
+//                 }}
+//             />
+//             <ErrorModal
+//                 errorModalProps={errorModalProps}
+//                 model={isErrorModal.open}
+//                 setter={() => {
+//                     setErrorModal({ open: false, code: null });
+//                 }}
+//             />
+//             {network?.isSupported && selectedCurrency && (
+//                 <InvestModal
+//                     investModalProps={investModalProps}
+//                     model={isInvestModal}
+//                     setter={() => {
+//                         setInvestModal(false);
+//                     }}
+//                 />
+//             )}
+//         </div>
+//     );
+// }
+

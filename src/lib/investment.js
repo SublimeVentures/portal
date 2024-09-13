@@ -12,6 +12,7 @@ function roundAmount(amount) {
 function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min;
     const allocation_min = offer?.alloMin || MIN_ALLOCATION;
+
     if (offer.isLaunchpad) {
         allocationUser_base = offer.alloMax;
         allocationUser_min = allocation_min;
@@ -120,13 +121,13 @@ function allocationUserBuild(params) {
     const { allocationUser_base, allocationUser_max, allocationUser_min } = getUserAllocationMax(
         params.account,
         params.offer,
-        params.allocationOffer,
         params.upgradesUse?.increasedUsed?.amount || 0,
     );
     params.output.allocationUser_guaranteed = getUserAllocationGuaranteed(params.upgradesUse?.guaranteedUsed);
     params.output.allocationUser_base = allocationUser_base;
     params.output.allocationUser_max = allocationUser_max;
     params.output.allocationUser_min = allocationUser_min;
+
     return allocationPhaseAdjust(params);
 }
 
@@ -144,7 +145,7 @@ function userInvestmentState(
         (allocationOffer?.alloFilled || 0) -
         (allocationOffer?.alloRes || 0) -
         (allocationOffer?.alloGuaranteed || 0);
-    console.log("allocationOffer_left", allocationOffer_left, allocationOffer?.alloTotal, allocationOffer);
+    
     let build = {
         account,
         offer,
@@ -239,15 +240,6 @@ function buttonInvestIsDisabled(
     isStakeLock,
     userInvestmentState,
 ) {
-    // console.log(
-    //     "buttonInvestIsDisabledV1",
-    //     allocationOffer?.isPaused ||
-    //     offerPhaseCurrent?.controlsDisabled ||
-    //     isStakeLock ||
-    //     !investmentAmount ||
-    //     !isAllocationOk,
-    //     isAllocationOk,
-    // );
     return (
         allocationOffer?.isPaused ||
         offerPhaseCurrent?.controlsDisabled ||

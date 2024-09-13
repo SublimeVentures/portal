@@ -6,6 +6,7 @@ import { OfferStatus } from "@/v2/modules/opportunities/helpers";
 import { Progress } from "@/v2/components/ui/progress";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import { Skeleton } from "@/v2/components/ui/skeleton";
+import { useUserAllocationQuery } from "@/v2/modules/offer/queries";
 
 const TBA_TEXT = "TBA";
 
@@ -23,14 +24,18 @@ const getCurrency = (value) => (value > 0 ? formatCurrency(value) : null);
 const getTGE = (tge, ppu) =>
     tge > 0 && ppu ? `(${formatPercentage((tge - ppu) / ppu)}) ${formatCurrency(tge)}` : null;
 
-export default function Fundraise({ className, userAllocation }) {
+export default function Fundraise({ className }) {
+    const userAllocation = useUserAllocationQuery();
     const { data: offer, isLoading } = useOfferDetailsQuery();
     const { state } = useOfferStatus(offer);
     const { data: { progress, filled } = {} } = useOfferProgressQuery(offer.id, {
         refetchInterval: state === OfferStatus.IN_PROGRESS ? 15000 : false,
     });
+
     console.log("offer", offer, userAllocation);
+    
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
+    
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl space-y-6", className)}>
             <div className="flex gap-2 items-center">
