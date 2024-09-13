@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
+import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { fetchOfferAllocation, fetchOfferDetails } from "@/fetchers/offer.fetcher";
 import { fetchUserInvestment } from "@/fetchers/vault.fetcher";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
@@ -40,17 +41,15 @@ export function useOfferDetailsQuery() {
 export function useOfferAllocationQuery() {
     const router = useRouter();
     const { offerId } = useOfferDetailsStore();
-
-    // console.log('---TEST---', offerId)
-    // const { offerId, isAllocationRefetchEnabled, isExtraQueryEnabled } = useStore();
-
+    const { isClosed } = usePhaseInvestment();
+    
     const { error, refetch, ...data } = useQuery({
         queryKey: ["offerAllocation", offerId],
         queryFn: () => fetchOfferAllocation(offerId),
         refetchOnMount: false,
         refetchOnWindowFocus: true,
-        // refetchInterval: isAllocationRefetchEnabled,
-        // enabled: isExtraQueryEnabled,
+        refetchInterval: isClosed ? false : 15000,
+        enabled: Boolean(offerId),
     });
 
     useEffect(() => {
@@ -70,20 +69,19 @@ export function useOfferAllocationQuery() {
     return data;
 }
 
-export const userAllocationQueryOptions = (offerId, userID, options) => ({
-    queryKey: ["userAllocation", offerId, userID],
-    queryFn: () => fetchUserInvestment(offerId),
-    ...options,
-});
-
-export function useUserAllocationQuery(offerId, userId) {
-    const { error, refetch, ...data } = useQuery(
-        userAllocationQueryOptions(offerId, userId, {
-            refetchOnMount: false,
-            cacheTime: 5 * 60 * 1000,
-            staleTime: 15 * 1000,
-        }),
-    );
+export function useUserAllocationQuery() {
+    const { offerId } = useOfferDetailsStore();
+    const { isClosed } = usePhaseInvestment();
+    
+    const { error, refetch, ...data } = useQuery({
+        queryKey: ["userAllocation", offerId],
+        queryFn: () => fetchUserInvestment(offerId),
+        refetchOnMount: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 15 * 1000,
+        refetchOnWindowFocus: !isClosed,
+        enabled: Boolean(offerId),
+    });
 
     useEffect(() => {
         try {
