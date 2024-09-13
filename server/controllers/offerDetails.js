@@ -1,12 +1,12 @@
+const { serializeError } = require("serialize-error");
 const { getOfferDetails } = require("../queries/offers.query");
 const { getOfferRaise } = require("../queries/invest.query");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
 async function getParamOfferDetails(user, req) {
-    const { partnerId, tenantId } = user;
+    const { partnerId, tenantId, userId } = user;
 
-    const results = await getOfferDetails(req.params.slug, partnerId, tenantId);
+    const results = await getOfferDetails(req.params.slug, partnerId, tenantId, userId);
     const offer = results[0];
     if (!offer) return { ok: false };
     //todo: lengthWale, lengthRaffle
@@ -39,6 +39,7 @@ async function getParamOfferDetails(user, req) {
         d_close: offer.d_close,
         lengthFCFS: offer.lengthFCFS,
         lengthGuaranteed: offer.lengthGuaranteed,
+        participants: offer.participants,
     };
 }
 

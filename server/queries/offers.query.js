@@ -298,11 +298,11 @@ const query_getOfferDetails = `
     LIMIT 1;
 `;
 
-async function getOfferDetails(slug, partnerId, tenantId) {
+async function getOfferDetails(slug, partnerId, tenantId, userId) {
     try {
         return await db.query(query_getOfferDetails, {
             type: QueryTypes.SELECT,
-            replacements: { slug, partnerId, tenantId },
+            replacements: { slug, partnerId, tenantId, userId },
         });
     } catch (error) {
         logger.error("QUERY :: [getOfferDetails]", {
@@ -401,6 +401,22 @@ async function getAllocation(userId) {
     }
 }
 
+async function getOfferParticipants(offerId, userId) {
+    try {
+        return models[`z_participant_${offerId}`].findAll({
+            where: {
+                userId,
+            },
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getOfferParticipants]", {
+            error: serializeError(error),
+        });
+
+        return [];
+    }
+}
+
 module.exports = {
     getOffersPublic,
     getOfferList,
@@ -411,4 +427,5 @@ module.exports = {
     getOtcList,
     getOfferWithLimits,
     getAllocation,
+    getOfferParticipants,
 };
