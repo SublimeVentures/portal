@@ -62,8 +62,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         chains,
         switchChain,
     } = useSwitchChain();
-
-    useEffect(() => {
+    const setInitialDate = () => {
         console.log(
             "EC :: context pass init",
             environmentProps.isClean && initialData?.cdn,
@@ -109,7 +108,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
                 "saved environment",
             );
         }
-    }, [initialData?.cdn]);
+    };
 
     useEffect(() => {
         const isNetworkSupported = !!chains.find((el) => el.id === chain?.id);
@@ -227,6 +226,9 @@ export const EnvironmentProvider = ({ children, initialData }) => {
             softLogout ? await logOutRefresh() : await logOut();
         });
     };
+
+    setInitialDate();
+    useEffect(setInitialDate, [initialData?.cdn]);
 
     const value = {
         network: {
