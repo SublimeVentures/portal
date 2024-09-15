@@ -3,7 +3,7 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
-const rootVariants = cva("relative h-2 w-full overflow-hidden rounded-full", {
+const rootVariants = cva("relative h-1 md:h-1.5 w-full overflow-hidden rounded-full", {
     variants: {
         variant: {
             accent: "bg-accent/20",

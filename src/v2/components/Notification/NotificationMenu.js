@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-
+import { useState } from "react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -29,42 +29,63 @@ const NotificationMenu = ({ isBlockedAlert }) => {
 
     const newCount = 0;
 
+    const [open, setOpen] = useState(false);
+
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={(value) => setOpen(value)}>
             <DropdownMenuTrigger asChild>
                 <IconButton icon={bellIcon} variant="transparent" shape="circle" className="p-3 outline-none" />
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
                 style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                className="w-screen h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto"
+                className="w-screen h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-gradient-primary"
             >
                 <div className="mb-4 px-8 flex items-baseline justify-between text-foreground text-base leading-none">
                     <div>
                         <h3 className="inline text-foreground text-xl leading-none">Notifications</h3>
-                        <p className="ml-2 inline">
+                        {/* <p className="ml-2 inline">
                             New <span className="font-light">(2)</span>
-                        </p>
+                        </p> */}
                     </div>
 
-                    <Link href={routes.Notifications} className="text-accent font-light leading-none hover:underline">
+                    <Link
+                        href={routes.Notifications}
+                        onClick={() => setOpen(false)}
+                        className="text-accent font-light leading-none hover:underline"
+                    >
                         Show all
                     </Link>
                 </div>
 
-                <DropdownMenuGroup>
-                    {data?.rows.length
-                        ? data?.rows.map((notification) => (
-                              <DropdownMenuItem key={notification.id}>
-                                  <TimelineItem
-                                      className="px-8 bg-transparent"
-                                      showTimeline={false}
-                                      item={notification}
-                                  />
-                              </DropdownMenuItem>
-                          ))
-                        : null}
-                </DropdownMenuGroup>
+                {data?.rows.length ? (
+                    <DropdownMenuGroup>
+                        {data?.rows.map((notification) => (
+                            <DropdownMenuItem key={notification.id}>
+                                <TimelineItem
+                                    className="px-8 bg-transparent"
+                                    showTimeline={false}
+                                    item={notification}
+                                />
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuGroup>
+                ) : (
+                    <div className="mt-10">
+                        <h3 className="text-white text-sm text-center mb-1.5">No new notifications</h3>
+                        <p className="text-white/75 text-xs text-center">
+                            Check{" "}
+                            <Link
+                                href={routes.Notifications}
+                                className="text-accent hover:underline"
+                                onClick={() => setOpen(false)}
+                            >
+                                this page
+                            </Link>{" "}
+                            to view your full history.
+                        </p>
+                    </div>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );

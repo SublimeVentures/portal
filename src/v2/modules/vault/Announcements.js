@@ -26,7 +26,7 @@ const Announcements = ({ className }) => {
                 {offers?.rows?.map((offer) => (
                     <Link href={`${routes.Opportunities}/${offer.slug}`} key={offer.slug} className="grow flex">
                         <Card className="grow p-6 group/button">
-                            <div className="bg-white/5 backdrop-blur-2xl rounded h-full relative flex 3xl:block">
+                            <div className="bg-white/5 backdrop-blur-2xl rounded relative flex 3xl:block h-full">
                                 <div className="relative h-24 flex gap-2 3xl:mb-12 3xl:h-2/5 m-2 3xl:m-0">
                                     <Image
                                         src={getResearchIconSrc(offer.slug)}
@@ -38,7 +38,7 @@ const Announcements = ({ className }) => {
                                     <Image
                                         src={getResearchBgSrc(offer.slug)}
                                         alt={`Background image for ${offer.name} offer`}
-                                        className="hidden 3xl:block object-cover rounded-t"
+                                        className="hidden 3xl:block object-cover rounded-t aspect-[341/138]"
                                         width={1000}
                                         height={300}
                                     />

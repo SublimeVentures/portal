@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-export default function DefinitionItem({ term, className = "", children }) {
+export default function DefinitionItem({ term, className = "", children, ddClassName }) {
     return (
         <>
             <dt
@@ -11,7 +11,12 @@ export default function DefinitionItem({ term, className = "", children }) {
             >
                 {term}
             </dt>
-            <dd className="text-sm font-medium text-foreground leading-none whitespace-nowrap justify-self-end">
+            <dd
+                className={cn(
+                    "text-sm font-medium text-foreground leading-none whitespace-nowrap justify-self-end",
+                    ddClassName,
+                )}
+            >
                 {children}
             </dd>
         </>
