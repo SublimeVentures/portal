@@ -100,11 +100,10 @@ export function useUserAllocationQuery() {
     return data;
 }
 
+// @TODO - Create fetch SSR
 export function useUserPremiumQuery() {
-    // const { userId, tenantId } = useStore();
-
     const { error, refetch, ...data } = useQuery({
-        queryKey: ["premiumOwned", userId, tenantId],
+        queryKey: ["premiumOwned"],
         queryFn: fetchStoreItemsOwned,
         refetchOnMount: true,
         refetchOnWindowFocus: false,
@@ -113,4 +112,4 @@ export function useUserPremiumQuery() {
     });
 
     return data;
-}
+};

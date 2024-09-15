@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
 import { cn } from "@/lib/cn";
 
-export default function SinglePhase({ phase, phaseName, currentPhase }) {
+export default function SinglePhase({ phase, phaseName, phaseDescription, currentPhase }) {
     return (
         <Tooltip>
             <TooltipTrigger
@@ -13,7 +13,7 @@ export default function SinglePhase({ phase, phaseName, currentPhase }) {
             </TooltipTrigger>
             
             <TooltipContent>
-                <p>Hover info</p>
+                <p>{phaseDescription}</p>
             </TooltipContent>
         </Tooltip>
     );
