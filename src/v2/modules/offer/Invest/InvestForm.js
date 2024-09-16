@@ -8,7 +8,7 @@ import { Button } from "@/v2/components/ui/button";
 import { formatNumber } from "./utils";
 
 export default function InvestForm({ allocationData, control, watch, setValue, formState: { errors }, ...form }) {
-    const { network, getCurrencySettlement } = useEnvironmentContext();
+    const { getCurrencySettlement } = useEnvironmentContext();
     
     const dropdownCurrencyOptions = getCurrencySettlement();
     const investmentAmountValue = watch("investmentAmount");

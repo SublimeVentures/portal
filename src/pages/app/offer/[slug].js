@@ -8,12 +8,11 @@ import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 
+import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
+
 import { Overview, Phases, Invest, Fundraise, Vesting, History } from "@/v2/modules/offer";
 export default function AppOfferDetails({ session, state }) {
-    initStore({
-        offerId: state.offerId,
-        userAllocation: state.userAllocation,
-    });
+    initStore({ session, ...state });
 
     return (
         <>
@@ -42,8 +41,8 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 staleTime: 15 * 60 * 1000,
             });
 
-            const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
-            const offerId = offerDetails.id;
+            const offer = queryClient.getQueryData(["offerDetails", slug]);
+            const offerId = offer.id;
 
             if (!offerId) throw Error("Offer not specified");
 
@@ -58,10 +57,10 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 queryFn: () => fetchUserInvestmentSsr(offerId, token),
             });
 
-            const offerAllocation = queryClient.getQueryData(["offerAllocation", offerId]);
+            const allocation = queryClient.getQueryData(["offerAllocation", offerId]);
             const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
 
-            if (!(offerAllocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
+            if (!(allocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
                 throw Error("Data not fetched");
             }
 
@@ -69,8 +68,8 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 additionalProps: {
                     dehydratedState: dehydrate(queryClient),
                     state: {
-                        offerId,
-                        offerAllocation,
+                        offer,
+                        allocation,
                         userAllocation,
                     }
                 },
@@ -91,6 +90,45 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 AppOfferDetails.getLayout = function (page) {
     return <AppLayout title="Opportunities">{page}</AppLayout>;
 };
+
+// useEffect(() => {
+//     const updateAllocationData = () => {
+//         if (!offer) return;
+
+//         setAllocationData({ ...allocations });
+
+//         const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocations, investmentAmount);
+
+//         // if (!allocationIsValid) {
+//         //     setError("investmentAmount", { type: "manual", message: message ?? "Invalid allocation amount" });
+//         // }
+
+//         // @TODO: Move to button component?
+//         const { isDisabled, text } = buttonInvestState(
+//             allocation || {},
+//             phaseCurrent,
+//             investmentAmount,
+//             allocationIsValid,
+//             allocations,
+//             isStakeLock,
+//             userAllocation?.invested
+//         );
+
+//         setInvestButtonDisabled(isDisabled);
+//         setInvestButtonText(text);
+//     };
+
+//     updateAllocationData();
+// }, [
+//     allocation?.alloFilled,
+//     allocation?.alloRes,
+//     upgradesUse?.increasedUsed?.amount,
+//     upgradesUse?.guaranteedUsed?.amount,
+//     upgradesUse?.guaranteedUsed?.alloUsed,
+//     userAllocation?.invested?.total,
+//     investmentAmount,
+//     phaseCurrent?.phase,
+// ])
 
 // @TODO - Store
 

@@ -13,17 +13,6 @@ import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery }
 import InvestForm from "./InvestForm";
 import { getInvestSchema } from "./utils";
 
-const defaultAllocation = {
-    allocationUser_max: 0,
-    allocationUser_min: 0,
-    allocationUser_left: 0,
-    allocationUser_invested: 0,
-    allocationOffer_left: 0,
-    allocationUser_guaranteed: 0,
-    offer_isProcessing: false,
-    offer_isSettled: false,
-};
-
 // @TODO Reuse with fundraise component
 const Definition = ({ term, isLoading, children }) => (
     <>
@@ -43,14 +32,12 @@ export default function Invest({ session }) {
     const { data: offer } = useOfferDetailsQuery();
     const { data: allocation } = useOfferAllocationQuery();
     const { data: userAllocation } = useUserAllocationQuery();
-    const { upgradesUse } = useOfferDetailsStore();
+    const { allocationData, upgradesUse } = useOfferDetailsStore();
     const { phaseCurrent } = usePhaseInvestment();
     
-    const [investButtonDisabled, setInvestButtonDisabled] = useState(false);
-    const [investButtonText, setInvestButtonText] = useState("");
-    const [allocationData, setAllocationData] = useState(defaultAllocation);
+    const [investButtonState, setInvestButtonState] = useState({ isDisabled: false, text: "" });
 
-    const { watch, setValue, setError, ...form } = useForm({
+    const { watch, setValue, setError, clearErrors, ...form } = useForm({
         resolver: zodResolver(getInvestSchema(allocationData)),
         mode: "onChange",
         defaultValues: {
@@ -63,56 +50,39 @@ export default function Invest({ session }) {
 
     const isBooked = allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0;
     const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
-    const investmentLocked = investButtonDisabled || isStakeLock;
+    const investmentLocked = investButtonState.isDisabled || isStakeLock;
 
     useEffect(() => {
-        const updateAllocationData = () => {
-            if (!offer) return;
+        if (!offer) return;
 
-            // @todo - fix
-            const allocations = userInvestmentState(
-                session,
-                offer,
-                phaseCurrent,
-                upgradesUse,
-                userAllocation?.invested?.total,
-                allocation || {}
-            );
+        const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocationData, investmentAmount);
 
-            setAllocationData({ ...allocations });
+        if (!allocationIsValid) {
+            setError("investmentAmount", { type: "manual", message: message ?? "Invalid allocation amount" });
+        }
+        
+        const { isDisabled, text } = buttonInvestState(
+            allocation || {},
+            phaseCurrent,
+            investmentAmount,
+            allocationIsValid,
+            allocationData,
+            isStakeLock,
+            userAllocation?.invested
+        );
 
-            const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocations, investmentAmount);
-
-            // if (!allocationIsValid) {
-            //     setError("investmentAmount", { type: "manual", message: message ?? "Invalid allocation amount" });
-            // }
-
-            // @TODO: Move to button component?
-            const { isDisabled, text } = buttonInvestState(
-                allocation || {},
-                phaseCurrent,
-                investmentAmount,
-                allocationIsValid,
-                allocations,
-                isStakeLock,
-                userAllocation?.invested
-            );
-
-            setInvestButtonDisabled(isDisabled);
-            setInvestButtonText(text);
-        };
-
-        updateAllocationData();
+        setInvestButtonState({ isDisabled, text })
     }, [
+        allocationData,
+        investmentAmount,
         allocation?.alloFilled,
         allocation?.alloRes,
         upgradesUse?.increasedUsed?.amount,
         upgradesUse?.guaranteedUsed?.amount,
         upgradesUse?.guaranteedUsed?.alloUsed,
         userAllocation?.invested?.total,
-        investmentAmount,
         phaseCurrent?.phase,
-    ])
+    ]);
 
     const amountStorageKey = `offer.${offer.id}.amount`;
     const currencyStorageKey = `offer.${offer.id}.currency`;
@@ -121,7 +91,8 @@ export default function Invest({ session }) {
         const cachedData = getExpireData(amountStorageKey);
         const value = cachedData ?? allocationData?.allocationUser_min ?? offer.alloMin;
 
-        setValue("investmentAmount", value);
+        setValue("investmentAmount", value);;
+        clearErrors();
     }, [allocationData?.allocationUser_min]);
 
     useEffect(() => {
@@ -130,39 +101,43 @@ export default function Invest({ session }) {
 
         setValue("currency", initialCurrency.symbol);
     }, [network?.chainId, dropdownCurrencyOptions]);
+    
+    // @TODO - Tax amount depends of tier - logic not ready yet.
+    const tax = 10;
+    const subtotal = investmentAmount - (investmentAmount * (tax / 100));
 
     return (
         <div className="relative flex flex-col flex-1 justify-center items-center">
             <div className="w-full flex flex-col space-y-6 lg:p-4 2xl:p-8">
                 <h3 className="mb-6 text-base lg:text-xl">My Contribution</h3>
-                <InvestForm allocationData={allocationData} {...{ watch, setValue, setError, ...form }} />
+                <InvestForm allocationData={allocationData} {...{ watch, setValue, setError, clearErrors, ...form }} />
 
                 <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base">
-                    <Definition term="Subtotal">?</Definition>
-                    <Definition term="Tax fees">?</Definition>
+                    <Definition term="Subtotal">${subtotal}</Definition>
+                    <Definition term="Tax fees">{tax}%</Definition>
                 </dl>
 
                 <div class="w-full h-[1px] bg-foreground/10"></div>
 
                 <div className="grid grid-rows-3 items-center justify-center text-sm text-center lg:grid-cols-2 lg:grid-rows-1 lg:text-start">
                     <h4 className="text-sm md:text-base lg:col-start-1">Total Investment:</h4>
-                    <div className="font-semibold text-3xl lg:col-start-2 lg:row-span-2 lg:text-end">?</div>
+                    <div className="font-semibold text-3xl lg:col-start-2 lg:row-span-2 lg:text-end">${investmentAmount}</div>
                     <p className="text-sm font-regular text-foreground/40 lg:col-start-1">Tax fees don't contribute to deals</p>
                 </div>
 
                 <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
                     <Button 
                         variant="gradient" 
-                        disabled={investButtonDisabled || investmentLocked} 
+                        disabled={investButtonState.isDisabled || investmentLocked} 
                         className="flex-grow basis-full sm:basis-auto"
                         // onClick={handler={debouncedMakeInvestment}}
                     >
-                        {investButtonText}
+                        {investButtonState.text}
                     </Button>
                     {investmentLocked && userAllocation?.invested.total - userAllocation?.invested.invested > 0 && (
                         <Button 
                             variant="gradient" 
-                            disabled={investButtonDisabled} 
+                            disabled={investButtonState.isDisabled} 
                             className="flex-grow basis-full sm:basis-auto"
                             // handler={debouncedMakeInvestment}
                         >

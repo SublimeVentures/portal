@@ -13,6 +13,7 @@ export const Phases = {
     [PhaseId.Whale]: {
         phase: PhaseId.Whale,
         phaseName: "Whale",
+        phaseDescription: "Exclusive phase for large investors. Opening soon.",
         button: "Open Soon",
         controlsDisabled: true,
         startDate: 0,
@@ -20,6 +21,7 @@ export const Phases = {
     [PhaseId.Pending]: {
         phase: PhaseId.Pending,
         phaseName: "Pending",
+        phaseDescription: "Phase is being prepared. Users can register for the raffle during this time.",
         button: "Open Soon",
         controlsDisabled: true,
         startDate: 0,
@@ -27,6 +29,7 @@ export const Phases = {
     [PhaseId.Raffle]: {
         phase: PhaseId.Raffle,
         phaseName: "Raffle",
+        phaseDescription: "Raffle winners have guaranteed allocation.",
         button: "Open Soon",
         controlsDisabled: true,
         startDate: 0,
@@ -34,6 +37,7 @@ export const Phases = {
     [PhaseId.Open]: {
         phase: PhaseId.Open,
         phaseName: "Open",
+        phaseDescription: "Investment is open to all users. Limited time availability.",
         button: "Invest",
         controlsDisabled: false,
         startDate: -1,
@@ -41,6 +45,7 @@ export const Phases = {
     [PhaseId.FCFS]: {
         phase: PhaseId.FCFS,
         phaseName: "FCFS",
+        phaseDescription: "Investment is open but capped. First come, first served access.",
         button: "Invest",
         controlsDisabled: false,
         startDate: -1,
@@ -48,6 +53,7 @@ export const Phases = {
     [PhaseId.UnlimitedSlow]: {
         phase: PhaseId.UnlimitedSlow,
         phaseName: "Unlimited slow",
+        phaseDescription: "Investments are open with a capped limit per user.",
         button: "Invest",
         controlsDisabled: false,
         startDate: -1,
@@ -55,6 +61,7 @@ export const Phases = {
     [PhaseId.Unlimited]: {
         phase: PhaseId.Unlimited,
         phaseName: "Unlimited",
+        phaseDescription: "Unlimited investment phase with no restrictions.",
         button: "Invest",
         controlsDisabled: false,
         startDate: -1,
@@ -62,6 +69,7 @@ export const Phases = {
     [PhaseId.Closed]: {
         phase: PhaseId.Closed,
         phaseName: "Closed",
+        phaseDescription: "The investment opportunity has ended. No further investments allowed.",
         button: "Closed",
         controlsDisabled: true,
         startDate: -1,
