@@ -1,19 +1,15 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "../queries";
 import InvestForm from "./InvestForm";
 import { getInvestSchema } from "./utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
-import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/lib/investment";
+import { buttonInvestState, tooltipInvestState } from "@/lib/investment";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { Button } from "@/v2/components/ui/button";
-import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "../queries";
-import InvestForm from "./InvestForm";
-import { getInvestSchema } from "./utils";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 
 // @TODO Reuse with fundraise component
@@ -62,7 +58,7 @@ export default function Invest({ session }) {
         if (!allocationIsValid) {
             setError("investmentAmount", { type: "manual", message: message ?? "Invalid allocation amount" });
         }
-        
+
         const { isDisabled, text } = buttonInvestState(
             allocation || {},
             phaseCurrent,
@@ -70,10 +66,10 @@ export default function Invest({ session }) {
             allocationIsValid,
             allocationData,
             isStakeLock,
-            userAllocation?.invested
+            userAllocation?.invested,
         );
 
-        setInvestButtonState({ isDisabled, text })
+        setInvestButtonState({ isDisabled, text });
     }, [
         allocationData,
         investmentAmount,
@@ -93,7 +89,7 @@ export default function Invest({ session }) {
         const cachedData = getExpireData(amountStorageKey);
         const value = cachedData ?? allocationData?.allocationUser_min ?? offer.alloMin;
 
-        setValue("investmentAmount", value);;
+        setValue("investmentAmount", value);
         clearErrors();
     }, [allocationData?.allocationUser_min]);
 
@@ -103,10 +99,10 @@ export default function Invest({ session }) {
 
         setValue("currency", initialCurrency.symbol);
     }, [network?.chainId, dropdownCurrencyOptions]);
-    
+
     // @TODO - Tax amount depends of tier - logic not ready yet.
     const tax = 10;
-    const subtotal = investmentAmount - (investmentAmount * (tax / 100));
+    const subtotal = investmentAmount - investmentAmount * (tax / 100);
 
     return (
         <div className="relative flex flex-col flex-1 justify-center items-center">
@@ -123,23 +119,27 @@ export default function Invest({ session }) {
 
                 <div className="grid grid-rows-3 items-center justify-center text-sm text-center lg:grid-cols-2 lg:grid-rows-1 lg:text-start">
                     <h4 className="text-sm md:text-base lg:col-start-1">Total Investment:</h4>
-                    <div className="font-semibold text-3xl lg:col-start-2 lg:row-span-2 lg:text-end">${investmentAmount}</div>
-                    <p className="text-sm font-regular text-foreground/40 lg:col-start-1">Tax fees don't contribute to deals</p>
+                    <div className="font-semibold text-3xl lg:col-start-2 lg:row-span-2 lg:text-end">
+                        ${investmentAmount}
+                    </div>
+                    <p className="text-sm font-regular text-foreground/40 lg:col-start-1">
+                        Tax fees don't contribute to deals
+                    </p>
                 </div>
 
                 <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
-                    <Button 
-                        variant="gradient" 
-                        disabled={investButtonState.isDisabled || investmentLocked} 
+                    <Button
+                        variant="gradient"
+                        disabled={investButtonState.isDisabled || investmentLocked}
                         className="flex-grow basis-full sm:basis-auto"
                         // onClick={handler={debouncedMakeInvestment}}
                     >
                         {investButtonState.text}
                     </Button>
                     {investmentLocked && userAllocation?.invested.total - userAllocation?.invested.invested > 0 && (
-                        <Button 
-                            variant="gradient" 
-                            disabled={investButtonState.isDisabled} 
+                        <Button
+                            variant="gradient"
+                            disabled={investButtonState.isDisabled}
                             className="flex-grow basis-full sm:basis-auto"
                             // handler={debouncedMakeInvestment}
                         >
