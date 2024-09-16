@@ -23,13 +23,13 @@ const StatisticCard = ({ title, value = 0, icon, isLoading = false, isError = fa
     if (isLoading) return <SkeletonStatisticCard />;
     if (isError) return <ErrorStatisticCard actionFn={actionFn} />;
     return (
-        <Card variant="accent" className={cn("min-w-32 grow flex items-center", className)}>
+        <Card variant="accent" className={cn("grow flex items-center gap-x-5", className)}>
             <CardIcon
-                className={cn("bg-accent/[.1] text-accent mr-5 shrink-0", { "hidden md:inline-block": last })}
+                className={cn("bg-accent/[.1] text-accent shrink-0", { "hidden md:inline-block": last })}
                 icon={icon}
             />
-            <div className={cn({ "text-center w-full md:text-left md:w-auto": last })}>
-                <CardTitle className="text-xs md:text-sm font-light text-foreground">{title}</CardTitle>
+            <div className={cn("min-w-24", { "text-center w-full md:text-left md:w-auto": last })}>
+                <CardTitle className="text-xs md:text-sm font-light text-foreground text-nowrap">{title}</CardTitle>
                 <p className="text-sm md:text-lg font-medium text-foreground">{value}</p>
             </div>
         </Card>
