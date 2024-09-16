@@ -10,8 +10,12 @@ export const logIn = async (message, signature, tenant, partner, type) => {
         return data;
     } catch (error) {
         handleError(ErrorType.FETCHER, error, { methodName: "logIn", enableSentry: true });
+
+        return {
+            ok: false,
+            error: e.response?.data?.error || "Error processing login",
+        };
     }
-    return false;
 };
 
 export const logOut = async () => {

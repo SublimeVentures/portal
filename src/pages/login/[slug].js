@@ -10,18 +10,27 @@ import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
 import { verifyID } from "@/lib/authHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { fetchPartners } from "@/fetchers/public.fecher";
-import { seoConfig } from "@/lib/seoConfig";
-import PAGE, { ExternalLinks } from "@/routes";
+import { PAGE } from "@/lib/enum/route";
 import { tenantIndex } from "@/lib/utils";
 import Linker from "@/components/link";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
+const {
+    seo: {
+        DESCRIPTION,
+        INFO: { og, twitter },
+        PAGES: {
+            [PAGE.Login]: { title, url },
+        },
+    },
+    externalLinks,
+} = getTenantConfig();
+
 export default function LoginPartner({ selectedPartner, isAuthenticated }) {
-    const seo = seoConfig(PAGE.Login);
     const router = useRouter();
     const tilt = useRef(null);
     const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
@@ -55,7 +64,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
                                 Unlock exclusive partner privileges by connecting a wallet with your Partner NFT. Ensure
                                 you hold the NFT or have been granted delegated access to journey forward.
                             </div>
-                            <Linker url={ExternalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
+                            <Linker url={externalLinks.DELEGATED_ACCESS} text={"Delegated access?"} />
                         </div>
                         <div className="flex flex-col gap-5 justify-end flex-1 pt-10 lg:mt-0">
                             <RoundButton
@@ -90,13 +99,7 @@ export default function LoginPartner({ selectedPartner, isAuthenticated }) {
 
     return (
         <>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             <HeroBg subtitle={"powered by basedVC"} title={logo()} content={renderOptions()} />
             <LoginModal loginModalProps={loginData} />
         </>

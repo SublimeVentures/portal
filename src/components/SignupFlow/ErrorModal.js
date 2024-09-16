@@ -1,7 +1,10 @@
+import React, { useMemo } from "react";
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import { LoginErrorsEnum } from "@/constants/enum/login.enum";
+
+const { externalLinks } = getTenantConfig();
 
 const TENANTS_ERROR = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
@@ -16,7 +19,7 @@ const TENANTS_ERROR = () => {
                         </ul>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -32,7 +35,7 @@ const TENANTS_ERROR = () => {
                         <div className={"text-app-error"}>Neo Tokyo Citizen NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -45,7 +48,7 @@ const TENANTS_ERROR = () => {
                         <div className={"text-app-error"}>CyberKongz NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -58,7 +61,7 @@ const TENANTS_ERROR = () => {
                         <div className={"text-app-error"}>BAYC / MAYC NFT not detected...</div>
                     </div>
                     <div>
-                        <Linker url={ExternalLinks.HOW_TO_ACCESS} />
+                        <Linker url={externalLinks.HOW_TO_ACCESS} />
                     </div>
                 </>
             );
@@ -66,14 +69,21 @@ const TENANTS_ERROR = () => {
     }
 };
 
-export default function ErrorModal({ model, setter }) {
-    const title = () => {
-        return (
-            <>
-                Login <span className="text-app-error">error</span>
-            </>
-        );
-    };
+export default function ErrorModal({ isOpen, closeModal, errorMessage }) {
+    const title = (
+        <>
+            Login <span className="text-app-error">error</span>
+        </>
+    );
 
-    return <GenericModal isOpen={model} closeModal={setter} title={title()} content={TENANTS_ERROR()} />;
+    let content;
+    if (errorMessage === LoginErrorsEnum.WALLET_ALREADY_ACTIVE) {
+        content = <p className="text-app-success font-bold mb-5">Wallet already active.</p>;
+    } else if (errorMessage === LoginErrorsEnum.WALLETS_LIMIT_REACHED) {
+        content = <p className="text-app-success font-bold mb-5">Reached maximum wallets limit.</p>;
+    } else {
+        content = TENANTS_ERROR();
+    }
+
+    return <GenericModal isOpen={isOpen} closeModal={closeModal} title={title} content={content} />;
 }

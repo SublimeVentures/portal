@@ -4,13 +4,14 @@ import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { IoEllipsisHorizontalOutline as IconMore } from "react-icons/io5";
+import PropTypes from "prop-types";
 import PAGE from "@/routes";
 import { parseVesting } from "@/lib/vesting";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function VaultItem({ item, passData }) {
     const { cdn } = useEnvironmentContext();
-    const { createdAt, invested, tge, ppu, claimed, isManaged } = item;
+    const { createdAt, invested, tge, ppu, claimed, claims, isManaged } = item;
     const tilt = useRef(null);
     const participated = moment(createdAt).utc().local().format("YYYY-MM-DD");
     const normalized_tgeDiff = Number((100 * (tge - ppu)) / ppu)?.toLocaleString(undefined, {
@@ -21,8 +22,7 @@ export default function VaultItem({ item, passData }) {
 
     const { vestedPercentage, nextUnlock, nextSnapshot, nextClaim, isInstant, isSoon, claimStage, payoutId } =
         parseVesting(item.t_unlock);
-    const test = parseVesting(item.t_unlock);
-    const awaitngClaim = claimed === 0 && payoutId > 0;
+    const awaitingClaim = claims.some((claim) => !claim.isClaimed) && payoutId > 0;
     const performance = (claimed / invested) * 100;
 
     const setPassData = () => {
@@ -55,10 +55,10 @@ export default function VaultItem({ item, passData }) {
             <div className="sm:bordered-box-left lg:bordered-box xl:bordered-box-left relative bg-navy-accent flex flex-1 flex-col p-5">
                 <div className="font-bold text-2xl flex items-center glowNormal">
                     <div className="flex flex-1">{item.name}</div>
-                    {(isSoon || awaitngClaim) && (
+                    {(isSoon || awaitingClaim) && (
                         <div className="bordered-container text-sm text-black bg-app-success px-3 py-1 rounded-xl select-none">
                             {" "}
-                            {awaitngClaim ? "CLAIM" : "UNLOCK SOON"}
+                            {awaitingClaim ? "CLAIM" : "UNLOCK SOON"}
                         </div>
                     )}
                 </div>
@@ -131,3 +131,33 @@ export default function VaultItem({ item, passData }) {
         </div>
     );
 }
+
+VaultItem.propTypes = {
+    item: PropTypes.shape({
+        claimed: PropTypes.number,
+        claims: PropTypes.arrayOf(
+            PropTypes.shape({
+                isClaimed: PropTypes.bool,
+            }),
+        ),
+        createdAt: PropTypes.string,
+        id: PropTypes.number,
+        invested: PropTypes.number,
+        isManaged: PropTypes.bool,
+        locked: PropTypes.number,
+        name: PropTypes.string,
+        offerId: PropTypes.number,
+        ppu: PropTypes.number,
+        slug: PropTypes.string,
+        t_unlock: PropTypes.arrayOf(
+            PropTypes.shape({
+                c: PropTypes.number,
+                u: PropTypes.string,
+                s: PropTypes.number,
+                p: PropTypes.number,
+            }),
+        ),
+        tge: PropTypes.number,
+        ticker: PropTypes.string,
+    }),
+};

@@ -7,11 +7,13 @@ import Loader from "@/components/App/Loader";
 import OfferItem from "@/components/App/Offer/OfferItem";
 import Stat from "@/components/Stat";
 import { fetchLaunchpadList } from "@/fetchers/offer.fetcher";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { Tooltiper, TooltipType } from "@/components/Tooltip";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { NAME } = getTenantConfig().seo;
 
 export default function AppLaunchpad({ session }) {
     const { cdn } = useEnvironmentContext();
@@ -49,7 +51,7 @@ export default function AppLaunchpad({ session }) {
         );
     };
 
-    const title = `Launchpad - ${getCopy("NAME")}`;
+    const title = `Launchpad - ${NAME}`;
     return (
         <>
             <Head>

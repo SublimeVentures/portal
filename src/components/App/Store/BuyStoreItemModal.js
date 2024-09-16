@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/router";
 import GenericModal from "@/components/Modal/GenericModal";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import lottieSuccess from "@/assets/lottie/success.json";
@@ -12,9 +12,11 @@ import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { tenantIndex } from "@/lib/utils";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
+
+const { externalLinks } = getTenantConfig();
 
 export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
@@ -117,7 +119,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                     </div>
                 </div>
                 <div className="mt-auto">
-                    What's next? <Linker url={ExternalLinks.UPGRADES} />
+                    What's next? <Linker url={externalLinks.UPGRADES} />
                 </div>
             </div>
         );

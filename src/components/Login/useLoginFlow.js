@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { v4 as uuidv4 } from "uuid";
@@ -7,6 +7,7 @@ import routes from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 import { isUrlTrusted } from "@/components/Login/helper";
+import { ErrorModalContext } from "@/components/SignupFlow/ErrorProvider";
 
 const SIGNING_MESSAGE = {
     [TENANT.basedVC]: "INVEST GROUND FLOOR\nDON'T BE EXIT LIQUIDITY",
@@ -21,6 +22,7 @@ const LOGIN_TYPE = {
 
 export default function useLoginFlow() {
     const router = useRouter();
+    const { setShow, setMessage } = useContext(ErrorModalContext);
 
     const [signErrorMsg, setErrorMsg] = useState("");
     const [isSigningMessage, setIsSigningMessage] = useState(false);
@@ -57,14 +59,11 @@ export default function useLoginFlow() {
                 partner,
                 LOGIN_TYPE.WEB3,
             );
-
             if (isAuth?.ok) {
                 router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
-                router.push({
-                    pathname: routes.Login,
-                    query: { error: LoginErrorsEnum.CREDENTIALS_ERROR },
-                });
+                setShow(true);
+                setMessage(isAuth?.error);
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
             }
