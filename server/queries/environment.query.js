@@ -81,13 +81,17 @@ async function getEnvironment() {
     //-- PARAM :: `stats.funded`
 
     const query_funded = `
-        SELECT o.*,
-               array_agg(ol."partnerId") AS offerLimits,
-               ofr."alloRaised"
-        FROM offer o
-                 LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
-                 LEFT JOIN "offerFundraise" ofr ON o.id = ofr."offerId"
-        GROUP BY o.id, ofr."alloRaised"
+        SELECT 
+            o.*,
+            array_agg(ol."partnerId") AS offerLimits,
+            MAX(ol."alloRaised") AS "alloRaised"
+        FROM 
+            offer o
+        LEFT JOIN 
+            "offerLimit" ol ON o.id = ol."offerId"
+        GROUP BY 
+            o.id
+        ;
     `;
 
     const offers = await db.query(query_funded, { type: QueryTypes.SELECT });

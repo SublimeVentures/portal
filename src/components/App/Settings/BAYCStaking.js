@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AiOutlineInfoCircle as IconInfo } from "react-icons/ai";
@@ -25,8 +25,13 @@ export default function BAYCStaking({ stakingProps }) {
     const [unstakingModal, setUnStakingModal] = useState(false);
     const isElite = session.isElite;
 
+    const stakeOnCurrentWallet = session.stakedOn === account.address;
+
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
-    const { unstake, nextDate, nextDateH } = timeUntilNextUnstakeWindow(unstakeDate, staked);
+
+    const unstakingData = useMemo(() => {
+        return timeUntilNextUnstakeWindow(unstakeDate, staked);
+    }, [staked, unstakeDate]);
 
     const refreshSession = async (force) => {
         const result = await updateStaking(account.address);
@@ -43,6 +48,24 @@ export default function BAYCStaking({ stakingProps }) {
         // }
     };
 
+    const onSuccessStakingClose = useCallback(async () => {
+        setStakingModal(false);
+        await refreshSession();
+    }, [refreshSession]);
+
+    const onSuccessUnstakingClose = useCallback(async () => {
+        setUnStakingModal(false);
+        await refreshSession();
+    }, [refreshSession]);
+
+    const onStakingClose = () => {
+        setStakingModal(false);
+    };
+
+    const onUnstakingClose = () => {
+        setUnStakingModal(false);
+    };
+
     const stakingModalProps = {
         stakeReq: session.stakeReq,
         stakeSize: session.stakeSize,
@@ -56,7 +79,7 @@ export default function BAYCStaking({ stakingProps }) {
 
     useEffect(() => {
         setStaked(session.isStaked);
-    }, []);
+    }, [session.isStaked]);
 
     return (
         <div className={`relative offerWrap flex flex-1 max-w-[600px]`}>
@@ -65,7 +88,7 @@ export default function BAYCStaking({ stakingProps }) {
                     <div className={`text-app-error font-accent glowRed  font-light text-2xl flex glowNormal`}>
                         IDENTITY
                     </div>
-                    <a href={ExternalLinks.STAKING} target={"_blank"} rel="noreferrer">
+                    <a href={externalLinks.STAKING} target={"_blank"} rel="noreferrer">
                         <IconButton zoom={1.1} size={"w-8"} icon={<IconInfo className="h-8 w-8" />} noBorder={true} />
                     </a>
                 </div>
@@ -103,15 +126,15 @@ export default function BAYCStaking({ stakingProps }) {
                 </div>
                 {Boolean(staked) && (
                     <div className={"detailRow text-app-success"}>
-                        <p>Next {unstake ? "re" : "un"}stake</p>
+                        <p>Next {unstakingData.unstake ? "re" : "un"}stake</p>
                         <hr className={"spacer"} />
                         <p>
                             in{" "}
-                            {nextDate > 3 ? (
-                                <>{nextDate} days</>
+                            {unstakingData.nextDate > 3 ? (
+                                <>{unstakingData.nextDate} days</>
                             ) : (
                                 <>
-                                    {nextDateH} hour{nextDateH > 1 ? "s" : ""}
+                                    {unstakingData.nextDateH} hour{unstakingData.nextDateH > 1 ? "s" : ""}
                                 </>
                             )}
                         </p>
@@ -135,13 +158,14 @@ export default function BAYCStaking({ stakingProps }) {
                             setStakingModal(true);
                         }}
                     />
-                    {unstake && (
+                    {unstakingData.unstake && (
                         <UniButton
                             type={ButtonTypes.BASE}
                             text={"Unstake"}
                             handler={() => {
                                 setUnStakingModal(true);
                             }}
+                            isDisabled={!stakeOnCurrentWallet}
                         />
                     )}
                 </div>
@@ -149,19 +173,15 @@ export default function BAYCStaking({ stakingProps }) {
             <StakingModal
                 stakingModalProps={stakingModalProps}
                 model={stakingModal}
-                setter={async () => {
-                    setStakingModal(false);
-                    await refreshSession();
-                }}
+                onSuccessClose={onSuccessStakingClose}
+                onClose={onStakingClose}
             />
-            {unstake && (
+            {unstakingData.unstake && (
                 <UnStakingModal
                     stakingModalProps={stakingModalProps}
                     model={unstakingModal}
-                    setter={async () => {
-                        setUnStakingModal(false);
-                        await refreshSession(true);
-                    }}
+                    onSuccessClose={onSuccessUnstakingClose}
+                    onClose={onUnstakingClose}
                 />
             )}
         </div>

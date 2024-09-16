@@ -31,7 +31,7 @@ export default function ChangeAddress({ session }) {
     const contentWrongWallet = () => {
         return (
             <div className="flex flex-1 flex-col">
-                You've changed the wallet account. <br />
+                You&apos;ve changed the wallet account. <br />
                 You can only use wallets approved in the <span className="contents text-app-success">Setting</span>{" "}
                 page.
                 <div className="my-10">

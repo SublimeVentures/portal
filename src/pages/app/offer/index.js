@@ -35,7 +35,7 @@ export default function AppOffer({ session }) {
         refetchOnWindowFocus: false,
     });
 
-    const offerList = response?.offers;
+    const offerList = response?.offers[0].rows;
     const offerListRender = offerList ? offerList : [];
     const stats = response?.stats;
     const partners = stats && stats?.partners ? stats.partners : 0;

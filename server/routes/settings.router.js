@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { getUserWallets, addUserWallet, removeUserWallet, refreshStaking } = require("../controllers/wallets");
+const { verifyID } = require("../../src/lib/authHelpers");
+const {
+    getUserWallets,
+    addUserWallet,
+    removeUserWallet,
+    refreshStaking,
+    checkUserWalletsForStaking,
+} = require("../controllers/wallets");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
 
 router.get("/wallets", async (req, res) => {
@@ -54,6 +61,11 @@ router.post("/stake", async (req, res) => {
         delete result.token;
         delete result.cookie;
     }
+    return res.status(200).json(result);
+});
+
+router.post("/stake/check", async (req, res) => {
+    const result = await getStakingWallet();
     return res.status(200).json(result);
 });
 

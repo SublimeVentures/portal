@@ -214,7 +214,6 @@ export default function Sidebar({ session }) {
                     <Link
                         href={el.link}
                         key={el.name}
-                        prefetch
                         onClick={() => {
                             toggleMobile();
                         }}
