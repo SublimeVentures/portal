@@ -118,6 +118,10 @@ module.exports = {
             130: "130deg",
             140: "140deg",
         },
+        aspectRatio: {
+            "a4-vertical": "210 / 297",
+            "a4-horizontal": "297 / 210",
+        },
     },
     plugins: [
         function ({ matchUtilities, theme }) {
@@ -131,6 +135,16 @@ module.exports = {
                     values: theme("angle"),
                 },
             );
+        },
+        function ({ addUtilities }) {
+            addUtilities({
+                ".backface-visible": {
+                    "backface-visibility": "visible",
+                },
+                ".backface-hidden": {
+                    "backface-visibility": "hidden",
+                },
+            });
         },
     ],
 };

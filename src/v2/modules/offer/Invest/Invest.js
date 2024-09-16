@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "../queries";
+import InvestForm from "./InvestForm";
+import { getInvestSchema } from "./utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import useLocalStorage from "@/lib/hooks/useLocalStorage";
@@ -9,9 +12,9 @@ import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/li
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { Button } from "@/v2/components/ui/button";
 import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "../queries";
-
 import InvestForm from "./InvestForm";
 import { getInvestSchema } from "./utils";
+import { Skeleton } from "@/v2/components/ui/skeleton";
 
 // @TODO Reuse with fundraise component
 const Definition = ({ term, isLoading, children }) => (
@@ -28,13 +31,12 @@ export default function Invest({ session }) {
     const { network, getCurrencySettlement } = useEnvironmentContext();
     const dropdownCurrencyOptions = getCurrencySettlement();
     const { getExpireData } = useLocalStorage();
-    
+
     const { data: offer } = useOfferDetailsQuery();
     const { data: allocation } = useOfferAllocationQuery();
     const { data: userAllocation } = useUserAllocationQuery();
     const { allocationData, upgradesUse } = useOfferDetailsStore();
     const { phaseCurrent } = usePhaseInvestment();
-    
     const [investButtonState, setInvestButtonState] = useState({ isDisabled: false, text: "" });
 
     const { watch, setValue, setError, clearErrors, ...form } = useForm({
@@ -117,7 +119,7 @@ export default function Invest({ session }) {
                     <Definition term="Tax fees">{tax}%</Definition>
                 </dl>
 
-                <div class="w-full h-[1px] bg-foreground/10"></div>
+                <div className="w-full h-[1px] bg-foreground/10"></div>
 
                 <div className="grid grid-rows-3 items-center justify-center text-sm text-center lg:grid-cols-2 lg:grid-rows-1 lg:text-start">
                     <h4 className="text-sm md:text-base lg:col-start-1">Total Investment:</h4>
@@ -145,7 +147,7 @@ export default function Invest({ session }) {
                         </Button>
                     )}
                 </div>
-                
+
                 {isBooked && (
                     <p className="text-sm text-green-500 text-center">
                         All spots booked! Awaiting blockchain confirmations. <br />
@@ -155,4 +157,4 @@ export default function Invest({ session }) {
             </div>
         </div>
     );
-};
+}

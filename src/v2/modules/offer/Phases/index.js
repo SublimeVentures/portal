@@ -15,7 +15,7 @@ export default function Phases({ className }) {
     return (
         <div
             className={cn(
-                "p-4 flex flex-col items-center justify-between rounded bg-[#12202C] 2xl:flex-row",
+                "p-4 flex flex-col items-center justify-between rounded bg-white/[.07] backdrop-blur-3xl 2xl:flex-row",
                 className,
             )}
         >

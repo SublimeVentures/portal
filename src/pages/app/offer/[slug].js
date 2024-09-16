@@ -1,5 +1,4 @@
 import { dehydrate } from "@tanstack/react-query";
-
 import { initStore } from "@/v2/modules/offer/store";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
 import { processServerSideData } from "@/lib/serverSideHelpers";
@@ -7,23 +6,22 @@ import { queryClient } from "@/lib/queryCache";
 import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.fetcher";
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
+import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
 
-import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
-
-import { Overview, Phases, Invest, Fundraise, Vesting, History } from "@/v2/modules/offer";
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });
 
     return (
         <>
             <Metadata title="Opportunity" />
-            <div className="text-white flex flex-col md:grid md:grid-cols-12 gap-4">
+            <div className="text-white flex flex-col md:grid md:grid-cols-12 gap-4 grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 lg:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4 lg:mb-10">
                 <Overview className="col-span-12" />
                 <Phases className="col-span-12" />
                 <Invest className="col-span-7" session={session} />
                 <Fundraise className="col-span-5" />
                 <Vesting className="col-span-4" />
                 <History className="col-span-8" />
+                <Report className="col-span-12" />
             </div>
         </>
     );
@@ -71,7 +69,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                         offer,
                         allocation,
                         userAllocation,
-                    }
+                    },
                 },
             };
         } catch (error) {
@@ -139,7 +137,7 @@ AppOfferDetails.getLayout = function (page) {
 // - refetchOfferAllocation - query / invalidate func
 // - refetchUserAllocation - query / invalidate func
 // - allocation - query
-// - premiumData - query 
+// - premiumData - query
 // - refetchPremiumData - query / invalidate func
 
 // - userInvested - investment context?
@@ -151,35 +149,34 @@ AppOfferDetails.getLayout = function (page) {
 // - investmentAmount - ?
 // - allocationData - ? zustand ?
 
-    // const restoreModalProps = {
-    //     allocationOld: isRestoreModal.amount,
-    //     investmentAmount,
-    //     bookingExpire,
-    //     bookingRestore,
-    //     bookingCreateNew,
-    // };
-    // const errorModalProps = {
-    //     code: isErrorModal.code,
-    // };
-    // const upgradesModalProps = {
-    //     phaseCurrent,
-    //     offer: offer,
-    //     refetchUserAllocation,
-    //     userAllocationState,
-    //     upgradesUse,
-    //     premiumData,
-    //     refetchPremiumData,
-    //     allocationUserLeft: allocationData.allocationUser_left,
-    // };
+// const restoreModalProps = {
+//     allocationOld: isRestoreModal.amount,
+//     investmentAmount,
+//     bookingExpire,
+//     bookingRestore,
+//     bookingCreateNew,
+// };
+// const errorModalProps = {
+//     code: isErrorModal.code,
+// };
+// const upgradesModalProps = {
+//     phaseCurrent,
+//     offer: offer,
+//     refetchUserAllocation,
+//     userAllocationState,
+//     upgradesUse,
+//     premiumData,
+//     refetchPremiumData,
+//     allocationUserLeft: allocationData.allocationUser_left,
+// };
 
-    // const investModalProps = {
-    //     investmentAmount,
-    //     offer,
-    //     selectedCurrency,
-    //     bookingExpire,
-    //     afterInvestmentCleanup,
-    // };
-
+// const investModalProps = {
+//     investmentAmount,
+//     offer,
+//     selectedCurrency,
+//     bookingExpire,
+//     afterInvestmentCleanup,
+// };
 
 //             <RestoreHashModal
 //                 restoreModalProps={restoreModalProps}
@@ -207,4 +204,3 @@ AppOfferDetails.getLayout = function (page) {
 //         </div>
 //     );
 // }
-
