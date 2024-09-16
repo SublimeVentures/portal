@@ -13,6 +13,7 @@ import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
 
 import { TENANT } from "@/lib/tenantHelper";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
+import Push from "@/components/Push";
 
 switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
     case TENANT.basedVC: {
@@ -51,6 +52,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                 </WagmiProvider>
             </ClientErrorBoundary>
             <Gtag />
+            <Push />
             <Toaster position="top-right" gutter={15} />
         </>
     );

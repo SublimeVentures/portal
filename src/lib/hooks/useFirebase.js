@@ -71,7 +71,7 @@ export function useFirebase() {
         const fcm = getMessaging(firebase);
         onMessage(fcm, (payload) => {
             toast.custom((t) => <NotificationToast t={t} notification={payload.notification} />, {
-                duration: Infinity,
+                duration: 5000,
             });
         });
         return fcm;
