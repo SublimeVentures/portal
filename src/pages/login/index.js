@@ -1,40 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { dehydrate, useQuery } from "@tanstack/react-query";
-
+import { seoConfig } from "@/lib/seoConfig";
 import { fetchPartners } from "@/fetchers/public.fecher";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import PAGE from "@/routes";
 import { queryClient } from "@/lib/queryCache";
-import { seoConfig } from "@/lib/seoConfig";
 import { verifyID } from "@/lib/authHelpers";
-import ErrorModal from "@/components/SignupFlow/ErrorModal";
-import { LoginErrorsEnum } from "@/constants/enum/login.enum";
+import ErrorProvider from "@/components/SignupFlow/ErrorProvider";
 
 const renderLogin = (componentName, data) => {
-    const TenantComponent = dynamic(() => import(`@/components/Login/${componentName}`), { ssr: true })
-    return <TenantComponent ssrData={data} />
+    const TenantComponent = dynamic(() => import(`@/components/Login/${componentName}`), { ssr: true });
+    return <TenantComponent ssrData={data} />;
 };
 
 export default function Login({ isAuthenticated }) {
-    let [errorModal, setErrorModal] = useState(false);
     const router = useRouter();
     const seo = seoConfig(PAGE.Login);
-    const { components } = useTenantSpecificData()
+    const { components } = useTenantSpecificData();
 
     useEffect(() => {
         if (isAuthenticated) {
             router.replace("/app");
         }
     }, []);
-
-    useEffect(() => {
-        if (router?.query?.error === LoginErrorsEnum.CREDENTIALS_ERROR) {
-            setErrorModal(true);
-        }
-    }, [router.query]);
 
     const { data } = useQuery({
         queryKey: ["partnerList"],
@@ -46,7 +37,7 @@ export default function Login({ isAuthenticated }) {
     });
 
     return (
-        <>
+        <ErrorProvider>
             <NextSeo
                 title={seo.title}
                 description={seo.description}
@@ -56,8 +47,7 @@ export default function Login({ isAuthenticated }) {
             />
 
             {renderLogin(components.login, data)}
-            <ErrorModal model={errorModal} setter={() => setErrorModal(false)} />
-        </>
+        </ErrorProvider>
     );
 }
 

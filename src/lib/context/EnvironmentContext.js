@@ -240,6 +240,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         cdn: environmentProps.cdn,
         account: accountProp,
         activeDiamond: environmentProps.activeDiamond,
+        diamonds: environmentProps.diamonds,
         activeOtcContract: environmentProps.activeOtcContract,
         activeInvestContract: environmentProps.activeInvestContract,
         activeCurrencyStaking: environmentProps.activeCurrencyStaking,

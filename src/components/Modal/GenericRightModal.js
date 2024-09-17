@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import { cn } from "@/lib/cn";
 
-export default function GenericRightModal({ isOpen, closeModal, title, content, persistent, noClose }) {
+export default function GenericRightModal({ isOpen, closeModal, title, content, persistent, noClose, withTopMargin }) {
     const [isShake, setShake] = useState(false);
 
     const triggerShake = () => {
@@ -12,7 +12,7 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
         setTimeout(() => setShake(false), 1000);
     };
 
-    const closeModalOnBg = () => persistent ? triggerShake() : closeModal();
+    const closeModalOnBg = () => (persistent ? triggerShake() : closeModal());
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -29,6 +29,8 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [isOpen]);
+
+    const top = withTopMargin ? `top-[80px]` : `top-[20px]`;
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -58,13 +60,19 @@ export default function GenericRightModal({ isOpen, closeModal, title, content, 
                         >
                             <div className="bg-app-bg">
                                 <Dialog.Panel
-                                    className={cn("dialogWrap flex flex-col min-h-screen glareBg w-full sm:max-w-md transform overflow-hidden text-white p-10 bg-app-bg text-start transition-all", { 'shake': isShake })}
+                                    className={cn(
+                                        `dialogWrap flex flex-col min-h-screen glareBg w-full sm:max-w-md transform overflow-hidden text-white p-10 bg-app-bg text-start transition-all`,
+                                        {
+                                            shake: isShake,
+                                            "pt-[calc(2.5rem+60px)]": withTopMargin,
+                                        },
+                                    )}
                                 >
                                     <Dialog.Title as="h3" className="text-3xl font-bold pb-5 pt-5">
                                         <span>{title}</span>
                                         {!noClose && (
                                             <div
-                                                className={`absolute top-[20px] right-[0px] cursor-pointer`}
+                                                className={cn("absolute right-[0px] cursor-pointer", top)}
                                                 onClick={closeModal}
                                             >
                                                 <CancelIcon className={ButtonIconSize.default} />

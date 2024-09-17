@@ -1,6 +1,24 @@
 ## Getting Started
 
-First, run the development server:
+To get the application up and running, follow these steps:
+
+#### Install dependencies
+
+This will install all the necessary packages required for the project.
+
+```bash
+yarn install
+```
+
+### Run post-install scripts
+
+This will execute any scripts that need to run after the installation of packages. It ensures the project is properly set up and configured.
+
+```bash
+yarn run prepare
+```
+
+### Run development server
 
 ```bash
 npm run dev
@@ -10,11 +28,10 @@ yarn dev
 pnpm dev
 ```
 
-#
-
-
 ## Envs
+
 Example env file
+
 ```DATABASE=postgresql://username:password@host:port/db
 IS_LOCAL_DB=true
 

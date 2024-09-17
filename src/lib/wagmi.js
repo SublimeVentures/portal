@@ -1,9 +1,10 @@
 import { http, createConfig, fallback } from "wagmi";
 import { mainnet, polygon, bsc, avalanche, sepolia } from "wagmi/chains";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
-import { RPCs, WALLET_CONNECT_ID } from "@/lib/blockchain";
+import { RPCs } from "@/lib/blockchain";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
-const isProductionEnv = process.env.ENV === "production";
+const { walletConnectProjectId } = getTenantConfig();
 
 const retryOptions = {
     retryCount: 7,
@@ -17,6 +18,8 @@ const fallbackOptions = {
     retryDelay: 150,
 };
 
+const isProductionEnv = process.env.ENV === "production";
+
 export const config = createConfig({
     chains: [...(isProductionEnv ? [mainnet] : [sepolia]), polygon, bsc],
     batch: { multicall: true },
@@ -25,7 +28,7 @@ export const config = createConfig({
     pollingInterval: 4_000,
     connectors: [
         walletConnect({
-            projectId: WALLET_CONNECT_ID,
+            projectId: walletConnectProjectId,
         }),
         coinbaseWallet({
             appName: "Venture Capital",
