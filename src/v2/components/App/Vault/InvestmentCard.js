@@ -1,4 +1,3 @@
-import { Avatar } from "@/v2/components/ui/avatar";
 import { Skeleton, SkeletonCircle } from "@/v2/components/ui/skeleton";
 import { Card, CardTitle } from "@/v2/components/ui/card";
 import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
@@ -8,13 +7,15 @@ import { cn } from "@/lib/cn";
 import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
 import { Button } from "@/v2/components/ui/button";
 import Modal from "@/v2/components/App/Vault/ClaimModal";
+import useImage from "@/v2/hooks/useImage";
+import { Avatar } from "@/v2/components/ui/avatar";
 
 // aspect-[5/8]
 const InvestmentCardWrapper = ({ children, className }) => {
     return (
         <Card
             className={cn(
-                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button",
+                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button lg:max-w-200 3xl:max-w-[300px]",
                 className,
             )}
         >
@@ -54,7 +55,8 @@ export const ErrorInvestmentCard = ({ actionFn }) => {
 
 const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
     const data = useInvestmentsData(details);
-    const { title, coin, logo, participatedDate, canClaim, isClaimSoon } = data;
+    const { title, coin, slug, participatedDate, canClaim, isClaimSoon } = data;
+    const { getResearchIconSrc } = useImage();
 
     if (isLoading) {
         return <SkeletonInvestmentCard />;
@@ -75,7 +77,7 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
                 <Avatar
                     className="size-10"
                     session={{
-                        img: logo,
+                        img: getResearchIconSrc(slug),
                     }}
                 />
             </div>

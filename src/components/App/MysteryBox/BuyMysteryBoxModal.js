@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/router";
 import GenericModal from "@/components/Modal/GenericModal";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { tenantIndex } from "@/lib/utils";
@@ -12,9 +12,11 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import BlockchainSteps from "@/components/BlockchainSteps";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
 const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
+
+const { externalLinks } = getTenantConfig();
 
 export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     const { order, setOrder } = buyModalProps;
@@ -119,7 +121,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                     </div>
                 </div>
                 <div className="mt-auto">
-                    What's next? <Linker url={ExternalLinks.LOOTBOX} />
+                    What's next? <Linker url={externalLinks.LOOTBOX} />
                 </div>
             </div>
         );

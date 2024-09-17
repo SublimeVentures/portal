@@ -19,4 +19,4 @@ export default function StakeActions({ session, staking }) {
             </Button>
         </div>
     );
-};
+}

@@ -6,9 +6,9 @@ import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { authTokenName } from "@/lib/authHelpers";
 import { handleError } from "@/v2/lib/error";
 
-export const fetchOfferList = async (query) => {
+export const fetchOfferList = async (query, config = {}) => {
     try {
-        const { data } = await axiosPrivate.get(API.offerList, { params: { type: "vc", ...query } });
+        const { data } = await axiosPrivate.get(API.offerList, { params: { type: "vc", ...query }, ...config });
 
         return data;
     } catch (error) {
@@ -16,9 +16,9 @@ export const fetchOfferList = async (query) => {
     }
 };
 
-export const fetchOfferStats = async () => {
+export const fetchOfferStats = async (query, config) => {
     try {
-        const { data } = await axiosPrivate.get(API.offerStats);
+        const { data } = await axiosPrivate.get(API.offerStats, { params: query, ...config });
         return data;
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferStats", enableSentry: true });
@@ -84,6 +84,7 @@ export const fetchOfferAllocation = async (id) => {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferAllocation", enableSentry: true });
     }
 };
+
 export const fetchOfferAllocationSsr = async (id, token) => {
     if (!id) return {};
     try {
@@ -105,5 +106,14 @@ export const useUpgrade = async (offerId, upgradeId) => {
         return data;
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "useUpgrade", enableSentry: true });
+    }
+};
+
+export const fetchOfferParticipants = async (offerId, config) => {
+    try {
+        const { data } = await axiosPrivate.get(`${API.offerList}/${offerId}/participants`, config);
+        return data;
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferParticipants", enableSentry: true });
     }
 };

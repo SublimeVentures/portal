@@ -1,7 +1,9 @@
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
 import { BookingErrorsENUM } from "@/lib/enum/invest";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 const renderError = (code) => {
     switch (code) {
@@ -30,7 +32,7 @@ const renderError = (code) => {
                     <br />
                     Please wait for button to enable back again!
                     <div className="mt-5">
-                        <Linker url={ExternalLinks.BOOKING_SYSTEM} />
+                        <Linker url={externalLinks.BOOKING_SYSTEM} />
                     </div>
                 </>
             );
@@ -44,7 +46,7 @@ const renderError = (code) => {
                     <br />
                     Please wait for the Discord update from the staff.
                     <div className="mt-5">
-                        <Linker url={ExternalLinks.OFFER_PHASES} />
+                        <Linker url={externalLinks.OFFER_PHASES} />
                     </div>
                 </>
             );
@@ -57,7 +59,7 @@ const renderError = (code) => {
                     <br />
                     Don't cheat the timer!
                     <div className="mt-5">
-                        <Linker url={ExternalLinks.OFFER_PHASES} />
+                        <Linker url={externalLinks.OFFER_PHASES} />
                     </div>
                 </>
             );

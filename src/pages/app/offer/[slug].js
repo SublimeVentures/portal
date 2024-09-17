@@ -1,203 +1,31 @@
-import { dehydrate, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
-import { NextSeo } from "next-seo";
-import { useEffect, useState } from "react";
-import LayoutApp from "@/components/Layout/LayoutApp";
-import {
-    fetchOfferAllocation,
-    fetchOfferAllocationSsr,
-    fetchOfferDetails,
-    fetchOfferDetailsSsr,
-} from "@/fetchers/offer.fetcher";
-import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
-import Loader from "@/components/App/Loader";
-import Empty from "@/components/App/Empty";
-import { phases } from "@/lib/phases";
-import routes from "@/routes";
-import PAGE from "@/routes";
-import { getCopy } from "@/lib/seoConfig";
-import { PremiumItemsENUM } from "@/lib/enum/store";
-import { queryClient } from "@/lib/queryCache";
+import { dehydrate } from "@tanstack/react-query";
+import { initStore } from "@/v2/modules/offer/store";
+import { AppLayout, Metadata } from "@/v2/components/Layout";
 import { processServerSideData } from "@/lib/serverSideHelpers";
-import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
-import { OfferDetailsParams } from "@/components/App/Offer/OfferDetailsParams";
-import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
-import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
-import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
-import { InvestProvider } from "@/components/App/Offer/InvestContext";
-import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
+import { queryClient } from "@/lib/queryCache";
+import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.fetcher";
+import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
+import { routes } from "@/v2/routes";
+import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
 
-export const AppOfferDetails = ({ session }) => {
-    const router = useRouter();
-    const { slug } = router.query;
-    const { userId, tenantId } = session;
+export default function AppOfferDetails({ session, state }) {
+    initStore({ session, ...state });
 
-    let [phaseIsClosed, setPhaseIsClosed] = useState(false);
-    let [phaseCurrent, setPhaseCurrent] = useState(false);
-    let [phaseNext, setPhaseNext] = useState(false);
-
-    const {
-        isSuccess: offerDetailsState,
-        data: offerData,
-        error: errorOfferDetails,
-        refetch: refetchOfferDetails,
-    } = useQuery({
-        queryKey: ["offerDetails", slug],
-        queryFn: () => fetchOfferDetails(slug),
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        cacheTime: 30 * 60 * 1000,
-        staleTime: 15 * 60 * 1000,
-    });
-
-    const offerId = offerData?.id;
-    const {
-        isSuccess: offerAllocationState,
-        data: allocation,
-        error: errorOfferAllocation,
-        refetch: refetchOfferAllocation,
-    } = useQuery({
-        queryKey: ["offerAllocation", offerId],
-        queryFn: () => fetchOfferAllocation(offerId),
-        refetchOnMount: false,
-        refetchOnWindowFocus: true,
-        refetchInterval: 15000,
-        // refetchInterval: phaseIsClosed ? false : 15000,
-    });
-
-    const {
-        isSuccess: userAllocationState,
-        data: userAllocation,
-        refetch: refetchUserAllocation,
-        error: errorUserAllocation,
-    } = useQuery({
-        queryKey: ["userAllocation", offerId, userId],
-        queryFn: () => fetchUserInvestment(offerData?.id),
-        refetchOnMount: false,
-        refetchOnWindowFocus: !phaseIsClosed,
-        enabled: !!offerData?.id,
-    });
-
-    const { data: premiumData, refetch: refetchPremiumData } = useQuery({
-        queryKey: ["premiumOwned", userId, tenantId],
-        queryFn: fetchStoreItemsOwned,
-        refetchOnMount: true,
-        refetchOnWindowFocus: false,
-        cacheTime: 5 * 60 * 1000,
-        staleTime: 5 * 1000,
-    });
-
-    useEffect(() => {
-        try {
-            if (!!errorOfferDetails) {
-                refetchOfferDetails().then((el) => {
-                    if (!!errorOfferDetails) {
-                        throw Error("Offer details fetch fail");
-                    }
-                });
-            }
-            if (!!errorOfferAllocation) {
-                refetchOfferAllocation().then((el) => {
-                    if (!!errorOfferAllocation) {
-                        throw Error("Offer allocations fetch fail");
-                    }
-                });
-            }
-            if (!!errorUserAllocation) {
-                refetchUserAllocation().then((el) => {
-                    if (!!errorUserAllocation) {
-                        throw Error("User allocations fetch fail");
-                    }
-                });
-            }
-        } catch (error) {
-            router.push(PAGE.Opportunities);
-        }
-    }, [errorOfferDetails, errorOfferAllocation, errorUserAllocation]);
-
-    const feedPhases = () => {
-        if (!offerData?.id) return;
-        const { isClosed, phaseCurrent, phaseNext } = phases({
-            ...offerData,
-            ...allocation,
-        });
-        setPhaseIsClosed(isClosed);
-        setPhaseCurrent(phaseCurrent);
-        setPhaseNext(phaseNext);
-    };
-
-    const paramsBar = {
-        offer: offerData,
-        phaseCurrent,
-        phaseNext,
-        phaseIsClosed,
-        refreshInvestmentPhase: feedPhases,
-    };
-
-    const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
-    const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
-
-    const paramsInvest = {
-        offer: offerData,
-        refetchUserAllocation,
-        userAllocationState,
-        refetchOfferAllocation,
-        userInvested: userAllocation,
-        allocation,
-        session,
-        upgradesUse: { guaranteedUsed, increasedUsed },
-        phaseCurrent,
-        premiumData,
-        refetchPremiumData,
-    };
-
-    const paramsParams = {
-        offer: offerData,
-        allocation,
-        userInvested: userAllocation?.invested,
-        phaseIsClosed,
-        refetchUserAllocation,
-    };
-
-    const renderPage = () => {
-        if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader />;
-        if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty />;
-
-        return (
-            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                <OfferDetailsTopBar paramsBar={paramsBar} />
-                <div className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
-                    {!phaseIsClosed ? (
-                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
-                    ) : (
-                        <OfferDetailsInvestClosed />
-                    )}
-                </div>
-                <div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
-                    <OfferDetailsParams paramsParams={paramsParams} />
-                </div>
-                <div className="flex flex-col col-span-12">
-                    <OfferDetailsDetails offer={offerData} />
-                </div>
-            </div>
-        );
-    };
-
-    useEffect(() => {
-        if (!offerData?.ok) {
-            router.push(routes.Opportunities);
-        }
-        feedPhases();
-    }, [offerData, allocation?.isSettled, allocation?.isPaused]);
-
-    const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${getCopy("NAME")}`;
     return (
         <>
-            <NextSeo title={pageTitle} />
-            <InvestProvider initialData={offerId}>{renderPage()}</InvestProvider>
+            <Metadata title="Opportunity" />
+            <div className="text-white flex flex-col md:grid md:grid-cols-12 gap-4 grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 lg:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4 lg:mb-10">
+                <Overview className="col-span-12" />
+                <Phases className="col-span-12" />
+                <Invest className="col-span-7" session={session} />
+                <Fundraise className="col-span-5" />
+                <Vesting className="col-span-4" />
+                <History className="col-span-8" />
+                <Report className="col-span-12" />
+            </div>
         </>
     );
-};
+}
 
 export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
     const customLogicCallback = async (account, token) => {
@@ -210,33 +38,38 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 cacheTime: 30 * 60 * 1000,
                 staleTime: 15 * 60 * 1000,
             });
-            const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
 
-            const offerId = offerDetails.id;
+            const offer = queryClient.getQueryData(["offerDetails", slug]);
+            const offerId = offer.id;
 
-            if (!offerId) {
-                throw Error("Offer not specified");
-            }
+            if (!offerId) throw Error("Offer not specified");
 
             await queryClient.prefetchQuery({
                 queryKey: ["offerAllocation", offerId],
                 queryFn: () => fetchOfferAllocationSsr(offerId, token),
             });
+
             const userId = account.userId;
             await queryClient.prefetchQuery({
                 queryKey: ["userAllocation", offerId, userId],
                 queryFn: () => fetchUserInvestmentSsr(offerId, token),
             });
 
-            const offerAllocation = queryClient.getQueryData(["offerAllocation", offerId]);
+            const allocation = queryClient.getQueryData(["offerAllocation", offerId]);
             const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
 
-            if (!(offerAllocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
+            if (!(allocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
                 throw Error("Data not fetched");
             }
+
             return {
                 additionalProps: {
                     dehydratedState: dehydrate(queryClient),
+                    state: {
+                        offer,
+                        allocation,
+                        userAllocation,
+                    },
                 },
             };
         } catch (error) {
@@ -253,7 +86,121 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 };
 
 AppOfferDetails.getLayout = function (page) {
-    return <LayoutApp>{page}</LayoutApp>;
+    return <AppLayout title="Opportunities">{page}</AppLayout>;
 };
 
-export default AppOfferDetails;
+// useEffect(() => {
+//     const updateAllocationData = () => {
+//         if (!offer) return;
+
+//         setAllocationData({ ...allocations });
+
+//         const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocations, investmentAmount);
+
+//         // if (!allocationIsValid) {
+//         //     setError("investmentAmount", { type: "manual", message: message ?? "Invalid allocation amount" });
+//         // }
+
+//         // @TODO: Move to button component?
+//         const { isDisabled, text } = buttonInvestState(
+//             allocation || {},
+//             phaseCurrent,
+//             investmentAmount,
+//             allocationIsValid,
+//             allocations,
+//             isStakeLock,
+//             userAllocation?.invested
+//         );
+
+//         setInvestButtonDisabled(isDisabled);
+//         setInvestButtonText(text);
+//     };
+
+//     updateAllocationData();
+// }, [
+//     allocation?.alloFilled,
+//     allocation?.alloRes,
+//     upgradesUse?.increasedUsed?.amount,
+//     upgradesUse?.guaranteedUsed?.amount,
+//     upgradesUse?.guaranteedUsed?.alloUsed,
+//     userAllocation?.invested?.total,
+//     investmentAmount,
+//     phaseCurrent?.phase,
+// ])
+
+// @TODO - Store
+
+// paramsInvestPhase
+// - offer - query
+// - phaseCurrent - phase hook
+// - session - env hook?
+// - refetchOfferAllocation - query / invalidate func
+// - refetchUserAllocation - query / invalidate func
+// - allocation - query
+// - premiumData - query
+// - refetchPremiumData - query / invalidate func
+
+// - userInvested - investment context?
+// - userAllocationState - ?
+
+// calculateModalProps
+// - offer - query
+
+// - investmentAmount - ?
+// - allocationData - ? zustand ?
+
+// const restoreModalProps = {
+//     allocationOld: isRestoreModal.amount,
+//     investmentAmount,
+//     bookingExpire,
+//     bookingRestore,
+//     bookingCreateNew,
+// };
+// const errorModalProps = {
+//     code: isErrorModal.code,
+// };
+// const upgradesModalProps = {
+//     phaseCurrent,
+//     offer: offer,
+//     refetchUserAllocation,
+//     userAllocationState,
+//     upgradesUse,
+//     premiumData,
+//     refetchPremiumData,
+//     allocationUserLeft: allocationData.allocationUser_left,
+// };
+
+// const investModalProps = {
+//     investmentAmount,
+//     offer,
+//     selectedCurrency,
+//     bookingExpire,
+//     afterInvestmentCleanup,
+// };
+
+//             <RestoreHashModal
+//                 restoreModalProps={restoreModalProps}
+//                 model={isRestoreModal.open}
+//                 setter={() => {
+//                     setRestoreModal({ open: false, amount: 0 });
+//                 }}
+//             />
+//             <ErrorModal
+//                 errorModalProps={errorModalProps}
+//                 model={isErrorModal.open}
+//                 setter={() => {
+//                     setErrorModal({ open: false, code: null });
+//                 }}
+//             />
+//             {network?.isSupported && selectedCurrency && (
+//                 <InvestModal
+//                     investModalProps={investModalProps}
+//                     model={isInvestModal}
+//                     setter={() => {
+//                         setInvestModal(false);
+//                     }}
+//                 />
+//             )}
+//         </div>
+//     );
+// }

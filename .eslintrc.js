@@ -18,15 +18,9 @@ module.exports = {
         "plugin:import/warnings",
         "plugin:prettier/recommended",
         "next",
-        "prettier", 
-    ],
-    plugins: [
-        "react",
-        "react-hooks",
-        "jsx-a11y",
-        "import",
         "prettier",
     ],
+    plugins: ["react", "jsx-a11y", "import", "prettier"],
     rules: {
         "@next/next/no-img-element": "warn",
         "react/react-in-jsx-scope": "off",

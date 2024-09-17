@@ -10,7 +10,7 @@ import {
 
 export default function Referals() {
     return (
-        <div className="grid grid-cols-1 gap-5 box-border 3xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 box-border 3xl:grid-cols-3 3xl:h-full">
             <div className="bg-gray-800 rounded-lg col-span-1 md:row-span-12">
                 <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full bg-settings-gradient pb-23">
                     <div>

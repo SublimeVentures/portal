@@ -193,6 +193,7 @@ export const getMethod = (type, token, params) => {
             const isValid =
                 validAddress(token?.contract) &&
                 validNumber(params?.offerId) &&
+                validNumber(params?.partnerId) &&
                 validAddress(params?.spender) &&
                 validHash(params?.booking?.code) &&
                 validHash(params?.booking?.signature) &&
@@ -205,6 +206,7 @@ export const getMethod = (type, token, params) => {
                           name: "invest",
                           inputs: [
                               params.booking.code,
+                              params.partnerId,
                               params.offerId,
                               params.amount,
                               params.booking.expires,

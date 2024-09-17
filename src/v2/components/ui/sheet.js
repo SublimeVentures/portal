@@ -57,7 +57,7 @@ const SheetHeader = ({ className, ...props }) => (
             <div className="bg-primary-950/[.6] sm:rounded-l-4xl">
                 <div
                     className={cn(
-                        "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center text-center",
+                        "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center justify-center text-center",
                         className,
                     )}
                     {...props}
@@ -75,7 +75,9 @@ const SheetFooter = ({ className, ...props }) => (
 
 SheetFooter.displayName = "SheetFooter";
 
-const SheetBody = ({ className, ...props }) => <div className={cn("relative grow w-full", className)} {...props} />;
+const SheetBody = ({ className, ...props }) => (
+    <div className={cn("relative grow w-full overflow-y-auto", className)} {...props} />
+);
 
 SheetBody.displayName = "SheetBody";
 

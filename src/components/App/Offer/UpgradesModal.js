@@ -2,12 +2,15 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import GenericModal from "@/components/Modal/GenericModal";
 import Linker from "@/components/link";
-import PAGE, { ExternalLinks } from "@/routes";
+import PAGE from "@/routes";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import UpgradesModalItem from "@/components/App/Offer/UpgradesModalItem";
 import { PremiumItemsENUM, PremiumItemsParamENUM } from "@/lib/enum/store";
 import { useUpgrade } from "@/fetchers/offer.fetcher";
 import { PhaseId } from "@/lib/phases";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { externalLinks } = getTenantConfig();
 
 const description = (type, maximumGuaranteedBooking, length) => {
     switch (type) {
@@ -138,7 +141,7 @@ export default function UpgradesModal({ model, setter, upgradesModalProps }) {
                             />
                         </div>
                         <div className="mx-auto mt-auto">
-                            <Linker url={ExternalLinks.UPGRADES} />
+                            <Linker url={externalLinks.UPGRADES} />
                         </div>
                     </div>
                 )}
@@ -189,7 +192,7 @@ export default function UpgradesModal({ model, setter, upgradesModalProps }) {
                     )}
                 </div>
                 <div className="mx-auto">
-                    <Linker url={ExternalLinks.UPGRADES} />
+                    <Linker url={externalLinks.UPGRADES} />
                 </div>
             </div>
         );

@@ -9,8 +9,10 @@ import lottieSuccess from "@/assets/lottie/success.json";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
-import { getCopy } from "@/lib/seoConfig";
 import GenericModal from "@/components/Modal/GenericModal";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { NAME } = getTenantConfig().seo;
 
 export const blockchainPrerequisite = async (params) => {
     const { claimId, account } = params;
@@ -132,7 +134,7 @@ export default function ClaimPayoutModal({ model, setter, props }) {
             <div className="flex flex-col flex-1">
                 <div className={"flex flex-1 flex-col justify-center items-center"}>
                     <div className={""}>
-                        Thank you for investing with <span className={"font-bold text-gold"}>{getCopy("NAME")}</span>.
+                        Thank you for investing with <span className={"font-bold text-gold"}>{NAME}</span>.
                     </div>
                     <Lottie
                         animationData={lottieSuccess}

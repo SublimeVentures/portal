@@ -12,8 +12,8 @@ const buttonVariants = cva(
                 accent: "bg-accent hover:enabled:bg-accent-600 group-hover/button:bg-accent-600",
                 gradient: "bg-gradient-to-r from-primary to-primary-600 hover:enabled:opacity-80",
                 outline:
-                    "bg-transparent border border-foreground hover:enabled:bg-foreground/[0.2] group-hover/button:bg-foreground/[0.2]",
-                secondary: "bg-primary/10 hover:enabled:bg-primary/30",
+                    "bg-transparent border border-foreground hover:bg-foreground/[0.2] group-hover/button:bg-foreground/[0.2]",
+                secondary: "bg-primary/10 hover:bg-primary/30",
                 tertiary:
                     "bg-transparent border border-primary-600 hover:enabled:border-primary aria-expanded:border-primary",
                 link: "p-0 text-accent hover:enabled:underline hover:enabled:underline-offset-4",

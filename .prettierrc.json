@@ -1,0 +1,11 @@
+{
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "singleQuote": false,
+  "jsxSingleQuote": false,
+  "bracketSameLine": false,
+  "htmlWhitespaceSensitivity": "ignore",
+  "semi": true,
+  "quoteProps": "as-needed",
+  "bracketSpacing": true
+}

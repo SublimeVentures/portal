@@ -1,31 +1,37 @@
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
-import { ICONS } from "@/lib/icons";
 
 export const stepPrerequisite = (state, data) => {
     console.log("BIX :: PREREQUISITE :: step state", state, data);
-
-    const iconPadding = "p-[7px]";
     let result = {};
 
     if (!data.prerequisite_isReady) {
-        result = handlePending({ content: data.params.prerequisiteTextWaiting || "Validate transaction" });
+        result = handlePending({
+            content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
+            text: "Please wait while we validate your transaction details.",
+        });
     } else {
         if (state.isFinished) {
-            result = handleSuccess({ content: data.params.prerequisiteTextSuccess || "Validation successful" });
+            result = handleSuccess({
+                content: data.params.prerequisiteTextSuccess ?? "Validation successful",
+                text: "Your transaction has been successfully validated and is ready to proceed.",
+            });
         } else if (data.isLoading) {
-            result = handleProcessing({ content: data.params.prerequisiteTextProcessing || "Validation processing" });
+            result = handleProcessing({
+                content: data.params.prerequisiteTextProcessing ?? "Processing validation",
+                text: "We are currently processing your transaction validation. Please wait.",
+            });
         } else if (data.isError) {
             result = handleError({
-                content: data.params.prerequisiteTextError || "Validation failed",
-                text: data?.error,
+                content: data.params.prerequisiteTextError ?? "Validation failed",
+                text: data?.error ?? "An error occurred during the validation process. Please try again.",
             });
         } else {
-            result = handlePending({ content: data.params.prerequisiteTextWaiting || "Validate transaction" });
+            result = handlePending({
+                content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
+                text: "Please wait while we validate your transaction details.",
+            });
         }
     }
-
-    result.icon = ICONS.TICKET;
-    result.iconPadding = iconPadding;
 
     console.log("BIX :: PREREQUISITE :: step state result", result, state, data);
 

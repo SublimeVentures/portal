@@ -142,13 +142,13 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                     <Image
                                         src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
                                         className="inline mx-2 rounded-full"
-                                        alt="Cover image of ${name} token"
+                                        alt={`Cover image of token`}
                                         width={35}
                                         height={35}
                                     />
                                     <dl className="flex flex-col gap-2">
-                                        <DefinitionItem DefinitionItem term="You Recieve">
-                                            ?
+                                        <DefinitionItem term="You Recieve">
+                                            {offerDetails.amount / currentMarket.ppu}
                                         </DefinitionItem>
                                     </dl>
                                 </div>

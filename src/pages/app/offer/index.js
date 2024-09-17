@@ -1,5 +1,5 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
-
+import { authTokenName } from "@/lib/authHelpers";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { queryClient } from "@/lib/queryCache";
 import { cacheOptions } from "@/v2/helpers/query";
@@ -11,11 +11,13 @@ import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
 import routes from "@/routes";
 
+import { offersKeys } from "@/v2/constants";
+
 export default function AppOpportunities({ session }) {
     const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = session;
 
     const {
-        data: { pages = [] } = [],
+        data,
         isLoading: isOffersLoading,
         isError: isOffersError,
         isFetchingNextPage,
@@ -23,12 +25,14 @@ export default function AppOpportunities({ session }) {
         fetchNextPage,
     } = useOffersInfiniteQuery();
 
+    const { pages = [], count } = data || {};
+
     const {
         data: stats = {},
         isLoading: isStatsLoading,
         isError: isStatsError,
     } = useQuery({
-        queryKey: ["offerStats", TENANT_ID, PARTNER_ID],
+        queryKey: offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }),
         queryFn: fetchOfferStats,
         ...cacheOptions,
     });
@@ -55,16 +59,28 @@ export default function AppOpportunities({ session }) {
         <Opportunities
             offers={pages}
             stats={stats}
+            count={count}
             infiniteLoaderOpts={{ isFetchingNextPage, hasNextPage, fetchNextPage }}
         />
     );
 }
 
 export const getServerSideProps = async ({ req, res }) => {
-    const customLogicCallback = async (account) => {
+    const customLogicCallback = async (account, token) => {
         const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = account;
-        await queryClient.prefetchQuery(["offerList", TENANT_ID, PARTNER_ID], fetchOfferList);
-        await queryClient.prefetchQuery(["offerStats", TENANT_ID, PARTNER_ID], fetchOfferStats);
+        const config = {
+            headers: {
+                Cookie: `${authTokenName}=${token}`,
+            },
+        };
+        await queryClient.prefetchQuery({
+            queryKey: offersKeys.queryOffersVc({ TENANT_ID, PARTNER_ID }),
+            queryFn: () => fetchOfferList(null, config),
+        });
+        await queryClient.prefetchQuery({
+            queryKey: offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }),
+            queryFn: () => fetchOfferStats(null, config),
+        });
 
         return {
             additionalProps: {

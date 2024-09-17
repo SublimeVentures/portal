@@ -14,7 +14,7 @@ import {
 } from "@/v2/components/App/Vault/StatisticsCard";
 import Title from "@/v2/modules/opportunities/Title";
 
-export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
+export default function Opportunities({ offers, stats, infiniteLoaderOpts, count }) {
     const { partners = 0, vc: investments = 0, funded: rawFunded = 0 } = stats;
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
 
@@ -29,20 +29,20 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts }) {
             <Metadata title="Opportunities" />
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center lg:gap-4">
                 <div className="mb-4 3xl:mb-0">
-                    <Title subtitle="We bring new industry giants to our community" count={offers.length + 1}>
+                    <Title subtitle="We bring new industry giants to our community" count={count}>
                         Funded Projects
                     </Title>
                 </div>
-                <div className="flex flex-wrap gap-4 grow md:flex md:grow-0">
-                    <InvestedStatisticCard value={investments} className="sm:flex-1 lg:flex-none" />
+                <div className="flex flex-wrap 2xl:flex-nowrap gap-4">
+                    <InvestedStatisticCard value={investments} className="sm:flex-1 grow" />
                     {tenantIndex === TENANT.basedVC ? (
-                        <PartnersStatisticCard value={partners} className="sm:flex-1 lg:flex-none" />
+                        <PartnersStatisticCard value={partners} className="sm:flex-1 grow" />
                     ) : null}
-                    <RaisedStatisticCard value={shortCurrencyFormatterWithSuffix(rawFunded)} className="flex-1" />
+                    <RaisedStatisticCard value={shortCurrencyFormatterWithSuffix(rawFunded)} className="flex-1 grow" />
                 </div>
             </div>
             <div className="grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 sm:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4">
-                <ul className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-2 gap-4 lg:gap-y-6 lg:gap-x-8 2xl:grid-cols-cards">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-y-6 lg:gap-x-8 2xl:grid-cols-cards">
                     {offers.map((offer, idx) => {
                         if (idx + 1 === offers.length && hasNextPage) {
                             return (

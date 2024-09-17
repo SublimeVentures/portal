@@ -13,6 +13,8 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
     const [success, setSuccess] = useState(false);
     const existingWallet = wallets.find((el) => el.wallet === account?.address) && !!account?.address;
 
+    const walletToRemove = addProps?.wallets?.find((el) => el.isDelegate);
+
     const { error: signMessageError, signMessageAsync: signMessageFn } = useSignMessage();
 
     const closeModal = () => {
@@ -61,21 +63,17 @@ export default function WalletRemoveModal({ model, setter, addProps }) {
     const contentStake = () => {
         return (
             <div className="min-w-[300px]">
-                <div>
-                    Switch to wallet you want to remove, and sign message.
-                    <br />
-                    <span className="text-app-error">You need to have at least one wallet assigned!</span>
-                </div>
+                <div>You can unlink your delegated wallet and replace it with a new one.</div>
                 <div className="py-5">
                     <div className="h-[60px]">
-                        {existingWallet && (
-                            <div>
-                                <div className="glowNormal font-bold pb-2 w-full text-center">Wallet to be removed</div>
-                                <div className="text-xs p-2 bg-app-accent2 text-center bordered-container">
-                                    {account?.address}
-                                </div>
+                        <div>
+                            <div className="glowNormal font-bold pb-2 w-full text-center text-app-error">
+                                Wallet to be removed
                             </div>
-                        )}
+                            <div className="text-xs p-2 bg-app-accent2 text-center bordered-container">
+                                {walletToRemove?.wallet}
+                            </div>
+                        </div>
                         <div className="pt-2 w-full text-center text-app-error">{error}</div>
                     </div>
                 </div>

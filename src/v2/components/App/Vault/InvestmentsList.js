@@ -10,7 +10,7 @@ export default function InvestmentsList({ investments = [], isLoading = false })
     return (
         <ul className="h-full flex flex-col gap-4 md:gap-8">
             {investments.map((item) => (
-                <li key={item.slug}>
+                <li key={item.id}>
                     {isRowView ? (
                         <InvestmentRow details={item} isLoading={isLoading} />
                     ) : (

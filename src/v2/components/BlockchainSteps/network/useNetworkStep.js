@@ -4,9 +4,7 @@ import { STEPS } from "../enums";
 import { networkAction } from "./reducer";
 import useGetNetwork from "@/lib/hooks/useGetNetwork";
 
-export default function useNetworkStep(isActive, state, data, dispatch) {
-    if (!isActive) return {};
-
+export default function useNetworkStep(state, data, dispatch) {
     const { steps, params } = data;
 
     const network_isReady = steps.network && !state.network.lock;

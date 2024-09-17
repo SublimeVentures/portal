@@ -1,54 +1,44 @@
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { PartnershipCard } from "@/v2/components/App/Vault";
 import { cn } from "@/lib/cn";
-import { fetchNews } from "@/v2/fetchers/news.fetcher";
 import { Card } from "@/v2/components/ui/card";
-import { fetchOfferList } from "@/fetchers/offer.fetcher";
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { routes } from "@/v2/routes";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import Title from "@/v2/modules/vault/components/Dashboard/Title";
+import useImage from "@/v2/hooks/useImage";
+import useNewsQuery from "@/v2/hooks/useNewsQuery";
+import useOffersQuery from "@/v2/hooks/useOffersQuery";
 
-const useNewsQuery = () =>
-    useQuery({
-        queryKey: ["news"],
-        queryFn: fetchNews,
-    });
-
-const useOffersQuery = (query, options = {}) =>
-    useQuery({
-        queryKey: ["offerList", query],
-        queryFn: () => fetchOfferList(query),
-        ...options,
-    });
+export const OFFERS_QUERY = {
+    limit: 1,
+};
 
 const Announcements = ({ className }) => {
     const { data = {}, isLoading } = useNewsQuery();
-    const { data: { offers = [] } = {} } = useOffersQuery({ limit: 1 }, { disabled: !data });
-    const { cdn } = useEnvironmentContext();
+    const { data: offers = {} } = useOffersQuery(OFFERS_QUERY, { disabled: !data });
+    const { getResearchIconSrc, getResearchBgSrc } = useImage();
     if (!data) {
         return (
             <div className={cn("flex flex-col", className)}>
                 <Title className="mb-5 md:mb-2 md:hidden 3xl:flex">Offer</Title>
-                {offers.map((offer) => (
+                {offers?.rows?.map((offer) => (
                     <Link href={`${routes.Opportunities}/${offer.slug}`} key={offer.slug} className="grow flex">
                         <Card className="grow p-6 group/button">
-                            <div className="bg-white/5 backdrop-blur-2xl rounded h-full relative flex 3xl:block">
+                            <div className="bg-white/5 backdrop-blur-2xl rounded relative flex 3xl:block h-full">
                                 <div className="relative h-24 flex gap-2 3xl:mb-12 3xl:h-2/5 m-2 3xl:m-0">
                                     <Image
-                                        src={`${cdn}/research/${offer.slug}/icon.jpg`}
+                                        src={getResearchIconSrc(offer.slug)}
                                         className="rounded 3xl:absolute 3xl:left-4 3xl:-bottom-12 3xl:shadow-lg"
                                         alt={`Avatar for ${offer.name} offer`}
                                         width={90}
                                         height={90}
                                     />
                                     <Image
-                                        src={`${cdn}/research/${offer.slug}/bg.jpg`}
+                                        src={getResearchBgSrc(offer.slug)}
                                         alt={`Background image for ${offer.name} offer`}
-                                        className="hidden 3xl:block object-cover rounded-t"
+                                        className="hidden 3xl:block object-cover rounded-t aspect-[341/138]"
                                         width={1000}
                                         height={300}
                                     />

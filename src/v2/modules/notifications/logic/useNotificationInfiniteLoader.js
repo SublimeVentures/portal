@@ -8,8 +8,8 @@ import { notificationKeys } from "@/v2/constants";
 export const useNotificationInfiniteQuery = (query, options = {}) =>
     useInfiniteQuery({
         queryKey: notificationKeys.queryNotifications(query),
-        queryFn: ({ pageParam: offset = 6 }) => {
-            return fetchNotificationList({ ...query, offset });
+        queryFn: ({ pageParam: offset }) => {
+            return fetchNotificationList({ ...query, ...(offset ? { offset } : {}) });
         },
         getNextPageParam: ({ limit, offset, count }) => {
             const cursor = limit + offset;
@@ -46,9 +46,13 @@ export default function useNotificationInfiniteLoader() {
 
     const handleInputChange = useCallback(
         (name, value) => {
+            const newQuery = { ...query, ...(value !== null ? { [name]: value } : {}) };
+            if (value === null) {
+                delete newQuery[name];
+            }
             router.push({
                 pathname: router.pathname,
-                query: { ...query, [name]: value },
+                query: newQuery,
             });
         },
         [router, query],

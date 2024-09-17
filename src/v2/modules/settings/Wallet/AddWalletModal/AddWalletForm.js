@@ -100,7 +100,7 @@ export default function AddWalletForm({ wallets, networkList }) {
                                 name="network"
                                 control={control}
                                 render={({ field }) => (
-                                    <FormItem className="my-1 flex flex-col w-full md:mt-2 md:ml-2 md:w-40">
+                                    <FormItem className="my-1 flex flex-col w-full md:mt-2 md:ml-2 md:w-40 md:-mb-0.5">
                                         <FormLabel className="md:sr-only">Network</FormLabel>
                                         <FormControl>
                                             <Select

@@ -5,7 +5,7 @@ import { mapChainIdToNameWithScanner } from "@/../server/services/mappers/blockc
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { getRedirectMessage } from "@/v2/helpers/notifications";
 
-export default function TimelineTransaction({ item }) {    
+export default function TimelineTransaction({ item }) {
     const chainData = mapChainIdToNameWithScanner(item.onchain.chainId);
     const message = getRedirectMessage(item.typeId, item);
 
@@ -13,12 +13,12 @@ export default function TimelineTransaction({ item }) {
 
     return (
         <Link
-            className="flex items-center text-xs text-foreground/[.5] cursor-pointer hover:underline"
+            className="inline-flex items-center text-xs space-x-2 text-foreground/[.5] cursor-pointer transition-colors hover:underline"
             target="_blank"
             href={`${chainData.scannerUrl}/tx/${item.onchain.txID}`}
         >
             <span>{message}</span>
-            <ArrowIcon className="ml-2" />
+            <ArrowIcon className="w-2 h-2" />
         </Link>
     );
 }

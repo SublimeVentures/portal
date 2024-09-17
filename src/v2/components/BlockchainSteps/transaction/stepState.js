@@ -1,28 +1,37 @@
 import { handleProcessing, handlePending, handleError, handleSuccess } from "../helpers";
-import { ICONS } from "@/lib/icons";
 
 export const stepTransaction = (state, data) => {
     console.log("BIX :: TRANSITION :: step state", state, data);
-
-    const iconPadding = "p-[7px]";
     let result = {};
 
     if (!data.transaction_isReady) {
-        result = handlePending({ content: "Send transaction" });
+        result = handlePending({
+            content: "Preparing transaction",
+            text: "We are setting up your transaction. Please wait a moment.",
+        });
     } else {
         if (state.isFinished) {
-            result = handleSuccess({ content: "Transaction confirmed" });
+            result = handleSuccess({
+                content: "Transaction confirmed",
+                text: "Your transaction has been successfully confirmed.",
+            });
         } else if (data.isFetching || data.isLoading) {
-            result = handleProcessing({ content: "Sending transaction" });
+            result = handleProcessing({
+                content: "Sending transaction",
+                text: "Your transaction is being sent. Please wait for confirmation.",
+            });
         } else if (data.isError) {
-            result = handleError({ content: "Error on sending transaction", text: data?.error });
+            result = handleError({
+                content: "Transaction failed",
+                text: data?.error ?? "An error occurred while sending your transaction. Please try again.",
+            });
         } else {
-            result = handlePending({ content: "Send transaction" });
+            result = handlePending({
+                content: "Preparing transaction",
+                text: "We are setting up your transaction. Please wait a moment.",
+            });
         }
     }
-
-    result.icon = ICONS.ROCKET;
-    result.iconPadding = iconPadding;
 
     console.log("BIX :: TRANSITION :: step state result", result, state, data);
 

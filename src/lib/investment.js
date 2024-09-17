@@ -9,22 +9,24 @@ function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
 }
 
-function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedUsed) {
+function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min;
     const allocation_min = offer?.alloMin || MIN_ALLOCATION;
+
     if (offer.isLaunchpad) {
         allocationUser_base = offer.alloMax;
         allocationUser_min = allocation_min;
     } else {
         switch (account.tenantId) {
-            case TENANT.basedVC || TENANT.BAYC: {
+            case TENANT.basedVC:
+            case TENANT.BAYC: {
                 allocationUser_base = account.multi * offer.alloMax; //todo: add new field for alloMulti and alloLimit
                 // if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
                 allocationUser_min = allocation_min;
                 break;
             }
             case TENANT.NeoTokyo: {
-                allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus;
+                allocationUser_base = account.multi * offer?.alloTotal + account.allocationBonus;
                 if (allocationUser_base < allocation_min) allocationUser_base = allocation_min;
                 if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
                 allocationUser_min = allocation_min;
@@ -67,8 +69,8 @@ function getUserAllocationGuaranteed(guaranteedUsed) {
     }
 }
 
-function getAllocationLeft(allocationOffer_left, allocationUser_left) {
-    return allocationOffer_left < allocationUser_left ? allocationOffer_left : allocationUser_left;
+function getAllocationLeft(offer_left, allocationUser_left) {
+    return offer_left < allocationUser_left ? offer_left : allocationUser_left;
 }
 
 function allocationParseUnlimited(params) {
@@ -120,13 +122,13 @@ function allocationUserBuild(params) {
     const { allocationUser_base, allocationUser_max, allocationUser_min } = getUserAllocationMax(
         params.account,
         params.offer,
-        params.allocationOffer,
         params.upgradesUse?.increasedUsed?.amount || 0,
     );
     params.output.allocationUser_guaranteed = getUserAllocationGuaranteed(params.upgradesUse?.guaranteedUsed);
     params.output.allocationUser_base = allocationUser_base;
     params.output.allocationUser_max = allocationUser_max;
     params.output.allocationUser_min = allocationUser_min;
+
     return allocationPhaseAdjust(params);
 }
 
@@ -144,7 +146,7 @@ function userInvestmentState(
         (allocationOffer?.alloFilled || 0) -
         (allocationOffer?.alloRes || 0) -
         (allocationOffer?.alloGuaranteed || 0);
-    console.log("allocationOffer_left", allocationOffer_left, allocationOffer?.alloTotal, allocationOffer);
+
     let build = {
         account,
         offer,
@@ -239,15 +241,6 @@ function buttonInvestIsDisabled(
     isStakeLock,
     userInvestmentState,
 ) {
-    // console.log(
-    //     "buttonInvestIsDisabledV1",
-    //     allocationOffer?.isPaused ||
-    //     offerPhaseCurrent?.controlsDisabled ||
-    //     isStakeLock ||
-    //     !investmentAmount ||
-    //     !isAllocationOk,
-    //     isAllocationOk,
-    // );
     return (
         allocationOffer?.isPaused ||
         offerPhaseCurrent?.controlsDisabled ||

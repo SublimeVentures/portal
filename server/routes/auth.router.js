@@ -40,7 +40,13 @@ router.post("/login", async (req, res) => {
         return res.status(200).json(result);
     } catch (error) {
         logger.info(`LOGIN USER`, { error: serializeError(error), body: req.body });
-        return res.status(400).json({});
+        let message = "CredentialsSignin";
+        if (error.message.includes("already active")) {
+            message = "WalletAlreadyActive";
+        } else if (error.message.includes("maximum wallet limit")) {
+            message = "WalletsLimitReached";
+        }
+        return res.status(400).json({ error: message });
     }
 });
 

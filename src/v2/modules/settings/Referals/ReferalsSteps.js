@@ -12,7 +12,7 @@ const Bullet = ({ children }) => (
 
 export default function ReferalsSteps() {
     return (
-        <div className="rounded opacity-100 steps-gradient mt-8 py-12 px-9 flex flex-col">
+        <div className="rounded opacity-100 steps-gradient mt-8 md:mt-0 py-12 px-9 flex flex-col">
             <div className="flex">
                 <div className="flex flex-col items-center">
                     <Bullet>1</Bullet>

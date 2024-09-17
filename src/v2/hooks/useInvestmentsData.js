@@ -9,6 +9,7 @@ export default function useInvestmentsData(details) {
         invested: details.invested || 0,
         vested: details.claimed || 0,
         progress: details.vested || 0,
+        slug: details?.offer?.slug,
         logo: `${cdn}/research/${details?.offer?.slug}/icon.jpg`,
         isManaged: details?.offer?.isManaged,
         performance: details.performance * 100,

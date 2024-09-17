@@ -4,10 +4,9 @@ import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import routes from "@/routes";
-import { AppLayout, Metadata } from "@/v2/components/Layout";
+import { AppLayout } from "@/v2/components/Layout";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { fetchStore } from "@/fetchers/store.fetcher";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { Card } from "@/v2/components/ui/card";
@@ -17,12 +16,16 @@ import { Button } from "@/v2/components/ui/button";
 import Header from "@/v2/components/App/Upgrades/Header";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
+import useImage from "@/v2/hooks/useImage";
+import { getCopy } from "@/lib/seoConfig";
 
 const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
 
 export default function AppUpgrades({ session }) {
     const { tenantId } = session;
-    const { cdn, getCurrencyStore } = useEnvironmentContext();
+    const { getStoreSrc } = useImage();
+    const { getCurrencyStore } = useEnvironmentContext();
+
     console.log("getCurrencyStore", getCurrencyStore());
 
     const [isBuyModal, setBuyModal] = useState(false);
@@ -78,7 +81,7 @@ export default function AppUpgrades({ session }) {
                             )}
                         >
                             <Image
-                                src={`${cdn}/webapp/store/${data.img}`}
+                                src={getStoreSrc(data.img)}
                                 className="rounded-full size-46 sm:size-32 3xl:size-80"
                                 alt={data.name}
                                 width={320}

@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { fetchOfferList } from "@/fetchers/offer.fetcher";
+import { offersKeys } from "@/v2/constants";
 
 export default function useOffersInfiniteQuery(query = {}) {
     return useInfiniteQuery({
-        queryKey: ["offers", query],
+        queryKey: offersKeys.queryOffersVc(query),
         queryFn: ({ pageParam: offset = 0 }) => fetchOfferList({ ...query, offset }),
         getNextPageParam: ({ limit, offset, count }) => {
             const cursor = limit + offset;
@@ -16,6 +17,11 @@ export default function useOffersInfiniteQuery(query = {}) {
 
             return cursor;
         },
-        select: (data) => ({ pages: data.pages.flatMap((page) => page.rows) }),
+        select: (data) => {
+            return {
+                count: data.pages[0]?.count ?? 0,
+                pages: data.pages.flatMap((page) => page.rows),
+            };
+        },
     });
 }

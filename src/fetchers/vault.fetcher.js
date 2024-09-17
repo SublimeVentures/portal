@@ -29,9 +29,12 @@ export const fetchUserInvestmentSsr = async (offerId, token) => {
     return 0;
 };
 
-export const fetchVault = async (query = {}) => {
+export const fetchVault = async (query, config) => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchVault + "/all", { params: query });
+        const { data } = await axiosPrivate.get(API.fetchVault + "/all", {
+            params: query,
+            ...config,
+        });
         return data;
     } catch (error) {
         handleError(ErrorType.FETCHER, error, { methodName: "fetchVault", enableSentry: true });
@@ -39,11 +42,14 @@ export const fetchVault = async (query = {}) => {
     return [];
 };
 
-export const fetchVaultStats = async () => {
+export const fetchVaultStats = async (query, config) => {
     try {
-        const { data } = await axiosPrivate.get(API.fetchVault + "/stats");
+        const { data } = await axiosPrivate.get(API.fetchVault + "/stats", {
+            params: query,
+            ...config,
+        });
         return data;
     } catch (error) {
-        return handleError(ErrorType.FETCHER, error, { methodName: "fetchUserInvestmentSsr", enableSentry: true });
+        return handleError(ErrorType.FETCHER, error, { methodName: "fetchVaultStats", enableSentry: true });
     }
 };

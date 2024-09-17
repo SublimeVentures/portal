@@ -22,7 +22,7 @@
     }
 
     .table-head-cell {
-      @apply px-6 pr-5 text-base font-medium text-foreground normal-case text-left;
+      @apply px-6 pr-5 text-sm font-medium text-foreground normal-case text-left;
     }
 
     .table-body-row {
@@ -107,12 +107,24 @@
   }
 
   .bg-mystery-box {
-    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0, 0, 0, 0) 50%), url('/img/bg-mystery-box.webp');
+    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@640.jpg');
+  }
+
+  @screen sm {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1280.jpg');
+    }
+  }
+
+  @screen lg {
+    .bg-mystery-box {
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1920.jpg');
+    }
   }
 
   @screen 3xl {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0, 0, 0, 0) 50%), url('/img/bg-mystery-box.webp');
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@3840.jpg');
     }
   }
 
@@ -122,15 +134,17 @@
 
   @screen 3xl {
     .bg-banner-default {
-      background-image: url('/img/bg/banner/default@1.webp');
+      background-image: url('/img/bg/banner/default@2.webp');
     }
   }
 
-  // @media screen and (--webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
-  //   .bg-banner-default {
-  //     background-image: url('/img/bg/banner/default@2.webp');
-  //   }
-  // }
+  .bg-banner-vertical {
+    background-color: theme('colors.primary.900');
+    background-image: url('/img/bg/banner/vertical@2x.jpg');
+    background-position: left center;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+  }
 }
 
 ::-webkit-scrollbar {
