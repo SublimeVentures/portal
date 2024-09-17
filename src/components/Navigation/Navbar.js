@@ -105,7 +105,9 @@ export default function Navbar() {
                         <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />
                     </div>
                 </Link>
-                <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>
+                <div
+                    className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 font-light `}
+                >
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
                     })}

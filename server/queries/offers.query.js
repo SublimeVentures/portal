@@ -239,10 +239,9 @@ const query_getOtcList = `
             LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
             LEFT JOIN "partner" p ON CAST(o."broughtBy" AS INTEGER) = p.id
     WHERE
-        o.otc != 0 AND
-        (
-                (o."isOtcExclusive" = FALSE) OR
-                (o."isOtcExclusive" = TRUE AND ol."partnerId" = :tenantId)
+        o.otc != 0 AND (
+            (o."isOtcExclusive" = true AND ol."partnerId" = :tenantId AND CAST(o."broughtBy" AS INTEGER) = :tenantId) OR
+            (o."isOtcExclusive" = false AND (ol."partnerId" = :tenantId OR ol."partnerId" = :partnerId))
         )
     GROUP BY
         o.id, p.id
