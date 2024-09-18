@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const { serializeError } = require("serialize-error");
 const logger = require("./src/lib/logger");
 const authMiddleware = require("./server/middlewares/auth.middleware");
+const checkTenant = require("./server/middlewares/checkTenant.middleware");
 
 const { connectDB } = require("./server/services/db");
 const { initCron } = require("./server/services/cron");
@@ -55,8 +56,8 @@ nextApp.prepare().then(async () => {
     server.use("/api/settings", authMiddleware, settingsRoute);
     server.use("/api/payout", authMiddleware, payoutRoute);
     server.use("/api/claim", authMiddleware, claimRoute);
-    server.use("/api/referral", authMiddleware, referralRoute);
-    server.use("/api/referral-claim", authMiddleware, referralClaimRoute);
+    server.use("/api/referral", authMiddleware, checkTenant, referralRoute);
+    server.use("/api/referral-claim", authMiddleware, checkTenant, referralClaimRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
