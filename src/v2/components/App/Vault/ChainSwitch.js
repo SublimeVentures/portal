@@ -104,11 +104,10 @@ const ChainSwitch = () => {
     const {
         network: { chains = [], chainId },
     } = data;
-    const [open, setOpen] = useState(false);
     return (
         <ChainGroup
             className={cn({
-                "w-11": !open,
+                "w-11": !data.networkToggle,
             })}
         >
             {chains.map((chain) => {
@@ -118,9 +117,11 @@ const ChainSwitch = () => {
                         key={chain.id}
                         isActive={isActive}
                         chainId={chain.id}
-                        onClick={() => setOpen((prev) => !prev)}
+                        onClick={() =>
+                            data.updateEnvironmentProps([{ path: "networkToggle", value: !data.networkToggle }])
+                        }
                         className={cn({
-                            "!hidden": !open && !isActive,
+                            "!hidden": !data.networkToggle && !isActive,
                         })}
                     >
                         <ChainIcon chainId={chain.id} active={isActive} />

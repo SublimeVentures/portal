@@ -11,7 +11,7 @@ import Logo from "@/assets/svg/logo_1.svg";
 
 export const Image = forwardRef(({ className, ...props }, ref) => {
     return (
-        <div className="aspect-video -mx-4 -mt-8 md:mr-0 md:-ml-13 md:-my-8 relative md:w-3/5">
+        <div className="h-40 md:h-auto -mx-4 -mt-8 md:mr-0 md:-ml-13 md:-my-8 relative md:w-3/5">
             <NextImage fill {...props} ref={ref} className={cn("rounded-t md:rounded-l object-cover", className)} />
             <Logo className="absolute bottom-3 left-3 md:bottom-6 md:left-6 size-9 md:size-13" />
         </div>

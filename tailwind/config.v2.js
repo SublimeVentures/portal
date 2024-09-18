@@ -62,6 +62,7 @@ module.exports = {
                 26: "6.5rem", // 104px
                 30: "7.5rem", // 120px
                 46: "11.5rem", // 184px
+                50: "12.5rem", // 200px
                 116: "29rem", // 464px
             },
             fontSize: {

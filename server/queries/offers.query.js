@@ -213,6 +213,7 @@ async function getLaunchpadList(partnerId, tenantId) {
 
 const query_getOtcList = `
     SELECT
+        o.id,
         o.slug,
         o.name,
         o.ppu,

@@ -26,13 +26,14 @@ export default function Header({ title, isBlockedAlert, className, session }) {
     const {
         environmentCleanup,
         account: { address },
+        networkToggle,
     } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
     const handleLogout = () => environmentCleanup();
     return (
         <header className={cn("flex justify-between shrink-0", className)}>
             <div className="flex justify-between items-center w-full h-max text-white">
-                <div className="lg:hidden">
+                <div className={cn("lg:hidden", { "w-0 overflow-hidden": networkToggle })}>
                     <Link href={PAGE.App}>
                         <div className="flex items-center">{renderLogo(components.logo)}</div>
                     </Link>
@@ -44,7 +45,7 @@ export default function Header({ title, isBlockedAlert, className, session }) {
                     )}
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 justify-self-end">
                     <div className="hidden items-center gap-4 md:flex">
                         <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
                         <Avatar className="bg-white size-13" session={session} />
