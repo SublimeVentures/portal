@@ -58,7 +58,10 @@ export default function NotificationsSettings({ session, onNewSettings }) {
         });
         fetchNotificationChannels()
             .then((res) => {
-                setNotificationOptions(res);
+                setNotificationOptions({
+                    ...res,
+                    channels: res.channels.filter(({ id }) => id !== "discord"),
+                });
                 return res;
             })
             .then((opts) => {
