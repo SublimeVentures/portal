@@ -29,30 +29,25 @@ router.get("/progress", async (req, res) => {
 });
 
 router.get("/:slug", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+    const { user, ...request } = req;
 
-    return res.status(200).json(await getParamOfferDetails(user, req));
+    return res.status(200).json(await getParamOfferDetails(user, request));
 });
 
 router.get("/allocation/:id", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
-
     return res.status(200).json(await getOfferAllocation(req));
 });
 
 router.get("/:id/upgrade/:upgrade", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+    const { user, ...request } = req;
 
-    return res.status(200).json(await useUpgrade(user, req));
+    return res.status(200).json(await useUpgrade(user, request));
 });
 
 router.get("/:id/state", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
-    return res.status(200).json(await userStatusInOffer(user, req));
+    const { user, ...request } = req;
+
+    return res.status(200).json(await userStatusInOffer(user, request));
 });
 
 router.get("/:id/participants", async (req, res) => {

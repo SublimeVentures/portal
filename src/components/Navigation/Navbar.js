@@ -2,38 +2,39 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import useScrollPosition from "@/lib/hooks/useScrollPosition";
 import { tenantIndex } from "@/lib/utils";
-import { ExternalLinks } from "@/routes";
 import { CitCapGlitchButton } from "@/components/Button/CitCapGlitchButton";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import DynamicIcon from "@/components/Icon";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
+
+const { externalLinks } = getTenantConfig();
 
 const TENANT_MENU = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
             return [
-                { name: "APPLY", link: ExternalLinks.APPLY, isExternal: true },
-                { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
+                { name: "APPLY", link: externalLinks.APPLY, isExternal: true },
+                { name: "DOCS", link: externalLinks.WIKI, isExternal: true },
                 { name: "INVESTMENTS", link: "investments" },
             ];
         }
         case TENANT.NeoTokyo: {
             return [
-                { name: "APPLY", link: ExternalLinks.APPLY, isExternal: true },
-                { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
+                { name: "APPLY", link: externalLinks.APPLY, isExternal: true },
+                { name: "DOCS", link: externalLinks.WIKI, isExternal: true },
                 { name: "TOKENOMICS", link: "tokenomics" },
             ];
         }
         case TENANT.BAYC: {
             return [
-                { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
+                { name: "DOCS", link: externalLinks.WIKI, isExternal: true },
                 { name: "INVESTMENTS", link: "investments" },
             ];
         }
         default: {
             return [
-                { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
+                { name: "DOCS", link: externalLinks.WIKI, isExternal: true },
                 { name: "TOKENOMICS", link: "tokenomics" },
             ];
         }

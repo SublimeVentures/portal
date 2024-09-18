@@ -18,7 +18,8 @@ function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
         allocationUser_min = allocation_min;
     } else {
         switch (account.tenantId) {
-            case TENANT.basedVC || TENANT.BAYC: {
+            case TENANT.basedVC:
+            case TENANT.BAYC: {
                 allocationUser_base = account.multi * offer.alloMax; //todo: add new field for alloMulti and alloLimit
                 // if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
                 allocationUser_min = allocation_min;
@@ -145,7 +146,7 @@ function userInvestmentState(
         (allocationOffer?.alloFilled || 0) -
         (allocationOffer?.alloRes || 0) -
         (allocationOffer?.alloGuaranteed || 0);
-    
+
     let build = {
         account,
         offer,

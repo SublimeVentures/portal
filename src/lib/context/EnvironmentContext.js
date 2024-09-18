@@ -62,8 +62,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         chains,
         switchChain,
     } = useSwitchChain();
-
-    useEffect(() => {
+    const setInitialDate = () => {
         console.log(
             "EC :: context pass init",
             environmentProps.isClean && initialData?.cdn,
@@ -109,7 +108,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
                 "saved environment",
             );
         }
-    }, [initialData?.cdn]);
+    };
 
     useEffect(() => {
         const isNetworkSupported = !!chains.find((el) => el.id === chain?.id);
@@ -228,6 +227,9 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         });
     };
 
+    setInitialDate();
+    useEffect(setInitialDate, [initialData?.cdn]);
+
     const value = {
         network: {
             ...networkProp,
@@ -238,6 +240,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         cdn: environmentProps.cdn,
         account: accountProp,
         activeDiamond: environmentProps.activeDiamond,
+        diamonds: environmentProps.diamonds,
         activeOtcContract: environmentProps.activeOtcContract,
         activeInvestContract: environmentProps.activeInvestContract,
         activeCurrencyStaking: environmentProps.activeCurrencyStaking,

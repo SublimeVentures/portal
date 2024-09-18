@@ -1,12 +1,11 @@
 import { cn } from "@/lib/cn";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
-import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
+import { useOfferDetailsQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
 import { useOfferProgressQuery, useOfferStatus } from "@/v2/modules/opportunities/useSingleOfferLogic";
 import { OfferStatus } from "@/v2/modules/opportunities/helpers";
 import { Progress } from "@/v2/components/ui/progress";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import { Skeleton } from "@/v2/components/ui/skeleton";
-import { useUserAllocationQuery } from "@/v2/modules/offer/queries";
 
 const TBA_TEXT = "TBA";
 
@@ -33,7 +32,6 @@ export default function Fundraise({ className }) {
     });
     
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
-    
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl space-y-6", className)}>
             <div className="flex gap-2 items-center">

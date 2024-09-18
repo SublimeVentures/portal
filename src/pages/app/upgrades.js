@@ -7,7 +7,6 @@ import routes from "@/routes";
 import { AppLayout } from "@/v2/components/Layout";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { fetchStore } from "@/fetchers/store.fetcher";
-import { getCopy } from "@/lib/seoConfig";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { Card } from "@/v2/components/ui/card";
@@ -18,6 +17,7 @@ import Header from "@/v2/components/App/Upgrades/Header";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import useImage from "@/v2/hooks/useImage";
+import { getCopy } from "@/lib/seoConfig";
 
 const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
 

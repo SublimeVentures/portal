@@ -1,9 +1,9 @@
 import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import HeroBg from "@/components/Home/HeroBg";
-import { seoConfig } from "@/lib/seoConfig";
 import PAGE from "@/routes";
-import { TENANT } from "@/lib/tenantHelper";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+
 const ToS_based = dynamic(() => import("@/components/Legal/ToS_based"), {
     ssr: true,
 });
@@ -28,18 +28,18 @@ const TENANT_TOS = () => {
     }
 };
 
-export default function Terms() {
-    const seo = seoConfig(PAGE.ToS);
+const {
+    DESCRIPTION,
+    INFO: { og, twitter },
+    PAGES: {
+        [PAGE.ToS]: { title, url },
+    },
+} = getTenantConfig().seo;
 
+export default function Terms() {
     return (
         <>
-            <NextSeo
-                title={seo.title}
-                description={seo.description}
-                canonical={seo.url}
-                openGraph={seo.og}
-                twitter={seo.twitter}
-            />
+            <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             <HeroBg subtitle={""} title={"Terms of Service"} content={TENANT_TOS()} extraClass={"listWithStyle"} />
         </>
     );

@@ -8,7 +8,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
     const { getResearchIconSrc, getResearchBgSrc } = useImage();
 
     return (
-        <Card variant="dark" className="h-full flex flex-col">
+        <Card variant="dark" className="h-full flex flex-col lg:p-3">
             <div className="grow">
                 <div className="relative h-24 flex gap-2 lg:mb-12 lg:h-32">
                     <Image
@@ -31,7 +31,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}
-                            className="relative text-foreground text-2xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:p-4 after:absolute after:-bottom-1"
+                            className="relative text-foreground text-2xl font-medium leading-none mb-2 after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:px-3 after:leading-none after:align-top md:after:align-middle"
                         >
                             {name}
                         </h3>
@@ -46,9 +46,9 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                 <Progress value={progress} />
             </div>
 
-            <div className="m-4 px-2.5 flex justify-between items-center bg-primary-600 rounded-full">
-                <p className="text-xs text-foreground lg:text-md">{dateLabel}</p>
-                <time className="text-xs text-foreground lg:text-md">{date}</time>
+            <div className="m-4 px-2.5 lg:px-4 flex justify-between items-center bg-primary-600 rounded-full text-xs font-light text-foreground lg:text-sm leading-5 lg:leading-7">
+                <p>{dateLabel}</p>
+                <time>{date}</time>
             </div>
         </Card>
     );

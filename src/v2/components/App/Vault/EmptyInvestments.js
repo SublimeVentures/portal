@@ -9,10 +9,12 @@ const EmptyInvestments = () => {
             border="none"
             className="p-0 grow bg-empty-investment-pattern bg-cover bg-center bg-no-repeat"
         >
-            <div className="py-16 px-4 md:py-24 md:px-20 flex flex-col items-center md:items-start gap-4 text-center md:text-left 3xl:w-2/5">
+            <div className="py-16 px-4 md:px-20 flex flex-col items-center justify-center md:items-start gap-4 text-center md:text-left">
                 <CardTitle className="text-sm md:text-base font-normal">No investments found</CardTitle>
                 <CardDescription className="text-lg md:text-2xl font-semibold md:font-medium">
-                    Explore elite investment avenues curated for the astute investor
+                    Explore elite investment avenues
+                    <br />
+                    curated for the astute investor
                 </CardDescription>
 
                 <div className="flex items-center gap-4">

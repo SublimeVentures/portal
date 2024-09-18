@@ -6,14 +6,15 @@ import MarketDetails from "./MarketDetails";
 import { Card } from "@/v2/components/ui/card";
 import { Button } from "@/v2/components/ui/button";
 import { Skeleton } from "@/v2/components/ui/skeleton";
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { routes } from "@/v2/routes";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+import useImage from "@/v2/hooks/useImage";
 
 export default function Overview() {
     const { currentMarket, isLoading } = useMarket();
-    const { name, ticker, genre, slug, dealStructure, ppu, activeDealsCount, partnerLogo, partnerName } = currentMarket ?? {};
-    const { cdn } = useEnvironmentContext();
+    const { name, ticker, genre, slug, dealStructure, ppu, activeDealsCount, partnerLogo, partnerName } =
+        currentMarket ?? {};
+    const { getResearchIconSrc } = useImage();
 
     if (!currentMarket) {
         return null;
@@ -30,7 +31,7 @@ export default function Overview() {
                 <>
                     <div className="flex items-center gap-4 2xl:gap-8">
                         <Image
-                            src={`${cdn}/research/${slug}/icon.jpg`}
+                            src={getResearchIconSrc(slug)}
                             className="size-22 3xl:size-26 rounded"
                             alt={slug}
                             width={100}
@@ -54,7 +55,6 @@ export default function Overview() {
                     </div>
 
                     <MarketDetails
-                        src={`${cdn}/research/${partnerLogo}/icon.jpg`}
                         alt={`Launched in ${partnerName}`}
                         offer={{ ticker, dealStructure, ppu, activeDealsCount, partnerLogo }}
                     />
@@ -62,4 +62,4 @@ export default function Overview() {
             )}
         </Card>
     );
-};
+}

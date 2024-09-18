@@ -89,12 +89,11 @@ export default function Staking({ session }) {
                                 {currentTenant.fields?.map((field, index) => (
                                     <dl key={index} className="flex gap-2">
                                         <DefinitionItem
-                                            className="font-bold"
+                                            className="font-bold text-sm"
                                             term={typeof field.term === "function" ? field.term(session) : field.term}
+                                            ddClassName="text-foreground text-sm font-light"
                                         >
-                                            <span className="font-light">
-                                                {typeof field.value === "function" ? field.value(session) : field.value}
-                                            </span>
+                                            {typeof field.value === "function" ? field.value(session) : field.value}
                                         </DefinitionItem>
                                     </dl>
                                 ))}

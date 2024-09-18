@@ -1,15 +1,14 @@
+import { useOfferDetailsQuery } from "../queries";
+import InvestClosed from "./InvestClosed";
+import Invest from "./Invest";
+import CalculateModal from "./Modals/CalculateModal";
+import UpgradesModal from "./Modals/UpgradesModal";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { PhaseId } from "@/v2/lib/phases";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
 import { Badge } from "@/v2/components/ui/badge";
 import { cn } from "@/lib/cn";
-
-import { useOfferDetailsQuery } from "../queries";
-import InvestClosed from "./InvestClosed";
-import Invest from "./Invest";
-import CalculateModal from "./Modals/CalculateModal";
-import UpgradesModal from "./Modals/UpgradesModal";
 
 // const { clearBooking, bookingDetails, setBooking, getSavedBooking } = useInvestContext();
 // const data = useInvestContext(offer.id);
@@ -24,9 +23,9 @@ export default function Investment({ session, className }) {
         guaranteedUsed?.alloUsed != guaranteedUsed?.alloMax &&
         phaseCurrent.phase != PhaseId.Unlimited &&
         !offer.isLaunchpad;
-    
+
     return (
-        <div className={cn("p-4 flex flex-col space-y-4 rounded bg-[#12202C]", className)}>
+        <div className={cn("p-4 flex flex-col space-y-4 rounded bg-white/[.07] backdrop-blur-3xl", className)}>
             <div className="flex flex-wrap items-center justify-between gap-4 xl:flex-nowrap">
                 <div className="flex gap-2 items-center">
                     <h2 className="text-lg font-semibold">Invest</h2>
@@ -56,4 +55,4 @@ export default function Investment({ session, className }) {
             </div>
         </div>
     );
-};
+}
