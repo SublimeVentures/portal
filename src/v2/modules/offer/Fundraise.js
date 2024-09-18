@@ -31,8 +31,6 @@ export default function Fundraise({ className }) {
     const { data: { progress, filled } = {} } = useOfferProgressQuery(offer.id, {
         refetchInterval: state === OfferStatus.IN_PROGRESS ? 15000 : false,
     });
-
-    console.log("offer", offer, userAllocation);
     
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
     

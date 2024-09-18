@@ -25,10 +25,13 @@ async function getOfferRaise(id) {
     }
     return {};
 }
-
+ 
 async function investIncreaseAllocationReserved(offer, wantedAllocation, upgradeGuaranteed, transaction) {
     let effectiveAllocationReserved;
     let sumFilter = ` COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0)`;
+
+    const offerLimit = offer.offerLimits[0];
+    if (!offerLimit) throw new Error("Offer limit is not available.");
 
     if (upgradeGuaranteed?.isExpired === false) {
         const guaranteedAllocationLeft = upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed;
@@ -42,10 +45,10 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
             alloGuaranteed = wantedAllocation;
         }
 
-        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerLimit?.alloTotal}`;
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offerLimit?.alloTotal}`;
     } else {
         effectiveAllocationReserved = wantedAllocation;
-        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerLimit?.alloTotal}`;
+        sumFilter += ` + ${wantedAllocation} <= ${offerLimit?.alloTotal}`;
     }
 
     const updateQuery = `
@@ -60,8 +63,6 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
         type: QueryTypes.UPDATE,
         transaction,
     });
-
-    console.log("investIncreaseAllocationReserved", result, updateQuery);
 
     return {
         ok: result[0].length === 1,

@@ -8,8 +8,6 @@ import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 
-import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
-
 import { Overview, Phases, Invest, Fundraise, Vesting, History } from "@/v2/modules/offer";
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });

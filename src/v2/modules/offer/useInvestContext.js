@@ -37,17 +37,17 @@ export default function useInvestContext() {
     }, [offer, isLoading, isError]);
 
     const setBooking = (booking) => {
-        const expires = Number(booking.expires);
-        const obj = {
-            code: booking.hash,
-            expires: expires,
-            amount: Number(booking.amount),
-            signature: booking.signature,
-        };
-        setBookingDetails(obj);
-        setCookie(`hash_${offerId}`, `${JSON.stringify(obj)}`, {
-            expires: new Date(expires * 1000),
-        });
+        // const expires = Number(booking.expires);
+        // const obj = {
+        //     code: booking.hash,
+        //     expires: expires,
+        //     amount: Number(booking.amount),
+        //     signature: booking.signature,
+        // };
+        // setBookingDetails(obj);
+        // setCookie(`hash_${offerId}`, `${JSON.stringify(obj)}`, {
+        //     expires: new Date(expires * 1000),
+        // });
     };
 
     const clearBooking = () => {
@@ -58,7 +58,7 @@ export default function useInvestContext() {
     };
 
     const getSavedBooking = () => {
-        const saved = cookies[`hash_${offerId}`];
+        const saved = cookies[`hash_${offerId}`] ?? null;
         return !!saved ? { ok: true, ...saved } : { ok: false };
     };
 
@@ -69,38 +69,6 @@ export default function useInvestContext() {
         getSavedBooking,
     };
 };
-
-// const InvestContext = createContext({
-//     getSavedBooking: () => {},
-//     clearBooking: () => {},
-//     setBooking: () => {},
-// });
-
-// export const useInvestContext = () => useContext(InvestContext);
-
-    // const value = {
-        // bookingDetails,
-        // setBooking,
-        // clearBooking,
-        // getSavedBooking,
-    // };
-
-    // return <InvestContext.Provider value={value}>{children}</InvestContext.Provider>;
-
-
-// const DEFAULT_STATE = {
-//     code: 0,
-//     expires: 0,
-//     amount: 0,
-//     signature: "",
-// };
-
-// const useInvestStore = create((set) => ({
-//     booking: DEFAULT_STATE,
-//     offerId: 0,
-//     setOfferId: (offerId) => set(() => ({ offerId })),
-//     setBooking: (booking) => set(() => ({ booking })),
-// }));
 
 
 //     // const setBooking = (booking) => {

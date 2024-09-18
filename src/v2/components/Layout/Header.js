@@ -1,7 +1,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
-import MobileMenu from "./MobileMenu";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
@@ -11,11 +10,7 @@ import { Avatar } from "@/v2/components/ui/avatar";
 import { shortenAddress } from "@/v2/lib/helpers";
 import PAGE from "@/routes";
 import { cn } from "@/lib/cn";
-
-const mockedUser = {
-    username: "Steady Stacker",
-    walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
-};
+import MobileMenu from "./MobileMenu";
 
 const renderLogo = (componentName) => {
     const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
@@ -27,8 +22,11 @@ export default function Header({ title, isBlockedAlert, className, session }) {
         environmentCleanup,
         account: { address },
     } = useEnvironmentContext();
+
     const { components } = useTenantSpecificData();
+    
     const handleLogout = () => environmentCleanup();
+
     return (
         <header className={cn("flex justify-between shrink-0", className)}>
             <div className="flex justify-between items-center w-full h-max text-white">
@@ -62,4 +60,4 @@ export default function Header({ title, isBlockedAlert, className, session }) {
             </div>
         </header>
     );
-}
+};

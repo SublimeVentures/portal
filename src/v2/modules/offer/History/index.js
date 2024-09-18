@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
+
 import { cn } from "@/lib/cn";
 import { fetchOfferParticipants } from "@/fetchers/offer.fetcher";
 import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
-import { formatCurrency } from "@/v2/helpers/formatters";
-import { Button } from "@/v2/components/ui/button";
 import { Skeleton } from "@/v2/components/ui/skeleton";
-import CrossIcon from "@/v2/assets/svg/cross.svg";
+import { formatCurrency } from "@/v2/helpers/formatters";
+
+import CancelReservationModal from "./CancelReservationModal";
 
 const offerParticipantsOptions = (offerId, config) => ({
     queryKey: ["offerParticipants", offerId],
@@ -32,6 +33,7 @@ export default function History({ className }) {
     const { data: participants = [], isLoading } = useOfferParticipantsQuery(offer.id, {
         enabled: !!offer.id,
     });
+
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6", className)}>
             <h2 className="ext-xl md:text-2xl font-medium">History</h2>
@@ -91,24 +93,12 @@ export default function History({ className }) {
                                     {formatCurrency(participant.amount)}
                                 </Definition>
                             </dl>
-                            <Button
-                                className="hidden md:block"
-                                variant="outline"
-                                disabled={!(participant.isConfirmedInitial && !participant.isConfirmed)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                className="md:hidden px-5"
-                                variant="secondary"
-                                disabled={!(participant.isConfirmedInitial && !participant.isConfirmed)}
-                            >
-                                <CrossIcon className="size-3" />
-                            </Button>
+
+                            <CancelReservationModal isDisabled={!(participant.isConfirmedInitial && !participant.isConfirmed)} />
                         </li>
                     ))
                 )}
             </ul>
         </div>
     );
-}
+};

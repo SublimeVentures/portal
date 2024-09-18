@@ -7,20 +7,26 @@ export const formatNumber = (value) => {
     return numericValue ? `$${Number(numericValue).toLocaleString("en-US")}` : "$0";
 };
 
-export const getInvestSchema = (allocation) =>
-    z.object({
+export const getInvestSchema = (allocation, currencies) => {
+    const symbols = currencies.map(currency => currency.symbol);
+
+    return z.object({
         investmentAmount: z
-            .string()
-            .min(1, "Investment amount is required")
-            .refine((val) => !isNaN(Number(val.replace(/\s/g, ""))), {
-                message: "Please enter a valid number",
-            })
-            .transform((val) => val.replace(/\s/g, ""))
-            .refine((val) => Number(val) >= allocation.allocationUser_min, {
-                message: `Minimum amount is ${allocation.allocationUser_min}`,
-            })
-            .refine((val) => Number(val) <= allocation.allocationUser_max, {
-                message: `Maximum amount is ${allocation.allocationUser_max}`,
-            }),
-        currency: z.string()
+            .union([z.string(), z.number()])
+            .transform(val => typeof val === "string" ? Number(val) : val)
+            .refine(val => !isNaN(val), { message: "Investment amount must be a valid number" })
+            .pipe(
+                z.number()
+                    .min(allocation.allocationUser_min, {
+                        message: `Minimum amount is ${allocation.allocationUser_min}`,
+                    })
+                    .max(Math.min(allocation.allocationUser_max, allocation.allocationUser_left), {
+                        message: `Maximum amount is ${Math.min(allocation.allocationUser_max, allocation.allocationUser_left)}`,
+                    })
+            ),
+        currency: z.enum(symbols, {
+            message: `Currency must be one of: ${symbols.join(', ')}`,
+        }),
     });
+};
+
