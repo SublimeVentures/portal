@@ -1,4 +1,5 @@
 import Image from "next/image";
+import moment from "moment";
 
 import { cn } from "@/lib/cn";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -15,7 +16,7 @@ function DefinitionTerm({ children, className }) {
 }
 
 function DefinitionDescription({ children, className }) {
-    return <dd className={cn("text-sm text-foreground 3xl:text-lg leading-7 font-medium", className)}>{children}</dd>;
+    return <dd className={cn("text-sm text-foreground 3xl:text-lg leading-7 font-medium text-nowrap", className)}>{children}</dd>;
 }
 
 function Definition({ children, term, termClassName, descClassName }) {
@@ -31,16 +32,17 @@ function DefinitionList({ children, className }) {
     return <dl className={cn("grid grid-rows-2 grid-flow-col", className)}>{children}</dl>;
 }
 
-export default function RestoreModal() {
+export default function RestoreModal({ open, allocationOld, timeOld, onOpenChange, bookingRestore }) {
     const { account: { address } } = useEnvironmentContext();
     const { data: offer } = useOfferDetailsQuery();
     const { getResearchIconSrc } = useImage();
 
-    const isOpen = true;
-
+    const allocationOldLocal = Number(allocationOld).toLocaleString();
+    const timeOldFormatted = moment(timeOld).format('YYYY.MM.DD HH:mm:ss');
+    
     return (
-        <Dialog open={isOpen}>
-            <DialogContent>
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-[1000px]">
                 <DialogHeader>
                     <DialogTitle>Restore Reservation</DialogTitle>
                     <DialogDescription>
@@ -55,7 +57,7 @@ export default function RestoreModal() {
                             <Image
                                 src={getResearchIconSrc(offer.slug)}
                                 className="rounded"
-                                alt={`Avatar for ${name} offer`}
+                                alt={`Avatar for ${offer.name} offer`}
                                 width={90}
                                 height={90}
                             />
@@ -63,8 +65,8 @@ export default function RestoreModal() {
                         </Definition>
                         <Definition term="Project">{offer.name}</Definition>
                         <Definition term="Me">{shortenAddress(address ?? "")}</Definition>
-                        <Definition term="Date">...</Definition>
-                        <Definition term="Amount">...</Definition>
+                        <Definition term="Date">{timeOldFormatted}</Definition>
+                        <Definition term="Amount">${allocationOldLocal}</Definition>
                     </DefinitionList>
                 </div>
 
@@ -72,7 +74,7 @@ export default function RestoreModal() {
                     <p className="order-2 text-sm text-foreground/50 lg:order-1">Reservation will be automaticaly restored.</p>
                     <div className="ordero-1 flex items-center gap-2 lg:order-2">
                         <Button variant="outline">Back</Button>
-                        <Button>Confirm Reservation</Button>
+                        <Button onClick={bookingRestore}>Confirm Reservation</Button>
                     </div>
                 </DialogFooter>
             </DialogContent>
@@ -80,26 +82,14 @@ export default function RestoreModal() {
     );
 };
 
-// import moment from "moment";
-// import GenericModal from "@/components/Modal/GenericModal";
-// import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-// import { useInvestContext } from "@/components/App/Offer/InvestContext";
-// import CustomFlipClockCountdown from "@/components/FlipClockCountdown";
+// OLD CODE
+
+// const allocationNewLocal = Number(investmentAmount).toLocaleString();
 
 // export default function RestoreHashModal({ model, setter, restoreModalProps }) {
 //     const { allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew } = restoreModalProps;
 //     const { bookingDetails } = useInvestContext();
-    
-//     const title = () => {
-//         return (
-//             <>
-//                 Booking <span className="text-gold">detected</span>
-//             </>
-//         );
-//     };
 
-//     const allocationOldLocal = Number(allocationOld).toLocaleString();
-//     const allocationNewLocal = Number(investmentAmount).toLocaleString();
 //     const content = () => {
 //         return (
 //             <div>
@@ -114,6 +104,7 @@ export default function RestoreModal() {
 //                         <span className="text-app-error">make new one (${allocationNewLocal})</span>?
 //                     </div>
 //                 </div>
+
 //                 <div className="flex flex-col justify-center items-center gap-2">
 //                     <div>Old booking is going to expire in</div>
 //                     <CustomFlipClockCountdown
@@ -130,30 +121,12 @@ export default function RestoreModal() {
 //                     />
 //                 </div>
 
-//                 <div className={`flex flex-col gap-5 flex-1 mt-10 button-container`}>
-//                     <UniButton
-//                         type={ButtonTypes.BASE}
-//                         text="Restore"
-//                         state="danger"
-//                         isWide={true}
-//                         isPrimary={true}
-//                         zoom={1.1}
-//                         size="text-sm sm"
-//                         handler={bookingRestore}
-//                     />
-//                     <UniButton
-//                         type={ButtonTypes.BASE}
-//                         text="New Booking"
-//                         state={""}
-//                         isWide={true}
-//                         zoom={1.1}
-//                         size="text-sm sm"
-//                         handler={bookingCreateNew}
-//                     />
-//                 </div>
-//             </div>
-//         );
-//     };
-
-//     return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
-// }
+// <UniButton
+// type={ButtonTypes.BASE}
+// text="New Booking"
+// state={""}
+// isWide={true}
+// zoom={1.1}
+// size="text-sm sm"
+// handler={bookingCreateNew}
+// />

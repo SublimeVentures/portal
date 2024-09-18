@@ -169,13 +169,7 @@ AppOfferDetails.getLayout = function (page) {
 //     allocationUserLeft: allocationData.allocationUser_left,
 // };
 
-// const investModalProps = {
-//     investmentAmount,
-//     offer,
-//     selectedCurrency,
-//     bookingExpire,
-//     afterInvestmentCleanup,
-// };
+
 
 //             <RestoreHashModal
 //                 restoreModalProps={restoreModalProps}
@@ -191,15 +185,7 @@ AppOfferDetails.getLayout = function (page) {
 //                     setErrorModal({ open: false, code: null });
 //                 }}
 //             />
-//             {network?.isSupported && selectedCurrency && (
-//                 <InvestModal
-//                     investModalProps={investModalProps}
-//                     model={isInvestModal}
-//                     setter={() => {
-//                         setInvestModal(false);
-//                     }}
-//                 />
-//             )}
-//         </div>
+
+
 //     );
 // }

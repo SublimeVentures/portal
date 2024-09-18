@@ -132,7 +132,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                 />
             </div>
 
-            {errors.investmentAmount && <FormMessage>{errors.investmentAmount.message}</FormMessage>}
+            {errors.investmentAmount && <FormMessage className="mt-2">{errors.investmentAmount.message}</FormMessage>}
         </div>
     );
 };

@@ -14,6 +14,8 @@ export default function Invest({ session }) {
         getInvestFormFieldsProps,
         getInvestFormSummaryProps,
         getInvestFormSubmitProps,
+        getInvestModalProps,
+        getRestoreModalProps,
         getInvestErrorModalProps,
     } = useInvest(session);
 
@@ -27,6 +29,8 @@ export default function Invest({ session }) {
                         <InvestFormFields {...getInvestFormFieldsProps()} />
                         <InvestFormSummary {...getInvestFormSummaryProps()} />
                         <InvestFormSubmit {...getInvestFormSubmitProps()} />
+
+                        <InvestModal {...getInvestModalProps()}/>
                     </InvestForm>
                                         
                     {isBooked && (
@@ -38,9 +42,8 @@ export default function Invest({ session }) {
                 </div>
             </div>
 
-            {/* <InvestModal isOpen={isInvestModalOpen} setOpen={setIsInvestModalOpen} /> */}
             <InvestErrorModal {...getInvestErrorModalProps()} />
-            {/* <RestoreModal /> */}
+            <RestoreModal {...getRestoreModalProps()} />
         </>
     );
-}
+};

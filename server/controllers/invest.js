@@ -243,7 +243,7 @@ function checkReserveSpotQueryParams(req) {
     }
 }
 
-async function obtainSignature(offerId, amount, hash, expires, token) {
+async function obtainSignature(offerId, amount, hash, expires, partnerId, chainId, token) {
     const signature = await axios.post(
         `${process.env.AUTHER}/invest/sign`,
         {
@@ -251,6 +251,8 @@ async function obtainSignature(offerId, amount, hash, expires, token) {
             amount,
             hash,
             expires,
+            partnerId,
+            chainId,
             token,
         },
         {
@@ -285,13 +287,28 @@ async function reserveSpot(user, req) {
 
         console.log("reservation", reservation);
         const token = req.cookies[authTokenName];
+
+        // console.log(
+        //     'BEFORE-SIGNATURE',
+        //     queryParams.data._offerId,
+        //     reservation.data.amount,
+        //     reservation.data.hash,
+        //     reservation.data.expires,
+        //     user.partnerId,
+        //     queryParams.data._chain,
+        //     token,
+        // )
+
         const signature = await obtainSignature(
             queryParams.data._offerId,
             reservation.data.amount,
             reservation.data.hash,
             reservation.data.expires,
+            user.partnerId,
+            queryParams.data._chain,
             token,
         );
+        console.log("signature", signature);
 
         if (!signature.ok) {
             console.log("expore", queryParams.data._offerId, user.userId, reservation.data.hash);
