@@ -44,6 +44,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         upgradesUse,
         premiumData,
         refetchPremiumData,
+        partnerId,
     } = paramsInvestPhase;
     const amountStorageKey = `offer.${offer.id}.amount`;
     const currencyStorageKey = `offer.${offer.id}.currency`;
@@ -335,6 +336,7 @@ export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
         selectedCurrency,
         bookingExpire,
         afterInvestmentCleanup,
+        partnerId,
     };
 
     const defaultSelected = dropdownCurrencyOptions.findIndex((el) => {

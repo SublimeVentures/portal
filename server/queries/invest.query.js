@@ -1,13 +1,14 @@
+const { Op, QueryTypes } = require("sequelize");
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, QueryTypes } = require("sequelize");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
 async function getOfferRaise(id) {
     try {
-        return await models.offerFundraise.findOne({
+        return await models.offerLimit.findOne({
             where: { offerId: id },
+            attributes: ["alloRes", "alloFilled", "alloGuaranteed", "alloTotal", "isPaused", "isSettled", "isRefund"],
         });
     } catch (error) {
         logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
@@ -33,14 +34,14 @@ async function investIncreaseAllocationReserved(offer, wantedAllocation, upgrade
             alloGuaranteed = wantedAllocation;
         }
 
-        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerFundraise?.alloTotal}`;
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerLimits?.[0].alloTotal}`;
     } else {
         effectiveAllocationReserved = wantedAllocation;
-        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerFundraise?.alloTotal}`;
+        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerLimits?.[0]?.alloTotal}`;
     }
 
     const updateQuery = `
-        UPDATE "offerFundraise"
+        UPDATE "offerLimit"
         SET "alloRes" = "alloRes" + ${effectiveAllocationReserved}
         WHERE "offerId" = ${offer.id}
           AND ${sumFilter}
@@ -134,7 +135,7 @@ async function expireAllocation(offerId, userId, hash) {
 async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transaction) {
     let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`;
 
-    const booked = await models.offerFundraise.increment(
+    const booked = await models.offerLimit.increment(
         { alloGuaranteed: amount },
         {
             where: {

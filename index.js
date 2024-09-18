@@ -59,7 +59,7 @@ nextApp.prepare().then(async () => {
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
         res.set({
-            "Cache-Control": dev ? "no-store" : "public, max-age=3600",
+            "Cache-Control": dev ? "no-store" : "public, max-age=604800, must-revalidate",
         });
         const parsedUrl = url.parse(req.url, true);
         nextHandler(req, res, parsedUrl);
