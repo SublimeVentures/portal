@@ -26,9 +26,9 @@ export default function ClaimItem({ item, passData }) {
     return (
         <div className="bordered-box boxshadow vaultItem timeline flex col-span-12 lg:col-span-6 3xl:col-span-4">
             <div className="sm:bordered-box-left lg:bordered-box xl:bordered-box-left relative bg-navy-accent flex flex-1 flex-col p-5">
-                <div className="font-bold text-2xl flex items-center glowNormal">
+                <header className="font-bold text-2xl flex items-center glowNormal">
                     <div className="flex flex-1">{item.offer.name}</div>
-                </div>
+                </header>
 
                 <div className="card-content-description text-md py-2">
                     {item.claims.sort((a, b) => a.investmentStage - b.investmentStage).map((claim, index) => (

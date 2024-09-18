@@ -1,8 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
-import { authTokenName } from "@/lib/authHelpers";
-import { axiosPublic } from "@/lib/axios/axiosPublic";
 
 export const getSignature = async (claimId, wallet) => {
     try {

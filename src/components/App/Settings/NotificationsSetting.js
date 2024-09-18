@@ -29,15 +29,15 @@ export default function NotificationsSetting({}) {
 
                 <div className="flex ">
                     <div className="flex-1 ">ANNOUNCEMENTS</div>
-                    <div className="">$550 000</div>
+                    <div>$550 000</div>
                 </div>
                 <div className="flex ">
                     <div className="flex-1 ">NEW OPPORTUNITY</div>
-                    <div className="">$350 000</div>
+                    <div>$350 000</div>
                 </div>
                 <div className="flex text-app-success mb-1">
                     <div className="flex-1 ">CLAIMABLE</div>
-                    <div className="">$35 000</div>
+                    <div>$35 000</div>
                 </div>
             </div>
         </>

@@ -1,13 +1,13 @@
-const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
 const axios = require("axios");
+const logger = require("../../src/lib/logger");
 const { authTokenName } = require("../../src/lib/authHelpers");
 const { getUserReferralClaim } = require("../queries/referralClaim.query");
 
 async function signUserReferralClaim(user, req) {
     try {
         const claimId = Number(req.body.claimId);
-        const isUserWallet = user.wallets.find((el) => el === req.body.wallet);
+        const isUserWallet = user.wallets.includes(req.body.wallet);
 
         if (claimId && isUserWallet) {
             const token = req.cookies[authTokenName];

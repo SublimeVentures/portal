@@ -1,9 +1,21 @@
-const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
-const { queryReferralCode, createReferralCode, checkReferralHashUniqueness, queryReferrals } = require("../queries/referral.query");
 const crypto = require('crypto');
+const { serializeError } = require("serialize-error");
+const logger = require("../../src/lib/logger");
+const { 
+    queryReferralCode,
+    createReferralCode,
+    checkReferralHashUniqueness,
+    queryReferrals,
+} = require("../queries/referral.query");
 
-const SALT = 'sublime';
+
+function generateRandomSalt(length = 16) {
+    return crypto.randomBytes(length).toString("hex");
+}
+
+function generateHash(source) {
+    return crypto.createHash('sha256').update(source).digest('hex').substring(0, 7);
+}
 
 async function getReferralCode(req) {
     try {
@@ -14,7 +26,7 @@ async function getReferralCode(req) {
             error: serializeError(error),
             params: req.params,
         });
-        return [];
+        throw error;
     }
 }
 
@@ -27,21 +39,22 @@ async function getReferrals(req) {
             error: serializeError(error),
             params: req.params,
         });
-        return [];
+        throw error;
     }
 }
 
 async function createReferral(req) {
     try {
         const { userId } = req.user;
-        const hashSource = String(userId) + SALT + new Date().getTime();
-        let hash = crypto.createHash('sha256').update(hashSource).digest('hex').substring(0, 7);
-        let isUnique = await checkReferralHashUniqueness(hash);
+        const randomSalt = generateRandomSalt();
+        let hash;
+        let isUnique = false;
         let attempts = 0;
 
         while (!isUnique && attempts < 3) {
             attempts++;
-            hash = crypto.createHash('sha256').update(String(userId) + attempts).digest('hex').substring(0, 7);
+            const hashSource = `${userId}${randomSalt}${new Date().getTime()}${attempts}`;
+            hash = generateHash(hashSource);
             isUnique = await checkReferralHashUniqueness(hash);
         }
 
@@ -49,14 +62,13 @@ async function createReferral(req) {
             return await createReferralCode(userId, hash);
         }
 
-        throw Error("User referral could not be created within 3 tries")
-
+        throw Error("User referral could not be created within 3 tries");
     } catch (error) {
         logger.error(`Can't create referral code`, {
             error: serializeError(error),
             params: req.params,
         });
-        return [];
+        throw error;
     }
 }
 

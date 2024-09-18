@@ -1,13 +1,18 @@
 import Head from "next/head";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import Empty from "@/components/App/Empty";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import Loader from "@/components/App/Loader";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import routes from "@/routes";
-import { createInviteLink, fetchUserReferralCode, fetchUserReferralClaims, fetchUserReferrals } from "@/fetchers/referral.fetcher";
+import {
+    createInviteLink,
+    fetchUserReferralCode,
+    fetchUserReferralClaims,
+    fetchUserReferrals,
+} from "@/fetchers/referral.fetcher";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { useEffect, useState } from "react";
 import ClaimItem from "@/components/App/Referral/ClaimItem";
 import DetailsSidebar from "@/components/App/Referral/DetailsSidebar";
 import ReferralsTable from "@/components/App/Referral/ReferralsTable";
@@ -15,12 +20,11 @@ import { getTenantConfig } from "@/lib/tenantHelper";
 import InlineCopyButton from "@/components/Button/InlineCopyButton";
 
 const {
-    seo: { NAME }
+    seo: { NAME },
 } = getTenantConfig();
 
-export default function AppReferral({ session }) {
-
-    const [referral, setReferral] = useState(null)
+export default function AppReferral() {
+    const [referral, setReferral] = useState(null);
     const [claimModal, setClaimModal] = useState(false);
     const [claimModalDetails, setClaimModalDetails] = useState({});
 
@@ -66,10 +70,9 @@ export default function AppReferral({ session }) {
 
     useEffect(() => {
         if (referralCodeResponse) {
-            setReferral(`${process.env.DOMAIN}/login?referral=${referralCodeResponse.hash}`)
+            setReferral(`${process.env.DOMAIN}/login?referral=${referralCodeResponse.hash}`);
         }
-    }, [referralCodeResponse])
-
+    }, [referralCodeResponse]);
 
     const closeClaimModal = () => {
         setClaimModal(false);
@@ -83,11 +86,11 @@ export default function AppReferral({ session }) {
     };
 
     const createHandler = async () => {
-        const createData = await createInviteLink()
+        const createData = await createInviteLink();
         if (createData) {
-            setReferral(`${process.env.DOMAIN}/login?referral=${createData.hash}`)
+            setReferral(`${process.env.DOMAIN}/login?referral=${createData.hash}`);
         }
-    }
+    };
 
     const renderList = () => {
         if (!referralClaimsResponse) return;
@@ -95,14 +98,14 @@ export default function AppReferral({ session }) {
             if (!acc[claim.offer.id]) {
                 acc[claim.offer.id] = {
                     offer: claim.offer,
-                    claims: []
+                    claims: [],
                 };
             }
             acc[claim.offer.id].claims.push(claim);
             return acc;
         }, {});
 
-        return Object.values(consolidatedClaims).map((el, i) => {
+        return Object.values(consolidatedClaims).map((el) => {
             return <ClaimItem item={el} key={el.offer.id} passData={openClaimModal} />;
         });
     };
@@ -113,77 +116,78 @@ export default function AppReferral({ session }) {
     };
 
     const renderPage = () => {
-        if (isLoadingReferralClaims || isLoadingReferralCode || isLoadingReferrals ) return <Loader />;
+        if (isLoadingReferralClaims || isLoadingReferralCode || isLoadingReferrals) return <Loader />;
         if (isReferralClaimsError || isReferralCodeError || isUserReferralsError) return <Empty />;
 
         return (
             <div className="h-full flex flex-row items-start justify-center">
                 <div className="flex-col">
-                    <div
-                        className="bordered-container bg-navy-accent flex text-center border-transparent border mb-4"
-                    >
+                    <div className="bordered-container bg-navy-accent flex text-center border-transparent border mb-4">
                         <div className="flex flex-1 flex-col bg-navy-accent">
                             <div className="flex flex-1 flex-col text-left py-4">
-                                <div className={"px-10 pt-5"}>
+                                <div className="px-10 pt-5">
                                     <div className="text-3xl font-bold flex flex-1 glow">Referral Link</div>
-                                    <div className="text-md flex flex-1 mt-1 pb-5 color">Share this link so people can use your referral</div>
+                                    <div className="text-md flex flex-1 mt-1 pb-5 color">
+                                        Share this link so people can use your referral
+                                    </div>
                                 </div>
 
-                                {!referral ? <UniButton
-                                    type={ButtonTypes.BASE}
-                                    text="Create Invite Link"
-                                    isLoading={false}
-                                    isDisabled={false}
-                                    is3d={false}
-                                    isWide={true}
-                                    zoom={1.1}
-                                    size={"text-sm sm"}
-                                    handler={() => createHandler()}
-                                /> :
-
+                                {!referral ? (
+                                    <UniButton
+                                        type={ButtonTypes.BASE}
+                                        text="Create Invite Link"
+                                        isLoading={false}
+                                        isDisabled={false}
+                                        is3d={false}
+                                        isWide={true}
+                                        zoom={1.1}
+                                        size={"text-sm sm"}
+                                        handler={() => createHandler()}
+                                    />
+                                ) : (
                                     <div className="font-bold text-center py-2 my-6 w-full mt-auto bordered-container">
-                                        <input className="w-3/4 text-white p-2" disabled={true} type="text" value={referral} />
+                                        <input
+                                            className="w-3/4 text-white p-2"
+                                            disabled={true}
+                                            type="text"
+                                            value={referral}
+                                        />
                                         <InlineCopyButton copiable={referral} />
-                                    </div>}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        className="bordered-container bg-navy-accent flex text-center border-transparent border offerItem mb-4"
-                    >
+                    <div className="bordered-container bg-navy-accent flex text-center border-transparent border offerItem mb-4">
                         <div className="flex flex-1 flex-col bg-navy-accent">
                             <div className="flex flex-1 flex-col text-left">
-                                <div className={"px-10 pt-5 mb-8"}>
-                                    <div className="text-3xl font-bold flex flex-1 glow">Summary</div>
+                                <div className="px-10 pt-5 mb-8">
+                                    <header className="text-3xl font-bold flex flex-1 glow">Summary</header>
                                     <div className="text-md flex flex-1 mt-1 pb-5 color">Summary of all referrals</div>
-                                    <div className="">
-                                        {userReferrals && <ReferralsTable dataProp={userReferrals} />}
+                                    <div>{userReferrals && <ReferralsTable dataProp={userReferrals} />}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bordered-container bg-navy-accent flex text-center border-transparent border offerItem">
+                        <div className="flex flex-1 flex-col bg-navy-accent">
+                            <div className="flex flex-1 flex-col text-left ">
+                                <div className="px-10 pt-5 mb-8">
+                                    <header className="text-3xl font-bold flex flex-1 glow">Claim Payouts</header>
+                                    <div className="text-md flex flex-1 mt-1 pb-5 color">
+                                        Claim payouts from different referrals
+                                    </div>
+                                    <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                                        {renderList()}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        className="bordered-container bg-navy-accent flex text-center border-transparent border offerItem"
-                    >
-                        <div className="flex flex-1 flex-col bg-navy-accent">
-                            <div className="flex flex-1 flex-col text-left ">
-                                <div className={"px-10 pt-5 mb-8"}>
-                                    <div className="text-3xl font-bold flex flex-1 glow">Claim Payouts</div>
-                                    <div className="text-md flex flex-1 mt-1 pb-5 color">Claim payouts from different referrals</div>
-                                    <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">{renderList()}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                <DetailsSidebar
-                    model={claimModal}
-                    setter={closeClaimModal}
-                    claimModalProps={claimModalProps}
-                />
+                <DetailsSidebar model={claimModal} setter={closeClaimModal} claimModalProps={claimModalProps} />
             </div>
         );
     };

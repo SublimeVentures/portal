@@ -1,28 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { verifyID } = require("../../src/lib/authHelpers");
 const { signUserReferralClaim, userReferralClaim } = require("../controllers/referralClaim");
-const { tenantIndex } = require("../../src/lib/utils");
-const { TENANT } = require("../../src/lib/tenantHelper");
+const checkTenant = require("../middlewares/checkTenant");
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC;
-
-router.post("/sign", async (req, res) => {
-    if (isBaseVCTenant) {
-        const { user } = req;
-        return res.status(200).json(await signUserReferralClaim(user, req));
-    } else {
-        return res.status(403).json({ error: "Not allowed on current tenant" });
-    }
+router.post("/sign", checkTenant, async (req, res) => {
+    const { user } = req;
+    return res.status(200).json(await signUserReferralClaim(user, req));
 });
 
-router.get("/:id", async (req, res) => {
-    if (isBaseVCTenant) {
-        const { user } = req;
-        return res.status(200).json(await userReferralClaim(user, req));
-    } else {
-        return res.status(403).json({ error: "Not allowed on current tenant" });
-    }
+router.get("/:id", checkTenant, async (req, res) => {
+    const { user } = req;
+    return res.status(200).json(await userReferralClaim(user, req));
 });
 
 module.exports = { router };

@@ -11,6 +11,7 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import GenericModal from "@/components/Modal/GenericModal";
 import { getReferralClaimSignature } from "@/fetchers/referral.fetcher";
 import { getTenantConfig } from "@/lib/tenantHelper";
+import { formatCurrency } from "@/utils/helpers";
 
 const { NAME } = getTenantConfig().seo;
 
@@ -115,10 +116,7 @@ export default function ReferralClaimPayoutModal({ model, setter, props }) {
                     <div className={"detailRow font-bold"}>
                         <p>CLAIM</p>
                         <hr className={"spacer"} />
-                        <p className={"font-mono"}>
-                            {Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}{" "}
-                            {currency?.symbol}
-                        </p>
+                        <p className={"font-mono"}>{formatCurrency(amount, currency)}</p>
                     </div>
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
@@ -130,14 +128,14 @@ export default function ReferralClaimPayoutModal({ model, setter, props }) {
         return (
             <div className="flex flex-col flex-1">
                 <div className={"flex flex-1 flex-col justify-center items-center"}>
-                    <div className={""}>
+                    <div>
                         Thank you for referring for <span className={"font-bold text-gold"}>{NAME}</span>.
                     </div>
                     <Lottie
                         animationData={lottieSuccess}
                         loop={true}
                         autoplay={true}
-                        style={{ width: "320px", margin: "30px auto 0px" }}
+                        className="w-[320px] my-0 mx-auto mt-[30px]"
                     />
                 </div>
             </div>

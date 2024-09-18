@@ -1,33 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const { getReferralCode, getReferrals, createReferral } = require("../controllers/referral");
-const { tenantIndex } = require("../../src/lib/utils");
-const { TENANT } = require("../../src/lib/tenantHelper");
+const checkTenant = require("../middlewares/checkTenant");
 
-const isBaseVCTenant = tenantIndex === TENANT.basedVC;
-
-router.get("/", async (req, res) => {
-    if (isBaseVCTenant) {
-        return res.status(200).json(await getReferralCode(req));
-    } else {
-        return res.status(403).json({ error: "Not allowed on current tenant" });
-    }
+router.get("/", checkTenant, async (req, res) => {
+    return res.status(200).json(await getReferralCode(req));
 });
 
-router.get("/referrals", async (req, res) => {
-    if (isBaseVCTenant) {
-        return res.status(200).json(await getReferrals(req));
-    } else {
-        return res.status(403).json({ error: "Not allowed on current tenant" });
-    }
+router.get("/referrals", checkTenant, async (req, res) => {
+    return res.status(200).json(await getReferrals(req));
 });
 
-router.post("/create", async (req, res) => {
-    if (isBaseVCTenant) {
-        return res.status(200).json(await createReferral(req));
-    } else {
-        return res.status(403).json({ error: "Not allowed on current tenant" });
-    }
+router.post("/create", checkTenant, async (req, res) => {
+    return res.status(200).json(await createReferral(req));
 });
 
 module.exports = { router };

@@ -1,8 +1,10 @@
 import Head from "next/head";
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import LayoutApp from "@/components/Layout/LayoutApp";
 import routes from "@/routes";
+import PAGE from "@/lib/enum/route";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
@@ -12,8 +14,6 @@ import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 import ReferralsTable from "@/components/App/Referral/ReferralsTable";
 import { fetchUserReferrals } from "@/fetchers/referral.fetcher";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
-import { useRouter } from "next/router";
-import PAGE from "@/routes";
 import { tenantIndex } from "@/lib/utils";
 
 const StakeBased = dynamic(() => import("@/components/App/Settings/BasedStaking"), { ssr: true });
@@ -60,9 +60,7 @@ export default function AppSettings({ session }) {
         refetchOnWindowFocus: true,
     });
 
-    const {
-        data: userReferrals,
-    } = useQuery({
+    const { data: userReferrals } = useQuery({
         queryKey: ["fetchUserReferrals"],
         queryFn: fetchUserReferrals,
     });
@@ -94,27 +92,29 @@ export default function AppSettings({ session }) {
                 <div className="col-span-12 xl:col-span-6 flex flex-row gap-x-5 mobile:gap-10">
                     <ManageWallets walletProps={walletProps} />
                 </div>
-                <div className={"flex col-span-12 xl:col-span-6"}>{TENANTS_STAKING(stakingProps)}</div>
-                {isBaseVCTenant && userReferrals && <div className={"flex col-span-12 xl:col-span-6"}>
-                    <div className={"bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase overflow-x-auto"}>
-                        <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
-                            <div className="flex flex-1 font-bold">Referrals Summary</div>
-                        </div>
-                        <ReferralsTable dataProp={userReferrals} />
-                        <div className={"flex flex-row ml-auto p-5 mt-auto"}>
-                            <UniButton
-                                type={ButtonTypes.BASE}
-                                text={"Refer / Claim"}
-                                size={"text-sm xs"}
-                                isWide={true}
-                                isLarge={true}
-                                handler={() => {
-                                    router.replace(PAGE.Referral)
-                                }}
-                            />
+                <div className="flex col-span-12 xl:col-span-6">{TENANTS_STAKING(stakingProps)}</div>
+                {isBaseVCTenant && userReferrals && (
+                    <div className="flex col-span-12 xl:col-span-6">
+                        <div className="bg-navy-accent p-5 font-accent flex flex-1 flex-col uppercase overflow-x-auto">
+                            <div className="font-bold text-2xl flex items-center glowNormal p-5 ">
+                                <div className="flex flex-1 font-bold">Referrals Summary</div>
+                            </div>
+                            <ReferralsTable dataProp={userReferrals} />
+                            <div className="flex flex-row ml-auto p-5 mt-auto">
+                                <UniButton
+                                    type={ButtonTypes.BASE}
+                                    text={"Refer / Claim"}
+                                    size={"text-sm xs"}
+                                    isWide={true}
+                                    isLarge={true}
+                                    handler={() => {
+                                        router.replace(PAGE.Referral);
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>}
+                )}
             </div>
         </>
     );

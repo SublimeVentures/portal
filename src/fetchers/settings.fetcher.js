@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
-import { authTokenName, refreshTokenName } from "@/lib/authHelpers";
+import { authTokenName } from "@/lib/authHelpers";
 
 export const fetchUserWallets = async () => {
     try {

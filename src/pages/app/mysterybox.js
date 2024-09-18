@@ -29,7 +29,7 @@ const TENANT_MYSTERYBOX = () => {
         case TENANT.basedVC: {
             return (
                 <div className={"video-wrapper"}>
-                    <video loop autoPlay muted playsInline className="">
+                    <video loop autoPlay muted playsInline>
                         <source src="https://cdn.basedvc.fund/webapp/1.mp4" type="video/mp4" />
                     </video>
                 </div>

@@ -11,6 +11,7 @@ import BlockchainSteps from "@/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
 import GenericModal from "@/components/Modal/GenericModal";
 import { getTenantConfig } from "@/lib/tenantHelper";
+import { formatCurrency } from "@/utils/helpers";
 
 const { NAME } = getTenantConfig().seo;
 
@@ -118,10 +119,7 @@ export default function ClaimPayoutModal({ model, setter, props }) {
                     <div className={"detailRow font-bold"}>
                         <p>CLAIM</p>
                         <hr className={"spacer"} />
-                        <p className={"font-mono"}>
-                            {Number(nextPayout?.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}{" "}
-                            {currency?.symbol}
-                        </p>
+                        <p className={"font-mono"}>{formatCurrency(nextPayout?.amount, currency)}</p>
                     </div>
                 </div>
                 {model && <BlockchainSteps data={blockchainInteractionData} />}
