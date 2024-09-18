@@ -141,7 +141,7 @@ export default function NotificationsSettings() {
     return (
         <Card
             variant="none"
-            className="py-6 px-12 lg:py-3 lg:px-6 3xl:py-6 3xl:px-12 flex flex-col gap-8 lg:gap-4 3xl:gap-8 h-full w-full bg-settings-gradient"
+            className="py-6 px-12 lg:py-3 lg:px-6 3xl:py-6 3xl:px-12 flex flex-col gap-8 lg:gap-4 3xl:gap-8 min-h-full w-full bg-settings-gradient"
         >
             <div>
                 <CardTitle className="text-base font-medium text-white 3xl:text-lg">
