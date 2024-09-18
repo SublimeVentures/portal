@@ -163,7 +163,7 @@ export default function AppReferral() {
                         <div className="flex flex-1 flex-col bg-navy-accent">
                             <div className="flex flex-1 flex-col text-left">
                                 <div className="px-10 pt-5 mb-8">
-                                    <header className="text-3xl font-bold flex flex-1 glow">Summary</header>
+                                    <h2 className="text-3xl font-bold flex flex-1 glow">Summary</h2>
                                     <div className="text-md flex flex-1 mt-1 pb-5 color">Summary of all referrals</div>
                                     <div>{userReferrals && <ReferralsTable dataProp={userReferrals} />}</div>
                                 </div>
@@ -175,7 +175,7 @@ export default function AppReferral() {
                         <div className="flex flex-1 flex-col bg-navy-accent">
                             <div className="flex flex-1 flex-col text-left ">
                                 <div className="px-10 pt-5 mb-8">
-                                    <header className="text-3xl font-bold flex flex-1 glow">Claim Payouts</header>
+                                    <h2 className="text-3xl font-bold flex flex-1 glow">Claim Payouts</h2>
                                     <div className="text-md flex flex-1 mt-1 pb-5 color">
                                         Claim payouts from different referrals
                                     </div>

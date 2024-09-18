@@ -131,7 +131,7 @@ export default function ClaimPayoutModal({ model, setter, props }) {
         return (
             <div className="flex flex-col flex-1">
                 <div className={"flex flex-1 flex-col justify-center items-center"}>
-                    <div className={""}>
+                    <div>
                         Thank you for investing with <span className={"font-bold text-gold"}>{NAME}</span>.
                     </div>
                     <Lottie

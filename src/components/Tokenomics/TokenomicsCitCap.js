@@ -190,7 +190,7 @@ export default function TokenomicsCitCap({}) {
                     </div>
                 </div>
                 <div className={"mt-10 text-center text-xl"}>
-                    <span className={""}>Maximum allocation </span>
+                    <span>Maximum allocation </span>
                     <span className={"font-bold text-gold"}>${allocationTotal || 0}</span>
                 </div>
                 <div className={"flex flex-col gap-0 md:flex-row md:gap-10 justify-center mt-10"}>
@@ -203,11 +203,11 @@ export default function TokenomicsCitCap({}) {
                             />
                         </Link>
                     </div>
-                    <div className={""}>
-                        <div className={""}>
+                    <div>
+                        <div>
                             <Linker url={externalLinks.GETBYTES} text={"Get BYTES"} />
                         </div>
-                        <div className={""}>
+                        <div>
                             <Linker url={externalLinks.STAKE_NT} text={"Stake in Bank of Neo Tokyo"} />
                         </div>
                     </div>

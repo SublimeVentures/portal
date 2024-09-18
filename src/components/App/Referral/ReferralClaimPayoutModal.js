@@ -106,7 +106,7 @@ export default function ReferralClaimPayoutModal({ model, setter, props }) {
                 </div>
                 <div className={"flex flex-1 flex-col py-5"}>
                     <div className={"detailRow"}>
-                        <p className={"font-bold"}>NETWORK</p>
+                        <h2 className={"font-bold"}>NETWORK</h2>
                         <hr className={"spacer"} />
                         <p className={"flex gap-1 h-[18px] font-mono"}>
                             <DynamicIcon name={NETWORKS[currency?.chainId]} style={ButtonIconSize.clicksLow} />

@@ -63,7 +63,7 @@ export default function TokenomicsCyberKongz({}) {
                     </div>
                 </div>
                 <div className={"mt-10 text-center text-xl"}>
-                    <span className={""}>Maximum allocation </span>
+                    <span>Maximum allocation </span>
                     <span className={"font-bold text-gold"}>${allocationTotal || 0}</span>
                 </div>
                 <div className={"flex flex-col gap-0 md:flex-row md:gap-10 justify-center mt-10"}>
@@ -77,7 +77,7 @@ export default function TokenomicsCyberKongz({}) {
                         </Link>
                     </div>
                     <div className={"flex justify-center items-center"}>
-                        <div className={""}>
+                        <div>
                             <Linker url={externalLinks.GET_BANANA_ETH} text={"Get BANANA"} />
                         </div>
                     </div>

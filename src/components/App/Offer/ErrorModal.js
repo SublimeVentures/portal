@@ -81,7 +81,7 @@ export default function ErrorModal({ model, setter, errorModalProps }) {
     };
 
     const content = () => {
-        return <div className={""}>{renderError(code)}</div>;
+        return <div>{renderError(code)}</div>;
     };
 
     return <GenericModal isOpen={model} closeModal={setter} title={title()} content={content()} />;
