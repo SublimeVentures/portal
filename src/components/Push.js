@@ -5,7 +5,7 @@ export default function Push() {
     const { fcm } = useFirebase();
 
     useEffect(() => {
-        if (fcm) {
+        if (fcm && fcm.app) {
             console.debug("FCM app name:", fcm.app.name);
         }
     }, [fcm]);
