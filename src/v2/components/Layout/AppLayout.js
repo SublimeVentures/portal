@@ -15,7 +15,7 @@ export const layoutStyles = {
 const DesktopLayout = ({ children, isBlockedAlert, title, contentClassName, session }) => {
     return (
         <>
-            <div className="px-4 pt-4 flex flex-col gap-4 lg:hidden">
+            <div className="px-4 pt-4 flex flex-col gap-4 lg:hidden relative before:absolute before:top-full before:z-10 before:bg-gradient-to-b before:to-transparent before:from-primary-950 before:h-4 before:left-0 before:right-0 before:pointer-events-none sm:before:hidden">
                 <Header isBlockedAlert={isBlockedAlert} session={session} />
                 <TabletNavbar />
             </div>
@@ -51,7 +51,12 @@ export default function LayoutApp({ children, title, contentClassName }) {
             )}
         >
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
-            <DesktopLayout isBlockedAlert={isBlockedAlert} title={title} contentClassName={contentClassName} session={session}>
+            <DesktopLayout
+                isBlockedAlert={isBlockedAlert}
+                title={title}
+                contentClassName={contentClassName}
+                session={session}
+            >
                 {children}
             </DesktopLayout>
 

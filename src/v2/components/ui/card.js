@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { cva } from "class-variance-authority";
+import Link from "next/link";
 
 import { Button } from "@/v2/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -20,8 +21,14 @@ const cardVariants = cva("group/card py-3.5 px-5 relative rounded transition-bas
     },
 });
 
-const Card = forwardRef(({ variant, border, className, ...props }, ref) => (
-    <div ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />
+const Card = forwardRef(({ variant, border, className, href, ...props }, ref) => (
+    <>
+        {href ? (
+            <Link ref={ref} href={href} className={cn(cardVariants({ variant, className }))} {...props} />
+        ) : (
+            <div ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />
+        )}
+    </>
 ));
 
 Card.displayName = "Card";

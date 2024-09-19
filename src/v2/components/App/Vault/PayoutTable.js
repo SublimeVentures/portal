@@ -60,7 +60,7 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
         "order-1": variant === PayoutTableVariants.horizontal,
     });
     return (
-        <Card variant="static" className={cn("p-0 flex flex-col", className)}>
+        <Card variant="static" className={cn("p-0 flex flex-col cursor-auto", className)}>
             <div className="p-2 h-5 rounded bg-gradient-to-r from-primary to-primary-600" />
             {!pages[0]?.rows?.length ? (
                 <div className="grow p-4">
@@ -94,16 +94,19 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                                         <li
                                             key={id}
                                             className={cn(
-                                                "p-4 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09]",
+                                                "p-4 flex items-center bg-foreground/[0.03] transition-colors hover:bg-foreground/[0.09]",
                                                 {
                                                     "flex-col": variant === PayoutTableVariants.horizontal,
                                                     "flex-row": variant === PayoutTableVariants.vertical,
                                                 },
                                             )}
                                         >
-                                            <Avatar session={{ img: getResearchIconSrc(slug) }} />
+                                            <Avatar
+                                                session={{ img: getResearchIconSrc(slug) }}
+                                                className="select-none pointer-events-none"
+                                            />
                                             <dl
-                                                className={cn("w-full", {
+                                                className={cn("w-full select-none", {
                                                     "flex flex-col gap-2": variant === PayoutTableVariants.horizontal,
                                                     "ml-4 grid grid-cols-5 items-center justify-between gap-4":
                                                         variant === PayoutTableVariants.vertical,

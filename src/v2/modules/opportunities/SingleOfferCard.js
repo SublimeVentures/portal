@@ -13,7 +13,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                 <div className="relative h-24 flex gap-2 lg:mb-12 lg:h-32">
                     <Image
                         src={getResearchIconSrc(slug)}
-                        className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg"
+                        className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg select-none pointer-events-none"
                         alt={`Avatar for ${name} offer`}
                         width={90}
                         height={90}
@@ -21,7 +21,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <Image
                         src={getResearchBgSrc(slug)}
                         alt={`Background image for ${name} offer`}
-                        className="object-cover rounded"
+                        className="object-cover rounded  select-none pointer-events-none"
                         width={1000}
                         height={200}
                     />

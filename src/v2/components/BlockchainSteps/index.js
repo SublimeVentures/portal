@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 
+import { stepsStatus } from "./reducer";
 import BlockchainStep from "@/v2/components/BlockchainSteps/BlockchainStep";
 import { countSteps } from "@/v2/components/BlockchainSteps/helpers";
 import LinkIcon from "@/v2/assets/svg/link.svg";
@@ -11,11 +12,10 @@ import FiveChainsIcon from "@/v2/assets/svg/five-chains.svg";
 import FourChainsIcon from "@/v2/assets/svg/four-chains.svg";
 import TreeChainsIcon from "@/v2/assets/svg/tree-chains.svg";
 import TwoChainsIcon from "@/v2/assets/svg/two-chains.svg";
-import { stepsStatus } from "./reducer";
 
 const successColors = { "--start-color": "rgba(64, 206, 96, .22)", "--end-color": "rgba(32, 103, 48, .22)" };
 
-const colorSchemes = {
+export const colorSchemes = {
     [stepsStatus.IDLE]: { "--start-color": "rgba(13, 43, 58, .22)", "--end-color": "rgba(165, 210, 255, .22)" },
     [stepsStatus.ERROR]: { "--start-color": "rgba(225, 58, 58, .22)", "--end-color": "rgba(109, 28, 28, .22)" },
     [stepsStatus.PROCESSING]: successColors,
@@ -25,7 +25,7 @@ const colorSchemes = {
 const ChainIcon = ({ steps, status = colorSchemes.IDLE }) => {
     const stepsNumber = countSteps(steps);
     let IconComponent;
-    
+
     switch (stepsNumber) {
         case 2:
             IconComponent = TwoChainsIcon;

@@ -66,14 +66,14 @@ export default function AppUpgrades({ session }) {
                 <title>{title}</title>
             </Head>
             <Header title="Supercharge your investments" className="sm:mb-4 lg:mb-0" />
-            <div className="flex flex-col sm:flex-row sm:grow sm:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12">
+            <div className="flex flex-col sm:flex-row sm:grow sm:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12 select-none">
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
                             key={data.slug}
                             variant={data.id === 1 ? "accent" : "static"}
                             className={cn(
-                                "text-white flex-1 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
+                                "cursor-auto text-white flex-1 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
                                 {
                                     "!bg-pattern-gold": data.id === 1,
                                     "!bg-pattern-blue": data.id !== 1,
@@ -82,7 +82,7 @@ export default function AppUpgrades({ session }) {
                         >
                             <Image
                                 src={getStoreSrc(data.img)}
-                                className="rounded-full size-46 sm:size-32 3xl:size-80"
+                                className="rounded-full size-46 sm:size-32 3xl:size-80 pointer-events-none"
                                 alt={data.name}
                                 width={320}
                                 height={320}
