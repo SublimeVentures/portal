@@ -60,7 +60,7 @@ async function getActiveOffers(otcId, query) {
         },
         raw: true,
     });
-};
+}
 
 async function getHistoryOffers(offerId, query) {
     const { sortId, sortOrder } = query;
@@ -90,9 +90,9 @@ async function getHistoryOffers(offerId, query) {
         },
         raw: true,
     });
-};
+}
 
-async function getLatestOffers(query) {
+async function getLatestOffers(query, tenantId, partnerId) {
     const { sortId, sortOrder } = query;
 
     const order = constructOffersOrder(sortId, sortOrder);
@@ -115,14 +115,29 @@ async function getLatestOffers(query) {
             isFilled: false,
             isCancelled: false,
         },
-        include: {
-            model: models.offer,
-            attributes: [],
-            required: true, // Ensures INNER JOIN
-        },
+        include: [
+            {
+                model: models.offer,
+                attributes: [],
+                required: true,
+                where: {
+                    id: {
+                        [Sequelize.Op.in]: Sequelize.literal(`(
+                            SELECT "offerLimit"."offerId"
+                            FROM "offerLimit"
+                            WHERE (
+                                ("offerLimit"."isTenantExclusive" = false AND ("offerLimit"."partnerId" = ${partnerId} OR "offerLimit"."partnerId" = ${tenantId}))
+                                OR
+                                ("offerLimit"."isTenantExclusive" = true AND "offerLimit"."partnerId" = ${tenantId})
+                            )
+                        )`),
+                    },
+                },
+            },
+        ],
         raw: true,
     });
-};
+}
 
 async function getUserPendingOffers(wallet) {
     return models.otcLock.findAll({

@@ -138,6 +138,16 @@
     background-size: auto 100%;
     background-repeat: no-repeat;
   }
+
+  .hamburger-transform-1 {
+    transform: rotateZ(45deg) translate(4px, 0px);
+  }
+  .hamburger-transform-2 {
+    transform: rotateZ(-45deg);
+  }
+  .hamburger-transform-3 {
+    transform: translate(17px, -3px) rotateZ(45deg);
+  }
 }
 
 ::-webkit-scrollbar {
@@ -219,12 +229,4 @@ input[type=number] {
 .test6 {
   // background: linear-gradient(to top, theme('colors.primary.950'), transparent);
   background: linear-gradient(to top, theme('colors.primary.950') 0%, theme('colors.primary.950') 50%, transparent 100%);
-}
-
-.tabs-scrollbar::-webkit-scrollbar {
-  height: 4px;
-}
-.tabs-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #0D87A1 transparent;
 }

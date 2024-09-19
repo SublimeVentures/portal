@@ -30,7 +30,7 @@ const renderLogo = (componentName) => {
 
 export default function MobileMenu({ isBlockedAlert }) {
     const router = useRouter();
-    const { environmentCleanup } = useEnvironmentContext();
+    const { environmentCleanup, networkToggle } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -105,7 +105,9 @@ export default function MobileMenu({ isBlockedAlert }) {
                 >
                     <div className="p-4 w-full flex items-center justify-between">
                         <Link href={PAGE.App}>
-                            <div className="flex items-center">{renderLogo(components.logo)}</div>
+                            <div className={cn("flex items-center", { "w-0 overflow-hidden": networkToggle })}>
+                                {renderLogo(components.logo)}
+                            </div>
                         </Link>
                         <div className="flex items-center gap-4">
                             <NotificationMenu />

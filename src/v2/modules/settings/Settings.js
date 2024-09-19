@@ -6,7 +6,7 @@ import Wallet from "./Wallet";
 import General from "./General";
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/v2/components/ui/tabs";
-import Referals from "@/v2/modules/settings/Referals";
+import Referrals from "@/v2/modules/settings/Referrals";
 
 export const mobileTabs = [
     {
@@ -25,9 +25,9 @@ export const mobileTabs = [
         component: Wallet,
     },
     {
-        id: "mobile-referals",
-        name: "Referals",
-        component: Referals,
+        id: "mobile-referrals",
+        name: "Referrals",
+        component: Referrals,
     },
 ];
 
@@ -38,9 +38,9 @@ export const desktopTabs = [
         component: General,
     },
     {
-        id: "referals",
-        name: "Referals",
-        component: Referals,
+        id: "referrals",
+        name: "Referrals",
+        component: Referrals,
     },
 ];
 
@@ -58,8 +58,8 @@ export default function Settings({ session }) {
                 value={activeTab}
                 onValueChange={setActiveTab}
             >
-                <div className="flex justify-between items-center">
-                    <TabsList aria-label="Settings tabs" className="pb-0">
+                <div className="relative flex justify-between items-center -mx-4 before:absolute before:inset-y-0 before:left-0 before:w-6 before:z-10 md:before:hidden before:pointer-events-none before:bg-gradient-to-r before:to-transparent before:from-primary-950 after:absolute after:inset-y-0 after:right-0 after:w-6 after:z-10 md:after:hidden after:pointer-events-none after:bg-gradient-to-l after:to-transparent after:from-primary-950">
+                    <TabsList aria-label="Settings tabs" className="pb-0 px-4">
                         {tabs.map((tab) => (
                             <TabsTrigger key={tab.name} value={tab.id}>
                                 {tab.name}

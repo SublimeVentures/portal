@@ -78,10 +78,12 @@ export default function History({ className }) {
                                 >
                                     {participant.isConfirmed && <span className="text-success">Confirmed</span>}
                                     {participant.isConfirmedInitial && !participant.isConfirmed && (
-                                        <span className="text-yellow-500">Reserved</span>
+                                        <span className="text-yellow-500">Internal check</span>
                                     )}
                                     {participant.isExpired && <span className="text-error">Expired</span>}
-                                    {participant.isGuaranteed && <span className="text-accent">Guaranteed</span>}
+                                    {!participant.isConfirmedInitial &&
+                                        !participant.isConfirmed &&
+                                        !participant.isExpired && <span className="text-accent">Booked</span>}
                                 </Definition>
                                 <Definition
                                     term="Amount"
@@ -94,14 +96,18 @@ export default function History({ className }) {
                             <Button
                                 className="hidden md:block"
                                 variant="outline"
-                                disabled={!(participant.isConfirmedInitial && !participant.isConfirmed)}
+                                disabled={
+                                    participant.isConfirmed || participant.isConfirmedInitial || participant.isExpired
+                                }
                             >
                                 Cancel
                             </Button>
                             <Button
                                 className="md:hidden px-5"
                                 variant="secondary"
-                                disabled={!(participant.isConfirmedInitial && !participant.isConfirmed)}
+                                disabled={
+                                    participant.isConfirmed || participant.isConfirmedInitial || participant.isExpired
+                                }
                             >
                                 <CrossIcon className="size-3" />
                             </Button>

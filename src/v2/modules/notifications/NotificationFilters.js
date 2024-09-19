@@ -40,7 +40,10 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
                         value={typeId ?? 0}
                         onValueChange={(value) => handleInputChange("typeId", value === 0 ? null : value)}
                     >
-                        <SelectTrigger className="px-8 w-full md:w-auto" size="sm">
+                        <SelectTrigger
+                            className="px-8 w-full md:w-auto text-xs md:text-sm !leading-1 md:!leading-6"
+                            size="sm"
+                        >
                             <SelectValue placeholder="Event type" />
                         </SelectTrigger>
                         <SelectContent>

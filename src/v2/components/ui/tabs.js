@@ -9,7 +9,7 @@ const TabsList = forwardRef(({ className, ...props }, ref) => (
     <TabsPrimitive.List
         ref={ref}
         className={cn(
-            "pb-4 inline-flex w-full tabs-scrollbar overflow-x-auto items-center justify-start gap-2",
+            "pb-4 inline-flex w-full overflow-x-auto items-center justify-start gap-2 no-scrollbar",
             className,
         )}
         {...props}
