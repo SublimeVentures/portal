@@ -18,7 +18,7 @@ This will execute any scripts that need to run after the installation of package
 yarn run prepare
 ```
 
-### Run development server
+### Run development server:
 
 ```bash
 npm run dev
