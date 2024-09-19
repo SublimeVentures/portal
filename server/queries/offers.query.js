@@ -375,6 +375,24 @@ async function getOfferWithLimits(offerId) {
                 {
                     model: models.offerLimit,
                     as: "offerLimits",
+                    attributes: [
+                        'id',
+                        'offerId',
+                        'partnerId',
+                        'isTenantExclusive',
+                        'alloMin',
+                        'alloMax',
+                        'alloTotal',
+                        'd_open',
+                        'd_close',
+                        'lengthWhales',
+                        'lengthRaffle',
+                        'lengthFCFS',
+                        'lengthGuaranteed',
+                        'guaranteedIsExpired',
+                        'createdAt',
+                        'updatedAt'
+                    ]
                 },
             ],
         });

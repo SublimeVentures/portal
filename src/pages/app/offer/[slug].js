@@ -7,7 +7,6 @@ import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
-
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });
 
@@ -170,13 +169,7 @@ AppOfferDetails.getLayout = function (page) {
 //     allocationUserLeft: allocationData.allocationUser_left,
 // };
 
-// const investModalProps = {
-//     investmentAmount,
-//     offer,
-//     selectedCurrency,
-//     bookingExpire,
-//     afterInvestmentCleanup,
-// };
+
 
 //             <RestoreHashModal
 //                 restoreModalProps={restoreModalProps}
@@ -192,15 +185,7 @@ AppOfferDetails.getLayout = function (page) {
 //                     setErrorModal({ open: false, code: null });
 //                 }}
 //             />
-//             {network?.isSupported && selectedCurrency && (
-//                 <InvestModal
-//                     investModalProps={investModalProps}
-//                     model={isInvestModal}
-//                     setter={() => {
-//                         setInvestModal(false);
-//                     }}
-//                 />
-//             )}
-//         </div>
+
+
 //     );
 // }

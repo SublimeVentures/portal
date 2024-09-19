@@ -12,10 +12,9 @@ import { cn } from "@/lib/cn";
 
 // const { clearBooking, bookingDetails, setBooking, getSavedBooking } = useInvestContext();
 // const data = useInvestContext(offer.id);
-let isClosed = false; // @TODO: Remove
 
 export default function Investment({ session, className }) {
-    const { phaseCurrent, isClosed: isClosedTemp } = usePhaseInvestment();
+    const { phaseCurrent, isClosed } = usePhaseInvestment();
     const { upgradesUse } = useOfferDetailsStore();
     const { data: offer } = useOfferDetailsQuery();
 
@@ -50,8 +49,8 @@ export default function Investment({ session, className }) {
                     {displayGuaranteed && <Badge variant="warning">Guaranteed</Badge>}
                 </div>
             </div>
-
-            <div className="px-6 py-4 bg-foreground/[.05] rounded">
+        
+            <div className="px-6 py-4 h-full bg-foreground/[.05] rounded">
                 {isClosed ? <InvestClosed /> : <Invest session={session} />}
             </div>
         </div>

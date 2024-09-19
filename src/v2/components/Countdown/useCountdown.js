@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
 
@@ -18,6 +18,7 @@ const getReturnValues = (countDown) => {
 export const useCountdown = (targetDate, onComplete = () => {}) => {
     const countDownDate = new Date(targetDate).getTime();
     const [countDown, setCountDown] = useState(null);
+    const hasCompleted = useRef(false);
 
     useEffect(() => {
         const updateCountdown = () => {
@@ -25,10 +26,14 @@ export const useCountdown = (targetDate, onComplete = () => {}) => {
             const timeLeft = countDownDate - now;
 
             if (timeLeft <= 0) {
-                setCountDown(0);
-                onComplete();
+                if (!hasCompleted.current) {
+                    setCountDown(0);
+                    onComplete();
+                    hasCompleted.current = true;
+                }
             } else {
                 setCountDown(timeLeft);
+                hasCompleted.current = false;
             }
 
             setCountDown(countDownDate - now);

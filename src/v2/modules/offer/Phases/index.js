@@ -31,8 +31,8 @@ export default function Phases({ className }) {
             </div>
 
             <div className="mt-4 2xl:mr-16 2xl:mt-0">
-                {!isClosed && <Countdown countStart={countStart} onComplete={updatePhase} />}
+                {!isClosed ? <Countdown countStart={countStart} onComplete={updatePhase} /> : "Phase Closed"}
             </div>
         </div>
     );
-}
+};

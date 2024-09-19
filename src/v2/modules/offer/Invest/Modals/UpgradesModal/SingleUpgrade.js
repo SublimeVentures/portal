@@ -1,18 +1,19 @@
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
-import { PremiumItemsENUM } from "@/lib/enum/store";
+import { PremiumItemsENUM, PremiumItemsParamENUM } from "@/lib/enum/store";
+import { PhaseId } from "@/v2/lib/phases";
 import { cn } from "@/lib/cn";
 
 const upgradesData = {
     [PremiumItemsENUM.Guaranteed]: {
         name: "Guaranteed",
-        description: "Secure a guaranteed allocation slot.",
-        phases: [1, 2, 3, 4, 5, 6, 7, 8],
+        description: `"Guarantee your max allocation by $${PremiumItemsParamENUM.Guaranteed}.`,
+        phases: [PhaseId.Whale, PhaseId.Pending],
         bg: "/img/upgrade-dialog-premium.png",
     },
     [PremiumItemsENUM.Increased]: {
         name: "Increased",
-        description: "Increase your maximum allocation by $2000.",
-        phases: [1, 2, 3, 4, 5, 6, 7, 8],
+        description: `Increase your maximum allocation by $${PremiumItemsParamENUM.Increased}.`,
+        phases: [PhaseId.Whale, PhaseId.Pending, PhaseId.FCFS],
         bg: "/img/bg/banner/default@2.webp",
     },
 };
@@ -21,18 +22,22 @@ const upgradesData = {
 // @TODO - Adjsut background images and gradient
 export default function SingleUpgrade({ id, amount, isSelected, onSelect }) {
     const upgrade = upgradesData[id];
-    // const { getStoreSrc } = useImage();
 
+    // const { getStoreSrc } = useImage();
     const { phaseCurrent } = usePhaseInvestment();
     const isValidPhase = upgrade.phases.includes(phaseCurrent.phase);
 
+    const handleUpgradeSelect = (id) => isValidPhase && onSelect(id);
+    
     return (
         <div
             className={cn(
                 "relative flex items-end w-full h-[400px] bg-[#0A1C30] border rounded cursor-pointer overflow-hidden transition-all ease-in-out",
                 isSelected ? "border-primary" : "border-transparent",
+                !isValidPhase && "cursor-not-allowed",
+                !isSelected && isValidPhase && "hover:border-primary/40",
             )}
-            onClick={() => onSelect(id)}
+            onClick={() => handleUpgradeSelect(id)}
         >
             <div
                 className="absolute inset-0 bg-cover bg-center transition-opacity duration-300"
@@ -50,7 +55,7 @@ export default function SingleUpgrade({ id, amount, isSelected, onSelect }) {
 
                 <dl className={cn("px-4 py-2 flex items-center gap-6 rounded", isValidPhase ? "text-accent bg-accent/10" : "text-red-500 bg-red-500/10")}>
                     <dt>Owned</dt>
-                    <dd style={{ textShadow: "0 0 15px #FDC171" }}>{amount}</dd>
+                    <dd style={{ textShadow: isValidPhase ? "0 0 15px #FDC171" : "0 0 15px red" }}>{amount}</dd>
                 </dl>
             </div>
         </div>

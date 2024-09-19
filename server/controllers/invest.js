@@ -30,13 +30,11 @@ async function processBooking(offer, offerLimit, user, amount) {
         sumAmountForUserAndTenant(offer.id, userId, tenantId),
         fetchUpgradeUsed(userId, offer.id, tenantId),
     ]);
-    // console.log("vault", vault);
-    // console.log("upgrades", upgrades);
-    // console.log("offer", offer);
 
     const upgradeGuaranteed = offer?.isLaunchpad
         ? { isExpired: true, alloMax: 0, alloUsed: 0 }
         : upgrades.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    
     const upgradeIncreased = upgrades.find((el) => el.id === PremiumItemsENUM.Increased);
 
     let transaction;
@@ -243,7 +241,7 @@ function checkReserveSpotQueryParams(req) {
     }
 }
 
-async function obtainSignature(offerId, amount, hash, expires, token) {
+async function obtainSignature(offerId, amount, hash, expires, partnerId, chainId, token) {
     const signature = await axios.post(
         `${process.env.AUTHER}/invest/sign`,
         {
@@ -251,6 +249,8 @@ async function obtainSignature(offerId, amount, hash, expires, token) {
             amount,
             hash,
             expires,
+            partnerId,
+            chainId,
             token,
         },
         {
@@ -277,19 +277,18 @@ async function reserveSpot(user, req) {
         const queryParams = checkReserveSpotQueryParams(req);
         if (!queryParams.ok) return queryParams;
 
-        console.log("queryParams", queryParams);
         const reservation = await processReservation(queryParams.data, user);
-        console.log("reservation", reservation);
-
         if (!reservation.ok) return reservation;
 
-        console.log("reservation", reservation);
         const token = req.cookies[authTokenName];
+
         const signature = await obtainSignature(
             queryParams.data._offerId,
             reservation.data.amount,
             reservation.data.hash,
             reservation.data.expires,
+            user.partnerId,
+            queryParams.data._chain,
             token,
         );
 

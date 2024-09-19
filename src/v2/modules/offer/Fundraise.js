@@ -30,6 +30,7 @@ export default function Fundraise({ className }) {
     const { data: { progress, filled } = {} } = useOfferProgressQuery(offer.id, {
         refetchInterval: state === OfferStatus.IN_PROGRESS ? 15000 : false,
     });
+    
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl space-y-6", className)}>
