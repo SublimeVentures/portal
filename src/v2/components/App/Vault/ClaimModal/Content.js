@@ -39,7 +39,7 @@ export default function Content({ data }) {
                         name="Timeline"
                         variant="primary"
                         shape="circle"
-                        className="absolute top-2.5 right-2.5 block md:hidden p-2"
+                        className="absolute top-50 right-6 block md:hidden p-2"
                         icon={!timeline ? ScheduleIcon : ArrowLeftIcon}
                         onClick={handleToggleTimeline}
                     />

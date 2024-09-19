@@ -51,7 +51,7 @@ export default function InvestmentsList({ investments, views, query, onChange, c
         <Header
             className={className}
             title="My Investments"
-            count={investments.length + 1}
+            count={investments.length}
             bannerClassName="hidden sm:flex lg:hidden 2xl:flex"
             affix={<ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />}
         >

@@ -13,7 +13,7 @@ const Definition = ({ term, children }) => (
 export default function Vesting({ className }) {
     const { data: offer, isLoading } = useOfferDetailsQuery();
     return (
-        <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6", className)}>
+        <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6 select-none", className)}>
             <h2 className="text-xl md:text-2xl font-medium">Vesting details</h2>
             <ul className="overflow-y-auto md:max-h-44 -my-2 -mr-3 pr-2">
                 {isLoading ? (

@@ -27,6 +27,7 @@ const DEFAULT_STATE = {
     sharedContracts: {},
     settings: {},
     activeDiamond: "",
+    networkToggle: false,
 };
 
 const EnvironmentContext = createContext({
@@ -249,6 +250,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         currencyStore: environmentProps.currencyStore,
         currencyStaking: environmentProps.currencyStaking,
         settings: environmentProps.settings,
+        networkToggle: environmentProps.networkToggle,
         getCurrencySettlement,
         getCurrencyStore,
         getCurrencySymbolByAddress,

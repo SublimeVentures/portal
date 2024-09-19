@@ -24,7 +24,14 @@ import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStep
 import { ExternalLinks } from "@/routes";
 
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
-    const { transactionSuccessful, textCopy, currentMarket, getSelectedMarketProps, getOfferTabsProps, getOfferFormProps } = content;
+    const {
+        transactionSuccessful,
+        textCopy,
+        currentMarket,
+        getSelectedMarketProps,
+        getOfferTabsProps,
+        getOfferFormProps,
+    } = content;
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
 
     return (
@@ -35,7 +42,7 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
             </SheetHeader>
 
             <SheetBody>
-                <div className="h-full my-4 mr-4 block-scrollbar overflow-y-auto">
+                <div className="h-full my-4 sm:mr-4 block-scrollbar sm:overflow-y-auto">
                     {transactionSuccessful ? (
                         <MakeTransactionSuccess market={currentMarket.name} textCopy={textCopy} amount={amount} />
                     ) : (
@@ -75,18 +82,23 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
 export default function MakeOfferModal() {
     const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
 
-    const { selectedTab, blockchainInteractionDataSELL, blockchainInteractionDataBUY, ...content } = useCreateOfferModalLogic(isMakeModalOpen, setIsMakeModalOpen);
+    const { selectedTab, blockchainInteractionDataSELL, blockchainInteractionDataBUY, ...content } =
+        useCreateOfferModalLogic(isMakeModalOpen, setIsMakeModalOpen);
 
-    const { resetState: resetSellState, ...buyBlockchainStep } = useBlockchainStep({ data: blockchainInteractionDataSELL });
-    const { resetState: resetBuyState, ...sellBlockchainStep } = useBlockchainStep({ data: blockchainInteractionDataBUY });
+    const { resetState: resetSellState, ...buyBlockchainStep } = useBlockchainStep({
+        data: blockchainInteractionDataSELL,
+    });
+    const { resetState: resetBuyState, ...sellBlockchainStep } = useBlockchainStep({
+        data: blockchainInteractionDataBUY,
+    });
 
     const handleModalChange = (isOpen) => {
         if (!isOpen) {
             resetBuyState();
             resetSellState();
         }
-        
-        setIsMakeModalOpen(isOpen)
+
+        setIsMakeModalOpen(isOpen);
     };
 
     return (

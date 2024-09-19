@@ -73,13 +73,13 @@ const OfferSelect = ({ name, control, options, handleChange }) => {
     );
 };
 
-const OfferMaxValue = ({ name, control, handleChange }) => {
+const OfferMaxValue = ({ name, control, handleChange, className }) => {
     return (
         <FormField
             name={name}
             control={control}
             render={() => (
-                <FormItem className="w-[80px] self-center">
+                <FormItem className={cn("w-[80px] self-center", className)}>
                     <FormControl>
                         <Button
                             className="pl-10 pr-0 pt-6 pb-0 text-primary bg-transparent border-none hover:enabled:text-white hover:enabled:bg-transparent"
@@ -96,6 +96,7 @@ const OfferMaxValue = ({ name, control, handleChange }) => {
 
 export default function OfferForm({ form, cdn, market, multiplierParsed, getOfferFieldProps }) {
     const selectedCurrency = getOfferFieldProps("currency").value;
+    const maxProps = getOfferFieldProps("max");
     return (
         <>
             <Form {...form}>
@@ -116,7 +117,12 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
                                         />
                                     }
                                     {...getOfferFieldProps("amount")}
-                                    after={<OfferMaxValue {...getOfferFieldProps("max")} />}
+                                    after={
+                                        <>
+                                            {maxProps ? <OfferMaxValue {...maxProps} className="mr-5" /> : null}
+                                            <span className="text-white/50">USD</span>
+                                        </>
+                                    }
                                 />
                             </div>
                         </div>

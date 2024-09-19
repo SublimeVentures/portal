@@ -39,10 +39,10 @@ export default function WalletSettings({ session }) {
 
     return (
         <Card variant="none" className="flex flex-col gap-8 h-full w-full bg-settings-gradient md:py-6 md:px-12">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center select-none">
                 <div>
-                    <CardTitle className="text-lg font-medium">Wallet connect</CardTitle>
-                    <CardDescription className="text-md">Payout will be send to this wallet</CardDescription>
+                    <CardTitle className="text-lg font-medium">Wallet Connected</CardTitle>
+                    <CardDescription className="text-md">Payouts will be sent to this wallet</CardDescription>
                 </div>
 
                 <div className="hidden md:block">
@@ -50,6 +50,7 @@ export default function WalletSettings({ session }) {
                         isOpen={isAddWalletModalOpen}
                         setIsOpen={setIsAddWalletModalOpen}
                         disabled={isMaxWallets || isLoading}
+                        wallets={wallets}
                     />
                 </div>
             </div>
@@ -78,19 +79,19 @@ export default function WalletSettings({ session }) {
                                               <div className="flex flex-wrap items-center gap-8">
                                                   <CheckboxField
                                                       checked={isAirdrop}
-                                                      className="cursor-default pointer-events-none"
+                                                      className="cursor-default pointer-events-none select-none"
                                                   >
                                                       Airdrop
                                                   </CheckboxField>
                                                   <CheckboxField
                                                       checked={isStaking}
-                                                      className="cursor-default pointer-events-none"
+                                                      className="cursor-default pointer-events-none select-none"
                                                   >
                                                       Staking
                                                   </CheckboxField>
                                                   <CheckboxField
                                                       checked={isDelegate}
-                                                      className="cursor-default pointer-events-none"
+                                                      className="cursor-default pointer-events-none select-none"
                                                   >
                                                       Delegated wallet
                                                   </CheckboxField>

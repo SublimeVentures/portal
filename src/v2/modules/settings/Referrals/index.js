@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
-import ReferalsSteps from "@/v2/modules/settings/Referals/ReferalsSteps";
-import ReferalsTable from "@/v2/modules/settings/Referals/ReferalsTable";
+import ReferralsSteps from "@/v2/modules/settings/Referrals/ReferralsSteps";
+import ReferralsTable from "@/v2/modules/settings/Referrals/ReferralsTable";
 import {
     RewardStatisticCard,
     DiscountsStatisticCard,
     InvitersStatisticCard,
 } from "@/v2/components/App/Vault/StatisticsCard";
 
-export default function Referals() {
+export default function Referrals() {
     return (
         <div className="grid grid-cols-1 gap-5 box-border 3xl:grid-cols-3 3xl:h-full">
             <div className="bg-gray-800 rounded-lg col-span-1 md:row-span-12">
@@ -25,7 +25,7 @@ export default function Referals() {
                             details.
                         </CardDescription>
                     </div>
-                    <ReferalsSteps />
+                    <ReferralsSteps />
                 </Card>
             </div>
 
@@ -36,7 +36,7 @@ export default function Referals() {
             </div>
 
             <div className="bg-gray-800 rounded-lg col-span-1 3xl:col-span-2 md:row-span-11">
-                <ReferalsTable />
+                <ReferralsTable />
             </div>
         </div>
     );

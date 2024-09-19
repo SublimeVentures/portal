@@ -32,9 +32,15 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
                     className,
                 )}
             >
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center select-none">
                     <div className="flex items-center gap-4">
-                        <Image src={getImageSrc(item, image)} className="rounded-full" alt="" width={55} height={55} />
+                        <Image
+                            src={getImageSrc(item, image)}
+                            className="rounded-full pointer-events-none"
+                            alt=""
+                            width={55}
+                            height={55}
+                        />
 
                         <div>
                             <div>

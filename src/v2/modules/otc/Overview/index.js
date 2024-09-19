@@ -29,15 +29,15 @@ export default function Overview() {
                 <Skeleton className="h-64 md:h-24" />
             ) : (
                 <>
-                    <div className="flex items-center gap-4 2xl:gap-8">
+                    <div className="flex items-center gap-4 2xl:gap-8 select-none">
                         <Image
                             src={getResearchIconSrc(slug)}
-                            className="size-22 3xl:size-26 rounded"
+                            className="size-22 3xl:size-26 rounded pointer-events-none"
                             alt={slug}
                             width={100}
                             height={100}
                         />
-                        <div className="w-full">
+                        <div className="w-full select-none">
                             <h3 className="text-base font-medium 3xl:text-3xl text-foreground leading-none">
                                 {name}
                                 <small className="ml-1.5 font-light align-super text-2xs 3xl:text-base">

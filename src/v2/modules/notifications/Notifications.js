@@ -18,7 +18,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
             {data.length > 0 || isFetching ? (
                 <Card
                     variant="none"
-                    className="flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12 p-0"
+                    className="flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12 p-0 cursor-auto"
                 >
                     <div className="py-4 flex flex-col h-full overflow-y-auto pr-4">
                         <ol className="px-4 flex flex-col grow overflow-x-hidden py-2">
@@ -46,7 +46,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
                 <Card
                     variant="none"
                     border="none"
-                    className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat lg:mb-6 3xl:mb-12"
+                    className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat lg:mb-6 3xl:mb-12 cursor-auto select-none"
                 >
                     <CardTitle className="text-sm md:text-base text-center font-normal">
                         No notifications found

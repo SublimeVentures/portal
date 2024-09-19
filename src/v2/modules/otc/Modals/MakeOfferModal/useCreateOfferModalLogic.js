@@ -48,7 +48,6 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const [multiplier, setMultiplier] = useState(DEFAULT_VALUES.MULTIPLIER);
 
     const multiplierParsed = multiplier.toFixed(2);
-    const statusCheck = statusAmount || statusPrice;
 
     const isSeller = selectedTab === TABS.SELL;
     const textCopy = isSeller ? "sell" : "buy";
@@ -78,6 +77,8 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             currency: getExpireData(currencyStorageKey)?.symbol ?? dropdownCurrencyOptions[0].symbol,
         },
     });
+
+    const statusCheck = !form.formState.isValid;
 
     const [amount, price, currency] = watch(["amount", "price", "currency"]);
 
@@ -250,14 +251,14 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
                     control: form.control,
                     handleChange: handleAmountChange,
                     placeholder: "Offer amount",
-                    label: "Your offer",
+                    label: "Your offer ",
                 },
                 price: {
                     name,
                     control: form.control,
                     handleChange: handlePriceChange,
                     placeholder: "Desired amount",
-                    label: "You receive",
+                    label: "You price",
                 },
                 currency: {
                     name,
@@ -268,18 +269,21 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
                     label: null,
                     options: dropdownCurrencyOptions,
                 },
-                max: {
-                    name,
-                    control: form.control,
-                    handleChange: handleSetMaxValue,
-                },
+                ...(isSeller
+                    ? {
+                          max: {
+                              name,
+                              control: form.control,
+                              handleChange: handleSetMaxValue,
+                          },
+                      }
+                    : {}),
             };
 
             return fields[name];
         },
-        [form, handleSetMaxValue, handleCurrencyChange, handleAmountChange],
+        [form, handleSetMaxValue, handleCurrencyChange, handleAmountChange, isSeller],
     );
-
 
     return {
         transactionSuccessful,
@@ -316,4 +320,4 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps],
         ),
     };
-};
+}

@@ -74,7 +74,7 @@ export default function LoginGlobal({ ssrData }) {
                     style={{ marginTop: "calc(-100vh)" }}
                 >
                     <div className={"p-10 flex flex-col justify-center"}>
-                        <div className=" flex flex-col p-10 blurred glareBg  w-full sm:w-auto min-w-[340px]">
+                        <div className=" flex flex-col p-10 blurred glareBg  w-full sm:w-auto min-w-[340px] shadow shadow-white/25">
                             <div className="text-3xl font-bold">
                                 <span className={"text-app-success"}>Login</span> with
                             </div>
@@ -150,27 +150,33 @@ export default function LoginGlobal({ ssrData }) {
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={"text-sm sm"}
+                                    size={
+                                        "text-sm sm w-full border border-white rounded-full text-white h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/25"
+                                    }
                                     handler={() => handleConnect()}
                                 />
                             </div>
                             <div className="my-10 h-px w-full barHor"></div>
-                            <div className="flex flex-1 items-end fullWidthButton btn-narrow disabled">
+                            <div className="flex-1 items-end fullWidthButton btn-narrow disabled">
                                 <RoundButton
                                     text={"Discord"}
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={"text-sm sm"}
+                                    size={
+                                        "text-sm sm w-full border border-white/25 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/[0.1] pointer-events-none"
+                                    }
                                 />
                             </div>
-                            <div className="flex flex-1 items-end pt-2 fullWidthButton btn-narrow disabled">
+                            <div className="flex-1 items-end pt-2 fullWidthButton btn-narrow disabled">
                                 <RoundButton
                                     text={"E-mail"}
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={"text-sm sm"}
+                                    size={
+                                        "text-sm sm w-full border border-white/35 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/[0.1] pointer-events-none"
+                                    }
                                 />
                             </div>
                         </div>

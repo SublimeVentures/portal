@@ -25,26 +25,13 @@ export default function Timeline({ data, onCloseClick }) {
     return (
         <SheetBody className="overflow-x-auto md:flex md:flex-col px-4 md:py-4 md:px-30 py-3 gap-3 md:gap-4">
             <div className="flex items-center justify-between">
-                <Title text="Timeline">
-                    <Button
-                        variant="link"
-                        className="leading-1 text-xs md:text-sm py-0 px-8 md:px-0 ml-auto"
-                        onClick={onCloseClick}
-                    >
-                        Back <ArrowIcon className="size-2.5 ml-2" />
-                    </Button>
-                </Title>
+                <Title text="Timeline"></Title>
             </div>
             <div className="md:flex md:flex-col gap-3 md:gap-4">
                 {(notifications?.pages || []).map((notification = [], index, array) => {
                     const lastItem = index === array.length - 1;
                     return (
-                        <TimelineItem
-                            ref={lastItem ? lastItemRef : null}
-                            key={notification.id}
-                            item={notification}
-                            className="-ml-13"
-                        />
+                        <TimelineItem ref={lastItem ? lastItemRef : null} key={notification.id} item={notification} />
                     );
                 })}
                 {isFetching && <TimelineSkeleton />}

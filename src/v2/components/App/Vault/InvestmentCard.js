@@ -68,20 +68,20 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
     return (
         <InvestmentCardWrapper>
             <div className="mb-4 md:mb-8 flex justify-between items-center">
-                <div>
+                <div className="select-none">
                     <CardTitle className="text-sm font-semibold md:text-lg md:font-medium text-foreground leading-none">
                         {coin}
                     </CardTitle>
                     <p className="text-xs font-light md:text-base text-foreground leading-none">{title}</p>
                 </div>
                 <Avatar
-                    className="size-10"
+                    className="size-10 pointer-events-none select-none"
                     session={{
                         img: getResearchIconSrc(slug),
                     }}
                 />
             </div>
-            <Attributes details={data} className="grow gap-2 mb-5" grid />
+            <Attributes details={data} className="grow gap-2 mb-5 select-none" grid />
             <Modal data={data}>
                 <Button variant={canClaim ? "accent" : "outline"} className="mb-3.5 mt-auto w-full font-xs">
                     <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
@@ -90,7 +90,7 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
             </Modal>
 
             {participatedDate && (
-                <p className="absolute left-0 bottom-1 py-2 w-full text-xxs font-light text-foreground/[.56] text-center">
+                <p className="absolute left-0 bottom-1 py-2 w-full text-xxs font-light text-foreground/[.56] text-center select-none">
                     Participated {participatedDate}
                 </p>
             )}

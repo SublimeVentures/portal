@@ -26,20 +26,22 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="p-8 lg:py-5 3xl:py-8 text-sm font-light text-foreground">{name}</h2>
+                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-foreground mt-16 select-none">
+                    {name}
+                </h2>
                 <ul className="flex flex-col gap-2">
                     {items.map(({ name, path }) => (
                         <li
                             key={path}
                             className={cn(
-                                "text-base font-normal text-foreground hover:bg-primary/30 rounded cursor-pointer",
+                                "text-base font-normal text-foreground transition-colors hover:bg-primary/30 rounded cursor-pointer",
                                 {
                                     "bg-gradient-to-r from-primary to-primary-600 font-medium":
                                         router.pathname === path,
                                 },
                             )}
                         >
-                            <Link href={path} className="px-6 block lg:py-1.5 3xl:py-2">
+                            <Link href={path} className="px-6 block lg:py-1.5 3xl:py-2 ">
                                 {name}
                             </Link>
                         </li>
@@ -64,7 +66,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
                 </nav>
 
                 <div className="mt-auto flex flex-col items-center">
-                    <h2 className="text-sm font-light text-white/60">Community</h2>
+                    <h2 className="text-sm font-light text-white/60 select-none">Community</h2>
                     <ul className="flex items-center lg:gap-4 3xl:gap-2 pt-4">
                         {socialMenu.map(({ icon, name, path }) => (
                             <li key={name}>

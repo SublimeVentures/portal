@@ -35,7 +35,7 @@ export default function History({ className }) {
     });
 
     return (
-        <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6", className)}>
+        <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6 select-none", className)}>
             <h2 className="ext-xl md:text-2xl font-medium">History</h2>
             <ul className="overflow-y-auto md:max-h-44 -my-2 -mr-2 pr-2">
                 {isLoading ? (
@@ -80,10 +80,12 @@ export default function History({ className }) {
                                 >
                                     {participant.isConfirmed && <span className="text-success">Confirmed</span>}
                                     {participant.isConfirmedInitial && !participant.isConfirmed && (
-                                        <span className="text-yellow-500">Reserved</span>
+                                        <span className="text-yellow-500">Internal check</span>
                                     )}
                                     {participant.isExpired && <span className="text-error">Expired</span>}
-                                    {participant.isGuaranteed && <span className="text-accent">Guaranteed</span>}
+                                    {!participant.isConfirmedInitial &&
+                                        !participant.isConfirmed &&
+                                        !participant.isExpired && <span className="text-accent">Booked</span>}
                                 </Definition>
                                 <Definition
                                     term="Amount"

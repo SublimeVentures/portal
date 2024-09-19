@@ -15,7 +15,7 @@ import {
 import Title from "@/v2/modules/opportunities/Title";
 
 export default function Opportunities({ offers, stats, infiniteLoaderOpts, count }) {
-    const { partners = 0, vc: investments = 0, funded: rawFunded = 0 } = stats;
+    const { partners = 0, funded: rawFunded = 0 } = stats;
     const { isFetchingNextPage, hasNextPage, fetchNextPage } = infiniteLoaderOpts;
 
     const ref = useRef();
@@ -27,14 +27,14 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts, count
     return (
         <>
             <Metadata title="Opportunities" />
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center lg:gap-4">
-                <div className="mb-4 3xl:mb-0">
+            <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-8">
+                <div className="mb-4 3xl:mb-0 w-full 2xl:w-5/12 3xl:w-1/2">
                     <Title subtitle="We bring new industry giants to our community" count={count}>
                         Funded Projects
                     </Title>
                 </div>
-                <div className="flex flex-wrap 2xl:flex-nowrap gap-4">
-                    <InvestedStatisticCard value={investments} className="sm:flex-1 grow" />
+                <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full 2xl:w-7/12 3xl:w-1/2">
+                    <InvestedStatisticCard value={count} className="sm:flex-1 grow" />
                     {tenantIndex === TENANT.basedVC ? (
                         <PartnersStatisticCard value={partners} className="sm:flex-1 grow" />
                     ) : null}
