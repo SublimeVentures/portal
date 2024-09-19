@@ -1,5 +1,8 @@
 FROM node:18-alpine
 
+ARG NODE_OPTIONS
+ENV NODE_OPTIONS=$NODE_OPTIONS
+
 RUN apk add -q --no-cache python3 py3-pip make g++
 
 WORKDIR /usr/src/app
