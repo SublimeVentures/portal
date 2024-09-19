@@ -73,8 +73,8 @@ export default function LoginGlobal({ ssrData }) {
                     className="text-white flex pt-20  flex-grow min-h-screen flex-col justify-center sm:flex-row"
                     style={{ marginTop: "calc(-100vh)" }}
                 >
-                    <div className={"p-10 flex flex-col justify-center"}>
-                        <div className=" flex flex-col p-10 blurred glareBg  w-full sm:w-auto min-w-[340px] shadow shadow-white/25">
+                    <div className={"mx-auto px-0 py-10 sm:mx-0 sm:px-10 flex flex-col justify-center"}>
+                        <div className=" flex flex-col px-6 py-10 sm:p-10 blurred glareBg  w-full sm:w-auto min-w-[340px] shadow shadow-white/10 sm:shadow-white/25 backdrop-blur-md">
                             <div className="text-3xl font-bold">
                                 <span className={"text-app-success"}>Login</span> with
                             </div>
@@ -143,7 +143,7 @@ export default function LoginGlobal({ ssrData }) {
                                     }}
                                 />
                             </div>
-                            <div className="flex flex-1 items-end pt-10 fullWidthButton btn-narrow">
+                            <div className="flex-1 items-end pt-10 fullWidthButton btn-narrow">
                                 <RoundButton
                                     text={"CONNECT WALLET"}
                                     isLoading={isLoginLoading}
@@ -156,7 +156,7 @@ export default function LoginGlobal({ ssrData }) {
                                     handler={() => handleConnect()}
                                 />
                             </div>
-                            <div className="my-10 h-px w-full barHor"></div>
+                            <div className="my-10 h-px w-full barHor bg-gradient-to-r from-transparent via-white/50 via-50% to-transparent"></div>
                             <div className="flex-1 items-end fullWidthButton btn-narrow disabled">
                                 <RoundButton
                                     text={"Discord"}
