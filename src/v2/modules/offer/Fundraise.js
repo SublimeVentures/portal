@@ -34,7 +34,7 @@ export default function Fundraise({ className }) {
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl space-y-6", className)}>
             <div className="flex gap-2 items-center">
-                <h2 className="text-xl md:text-2xl font-medium">Fundraise Goal</h2>
+                <h2 className="text-xl md:text-2xl font-medium select-none">Fundraise Goal</h2>
                 <Tooltip>
                     <TooltipTrigger
                         className="size-4 rounded-full bg-white/[.14] text-2xs flex items-center justify-center cursor-help hover:bg-white/[.2] transition-colors duration-200"
@@ -46,14 +46,14 @@ export default function Fundraise({ className }) {
                 </Tooltip>
             </div>
             <div>
-                <div className="flex justify-between items-end mb-4">
+                <div className="flex justify-between items-end mb-4 select-none">
                     <p className="text-xl md:text-3xl">{formatCurrency(filled)}</p>
                     <p className="text-base md:text-lg text-success">{formatPercentage(progress / 100)} filled</p>
                 </div>
                 <Progress value={progress} variant="success" />
             </div>
             <div>
-                <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base">
+                <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base select-none">
                     {booked > 0 && (
                         <Definition term="Reserved" isLoading={isLoading}>
                             {getCurrency(booked) ?? TBA_TEXT}

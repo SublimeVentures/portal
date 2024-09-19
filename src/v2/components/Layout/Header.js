@@ -41,14 +41,16 @@ export default function Header({ title, isBlockedAlert, className, session }) {
 
                 <div className="hidden items-baseline lg:flex">
                     {title && (
-                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground">{title}</h2>
+                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground select-none">
+                            {title}
+                        </h2>
                     )}
                 </div>
 
                 <div className="flex items-center gap-4 justify-self-end">
-                    <div className="hidden items-center gap-4 md:flex">
+                    <div className="hidden items-center gap-4 md:flex select-none">
                         <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
-                        <Avatar className="bg-white size-13" session={session} />
+                        <Avatar className="bg-white size-13 pointer-events-none" session={session} />
                         <div className="mx-2 h-6 w-0.5 bg-foreground" />
                     </div>
 

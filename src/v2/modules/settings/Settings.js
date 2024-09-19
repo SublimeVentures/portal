@@ -58,7 +58,7 @@ export default function Settings({ session }) {
                 value={activeTab}
                 onValueChange={setActiveTab}
             >
-                <div className="relative flex justify-between items-center -mx-4 before:absolute before:inset-y-0 before:left-0 before:w-6 before:z-10 md:before:hidden before:pointer-events-none before:bg-gradient-to-r before:to-transparent before:from-primary-950 after:absolute after:inset-y-0 after:right-0 after:w-6 after:z-10 md:after:hidden after:pointer-events-none after:bg-gradient-to-l after:to-transparent after:from-primary-950">
+                <div className="relative flex justify-between items-center -mx-4 before:absolute before:inset-y-0 before:left-0 before:w-6 before:z-10 md:before:hidden before:pointer-events-none before:bg-gradient-to-r before:to-transparent before:from-primary-950 after:absolute after:inset-y-0 after:right-0 after:w-6 after:z-10 md:after:hidden after:pointer-events-none after:bg-gradient-to-l after:to-transparent after:from-primary-950 select-none">
                     <TabsList aria-label="Settings tabs" className="pb-0 px-4">
                         {tabs.map((tab) => (
                             <TabsTrigger key={tab.name} value={tab.id}>

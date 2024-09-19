@@ -25,12 +25,12 @@ const Announcements = ({ className }) => {
                 <Title className="mb-5 md:mb-2 md:hidden 3xl:flex">Offer</Title>
                 {offers?.rows?.map((offer) => (
                     <Link href={`${routes.Opportunities}/${offer.slug}`} key={offer.slug} className="grow flex">
-                        <Card className="grow p-6 group/button">
+                        <Card className="grow p-6 group/button transition-all">
                             <div className="bg-white/5 backdrop-blur-2xl rounded relative flex 3xl:block h-full">
                                 <div className="relative h-24 flex gap-2 3xl:mb-12 3xl:h-2/5 m-2 3xl:m-0">
                                     <Image
                                         src={getResearchIconSrc(offer.slug)}
-                                        className="rounded 3xl:absolute 3xl:left-4 3xl:-bottom-12 3xl:shadow-lg"
+                                        className="rounded 3xl:absolute 3xl:left-4 3xl:-bottom-12 3xl:shadow-lg pointer-events-none select-none"
                                         alt={`Avatar for ${offer.name} offer`}
                                         width={90}
                                         height={90}
@@ -38,12 +38,12 @@ const Announcements = ({ className }) => {
                                     <Image
                                         src={getResearchBgSrc(offer.slug)}
                                         alt={`Background image for ${offer.name} offer`}
-                                        className="hidden 3xl:block object-cover rounded-t aspect-[341/138]"
+                                        className="hidden 3xl:block object-cover rounded-t aspect-[341/138] pointer-events-none select-none"
                                         width={1000}
                                         height={300}
                                     />
                                 </div>
-                                <div className="flex justify-between items-center 3xl:px-4 3xl:py-0 3xl:items-start">
+                                <div className="flex justify-between items-center 3xl:px-4 3xl:py-0 3xl:items-start select-none">
                                     <div>
                                         <h3
                                             data-ticker={`$${offer.ticker}`}

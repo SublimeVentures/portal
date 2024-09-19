@@ -4,8 +4,6 @@ import SingleChainIcon from "@/v2/assets/svg/single-chain.svg";
 const SingleChain = ({ icon: Icon, active }) => {
     return (
         <div className="relative h-[43px]">
-            <SingleChainIcon className="absolute" />
-
             <div className="relative flex items-center h-full justify-center w-max gap-3 hover:scale-110 transition-all">
                 <div
                     className={cn(

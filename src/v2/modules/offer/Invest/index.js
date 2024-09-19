@@ -29,7 +29,7 @@ export default function Investment({ session, className }) {
         <div className={cn("p-4 flex flex-col space-y-4 rounded bg-white/[.07] backdrop-blur-3xl", className)}>
             <div className="flex flex-wrap items-center justify-between gap-4 xl:flex-nowrap">
                 <div className="flex gap-2 items-center">
-                    <h2 className="text-lg font-semibold">Invest</h2>
+                    <h2 className="text-lg font-semibold select-none">Invest</h2>
                     <Tooltip>
                         <TooltipTrigger
                             className="size-4 rounded-full bg-white/[.14] text-2xs flex items-center justify-center cursor-help hover:bg-white/[.2] transition-colors duration-200"

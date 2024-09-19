@@ -2,6 +2,8 @@ import SingleChain from "../Vault/SingleChain";
 import TwoChainsIcon from "@/v2/assets/svg/two-chains.svg";
 import gridIcon from "@/v2/assets/svg/grid.svg";
 import listIcon from "@/v2/assets/svg/list.svg";
+import { colorSchemes } from "@/v2/components/BlockchainSteps";
+import { stepsStatus } from "@/v2/components/BlockchainSteps/reducer";
 
 const VIEW_ICON_MAP = {
     grid: gridIcon,
@@ -11,7 +13,7 @@ const VIEW_ICON_MAP = {
 const ViewRadio = ({ name = "view", options, value, onChange }) => {
     return (
         <div className="relative h-[43px]">
-            <TwoChainsIcon className="absolute z-0" />
+            <TwoChainsIcon className="absolute z-0" style={colorSchemes[stepsStatus.IDLE]} />
             <div className="relative flex items-center h-full justify-center w-max gap-3">
                 {options.map((option) => (
                     <label htmlFor={option} key={option} className="cursor-pointer">

@@ -48,11 +48,11 @@ export default function Overview({ className }) {
                                 src={getResearchIconSrc(offer.slug)}
                                 alt={offer.name}
                                 fill={true}
-                                className="rounded object-cover"
+                                className="rounded object-cover select-none pointer-events-none"
                             />
                         )}
                     </div>
-                    <div className="grow">
+                    <div className="grow select-none">
                         {isLoading ? (
                             <>
                                 <Skeleton className="mb-0.5 md:mb-1.5 h-7 md:h-9" />
@@ -69,7 +69,7 @@ export default function Overview({ className }) {
                         )}
                     </div>
                 </div>
-                <div className="w-full md:order-3 text-sm md:text-base font-light empty:hidden">
+                <div className="w-full md:order-3 text-sm md:text-base font-light empty:hidden select-none">
                     {isLoading ? (
                         <>
                             <Skeleton className="mb-0.5" />
@@ -112,7 +112,7 @@ export default function Overview({ className }) {
                     src={getResearchBgSrc(offer.slug)}
                     alt={offer.name}
                     fill={true}
-                    className="rounded object-cover"
+                    className="rounded object-cover select-none pointer-events-none"
                 />
                 {isLoading ? (
                     <Skeleton className="rounded absolute inset-0 h-auto" />
@@ -121,7 +121,7 @@ export default function Overview({ className }) {
                         src={getResearchBgSrc(offer.slug)}
                         alt={offer.name}
                         fill={true}
-                        className="rounded object-cover"
+                        className="rounded object-cover select-none pointer-events-none"
                     />
                 )}
             </div>

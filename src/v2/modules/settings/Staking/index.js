@@ -52,7 +52,10 @@ export default function Staking({ session }) {
     const staking = useStaking({ tenantId, session, account });
 
     return (
-        <Card variant="none" className="p-6 2xl:px-11 2xl:py-9 flex flex-col bg-settings-gradient 2xl:flex-row w-full">
+        <Card
+            variant="none"
+            className="p-6 2xl:px-11 2xl:py-9 flex flex-col bg-settings-gradient 2xl:flex-row w-full select-none cursor-auto"
+        >
             <div className="flex items-center gap-4 2xl:hidden mb-4">
                 <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-foreground">
                     Staking
@@ -66,7 +69,7 @@ export default function Staking({ session }) {
                         alt=""
                         width={87}
                         height={87}
-                        className="rounded w-full h-full"
+                        className="rounded w-full h-full pointer-events-none"
                     />
                 </div>
                 <div className="flex flex-col justify-center w-full">
@@ -76,7 +79,7 @@ export default function Staking({ session }) {
                             alt=""
                             width={87}
                             height={87}
-                            className="shrink-0 rounded 2xl:hidden mb-4 2xl:mb-0"
+                            className="shrink-0 rounded 2xl:hidden mb-4 2xl:mb-0 pointer-events-none"
                         />
 
                         <div>

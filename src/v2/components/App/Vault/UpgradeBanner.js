@@ -20,14 +20,14 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
         <Card
             variant="none"
             border="none"
-            className={cn("relative flex group/button", className, {
+            href={routes.Upgrades}
+            className={cn("relative flex group/button select-none", className, {
                 "bg-banner-default bg-left bg-cover 3xl:bg-center bg-no-repeat py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
                     variant === VARIANTS.DEFAULT,
                 "bg-banner-vertical p-3 md:justify-end lg:w-116": variant === VARIANTS.VERTICAL,
             })}
         >
-            <Link
-                href={routes.Upgrades}
+            <div
                 className={cn("", {
                     "w-7/12 3xl:w-full": variant === VARIANTS.DEFAULT,
                     "block w-full md:w-1/2": variant === VARIANTS.VERTICAL,
@@ -90,7 +90,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                         </dl>
                     </>
                 )}
-            </Link>
+            </div>
         </Card>
     );
 };
