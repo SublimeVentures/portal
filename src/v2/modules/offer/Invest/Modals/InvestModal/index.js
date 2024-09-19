@@ -26,8 +26,9 @@ import { Button } from "@/v2/components/ui/button";
 
 const InvestModalContent = ({ open, investmentAmount, currency, handleCurrencyChange, bookingExpire }) => {
     const { account, activeInvestContract } = useEnvironmentContext();
-    const { clearBooking, bookingDetails } = useInvestContext();
+    const { clearBooking, getSavedBooking } = useInvestContext();
     const { data: offer } = useOfferDetailsQuery();
+    const bookingDetails = getSavedBooking();
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
     const amountNumber = Number(investmentAmount);
@@ -115,7 +116,7 @@ const InvestModalContent = ({ open, investmentAmount, currency, handleCurrencyCh
                             <h4 className="pb-2 text-xl text-foreground">Complete transfer in the next</h4>
                             <Countdown
                                 countStart={moment.unix(bookingDetails.expires).valueOf()}
-                                onComplete={() => bookingExpire()}
+                                onComplete={bookingExpire}
                                 units={{ minutes: "m :", seconds: "s" }}
                                 className="text-2xl"
                             />

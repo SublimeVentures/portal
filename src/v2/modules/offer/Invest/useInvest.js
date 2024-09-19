@@ -23,7 +23,7 @@ export default function useInvest(session) {
     const dropdownCurrencyOptions = getCurrencySettlement();
     const { phaseCurrent } = usePhaseInvestment();
     
-    const { clearBooking, bookingDetails, setBooking, getSavedBooking } = useInvestContext();
+    const { getSavedBooking, setBooking, clearBooking } = useInvestContext();
     const { getExpireData, setExpireData } = useLocalStorage();
     
     const { data: offer } = useOfferDetailsQuery();
@@ -115,9 +115,8 @@ export default function useInvest(session) {
     // };
 
     const afterInvestmentCleanup = async () => {
-        console.log('afterInvestmentCleanup')
         setIsLoading(true);
-        await clearBooking();
+        clearBooking();
 
         await Promise.all([
             queryClient.invalidateQueries(["userAllocation"]),
@@ -128,11 +127,9 @@ export default function useInvest(session) {
     };
 
     const bookingExpire = async () => {
-        console.log('bookingExpire')
-        clearBooking();
-        // setRestoreModalData({ open: false, amount: 0, time: null });
-        // setIsInvestModalOpen(false);
-        // await afterInvestmentCleanup();
+        setRestoreModalData({ open: false, amount: 0, time: null });
+        setIsInvestModalOpen(false);
+        await afterInvestmentCleanup();
     };
 
     const startInvestmentProcess = async (values) => {
@@ -175,6 +172,7 @@ export default function useInvest(session) {
         setIsLoading(true);
 
         try {
+            const bookingDetails = getSavedBooking();
             const savedTimestamp = bookingDetails.expires;
             const savedDate = bookingDetails.date;
             const savedAmount = bookingDetails.amount;
@@ -189,7 +187,6 @@ export default function useInvest(session) {
             }
             
             else {
-                console.log("restore ", savedAmount);
                 setRestoreModalData({ open: true, amount: savedAmount, date: savedDate });
             }
         } catch (e) {
@@ -200,10 +197,11 @@ export default function useInvest(session) {
         setIsLoading(false);
     };
 
+    // @TODO - Is eventName required?
     const makeInvestment = async (values, eventName) => {
-        const { ok } = getSavedBooking();
-      
-        if (ok) await processExistingSession(values);
+        const rest = getSavedBooking();
+
+        if (rest.ok) await processExistingSession(values);
         else await startInvestmentProcess(values);
     };
 

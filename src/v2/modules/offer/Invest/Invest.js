@@ -24,7 +24,6 @@ export default function Invest({ session }) {
             <div className="relative flex flex-col flex-1 justify-center items-center">
                 <div className="w-full lg:p-4 2xl:p-8">
                     <h3 className="mb-12 text-base lg:text-xl">My Contribution</h3>
-
                     <InvestForm {...getInvestFormProps()}>
                         <InvestFormFields {...getInvestFormFieldsProps()} />
                         <InvestFormSummary {...getInvestFormSummaryProps()} />
