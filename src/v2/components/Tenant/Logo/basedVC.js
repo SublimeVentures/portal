@@ -5,8 +5,8 @@ const BasedVCLogo = () => {
         <>
             <DynamicIcon name="logo_1" style="size-17 text-white" />
             <div className="flex flex-col">
-                <h1 className="text-lg md:text-3xl text-foreground">based.vc</h1>
-                <p className="text-md font-light text-foreground">VC for all</p>
+                <h1 className="text-lg md:text-2xl text-foreground">based.vc</h1>
+                <p className="text-base font-light text-foreground">VC for all</p>
             </div>
         </>
     );
