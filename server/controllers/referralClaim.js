@@ -1,8 +1,8 @@
 const { serializeError } = require("serialize-error");
+const axios = require("axios");
 const logger = require("../../src/lib/logger");
 const { authTokenName } = require("../../src/lib/authHelpers");
 const { getUserReferralClaim } = require("../queries/referralClaim.query");
-const { axiosAutherPublic } = require("../services/request/axios");
 
 async function signUserReferralClaim(user, req) {
     try {
@@ -11,12 +11,19 @@ async function signUserReferralClaim(user, req) {
 
         if (claimId && isUserWallet) {
             const token = req.cookies[authTokenName];
-
-            const signature = await axiosAutherPublic.post("/referral-claim/sign", {
-                claimId,
-                wallet: req.body.wallet,
-                token,
-            });
+            const signature = await axios.post(
+                `${process.env.AUTHER}/referral-claim/sign`,
+                {
+                    claimId,
+                    wallet: req.body.wallet,
+                    token,
+                },
+                {
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                },
+            );
 
             if (!signature?.data?.ok) {
                 throw new Error(signature?.data?.error);

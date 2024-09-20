@@ -1,5 +1,6 @@
 const moment = require("moment");
 const { serializeError } = require("serialize-error");
+const axios = require("axios");
 const { getOfferWithLimits } = require("../queries/offers.query");
 const { getEnv } = require("../services/env");
 const {
@@ -17,7 +18,6 @@ const { userInvestmentState } = require("../../src/lib/investment");
 const db = require("../services/db/definitions/db.init");
 const { authTokenName } = require("../../src/lib/authHelpers");
 const { createHash } = require("./helpers");
-const { axiosAutherPublic } = require("../services/request/axios");
 
 let CACHE = {};
 
@@ -244,14 +244,21 @@ function checkReserveSpotQueryParams(req) {
 }
 
 async function obtainSignature(offerId, amount, hash, expires, token) {
-    const signature = await axiosAutherPublic.post("/invest/sign", {
-        offerId,
-        amount,
-        hash,
-        expires,
-        token,
-    });
-
+    const signature = await axios.post(
+        `${process.env.AUTHER}/invest/sign`,
+        {
+            offerId,
+            amount,
+            hash,
+            expires,
+            token,
+        },
+        {
+            headers: {
+                "content-type": "application/json",
+            },
+        },
+    );
     if (!signature?.data?.ok) {
         return {
             ok: false,

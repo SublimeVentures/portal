@@ -1,19 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const axios = require("axios");
 const { serializeError } = require("serialize-error");
 const { refreshTokenName, authTokenName } = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
-const { axiosAutherPublic } = require("../services/request/axios");
 
 //LOGIN USER
 router.post("/login", async (req, res) => {
     if (!req.body?.message || !req.body?.signature || !req.body?.tenant || !req.body?.partner)
         return res.status(400).json({});
     try {
-        const auth = await axiosAutherPublic.post("/session/login", req.body);
+        const auth = await axios.post(`${process.env.AUTHER}/auth/login`, req.body, {
+            headers: {
+                "content-type": "application/json",
+            },
+        });
 
         const result = auth.data;
 
@@ -53,9 +57,7 @@ router.delete("/login", async (req, res) => {
             if (!auth) return res.status(401).json({});
 
             const token = req.cookies[authTokenName];
-
-            const authData = await axiosAutherPublic.delete("/auth/login", { data: { token } });
-
+            const authData = await axios.delete(`${process.env.AUTHER}/auth/login`, { data: { token } });
             const result = authData.data;
             if (!result?.ok) throw Error("Bad AUTHER response");
         }
@@ -89,7 +91,7 @@ router.put("/login", async (req, res) => {
             return res.status(400).send({ ok: false, error: "Token is required" });
         }
 
-        const { auth } = await verifyID(req, true);
+        const { auth, user } = await verifyID(req, true);
         if (!auth) return res.status(401).json({ ok: false, error: "Not authorized" });
 
         const userData = await refreshData(token);
