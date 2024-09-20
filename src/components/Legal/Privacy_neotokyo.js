@@ -1,4 +1,4 @@
-export default function ToS_neotokyo({}) {
+export default function ToS_neotokyo() {
     return (
         <div
             className={"flex flex-1 justify-between flex-wrap gap-10 max-w-[1000px] text-sm flex-col"}
@@ -17,15 +17,17 @@ export default function ToS_neotokyo({}) {
                 </p>
                 <p>
                     <strong>Last Updated:</strong>
-                    <span style={{ fontWeight: 400 }}>&nbsp;October 28, 2023</span>
+                    <span style={{ fontWeight: 400 }}>&nbsp;August 11, 2024</span>
                     <span style={{ fontWeight: 400 }}>
                         <br />
                         <br />
                     </span>
                 </p>
                 <p>
-                    <span style={{ fontWeight: 400 }}>This Privacy Policy is designed to help you understand how </span>
-                    <strong>BasedVC DAO LLC</strong>
+                    <span style={{ fontWeight: 400 }}>
+                        This Privacy Policy is designed to help you understand how the
+                    </span>
+                    <strong>BasedVC Foundation, a Panama Foundation Company</strong>
                     <span style={{ fontWeight: 400 }}>. (“</span>
                     <strong>Citizen Capital</strong>
                     <span style={{ fontWeight: 400 }}>,” “</span>

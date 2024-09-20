@@ -17,7 +17,7 @@ export default function Privacy_based({}) {
                 </p>
                 <p>
                     <strong>Last Updated:</strong>
-                    <span style={{ fontWeight: 400 }}>&nbsp;October 28, 2023</span>
+                    <span style={{ fontWeight: 400 }}>&nbsp;August 11, 2024</span>
                     <span style={{ fontWeight: 400 }}>
                         <br />
                         <br />
@@ -25,7 +25,7 @@ export default function Privacy_based({}) {
                 </p>
                 <p>
                     <span style={{ fontWeight: 400 }}>This Privacy Policy is designed to help you understand how </span>
-                    <strong>BasedVC DAO LLC</strong>
+                    <strong>BasedVC Foundation</strong>
                     <span style={{ fontWeight: 400 }}>. (“</span>
                     <strong>BasedVC</strong>
                     <span style={{ fontWeight: 400 }}>,” “</span>
@@ -571,7 +571,7 @@ export default function Privacy_based({}) {
                             &nbsp;We may use personal information and other information about you to create
                             de-identified and/or aggregated information, such as de-identified demographic information,
                             de-identified location information, information about the device from which you access our
-                            Services, or other analyses we create.
+                            Services, or other analyses we create
                         </span>
                     </li>
                 </ul>

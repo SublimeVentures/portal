@@ -10,7 +10,7 @@ export default function ToS_based({}) {
                 </p>
                 <p>
                     <span style={{ fontWeight: 400 }}>
-                        These Terms of Service were last updated on October 27, 2023.
+                        These Terms of Service were last updated on August 11, 2024.
                     </span>
                     <strong>
                         <br />
@@ -30,12 +30,12 @@ export default function ToS_based({}) {
                         <span style={{ fontWeight: 400 }}>https://basedvc.fund</span>
                     </a>
                     <span style={{ fontWeight: 400 }}>) and&nbsp; the Services provided by </span>
-                    <strong>BASEDVC DAO LLC</strong>
+                    <strong>BasedVC Foundation</strong>
                     <span style={{ fontWeight: 400 }}> (“</span>
                     <strong>BasedVC</strong>
                     <span style={{ fontWeight: 400 }}>
-                        ”) a limited liability DAO company incorporated and registered under the laws of the Republic of
-                        the Marshall Islands.
+                        ”) a Panama Foundation Company incorporated and registered under the laws of the Republic of the
+                        Panama.
                     </span>
                     <span style={{ fontWeight: 400 }}>
                         <br />
@@ -298,9 +298,9 @@ export default function ToS_based({}) {
                         <span style={{ fontWeight: 400 }}>“</span>
                         <strong>BasedVC</strong>
                         <span style={{ fontWeight: 400 }}>
-                            ” refers to BasedVC DAO LLC., a limited liability partnership incorporated and registered
-                            under the laws of the Republic of the Marshall Islands. Hereinafter referred to as BasedVC,
-                            we, us, our in this Terms;
+                            ” refers to the BasedVC Foundation, a Panama Foundation Company, incorporated and registered
+                            under the laws of the Republic of Panama. Hereinafter referred to as BasedVC, we, us, our in
+                            this Term;
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
@@ -319,7 +319,7 @@ export default function ToS_based({}) {
                         <span style={{ fontWeight: 400 }}>
                             ” refers to the non-fungible token of BasedVC Partners on the Ethereum blockchain. Users
                             need to hold Partner NFT to participate in any Services on the website including IGO/ICO/IDO
-                            sale of Projects selected for the Launchpad, vesting of project tokens, yield box etc.;
+                            sale of Projects selected for the Launchpad, vesting of project tokens, yield box etc;
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
@@ -749,7 +749,7 @@ export default function ToS_based({}) {
                             the conclusion of the Allocation Round of IGO/ICO/IDO, if there are unsold IGO/ICO/IDO
                             tokens, you will be able to join the community Round to purchase the unsold IGO/ICO/IDO
                             tokens according to announcement of FCFS that can participate if there are unsold tokens
-                            from the Allocation Round.
+                            from the Allocation Round
                         </span>
                     </li>
                 </ul>
@@ -759,13 +759,13 @@ export default function ToS_based({}) {
                 <p>
                     <span style={{ fontWeight: 400 }}>
                         These Terms of Service shall be governed by and construed and enforced in accordance with the
-                        Laws of the Republic of Marshall Islands, and shall be interpreted in all respects as a Republic
-                        of Marshall Islands contract. You irrevocably agree that, any dispute, controversy, claim or
-                        action arising from or related to your access or use of the Website or these Terms of Service
-                        likewise shall be governed by the Laws of the British Virgin Islands, exclusive of choice-of-law
-                        principles. Nothing in this clause shall limit the right of BasedVC to take proceedings against
-                        you in any other court of competent jurisdiction, nor shall the taking of proceedings in any one
-                        or more jurisdictions preclude the taking of proceedings in any other jurisdictions, whether
+                        Laws of the Republic of Panama and shall be interpreted in all respects as a Republic of Panama
+                        contract. You irrevocably agree that, any dispute, controversy, claim or action arising from or
+                        related to your access or use of the Website or these Terms of Service likewise shall be
+                        governed by the Laws of the British Virgin Islands, exclusive of choice-of-law principles.
+                        Nothing in this clause shall limit the right of BasedVC to take proceedings against you in any
+                        other court of competent jurisdiction, nor shall the taking of proceedings in any one or more
+                        jurisdictions preclude the taking of proceedings in any other jurisdictions, whether
                         concurrently or not, to the extent permitted by the law of such other jurisdiction.
                     </span>
                 </p>
@@ -918,12 +918,11 @@ export default function ToS_based({}) {
                 </ul>
                 <ol>
                     <li>
-                        <span style={{ fontWeight: 400 }}> Acts of God, nature, court or government;</span>
+                        <span style={{ fontWeight: 400 }}>i. Acts of God, nature, court or government;</span>
                     </li>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            Failure or interruption of public or private telecommunication networks, the failure of
+                            ii. Failure or interruption of public or private telecommunication networks, the failure of
                             Blockchain Networks, communication channels or information systems;
                         </span>
                     </li>
@@ -936,14 +935,12 @@ export default function ToS_based({}) {
                 <ol>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            Delay, failure, or interruption in, or unavailability of, third-party services; and
+                            iv. Delay, failure, or interruption in, or unavailability of, third-party services; and
                         </span>
                     </li>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            Strikes, lockouts, labour disputes, wars, terrorist acts and riots.
+                            v. Strikes, lockouts, labour disputes, wars, terrorist acts and riots.
                         </span>
                     </li>
                 </ol>
@@ -981,19 +978,19 @@ export default function ToS_based({}) {
                             Service or the existence, breach, termination, enforcement, interpretation or validity
                             thereof, or (ii) your Crypto Tokens the operations and Services of the Website, or (iii)
                             your access to or use of the Services at any time, shall be subject to the exclusive
-                            jurisdiction of the courts of the Republic of Marshall Islands. For the avoidance of doubt,
-                            and without limiting the generality of the foregoing, this provision expressly applies to
-                            any claim, whether in tort, contract or otherwise, against BasedVC.
+                            jurisdiction of the courts of the Republic of Panama.. For the avoidance of doubt, and
+                            without limiting the generality of the foregoing, this provision expressly applies to any
+                            claim, whether in tort, contract or otherwise, against BasedVC.
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
                         <span style={{ fontWeight: 400 }}>
                             you irrevocably and unconditionally agree and consent to the exclusive jurisdiction and
-                            venue of the courts of the Republic of Marshall Islands, and you waive any objections
-                            thereto. Nothing in this clause shall limit the right of Company to take proceedings against
-                            you in any other court of competent jurisdiction, nor shall the taking of proceedings in any
-                            one or more jurisdictions preclude the taking of proceedings in any other jurisdictions,
-                            whether concurrently or not, to the extent permitted by the law of such other jurisdiction.
+                            venue of the courts of the Republic of Panama and you waive any objections thereto. Nothing
+                            in this clause shall limit the right of Company to take proceedings against you in any other
+                            court of competent jurisdiction, nor shall the taking of proceedings in any one or more
+                            jurisdictions preclude the taking of proceedings in any other jurisdictions, whether
+                            concurrently or not, to the extent permitted by the law of such other jurisdiction.
                         </span>
                     </li>
                     <li style={{ fontWeight: 400 }}>
@@ -1054,7 +1051,7 @@ export default function ToS_based({}) {
                     <li>
                         <span style={{ fontWeight: 400 }}>
                             {" "}
-                            IV. If you are obligated to indemnify BasedVC, its Affiliate, shareholders, licensors,
+                            iv. If you are obligated to indemnify BasedVC, its Affiliate, shareholders, licensors,
                             officers, directors, managers, employees, and agents, BasedVC will have the right, at our
                             sole discretion, to control any action or proceeding and to determine whether BasedVC wishes
                             to proceed, or settle, and if so, on what terms or provisions.
@@ -1194,8 +1191,7 @@ export default function ToS_based({}) {
                 <ol>
                     <li>
                         <span style={{ fontWeight: 400 }}>
-                            {" "}
-                            the failure of the Services to remain operational for any period of time.
+                            iv. the failure of the Services to remain operational for any period of time.
                         </span>
                     </li>
                 </ol>
