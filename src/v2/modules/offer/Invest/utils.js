@@ -9,6 +9,10 @@ export const formatNumber = (value) => {
     return numericValue ? `$${Number(numericValue).toLocaleString("en-US")}` : "$0";
 };
 
+// @TODO - (NA UNLIMITED) Jesli allocation jest mniejsza niz MIN_ALLOCATION, to automatycznie ma to byc 100%
+// - Jesli jest mniejsza niz MIN_ALLOCATION, to ma byc pokazane jako wypelnione
+// - Dopasowanie ZOD do phases z @/lib/investment
+
 export const getInvestSchema = (allocation, currencies) => {
     const symbols = currencies.map(currency => currency.symbol);
 

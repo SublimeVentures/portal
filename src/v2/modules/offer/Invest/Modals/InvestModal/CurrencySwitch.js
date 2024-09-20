@@ -1,15 +1,10 @@
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
+import { RadioGroup, RadioGroupItem } from "@/v2/components/ui/inline-radio-group";
 import { FormControl, FormField, FormItem } from "@/v2/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
 
-export default function CurrencySwitch({ handleCurrencyChange }) {
-    const { getCurrencySettlement } = useEnvironmentContext();
-    
-    const dropdownCurrencyOptions = getCurrencySettlement();
+export default function CurrencySwitch({ currency, handleCurrencyChange }) {
     const { control } = useFormContext();
 
     const handleSelectCurrency = useCallback((value, callback) => {
@@ -18,61 +13,29 @@ export default function CurrencySwitch({ handleCurrencyChange }) {
 
     return (
         <FormField
-            name="currency"
             control={control}
+            name="currency"
             render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-3">
                     <FormControl>
-                        <Select {...field} onValueChange={(val) => handleSelectCurrency(val, field.onChange)}>
-                            <SelectTrigger className="w-full h-full bg-foreground/[.06]">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {dropdownCurrencyOptions.map((option) => (
-                                    <SelectItem key={option.symbol} value={option.symbol}>
-                                        <div className="flex items-center gap-2">
-                                            <DynamicIcon className="p-1 w-6 h-6" name={option.symbol} />
-                                            {option.symbol}
-                                        </div>
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <RadioGroup
+                            {...field}
+                            onValueChange={(val) => handleSelectCurrency(val, field.onChange)}
+                        >
+                            <FormItem className="w-full">
+                                <FormControl>
+                                    <RadioGroupItem value="USDT" checked={currency === "USDT"}>USDT</RadioGroupItem>
+                                </FormControl>
+                            </FormItem>
+                            <FormItem className="w-full">
+                                <FormControl>
+                                    <RadioGroupItem value="USDC" checked={currency === "USDC"}>USDC</RadioGroupItem>
+                                </FormControl>
+                            </FormItem>
+                        </RadioGroup>
                     </FormControl>
                 </FormItem>
             )}
-        /> 
+        />
     );
 };
-
-// Code for version from design
-            {/* <label
-                htmlFor="usdt"
-                className={cn("p-2 relative w-full font-light text-foreground/50 bg-transparent text-center cursor-pointer", { "text-foreground bg-primary": selectedCurrency === 'usdt' })}
-            >
-                <input
-                    type="radio"
-                    id="usdt"
-                    name="currency"
-                    value="usdt"
-                    checked={selectedCurrency === 'usdt'}
-                    onChange={handleChange}
-                    className="absolute opacity-0"
-                />
-                USDT
-            </label>
-            <label
-                htmlFor="usdc"
-                className={cn("p-2 relative w-full font-light text-foreground/50 bg-transparent text-center cursor-pointer", { "text-foreground bg-primary": selectedCurrency === 'usdc' })}
-            >
-                <input
-                    type="radio"
-                    id="usdc"
-                    name="currency"
-                    value="usdc"
-                    checked={selectedCurrency === 'usdc'}
-                    onChange={handleChange}
-                    className="absolute opacity-0"
-                />
-                USDC
-            </label> */}

@@ -122,7 +122,7 @@ const InvestModalContent = ({ open, investmentAmount, currency, handleCurrencyCh
                             />
                         </div>
 
-                        <CurrencySwitch handleCurrencyChange={handleCurrencyChange} />
+                        <CurrencySwitch currency={currency} handleCurrencyChange={handleCurrencyChange} />
                         <BlockchainSteps {...getBlockchainStepsProps()} />
                     </>
                 )}

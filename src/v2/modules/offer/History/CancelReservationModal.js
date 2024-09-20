@@ -1,9 +1,12 @@
 import Image from "next/image";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import moment from "moment";
+
 
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
 import { shortenAddress } from "@/v2/lib/helpers";
+import { formatCurrency } from "@/v2/helpers/formatters";
 import useImage from "@/v2/hooks/useImage";
 import { Dialog, DialogTrigger, DialogContent, DialogDescription, DialogHeader, DialogFooter, DialogTitle } from "@/v2/components/ui/dialog";
 import { Button } from "@/v2/components/ui/button";
@@ -13,12 +16,12 @@ import { useOfferDetailsQuery } from "../queries";
 // @TODO - Create reusable Definition Items components
 // Code from Mystery Box
 function DefinitionTerm({ children, className }) {
-    return <dt className={cn("text-xs text-foreground/70 3xl:text-sm font-light leading-7 self-end", className)}>{children}</dt>;
-}
+    return <dt className={cn("text-xs text-foreground/70 font-light self-end md:leading-7 3xl:text-sm", className)}>{children}</dt>;
+};
 
 function DefinitionDescription({ children, className }) {
-    return <dd className={cn("text-sm text-foreground 3xl:text-lg leading-7 font-medium", className)}>{children}</dd>;
-}
+    return <dd className={cn("text-sm text-foreground font-medium text-nowrap leading-7 3xl:text-base", className)}>{children}</dd>;
+};
 
 function Definition({ children, term, termClassName, descClassName }) {
     return (
@@ -27,16 +30,19 @@ function Definition({ children, term, termClassName, descClassName }) {
             <DefinitionDescription className={descClassName}>{children}</DefinitionDescription>
         </>
     );
-}
+};
 
 function DefinitionList({ children, className }) {
     return <dl className={cn("grid grid-rows-2 grid-flow-col", className)}>{children}</dl>;
-}
+};
 
-export default function CancelReservationModal({ isDisabled }) {
+export default function CancelReservationModal({ amount, date, isDisabled }) {
     const { account: { address } } = useEnvironmentContext();
     const { data: offer } = useOfferDetailsQuery();
     const { getResearchIconSrc } = useImage();
+
+    const dateFormatted = moment(date).format('YYYY.MM.DD - HH:mm:ss');
+    const amountFormatted = formatCurrency(amount);
 
     return (
         <Dialog>
@@ -45,58 +51,56 @@ export default function CancelReservationModal({ isDisabled }) {
                     <Button
                         className="hidden self-center md:block"
                         variant="outline"
-                        // disabled={isDisabled}
+                        disabled={isDisabled}
                     >
                         Cancel
                     </Button>
                     <Button
                         className="md:hidden px-5"
                         variant="secondary"
-                        // disabled={isDisabled}
+                        disabled={isDisabled}
                     >
                         <CrossIcon className="size-3" />
                     </Button>
                 </>  
             </DialogTrigger>
             
-            <DialogContent>
+            <DialogContent className="max-w-[1000px]">
                 <DialogHeader>
                     <DialogTitle>Cancel Reservation</DialogTitle>
                     <DialogDescription>
                         Are you sure you want to cancel following reservation?
                     </DialogDescription>
                 </DialogHeader>
-
-                <div className="my-2 px-4 py-4 flex gap-x-4 bg-white/[.04] md:px-8">
-                    <DefinitionList className="grid-cols-5 w-full">
+                
+                <div className="my-2 px-4 py-4 flex flex-col gap-x-4 bg-white/[.04] md:px-8 md:flex-row">
+                    <DefinitionList className="grid-cols-[45%,1fr] grid-rows-6 w-full md:grid-cols-[72px,auto,auto,auto,auto] md:grid-rows-1">
                         <Definition term="Logo" termClassName="sr-only" descClassName="row-span-2">
-                            <div className="h-full flex items-center justify-center w-16">
-                            <Image
-                                src={getResearchIconSrc(offer.slug)}
-                                className="rounded"
-                                alt={`Avatar for ${name} offer`}
-                                width={90}
-                                height={90}
-                            />
+                            <div className="h-full flex items-center justify-center w-12">
+                                <Image
+                                    src={getResearchIconSrc(offer.slug)}
+                                    className="rounded"
+                                    alt={`Avatar for ${offer.name} offer`}
+                                    width={90}
+                                    height={90}
+                                />
                             </div>
                         </Definition>
-                        <Definition term="Project">{offer.name}</Definition>
-                        <Definition term="Me">{shortenAddress(address ?? "")}</Definition>
-                        <Definition term="Date">...</Definition>
-                        <Definition term="Amount">...</Definition>
+                        <Definition termClassName="md:order-4" descClassName="md:order-4" term="Amount">{amountFormatted}</Definition>
+                        <Definition termClassName="md:order-3" descClassName="md:order-3" term="Date">{dateFormatted}</Definition>
+                        <Definition termClassName="md:order-1" descClassName="md:order-1" term="Project">{offer.name}</Definition>
+                        <Definition termClassName="md:order-2" descClassName="md:order-2" term="Me">{shortenAddress(address ?? "")}</Definition>
                     </DefinitionList>
                 </div>
 
-                <DialogFooter className="lg:flex-row items-center justify-between">
-                    <p className="order-2 text-sm text-foreground/50 lg:order-1">
-                      Investment amount will be send back to your wallet within 3 days.
-                    </p>
-                    <div className="ordero-1 flex items-center gap-2 lg:order-2">
+                <DialogFooter className="md:flex-row items-center justify-between">
+                    <p className="order-2 text-xs text-foreground/50 md:order-1 md:text-sm">Investment amount will be send back to your wallet within 3 days.</p>
+                    <div className="w-full order-1 flex flex-col-reverse gap-2 md:w-max md:flex-row md:items-center md:order-2">
                         <DialogPrimitive.Close asChild>
                             <Button variant="outline">Back</Button>
                         </DialogPrimitive.Close>
-                        
-                        <Button>Confirm Cancellation</Button>
+
+                        <Button onClick={() => {}}>Confirm Cancellation</Button>
                     </div>
                 </DialogFooter>
             </DialogContent>
