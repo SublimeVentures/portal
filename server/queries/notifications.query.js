@@ -1,20 +1,22 @@
 const { models } = require("../services/db/definitions/db.init");
+const logger = require("../services/logger");
 
 async function getNotificationChannels() {
     try {
-        const channels = await models.notificationChannel.findAll({
-            where: {
-                enabled: true,
-            },
-            raw: true,
-        });
-        const categories = await models.notificationChannelCategory.findAll({ raw: true });
+        const [channels, categories] = await Promise.all([
+            models.notificationChannel.findAll({
+                where: {
+                    enabled: true,
+                },
+                raw: true,
+            }),
+            models.notificationChannelCategory.findAll({ raw: true }),
+        ]);
         return {
             channels,
             categories,
         };
     } catch (err) {
-        console.error(err);
         return {
             channels: [],
             categories: [],
@@ -23,42 +25,54 @@ async function getNotificationChannels() {
 }
 
 async function getNotificationPreferences(userId, tenantId) {
-    const preferences = await models.notificationChannelPreference.findAll({
-        where: { userId, tenantId },
-    });
-    return preferences.reduce((acc, pref) => {
-        if (!acc[pref.channelCategoryId]) {
-            acc[pref.channelCategoryId] = {};
-        }
-        acc[pref.channelCategoryId][pref.channelId] = true;
-        return acc;
-    }, {});
+    try {
+        const preferences = await models.notificationChannelPreference.findAll({
+            where: { userId, tenantId },
+        });
+        return preferences.reduce((acc, pref) => {
+            if (!acc[pref.channelCategoryId]) {
+                acc[pref.channelCategoryId] = {};
+            }
+            acc[pref.channelCategoryId][pref.channelId] = true;
+            return acc;
+        }, {});
+    } catch (err) {
+        logger.error(err.message);
+        return {};
+    }
 }
 
 async function setNotificationPreferences(userId, tenantId, updates) {
-    return Promise.all(
-        updates.map((update) => {
-            if (update.enabled) {
-                return models.notificationChannelPreference.findOrCreate({
-                    where: {
-                        userId,
-                        tenantId,
-                        channelId: update.channelId,
-                        channelCategoryId: update.categoryId,
-                    },
+    try {
+        const updatables = updates.reduce(
+            (acc, update) => {
+                const { enabled, channelId, categoryId: channelCategoryId } = update;
+                const targetArray = enabled ? acc.toInsert : acc.toDelete;
+                targetArray.push({
+                    userId,
+                    tenantId,
+                    channelId,
+                    channelCategoryId,
                 });
-            } else {
-                return models.notificationChannelPreference.destroy({
-                    where: {
-                        userId,
-                        tenantId,
-                        channelId: update.channelId,
-                        channelCategoryId: update.categoryId,
-                    },
-                });
-            }
-        }),
-    );
+                return acc;
+            },
+            { toInsert: [], toDelete: [] },
+        );
+
+        return Promise.all(
+            models.notificationChannelPreference.bulkCreate(updatables.toInsert, {
+                ignoreDuplicates: true,
+            }),
+            models.notificationChannelPreference.destroy({
+                where: {
+                    $or: updatables.toDelete,
+                },
+            }),
+        );
+    } catch (err) {
+        logger.error(err.message);
+        return [];
+    }
 }
 
 module.exports = {

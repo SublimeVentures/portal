@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "@/components/Checkbox";
-import { cn } from "@/lib/cn";
 
 export default function NotificationPreferenceRow({ disabledKeys, selection, category, channels, onChange }) {
-    const [loading, setLoading] = useState(false);
-    const handleChange = (channelId) => async (checked) => {
-        if (channelId === "push") {
-            setLoading(true);
-        }
-        const updated = { ...selection };
-        updated[channelId] = checked;
+    const handleChange = (channelId) => (checked) => {
+        const updated = { ...selection, [channelId]: checked };
         onChange(updated);
-        if (channelId === "push") {
-            setLoading(false);
-        }
         return updated;
     };
 
@@ -31,7 +21,7 @@ export default function NotificationPreferenceRow({ disabledKeys, selection, cat
                             className="mx-auto sm:my-4"
                             checked={checked}
                             onCheckedChange={handleChange(channel.id)}
-                            disabled={disabledKeys[channel.id] || loading}
+                            disabled={disabledKeys[channel.id]}
                         />
                     </td>
                 );

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { deleteToken, getToken } from "firebase/messaging";
 import { useCookies } from "react-cookie";
@@ -56,31 +56,20 @@ export default function NotificationsSettings({ session, onNewSettings }) {
             updated.push = forceDisablePush;
             return updated;
         });
-        fetchNotificationChannels()
-            .then((res) => {
+        const prepareNotificationChannels = async () => {
+            try {
+                const res = fetchNotificationChannels();
                 setNotificationOptions({
                     ...res,
                     channels: res.channels.filter(({ id }) => id !== "discord"),
                 });
-                return res;
-            })
-            .then((opts) => {
-                return fetchNotificationPreferences().then((prefs) => ({
-                    prefs,
-                    opts,
-                }));
-            })
-            .then(({ prefs, opts }) => {
-                setPreferenceMap(prefs);
-                return { opts };
-            })
-            .then(({ opts }) => {
-                setPreferenceMap((prev) => {
-                    const updated = { ...prev };
+                const { prefs } = await fetchNotificationPreferences();
+                setPreferenceMap(() => {
+                    const updated = { ...prefs };
                     for (const categoryId of Object.keys(updated)) {
                         updated[categoryId]["push"] = !!cookies[`push_token_${categoryId}_${tenantIndex}`];
                     }
-                    for (const category of opts.categories) {
+                    for (const category of res.categories) {
                         if (!updated[category.id]) {
                             updated[category.id] = {};
                         }
@@ -88,42 +77,50 @@ export default function NotificationsSettings({ session, onNewSettings }) {
                     }
                     return updated;
                 });
-            });
+            } catch (err) {
+                // TODO display toast upon error - waiting for decision on what to use
+            }
+        };
+
+        prepareNotificationChannels();
     }, [cookies, forceDisablePush, session.email, session.phoneNumberE164]);
 
     useEffect(() => {
         setForceDisablePush(Notification.permission === "denied");
     }, []);
 
-    const handleChange = (ev) => {
+    const handleChange = useCallback((ev) => {
         const { name, value } = ev.target;
         setForm((prev) => ({ ...prev, [name]: value }));
-    };
+    }, []);
 
-    const handleSubmit = (ev) => {
-        ev.preventDefault();
-        const prefEntries = Object.entries(preferenceMap);
+    const handleSubmit = useCallback(
+        (ev) => {
+            ev.preventDefault();
+            const prefEntries = Object.entries(preferenceMap);
 
-        /**
-         * @type {NotificationPreferenceUpdates}
-         */
-        const preferenceUpdates = prefEntries.reduce((acc, [categoryId, channels]) => {
-            for (const [channelId, enabled] of Object.entries(channels)) {
-                acc.push({ categoryId, channelId, enabled });
-            }
-            return acc;
-        }, []);
+            /**
+             * @type {NotificationPreferenceUpdates}
+             */
+            const preferenceUpdates = prefEntries.reduce((acc, [categoryId, channels]) => {
+                for (const [channelId, enabled] of Object.entries(channels)) {
+                    acc.push({ categoryId, channelId, enabled });
+                }
+                return acc;
+            }, []);
 
-        updateNotificationPreferences(preferenceUpdates)
-            .then(() => updateUser(form))
-            .then(() => {
-                onNewSettings();
-                setSuccessDialog(true);
-            })
-            .catch(() => {
-                setErrorDialog(true);
-            });
-    };
+            updateNotificationPreferences(preferenceUpdates)
+                .then(() => updateUser(form))
+                .then(() => {
+                    onNewSettings();
+                    setSuccessDialog(true);
+                })
+                .catch(() => {
+                    setErrorDialog(true);
+                });
+        },
+        [form, onNewSettings, preferenceMap],
+    );
 
     const requestNotificationPermission = async () => {
         if (Notification.permission !== "granted") {
@@ -139,6 +136,52 @@ export default function NotificationsSettings({ session, onNewSettings }) {
         return isPushAllowed;
     };
 
+    const handlePushSubscribe = async (fcm, categoryId) => {
+        return getToken(fcm, {
+            vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
+        })
+            .then(async (token) => {
+                return subscribeToPushCategory(categoryId, token).then((res) => {
+                    if (res.ok) {
+                        setCookie(`push_token_${categoryId}_${tenantIndex}`, token);
+                    }
+                    return Boolean(res.ok);
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                return false;
+            });
+    };
+
+    const handlePushUnsubscribe = async (fcm, categoryId) => {
+        const token = cookies[`push_token_${categoryId}_${tenantIndex}`];
+        unsubscribeFromPushCategory(categoryId, token)
+            .then(() => {
+                deleteToken(fcm).then((done) => {
+                    console.log("FCM token removal:", done);
+                });
+            })
+            .catch(console.error)
+            .finally(() => {
+                removeCookie(`push_token_${categoryId}_${tenantIndex}`);
+            });
+        return false;
+    };
+
+    const handlePushPreferenceChange = async (categoryId, enabled) => {
+        if (fcm) {
+            if (enabled) {
+                return handlePushSubscribe(fcm, categoryId);
+            } else {
+                return handlePushUnsubscribe(fcm, categoryId);
+            }
+        } else {
+            console.warn("Firebase Messaging is not initialized!");
+            return false;
+        }
+    };
+
     const handlePreferenceChange = (categoryId) => (channels) => {
         setPreferenceMap((prev) => {
             const updated = { ...prev };
@@ -147,36 +190,10 @@ export default function NotificationsSettings({ session, onNewSettings }) {
                 if (!updated[categoryId]) {
                     updated[categoryId] = {};
                 }
-                if (channelId === "push" && updated[categoryId]["push"] !== enabled) {
-                    if (enabled) {
-                        if (fcm) {
-                            getToken(fcm, {
-                                vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
-                            })
-                                .then((token) => {
-                                    subscribeToPushCategory(categoryId, token).then((res) => {
-                                        if (res.ok) {
-                                            setCookie(`push_token_${categoryId}_${tenantIndex}`, token);
-                                        }
-                                    });
-                                })
-                                .catch(console.error);
-                        } else {
-                            console.warn("Firebase Messaging is not initialized!");
-                        }
-                    } else {
-                        if (fcm) {
-                            const token = cookies[`push_token_${categoryId}_${tenantIndex}`];
-                            unsubscribeFromPushCategory(categoryId, token).then(() => {
-                                deleteToken(fcm).then((done) => {
-                                    console.log("FCM token removal:", done);
-                                });
-                            });
-                        } else {
-                            console.warn("Firebase Messaging is not initialized!");
-                        }
-                        removeCookie(`push_token_${categoryId}_${tenantIndex}`);
-                    }
+                if (channelId === "push") {
+                    handlePushPreferenceChange(categoryId, enabled).then((allowed) => {
+                        updated[categoryId][channelId] = allowed;
+                    });
                 } else {
                     updated[categoryId][channelId] = enabled;
                 }
