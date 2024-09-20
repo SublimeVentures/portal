@@ -1,7 +1,6 @@
-const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
-const axios = require("axios");
 const { authTokenName } = require("../../src/lib/authHelpers");
+const { axiosAutherPublic } = require("../services/request/axios");
 
 async function signUserClaim(user, req) {
     try {
@@ -15,19 +14,11 @@ async function signUserClaim(user, req) {
                 wallet: req.body.wallet,
                 token,
             });
-            const signature = await axios.post(
-                `${process.env.AUTHER}/claim/sign`,
-                {
-                    claimId,
-                    wallet: req.body.wallet,
-                    token,
-                },
-                {
-                    headers: {
-                        "content-type": "application/json",
-                    },
-                },
-            );
+            const signature = await axiosAutherPublic.post("/claim/sign", {
+                claimId,
+                wallet: req.body.wallet,
+                token,
+            });
             console.log("signature", signature.data);
 
             if (!signature?.data?.ok) {

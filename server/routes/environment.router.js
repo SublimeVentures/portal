@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { serializeError } = require("serialize-error");
-const axios = require("axios");
 const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { buildCookie, authTokenName, refreshTokenName } = require("../../src/lib/authHelpers");
+const { axiosAutherPublic } = require("../services/request/axios");
 
 //GET USER ENVIRONMENT DATA
 router.get("/", async (req, res) => {
@@ -31,15 +31,10 @@ router.get("/", async (req, res) => {
 
 async function refreshPartnerEnvironment(user, res) {
     try {
-        const environment = await axios.post(
-            `${process.env.AUTHER}/environment/partner_refresh`,
-            { partnerId: user.partnerId, tenantId: user.tenantId },
-            {
-                headers: {
-                    "content-type": "application/json",
-                },
-            },
-        );
+        const environment = await axiosAutherPublic.post("/environment/partner_refresh", {
+            partnerId: user.partnerId,
+            tenantId: user.tenantId,
+        });
         const result = environment.data;
         if (!result?.ok) return res.status(401).json({ ...result });
         return res.status(200).json({ ...result });

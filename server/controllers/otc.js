@@ -1,3 +1,7 @@
+
+const moment = require("moment");
+const { serializeError } = require("serialize-error");
+const { isAddress } = require("web3-validator");
 const {
     getActiveOffers,
     getHistoryOffers,
@@ -6,14 +10,11 @@ const {
     processSellOtcDeal,
     saveOtcLock,
 } = require("../queries/otc.query");
-const moment = require("moment");
-const { createHash } = require("./helpers");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 const db = require("../services/db/definitions/db.init");
-const { isAddress } = require("web3-validator");
-const axios = require("axios");
 const { getOtcList } = require("../queries/offers.query");
+const { axiosAutherPublic } = require("../services/request/axios");
+const { createHash } = require("./helpers");
 
 async function getMarkets(session) {
     try {
@@ -116,21 +117,13 @@ async function signOffer(user, req) {
 
         await saveOtcLock(userId, wallet, deal.data, expireDate, transaction);
 
-        const signature = await axios.post(
-            `${process.env.AUTHER}/otc/sign`,
-            {
-                wallet,
-                otcId,
-                dealId,
-                nonce: deal.data.id,
-                expireDate,
-            },
-            {
-                headers: {
-                    "content-type": "application/json",
-                },
-            },
-        );
+        const signature = await axiosAutherPublic.post("/otc/sign", {
+            wallet,
+            otcId,
+            dealId,
+            nonce: deal.data.id,
+            expireDate,
+        });
 
         if (!signature?.data?.ok) {
             throw new Error("Invalid signature");
