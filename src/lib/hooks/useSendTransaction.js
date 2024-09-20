@@ -56,7 +56,7 @@ const calculateBigIntMultiplier = (value, multiplier) => {
 
 const GAS_MULTIPLIER = 1;
 const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
-const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1000;
+const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 10;
 
 const useCalculateGas = (args) => {
     const { query = {}, ...params } = args;
@@ -142,6 +142,13 @@ function useSendTransaction(isEnabled, method, chainId, account) {
             enabled: isEnabled,
         },
     });
+
+    if(gas?.data?.gas){
+        console.debug('------')
+        gas?.data?.gas && console.debug('gas::', gas?.data?.gas)
+        gas?.data?.maxFeePerGas && console.debug('maxFeePerGas::', gas?.data?.maxFeePerGas)
+        gas?.data?.maxPriorityFeePerGas && console.debug('maxPriorityFeePerGas::', gas?.data?.maxPriorityFeePerGas)
+    }
 
     const simulate = useSimulateContract({
         functionName: name,
