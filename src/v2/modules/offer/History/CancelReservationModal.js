@@ -1,11 +1,13 @@
+import { useState } from "react";
 import Image from "next/image";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import moment from "moment";
 
-
+import { queryClient } from "@/lib/queryCache";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
 import { shortenAddress } from "@/v2/lib/helpers";
+import { cancelOfferParticipant } from "@/fetchers/offer.fetcher";
 import { formatCurrency } from "@/v2/helpers/formatters";
 import useImage from "@/v2/hooks/useImage";
 import { Dialog, DialogTrigger, DialogContent, DialogDescription, DialogHeader, DialogFooter, DialogTitle } from "@/v2/components/ui/dialog";
@@ -36,13 +38,34 @@ function DefinitionList({ children, className }) {
     return <dl className={cn("grid grid-rows-2 grid-flow-col", className)}>{children}</dl>;
 };
 
-export default function CancelReservationModal({ amount, date, isDisabled }) {
+export default function CancelReservationModal({ participantId, amount, date, isDisabled }) {
     const { account: { address } } = useEnvironmentContext();
     const { data: offer } = useOfferDetailsQuery();
     const { getResearchIconSrc } = useImage();
-
+    
+    const [isProcessing, setIsProcessing] = useState(false);
     const dateFormatted = moment(date).format('YYYY.MM.DD - HH:mm:ss');
     const amountFormatted = formatCurrency(amount);
+
+    const handleConfirmCancel = async () => {
+        if (!offer.id || !participantId || isDisabled || isProcessing) return;
+        setIsProcessing(true);
+
+        try {
+            const { ok } = await cancelOfferParticipant(offer.id, participantId);
+
+            if (ok) {
+                await Promise.all([
+                    queryClient.invalidateQueries(["offerParticipants"]),
+                    queryClient.invalidateQueries(["offerDetails"]),
+                ]);
+            };
+        } catch (err) {
+            console.log('err', err)
+        }
+        
+        setIsProcessing(false);
+    };
 
     return (
         <Dialog>
@@ -100,7 +123,12 @@ export default function CancelReservationModal({ amount, date, isDisabled }) {
                             <Button variant="outline">Back</Button>
                         </DialogPrimitive.Close>
 
-                        <Button onClick={() => {}}>Confirm Cancellation</Button>
+                        <Button
+                            onClick={handleConfirmCancel}
+                            isDisabled={isDisabled || isProcessing}
+                        >
+                                Confirm Cancellation
+                            </Button>
                     </div>
                 </DialogFooter>
             </DialogContent>

@@ -29,7 +29,7 @@ export default function useInvest(session) {
     const { data: offer } = useOfferDetailsQuery();
     const { data: allocation } = useOfferAllocationQuery();
     const { data: userAllocation } = useUserAllocationQuery();
-    const { offerId, allocationData, upgradesUse } = useOfferDetailsStore();
+    const { offerId, allocationData } = useOfferDetailsStore();
 
     const [errorModalState, setErrorModalState] = useState({ open: false, code: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -93,6 +93,8 @@ export default function useInvest(session) {
 
     const openInvestmentModal = () => {
         if (isStakeLock) return;
+        
+        queryClient.invalidateQueries(["offerParticipants"]),
         setIsInvestModalOpen(true);
     };
 

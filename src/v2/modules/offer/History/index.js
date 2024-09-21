@@ -84,6 +84,7 @@ export default function History({ className }) {
 
                                 <CancelReservationModal
                                     isDisabled={!(participant.isConfirmedInitial && !participant.isConfirmed)}
+                                    participantId={participant.id}
                                     date={participant.createdAt}
                                     amount={participant.amount}
                                 />

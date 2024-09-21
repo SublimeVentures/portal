@@ -10,7 +10,7 @@ const DateTimeDisplay = ({ children, type }) => {
     );
 };
 
-const defaultUnits = {
+export const defaultUnits = {
     days: "Days . ",
     hours: "Hours . ",
     minutes: "Minutes . ",

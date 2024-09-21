@@ -438,8 +438,35 @@ async function getOfferParticipants(offerId, userId) {
         });
 
         return [];
-    }
-}
+    };
+};
+
+async function deleteOfferParticipants(params, userId) {
+    const { offerId, participantId } = params;
+
+    try {
+        const res = await models[`z_participant_${offerId}`].destroy({
+            where: {
+                id: participantId,
+                userId,
+                isConfirmedInitial: true,
+                isConfirmed: true,
+            },
+        });
+
+        if (res > 0) {
+            return { ok: true };
+        };
+
+        return { ok: false };
+    } catch (error) {
+        logger.error("QUERY :: [deleteOfferParticipants]", {
+            error: serializeError(error),
+        });
+
+        return { ok: false };
+    };
+};
 
 module.exports = {
     getOffersPublic,
@@ -452,4 +479,5 @@ module.exports = {
     getOfferWithLimits,
     getAllocation,
     getOfferParticipants,
+    deleteOfferParticipants,
 };

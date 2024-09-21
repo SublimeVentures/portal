@@ -26,7 +26,7 @@ export default function Vesting({ className }) {
                     </div>
                 )}
 
-                {(offer.payouts.length > 0 && !isLoading) && (
+                {(offer?.payouts?.length > 0 && !isLoading) && (
                     <ul className="-my-2 -mr-2 pr-2 max-h-80 overflow-y-auto md:max-h-44">
                         {offer.payouts.map((payout) => (
                             <li key={payout.id} className="my-2">

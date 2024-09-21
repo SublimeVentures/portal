@@ -5,7 +5,7 @@ const { getOffersStats, getParamOfferList } = require("../controllers/offerList"
 const { verifyID } = require("../../src/lib/authHelpers");
 const { useUpgrade } = require("../controllers/upgrade");
 const { userStatusInOffer } = require("../controllers/participants");
-const { getOfferProgress, getOfferParticipants } = require("../queries/offers.query");
+const { getOfferProgress, getOfferParticipants, deleteOfferParticipants } = require("../queries/offers.query");
 
 router.get("/", async (req, res) => {
     const { auth, user } = await verifyID(req);
@@ -51,12 +51,18 @@ router.get("/:id/state", async (req, res) => {
 });
 
 router.get("/:id/participants", async (req, res) => {
-    const {
-        auth,
-        user: { userId },
-    } = await verifyID(req);
+    const { auth, user } = await verifyID(req);
     if (!auth) return res.status(401).json({});
-    return res.status(200).json(await getOfferParticipants(req.params.id, userId));
+
+    return res.status(200).json(await getOfferParticipants(req.params.id, user.userId));
 });
+
+router.delete("/:offerId/participants/:participantId", async (req, res) => {
+    const { auth, user } = await verifyID(req);
+    if (!auth) return res.status(401).json({});
+
+    return res.status(200).json(await deleteOfferParticipants(req.params, user.userId));
+});
+
 
 module.exports = { router };
