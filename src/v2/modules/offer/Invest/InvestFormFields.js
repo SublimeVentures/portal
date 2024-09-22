@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 
+import { MIN_ALLOCATION, MIN_DIVISIBLE } from "@/lib/investment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
@@ -32,17 +33,36 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
     }, []);
 
     const handleSetMin = useCallback(() => {
-        const newValue = allocationData?.allocationUser_min;
-        if (newValue != null) handleAmountChange(newValue, setValue, ["investmentAmount", newValue, { shouldValidate: true }]);
-    }, [allocationData?.allocationUser_min]);
+        const allocationUser_min = allocationData?.allocationUser_min;
+        const allocationUser_left = allocationData?.allocationUser_left;
+    
+        if (allocationUser_left != null) {
+            const minValue = Math.min(
+                allocationUser_left,
+                Math.max(allocationUser_min || MIN_ALLOCATION, MIN_ALLOCATION)
+            );
+
+            handleAmountChange(minValue, setValue, ["investmentAmount", minValue, { shouldValidate: true }]);
+        }
+    }, [allocationData?.allocationUser_min, allocationData?.allocationUser_left]);
 
     const handleSetHalf = useCallback(() => {
-        const maxValue = allocationData?.allocationUser_max;
-        const leftValue = allocationData?.allocationUser_left;
-        
-        if (maxValue != null && leftValue != null) {
-            const minValue = Math.min(maxValue, leftValue);
-            const half = minValue * 0.5;
+        const allocationUser_max = allocationData?.allocationUser_max;
+        const allocationUser_min = allocationData?.allocationUser_min;
+        const allocationUser_left = allocationData?.allocationUser_left;
+    
+        if (allocationUser_left != null) {
+            const minValue = Math.min(
+                allocationUser_left,
+                Math.max(allocationUser_min || MIN_ALLOCATION, MIN_ALLOCATION)
+            );
+
+            const maxValue = Math.min(allocationUser_max, allocationUser_left);
+
+            let half = maxValue * 0.5;
+            half = Math.round(half / MIN_DIVISIBLE) * MIN_DIVISIBLE;
+            if (half < minValue) half = minValue;
+    
             handleAmountChange(half, setValue, ["investmentAmount", half, { shouldValidate: true }]);
         }
     }, [allocationData?.allocationUser_max, allocationData?.allocationUser_left]);
