@@ -2,6 +2,7 @@ const { Op, Sequelize } = require("sequelize");
 const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
+const { constructError } = require("../utils");
 
 async function getUserVault(
     userId,
@@ -155,11 +156,7 @@ async function getUserVault(
 
         return { count: result.count, rows: processedRows };
     } catch (error) {
-        logger.error("QUERY :: [getUserVault]", {
-            error: serializeError(error),
-            userId,
-        });
-        return { count: 0, rows: [] };
+        return constructError("QUERY", error, { isLog: true, methodName: "getUserVault" });
     }
 }
 
