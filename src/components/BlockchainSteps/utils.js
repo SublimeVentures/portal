@@ -4,6 +4,7 @@ import { BigNumber } from "bignumber.js";
 import abi_claim from "../../../abi/ClaimFacet.json";
 import abi_otc from "../../../abi/OtcFacet.abi.json";
 import abi_invest from "../../../abi/InvestFacet.abi.json";
+import abi_reassign from "../../../abi/ReasignFacet.abi.json";
 
 import abi_staking_neotokyo from "../../../abi/citcapStaking.abi.json";
 import abi_staking_generic from "../../../abi/genericStaking.abi.json";
@@ -34,6 +35,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REASSIGN: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -199,6 +201,7 @@ export const getMethod = (type, token, params) => {
                 validHash(params?.booking?.signature) &&
                 validNumber(params?.booking.expires) &&
                 validNumber(params?.booking.amount);
+
             return isValid
                 ? {
                       ok: true,
@@ -414,6 +417,38 @@ export const getMethod = (type, token, params) => {
                               params.prerequisite.signature,
                           ],
                           abi: abi_claim,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
+        case METHOD.REASSIGN: {
+            const isValid =
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.offer) &&
+                validNumber(params?.expire) &&
+                validAddress(params?.currency) &&
+                validAddress(params?.to);
+
+            console.log("validation REASSIGN", params, isValid, validHash(params?.prerequisite?.signature));
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "reassign",
+                          inputs: [
+                              params?.to,
+                              params?.currency,
+                              params?.offer,
+                              params?.expire,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_reassign,
                           confirmations: 2,
                           contract: params.contract,
                       },
