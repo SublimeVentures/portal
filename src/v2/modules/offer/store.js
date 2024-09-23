@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { PremiumItemsENUM } from "@/lib/enum/store";
 import { userInvestmentState } from "@/lib/investment";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 

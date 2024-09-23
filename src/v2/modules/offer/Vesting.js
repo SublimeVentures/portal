@@ -14,7 +14,7 @@ export default function Vesting({ className }) {
     const { data: offer, isLoading } = useOfferDetailsQuery();
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6 select-none", className)}>
-            <h2 className="text-xl md:text-2xl font-medium">Vesting details</h2>
+            <h2 className="text-xl md:text-2xl font-medium">Vesting Details</h2>
             <ul className="overflow-y-auto md:max-h-44 -my-2 -mr-3 pr-2">
                 {isLoading ? (
                     <>
@@ -40,7 +40,7 @@ export default function Vesting({ className }) {
                 ) : (
                     <li className="bg-white/[.04] md:h-44 flex flex-col items-center justify-center gap-4 p-6">
                         <h3 className="tracking-tight text-base md:text-lg font-medium text-foreground">
-                            Vesting details unavailable
+                            Vesting Details Unavailable
                         </h3>
                         <p className="max-w-md text-xs md:text-sm font-light text-foreground/50 text-center">
                             The vesting details are currently unavailable, but no worries!

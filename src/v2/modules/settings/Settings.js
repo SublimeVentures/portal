@@ -34,7 +34,7 @@ export const mobileTabs = [
 export const desktopTabs = [
     {
         id: "general",
-        name: "General settings",
+        name: "General Settings",
         component: General,
     },
     {

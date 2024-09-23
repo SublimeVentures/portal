@@ -12,7 +12,7 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
 
     return (
         <div className="flex flex-col items-center gap-4 3xl:gap-12 md:flex-row sm:mb-4 lg:mb-0 ">
-            <Title {...props}>My notifications</Title>
+            <Title {...props}>My Notifications</Title>
             <div className="w-full flex flex-col gap-4 md:flex-row">
                 <div className="flex items-center gap-2">
                     <DatePicker

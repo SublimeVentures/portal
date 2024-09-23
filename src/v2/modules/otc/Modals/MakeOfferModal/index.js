@@ -104,7 +104,7 @@ export default function MakeOfferModal() {
     return (
         <Sheet open={isMakeModalOpen} onOpenChange={handleModalChange}>
             <SheetTrigger asChild>
-                <Button>Create offer</Button>
+                <Button>Create Offer</Button>
             </SheetTrigger>
             <MakeOfferModalContent
                 content={content}
