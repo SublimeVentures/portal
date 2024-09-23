@@ -26,12 +26,17 @@ const getTGE = (tge, ppu) =>
 export default function Fundraise({ className }) {
     const userAllocation = useUserAllocationQuery();
     const { data: offer, isLoading } = useOfferDetailsQuery();
-    const { state } = useOfferStatus(offer);
-    const { data: { progress, filled } = {} } = useOfferProgressQuery(offer.id, {
-        refetchInterval: state === OfferStatus.IN_PROGRESS ? 15000 : false,
+    const { status } = useOfferStatus(offer);
+
+    const { data: { progress = 0, filled = 0 } = {} } = useOfferProgressQuery(offer.id, {
+        refetchInterval: status === OfferStatus.IN_PROGRESS ? 15000 : false,
+        enabled: status === OfferStatus.IN_PROGRESS,
     });
-    
+
+    const progressValue = status === OfferStatus.CLOSED ? 100 : progress;
+
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
+
     return (
         <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl space-y-6", className)}>
             <div className="flex gap-2 items-center">
@@ -49,9 +54,10 @@ export default function Fundraise({ className }) {
             <div>
                 <div className="flex justify-between items-end mb-4 select-none">
                     <p className="text-xl md:text-3xl">{formatCurrency(filled)}</p>
-                    <p className="text-base md:text-lg text-success">{formatPercentage(progress / 100)} filled</p>
+                    <p className="text-base md:text-lg text-success">{formatPercentage(progressValue / 100)} Filled</p>
                 </div>
-                <Progress value={progress} variant="success" />
+
+                <Progress value={progressValue} variant="success" />
             </div>
             <div>
                 <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base select-none">

@@ -37,7 +37,7 @@ const EmptyInvestmentsEnhanced = () => {
             </CardDescription>
             <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
                 <Button className="w-full collap:w-auto" variant="outline">
-                    OTC market
+                    OTC Market
                 </Button>
                 <Button className="w-full collap:w-auto">Opportunities</Button>
             </div>

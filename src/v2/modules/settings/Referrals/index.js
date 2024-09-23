@@ -15,7 +15,7 @@ export default function Referrals() {
                 <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full bg-settings-gradient pb-23">
                     <div>
                         <CardTitle className="text-base md:text-lg font-medium text-white mb-1">
-                            Join Based Referral program
+                            Join Based Referral Program
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm font-light">
                             Get free discounts and earn allocations. For more information, please read the{" "}

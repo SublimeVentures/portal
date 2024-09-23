@@ -12,6 +12,7 @@ export const useOfferStatus = (offer) => {
     const state = phaseCurrent?.phaseName;
     const status = getStatus(phaseCurrent);
     const variant = BadgeVariants[status];
+
     return { state, status, variant };
 };
 

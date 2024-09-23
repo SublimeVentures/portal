@@ -75,7 +75,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                     <>
                         {variant === VARIANTS.DEFAULT && (
                             <CardTitle className="mb-2 text-base 3xl:text-2xl font-normal italic text-accent text-center">
-                                Acquired <span className="3xl:block font-semibold">premium</span>
+                                Acquired <span className="3xl:block font-semibold">Premium</span>
                             </CardTitle>
                         )}
                         <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-5 gap-x-4">

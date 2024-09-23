@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { PremiumItemsENUM } from "@/lib/enum/store";
 import { userInvestmentState } from "@/lib/investment";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 
@@ -27,19 +28,20 @@ export const useOfferDetailsStore = create()(
     persist(
         (set) => ({
             ...defaultInitState,
-            setOfferDetails: (offerDetails) => set((state) => {
-                if (
-                    state.offerId !== offerDetails.offerId ||
-                    state.upgradesUse !== offerDetails.upgradesUse ||
-                    JSON.stringify(state.allocationData) !== JSON.stringify(offerDetails.allocationData)
-                ) {
-                    return offerDetails;
-                }
-                
-                return state;
-            }),
+            setOfferDetails: (offerDetails) =>
+                set((state) => {
+                    if (
+                        state.offerId !== offerDetails.offerId ||
+                        state.upgradesUse !== offerDetails.upgradesUse ||
+                        JSON.stringify(state.allocationData) !== JSON.stringify(offerDetails.allocationData)
+                    ) {
+                        return offerDetails;
+                    }
+
+                    return state;
+                }),
         }),
-        { name: OFFER_DETAILS_STORE }
+        { name: OFFER_DETAILS_STORE },
     ),
 );
 
@@ -48,7 +50,7 @@ export const initStore = ({ session, offer, allocation, userAllocation }) => {
 
     const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
     const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
-    const upgradesUse = (guaranteedUsed || increasedUsed) ? { guaranteedUsed, increasedUsed } : null;
+    const upgradesUse = guaranteedUsed || increasedUsed ? { guaranteedUsed, increasedUsed } : null;
 
     const allocationData = userInvestmentState(
         session,
@@ -56,7 +58,7 @@ export const initStore = ({ session, offer, allocation, userAllocation }) => {
         phaseCurrent,
         upgradesUse,
         userAllocation?.invested?.total,
-        allocation || {}
+        allocation || {},
     );
 
     const { setOfferDetails } = useOfferDetailsStore.getState();

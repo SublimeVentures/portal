@@ -29,7 +29,7 @@ export default function useInvest(session) {
     const { data: offer } = useOfferDetailsQuery();
     const { data: allocation } = useOfferAllocationQuery();
     const { data: userAllocation } = useUserAllocationQuery();
-    const { offerId, allocationData, upgradesUse } = useOfferDetailsStore();
+    const { offerId, allocationData } = useOfferDetailsStore();
 
     const [errorModalState, setErrorModalState] = useState({ open: false, code: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -100,7 +100,8 @@ export default function useInvest(session) {
 
     const openInvestmentModal = () => {
         if (isStakeLock) return;
-        setIsInvestModalOpen(true);
+
+        queryClient.invalidateQueries(["offerParticipants"]), setIsInvestModalOpen(true);
     };
 
     const bookingRestore = async () => {
@@ -113,13 +114,12 @@ export default function useInvest(session) {
         openInvestmentModal();
     };
 
-    // @TODO - Currently not used - Checked if it is neccesary
-    // const bookingCreateNew = async () => {
-    //     setIsLoading(true);
-    //     setRestoreModalData({ open: false, amount: 0, time: null });
-    //     clearBooking();
-    //     await startInvestmentProcess();
-    // };
+    const bookingCreateNew = async (newValue) => {
+        setIsLoading(true);
+        setRestoreModalData({ open: false, amount: 0, time: null });
+        clearBooking();
+        await startInvestmentProcess({ investmentAmount: newValue, currency });
+    };
 
     const afterInvestmentCleanup = async () => {
         setIsLoading(true);
@@ -197,8 +197,7 @@ export default function useInvest(session) {
         setIsLoading(false);
     };
 
-    // @TODO - Is eventName required?
-    const makeInvestment = async (values, eventName) => {
+    const makeInvestment = async (values) => {
         const rest = getSavedBooking();
 
         if (rest.ok) await processExistingSession(values);
@@ -207,10 +206,7 @@ export default function useInvest(session) {
 
     const debouncedSubmitHandler = debounce(makeInvestment, 5000, { leading: true, trailing: false });
 
-    const onSubmit = (values, evt) => {
-        const eventName = evt.nativeEvent.submitter.name; // invest / restore
-        debouncedSubmitHandler(values, eventName);
-    };
+    const onSubmit = (values) => debouncedSubmitHandler(values);
 
     return {
         isBooked,
@@ -249,7 +245,7 @@ export default function useInvest(session) {
             allocationOld: restoreModalData.amount,
             timeOld: restoreModalData.time,
             investmentAmount,
-            // bookingCreateNew,
+            bookingCreateNew,
             bookingRestore,
             onOpenChange: () => setRestoreModalData((prevState) => ({ ...prevState, open: !prevState.open })),
         }),

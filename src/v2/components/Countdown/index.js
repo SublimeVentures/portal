@@ -1,5 +1,5 @@
-import { cn } from "@/lib/cn";
 import { useCountdown } from "./useCountdown";
+import { cn } from "@/lib/cn";
 
 const DateTimeDisplay = ({ children, type }) => {
     return (
@@ -10,7 +10,7 @@ const DateTimeDisplay = ({ children, type }) => {
     );
 };
 
-const defaultUnits = {
+export const defaultUnits = {
     days: "Days . ",
     hours: "Hours . ",
     minutes: "Minutes . ",
@@ -25,7 +25,7 @@ export default function Countdown({ countStart, units = defaultUnits, onComplete
 
     return (
         <time className={cn("flex gap-2", className)} date={endDate} pubdate>
-            {Object.keys(units).map(key => {
+            {Object.keys(units).map((key) => {
                 const type = units[key];
                 return (
                     type && (
@@ -37,4 +37,4 @@ export default function Countdown({ countStart, units = defaultUnits, onComplete
             })}
         </time>
     );
-};
+}

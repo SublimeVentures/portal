@@ -67,12 +67,13 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
 
                 <div className="mt-auto flex flex-col items-center">
                     <h2 className="text-sm font-light text-white/60 select-none">Community</h2>
-                    <ul className="flex items-center lg:gap-4 3xl:gap-2 pt-4">
+
+                    <ul className="pt-2 flex items-center">
                         {socialMenu.map(({ icon, name, path }) => (
                             <li key={name}>
                                 <IconButton
                                     variant="transparent"
-                                    className="lg:size-4 3xl:size-10 lg:p-0 3xl:p-3"
+                                    className="p-2.5 size-9"
                                     shape="circle"
                                     name={name}
                                     icon={icon}
