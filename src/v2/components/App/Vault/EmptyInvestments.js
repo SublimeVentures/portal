@@ -20,7 +20,7 @@ const EmptyInvestments = () => {
 
                 <div className="flex items-center gap-4">
                     <Button variant="outline" asChild>
-                        <Link href={PAGE.OTC}>OTC market</Link>
+                        <Link href={PAGE.OTC}>OTC Market</Link>
                     </Button>
                     <Button>
                         <Link href={PAGE.Opportunities}>Opportunities</Link>

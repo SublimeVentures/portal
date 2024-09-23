@@ -11,9 +11,9 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
     const props = unreadCount > 0 ? { count: `${unreadCount} unread` } : {};
 
     return (
-        <div className="flex flex-col items-center gap-4 3xl:gap-12 md:flex-row sm:mb-4 lg:mb-0">
+        <div className="flex flex-col items-center gap-4 3xl:gap-12 md:flex-row sm:mb-4 lg:mb-0 ">
             <Title {...props}>My notifications</Title>
-            <div className="flex flex-col gap-4 md:flex-row">
+            <div className="w-full flex flex-col gap-4 md:flex-row">
                 <div className="flex items-center gap-2">
                     <DatePicker
                         className="w-full md:w-auto"
