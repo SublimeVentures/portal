@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 
+import { MIN_ALLOCATION, MIN_DIVISIBLE } from "@/lib/investment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
@@ -32,17 +33,36 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
     }, []);
 
     const handleSetMin = useCallback(() => {
-        const newValue = allocationData?.allocationUser_min;
-        if (newValue != null) handleAmountChange(newValue, setValue, ["investmentAmount", newValue, { shouldValidate: true }]);
-    }, [allocationData?.allocationUser_min]);
+        const allocationUser_min = allocationData?.allocationUser_min;
+        const allocationUser_left = allocationData?.allocationUser_left;
+    
+        if (allocationUser_left != null) {
+            const minValue = Math.min(
+                allocationUser_left,
+                Math.max(allocationUser_min || MIN_ALLOCATION, MIN_ALLOCATION)
+            );
+
+            handleAmountChange(minValue, setValue, ["investmentAmount", minValue, { shouldValidate: true }]);
+        }
+    }, [allocationData?.allocationUser_min, allocationData?.allocationUser_left]);
 
     const handleSetHalf = useCallback(() => {
-        const maxValue = allocationData?.allocationUser_max;
-        const leftValue = allocationData?.allocationUser_left;
-        
-        if (maxValue != null && leftValue != null) {
-            const minValue = Math.min(maxValue, leftValue);
-            const half = minValue * 0.5;
+        const allocationUser_max = allocationData?.allocationUser_max;
+        const allocationUser_min = allocationData?.allocationUser_min;
+        const allocationUser_left = allocationData?.allocationUser_left;
+    
+        if (allocationUser_left != null) {
+            const minValue = Math.min(
+                allocationUser_left,
+                Math.max(allocationUser_min || MIN_ALLOCATION, MIN_ALLOCATION)
+            );
+
+            const maxValue = Math.min(allocationUser_max, allocationUser_left);
+
+            let half = maxValue * 0.5;
+            half = Math.round(half / MIN_DIVISIBLE) * MIN_DIVISIBLE;
+            if (half < minValue) half = minValue;
+    
             handleAmountChange(half, setValue, ["investmentAmount", half, { shouldValidate: true }]);
         }
     }, [allocationData?.allocationUser_max, allocationData?.allocationUser_left]);
@@ -59,7 +79,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
 
     return (
         <div>
-            <div className="flex flex-col rounded gap-2 lg:p-2 lg:flex-row lg:bg-foreground/[.03]">
+            <div className="flex flex-col rounded gap-2 2xl:p-2 2xl:flex-row 2xl:bg-foreground/[.03]">
                 <FormField
                     name="investmentAmount"
                     control={control}
@@ -72,32 +92,32 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                                     onChange={(evt) => handleChange(evt, field.onChange)}
                                     value={formatNumber(amount || "")}
                                     aria-invalid={errors.investmentAmount ? "true" : "false"}
-                                    className="w-full bg-foreground/[.06] text-sm lg:text-base"
+                                    className="w-full bg-foreground/[.06] text-sm 2xl:text-base"
                                 />
                             </FormControl>
-                            <FormLabel htmlFor="investmentAmount" className="absolute left-0 -top-9 text-sm lg:-top-11 lg:-left-2 lg:text-base">Investment Size</FormLabel>
+                            <FormLabel htmlFor="investmentAmount" className="absolute left-0 -top-9 text-sm 2xl:-top-11 2xl:-left-2 2xl:text-base">Investment Size</FormLabel>
                         </FormItem>
                     )}
                 />
                 
-                <div className="w-full flex items-center gap-2 lg:w-max 2xl:gap-4">
+                <div className="w-full flex items-center gap-2 2xl:w-max 3xl:gap-4">
                     <Button 
                         type="button" 
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm lg:text-base lg:px-4 2xl:px-8" 
+                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm 2xl:text-base 2xl:px-4 3xl:px-8" 
                         onClick={handleSetMin}
                     >
                         Min.
                     </Button>
                     <Button 
                         type="button" 
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm lg:text-base lg:px-4 2xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetHalf}
                     >
                         50%
                     </Button>
                     <Button 
                         type="button" 
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm lg:text-base lg:px-4 2xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetMax}
                     >
                         Max.
@@ -108,10 +128,10 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                     name="currency"
                     control={control}
                     render={({ field }) => (
-                        <FormItem className="mt-8 relative lg:mt-0">
+                        <FormItem className="mt-8 relative 2xl:mt-0">
                             <FormControl>
                                 <Select {...field} onValueChange={(val) => handleSelectCurrency(val, field.onChange)}>
-                                    <SelectTrigger className="w-full h-full bg-foreground/[.06] lg:w-52">
+                                    <SelectTrigger className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -126,7 +146,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                                     </SelectContent>
                                 </Select>
                             </FormControl>
-                            <FormLabel htmlFor="currency" className="absolute -left-0 -top-9 text-sm lg:-top-11 lg:text-base">Select Currency</FormLabel>
+                            <FormLabel htmlFor="currency" className="absolute -left-0 -top-9 text-sm 2xl:-top-11 2xl:text-base">Select Currency</FormLabel>
                         </FormItem>
                     )}
                 />

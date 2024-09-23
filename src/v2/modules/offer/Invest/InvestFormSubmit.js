@@ -13,7 +13,7 @@ export default function InvestFormSubmit({ isBtnDisabled, btnText, investmentLoc
                 {btnText}
             </Button>
 
-            {(!isBtnDisabled && investmentLocked && hasAvailableFunds) && (
+            {/* {(!isBtnDisabled && investmentLocked && hasAvailableFunds) && (
                 <Button 
                     type="submit"
                     name="invest"
@@ -23,7 +23,7 @@ export default function InvestFormSubmit({ isBtnDisabled, btnText, investmentLoc
                 >
                     Restore
                 </Button>
-            )}
+            )} */}
         </div>
     );
 };

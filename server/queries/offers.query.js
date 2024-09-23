@@ -4,6 +4,7 @@ const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
 const db = require("../services/db/definitions/db.init");
 const { TENANT } = require("../../src/lib/tenantHelper");
+const { constructError } = require("../utils/index");
 
 async function getOffersPublic() {
     try {
@@ -33,10 +34,7 @@ async function getOffersPublic() {
 
         return db.query(sqlQuery, { type: QueryTypes.SELECT });
     } catch (error) {
-        logger.error("QUERY :: [getOffersPublic]", {
-            error: serializeError(error),
-        });
-        return [];
+        return constructError("QUERY", error, { isLog: true, methodName: "getOffersPublic" });
     }
 }
 
@@ -114,9 +112,7 @@ async function getOfferList(partnerId, tenantId, { limit = 6, offset = 0, isSett
             offset,
         };
     } catch (error) {
-        logger.error("QUERY :: [getOfferList]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferList" });
     }
 
     return { count: 0, rows: [] };
@@ -144,9 +140,7 @@ async function getOfferProgress(offerId) {
 
         return result.length > 0 ? result[0] : null;
     } catch (error) {
-        logger.error("QUERY :: [getOfferProgress]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferProgress" });
     }
 
     return null;
@@ -204,9 +198,7 @@ async function getLaunchpadList(partnerId, tenantId) {
             replacements: { partnerId, tenantId },
         });
     } catch (error) {
-        logger.error("QUERY :: [getLaunchpadList]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getLaunchpadList" });
     }
     return [];
 }
@@ -257,9 +249,7 @@ async function getOtcList(partnerId, tenantId) {
             replacements: { partnerId, tenantId },
         });
     } catch (error) {
-        logger.error("QUERY :: [getOtcList]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOtcList" });
     }
     return [];
 }
@@ -311,10 +301,7 @@ async function getOfferDetails(slug, partnerId, tenantId, userId) {
             replacements: { slug, partnerId, tenantId, userId },
         });
     } catch (error) {
-        logger.error("QUERY :: [getOfferDetails]", {
-            error: serializeError(error),
-            slug,
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferDetails" });
     }
     return {};
 }
@@ -365,7 +352,7 @@ async function getOfferFunding(offerId, partnerId, tenantId) {
         });
     }
     return {};
-}
+};
 
 async function getOfferWithLimits(offerId) {
     try {
@@ -399,10 +386,10 @@ async function getOfferWithLimits(offerId) {
 
         return offer ? offer.get({ plain: true }) : null;
     } catch (error) {
-        console.error("Error fetching offer with limits:", error);
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferWithLimits" });
         return null;
-    }
-}
+    };
+};
 
 async function getAllocation(userId) {
     try {
@@ -417,29 +404,54 @@ async function getAllocation(userId) {
             raw: true,
         });
     } catch (error) {
-        logger.error("QUERY :: [getAllocation]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getAllocation" });
 
         return [];
-    }
-}
+    };
+};
 
-async function getOfferParticipants(offerId, userId) {
+async function getOfferParticipants(user, req) {
+    const { userId } = user;
+    const { id } = req.params;
+
     try {
-        return models[`z_participant_${offerId}`].findAll({
+        return models[`z_participant_${id}`].findAll({
             where: {
                 userId,
             },
         });
     } catch (error) {
-        logger.error("QUERY :: [getOfferParticipants]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferParticipants" });
 
         return [];
-    }
-}
+    };
+};
+
+async function deleteOfferParticipants(user, req) {
+    const { userId } = user;
+    const { offerId, participantId } = req.params;
+
+    try {
+        const res = await models[`z_participant_${offerId}`].destroy({
+            where: {
+                id: participantId,
+                userId,
+                isConfirmedInitial: true,
+                isConfirmed: true,
+            },
+        });
+
+        if (res > 0) {
+            return { ok: true };
+        };
+
+        return { ok: false };
+    } catch (error) {
+        constructError("QUERY", error, { isLog: true, methodName: "deleteOfferParticipants" });
+
+        return { ok: false };
+    };
+};
 
 module.exports = {
     getOffersPublic,
@@ -452,4 +464,5 @@ module.exports = {
     getOfferWithLimits,
     getAllocation,
     getOfferParticipants,
+    deleteOfferParticipants,
 };
