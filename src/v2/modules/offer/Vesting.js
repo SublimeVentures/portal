@@ -48,11 +48,11 @@ export default function Vesting({ className }) {
                     
                 {offer.payouts.length === 0 && !isLoading && (
                     <EmptyState
-                        heading="Vesting details unavailable"
+                        heading="Vesting Details Unavailable"
                         description="The vesting details are currently unavailable, but no worries! As your investments progress, this section will update with relevant information. Stay tuned for updates as they come."
                     />
                 )}
             </div>
         </div>
     );
-}
+};

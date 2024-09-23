@@ -11,7 +11,7 @@ export default function CalculateForm() {
     return (
         <div className="flex flex-col gap-4">
             <label className="w-full flex flex-col text-foreground">
-                <span className="text-base mb-2 lg:text-lg">Buying allocation</span>
+                <span className="text-base mb-2 lg:text-lg">Buying Allocation</span>
                 <div className="relative w-full ">
                     <Input type="fund" value={amount} onChange={handleAmountChange} className="px-4 w-full md:px-8" />
                     <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">USD</span>

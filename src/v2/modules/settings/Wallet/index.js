@@ -93,7 +93,7 @@ export default function WalletSettings({ session }) {
                                                       checked={isDelegate}
                                                       className="cursor-default pointer-events-none select-none"
                                                   >
-                                                      Delegated wallet
+                                                      Delegated Wallet
                                                   </CheckboxField>
                                               </div>
                                           </div>

@@ -54,7 +54,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                         onClick={() => setOpen(false)}
                         className="text-accent font-light leading-none hover:underline"
                     >
-                        Show all
+                        Show All
                     </Link>
                 </div>
 

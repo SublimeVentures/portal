@@ -29,11 +29,7 @@ export default function UpgradesModal() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState(null);
     
-    // Filter to not include Mystery Box - Does this query return it though?
     const filteredData = upgrade?.filter(item => item.id !== PremiumItemsENUM.MysteryBox);
-    // const filteredData = upgrade?.filter(item => item.id !== PremiumItemsENUM.MysteryBox).slice(0, 1);
-    // const filteredData = upgrade?.filter(item => item.id !== PremiumItemsENUM.MysteryBox).concat(upgrade?.filter(item => item.id !== PremiumItemsENUM.MysteryBox));
-
     const isDataAvailable = filteredData?.length > 0;
     const upgradeDisabled = !isDataAvailable || isLoading || selectedUpgrade === null;
 
@@ -64,7 +60,7 @@ export default function UpgradesModal() {
         <Dialog>
             <DialogTrigger asChild>
                 <Button size="small" variant="outline" className="p-0 w-10 h-10 lg:py-1.5 lg:px-6 lg:w-auto">
-                    <span className="hidden lg:inline">Use upgrades</span>
+                    <span className="hidden lg:inline">Use Upgrades</span>
                     <IoDiamond className="lg:ml-2" />
                 </Button>
             </DialogTrigger>
@@ -72,7 +68,7 @@ export default function UpgradesModal() {
             <DialogContent className="md:max-w-max">
                 <div className="w-full space-y-8 md:max-w-[750px] xl:max-w-[1200px] 2xl:max-w-[1400px]">
                     <DialogHeader>
-                        <DialogTitle>Use upgrade</DialogTitle>
+                        <DialogTitle>Use Upgrade</DialogTitle>
                     </DialogHeader>
 
                     <div className="w-full max-h-[368px] overflow-x-hidden overflow-y-auto md:max-h-[400px]">
@@ -103,15 +99,15 @@ export default function UpgradesModal() {
                                 className="md:px-16 md:py-24"
                             />
                         )}
+                
+                        {error && <p className="text-lg text-red-500 text-center">{error}</p>}
                     </div>
-
-                    {error && <p className="text-lg text-red-500 text-center">{error}</p>}
 
                     <DialogFooter className="flex items-center">
                         <div className="w-full flex flex-col gap-2 md:flex-row md:items-center md:justify-center">
                             <Button asChild variant="outline" disabled={isLoading || isProcessing}>
                                 <Link href={routes.Upgrades}>
-                                    Buy upgrades
+                                    Buy Upgrades
                                 </Link>
                             </Button>
                             
@@ -119,7 +115,7 @@ export default function UpgradesModal() {
                                 disabled={upgradeDisabled || isProcessing}
                                 onClick={() => handleUpgradeUse(selectedUpgrade)}
                             >
-                                Use upgrade
+                                Use Upgrade
                             </Button>
                         </div>
 

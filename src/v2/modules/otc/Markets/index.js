@@ -59,13 +59,13 @@ export default function Markets() {
                     <h3 className="py-4 text-1xl font-medium text-foreground md:text-lg 2xl:block">Select Markets</h3>
                     {!!currentMarket && (
                         <Button variant="link" onClick={handleResetMarket}>
-                            Latest deals
+                            Latest Deals
                         </Button>
                     )}
                 </div>
                 <Search
                     ref={inputRef}
-                    name="Search name"
+                    name="Search Name"
                     value={searchValue}
                     onClose={() => setIsPopoverOpen(false)}
                     onChange={handleSearchChange}
