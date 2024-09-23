@@ -16,7 +16,7 @@ export default function InvestFormSubmit({ total, subtotal, tax, currency }) {
         <div className="space-y-6">
             <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base">
                 <Definition term="Subtotal">${subtotal}</Definition>
-                <Definition term="Tax fees">{tax}%</Definition>
+                <Definition term="Tax Fees">{tax}%</Definition>
             </dl>
 
             <div class="w-full h-[1px] bg-foreground/10"></div>

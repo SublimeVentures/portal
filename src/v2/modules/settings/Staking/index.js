@@ -15,21 +15,21 @@ const TENANTS_STAKIMG = {
     },
     [TENANT.NeoTokyo]: {
         fields: [
-            { term: "Nft ID:", value: (session) => `#${session.accountId}` },
+            { term: "NFT ID:", value: (session) => `#${session.accountId}` },
             { term: (session) => `${session.isS1 ? "BAYC" : "MAYC"} ID`, value: (session) => `#${session.tokenId}` },
             { term: "Season:", value: (session) => (session.isS1 ? "BAYC" : "MAYC") },
         ],
     },
     [TENANT.CyberKongz]: {
         fields: [
-            { term: "Nft ID:", value: (session) => `#${session.accountId}` },
+            { term: "NFT ID:", value: (session) => `#${session.accountId}` },
             { term: "Kong ID:", value: (session) => `#${session.tokenId}` },
             { term: "Season:", value: (session) => (session.isS1 ? "Genesis" : "Baby") },
         ],
     },
     [TENANT.BAYC]: {
         fields: [
-            { term: "Nft ID:", value: (session) => `#${session.accountId}` },
+            { term: "NFT ID:", value: (session) => `#${session.accountId}` },
             { term: "Citizen ID:", value: (session) => `#${session.tokenId}` },
             {
                 term: "Season:",

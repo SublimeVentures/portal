@@ -23,15 +23,15 @@ export default function ReferalsSteps() {
                 </div>
                 <div>
                     <div className="px-10 h-26 md:h-32">
-                        <Title>Send invitation</Title>
+                        <Title>Send Invitation</Title>
                         <Description>Send your referral link to your friends.</Description>
                     </div>
                     <div className="px-10 h-26 md:h-32">
-                        <Title>Register and trade</Title>
+                        <Title>Register and Trade</Title>
                         <Description>Let them register and trade through your ID.</Description>
                     </div>
                     <div className="px-10 h-26 md:h-32">
-                        <Title>Earn Rewrds</Title>
+                        <Title>Earn Rewards</Title>
                         <Description>Once they trade, you both will recieve the rewards.</Description>
                     </div>
                 </div>

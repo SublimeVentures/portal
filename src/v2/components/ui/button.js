@@ -20,8 +20,8 @@ const buttonVariants = cva(
                 destructive: "bg-error hover:enabled:bg-gradient-to-r from-error-600 to-error-700",
             },
             size: {
-                small: "py-1.5 px-6",
-                medium: "py-2 px-8",
+                small: "py-1.5 px-3 sm:px-6",
+                medium: "py-2 px-4 sm:px-8",
             },
         },
         defaultVariants: {

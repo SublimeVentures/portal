@@ -32,14 +32,14 @@ export default function UpgradesModal() {
         <Dialog>
             <DialogTrigger asChild>
                 <Button size="small" variant="outline" className="p-0 w-10 h-10 lg:py-1.5 lg:px-6 lg:w-auto">
-                    <span className="hidden lg:inline">Use upgrades</span>
+                    <span className="hidden lg:inline">Use Upgrades</span>
                     <IoDiamond className="lg:ml-2" />
                 </Button>
             </DialogTrigger>
 
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Use upgrade</DialogTitle>
+                    <DialogTitle>Use Upgrade</DialogTitle>
                 </DialogHeader>
 
                 <div>
@@ -68,11 +68,11 @@ export default function UpgradesModal() {
                     <div className="flex items-center gap-2">
                         <Button asChild variant="outline" disabled={isLoading}>
                             <Link href={routes.Upgrades}>
-                                Buy upgrades
+                                Buy Upgrades
                             </Link>
                         </Button>
                         
-                        <Button disabled={upgradeDisabled}>Use upgrade</Button>
+                        <Button disabled={upgradeDisabled}>Use Upgrade</Button>
                     </div>
                 </DialogFooter>
             </DialogContent>

@@ -62,7 +62,7 @@ export const socialMenu = [
     },
     {
         name: "twitter-x",
-        path: "/",
+        path: ExternalLinks.TWITTER,
         icon: TwitterIcon,
     },
 ];
