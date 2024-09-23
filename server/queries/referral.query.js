@@ -55,12 +55,12 @@ async function createReferralCode(userId, hash) {
 
 async function queryReferrals(inviterId) {
     try {
-        return await models.referral.findAll({
+        return await models.referrals.findAll({
             where: {
                 inviterId: inviterId,
             },
             include: {
-                model: models.referralPayout
+                model: models.referralPayouts
             },
         });
 
@@ -75,14 +75,14 @@ async function queryReferrals(inviterId) {
 
 async function queryAllUsersReferralData(inviterId) {
     try {
-        return await models.referral.findAll({
+        return await models.referrals.findAll({
             where: {
                 inviterId: inviterId,
             },
             include: {
-                model: models.referralPayout,
+                model: models.referralPayouts,
                 include: {
-                    model: models.referralClaim,
+                    model: models.referralClaims,
                     include: {
                         model: models.offer
                     }
@@ -101,7 +101,7 @@ async function queryAllUsersReferralData(inviterId) {
 
 async function getAllReferredUsers(userId) {
     try {
-        return await models.referral.findAll({
+        return await models.referrals.findAll({
             where: {
                 inviterId: userId,
             }

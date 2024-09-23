@@ -4,9 +4,9 @@ const { serializeError } = require("serialize-error");
 
 async function getUserReferralClaim(userId) {
     try {
-        return await models.referralClaim.findAll({
+        return await models.referralClaims.findAll({
             where: { userId: userId },
-            include: [{ model: models.offer }, { model: models.referralPayout }]
+            include: [{ model: models.offer }, { model: models.referralPayouts }]
         })
     } catch (error) {
         logger.error("QUERY :: [getUserReferralClaim]", {
