@@ -79,51 +79,47 @@ export default function NotificationsSettings() {
         }
     };
 
-    const handleBeforePushRequest = async (enabling, categoryId) => {
-        const isPushAllowed = await requestNotificationPermission();
-        if (!isPushAllowed) {
-            setForceDisablePush(true);
+    const handlePushSubscribe = async (categoryId) => {
+        const token = await getToken(fcm, {
+            vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
+        });
+        const subscription = await subscribeToPushCategory(categoryId, token);
+        if (subscription.ok) {
+            setCookie(`push_token_${categoryId}_${tenantIndex}`, token);
         }
-        if (enabling && isPushAllowed) {
+        return subscription.ok;
+    };
+
+    const handlePushUnsubscribe = async (categoryId) => {
+        const token = cookies[`push_token_${categoryId}_${tenantIndex}`];
+        unsubscribeFromPushCategory(categoryId, token).then(() => {
+            deleteToken(fcm).then((done) => {
+                console.log("FCM token removal:", done);
+            });
+        });
+        removeCookie(`push_token_${categoryId}_${tenantIndex}`);
+        return true;
+    };
+
+    const handleBeforePushRequest = async (enabling, categoryId) => {
+        try {
+            const isPushAllowed = await requestNotificationPermission();
+            if (!isPushAllowed) {
+                setForceDisablePush(true);
+            }
             if (fcm) {
-                return getToken(fcm, {
-                    vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
-                })
-                    .then((token) => {
-                        return subscribeToPushCategory(categoryId, token)
-                            .then((res) => {
-                                if (res.ok) {
-                                    setCookie(`push_token_${categoryId}_${tenantIndex}`, token);
-                                }
-                                return res.ok;
-                            })
-                            .catch((err) => {
-                                console.error(err);
-                                return false;
-                            });
-                    })
-                    .then((ok) => ok)
-                    .catch((err) => {
-                        console.error(err);
-                        return false;
-                    });
+                if (enabling && isPushAllowed) {
+                    return handlePushSubscribe(categoryId);
+                } else {
+                    return handlePushUnsubscribe(categoryId);
+                }
             } else {
                 console.warn("Firebase Messaging is not initialized!");
                 return false;
             }
-        } else {
-            if (fcm) {
-                const token = cookies[`push_token_${categoryId}_${tenantIndex}`];
-                unsubscribeFromPushCategory(categoryId, token).then(() => {
-                    deleteToken(fcm).then((done) => {
-                        console.log("FCM token removal:", done);
-                    });
-                });
-            } else {
-                console.warn("Firebase Messaging is not initialized!");
-            }
-            removeCookie(`push_token_${categoryId}_${tenantIndex}`);
-            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
         }
     };
 
