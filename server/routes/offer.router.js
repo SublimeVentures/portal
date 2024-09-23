@@ -51,17 +51,15 @@ router.get("/:id/state", async (req, res) => {
 });
 
 router.get("/:id/participants", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+    const { user, ...request } = req;
 
-    return res.status(200).json(await getOfferParticipants(req.params.id, user.userId));
+    return res.status(200).json(await getOfferParticipants(user, request));
 });
 
 router.delete("/:offerId/participants/:participantId", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+    const { user, ...request } = req;
 
-    return res.status(200).json(await deleteOfferParticipants(req.params, user.userId));
+    return res.status(200).json(await deleteOfferParticipants(user, request));
 });
 
 

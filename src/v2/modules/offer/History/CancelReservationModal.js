@@ -52,9 +52,9 @@ export default function CancelReservationModal({ participantId, amount, date, is
         setIsProcessing(true);
 
         try {
-            const { ok } = await cancelOfferParticipant(offer.id, participantId);
+            const res = await cancelOfferParticipant(offer.id, participantId);
 
-            if (ok) {
+            if (res?.ok) {
                 await Promise.all([
                     queryClient.invalidateQueries(["offerParticipants"]),
                     queryClient.invalidateQueries(["offerDetails"]),
