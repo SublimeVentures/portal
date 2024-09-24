@@ -26,7 +26,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-foreground mt-16 select-none">
+                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-foreground/50 mt-16 select-none">
                     {name}
                 </h2>
                 <ul className="flex flex-col gap-2">
