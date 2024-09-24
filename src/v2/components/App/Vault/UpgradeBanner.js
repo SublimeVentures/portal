@@ -78,11 +78,11 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                                 Acquired <span className="3xl:block font-semibold">Premium</span>
                             </CardTitle>
                         )}
-                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-5 gap-x-4">
+                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-4 gap-x-4">
                             {items.map((item) => (
                                 <Fragment key={item.id}>
-                                    <dt className="text-left">{item.name}</dt>
-                                    <dd className="px-1.5 bg-accent/[.2] text-accent first-of-type:rounded-t last-of-type:rounded-b w-6 text-center justify-self-end">
+                                    <dt className="text-left py-0.5">{item.name}</dt>
+                                    <dd className="px-1.5 bg-accent/[.2] text-accent first-of-type:rounded-t last-of-type:rounded-b w-6 text-center justify-self-end flex items-center justify-center">
                                         {item.amount}
                                     </dd>
                                 </Fragment>

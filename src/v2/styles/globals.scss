@@ -1,11 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import "@/v2/styles/gradients.scss";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
-
-@import "@/v2/styles/gradients.scss";
-// @import "@/styles/globals.scss";
 
 @layer base {
   body {
@@ -122,7 +120,8 @@
   }
 
   .bg-banner-default {
-    background-image: linear-gradient(to left, theme('colors.primary.900') 0%, theme('colors.primary.900') 50%, rgba(0,0,0,0) 100%), url('/img/bg/banner/default@1.webp');
+    background-image: url('/img/bg/banner/default-vertical@1.jpg');
+    background-position: 40% center;
   }
 
   @screen 3xl {

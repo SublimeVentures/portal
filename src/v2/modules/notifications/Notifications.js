@@ -1,5 +1,6 @@
 import { useRef } from "react";
-
+import Link from "next/link";
+import PAGE from "@/routes";
 import { useIntersectionObserver } from "@/v2/hooks";
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
@@ -55,10 +56,12 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
                         Explore elite investment avenues curated for the astute investor
                     </CardDescription>
                     <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
-                        <Button className="w-full collap:w-auto" variant="outline">
-                            OTC Market
+                        <Button className="w-full collap:w-auto" variant="outline" asChild>
+                            <Link href={PAGE.OTC}>OTC Market</Link>
                         </Button>
-                        <Button className="w-full collap:w-auto">Opportunities</Button>
+                        <Button className="w-full collap:w-auto">
+                            <Link href={PAGE.Opportunities}>Opportunities</Link>
+                        </Button>
                     </div>
                 </Card>
             )}

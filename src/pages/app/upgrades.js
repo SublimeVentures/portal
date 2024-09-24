@@ -66,7 +66,7 @@ export default function AppUpgrades({ session }) {
                 <title>{title}</title>
             </Head>
             <Header title="Supercharge your investments" className="sm:mb-4 lg:mb-0" />
-            <div className="flex flex-col sm:flex-row sm:grow sm:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12 select-none">
+            <div className="flex flex-col md:flex-row md:grow md:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12 select-none">
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
