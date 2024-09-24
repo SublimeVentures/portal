@@ -21,7 +21,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <Image
                         src={getResearchBgSrc(slug)}
                         alt={`Background image for ${name} offer`}
-                        className="object-cover rounded  select-none pointer-events-none"
+                        className="w-full object-cover rounded  select-none pointer-events-none"
                         width={1000}
                         height={200}
                     />

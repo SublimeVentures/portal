@@ -9,7 +9,7 @@ export default function Navbar() {
     const router = useRouter();
 
     return (
-        <nav className="fixed bottom-0 h-24 w-full bg-primary-800 md:hidden z-10">
+        <nav className="fixed bottom-0 h-24 w-full bg-primary-800 sm:hidden z-10">
             <div className="absolute z-10 -top-8 h-8 w-full bg-gradient-to-b from-transparent to-primary-950 flex justify-between">
                 <div
                     style={{

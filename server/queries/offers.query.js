@@ -118,27 +118,22 @@ async function getOfferList(partnerId, tenantId, { limit = 6, offset = 0, isSett
     return { count: 0, rows: [] };
 }
 
-const query_getOfferProgress = `
-    SELECT
-        CASE 
-            WHEN ol."alloTotal" > 0 THEN (ol."alloFilled" / ol."alloTotal") * 100
-            ELSE 0
-        END AS progress,
-        ol."alloFilled" AS filled
-    FROM
-        "offerLimit" ol
-    WHERE
-        ol."offerId" = :offerId;
-`;
-
 async function getOfferProgress(offerId) {
     try {
-        const result = await db.query(query_getOfferProgress, {
-            type: QueryTypes.SELECT,
-            replacements: { offerId },
+        const result = await models.offerLimit.findOne({
+            attributes: [
+                [
+                    Sequelize.literal(`CASE 
+                    WHEN "alloTotal" > 0 THEN ROUND(("alloFilled"::decimal / "alloTotal"::decimal) * 100, 2) 
+                    ELSE 0 
+                    END`),
+                    "progress",
+                ],
+                ["alloFilled", "filled"],
+            ],
+            where: { offerId },
         });
-
-        return result.length > 0 ? result[0] : null;
+        return result ? result.toJSON() : null;
     } catch (error) {
         constructError("QUERY", error, { isLog: true, methodName: "getOfferProgress" });
     }
@@ -352,7 +347,7 @@ async function getOfferFunding(offerId, partnerId, tenantId) {
         });
     }
     return {};
-};
+}
 
 async function getOfferWithLimits(offerId) {
     try {
@@ -363,23 +358,23 @@ async function getOfferWithLimits(offerId) {
                     model: models.offerLimit,
                     as: "offerLimits",
                     attributes: [
-                        'id',
-                        'offerId',
-                        'partnerId',
-                        'isTenantExclusive',
-                        'alloMin',
-                        'alloMax',
-                        'alloTotal',
-                        'd_open',
-                        'd_close',
-                        'lengthWhales',
-                        'lengthRaffle',
-                        'lengthFCFS',
-                        'lengthGuaranteed',
-                        'guaranteedIsExpired',
-                        'createdAt',
-                        'updatedAt'
-                    ]
+                        "id",
+                        "offerId",
+                        "partnerId",
+                        "isTenantExclusive",
+                        "alloMin",
+                        "alloMax",
+                        "alloTotal",
+                        "d_open",
+                        "d_close",
+                        "lengthWhales",
+                        "lengthRaffle",
+                        "lengthFCFS",
+                        "lengthGuaranteed",
+                        "guaranteedIsExpired",
+                        "createdAt",
+                        "updatedAt",
+                    ],
                 },
             ],
         });
@@ -388,8 +383,8 @@ async function getOfferWithLimits(offerId) {
     } catch (error) {
         constructError("QUERY", error, { isLog: true, methodName: "getOfferWithLimits" });
         return null;
-    };
-};
+    }
+}
 
 async function getAllocation(userId) {
     try {
@@ -407,8 +402,8 @@ async function getAllocation(userId) {
         constructError("QUERY", error, { isLog: true, methodName: "getAllocation" });
 
         return [];
-    };
-};
+    }
+}
 
 async function getOfferParticipants(user, req) {
     const { userId } = user;
@@ -424,8 +419,8 @@ async function getOfferParticipants(user, req) {
         constructError("QUERY", error, { isLog: true, methodName: "getOfferParticipants" });
 
         return [];
-    };
-};
+    }
+}
 
 async function deleteOfferParticipants(user, req) {
     const { userId } = user;
@@ -443,15 +438,15 @@ async function deleteOfferParticipants(user, req) {
 
         if (res > 0) {
             return { ok: true };
-        };
+        }
 
         return { ok: false };
     } catch (error) {
         constructError("QUERY", error, { isLog: true, methodName: "deleteOfferParticipants" });
 
         return { ok: false };
-    };
-};
+    }
+}
 
 module.exports = {
     getOffersPublic,
