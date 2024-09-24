@@ -8,13 +8,13 @@ export const getUpgradesData = (id, allocationData, length) => {
         [PremiumItemsENUM.Guaranteed]: {
             name: "Guaranteed",
             description: `Books $${maximumGuaranteedBooking} allocation for first ${(length / 3600).toFixed(0)}h of the investment.`,
-            phases: [PhaseId.Whale, PhaseId.Pending, 7],
+            phases: [PhaseId.Whale, PhaseId.Pending],
             bg: "/img/upgrade-dialog-premium.png",
         },
         [PremiumItemsENUM.Increased]: {
             name: "Increased",
             description: `Increase your maximum allocation by $${PremiumItemsParamENUM.Increased}.`,
-            phases: [PhaseId.Whale, PhaseId.Pending, PhaseId.FCFS, 7],
+            phases: [PhaseId.Whale, PhaseId.Pending, PhaseId.FCFS],
             bg: "/img/bg/banner/default@2.webp",
         },
     };

@@ -23,6 +23,9 @@ import SingleUpgrade from "./SingleUpgrade";
 import EmptyState from "../../../EmptyState";
 import { useOfferDetailsQuery, useUserPremiumQuery } from "../../../queries";
 
+// @TODO 
+// - Prevent from use increased upgrade on backed if the phase is wrong
+// - Return better error messages from backend - For example for wrong phase like above
 export default function UpgradesModal() {
     const { isClosed } = usePhaseInvestment();
     const { data: offer } = useOfferDetailsQuery();
