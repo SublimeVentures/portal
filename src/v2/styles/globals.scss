@@ -46,11 +46,11 @@
     }
 
     .table-body-row {
-      @apply bg-foreground/[.1] hover:bg-foreground/[.3] transition-base;
+      @apply border-8 border-transparent;
     }
 
     .table-data {
-      @apply block px-5 py-1 text-xs text-right text-foreground before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground; 
+      @apply block px-5 py-1 text-xs text-right text-foreground bg-foreground/[.1] transition-base before:content-[attr(data-label)] before:float-left before:font-bold before:text-foreground;
     }
   }
 

@@ -16,7 +16,7 @@ function SkeletonTable({ span = 4, count = 5 }) {
             </td>
         </tr>
     );
-}
+};
 
 export default function Table({ table, isLoading, colCount = 4 }) {
     return (
@@ -52,11 +52,11 @@ export default function Table({ table, isLoading, colCount = 4 }) {
                         ) : (
                             table.getRowModel().rows.map((row) => (
                                 <Fragment key={row.id}>
-                                    <tr className="table-body-row">
+                                    <tr className="table-body-row group">
                                         {row.getVisibleCells().map((cell) => (
                                             <td
                                                 key={cell.id}
-                                                className="table-data"
+                                                className="table-data group-hover:bg-foreground/[.3]"
                                                 data-label={cell.column.columnDef.header}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

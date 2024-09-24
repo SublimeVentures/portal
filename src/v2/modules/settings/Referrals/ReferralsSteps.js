@@ -1,14 +1,20 @@
 import Copy from "@/v2/components/Copy";
+import { shortenAddress } from "@/v2/lib/helpers";
 
 const Title = ({ children }) => <div className="text-nowrap text-sm md:text-base text-foreground">{children}</div>;
+
 const Description = ({ children }) => (
     <div className="text-xs md:text-sm text-[#C4C4C4] whitespace-pre-line font-light">{children}</div>
 );
+
 const Bullet = ({ children }) => (
     <div className="w-8 h-8 opacity-100 step-gradient flex items-center justify-center rounded-3xl text-white text-xs md:text-sm">
         {children}
     </div>
 );
+
+const mockedAddress = "0x12dA9c45B7f8a34EF1234560eF";
+const mockedTenantName = "based.VC";
 
 export default function ReferalsSteps() {
     return (
@@ -38,7 +44,7 @@ export default function ReferalsSteps() {
             </div>
 
             <div className="text-base font-normal py-2 text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-gradient-to-r from-primary to-primary-600 flex justify-center">
-                <Copy text={"0x12d...560eF/based.VC"} />
+                <Copy value={mockedAddress} text={`${shortenAddress(mockedAddress)}/${mockedTenantName}`} />
             </div>
         </div>
     );
