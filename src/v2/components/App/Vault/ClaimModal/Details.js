@@ -5,6 +5,8 @@ import { SheetBody } from "@/v2/components/ui/sheet";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
+import useReassign from "@/v2/components/App/Vault/ReassignModal/useReassign";
+import ReassignModal from "@/v2/components/App/Vault/ReassignModal";
 
 export const getSymbol = (data) => {
     return data.currentPayout?.currencySymbol ?? (data?.isManaged ? "USD" : data.coin);
@@ -14,6 +16,8 @@ export default function Details({ data, onClick, items }) {
     const symbol = getSymbol(data);
     const notifications = items?.pages?.flat() || [];
     const hasNotifications = notifications.length > 0;
+    const { getReassignModalProps } = useReassign();
+
     return (
         <>
             <SheetBody className="overflow-x-auto px-4 md:px-30 py-3 md:py-4 flex flex-col gap-3 md:gap-4">
@@ -25,6 +29,7 @@ export default function Details({ data, onClick, items }) {
                             <DefinitionItem term="Invested">{formatCurrency(data.invested)}</DefinitionItem>
                             <DefinitionItem term="Vested">{formatCurrency(data.vested, symbol)}</DefinitionItem>
                         </dl>
+                        <ReassignModal {...getReassignModalProps()} data={data} />
                     </div>
                 </div>
                 <div>

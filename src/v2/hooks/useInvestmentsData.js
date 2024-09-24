@@ -3,6 +3,7 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
 export default function useInvestmentsData(details) {
     const { cdn } = useEnvironmentContext();
+    console.log(details);
     return {
         title: details?.offer?.name,
         coin: details?.offer?.ticker,

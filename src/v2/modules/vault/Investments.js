@@ -11,7 +11,8 @@ export const INVESTMENTS_QUERY = {
 };
 
 const Investments = ({ className }) => {
-    const { data: investments = [], isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
+    const { data: vaults = [], isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
+
     return (
         <div className={cn("flex flex-col", className)}>
             <div className="flex justify-between items-center mb-5 sm:mb-4">
@@ -23,7 +24,7 @@ const Investments = ({ className }) => {
                 </Button>
             </div>
 
-            {investments.length <= 0 && !isLoading ? (
+            {vaults.length <= 0 && !isLoading ? (
                 <EmptyInvestments />
             ) : (
                 <div className="relative md:grow md:flex md:flex-col">
@@ -41,10 +42,10 @@ const Investments = ({ className }) => {
                                 </li>
                             </>
                         ) : (
-                            investments.map((item) => (
+                            vaults.map((item) => (
                                 <li
                                     key={item.id}
-                                    className="h-full snap-start md:[&:nth-last-child(2)]:hidden sm:last:hidden xl:[&:nth-last-child(2)]:block 3xl:last:block"
+                                    className="h-full snap-start xl:[&:nth-last-child(2)]:block 3xl:last:block"
                                 >
                                     <InvestmentCard details={item} isLoading={isLoading} />
                                 </li>
