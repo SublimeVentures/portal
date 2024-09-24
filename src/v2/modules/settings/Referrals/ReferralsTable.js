@@ -114,7 +114,7 @@ export default function ReferalsTable() {
     });
 
     return (
-        <div className="hidden overflow-hidden md:block h-full">
+        <div className="h-full">
             <Table table={table} isLoading={false} colCount={columns.length} />
         </div>
     );
