@@ -199,6 +199,7 @@ export const getMethod = (type, token, params) => {
                 validHash(params?.booking?.signature) &&
                 validNumber(params?.booking.expires) &&
                 validNumber(params?.booking.amount);
+
             return isValid
                 ? {
                       ok: true,

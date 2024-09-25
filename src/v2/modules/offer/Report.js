@@ -41,4 +41,4 @@ export default function Report({ className }) {
             {parsePages.length > 0 && amount > 0 && <Flipbook pages={parsePages} startPage={1} zooms={[1, 1.5, 2]} />}
         </div>
     );
-}
+};

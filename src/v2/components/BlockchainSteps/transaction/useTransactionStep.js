@@ -9,16 +9,16 @@ export default function useTransactionStep(state, data, dispatch) {
     const chainId = useChainId();
     const { steps, token, params } = data;
 
-    const transaction_isReady = steps.allowance
+    const transaction_isReady = steps?.allowance
         ? state.allowance.isFinished
-        : steps.liquidity
+        : steps?.liquidity
           ? state.liquidity.isFinished
-          : steps.network
+          : steps?.network
             ? state.network.isFinished
             : true;
 
     const transaction_shouldRun =
-        steps.transaction &&
+        steps?.transaction &&
         !state.transaction.isFinished &&
         !state.transaction.lock &&
         transaction_isReady &&
@@ -60,6 +60,7 @@ export default function useTransactionStep(state, data, dispatch) {
 
     return {
         transaction,
+        transaction_isFinished,
         stepTransaction: getStepState(STEPS.TRANSACTION, state.transaction, {
             ...transaction,
             token,

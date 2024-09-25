@@ -7,7 +7,7 @@ import useGetNetwork from "@/lib/hooks/useGetNetwork";
 export default function useNetworkStep(state, data, dispatch) {
     const { steps, params } = data;
 
-    const network_isReady = steps.network && !state.network.lock;
+    const network_isReady = !!steps.network && !state.network.lock;
     const network_shouldRun = !state.network.isFinished && network_isReady;
     const network_current = useGetNetwork(network_shouldRun, params.requiredNetwork);
     const network_isFinished = network_current.isValid;

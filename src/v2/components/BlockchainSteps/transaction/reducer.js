@@ -1,4 +1,4 @@
-import { stepsAction } from "../reducer";
+import { STEPS_ACTIONS } from "../enums";
 
 export const defaultTransactionStep = {
     isFinished: false,
@@ -15,9 +15,9 @@ export function transactionReducer(state, action) {
     const { type } = action;
 
     switch (type) {
-        case stepsAction.START:
+        case STEPS_ACTIONS.START:
             return { ...state, lock: false };
-        case stepsAction.RESET:
+        case STEPS_ACTIONS.RESET:
             return { ...defaultTransactionStep };
         case transactionAction.SET_TRANSACTION:
             return {

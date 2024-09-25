@@ -32,6 +32,7 @@ function useGetPrerequisite(isEnabled, params, globalState, token) {
                             prerequisite: result.data,
                         });
                         console.log(`BIX :: AVECO PREREQUISITE - SET - transaction method`, transaction_method);
+
                         updateState({
                             isLoading: false,
                             method: transaction_method.method || null,

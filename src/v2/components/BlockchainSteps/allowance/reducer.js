@@ -1,4 +1,4 @@
-import { stepsAction } from "../reducer";
+import { STEPS_ACTIONS } from "../enums";
 
 export const defaultAllowanceStep = {
     isFinished: false,
@@ -17,9 +17,9 @@ export function allowanceReducer(state, action) {
     const { type, payload } = action;
 
     switch (type) {
-        case stepsAction.START:
+        case STEPS_ACTIONS.START:
             return { ...state, lock: false };
-        case stepsAction.RESET:
+        case STEPS_ACTIONS.RESET:
             return { ...defaultAllowanceStep };
         case allowanceAction.SET_ALLOWANCE:
             return { ...state, current: payload.current, isFinished: payload.isFinished };

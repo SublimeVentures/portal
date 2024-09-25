@@ -7,16 +7,16 @@ import useGetPrerequisite from "@/lib/hooks/useGetPrerequisite";
 export default function usePrerequisiteStep(state, data, network_current, dispatch) {
     const { steps, token, params } = data;
 
-    const prerequisite_isReady = steps.allowance
+    const prerequisite_isReady = steps?.allowance
         ? state.allowance.isFinished
         : steps?.liquidity
           ? state.liquidity.isFinished
-          : steps.network
+          : steps?.network
             ? state.network.isFinished
             : true;
 
     const prerequisite_shouldRun =
-        steps.transaction && !state.prerequisite.isFinished && !state.prerequisite.lock && prerequisite_isReady;
+        steps?.transaction && !state.prerequisite.isFinished && !state.prerequisite.lock && prerequisite_isReady;
 
     const prerequisite = useGetPrerequisite(
         prerequisite_shouldRun,

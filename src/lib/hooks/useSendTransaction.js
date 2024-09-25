@@ -196,8 +196,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     return {
         isError: simulate.isError || write.isError || confirm.isError || gas.isError,
-        error: processError(simulate.error, write.error, confirm.error, gas.error),
-        // error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage,
+        error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage || gas?.error,
         isLoading:
             simulate.isFetching ||
             write.isFetching ||

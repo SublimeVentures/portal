@@ -1,7 +1,7 @@
-import { STEP_STATE } from "./enums";
+import { STEPS_STATE } from "./enums";
 
 export const handleError = ({ content, text, action = () => {} }) => ({
-    state: STEP_STATE.ERROR,
+    state: STEPS_STATE.ERROR,
     content,
     text,
     error: {
@@ -9,11 +9,11 @@ export const handleError = ({ content, text, action = () => {} }) => ({
     },
 });
 
-export const handleProcessing = (content) => ({ state: STEP_STATE.PROCESSING, ...content });
+export const handleProcessing = (content) => ({ state: STEPS_STATE.PROCESSING, ...content });
 
-export const handlePending = (content) => ({ state: STEP_STATE.PENDING, ...content });
+export const handlePending = (content) => ({ state: STEPS_STATE.PENDING, ...content });
 
-export const handleSuccess = (content) => ({ state: STEP_STATE.SUCCESS, ...content });
+export const handleSuccess = (content) => ({ state: STEPS_STATE.SUCCESS, ...content });
 
 export const countSteps = (steps) => {
     const stepsNames = ["network", "liquidity", "allowance", "transaction"];
@@ -42,23 +42,33 @@ export const getTextContent = (steps) => {
         if (steps.hasOwnProperty(stepKey)) {
             const step = steps[stepKey];
 
-            if (step.state === STEP_STATE.ERROR) {
-                return { content: step.content, text: step.text };
-            }
+            if (step.state === STEPS_STATE.ERROR) {
+                return {
+                    content: step.content,
+                    text: step.text
+                };
+            };
 
-            if (step.state === STEP_STATE.PROCESSING) {
+            if (step.state === STEPS_STATE.SUCCESS) {
                 state.content = step.content;
                 state.text = step.text;
-            }
+            };
 
-            if (step.state === STEP_STATE.SUCCESS && !state.content) {
+            if (step.state === STEPS_STATE.PROCESSING) {
                 state.content = step.content;
                 state.text = step.text;
-            }
-        }
-    }
+            };
 
-    if (!state.content && !state.text) return defaultState;
+            if (step.state === STEPS_STATE.PENDING) {
+                state.content = step.content;
+                state.text = step.text;
+            };
+        };
+    };
+
+    if (!state.content && !state.text) {
+        return defaultState;
+    };
 
     return state;
 };
