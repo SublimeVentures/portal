@@ -25,12 +25,15 @@ export default function Overview({ className }) {
     const { data: offer, isLoading } = useOfferDetailsQuery();
     const { getResearchIconSrc, getResearchBgSrc } = useImage();
     const { getResearchReportSrc } = useResearchAssets();
+
     const socials = [
         { href: offer.url_web, icon: LanguageIcon },
         { href: offer.url_twitter, icon: TwitterIcon },
         { href: offer.url_discord, icon: DiscordIcon },
     ].filter(({ href }) => href);
+
     const { state, variant } = useOfferStatus(offer);
+
     return (
         <div
             className={cn(
@@ -127,4 +130,4 @@ export default function Overview({ className }) {
             </div>
         </div>
     );
-}
+};

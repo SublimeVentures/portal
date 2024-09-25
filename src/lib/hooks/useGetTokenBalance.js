@@ -10,7 +10,7 @@ function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
 
     const finalAccount = account || "0x";
 
-    const { refetch, data, ...rest } = useReadContract({
+    const { data, isError, refetch, ...rest } = useReadContract({
         functionName: "balanceOf",
         address: contract,
         args: [finalAccount],
@@ -24,8 +24,10 @@ function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
         },
     });
 
+    // Added !isError, because when an error occurred in useReadContract, the steps got stuck in continuous
+    // refetch(), now user have to manually reset
     useWatchBlocks({
-        enabled: isEnabled,
+        enabled: !isError && isEnabled,
         onBlock(block) {
             console.log("BIX :: New block", block.number);
             refetch();
@@ -41,10 +43,11 @@ function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
         return 0;
     }, [data, precision]);
 
-    if (!token || skipStep) return;
+    if (skipStep) return;
 
     return {
         ...rest,
+        isError,
         balance,
     };
 }

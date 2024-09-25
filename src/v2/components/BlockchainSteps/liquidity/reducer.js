@@ -1,4 +1,4 @@
-import { stepsAction } from "../reducer";
+import { STEPS_ACTIONS } from "../enums";
 
 export const defaultLiquidityStep = {
     isFinished: false,
@@ -15,9 +15,9 @@ export function liquidityReducer(state, action) {
     const { type, payload } = action;
 
     switch (type) {
-        case stepsAction.START:
+        case STEPS_ACTIONS.START:
             return { ...state, lock: false };
-        case stepsAction.RESET:
+        case STEPS_ACTIONS.RESET:
             return { ...defaultLiquidityStep };
         case liquidityAction.SET_LIQUIDITY:
             return { ...state, balance: payload.balance, isFinished: payload.isFinished };

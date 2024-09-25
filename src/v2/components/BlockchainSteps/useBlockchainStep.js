@@ -2,13 +2,13 @@ import { useEffect, useReducer, useCallback } from "react";
 import { useChainId } from "wagmi";
 import debounce from "lodash.debounce";
 
-import { mainReducer, initialState, stepsAction } from "./reducer";
+import { mainReducer, initialState } from "./reducer";
 import useNetworkStep, { networkAction } from "./network";
 import useLiquidityStep, { liquidityAction } from "./liquidity";
 import useAllowanceStep, { allowanceAction } from "./allowance";
 import usePrerequisiteStep, { prerequisiteAction } from "./prerequisite";
 import useTransactionStep, { transactionAction } from "./transaction";
-import { STEP_STATE } from "./enums";
+import { STEPS_ACTIONS, STEPS_STATE } from "./enums";
 import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import { getTextContent } from "./helpers";
 
@@ -18,7 +18,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
     const [state, dispatch] = useReducer(mainReducer, initialState);
 
     useEffect(() => {
-        dispatch({ type: stepsAction.RESET });
+        dispatch({ type: STEPS_ACTIONS.RESET });
         resetState();
     }, [
         params.price,
@@ -41,7 +41,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
     const { stepLiquidity } = useLiquidityStep(state, data, dispatch);
     const { stepAllowance, allowance_set_reset, allowance_set } = useAllowanceStep(state, data, dispatch);
     const { stepPrerequisite } = usePrerequisiteStep(state, data, network_current, dispatch);
-    const { stepTransaction, transaction } = useTransactionStep(state, data, dispatch);
+    const { stepTransaction, transaction, transaction_isFinished } = useTransactionStep(state, data, dispatch);
 
     const resetState = () => {
         console.log("BIX :: PARAM CHANGED - reset writers");
@@ -52,7 +52,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
 
     const runProcess = () => {
         resetState();
-        dispatch({ type: stepsAction.START });
+        dispatch({ type: STEPS_ACTIONS.START });
     };
 
     const debouncedRunProcess = useCallback(
@@ -72,23 +72,23 @@ export default function useBlockchainStep({ data, deps = [] }) {
             stepTransaction?.state,
         );
 
-        if (steps?.network && stepNetwork?.state === STEP_STATE.ERROR) {
+        if (steps?.network && stepNetwork?.state === STEPS_STATE.ERROR) {
             dispatch({ type: networkAction.RESET_NETWORK });
-        }
-        if (steps?.liquidity && stepLiquidity?.state === STEP_STATE.ERROR) {
+        };
+        if (steps?.liquidity && stepLiquidity?.state === STEPS_STATE.ERROR) {
             dispatch({ type: liquidityAction.RESET_LIQUIDITY });
-        }
-        if (steps?.allowance && stepAllowance?.state === STEP_STATE.ERROR) {
+        };
+        if (steps?.allowance && stepAllowance?.state === STEPS_STATE.ERROR) {
             dispatch({ type: allowanceAction.RESET_ALLOWANCE });
             transaction.write?.reset();
-        }
-        if (stepPrerequisite?.state === STEP_STATE.ERROR) {
+        };
+        if (stepPrerequisite?.state === STEPS_STATE.ERROR) {
             dispatch({ type: prerequisiteAction.RESET_PREREQUISITE });
             transaction.write?.reset();
-        }
-        if (steps?.transaction && stepTransaction?.state === STEP_STATE.ERROR) {
+        };
+        if (steps?.transaction && stepTransaction?.state === STEPS_STATE.ERROR) {
             dispatch({ type: transactionAction.RESET_TRANSACTION });
-        }
+        };
     }, [
         stepNetwork?.state,
         stepLiquidity?.state,
@@ -98,11 +98,12 @@ export default function useBlockchainStep({ data, deps = [] }) {
     ]);
 
     useEffect(() => {
-        if (stepTransaction.transaction_isFinished) {
+        if (true) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
-            setTransactionSuccessful(stepTransaction.transaction_isFinished);
+            // setTransactionSuccessful(stepTransaction.transaction_isFinished);
+            setTransactionSuccessful(true);
         }
-    }, [stepTransaction.transaction_isFinished]);
+    }, [transaction_isFinished]);
 
     const extraState = {
         stepNetwork,
@@ -116,14 +117,14 @@ export default function useBlockchainStep({ data, deps = [] }) {
     const content = getTextContent(extraState);
 
     const statuses = Object.values(extraState).map((item) => item?.state).filter(Boolean);
-    const isProcessing = statuses.includes(STEP_STATE.PROCESSING);
-    const isSuccess = statuses.length > 0 && statuses.every((state) => state === STEP_STATE.SUCCESS);
-    const isError = statuses.includes(STEP_STATE.ERROR);
+    const isProcessing = statuses.includes(STEPS_STATE.PROCESSING);
+    const isSuccess = statuses.length > 0 && statuses.every((state) => state === STEPS_STATE.SUCCESS);
+    const isError = statuses.includes(STEPS_STATE.ERROR);
 
     useEffect(() => {
-        if (isProcessing) dispatch({ type: stepsAction.PROCESSING });
-        if (isSuccess) dispatch({ type: stepsAction.SUCCESS });
-        if (isError) dispatch({ type: stepsAction.ERROR });
+        if (isProcessing) dispatch({ type: STEPS_ACTIONS.PROCESSING });
+        if (isSuccess) dispatch({ type: STEPS_ACTIONS.SUCCESS });
+        if (isError) dispatch({ type: STEPS_ACTIONS.ERROR });
     }, [isError, isProcessing, isSuccess]);
 
     return {
@@ -138,5 +139,17 @@ export default function useBlockchainStep({ data, deps = [] }) {
             run: debouncedRunProcess,
             ...buttonState,
         }),
+
+        // testing purposes
+        // all: {
+        //     content,
+        //     steps,
+        //     status: state.status,
+        //     extraState,
+        //     resetState,
+        //     run: debouncedRunProcess,
+        //     ...buttonState,
+        // }
+        // {/* <Test {...all}/> */}
     };
 };
