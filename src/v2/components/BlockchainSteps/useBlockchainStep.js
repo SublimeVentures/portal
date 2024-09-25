@@ -98,10 +98,9 @@ export default function useBlockchainStep({ data, deps = [] }) {
     ]);
 
     useEffect(() => {
-        if (true) {
+        if (stepTransaction.transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
-            // setTransactionSuccessful(stepTransaction.transaction_isFinished);
-            setTransactionSuccessful(true);
+            setTransactionSuccessful(stepTransaction.transaction_isFinished);
         }
     }, [transaction_isFinished]);
 
