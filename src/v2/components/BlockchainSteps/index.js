@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import { stepsStatus } from "./reducer";
+import { STEPS_STATE } from "./enums";
 import BlockchainStep from "@/v2/components/BlockchainSteps/BlockchainStep";
 import { countSteps } from "@/v2/components/BlockchainSteps/helpers";
 import LinkIcon from "@/v2/assets/svg/link.svg";
@@ -16,13 +16,13 @@ import TwoChainsIcon from "@/v2/assets/svg/two-chains.svg";
 const successColors = { "--start-color": "rgba(64, 206, 96, .22)", "--end-color": "rgba(32, 103, 48, .22)" };
 
 export const colorSchemes = {
-    [stepsStatus.IDLE]: { "--start-color": "rgba(13, 43, 58, .22)", "--end-color": "rgba(165, 210, 255, .22)" },
-    [stepsStatus.ERROR]: { "--start-color": "rgba(225, 58, 58, .22)", "--end-color": "rgba(109, 28, 28, .22)" },
-    [stepsStatus.PROCESSING]: successColors,
-    [stepsStatus.SUCCESS]: successColors,
+    [STEPS_STATE.PENDING]: { "--start-color": "rgba(13, 43, 58, .22)", "--end-color": "rgba(165, 210, 255, .22)" },
+    [STEPS_STATE.ERROR]: { "--start-color": "rgba(225, 58, 58, .22)", "--end-color": "rgba(109, 28, 28, .22)" },
+    [STEPS_STATE.PROCESSING]: successColors,
+    [STEPS_STATE.SUCCESS]: successColors,
 };
 
-const ChainIcon = ({ steps, status = colorSchemes.IDLE }) => {
+const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
     const stepsNumber = countSteps(steps);
     let IconComponent;
 

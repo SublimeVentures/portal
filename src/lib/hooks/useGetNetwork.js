@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
-function useGetNetwork(isEnabled, requiredNetwork) {
+function useGetNetwork(isEnabled, requiredNetwork = null) {
     const { network } = useEnvironmentContext();
     const isValid = network?.chainId === requiredNetwork;
 

@@ -98,7 +98,7 @@ export default function History({ className }) {
 
                 {participants.length === 0 && !isLoading && (
                     <EmptyState
-                        heading="Investment history unavailable"
+                        heading="Investment History Unavailable"
                         description="Your investment history for this offer is currently empty, but no worries! As you make investments, this section will update. Check back later for more details as they become available."
                     />
                 )}

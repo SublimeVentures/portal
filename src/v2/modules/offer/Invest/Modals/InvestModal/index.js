@@ -7,6 +7,7 @@ import CurrencySwitch from "./CurrencySwitch";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
+import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import useInvestContext from "@/v2/modules/offer/useInvestContext";
 import Countdown from "@/v2/components/Countdown";
 import {
@@ -22,22 +23,24 @@ import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStep
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import lottieSuccess from "@/assets/lottie/success.json";
-
-import { Button } from "@/v2/components/ui/button";
 import { routes } from "@/v2/routes";
+import { Button } from "@/v2/components/ui/button";
 
 const InvestModalContent = ({
     open,
     investmentAmount,
     currency,
     handleCurrencyChange,
+    afterInvestmentCleanup,
     bookingExpire,
     onOpenChange,
-    afterInvestmentCleanup,
 }) => {
     const router = useRouter();
-    const { account, activeInvestContract } = useEnvironmentContext();
+    const { account, activeInvestContract, getCurrencySettlement } = useEnvironmentContext();
     const { clearBooking, getSavedBooking } = useInvestContext();
+
+    const dropdownCurrencyOptions = getCurrencySettlement();
+    const { partnerId } = useOfferDetailsStore();
     const { data: offer } = useOfferDetailsQuery();
     const bookingDetails = getSavedBooking();
 
@@ -57,7 +60,8 @@ const InvestModalContent = ({
         if (redirectToVault) await router.push(routes.App);
     };
 
-    const token = useGetToken(currency?.contract);
+    const selectedCurrency = dropdownCurrencyOptions.find((c) => c.symbol === currency);
+    const token = useGetToken(selectedCurrency?.contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -73,6 +77,7 @@ const InvestModalContent = ({
                 account: account.address,
                 booking: bookingDetails,
                 offerId: offer.id,
+                partnerId,
                 spender: activeInvestContract,
                 buttonText: "Transfer funds",
                 prerequisiteTextWaiting: "Generate hash",
@@ -82,11 +87,11 @@ const InvestModalContent = ({
                 transactionType: METHOD.INVEST,
             },
             token,
-            handleSetTransactionSuccess,
+            setTransactionSuccessful: handleSetTransactionSuccess,
         };
     }, [amountNumber, account, token?.contract, bookingDetails?.code, open, activeInvestContract]);
 
-    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { all, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
     });
 

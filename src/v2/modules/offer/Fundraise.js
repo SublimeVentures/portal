@@ -30,7 +30,6 @@ export default function Fundraise({ className }) {
 
     const { data: { progress = 0, filled = 0 } = {} } = useOfferProgressQuery(offer.id, {
         refetchInterval: status === OfferStatus.IN_PROGRESS ? 15000 : false,
-        enabled: status === OfferStatus.IN_PROGRESS,
     });
 
     const progressValue = status === OfferStatus.CLOSED ? 100 : progress;
@@ -56,7 +55,6 @@ export default function Fundraise({ className }) {
                     <p className="text-xl md:text-3xl">{formatCurrency(filled)}</p>
                     <p className="text-base md:text-lg text-success">{formatPercentage(progressValue / 100)} Filled</p>
                 </div>
-
                 <Progress value={progressValue} variant="success" />
             </div>
             <div>

@@ -58,7 +58,7 @@ const GAS_MULTIPLIER = 1;
 const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
 const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1;
 
-const useCalculateGas = (args) => {
+export const useCalculateGas = (args) => {
     const { query = {}, ...params } = args;
     const { chainId, scopeKey } = params;
 
@@ -196,8 +196,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     return {
         isError: simulate.isError || write.isError || confirm.isError || gas.isError,
-        error: processError(simulate.error, write.error, confirm.error, gas.error),
-        // error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage,
+        error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage || gas?.error,
         isLoading:
             simulate.isFetching ||
             write.isFetching ||

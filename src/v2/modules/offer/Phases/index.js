@@ -38,7 +38,7 @@ export default function Phases({ className }) {
             )}
 
             <div className="mt-4 2xl:mr-16 2xl:mt-0">
-                {!isClosed ? (
+                {!isClosed && (
                     <Countdown
                         countStart={countStart}
                         onComplete={updatePhase}
@@ -46,8 +46,6 @@ export default function Phases({ className }) {
                             !isDesktop ? { days: "D . ", hours: "H . ", minutes: "M. ", seconds: "S" } : defaultUnits
                         }
                     />
-                ) : (
-                    "Phase Closed"
                 )}
                 {!isClosed && <p className="mt-2 text-sm text-center md:hidden">Phase duration</p>}
             </div>

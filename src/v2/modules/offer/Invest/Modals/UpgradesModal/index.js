@@ -5,11 +5,13 @@ import { IoDiamond } from "react-icons/io5";
 import EmptyState from "../../../EmptyState";
 import { useOfferDetailsQuery, useUserPremiumQuery } from "../../../queries";
 import SingleUpgrade from "./SingleUpgrade";
+import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { queryClient } from "@/lib/queryCache";
 import { useUpgrade } from "@/fetchers/offer.fetcher";
 import { PremiumItemsENUM } from "@/lib/enum/store";
 import { routes } from "@/v2/routes";
 import { Button } from "@/v2/components/ui/button";
+import { IconButton } from "@/v2/components/ui/icon-button";
 import {
     Dialog,
     DialogContent,
@@ -20,7 +22,11 @@ import {
 } from "@/v2/components/ui/dialog";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 
+// @TODO
+// - Prevent from use increased upgrade on backed if the phase is wrong
+// - Return better error messages from backend - For example for wrong phase like above
 export default function UpgradesModal() {
+    const { isClosed } = usePhaseInvestment();
     const { data: offer } = useOfferDetailsQuery();
     const { data: upgrade, isLoading } = useUserPremiumQuery();
 
@@ -55,13 +61,21 @@ export default function UpgradesModal() {
         setSelectedUpgrade(id);
     };
 
+    if (isClosed) {
+        return null;
+    }
+
     return (
         <Dialog>
-            <DialogTrigger asChild>
-                <Button size="small" variant="outline" className="p-0 w-10 h-10 lg:py-1.5 lg:px-6 lg:w-auto">
-                    <span className="hidden lg:inline">Use Upgrades</span>
-                    <IoDiamond className="lg:ml-2" />
+            <DialogTrigger asChild className="hidden lg:inline-flex">
+                <Button variant="outline" className="h-10 lg:py-1.5 lg:px-6 lg:w-auto">
+                    <IoDiamond className="mr-2" />
+                    <span>Use Upgrades</span>
                 </Button>
+            </DialogTrigger>
+
+            <DialogTrigger asChild className="lg:hidden">
+                <IconButton variant="outline" className="p-0" icon={IoDiamond} />
             </DialogTrigger>
 
             <DialogContent className="md:max-w-max">

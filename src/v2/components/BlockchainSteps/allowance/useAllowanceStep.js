@@ -16,8 +16,9 @@ export default function useAllowanceStep(state, data, dispatch) {
         : steps?.network
           ? state.network.isFinished
           : true;
+
     const allowance_shouldRun =
-        steps.allowance && !state.allowance.isFinished && !state.allowance.lock && allowance_isReady;
+        steps?.allowance && !state.allowance.isFinished && !state.allowance.lock && allowance_isReady;
 
     const allowance_current = useGetTokenAllowance(
         allowance_shouldRun,
@@ -56,7 +57,9 @@ export default function useAllowanceStep(state, data, dispatch) {
         chainId,
         params.account,
     );
+
     const allowance_set = useSendTransaction(allowance_needIncrease, allowance_method.method, chainId, params.account);
+
     const allowance_isFinished =
         (!allowance_mustRun && !state.allowance.executing && params.allowance <= allowance_current?.allowance) ||
         (state.allowance.executing && allowance_set?.confirm?.data && params.allowance <= allowance_current?.allowance);
@@ -94,4 +97,4 @@ export default function useAllowanceStep(state, data, dispatch) {
             allowance_shouldRun,
         }),
     };
-};
+}

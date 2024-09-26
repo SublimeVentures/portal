@@ -23,7 +23,7 @@ export const routes = Object.freeze({
     Tokenomics: "/tokenomics",
     ToS: "/terms",
     Privacy: "/privacy",
-    App: "/app",
+    App: "/app/vault",
     Opportunities: "/app/offer",
     Launchpad: "/app/launchpad",
     OTC: "/app/otc",

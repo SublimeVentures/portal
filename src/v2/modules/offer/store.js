@@ -65,6 +65,7 @@ export const initStore = ({ session, offer, allocation, userAllocation }) => {
 
     const newOfferDetails = {
         offerId: offer.id,
+        partnerId: session.partnerId,
         upgradesUse,
         allocationData,
     };

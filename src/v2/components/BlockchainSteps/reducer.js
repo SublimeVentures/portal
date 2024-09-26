@@ -4,22 +4,10 @@ import { allowanceReducer, defaultAllowanceStep } from "./allowance";
 import { prerequisiteReducer, defaultPrerequisiteStep } from "./prerequisite/reducer";
 import { transactionReducer, defaultTransactionStep } from "./transaction/reducer";
 
-export const stepsAction = Object.freeze({
-    START: "START",
-    RESET: "RESET",
-    ERROR: "ERROR",
-    SUCCESS: "SUCCESS",
-});
-
-export const stepsStatus = Object.freeze({
-    IDLE: "IDLE",
-    PROCESSING: "PROCESSING",
-    SUCCESS: "SUCCESS",
-    ERROR: "ERROR",
-});
+import { STEPS_STATE, STEPS_ACTIONS } from "./enums";
 
 export const initialState = {
-    status: stepsStatus.IDLE,
+    status: STEPS_STATE.PENDING,
     network: defaultNetworkStep,
     liquidity: defaultLiquidityStep,
     allowance: defaultAllowanceStep,
@@ -27,19 +15,19 @@ export const initialState = {
     transaction: defaultTransactionStep,
 };
 
-const statusReducer = (state = stepsStatus.IDLE, action) => {
+const statusReducer = (state = STEPS_STATE.PENDING, action) => {
     switch (action.type) {
-        case stepsAction.START:
-            return stepsStatus.PROCESSING;
-        case stepsAction.SUCCESS:
-            return stepsStatus.SUCCESS;
-        case stepsAction.ERROR:
-            return stepsStatus.ERROR;
-        case stepsAction.RESET:
-            return stepsStatus.IDLE;
+        case STEPS_ACTIONS.START:
+            return STEPS_STATE.PROCESSING;
+        case STEPS_ACTIONS.SUCCESS:
+            return STEPS_STATE.SUCCESS;
+        case STEPS_ACTIONS.ERROR:
+            return STEPS_STATE.ERROR;
+        case STEPS_ACTIONS.RESET:
+            return STEPS_STATE.PENDING;
         default:
             return state;
-    };
+    }
 };
 
 export const combineReducers = (slices) => (state, action) => {

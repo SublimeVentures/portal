@@ -1,14 +1,21 @@
 import { useMemo, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useForm } from "react-hook-form";
+import { useSimulateContract } from "wagmi";
+import abi from "../../../../../../abi/ReasignFacet.abi.json";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/v2/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
 import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
+import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
+import useGetToken from "@/lib/hooks/useGetToken";
+import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
+import { Input } from "@/v2/components/ui/input";
 
 export default function ReassignModal(props) {
+    const [start, setStart] = useState(false);
     const {
         useGetReassignPrice,
         currency,
@@ -27,23 +34,17 @@ export default function ReassignModal(props) {
         ...args
     } = useEnvironmentContext();
 
-    const form = useForm();
-
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const dropdownCurrencyOptions = getCurrencySettlement();
 
+    const form = useForm();
+
     const { data: ReassignPrice } = useGetReassignPrice(diamonds[chainId]);
-
-    console.log(getCurrencySettlement());
-
-    console.log(args);
-
-    console.log(currency);
 
     const { offerId } = data;
 
-    console.log(typeof ReassignPrice);
+    const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -62,14 +63,36 @@ export default function ReassignModal(props) {
                 prerequisiteTextSuccess: "Hash obtained",
                 prerequisiteTextError: "Invalid transaction data",
                 transactionType: METHOD.REASSIGN,
+                inputs: ["0xbcda58cc5ca1A3caE1298991d9C067fdA111E165", currency.contract, 12],
             },
-            // token,
+            token,
             setTransactionSuccessful,
         };
     }, [account]);
 
+    // const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    //     data: blockchainInteractionData,
+    // });
+
+    const { query = {}, ...params } = blockchainInteractionData;
+    const { contract, scope, inputs } = params;
+
+    const simulate = useSimulateContract({
+        functionName: name,
+        address: contract,
+        args: inputs,
+        abi: abi,
+        chainId: chainId,
+        scopeKey: scope,
+        account: account.address,
+        query: {
+            enabled: true,
+            gcTime: 0,
+        },
+    });
+
     return (
-        <>
+        <div className="max-h-screen w-full">
             <Dialog open={open} onOpenChange={onOpenChange} onClose={closeModal}>
                 <DialogContent>
                     <DialogHeader className="md:items-center">
@@ -82,6 +105,25 @@ export default function ReassignModal(props) {
                         </DialogDescription>
                     </DialogHeader>
                     <Form {...form}>
+                        <dl className="definition-section definition-grid">
+                            <DefinitionItem term="Market">{Number(ReassignPrice)}</DefinitionItem>
+                        </dl>
+                        <FormField
+                            name="address"
+                            control={form.control}
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col w-full m-0">
+                                    <FormLabel>Address</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            autoComplete="false"
+                                            onChange={(evt) => field.onChange(evt, field.onChange)}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             name="currency"
                             control={form.control}
@@ -117,6 +159,13 @@ export default function ReassignModal(props) {
                             )}
                         />
                     </Form>
+                    {/*<dl className="definition-section ">*/}
+                    {/*    <BlockchainSteps {...getBlockchainStepsProps()} />*/}
+                    {/*</dl>*/}
+                    {/*<BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />*/}
+                    <button type="button" onClick={() => setStart(true)}>
+                        Mock Reassign
+                    </button>
                 </DialogContent>
             </Dialog>
             <button
@@ -125,6 +174,6 @@ export default function ReassignModal(props) {
             >
                 Reassign My Allocation
             </button>
-        </>
+        </div>
     );
 }

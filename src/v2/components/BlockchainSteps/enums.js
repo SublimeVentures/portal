@@ -6,9 +6,16 @@ export const STEPS = {
     TRANSACTION: 4,
 };
 
-export const STEP_STATE = {
+export const STEPS_STATE = {
     PENDING: 0,
     PROCESSING: 1,
     ERROR: 2,
     SUCCESS: 3,
+};
+
+export const STEPS_ACTIONS = {
+    START: "START",
+    RESET: "RESET",
+    ERROR: "ERROR",
+    SUCCESS: "SUCCESS",
 };

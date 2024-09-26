@@ -8,6 +8,7 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { fetchOfferList } from "@/fetchers/offer.fetcher";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { offersKeys } from "@/v2/constants";
+import PAGE from "@/routes";
 
 const EmptyInvestmentsEnhanced = () => {
     const { cdn } = useEnvironmentContext();
@@ -36,10 +37,12 @@ const EmptyInvestmentsEnhanced = () => {
                 Explore elite investment avenues curated for the astute investor
             </CardDescription>
             <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
-                <Button className="w-full collap:w-auto" variant="outline">
-                    OTC Market
+                <Button className="w-full collap:w-auto" variant="outline" asChild>
+                    <Link href={PAGE.OTC}>OTC Market</Link>
                 </Button>
-                <Button className="w-full collap:w-auto">Opportunities</Button>
+                <Button className="w-full collap:w-auto">
+                    <Link href={PAGE.Opportunities}>Opportunities</Link>
+                </Button>
             </div>
             {offers.map((offer) => (
                 <Link
