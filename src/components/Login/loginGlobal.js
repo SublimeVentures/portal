@@ -68,7 +68,7 @@ export default function LoginGlobal({ ssrData }) {
     return (
         <>
             <div className={`min-h-screen bg-app-bg`}>
-                <div className="bg min-h-screen"></div>
+                <div className="bg-[url(https://cdn.basedvc.fund/webapp/bg.jpg)] bg-cover min-h-screen"></div>
                 <div
                     className="text-white flex pt-20  flex-grow min-h-screen flex-col justify-center sm:flex-row"
                     style={{ marginTop: "calc(-100vh)" }}

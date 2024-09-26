@@ -94,11 +94,11 @@ export default function Navbar() {
     }, [scrollPosition]);
 
     return (
-        <div className="fixed w-full z-20 text-uppercase tracking-widest">
+        <div className="fixed w-full z-20 text-uppercase tracking-widest select-none">
             <div
                 className={`
-                ${!isOnTop || isMobileOpen ? "backdrop-blur-md" : ""} 
-                flex flex-row items-center w-full px-10 navShadow py-4 transition-all`}
+                ${!isOnTop || isMobileOpen ? "backdrop-blur-md text-white" : ""} 
+                flex flex-row items-center w-full px-10 py-4 transition-all`}
             >
                 <Link href="/" onClick={disableMobile}>
                     <div className={`flex`}>
@@ -106,7 +106,7 @@ export default function Navbar() {
                     </div>
                 </Link>
                 <div
-                    className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 font-light `}
+                    className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 font-light select-none`}
                 >
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
