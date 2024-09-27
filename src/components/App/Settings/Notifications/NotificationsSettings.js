@@ -58,7 +58,7 @@ export default function NotificationsSettings({ session, onNewSettings }) {
         });
         const prepareNotificationChannels = async () => {
             try {
-                const res = fetchNotificationChannels();
+                const res = await fetchNotificationChannels();
                 setNotificationOptions({
                     ...res,
                     channels: res.channels.filter(({ id }) => id !== "discord"),

@@ -18,7 +18,7 @@ export default function LayoutApp({ children }) {
     const isDifferentAccount = !isBlockedAlert && account.address !== children.props?.session.stakedOn;
 
     const BlockedAlert = () => (
-        <div className="fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
+        <div className="fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[1000] w-full text-center px-5 h-[var(--alertHeight)]">
             Investments are blocked!&nbsp;
             <u>
                 <Link href={routes.Settings}>Stake {stakingCurrency?.symbol} to unlock</Link>.
@@ -27,7 +27,7 @@ export default function LayoutApp({ children }) {
     );
 
     const DifferentAccountAlert = () => (
-        <div className="fixed top-0 flex items-center justify-center bg-app-accent uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
+        <div className="fixed top-0 flex items-center justify-center bg-app-accent uppercase text-white font-accent z-[1000] w-full text-center px-5 h-[var(--alertHeight)]">
             Your tokens are staked on another account!&nbsp;
             <button className="underline" onClick={() => logOut()}>
                 Logout and choose a wallet with staked tokens.
