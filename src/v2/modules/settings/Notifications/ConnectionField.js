@@ -30,6 +30,7 @@ export default function ConnectionField({
                 if (updated) {
                     onUpdate();
                 }
+                return enabled;
             });
 
     return (
@@ -53,7 +54,12 @@ export default function ConnectionField({
                     </div>
                 </div>
 
-                <Checkbox disabled={disabled} id={id} onCheckedChange={handleValueChange} checked={defaultChecked} />
+                <Checkbox
+                    disabled={disabled}
+                    id={id}
+                    onCheckedChange={handleValueChange}
+                    defaultChecked={defaultChecked}
+                />
             </label>
         </div>
     );

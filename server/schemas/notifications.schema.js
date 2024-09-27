@@ -1,6 +1,6 @@
-import { z } from "zod";
+const { z } = require("zod");
 
-export const NotificationPreferencesUpdateSchema = z.object({
+const NotificationPreferencesUpdateSchema = z.object({
     updates: z.array(
         z.object({
             categoryId: z.string(),
@@ -10,13 +10,19 @@ export const NotificationPreferencesUpdateSchema = z.object({
     ),
 });
 
-export const TopicSubscriptionSchema = z.object({
+const TopicSubscriptionSchema = z.object({
     categoryId: z.string(),
     token: z.string(),
 });
 
-export const TopicUnsubscribeSchema = z.object({
+const TopicUnsubscribeSchema = z.object({
     categoryId: z.string(),
     tenantId: z.number(),
     token: z.string(),
 });
+
+module.exports = {
+    NotificationPreferencesUpdateSchema,
+    TopicSubscriptionSchema,
+    TopicUnsubscribeSchema,
+};

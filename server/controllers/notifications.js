@@ -69,10 +69,10 @@ async function getNotificationPreferences(req, res) {
 }
 
 async function setNotificationPreferences(req, res) {
-    const { userId, tenantId } = req.user;
+    const { userId } = req.user;
     try {
         const { updates } = NotificationPreferencesUpdateSchema.parse(req.body);
-        const updated = await queries.setNotificationPreferences(userId, tenantId, updates);
+        const updated = await queries.setNotificationPreferences(userId, tenantIndex, updates);
         return res.status(200).json({
             ok: true,
             updated,

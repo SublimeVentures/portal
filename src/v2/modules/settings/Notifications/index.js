@@ -215,11 +215,13 @@ export default function NotificationsSettings() {
                                     name="SMS"
                                     id={`${cat.id}|${CONNECTION_TYPE.SMS}`}
                                     onUpdate={refetchPreferences}
+                                    defaultChecked={preferences[cat.id]?.[CONNECTION_TYPE.SMS]}
                                 />
                                 <ConnectionField
                                     disabled={!userData?.email}
                                     name="Email"
                                     id={`${cat.id}|${CONNECTION_TYPE.EMAIL}`}
+                                    defaultChecked={preferences[cat.id]?.[CONNECTION_TYPE.EMAIL]}
                                     onUpdate={refetchPreferences}
                                 />
                             </div>
