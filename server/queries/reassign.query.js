@@ -1,4 +1,6 @@
+const moment = require("moment/moment");
 const { constructError } = require("../utils");
+const { getEnv } = require("../services/env");
 const { BookingErrorsENUM } = require("@/lib/enum/invest");
 
 function checkReassignQueryParams(req) {
@@ -36,8 +38,24 @@ function checkReassignQueryParams(req) {
     }
 }
 
-async function processReassign() {
+async function processReassign(queryParams, user) {
     try {
+        // const { userId, tenantId, partnerId } = user;
+        const { _offerId, _to, _currency, _chain } = queryParams;
+
+        const expire = moment.utc().unix() + 3 * 60;
+
+        const currency = getEnv().currencies[_chain][_currency];
+
+        return {
+            ok: true,
+            reassign: {
+                _currency: currency,
+                _expire: expire,
+                _offer: _offerId,
+                _to,
+            },
+        };
     } catch (error) {
         return {
             ok: false,

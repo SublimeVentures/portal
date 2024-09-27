@@ -1,18 +1,18 @@
 const axios = require("axios");
 const { serializeError } = require("serialize-error");
-const { expireAllocation } = require("../queries/invest.query");
-const { checkReassignQueryParams } = require("../queries/reassign.query");
-const { BookingErrorsENUM } = require("@/lib/enum/invest");
+const { checkReassignQueryParams, processReassign } = require("../queries/reassign.query");
 const { authTokenName } = require("@/lib/authHelpers");
 const logger = require("@/lib/logger");
+const { ReassignErrorsENUM } = require("@/lib/enum/reassign");
 
-async function obtainSignature(offerId, expires, chainId, token) {
+async function obtainSignature(to, currency, offer, expire, token) {
     const signature = await axios.post(
         `${process.env.AUTHER}/reassign/sign`,
         {
-            offerId,
-            expires,
-            chainId,
+            to,
+            currency,
+            offer,
+            expire,
             token,
         },
         {
@@ -24,7 +24,7 @@ async function obtainSignature(offerId, expires, chainId, token) {
     if (!signature?.data?.ok) {
         return {
             ok: false,
-            code: BookingErrorsENUM.BAD_SIGNATURE,
+            code: ReassignErrorsENUM.BAD_SIGNATURE,
         };
     }
 
@@ -39,36 +39,30 @@ async function reassign(user, req) {
         const queryParams = checkReassignQueryParams(req);
         if (!queryParams.ok) return queryParams;
 
-        const reservation = await processReservation(queryParams.data, user);
-        if (!reservation.ok) return reservation;
+        const reassign = await processReassign(queryParams.data, user);
+        if (!reassign.ok) return reassign;
 
         const token = req.cookies[authTokenName];
 
         const signature = await obtainSignature(
-            queryParams.data._offerId,
-            reservation.data.amount,
-            reservation.data.hash,
-            reservation.data.expires,
-            user.partnerId,
-            queryParams.data._chain,
+            reassign._to,
+            reassign._currency,
+            reassign._offer,
+            reassign._expire,
             token,
         );
 
         if (!signature.ok) {
-            console.log("expore", queryParams.data._offerId, user.userId, reservation.data.hash);
-            await expireAllocation(queryParams.data._offerId, user.userId, reservation.data.hash);
             return signature;
         }
 
         return {
             ok: true,
-            hash: reservation.data.hash,
-            expires: reservation.data.expires,
-            amount: reservation.data.amount,
+            expire: reassign._expire,
             signature: signature.data,
         };
     } catch (error) {
-        logger.error(`ERROR :: [reserveSpot]`, {
+        logger.error(`ERROR :: [reassign]`, {
             reqQuery: req.query,
             user,
             error: serializeError(error),
