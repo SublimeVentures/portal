@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { dehydrate, useQuery } from "@tanstack/react-query";
 import { seoConfig } from "@/lib/seoConfig";
 import { fetchPartners } from "@/fetchers/public.fecher";
-import { useTenantSpecificData } from "@/v2/helpers/tenant";
+import { useTenantSpecificData, TENANT } from "@/v2/helpers/tenant";
 import PAGE from "@/routes";
 import { queryClient } from "@/lib/queryCache";
 import { verifyID } from "@/lib/authHelpers";

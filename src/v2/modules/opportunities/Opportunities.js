@@ -6,7 +6,6 @@ import { tenantIndex } from "@/lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
 import { shortCurrencyFormatterWithSuffix } from "@/v2/lib/currency";
 import { useIntersectionObserver } from "@/v2/hooks";
-import { Metadata } from "@/v2/components/Layout";
 import {
     InvestedStatisticCard,
     PartnersStatisticCard,
@@ -26,7 +25,6 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts, count
 
     return (
         <>
-            <Metadata title="Opportunities" />
             <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-8">
                 <div className="mb-4 3xl:mb-0 w-full 2xl:w-5/12 3xl:w-1/2">
                     <Title subtitle="We bring new industry giants to our community" count={count}>
@@ -58,17 +56,13 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts, count
                             </li>
                         );
                     })}
-                </ul>
-
-                {isFetchingNextPage && (
-                    <ul className="grid grid-cols-1 lg:grid-cols-2 gap-y-6 gap-x-8 2xl:grid-cols-cards">
-                        {Array.from({ length: 6 }, (_, index) => (
-                            <li key={index} className="min-h-[305px] h-full lg:min-h-[355px]">
+                    {isFetchingNextPage &&
+                        Array.from({ length: 6 }, (_, index) => (
+                            <li key={index}>
                                 <SingleOfferLoader />
                             </li>
                         ))}
-                    </ul>
-                )}
+                </ul>
             </div>
         </>
     );

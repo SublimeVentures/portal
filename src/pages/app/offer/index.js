@@ -15,6 +15,11 @@ import { offersKeys } from "@/v2/constants";
 
 export default function AppOpportunities({ session }) {
     const { tenantId: TENANT_ID, partnerId: PARTNER_ID } = session;
+    const metaData = {
+        title: "Opportunities",
+        description:
+            "Explore all the latest opportunities in the cryptocurrency space. Discover investment prospects, emerging projects, and innovative startups shaping the future of blockchain technology.",
+    };
 
     const {
         data,
@@ -40,7 +45,7 @@ export default function AppOpportunities({ session }) {
     if (isOffersLoading || isStatsLoading) {
         return (
             <div className="col-span-12 max-h-[40vh]">
-                <Metadata title="Loading" />
+                <Metadata {...metaData} />
                 <Loader />
             </div>
         );
@@ -49,19 +54,25 @@ export default function AppOpportunities({ session }) {
     if (!pages.length || isOffersError || isStatsError) {
         return (
             <div className="col-span-12 max-h-[40vh]">
-                <Metadata title="Opportunities" />
+                <Metadata {...metaData} />
                 <Empty />
             </div>
         );
     }
 
     return (
-        <Opportunities
-            offers={pages}
-            stats={stats}
-            count={count}
-            infiniteLoaderOpts={{ isFetchingNextPage, hasNextPage, fetchNextPage }}
-        />
+        <>
+            <Metadata
+                title="Opportunities"
+                description="Explore all the latest opportunities in the cryptocurrency space. Discover investment prospects, emerging projects, and innovative startups shaping the future of blockchain technology."
+            />
+            <Opportunities
+                offers={pages}
+                stats={stats}
+                count={count}
+                infiniteLoaderOpts={{ isFetchingNextPage, hasNextPage, fetchNextPage }}
+            />
+        </>
     );
 }
 

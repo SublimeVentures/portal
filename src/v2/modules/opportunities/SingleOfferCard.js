@@ -10,24 +10,26 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
     return (
         <Card variant="dark" className="h-full flex flex-col lg:p-3">
             <div className="grow">
-                <div className="relative h-24 flex gap-2 lg:mb-12 lg:h-32">
+                <div className="relative h-22 flex gap-2 lg:mb-12 lg:h-32">
                     <Image
                         src={getResearchIconSrc(slug)}
-                        className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg select-none pointer-events-none"
+                        className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg select-none pointer-events-none bg-primary-800 aspect-square"
                         alt={`Avatar for ${name} offer`}
-                        width={90}
-                        height={90}
+                        width={88}
+                        height={88}
+                        priority
                     />
                     <Image
                         src={getResearchBgSrc(slug)}
                         alt={`Background image for ${name} offer`}
-                        className="w-full object-cover rounded  select-none pointer-events-none"
-                        width={1000}
-                        height={200}
+                        className="object-cover rounded select-none pointer-events-none bg-primary-800"
+                        width={500}
+                        height={130}
+                        priority
                     />
                 </div>
 
-                <div className="py-4 flex justify-between items-center lg:px-4 lg:py-0 lg:items-start">
+                <div className="w-full py-4 flex justify-between items-center lg:px-4 lg:py-0 lg:items-start">
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}

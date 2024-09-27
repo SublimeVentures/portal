@@ -4,26 +4,23 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
 import { cn } from "@/lib/cn";
 
-const avatarVariants = cva(
-    "relative flex shrink-0 bg-black overflow-hidden rounded-full",
-    {
-        variants: {
-            variant: {
-                default: "rounded-full",
-                block: "rounded",
-            },
-            size: {
-                default: "h-[55px] w-[55px]",
-                small: "h-[51px] w-[51px]",
-                large: "h-[100px] w-[100px]",
-            },
+const avatarVariants = cva("relative flex shrink-0 bg-black overflow-hidden rounded-full", {
+    variants: {
+        variant: {
+            default: "rounded-full",
+            block: "rounded",
         },
-        defaultVariants: {
-            variant: "default",
-            size: "default",
+        size: {
+            default: "h-[55px] w-[55px]",
+            small: "h-[51px] w-[51px]",
+            large: "h-[100px] w-[100px]",
         },
     },
-);
+    defaultVariants: {
+        variant: "default",
+        size: "default",
+    },
+});
 
 const AvatarRoot = forwardRef(({ variant, size, className, ...props }, ref) => (
     <AvatarPrimitive.Root ref={ref} className={cn(avatarVariants({ variant, size, className }))} {...props} />
@@ -50,8 +47,8 @@ AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 const Avatar = forwardRef(({ session, ...props }, ref) => (
     <AvatarRoot ref={ref} {...props}>
-        <AvatarImage src={session?.img} />
-        <AvatarFallback fallback={session?.img_fallback} />
+        <AvatarImage src={session?.img} alt={session?.accountId} />
+        <AvatarFallback fallback={session?.img_fallback} alt={session?.accountId} />
     </AvatarRoot>
 ));
 

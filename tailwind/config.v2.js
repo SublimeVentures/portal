@@ -70,7 +70,7 @@ module.exports = {
                 "2xs": ".625rem", // 10px
             },
             fontFamily: {
-                body: ["Poppins", "sans-serif"],
+                body: ["var(--base-font)", "sans-serif"],
             },
             borderRadius: {
                 "4xl": "2rem",

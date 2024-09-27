@@ -1,6 +1,6 @@
 export default function Highlights() {
     return (
-        <div className="highlightGradient flex justify-center text-white md:pt-10">
+        <div className="bg-[linear-gradient(to_bottom,rgba(18,21,30,1)_0%,rgba(18,21,30,1)_85%,rgba(16,19,27,1)_100%)] flex justify-center text-white md:pt-10">
             <div className="px-10 py-25 flex flex-col gap-10 flex-1 lg:flex-row md:mx-auto md:justify-between lg:flex-row xl:max-w-[1400px] ">
                 <div className="lg:max-w-[350px] flex flex-col">
                     <div className="font-accent text-3xl font-light">Automated</div>
