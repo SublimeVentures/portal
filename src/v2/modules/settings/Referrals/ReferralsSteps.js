@@ -18,7 +18,7 @@ const mockedTenantName = "based.VC";
 
 export default function ReferalsSteps() {
     return (
-        <div className="rounded opacity-100 steps-gradient mt-8 md:mt-0 py-12 px-9 flex flex-col">
+        <div className="sm:p-4 sm:bg-foreground/[.06] sm:rounded md:py-10 md:px-8 flex flex-col grow">
             <div className="flex">
                 <div className="flex flex-col items-center">
                     <Bullet>1</Bullet>
@@ -27,6 +27,7 @@ export default function ReferalsSteps() {
                     <div className="h-5 md:h-10 bg-gray-500 w-px my-7" />
                     <Bullet>3</Bullet>
                 </div>
+
                 <div>
                     <div className="px-10 h-26 md:h-32">
                         <Title>Send Invitation</Title>
@@ -43,9 +44,10 @@ export default function ReferalsSteps() {
                 </div>
             </div>
 
-            <div className="text-base font-normal py-2 text-foreground hover:bg-primary/[.5] rounded cursor-pointer bg-gradient-to-r from-primary to-primary-600 flex justify-center">
+            {/* Button disabled because of mocked address */}
+            <div className="mt-auto py-2 flex justify-center text-foreground rounded cursor-pointer bg-gradient-to-r from-primary to-primary-600">
                 <Copy value={mockedAddress} text={`${shortenAddress(mockedAddress)}/${mockedTenantName}`} />
             </div>
         </div>
     );
-}
+};

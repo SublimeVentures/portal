@@ -1,8 +1,6 @@
+// import { getTenantConfig } from "@/lib/tenantHelper";
 import { BookingErrorsENUM } from "@/lib/enum/invest";
-import { getTenantConfig } from "@/lib/tenantHelper";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
-
-// const { externalLinks } = getTenantConfig();
 
 export default function InvestErrorModal({ code = "", ...props }) {
     const { title, description } = getError(code);
@@ -96,7 +94,7 @@ const messages = {
             </>
         ),
     },
-  };
+};
 
 const getError = (code) => {
     return messages[code] || messages.default;

@@ -34,7 +34,7 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
         getOfferTabsProps,
         getOfferFormProps,
     } = content;
-    const { all, getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
+    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
 
     return (
         <SheetContent className="h-full flex flex-col rounded-t-lg">

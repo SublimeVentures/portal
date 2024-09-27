@@ -27,6 +27,7 @@ import { queryClient } from "@/lib/queryCache";
 import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+
 // import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 
 export default function TakeOfferModal({ offerDetails, className }) {
@@ -38,7 +39,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
     const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
         useBlockchainTakeOfferTransaction({ offerDetails });
 
-    const { all, resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
         deps: [isTakeModalOpen],
     });

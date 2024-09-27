@@ -12,7 +12,7 @@ export default function Referrals() {
     return (
         <div className="flex flex-col gap-4 2xl:grid 2xl:grid-cols-3 2xl:h-full">
             <div className="order-2 rounded 2xl:row-span-12 2xl:order-2">
-                <Card variant="none" className="py-6 px-12 flex flex-col gap-8 h-full bg-settings-gradient">
+                <Card variant="none" className="flex flex-col gap-8 h-full bg-settings-gradient 2xl:py-6 2xl:px-12">
                     <div>
                         <CardTitle className="text-base md:text-lg font-medium text-white mb-1">
                             Join Based Referral Program
@@ -25,11 +25,12 @@ export default function Referrals() {
                             details.
                         </CardDescription>
                     </div>
+
                     <ReferralsSteps />
                 </Card>
             </div>
 
-            <div className="order-1 w-full flex gap-4 2xl:order-2 2xl:row-span-1 2xl:col-span-2">
+            <div className="order-1 flex flex-wrap gap-2 2xl:order-2 2xl:row-span-1 2xl:col-span-2 2xl:gap-4">
                 <RewardStatisticCard />
                 <InvitersStatisticCard />
                 <DiscountsStatisticCard value="10%" />

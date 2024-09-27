@@ -43,7 +43,12 @@ const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
     };
 
     return (
-        <IconComponent style={colorSchemes[status]} className={cn("absolute z-0", { "animate-pulse": status = STEPS_STATE.PROCESSING})} />
+        <IconComponent
+            style={colorSchemes[status]}
+            className={cn("absolute z-0", {
+                "animate-pulse": status === STEPS_STATE.PROCESSING
+            })}
+        />
     );
 };
 
@@ -73,11 +78,11 @@ export default function BlockchainSteps({ content, steps, extraState, status }) 
                 <ChainIcon steps={steps} status={status} />
 
                 <ul className="relative flex items-center h-full justify-center w-max gap-3 overflow-hidden">
-                    {steps.network && <BlockchainStep data={extraState.stepNetwork} stepsStatus={status} icon={LinkIcon} />}
-                    {steps.liquidity && <BlockchainStep data={extraState.stepLiquidity} stepsStatus={status} icon={BalanceIcon} />}
-                    {steps.allowance && <BlockchainStep data={extraState.stepAllowance} stepsStatus={status} icon={AccountBalanceIcon} />}
-                    {steps.transaction && <BlockchainStep data={extraState.stepPrerequisite} stepsStatus={status} icon={PriorityIcon} />}
-                    {steps.transaction && <BlockchainStep data={extraState.stepTransaction} stepsStatus={status} icon={RocketLaunchIcon} />}
+                    {steps.network && <BlockchainStep data={extraState.stepNetwork} status={status} icon={LinkIcon} />}
+                    {steps.liquidity && <BlockchainStep data={extraState.stepLiquidity} status={status} icon={BalanceIcon} />}
+                    {steps.allowance && <BlockchainStep data={extraState.stepAllowance} status={status} icon={AccountBalanceIcon} />}
+                    {steps.transaction && <BlockchainStep data={extraState.stepPrerequisite} status={status} icon={PriorityIcon} />}
+                    {steps.transaction && <BlockchainStep data={extraState.stepTransaction} status={status} icon={RocketLaunchIcon} />}
                 </ul>
             </div>
         </div>

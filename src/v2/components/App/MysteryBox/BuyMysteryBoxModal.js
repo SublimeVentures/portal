@@ -39,6 +39,15 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
         }
     }, [network.chainId]);
 
+    useEffect(() => {
+        const value = dropdownCurrencyOptions[0]?.symbol || "";
+        const isValidCurrency = value && value !== "...";
+    
+        if (!selectedCurrency & isValidCurrency) {
+            setSelectedCurrency(value);
+        }
+    }, [dropdownCurrencyOptions]);
+
     const closeModal = () => {
         setter();
         setTimeout(() => {
@@ -78,6 +87,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [model],
     });
 
     const contentSuccess = () => {
@@ -105,6 +115,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
             </Success.Content>
         );
     };
+
     const contentSteps = () => {
         return (
             <>
@@ -163,4 +174,4 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
             {content()}
         </Modal>
     );
-}
+};

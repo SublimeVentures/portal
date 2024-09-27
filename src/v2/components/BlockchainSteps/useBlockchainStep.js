@@ -63,39 +63,40 @@ export default function useBlockchainStep({ data, deps = [] }) {
         [],
     );
 
-    useEffect(() => {
-        console.log(
-            `BIX :: RESET STATE`,
-            stepNetwork?.state,
-            stepLiquidity?.state,
-            stepAllowance?.state,
-            stepTransaction?.state,
-        );
+    // useEffect(() => {
+    //     console.log(
+    //         `BIX :: RESET STATE`,
+    //         stepNetwork?.state,
+    //         stepLiquidity?.state,
+    //         stepAllowance?.state,
+    //         stepTransaction?.state,
+    //     );
 
-        if (steps?.network && stepNetwork?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: networkAction.RESET_NETWORK });
-        };
-        if (steps?.liquidity && stepLiquidity?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: liquidityAction.RESET_LIQUIDITY });
-        };
-        if (steps?.allowance && stepAllowance?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: allowanceAction.RESET_ALLOWANCE });
-            transaction.write?.reset();
-        };
-        if (stepPrerequisite?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: prerequisiteAction.RESET_PREREQUISITE });
-            transaction.write?.reset();
-        };
-        if (steps?.transaction && stepTransaction?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: transactionAction.RESET_TRANSACTION });
-        };
-    }, [
-        stepNetwork?.state,
-        stepLiquidity?.state,
-        stepAllowance?.state,
-        stepPrerequisite?.state,
-        stepTransaction?.state,
-    ]);
+    //     if (steps?.network && stepNetwork?.state === STEPS_STATE.ERROR) {
+    //         console.log('reset state', steps?.network, stepNetwork)
+    //         dispatch({ type: networkAction.RESET_NETWORK });
+    //     };
+    //     if (steps?.liquidity && stepLiquidity?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: liquidityAction.RESET_LIQUIDITY });
+    //     };
+    //     if (steps?.allowance && stepAllowance?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: allowanceAction.RESET_ALLOWANCE });
+    //         transaction.write?.reset();
+    //     };
+    //     if (stepPrerequisite?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: prerequisiteAction.RESET_PREREQUISITE });
+    //         transaction.write?.reset();
+    //     };
+    //     if (steps?.transaction && stepTransaction?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: transactionAction.RESET_TRANSACTION });
+    //     };
+    // }, [
+    //     stepNetwork?.state,
+    //     stepLiquidity?.state,
+    //     stepAllowance?.state,
+    //     stepPrerequisite?.state,
+    //     stepTransaction?.state,
+    // ]);
 
     useEffect(() => {
         if (!!transaction_isFinished) {
@@ -140,14 +141,14 @@ export default function useBlockchainStep({ data, deps = [] }) {
         }),
 
         // testing purposes
-        all: {
-            content,
-            steps,
-            status: state.status,
-            extraState,
-            resetState,
-            run: debouncedRunProcess,
-            ...buttonState,
-        }
+        // all: {
+        //     content,
+        //     steps,
+        //     status: state.status,
+        //     extraState,
+        //     resetState,
+        //     run: debouncedRunProcess,
+        //     ...buttonState,
+        // }
     };
 };
