@@ -14,7 +14,7 @@ export default function Hero({ account }) {
     };
 
     return (
-        <div className="min-h-screen bg flex flex-col justify-center hero select-none tracking-[0.2em]">
+        <div className="min-h-screen bg-[url(https://cdn.basedvc.fund/webapp/bg.jpg)] bg-cover flex flex-col justify-center hero select-none tracking-[0.2em]">
             <div className="flex flex-col w-full md:max-w-[80%] md:mx-auto xl:max-w-[1200px]">
                 <div className="flex flex-col p-10 text-white font-medium md:max-w-[600px] md:justify-center">
                     <div className={`font-accent ml-1 text-xs`}>INVEST GROUND FLOOR</div>

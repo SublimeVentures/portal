@@ -1,6 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
+import MobileMenu from "./MobileMenu";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
@@ -10,7 +11,6 @@ import { Avatar } from "@/v2/components/ui/avatar";
 import { shortenAddress } from "@/v2/lib/helpers";
 import PAGE from "@/routes";
 import { cn } from "@/lib/cn";
-import MobileMenu from "./MobileMenu";
 
 const renderLogo = (componentName) => {
     const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
@@ -25,9 +25,8 @@ export default function Header({ title, isBlockedAlert, className, session }) {
     } = useEnvironmentContext();
 
     const { components } = useTenantSpecificData();
-    
-    const handleLogout = () => environmentCleanup();
 
+    const handleLogout = () => environmentCleanup();
     return (
         <header className={cn("flex justify-between shrink-0", className)}>
             <div className="flex justify-between items-center w-full h-max text-white">
@@ -36,7 +35,6 @@ export default function Header({ title, isBlockedAlert, className, session }) {
                         <div className="flex items-center">{renderLogo(components.logo)}</div>
                     </Link>
                 </div>
-
                 <div className="hidden items-baseline lg:flex">
                     {title && (
                         <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground select-none">
@@ -44,23 +42,20 @@ export default function Header({ title, isBlockedAlert, className, session }) {
                         </h2>
                     )}
                 </div>
-
                 <div className="flex items-center gap-4 justify-self-end">
                     <div className="hidden items-center gap-4 md:flex select-none">
                         <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
-                        <Avatar className="bg-white size-13 pointer-events-none" session={session} />
+                        <Avatar className="size-13 pointer-events-none" session={session} />
                         <div className="mx-2 h-6 w-0.5 bg-foreground" />
                     </div>
-
                     <NotificationMenu />
                     <ChainSwitch />
                     <Button className="hidden lg:block" variant="secondary" onClick={handleLogout}>
                         Logout
                     </Button>
-
                     <MobileMenu isBlockedAlert={isBlockedAlert} />
                 </div>
             </div>
         </header>
     );
-};
+}
