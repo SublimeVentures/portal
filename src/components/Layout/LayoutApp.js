@@ -11,11 +11,12 @@ export default function LayoutApp({ children }) {
     const { currencyStaking, activeCurrencyStaking } = useEnvironmentContext();
     const stakingEnabled = children.props?.session.stakingEnabled;
     const isStaked = children.props?.session.isStaked;
+    const stakedOn = children.props?.session.stakedOn;
     const stakingCurrency = activeCurrencyStaking ? activeCurrencyStaking : currencyStaking[0];
     const { account } = useEnvironmentContext();
 
     const isBlockedAlert = stakingEnabled && !isStaked;
-    const isDifferentAccount = !isBlockedAlert && account.address !== children.props?.session.stakedOn;
+    const isDifferentAccount = !isBlockedAlert && !!stakedOn && account.address !== stakedOn;
 
     const BlockedAlert = () => (
         <div className="fixed top-0 flex items-center justify-center bg-app-error uppercase text-white font-accent z-[100000] w-full text-center px-5 h-[var(--alertHeight)]">
