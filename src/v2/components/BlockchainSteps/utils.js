@@ -15,6 +15,7 @@ import abi_upgrade_based from "../../../../abi/UpgradeFacet.json";
 import abi_mb_generic from "../../../../abi/genericMysteryBox.abi.json";
 import abi_mb_based from "../../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../../abi/neotokyoMysteryBox.abi.json";
+import abi_reassign from "../../../../abi/ReasignFacet.abi.json";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
@@ -34,6 +35,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REASSIGN: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -412,6 +414,38 @@ export const getMethod = (type, token, params) => {
                               params.prerequisite.signature,
                           ],
                           abi: abi_claim,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
+        case METHOD.REASSIGN: {
+            const isValid =
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.offer) &&
+                validNumber(params?.expire) &&
+                validAddress(params?.currency) &&
+                validAddress(params?.to);
+
+            console.log("validation REASSIGN", params, isValid, validHash(params?.prerequisite?.signature));
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "reassign",
+                          inputs: [
+                              params?.to,
+                              params?.currency,
+                              params?.offer,
+                              params?.expire,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_reassign,
                           confirmations: 2,
                           contract: params.contract,
                       },

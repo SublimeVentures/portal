@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useForm } from "react-hook-form";
-import { useSimulateContract } from "wagmi";
-import abi from "../../../../../../abi/ReasignFacet.abi.json";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
 import { METHOD } from "@/components/BlockchainSteps/utils";
@@ -11,11 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import useGetToken from "@/lib/hooks/useGetToken";
+import BlockchainSteps from "@/v2/components/BlockchainSteps";
+import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { Input } from "@/v2/components/ui/input";
 
 export default function ReassignModal(props) {
-    const [start, setStart] = useState(false);
     const {
         useGetReassignPrice,
         currency,
@@ -46,9 +45,12 @@ export default function ReassignModal(props) {
 
     const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract);
 
+    console.log(Number(ReassignPrice));
+
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
+                liquidity: true,
                 network: true,
                 transaction: true,
             },
@@ -63,32 +65,16 @@ export default function ReassignModal(props) {
                 prerequisiteTextSuccess: "Hash obtained",
                 prerequisiteTextError: "Invalid transaction data",
                 transactionType: METHOD.REASSIGN,
+                liquidity: Number(ReassignPrice),
                 inputs: ["0xbcda58cc5ca1A3caE1298991d9C067fdA111E165", currency.contract, 12],
             },
             token,
             setTransactionSuccessful,
         };
-    }, [account]);
+    }, [chainId, account.address, offerId, ReassignPrice]);
 
-    // const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
-    //     data: blockchainInteractionData,
-    // });
-
-    const { query = {}, ...params } = blockchainInteractionData;
-    const { contract, scope, inputs } = params;
-
-    const simulate = useSimulateContract({
-        functionName: name,
-        address: contract,
-        args: inputs,
-        abi: abi,
-        chainId: chainId,
-        scopeKey: scope,
-        account: account.address,
-        query: {
-            enabled: true,
-            gcTime: 0,
-        },
+    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+        data: blockchainInteractionData,
     });
 
     return (
@@ -159,13 +145,10 @@ export default function ReassignModal(props) {
                             )}
                         />
                     </Form>
-                    {/*<dl className="definition-section ">*/}
-                    {/*    <BlockchainSteps {...getBlockchainStepsProps()} />*/}
-                    {/*</dl>*/}
-                    {/*<BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />*/}
-                    <button type="button" onClick={() => setStart(true)}>
-                        Mock Reassign
-                    </button>
+                    <dl className="definition-section ">
+                        <BlockchainSteps {...getBlockchainStepsProps()} />
+                    </dl>
+                    <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
                 </DialogContent>
             </Dialog>
             <button
