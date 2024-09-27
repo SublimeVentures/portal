@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 
@@ -26,15 +27,20 @@ import { queryClient } from "@/lib/queryCache";
 import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
+// import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 
 export default function TakeOfferModal({ offerDetails, className }) {
+    const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
+
     const { currentMarket } = useMarket();
     const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
 
     const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
         useBlockchainTakeOfferTransaction({ offerDetails });
-    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+
+    const { all, resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [isTakeModalOpen],
     });
 
     if (!currentMarket?.name || !offerDetails?.currency) return;
@@ -55,7 +61,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
     };
 
     return (
-        <Sheet>
+        <Sheet open={isTakeModalOpen} onOpenChange={setIsTakeModalOpen}>
             <SheetTrigger asChild>
                 <Button variant="accent" className={className}>
                     Take
@@ -155,6 +161,8 @@ export default function TakeOfferModal({ offerDetails, className }) {
                             </div>
                         </div>
                     </div>
+
+                    {/* <Test {...all} /> */}
                 </SheetBody>
 
                 <SheetFooter>
@@ -172,4 +180,4 @@ export default function TakeOfferModal({ offerDetails, className }) {
             </SheetContent>
         </Sheet>
     );
-}
+};

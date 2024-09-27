@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 
 import TransactionSuccess from "../TransactionSucces";
@@ -25,6 +26,8 @@ import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 
 export default function CancelOfferModal({ offerDetails, className }) {
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
     const { currentMarket } = useMarket();
     const { network, cdn } = useEnvironmentContext();
 
@@ -37,6 +40,7 @@ export default function CancelOfferModal({ offerDetails, className }) {
 
     const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [isCancelModalOpen],
     });
 
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString();
@@ -55,7 +59,7 @@ export default function CancelOfferModal({ offerDetails, className }) {
     };
 
     return (
-        <Sheet>
+        <Sheet open={isCancelModalOpen} onOpenChange={setIsCancelModalOpen}>
             <SheetTrigger asChild>
                 <Button variant="outline" className={className}>
                     Cancel
@@ -147,4 +151,4 @@ export default function CancelOfferModal({ offerDetails, className }) {
             </SheetContent>
         </Sheet>
     );
-}
+};

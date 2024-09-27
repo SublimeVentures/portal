@@ -18,4 +18,4 @@ export const STEPS_ACTIONS = {
     RESET: "RESET",
     ERROR: "ERROR",
     SUCCESS: "SUCCESS",
-}
+};

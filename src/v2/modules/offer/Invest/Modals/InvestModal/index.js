@@ -84,8 +84,9 @@ const InvestModalContent = ({ open, investmentAmount, currency, handleCurrencyCh
         };
     }, [amountNumber, account, token?.contract, bookingDetails?.code, open, activeInvestContract]);
 
-    const { all, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [open],
     });
     
     return (

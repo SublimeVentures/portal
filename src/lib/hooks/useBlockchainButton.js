@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { STEP_STATE } from "@/components/BlockchainSteps/enums";
 
 function useBlockchainButton(steps, state, params, extraState) {
@@ -6,6 +7,7 @@ function useBlockchainButton(steps, state, params, extraState) {
 
     const processButtonState = () => {
         console.log("BIX :: BUTTON STATE", steps, extraState);
+
         if (params.buttonCustomLock) {
             return {
                 text: params.buttonCustomText,
@@ -51,9 +53,8 @@ function useBlockchainButton(steps, state, params, extraState) {
 
     useEffect(() => {
         const buttonState = processButtonState();
-        console.log("BIX :: BUTTON STATE", buttonState);
 
-        if (buttonState.lock) {
+        if (buttonState.lock || state.status === STEP_STATE.PENDING) {
             setResult(buttonState);
         } else {
             const timeoutId = setTimeout(() => {
@@ -88,6 +89,6 @@ function useBlockchainButton(steps, state, params, extraState) {
         buttonLock: result.lock,
         buttonText: result.text,
     };
-}
+};
 
 export default useBlockchainButton;
