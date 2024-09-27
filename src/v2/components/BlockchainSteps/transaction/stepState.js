@@ -5,7 +5,7 @@ export const stepTransaction = (state, data) => {
     let result = {};
 
     if (data.transaction_isReady) {
-        result = handlePending({ 
+        result = handleProcessing({ 
             content: "Preparing transaction", 
             text: "We are setting up your transaction. Please wait a moment."
         });
@@ -28,7 +28,7 @@ export const stepTransaction = (state, data) => {
         };
     } else {
         result = handlePending();
-    }
+    };
 
     console.log("BIX :: TRANSITION :: step state result", result, state, data);
 

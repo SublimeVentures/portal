@@ -29,11 +29,11 @@ export default function useLiquidityStep(state, data, dispatch) {
 
     return {
         stepLiquidity: getStepState(STEPS.LIQUIDITY, state.liquidity, {
+            ...liquidity_balance,
             token,
             params,
             liquidity_isFinished,
             liquidity_isReady,
-            liquidity_balance,
         }),
     };
 };

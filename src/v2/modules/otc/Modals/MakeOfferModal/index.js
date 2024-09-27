@@ -23,6 +23,8 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { ExternalLinks } from "@/routes";
 
+// import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
+
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
     const {
         transactionSuccessful,
@@ -32,7 +34,7 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
         getOfferTabsProps,
         getOfferFormProps,
     } = content;
-    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
+    const { all, getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
 
     return (
         <SheetContent className="h-full flex flex-col rounded-t-lg">
@@ -57,6 +59,8 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                         </div>
                     )}
                 </div>
+
+                {/* <Test {...all}/> */}
             </SheetBody>
 
             <SheetFooter>
@@ -85,24 +89,18 @@ export default function MakeOfferModal() {
     const { selectedTab, blockchainInteractionDataSELL, blockchainInteractionDataBUY, ...content } =
         useCreateOfferModalLogic(isMakeModalOpen, setIsMakeModalOpen);
 
-    const { resetState: resetSellState, ...buyBlockchainStep } = useBlockchainStep({
+    const { ...buyBlockchainStep } = useBlockchainStep({
         data: blockchainInteractionDataSELL,
+        deps: [selectedTab, isMakeModalOpen],
     });
-    const { resetState: resetBuyState, ...sellBlockchainStep } = useBlockchainStep({
+
+    const { ...sellBlockchainStep } = useBlockchainStep({
         data: blockchainInteractionDataBUY,
+        deps: [selectedTab, isMakeModalOpen],
     });
-
-    const handleModalChange = (isOpen) => {
-        if (!isOpen) {
-            resetBuyState();
-            resetSellState();
-        }
-
-        setIsMakeModalOpen(isOpen);
-    };
 
     return (
-        <Sheet open={isMakeModalOpen} onOpenChange={handleModalChange}>
+        <Sheet open={isMakeModalOpen} onOpenChange={setIsMakeModalOpen}>
             <SheetTrigger asChild>
                 <Button>Create Offer</Button>
             </SheetTrigger>

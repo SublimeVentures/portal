@@ -61,7 +61,7 @@ export default function useAllowanceStep(state, data, dispatch) {
     
     const allowance_isFinished =
         (!allowance_mustRun && !state.allowance.executing && params.allowance <= allowance_current?.allowance) ||
-        (state.allowance.executing && allowance_set?.confirm?.data && params.allowance <= allowance_current?.allowance);
+        (state.allowance.executing && !!allowance_set?.confirm?.data && params.allowance <= allowance_current?.allowance);
 
     useEffect(() => {
         if (allowance_shouldRun) {

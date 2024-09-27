@@ -30,27 +30,20 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         staleTime: 3 * 60 * 1000,
     });
 
-    const userAllocation = vault && currentMarket ? vault.find((el) => el.offerId === currentMarket.offerId) : null;
-    const allocationMax = userAllocation?.allocation;
+    const [selectedTab, setSelectedTab] = useState(TABS.BUY);
+    const dropdownCurrencyOptions = getCurrencySettlement();
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+    const [multiplier, setMultiplier] = useState(DEFAULT_VALUES.MULTIPLIER);
 
     const amountStorageKey = `otc.${currentMarket?.offerId}.amount`;
     const priceStorageKey = `otc.${currentMarket?.offerId}.price`;
     const currencyStorageKey = `otc.${currentMarket?.offerId}.currency`;
 
-    const [selectedTab, setSelectedTab] = useState(TABS.BUY);
-    const [selectedCurrency, setSelectedCurrency] = useState(null);
-    const dropdownCurrencyOptions = getCurrencySettlement();
-
-    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
-
-    const [statusAmount, setStatusAmount] = useState(false);
-    const [statusPrice, setStatusPrice] = useState(false);
-    const [multiplier, setMultiplier] = useState(DEFAULT_VALUES.MULTIPLIER);
-
     const multiplierParsed = multiplier.toFixed(2);
-
     const isSeller = selectedTab === TABS.SELL;
     const textCopy = isSeller ? "sell" : "buy";
+    const userAllocation = vault && currentMarket ? vault.find((el) => el.offerId === currentMarket.offerId) : null;
+    const allocationMax = userAllocation?.allocation;
 
     const formSchema = z.object({
         currency: z.string(),
@@ -74,13 +67,13 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         defaultValues: {
             amount: getExpireData(amountStorageKey) ?? 10,
             price: getExpireData(priceStorageKey) ?? 10,
-            currency: getExpireData(currencyStorageKey)?.symbol ?? dropdownCurrencyOptions[0].symbol,
+            currency: "",
         },
     });
 
     const statusCheck = !form.formState.isValid;
-
     const [amount, price, currency] = watch(["amount", "price", "currency"]);
+    const selectedCurrency = dropdownCurrencyOptions.find(c => c.symbol === currency);
 
     const calcMulti = useCallback(
         (price_) => setMultiplier(Number(Number(price_) / Number(amount).toFixed(2))),
@@ -102,11 +95,8 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             const amount = +evt.target.value;
             setExpireData(amountStorageKey, amount, new Date().getTime() + millisecondsInHour);
             if (amount) calcPrice(multiplier, amount);
-            setStatusAmount(true);
 
-            if (callback) {
-                return callback(amount);
-            }
+            if (callback) return callback(amount);
         },
         [setExpireData, amountStorageKey, calcPrice, multiplier],
     );
@@ -116,11 +106,8 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             const price = +evt.target.value;
             setExpireData(priceStorageKey, price, new Date().getTime() + millisecondsInHour);
             if (price && amount) calcMulti(price);
-            setStatusPrice(true);
 
-            if (callback) {
-                return callback(price);
-            }
+            if (callback) return callback(price);
         },
         [setExpireData, priceStorageKey, calcMulti, amount],
     );
@@ -170,6 +157,16 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         if (!isModalOpen) closeModal();
     }, [isModalOpen]);
 
+    useEffect(() => {
+        const cachedCurrency = getExpireData(currencyStorageKey);
+        const value = cachedCurrency || dropdownCurrencyOptions[0].symbol || "";
+        const isValidCurrency = value && value !== "...";
+    
+        if (!currency & isValidCurrency) {
+            setValue("currency", value);
+        }
+    }, [dropdownCurrencyOptions]);
+
     const customLocks = () => {
         if (statusCheck) return { lock: true, text: "Bad parameters" };
         else return { lock: false };
@@ -186,30 +183,6 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
 
     const { lock, text } = customLocks();
     const token = useGetToken(selectedCurrency?.contract);
-
-    const blockchainInteractionDataSELL = useMemo(() => {
-        console.log("BIX :: BUTTON STATE locked - refresh");
-        return {
-            steps: {
-                transaction: true,
-            },
-            params: {
-                price: Number(price),
-                amount: Number(amount),
-                account: account.address,
-                spender: activeOtcContract,
-                contract: activeOtcContract,
-                buttonCustomText: text,
-                buttonCustomLock: lock,
-                buttonText: "Make Offer",
-                market: currentMarket,
-                isSeller: true,
-                transactionType: METHOD.OTC_MAKE,
-            },
-            token,
-            setTransactionSuccessful,
-        };
-    }, [selectedCurrency?.contract, price, amount, account, activeOtcContract, isModalOpen, text]);
 
     const blockchainInteractionDataBUY = useMemo(() => {
         console.log("BIX :: BUTTON STATE locked - refresh");
@@ -236,6 +209,30 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
                 prerequisiteTextProcessing: "Generating hash",
                 prerequisiteTextSuccess: "Hash obtained",
                 prerequisiteTextError: "Couldn't generate hash",
+                transactionType: METHOD.OTC_MAKE,
+            },
+            token,
+            setTransactionSuccessful,
+        };
+    }, [selectedCurrency?.contract, price, amount, token, account, activeOtcContract, isModalOpen, text]);
+
+    const blockchainInteractionDataSELL = useMemo(() => {
+        console.log("BIX :: BUTTON STATE locked - refresh");
+        return {
+            steps: {
+                transaction: true,
+            },
+            params: {
+                price: Number(price),
+                amount: Number(amount),
+                account: account.address,
+                spender: activeOtcContract,
+                contract: activeOtcContract,
+                buttonCustomText: text,
+                buttonCustomLock: lock,
+                buttonText: "Make Offer",
+                market: currentMarket,
+                isSeller: true,
                 transactionType: METHOD.OTC_MAKE,
             },
             token,
@@ -320,4 +317,4 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps],
         ),
     };
-}
+};
