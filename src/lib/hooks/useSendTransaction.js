@@ -143,13 +143,6 @@ function useSendTransaction(isEnabled, method, chainId, account) {
         },
     });
 
-    if(gas?.data?.gas){
-        console.debug('------')
-        gas?.data?.gas && console.debug('gas::', gas?.data?.gas)
-        gas?.data?.maxFeePerGas && console.debug('maxFeePerGas::', gas?.data?.maxFeePerGas)
-        gas?.data?.maxPriorityFeePerGas && console.debug('maxPriorityFeePerGas::', gas?.data?.maxPriorityFeePerGas)
-    }
-
     const simulate = useSimulateContract({
         functionName: name,
         address: contract,
