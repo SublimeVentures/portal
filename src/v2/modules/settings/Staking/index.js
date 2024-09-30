@@ -54,7 +54,7 @@ export default function Staking({ session }) {
     return (
         <Card
             variant="none"
-            className="p-6 2xl:px-11 2xl:py-9 flex flex-col bg-settings-gradient 2xl:flex-row w-full select-none cursor-auto"
+            className="p-6 w-full flex flex-col bg-settings-gradient select-none cursor-auto 2xl:px-11 2xl:py-9 2xl:flex-row"
         >
             <div className="flex items-center gap-4 2xl:hidden mb-4">
                 <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-foreground">
@@ -62,6 +62,7 @@ export default function Staking({ session }) {
                 </CardTitle>
                 {isNew ? <Badge variant="warning">New</Badge> : null}
             </div>
+
             <div className="p-5 2xl:px-9 2xl:py-6 2xl:flex w-full gap-7 bg-white/[.02] rounded mb-4 xl:mb-0">
                 <div className="aspect-square h-full hidden 2xl:block shrink-0">
                     <Image
@@ -72,14 +73,14 @@ export default function Staking({ session }) {
                         className="rounded w-full h-full pointer-events-none"
                     />
                 </div>
-                <div className="flex flex-col justify-center w-full">
-                    <div className="flex items-center gap-4">
+                <div className="w-full flex flex-col justify-center">
+                    <div className="mb-4 flex items-center gap-4 w-full xl:mb-0">
                         <Image
                             src={session.img ?? session.img_fallback}
                             alt=""
-                            width={87}
-                            height={87}
-                            className="shrink-0 rounded 2xl:hidden mb-4 2xl:mb-0 pointer-events-none"
+                            width={100}
+                            height={100}
+                            className="shrink-0 rounded 2xl:hidden pointer-events-none"
                         />
 
                         <div>

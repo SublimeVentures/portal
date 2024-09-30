@@ -69,7 +69,10 @@ export default function StakingModal({ userId, staking = {} }) {
         };
     }, [stakingCurrency?.contract, activeDiamond, stakeSize, isOpen]);
     
-    const { getBlockchainStepsProps, getBlockchainStepButtonProps } = useBlockchainStep({ data: blockchainInteractionData, deps: [isOpen] });
+    const { getBlockchainStepsProps, getBlockchainStepButtonProps } = useBlockchainStep({
+        data: blockchainInteractionData,
+        deps: [isOpen],
+    });
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
