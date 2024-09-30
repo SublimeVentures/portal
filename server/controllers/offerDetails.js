@@ -1,7 +1,7 @@
+const { serializeError } = require("serialize-error");
 const { getOfferDetails } = require("../queries/offers.query");
 const { getOfferRaise } = require("../queries/invest.query");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
 async function getParamOfferDetails(user, req) {
     const { partnerId, tenantId } = user;
@@ -57,7 +57,7 @@ async function getOfferAllocation(req) {
             isRefund: allocation.isRefund,
         };
     } catch (error) {
-        logger.error(`Can't fetch offerFundraise`, {
+        logger.error(`Can't fetch offerLimit`, {
             error: serializeError(error),
             params: req.params,
         });

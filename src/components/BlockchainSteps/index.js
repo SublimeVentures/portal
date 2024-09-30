@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import debounce from "lodash.debounce";
 import { useChainId } from "wagmi";
 import BlockchainStep from "@/components/BlockchainSteps/BlockchainStep";
@@ -53,7 +53,13 @@ const BlockchainSteps = ({ data }) => {
                 },
             });
         }
-    }, [network_current.isValid, network_current?.network, network_shouldRun]);
+    }, [
+        network_current.chainId,
+        network_current.isValid,
+        network_current.network,
+        network_isFinished,
+        network_shouldRun,
+    ]);
 
     const liquidity_isReady = steps.liquidity && (steps.network ? state.network.isFinished : !state.liquidity.lock);
     const liquidity_shouldRun = !state.liquidity.isFinished && liquidity_isReady;
@@ -117,7 +123,6 @@ const BlockchainSteps = ({ data }) => {
             dispatch({ type: "SET_ALLOWANCE_SET", payload: true });
         }
     }, [allowance_needIncrease]);
-
     const allowance_set_reset = useSendTransaction(
         allowance_needReset,
         allowance_methodReset.method,
@@ -301,7 +306,7 @@ const BlockchainSteps = ({ data }) => {
     }, [stepNetwork.state, stepLiquidity.state, stepAllowance.state, stepPrerequisite.state, stepTransaction.state]);
 
     useEffect(() => {
-        if (!!transaction_isFinished) {
+        if (transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(transaction_isFinished);
         }

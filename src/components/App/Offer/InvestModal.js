@@ -19,7 +19,8 @@ const { externalLinks } = getTenantConfig();
 
 export default function InvestModal({ model, setter, investModalProps }) {
     const router = useRouter();
-    const { investmentAmount, offer, selectedCurrency, bookingExpire, afterInvestmentCleanup } = investModalProps;
+    const { investmentAmount, offer, selectedCurrency, bookingExpire, afterInvestmentCleanup, partnerId } =
+        investModalProps;
 
     const { account, activeInvestContract } = useEnvironmentContext();
 
@@ -64,6 +65,7 @@ export default function InvestModal({ model, setter, investModalProps }) {
                 account: account.address,
                 booking: bookingDetails,
                 offerId: offer.id,
+                partnerId,
                 spender: activeInvestContract,
                 buttonText: "Transfer funds",
                 prerequisiteTextWaiting: "Generate hash",

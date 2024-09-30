@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import GenericModal from "@/components/Modal/GenericModal";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import { METHOD } from "@/components/BlockchainSteps/utils";
@@ -11,7 +12,7 @@ const { staking } = getTenantConfig();
 
 const { NAME } = getTenantConfig().seo;
 
-export default function StakingModal({ model, setter, stakingModalProps }) {
+export default function StakingModal({ model, onClose, onSuccessClose, stakingModalProps }) {
     const { stakeReq, isS1, stakeMulti, isStaked, stakingCurrency } = stakingModalProps;
     const { account, activeDiamond } = useEnvironmentContext();
 
@@ -19,7 +20,11 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const closeModal = () => {
-        setter();
+        if (transactionSuccessful) {
+            onSuccessClose();
+        } else {
+            onClose();
+        }
         setTimeout(() => {
             setTransactionSuccessful(false);
         }, 400);
@@ -120,3 +125,10 @@ export default function StakingModal({ model, setter, stakingModalProps }) {
 
     return <GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} />;
 }
+
+StakingModal.propTypes = {
+    model: PropTypes.bool,
+    onClose: PropTypes.func,
+    onSuccessClose: PropTypes.func,
+    stakingModalProps: PropTypes.object,
+};

@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const logger = require("../../src/lib/logger");
 const { serializeError } = require("serialize-error");
-const { envCache } = require("../controllers/envionment");
 const axios = require("axios");
-const { verifyID } = require("../../src/lib/authHelpers");
+const logger = require("../../src/lib/logger");
+const { envCache } = require("../controllers/envionment");
 const { buildCookie, authTokenName, refreshTokenName } = require("../../src/lib/authHelpers");
 
 //GET USER ENVIRONMENT DATA
 router.get("/", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
+    const { user } = req;
 
     try {
         const environment = envCache.get(`${user.tenantId}:${user.partnerId}`);

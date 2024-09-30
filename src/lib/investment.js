@@ -9,7 +9,7 @@ function roundAmount(amount) {
     return Math.floor(amount / MIN_DIVISIBLE) * MIN_DIVISIBLE;
 }
 
-function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedUsed) {
+function getUserAllocationMax(account, offer, upgradeIncreasedUsed) {
     let allocationUser_base, allocationUser_max, allocationUser_min;
     const allocation_min = offer?.alloMin || MIN_ALLOCATION;
     if (offer.isLaunchpad) {
@@ -25,7 +25,7 @@ function getUserAllocationMax(account, offer, allocationOffer, upgradeIncreasedU
                 break;
             }
             case TENANT.NeoTokyo: {
-                allocationUser_base = account.multi * allocationOffer?.alloTotal + account.allocationBonus;
+                allocationUser_base = account.multi * offer?.alloTotal + account.allocationBonus;
                 if (allocationUser_base < allocation_min) allocationUser_base = allocation_min;
                 if (offer?.alloMax && allocationUser_base > offer?.alloMax) allocationUser_base = offer.alloMax;
                 allocationUser_min = allocation_min;
@@ -121,7 +121,6 @@ function allocationUserBuild(params) {
     const { allocationUser_base, allocationUser_max, allocationUser_min } = getUserAllocationMax(
         params.account,
         params.offer,
-        params.allocationOffer,
         params.upgradesUse?.increasedUsed?.amount || 0,
     );
     params.output.allocationUser_guaranteed = getUserAllocationGuaranteed(params.upgradesUse?.guaranteedUsed);
