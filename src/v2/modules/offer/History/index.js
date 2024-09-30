@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
+import EmptyState from "../EmptyState";
+import CancelReservationModal from "./CancelReservationModal";
 import { cn } from "@/lib/cn";
 import { fetchOfferParticipants } from "@/fetchers/offer.fetcher";
 import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 import { formatCurrency } from "@/v2/helpers/formatters";
-import EmptyState from "../EmptyState";
-
-import CancelReservationModal from "./CancelReservationModal";
+import { offersKeys } from "@/v2/constants";
 
 const offerParticipantsOptions = (offerId, config) => ({
-    queryKey: ["offerParticipants", offerId],
+    queryKey: offersKeys.offerParticipants(offerId),
     queryFn: () => fetchOfferParticipants(offerId, config),
 });
 
@@ -44,7 +44,7 @@ export default function History({ className }) {
                     </div>
                 )}
 
-                {(participants.length > 0 && !isLoading) && (
+                {participants.length > 0 && !isLoading && (
                     <ul className="-my-2 -mr-2 pr-2 max-h-96 overflow-y-auto md:max-h-44">
                         {participants.map((participant) => (
                             <li key={participant.id} className="bg-white/[.04] gap-x-4 px-4 md:px-8 py-4 flex my-2">
@@ -69,9 +69,13 @@ export default function History({ className }) {
                                         descClassName="order-4 md:order-7"
                                     >
                                         {participant.isConfirmed && <span className="text-success">Confirmed</span>}
-                                        {participant.isConfirmedInitial && !participant.isConfirmed && ( <span className="text-yellow-500">Internal check</span>)}
+                                        {participant.isConfirmedInitial && !participant.isConfirmed && (
+                                            <span className="text-yellow-500">Internal check</span>
+                                        )}
                                         {participant.isExpired && <span className="text-error">Expired</span>}
-                                        {!participant.isConfirmedInitial && !participant.isConfirmed && !participant.isExpired && <span className="text-accent">Booked</span>}
+                                        {!participant.isConfirmedInitial &&
+                                            !participant.isConfirmed &&
+                                            !participant.isExpired && <span className="text-accent">Booked</span>}
                                     </Definition>
                                     <Definition
                                         term="Amount"
@@ -92,7 +96,7 @@ export default function History({ className }) {
                         ))}
                     </ul>
                 )}
-                
+
                 {participants.length === 0 && !isLoading && (
                     <EmptyState
                         heading="Investment History Unavailable"
@@ -102,4 +106,4 @@ export default function History({ className }) {
             </div>
         </div>
     );
-};
+}

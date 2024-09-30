@@ -73,7 +73,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
 
     const statusCheck = !form.formState.isValid;
     const [amount, price, currency] = watch(["amount", "price", "currency"]);
-    const selectedCurrency = dropdownCurrencyOptions.find(c => c.symbol === currency);
+    const selectedCurrency = dropdownCurrencyOptions.find((c) => c.symbol === currency);
 
     const calcMulti = useCallback(
         (price_) => setMultiplier(Number(Number(price_) / Number(amount).toFixed(2))),
@@ -161,7 +161,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         const cachedCurrency = getExpireData(currencyStorageKey);
         const value = cachedCurrency || dropdownCurrencyOptions[0].symbol || "";
         const isValidCurrency = value && value !== "...";
-    
+
         if (!currency & isValidCurrency) {
             setValue("currency", value);
         }
@@ -238,7 +238,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             token,
             setTransactionSuccessful,
         };
-    }, [selectedCurrency?.contract, price, amount, account, activeOtcContract, isModalOpen, text]);
+    }, [selectedCurrency?.contract, price, amount, token, account, activeOtcContract, isModalOpen, text]);
 
     const getOfferFieldProps = useCallback(
         (name) => {
@@ -286,6 +286,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
         transactionSuccessful,
         currentMarket,
         textCopy,
+        amount,
         selectedTab,
         blockchainInteractionDataSELL,
         blockchainInteractionDataBUY,
@@ -317,4 +318,4 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
             [form, cdn, multiplierParsed, currentMarket.name, currentMarket.slug, getOfferFieldProps],
         ),
     };
-};
+}

@@ -24,11 +24,11 @@ import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStep
 import { ExternalLinks } from "@/routes";
 
 // import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
-
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
     const {
         transactionSuccessful,
         textCopy,
+        amount,
         currentMarket,
         getSelectedMarketProps,
         getOfferTabsProps,
@@ -44,22 +44,23 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
             </SheetHeader>
 
             <SheetBody>
-                <div className="h-full my-4 sm:mr-4 block-scrollbar sm:overflow-y-auto">
+                <div className="block-scrollbar sm:overflow-y-auto">
                     {transactionSuccessful ? (
                         <MakeTransactionSuccess market={currentMarket.name} textCopy={textCopy} amount={amount} />
                     ) : (
-                        <div className="mx-4 sm:px-10">
-                            <div className="mb-2 py-4 px-2 flex flex-col gap-4 bg-foreground/[.02] rounded">
-                                <SelectedMarket {...getSelectedMarketProps()} />
-                                <OfferTabs {...getOfferTabsProps()} />
-                                <OfferForm {...getOfferFormProps()} />
-                            </div>
+                        <div className="h-full my-4 sm:mr-4">
+                            <div className="mx-4 sm:px-10">
+                                <div className="mb-2 py-4 px-2 flex flex-col gap-4 bg-foreground/[.02] rounded">
+                                    <SelectedMarket {...getSelectedMarketProps()} />
+                                    <OfferTabs {...getOfferTabsProps()} />
+                                    <OfferForm {...getOfferFormProps()} />
+                                </div>
 
-                            <BlockchainSteps {...getBlockchainStepsProps()} />
+                                <BlockchainSteps {...getBlockchainStepsProps()} />
+                            </div>
                         </div>
                     )}
                 </div>
-
                 {/* <Test {...all}/> */}
             </SheetBody>
 

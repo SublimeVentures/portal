@@ -64,7 +64,7 @@ export default function AddWalletForm({ wallets, networkList }) {
 
             await addUserWallet(values.address, values.network);
             setStatus(FormStatusEnum.SUCCESS);
-            queryClient.invalidateQueries([settingsKeys.wallets]);
+            queryClient.invalidateQueries(settingsKeys.wallets);
         } catch (error) {
             setErrorMessage(error.message ?? "An unknown error occurred");
             setStatus(FormStatusEnum.ERROR);

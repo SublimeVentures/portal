@@ -17,7 +17,7 @@ export const useOfferStatus = (offer) => {
 };
 
 export const offerProgressQueryOptions = (id) => ({
-    queryKey: offersKeys.queryOfferProgress(id),
+    queryKey: offersKeys.offerProgress(id),
     queryFn: () => fetchOfferProgress(id),
 });
 
@@ -56,4 +56,4 @@ export default function useSingleOfferLogic(offer) {
             [name, slug, genre, ticker, state, status, progress, timestamp, formatKey],
         ),
     };
-};
+}
