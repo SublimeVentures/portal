@@ -2,9 +2,8 @@ import { saveTransaction } from "@/fetchers/otc.fetcher";
 
 export const blockchainPrerequisite = async (params) => {
     const { market, price, amount, isSeller, account, network } = params;
+    const transaction = await saveTransaction(market.id, network?.chainId, price, amount, isSeller, account);
 
-    const transaction = await saveTransaction(market.offerId, network?.chainId, price, amount, isSeller, account);
-    
     if (transaction.ok) {
         return {
             ok: true,
@@ -15,5 +14,5 @@ export const blockchainPrerequisite = async (params) => {
             ok: false,
             error: "Error generating hash",
         };
-    };
+    }
 };

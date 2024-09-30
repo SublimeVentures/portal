@@ -4,7 +4,7 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 function useGetNetwork(isEnabled, requiredNetwork = 0) {
     const { network } = useEnvironmentContext();
     const isValid = network?.chainId === requiredNetwork;
-    
+
     console.log("BIX :: NETWORK_CHECK - render", isValid, network?.chainId, requiredNetwork);
     useEffect(() => {
         if (!isValid && isEnabled) {
@@ -21,6 +21,6 @@ function useGetNetwork(isEnabled, requiredNetwork = 0) {
         isLoading: network?.isLoading,
         error: network?.error,
     };
-};
+}
 
 export default useGetNetwork;

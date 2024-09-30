@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash.debounce";
 import moment from "moment";
 
+import useInvestContext from "../useInvestContext";
+import { getInvestSchema } from "./utils";
 import { queryClient } from "@/lib/queryCache";
 import { buttonInvestState } from "@/lib/investment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
@@ -13,19 +15,18 @@ import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
-import useInvestContext from "../useInvestContext";
-import { getInvestSchema } from "./utils";
 import { millisecondsInHour } from "@/constants/datetime";
-  
+import { offersKeys } from "@/v2/constants";
+
 // @TODO - Tax amount depends of tier - logic not ready yet.
 export default function useInvest(session) {
-    const { network, getCurrencySettlement } = useEnvironmentContext();    
+    const { network, getCurrencySettlement } = useEnvironmentContext();
     const dropdownCurrencyOptions = getCurrencySettlement();
     const { phaseCurrent } = usePhaseInvestment();
-    
+
     const { getSavedBooking, setBooking, clearBooking } = useInvestContext();
     const { getExpireData, setExpireData } = useLocalStorage();
-    
+
     const { data: offer } = useOfferDetailsQuery();
     const { data: allocation } = useOfferAllocationQuery();
     const { data: userAllocation } = useUserAllocationQuery();
@@ -51,29 +52,36 @@ export default function useInvest(session) {
 
     const amountStorageKey = `offer.${offer.id}.amount`;
     const currencyStorageKey = `offer.${offer.id}.currency`;
-    
+
     const isBooked = allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0;
     const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
-    const { isBtnDisabled, btnText } = buttonInvestState( allocation || {}, phaseCurrent, investmentAmount, !hasErrors, allocationData, isStakeLock);
+    const { isBtnDisabled, btnText } = buttonInvestState(
+        allocation || {},
+        phaseCurrent,
+        investmentAmount,
+        !hasErrors,
+        allocationData,
+        isStakeLock,
+    );
     const investmentLocked = isBtnDisabled || isStakeLock;
-    const hasAvailableFunds = (userAllocation?.invested.total - userAllocation?.invested.invested) > 0;
+    const hasAvailableFunds = userAllocation?.invested.total - userAllocation?.invested.invested > 0;
     const tax = 10;
-    const subtotal = investmentAmount - (investmentAmount * (tax / 100));
-    
+    const subtotal = investmentAmount - investmentAmount * (tax / 100);
+
     useEffect(() => {
         const cachedData = getExpireData(amountStorageKey);
         const value = cachedData ?? allocationData?.allocationUser_min ?? offer.alloMin;
-    
-        setValue("investmentAmount", value);;
+
+        setValue("investmentAmount", value);
         clearErrors();
     }, [allocationData?.allocationUser_min]);
-    
+
     useEffect(() => {
         const cachedCurrency = getExpireData(currencyStorageKey);
-    
+
         const value = cachedCurrency || dropdownCurrencyOptions[0].symbol || "";
         const isValidCurrency = value && value !== "...";
-    
+
         if (!currency & isValidCurrency) {
             setValue("currency", value);
         }
@@ -93,9 +101,8 @@ export default function useInvest(session) {
 
     const openInvestmentModal = () => {
         if (isStakeLock) return;
-        
-        queryClient.invalidateQueries(["offerParticipants"]),
-        setIsInvestModalOpen(true);
+
+        queryClient.invalidateQueries(offersKeys.offerParticipants()), setIsInvestModalOpen(true);
     };
 
     const bookingRestore = async () => {
@@ -120,7 +127,7 @@ export default function useInvest(session) {
 
         await Promise.all([
             queryClient.invalidateQueries(["userAllocation"]),
-            queryClient.invalidateQueries(["offerAllocation"]),
+            queryClient.invalidateQueries(offersKeys.offerAllocation()),
         ]);
 
         setIsLoading(false);
@@ -133,38 +140,35 @@ export default function useInvest(session) {
     };
 
     const startInvestmentProcess = async (values) => {
-        const { investmentAmount, currency } = values;         
-        const isValidInvestment = (
-            investmentAmount > 0 && 
-            allocationData.allocationUser_max > 0 && 
-            allocationData.allocationUser_min > 0 && 
-            allocationData.allocationUser_left > 0 && 
-            investmentAmount <= allocationData.allocationUser_left
-        );
+        const { investmentAmount, currency } = values;
+        const isValidInvestment =
+            investmentAmount > 0 &&
+            allocationData.allocationUser_max > 0 &&
+            allocationData.allocationUser_min > 0 &&
+            allocationData.allocationUser_left > 0 &&
+            investmentAmount <= allocationData.allocationUser_left;
 
-        const hasRemainingInvestment = (userAllocation?.invested.total - userAllocation?.invested.invested) > 0;
+        const hasRemainingInvestment = userAllocation?.invested.total - userAllocation?.invested.invested > 0;
 
         if (isValidInvestment || hasRemainingInvestment) {
             if (!isLoading) setIsLoading(true);
-            
-            const contract = dropdownCurrencyOptions.find(option => option.symbol === currency)?.contract;
+
+            const contract = dropdownCurrencyOptions.find((option) => option.symbol === currency)?.contract;
 
             const res = await fetchHash(offerId, investmentAmount, contract, network.chainId);
-        
+
             if (!res.ok) {
                 await clearBooking();
                 setErrorModalState({ open: true, code: res.code });
                 queryClient.invalidateQueries(["userAllocation"]);
-            }
-
-            else if (res.hash?.length > 5) {
+            } else if (res.hash?.length > 5) {
                 const confirmedAmount = Number(res.amount);
                 setValue("investmentAmount", confirmedAmount);
                 setBooking(res);
                 openInvestmentModal();
-            };
-        };
-        
+            }
+        }
+
         setIsLoading(false);
     };
 
@@ -180,13 +184,9 @@ export default function useInvest(session) {
             if (savedTimestamp < moment.utc().unix()) {
                 clearBooking();
                 await startInvestmentProcess(values);
-            }
-
-            else if (savedAmount === Number(investmentAmount)) {
+            } else if (savedAmount === Number(investmentAmount)) {
                 openInvestmentModal();
-            }
-            
-            else {
+            } else {
                 setRestoreModalData({ open: true, amount: savedAmount, date: savedDate });
             }
         } catch (e) {
@@ -247,12 +247,12 @@ export default function useInvest(session) {
             investmentAmount,
             bookingCreateNew,
             bookingRestore,
-            onOpenChange: () => setRestoreModalData(prevState => ({ ...prevState, open: !prevState.open })),
+            onOpenChange: () => setRestoreModalData((prevState) => ({ ...prevState, open: !prevState.open })),
         }),
         getInvestErrorModalProps: () => ({
             code: errorModalState.code,
             open: errorModalState.open,
-            onOpenChange: () => setErrorModalState(prevState => ({ open: !prevState.open, code: null })),
+            onOpenChange: () => setErrorModalState((prevState) => ({ open: !prevState.open, code: null })),
         }),
     };
-};
+}

@@ -3,7 +3,7 @@ import { useReadContract, useWatchBlocks } from "wagmi";
 import { erc20Abi } from "viem";
 import BigNumber from "bignumber.js";
 
-function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
+function useGetTokenBalance(isEnabled, token, chainId, account, liquidity, skipStep) {
     const { contract, precision } = token;
 
     const scope = `${account}_liq_${contract}`;
@@ -24,16 +24,6 @@ function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
         },
     });
 
-    // Added !isError, because when an error occurred in useReadContract, the steps got stuck in continuous
-    // refetch(), now user have to manually reset
-    useWatchBlocks({
-        enabled: !isError && isEnabled,
-        onBlock(block) {
-            console.log("BIX :: New block", block.number);
-            refetch();
-        },
-    });
-
     const balance = useMemo(() => {
         if (typeof data !== "undefined") {
             const power = new BigNumber(10).pow(precision);
@@ -42,6 +32,15 @@ function useGetTokenBalance(isEnabled, token, chainId, account, skipStep) {
         }
         return 0;
     }, [data, precision]);
+
+    // The step got stuck in continuous refetch(), added !isError and balance check so now user have to manually reset
+    useWatchBlocks({
+        enabled: !isError && isEnabled && balance > liquidity,
+        onBlock(block) {
+            console.log("BIX :: New block", block.number);
+            refetch();
+        },
+    });
 
     if (skipStep) return;
 

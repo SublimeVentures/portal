@@ -7,6 +7,8 @@ import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
+import { offersKeys } from "@/v2/constants";
+
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });
 
@@ -32,19 +34,19 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 
         try {
             await queryClient.prefetchQuery({
-                queryKey: ["offerDetails", slug],
+                queryKey: offersKeys.offerDetails(slug),
                 queryFn: () => fetchOfferDetailsSsr(slug, token),
                 cacheTime: 30 * 60 * 1000,
                 staleTime: 15 * 60 * 1000,
             });
 
-            const offer = queryClient.getQueryData(["offerDetails", slug]);
+            const offer = queryClient.getQueryData(offersKeys.offerDetails(slug));
             const offerId = offer.id;
 
             if (!offerId) throw Error("Offer not specified");
 
             await queryClient.prefetchQuery({
-                queryKey: ["offerAllocation", offerId],
+                queryKey: offersKeys.offerAllocation(offerId),
                 queryFn: () => fetchOfferAllocationSsr(offerId, token),
             });
 
@@ -54,7 +56,7 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
                 queryFn: () => fetchUserInvestmentSsr(offerId, token),
             });
 
-            const allocation = queryClient.getQueryData(["offerAllocation", offerId]);
+            const allocation = queryClient.getQueryData(offersKeys.offerAllocation(offerId));
             const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
 
             if (!(allocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
@@ -87,4 +89,3 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 AppOfferDetails.getLayout = function (page) {
     return <AppLayout title="Opportunities">{page}</AppLayout>;
 };
-

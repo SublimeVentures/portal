@@ -9,8 +9,8 @@ import useAllowanceStep, { allowanceAction } from "./allowance";
 import usePrerequisiteStep, { prerequisiteAction } from "./prerequisite";
 import useTransactionStep, { transactionAction } from "./transaction";
 import { STEPS_ACTIONS, STEPS_STATE } from "./enums";
-import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 import { getTextContent } from "./helpers";
+import useBlockchainButton from "@/lib/hooks/useBlockchainButton";
 
 export default function useBlockchainStep({ data, deps = [] }) {
     const chainId = useChainId();
@@ -18,7 +18,6 @@ export default function useBlockchainStep({ data, deps = [] }) {
     const [state, dispatch] = useReducer(mainReducer, initialState);
 
     useEffect(() => {
-        dispatch({ type: STEPS_ACTIONS.RESET });
         resetState();
     }, [
         params.price,
@@ -45,6 +44,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
 
     const resetState = () => {
         console.log("BIX :: PARAM CHANGED - reset writers");
+        dispatch({ type: STEPS_ACTIONS.RESET });
         allowance_set_reset?.write?.reset();
         allowance_set?.write?.reset();
         transaction?.write?.reset();
@@ -99,24 +99,32 @@ export default function useBlockchainStep({ data, deps = [] }) {
     // ]);
 
     useEffect(() => {
-        if (!!transaction_isFinished) {
+        if (transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
             setTransactionSuccessful(transaction_isFinished);
         }
     }, [transaction_isFinished]);
 
     const extraState = {
-        stepNetwork,
-        stepLiquidity,
-        stepAllowance,
-        stepPrerequisite,
-        stepTransaction,
+        network: stepNetwork,
+        liquidity: stepLiquidity,
+        allowance: stepAllowance,
+        prerequisite: stepPrerequisite,
+        transaction: stepTransaction,
     };
 
-    const buttonState = useBlockchainButton(steps, state, params, extraState);
-    const content = getTextContent(extraState);
+    const filteredExtraState = Object.keys(extraState).reduce((acc, key) => {
+        if (steps[key] || key === "prerequisite") {
+            acc[key] = extraState[key];
+        }
+        return acc;
+    }, {});
 
-    const statuses = Object.values(extraState).map((item) => item?.state).filter(Boolean);
+    const buttonState = useBlockchainButton(steps, state, params, filteredExtraState);
+    const content = getTextContent(filteredExtraState);
+    const statuses = Object.values(extraState)
+        .map((item) => item?.state)
+        .filter(Boolean);
     const isProcessing = statuses.includes(STEPS_STATE.PROCESSING);
     const isSuccess = statuses.length > 0 && statuses.every((state) => state === STEPS_STATE.SUCCESS);
     const isError = statuses.includes(STEPS_STATE.ERROR);
@@ -133,7 +141,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
             content,
             steps,
             status: state.status,
-            extraState,
+            extraState: filteredExtraState,
         }),
         getBlockchainStepButtonProps: () => ({
             run: debouncedRunProcess,
@@ -151,4 +159,4 @@ export default function useBlockchainStep({ data, deps = [] }) {
         //     ...buttonState,
         // }
     };
-};
+}

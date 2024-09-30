@@ -69,6 +69,8 @@ function useGetPrerequisite(isEnabled, params, globalState, token) {
                 method: null,
                 extra: null,
                 isFinished: false,
+                isError: false,
+                error: null,
             });
         }
     }, [isEnabled]);

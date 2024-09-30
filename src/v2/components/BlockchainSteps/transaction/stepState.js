@@ -5,30 +5,32 @@ export const stepTransaction = (state, data) => {
     let result = {};
 
     if (data.transaction_isReady) {
-        result = handleProcessing({ 
-            content: "Preparing transaction", 
-            text: "We are setting up your transaction. Please wait a moment."
-        });
+        // If transaction is the second step, it's always ready, so I've commented it out to keep the "Analyser tool" default text
+        // result = handleProcessing({
+        //     content: "Preparing transaction",
+        //     text: "We are setting up your transaction. Please wait a moment."
+        // });
+        result = handlePending();
 
         if (state.isFinished) {
-            result = handleSuccess({ 
-                content: "Transaction confirmed", 
-                text: "Your transaction has been successfully confirmed."
+            result = handleSuccess({
+                content: "Transaction confirmed",
+                text: "Your transaction has been successfully confirmed.",
             });
         } else if (data.isFetching || data.isLoading) {
-            result = handleProcessing({ 
-                content: "Sending transaction", 
-                text: "Your transaction is being sent. Please wait for confirmation."
+            result = handleProcessing({
+                content: "Sending transaction",
+                text: "Your transaction is being sent. Please wait for confirmation.",
             });
         } else if (data.isError) {
-            result = handleError({ 
-                content: "Transaction failed", 
-                text: data?.error ?? "An error occurred while sending your transaction. Please try again."
+            result = handleError({
+                content: "Transaction failed",
+                text: data?.error ?? "An error occurred while sending your transaction. Please try again.",
             });
-        };
+        }
     } else {
         result = handlePending();
-    };
+    }
 
     console.log("BIX :: TRANSITION :: step state result", result, state, data);
 

@@ -432,7 +432,7 @@ async function deleteOfferParticipants(user, req) {
                 id: participantId,
                 userId,
                 isConfirmedInitial: true,
-                isConfirmed: true,
+                isConfirmed: false,
             },
         });
 
