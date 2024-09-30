@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { cva } from "class-variance-authority";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import Image from "next/image";
 
 import { cn } from "@/lib/cn";
 
@@ -29,7 +30,9 @@ const AvatarRoot = forwardRef(({ variant, size, className, ...props }, ref) => (
 AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
 const AvatarImage = forwardRef(({ className, ...props }, ref) => (
-    <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full", className)} {...props} />
+    <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full", className)} {...props} asChild>
+        <Image fill />
+    </AvatarPrimitive.Image>
 ));
 
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
@@ -40,7 +43,10 @@ const AvatarFallback = forwardRef(({ fallback, className, ...props }, ref) => (
         src={fallback}
         className={cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className)}
         {...props}
-    />
+        asChild
+    >
+        <Image fill />
+    </AvatarPrimitive.Image>
 ));
 
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;

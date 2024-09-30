@@ -1,3 +1,8 @@
+import { useOfferDetailsQuery } from "../queries";
+import EmptyState from "../EmptyState";
+import Invest from "./Invest";
+import CalculateModal from "./Modals/CalculateModal";
+import UpgradesModal from "./Modals/UpgradesModal";
 import { routes } from "@/v2/routes";
 import { PhaseId } from "@/v2/lib/phases";
 import { cn } from "@/lib/cn";
@@ -5,12 +10,6 @@ import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
 import { Badge } from "@/v2/components/ui/badge";
-
-import Invest from "./Invest";
-import CalculateModal from "./Modals/CalculateModal";
-import UpgradesModal from "./Modals/UpgradesModal";
-import { useOfferDetailsQuery } from "../queries";
-import EmptyState from "../EmptyState";
 
 export default function Investment({ session, className }) {
     const { phaseCurrent, isClosed } = usePhaseInvestment();
@@ -48,19 +47,26 @@ export default function Investment({ session, className }) {
                     {displayGuaranteed && <Badge variant="warning">Guaranteed</Badge>}
                 </div>
             </div>
-        
-                {isClosed ? (
-                    <div className="h-96">
-                        <EmptyState
-                            heading="Investment closed"
-                            description="While this investment is no longer active, you can still explore other options. Check out our OTC page for secondary market opportunities or visit our Opportunity Page for the latest investment opportunities. Stay ahead of the game and discover new ways to grow your portfolio!"
-                            cta={{ text: "Opportunities", href: routes.Opportunities, variant: "outline" }}
-                            secondaryCta={{ text: "OTC Market", href: routes.OTC, variant: "gradient" }}
-                        />
-                    </div>
-                ) : (
-                    <Invest session={session} />
-                )}
+
+            {isClosed ? (
+                <div className="h-96">
+                    <EmptyState
+                        heading="Investment closed"
+                        description="While this investment is no longer active, you can still explore other options. Check out our OTC page for secondary market opportunities or visit our Opportunity Page for the latest investment opportunities. Stay ahead of the game and discover new ways to grow your portfolio!"
+                        cta={{ text: "Opportunities", href: routes.Opportunities, variant: "outline" }}
+                        secondaryCta={{
+                            text: "OTC Market",
+                            href: {
+                                pathname: routes.OTC,
+                                query: offer.otc !== 0 ? { market: offer.slug, view: "offers" } : {},
+                            },
+                            variant: "gradient",
+                        }}
+                    />
+                </div>
+            ) : (
+                <Invest session={session} />
+            )}
         </div>
     );
-};
+}

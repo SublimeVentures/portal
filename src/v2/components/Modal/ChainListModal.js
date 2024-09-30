@@ -1,4 +1,4 @@
-import { useAccount, useSwitchChain } from "wagmi";
+import { useSwitchChain } from "wagmi";
 // eslint-disable-next-line import/namespace
 import * as chains from "wagmi/chains";
 import { useMemo } from "react";
@@ -7,13 +7,12 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { ChainIcon, ChainButton, ChainGroup } from "@/v2/components/App/Vault/ChainSwitch";
 
 const ChainListModal = () => {
-    const { isConnected, chainId } = useAccount();
     const { network } = useEnvironmentContext();
     const { switchChain, error } = useSwitchChain();
 
-    const { chains: current = [], isSupported, isLoading } = network;
+    const { chains: current = [], chainId, isSupported = true, isLoading = true } = network;
     const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
-    const isOpen = !isSupported && isConnected && !isLoading;
+    const isOpen = !isLoading && !isSupported;
 
     return (
         <Dialog open={isOpen}>
