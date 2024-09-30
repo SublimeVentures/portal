@@ -93,6 +93,7 @@ const InvestModalContent = ({
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [open],
     });
 
     return (

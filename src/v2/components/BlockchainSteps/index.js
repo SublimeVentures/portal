@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 
 import { STEPS_STATE } from "./enums";
+import { cn } from "@/lib/cn";
 import BlockchainStep from "@/v2/components/BlockchainSteps/BlockchainStep";
 import { countSteps } from "@/v2/components/BlockchainSteps/helpers";
 import LinkIcon from "@/v2/assets/svg/link.svg";
@@ -40,7 +41,12 @@ const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
             IconComponent = FiveChainsIcon;
     }
 
-    return <IconComponent style={colorSchemes[status]} className="absolute z-0" />;
+    return (
+        <IconComponent
+            style={colorSchemes[status]}
+            className={cn("absolute z-0", { "animate-pulse": (status = STEPS_STATE.PROCESSING) })}
+        />
+    );
 };
 
 export default function BlockchainSteps({ content, steps, extraState, status }) {
@@ -69,11 +75,29 @@ export default function BlockchainSteps({ content, steps, extraState, status }) 
                 <ChainIcon steps={steps} status={status} />
 
                 <ul className="relative flex items-center h-full justify-center w-max gap-3 overflow-hidden">
-                    {steps.network && <BlockchainStep data={extraState.stepNetwork} icon={LinkIcon} />}
-                    {steps.liquidity && <BlockchainStep data={extraState.stepLiquidity} icon={BalanceIcon} />}
-                    {steps.allowance && <BlockchainStep data={extraState.stepAllowance} icon={AccountBalanceIcon} />}
-                    {steps.transaction && <BlockchainStep data={extraState.stepPrerequisite} icon={PriorityIcon} />}
-                    {steps.transaction && <BlockchainStep data={extraState.stepTransaction} icon={RocketLaunchIcon} />}
+                    {steps.network && (
+                        <BlockchainStep data={extraState.stepNetwork} stepsStatus={status} icon={LinkIcon} />
+                    )}
+                    {steps.liquidity && (
+                        <BlockchainStep data={extraState.stepLiquidity} stepsStatus={status} icon={BalanceIcon} />
+                    )}
+                    {steps.allowance && (
+                        <BlockchainStep
+                            data={extraState.stepAllowance}
+                            stepsStatus={status}
+                            icon={AccountBalanceIcon}
+                        />
+                    )}
+                    {steps.transaction && (
+                        <BlockchainStep data={extraState.stepPrerequisite} stepsStatus={status} icon={PriorityIcon} />
+                    )}
+                    {steps.transaction && (
+                        <BlockchainStep
+                            data={extraState.stepTransaction}
+                            stepsStatus={status}
+                            icon={RocketLaunchIcon}
+                        />
+                    )}
                 </ul>
             </div>
         </div>

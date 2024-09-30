@@ -1,7 +1,7 @@
 export default function About() {
     return (
-        <div className="aboutGradient flex flex-col justify-center text-white pt-10 relative">
-            <div className="aboutBg w-[70%] h-[100%] right-0 absolute opacity-30 z-0"></div>
+        <div className="bg-[linear-gradient(to_bottom,_rgba(14,17,24,1)_0%,rgba(14,17,24,1)_85%,rgba(13,15,21,1)_100%)] flex flex-col justify-center text-white pt-10 relative">
+            <div className="bg-[url(https://cdn.basedvc.fund/webapp/aboutBG.jpg)] w-[70%] h-[100%] right-0 absolute opacity-30 z-0"></div>
             <div className="w-full z-10">
                 <div className="px-10 py-25 flex flex-col gap-10 flex-1 lg:flex-row md:mx-auto md:justify-between lg:flex-row xl:max-w-[1400px] ">
                     <div className="lg:max-w-[350px] flex flex-col">

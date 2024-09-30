@@ -70,7 +70,7 @@ module.exports = {
                 "2xs": ".625rem", // 10px
             },
             fontFamily: {
-                body: ["Poppins", "sans-serif"],
+                body: ["var(--base-font)", "sans-serif"],
             },
             borderRadius: {
                 "4xl": "2rem",
@@ -98,20 +98,20 @@ module.exports = {
                 DEFAULT: "0px 3px 30px var(--tw-shadow-color, rgb(0 0 0 / 0.05))",
                 accent: "0 3px 30px #FDC171",
             },
-        },
-        keyframes: {
-            "accordion-down": {
-                from: { height: "0" },
-                to: { height: "var(--radix-accordion-content-height)" },
+            keyframes: {
+                "accordion-down": {
+                    from: { height: "0" },
+                    to: { height: "var(--radix-accordion-content-height)" },
+                },
+                "accordion-up": {
+                    from: { height: "var(--radix-accordion-content-height)" },
+                    to: { height: "0" },
+                },
             },
-            "accordion-up": {
-                from: { height: "var(--radix-accordion-content-height)" },
-                to: { height: "0" },
+            animation: {
+                "accordion-down": "accordion-down 0.1s ease-out",
+                "accordion-up": "accordion-up 0.1s ease-out",
             },
-        },
-        animation: {
-            "accordion-down": "accordion-down 0.1s ease-out",
-            "accordion-up": "accordion-up 0.1s ease-out",
         },
         angle: {
             30: "30deg",

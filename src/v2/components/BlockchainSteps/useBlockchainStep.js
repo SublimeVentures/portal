@@ -98,9 +98,9 @@ export default function useBlockchainStep({ data, deps = [] }) {
     ]);
 
     useEffect(() => {
-        if (stepTransaction.transaction_isFinished) {
+        if (transaction_isFinished) {
             console.log("BIX :: TRANSACTION FINALIZED - transaction_isFinished");
-            setTransactionSuccessful(stepTransaction.transaction_isFinished);
+            setTransactionSuccessful(transaction_isFinished);
         }
     }, [transaction_isFinished]);
 
@@ -140,5 +140,16 @@ export default function useBlockchainStep({ data, deps = [] }) {
             run: debouncedRunProcess,
             ...buttonState,
         }),
+
+        // testing purposes
+        all: {
+            content,
+            steps,
+            status: state.status,
+            extraState,
+            resetState,
+            run: debouncedRunProcess,
+            ...buttonState,
+        },
     };
 }

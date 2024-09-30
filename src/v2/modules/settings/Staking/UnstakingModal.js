@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import {
@@ -15,13 +16,27 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { METHOD } from "@/components/BlockchainSteps/utils";
+import { settingsKeys } from "@/v2/constants";
 
-export default function UnstakingModal({ staking = {} }) {
+export default function UnstakingModal({ userId, staking = {} }) {
     const { currencyStaking, activeCurrencyStaking, account, activeDiamond } = useEnvironmentContext();
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
     const { stakeSize } = staking;
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+
+    const { data: wallets } = useQuery({
+        queryKey: settingsKeys.userWallets(userId),
+        queryFn: () => fetchUserWallets(),
+        refetchOnWindowFocus: true,
+    });
+
+    const registeredOriginalWallet = wallets?.find((el) => el.isHolder)?.wallet;
+
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -34,6 +49,7 @@ export default function UnstakingModal({ staking = {} }) {
                 account: account.address,
                 buttonText: "Unstake",
                 contract: activeDiamond,
+                delegated: wallet,
                 transactionType: METHOD.UNSTAKE,
             },
             setTransactionSuccessful,

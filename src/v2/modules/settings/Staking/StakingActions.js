@@ -6,11 +6,12 @@ import { Button } from "@/v2/components/ui/button";
 
 export default function StakeActions({ session, staking }) {
     const { staked, unstake } = staking;
+    const { userId } = session;
 
     return (
         <div className="flex flex-col gap-2 md:flex-row">
-            {!staked && <StakingModal session={session} staking={staking} />}
-            {unstake && <UnstakingModal staking={staking} />}
+            {!staked && <StakingModal userId={userId} staking={staking} />}
+            {unstake && <UnstakingModal userId={userId} staking={staking} />}
 
             <Button asChild variant="gradient" aria-label="Buy tokens">
                 <Link href="/" target="_blank" rel="noopener noreferrer">

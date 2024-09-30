@@ -22,7 +22,10 @@ export default function useTransactionStep(state, data, dispatch) {
         !state.transaction.isFinished &&
         !state.transaction.lock &&
         transaction_isReady &&
-        state.prerequisite.isFinished;
+        state.prerequisite.isFinished &&
+        state.status !== 2;
+
+    // console.log('state.prerequisite', state.status, state.status !== 2, transaction_shouldRun)
 
     console.log("BIX :: TRANSACTION - shouldRun / isReady", transaction_shouldRun, transaction_isReady);
 
@@ -44,7 +47,7 @@ export default function useTransactionStep(state, data, dispatch) {
 
     console.log(`BIX :: TRANSACTION - HOOK STATE`, transaction);
 
-    const transaction_isFinished = transaction.confirm?.data?.transactionHash;
+    const transaction_isFinished = !!transaction.confirm?.data?.transactionHash;
     console.log(`BIX :: TRANSACTION - RUN`, transaction_isFinished);
 
     useEffect(() => {

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Skeleton, SkeletonCircle } from "@/v2/components/ui/skeleton";
 import { Card, CardTitle } from "@/v2/components/ui/card";
 import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
@@ -8,7 +9,6 @@ import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
 import { Button } from "@/v2/components/ui/button";
 import ClaimModal from "@/v2/components/App/Vault/ClaimModal";
 import useImage from "@/v2/hooks/useImage";
-import { Avatar } from "@/v2/components/ui/avatar";
 
 // aspect-[5/8]
 const InvestmentCardWrapper = ({ children, className }) => {
@@ -74,11 +74,12 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
                     </CardTitle>
                     <p className="text-xs font-light md:text-base text-foreground leading-none">{title}</p>
                 </div>
-                <Avatar
-                    className="size-10 pointer-events-none select-none"
-                    session={{
-                        img: getResearchIconSrc(slug),
-                    }}
+                <Image
+                    src={getResearchIconSrc(slug)}
+                    alt={coin}
+                    width={40}
+                    height={40}
+                    className="overflow-hidden rounded-full size-10 pointer-events-none select-none bg-primary-800"
                 />
             </div>
             <Attributes details={data} className="grow gap-2 mb-5 select-none" grid />

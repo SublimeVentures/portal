@@ -99,9 +99,8 @@ export const useCalculateGas = (args) => {
 };
 
 function useSendTransaction(isEnabled, method, chainId, account) {
-    if (method?.stop) {
-        return true;
-    }
+    if (method?.stop ?? false) return true;
+
     if (!method) {
         method = {
             name: "",
@@ -161,8 +160,8 @@ function useSendTransaction(isEnabled, method, chainId, account) {
     });
 
     const write = useWriteContract();
-
     const confirmEnabled = write.isSuccess;
+
     const confirm = useWaitForTransactionReceipt({
         confirmations: confirmations,
         hash: write?.data,
@@ -205,7 +204,6 @@ function useSendTransaction(isEnabled, method, chainId, account) {
             write.isLoading ||
             confirm.isLoading ||
             write.isPending,
-        // isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || confirm.isPending || write.isPending,
         simulate,
         write,
         confirm,

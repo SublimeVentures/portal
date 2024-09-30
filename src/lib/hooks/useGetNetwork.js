@@ -7,8 +7,8 @@ function useGetNetwork(isEnabled, requiredNetwork = null) {
 
     console.log("BIX :: NETWORK_CHECK - render", isValid, network?.chainId, requiredNetwork);
     useEffect(() => {
-        console.log("BIX :: NETWORK_CHECK - switch chain ", !isValid, isEnabled);
-        if (!isValid && isEnabled) {
+        if (!isValid && isEnabled && requiredNetwork) {
+            console.log("BIX :: NETWORK_CHECK - switch chain ", !isValid, isEnabled);
             network?.switchChain({ chainId: requiredNetwork });
         }
     }, [isEnabled]);
