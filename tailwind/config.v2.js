@@ -82,9 +82,7 @@ module.exports = {
                 "sheet-gradient": `linear-gradient(151deg, ${primary[950]} 0%, ${primary[700]} 49%, ${primary[950]} 100%)`,
                 "navbar-gradient": `linear-gradient(to top, ${primary[950]} 0%, ${primary[950]} 50%, transparent 100%)`,
                 "settings-gradient": `linear-gradient(125deg, ${primary[900]} 0%, ${primary[700]} 49%, ${primary[700]} 50%, ${primary[900]} 100%)`,
-
                 "premium-banner": "url('/img/premium-banner.png')",
-                "empty-investment-pattern": "url('/img/bg/investments/empty@1400.jpg')",
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
                 gradient: "linear-gradient(var(--tw-gradient-angle), var(--tw-gradient-stops))",

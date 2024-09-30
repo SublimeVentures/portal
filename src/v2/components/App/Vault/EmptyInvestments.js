@@ -8,7 +8,7 @@ const EmptyInvestments = () => {
         <Card
             variant="none"
             border="none"
-            className="p-0 grow bg-empty-investment-pattern bg-cover bg-center bg-no-repeat"
+            className="p-0 grow bg-cover bg-center bg-no-repeat bg-empty-investment-pattern"
         >
             <div className="h-full py-16 px-4 md:px-20 flex flex-col items-center justify-center md:items-start gap-4 text-center md:text-left">
                 <CardTitle className="text-sm md:text-base font-normal">No investments found</CardTitle>

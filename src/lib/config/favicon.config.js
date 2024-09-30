@@ -3,16 +3,16 @@ const { TENANT } = require("../enum/tenant");
 const TENANT_FAVICON = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
-            return "/favicon.svg";
+            return "/1/favicon.png";
         }
         case TENANT.NeoTokyo: {
-            return "/img/favicon.png";
+            return "/6/favicon.png";
         }
         case TENANT.CyberKongz: {
-            return "/favicon_14.png";
+            return "/14/favicon.png";
         }
         case TENANT.BAYC: {
-            return "/favicon_19.png";
+            return "/19/favicon.png";
         }
     }
 };

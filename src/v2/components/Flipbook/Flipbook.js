@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import Matrix from "./Matrix";
 import DynamicIcon from "@/components/Icon";
 import { cn } from "@/lib/cn";
@@ -1163,7 +1164,7 @@ const Flipbook = ({
                     }}
                 >
                     {showLeftPage && (
-                        <img
+                        <Image
                             className="absolute backface-hidden"
                             style={{
                                 width: `${pageWidth}px`,
@@ -1172,12 +1173,15 @@ const Flipbook = ({
                                 top: `${yMargin}px`,
                             }}
                             // src={"https://cdn.basedvc.fund/research/shrapnel-nodes/ResearchReport_page-0008.jpg"}
+                            width={pageWidth}
+                            height={pageHeight}
                             src={pageUrlLoading(leftPage, true)}
                             onLoad={didLoadImage}
+                            alt="left page"
                         />
                     )}
                     {showRightPage && (
-                        <img
+                        <Image
                             className="absolute backface-hidden"
                             style={{
                                 width: `${pageWidth}px`,
@@ -1185,9 +1189,12 @@ const Flipbook = ({
                                 left: `${viewWidth / 2}px`,
                                 top: `${yMargin}px`,
                             }}
+                            width={pageWidth}
+                            height={pageHeight}
                             // src={"https://cdn.basedvc.fund/research/shrapnel-nodes/ResearchReport_page-0007.jpg"}
                             src={pageUrlLoading(rightPage, true)}
                             onLoad={didLoadImage}
+                            alt="right page"
                         />
                     )}
 

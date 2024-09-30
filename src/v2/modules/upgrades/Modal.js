@@ -124,7 +124,7 @@ export const Kicker = forwardRef(({ className, children, ...props }, ref) => {
 });
 Kicker.displayName = "Kicker";
 
-export default function Modal({ open, onClose, variant, children, className }) {
+export default function Modal({ open, onClose, variant, children, className, ...props }) {
     return (
         <Dialog open={open}>
             <DialogContent
@@ -135,6 +135,7 @@ export default function Modal({ open, onClose, variant, children, className }) {
                 )}
                 variant={variant}
                 closeClassName="size-7 md:size-10"
+                {...props}
             >
                 {children}
             </DialogContent>
