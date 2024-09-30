@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { useForm } from "react-hook-form";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
 import { METHOD } from "@/components/BlockchainSteps/utils";
@@ -13,39 +12,28 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { Input } from "@/v2/components/ui/input";
+import useReassign from "@/v2/components/App/Vault/ReassignModal/useReassign";
 
-export default function ReassignModal(props) {
-    const {
-        useGetReassignPrice,
-        currency,
-        handleCurrencyChange,
-        open,
-        onOpenChange,
-        openModal,
-        closeModal,
-        data = {},
-    } = props;
+export default function ReassignModal({ data = {} }) {
     const {
         account,
         getCurrencySettlement,
         network: { chainId },
         diamonds,
-        ...args
     } = useEnvironmentContext();
+    const dropdownCurrencyOptions = useMemo(() => getCurrencySettlement(), []);
+    const { getReassignModalProps, getReassignFormProps } = useReassign(data, chainId, dropdownCurrencyOptions);
+    const { useGetReassignPrice, currency, handleCurrencyChange, open, onOpenChange, openModal, closeModal } =
+        getReassignModalProps();
+    const { form, handleSubmit } = getReassignFormProps();
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
-
-    const dropdownCurrencyOptions = getCurrencySettlement();
-
-    const form = useForm();
 
     const { data: ReassignPrice } = useGetReassignPrice(diamonds[chainId]);
 
     const { offerId } = data;
 
     const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract);
-
-    console.log(Number(ReassignPrice));
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -91,64 +79,70 @@ export default function ReassignModal(props) {
                         </DialogDescription>
                     </DialogHeader>
                     <Form {...form}>
-                        <dl className="definition-section definition-grid">
-                            <DefinitionItem term="Market">{Number(ReassignPrice)}</DefinitionItem>
-                        </dl>
-                        <FormField
-                            name="address"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col w-full m-0">
-                                    <FormLabel>Address</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            autoComplete="false"
-                                            onChange={(evt) => field.onChange(evt, field.onChange)}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            name="currency"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem className="mt-8 relative 2xl:mt-0">
-                                    <FormControl>
-                                        <Select
-                                            {...field}
-                                            onValueChange={(val) => handleCurrencyChange(val, field.onChange)}
+                        <form onSubmit={handleSubmit}>
+                            <dl className="definition-section definition-grid">
+                                <DefinitionItem term="Market">{Number(ReassignPrice)}</DefinitionItem>
+                            </dl>
+                            <FormField
+                                name="to"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col w-full m-0">
+                                        <FormLabel>Allocation Receiver</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                autoComplete="false"
+                                                onChange={(evt) => field.onChange(evt, field.onChange)}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="currency"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem className="mt-8 relative 2xl:mt-0">
+                                        <FormControl>
+                                            <Select
+                                                {...field}
+                                                onValueChange={(val) => handleCurrencyChange(val, field.onChange)}
+                                            >
+                                                <SelectTrigger className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {dropdownCurrencyOptions.map((option) => (
+                                                        <SelectItem key={option.symbol} value={option.symbol}>
+                                                            <div className="flex items-center gap-2">
+                                                                <DynamicIcon
+                                                                    className="p-1 w-6 h-6"
+                                                                    name={option.symbol}
+                                                                />
+                                                                {option.symbol}
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormLabel
+                                            htmlFor="currency"
+                                            className="absolute -left-0 -top-9 text-sm 2xl:-top-11 2xl:text-base"
                                         >
-                                            <SelectTrigger className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52">
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {dropdownCurrencyOptions.map((option) => (
-                                                    <SelectItem key={option.symbol} value={option.symbol}>
-                                                        <div className="flex items-center gap-2">
-                                                            <DynamicIcon className="p-1 w-6 h-6" name={option.symbol} />
-                                                            {option.symbol}
-                                                        </div>
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormLabel
-                                        htmlFor="currency"
-                                        className="absolute -left-0 -top-9 text-sm 2xl:-top-11 2xl:text-base"
-                                    >
-                                        Select Currency
-                                    </FormLabel>
-                                </FormItem>
-                            )}
-                        />
+                                            Select Currency
+                                        </FormLabel>
+                                    </FormItem>
+                                )}
+                            />
+                            <button type="submit">Submit</button>
+                        </form>
                     </Form>
-                    <dl className="definition-section ">
-                        <BlockchainSteps {...getBlockchainStepsProps()} />
-                    </dl>
-                    <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
+                    {/*<dl className="definition-section ">*/}
+                    {/*    <BlockchainSteps {...getBlockchainStepsProps()} />*/}
+                    {/*</dl>*/}
+                    {/*<BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />*/}
                 </DialogContent>
             </Dialog>
             <button

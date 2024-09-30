@@ -1,7 +1,8 @@
 const moment = require("moment/moment");
+const axios = require("axios");
 const { constructError } = require("../utils");
 const { getEnv } = require("../services/env");
-const { BookingErrorsENUM } = require("@/lib/enum/invest");
+const { ReassignErrorsENUM } = require("../../src/lib/enum/reassign");
 
 function checkReassignQueryParams(req) {
     let _offerId, _currency, _chain, _to;
@@ -28,7 +29,7 @@ function checkReassignQueryParams(req) {
     } catch (error) {
         return {
             ok: false,
-            code: BookingErrorsENUM.VerificationFailed,
+            code: ReassignErrorsENUM.VerificationFailed,
             error: constructError("QUERY", error, {
                 isLog: true,
                 enableSentry: false,
@@ -38,7 +39,37 @@ function checkReassignQueryParams(req) {
     }
 }
 
-async function processReassign(queryParams, user) {
+async function obtainReassignSignature(to, currency, offerId, expire, token) {
+    const signature = await axios.post(
+        `${process.env.AUTHER}/reassign/sign`,
+        {
+            _to: to,
+            _currency: currency,
+            _offer: offerId,
+            _expire: expire,
+            token,
+        },
+        {
+            headers: {
+                "content-type": "application/json",
+            },
+        },
+    );
+
+    if (!signature?.data?.ok) {
+        return {
+            ok: false,
+            code: ReassignErrorsENUM.BAD_SIGNATURE,
+        };
+    }
+
+    return {
+        ok: true,
+        data: signature.data.data,
+    };
+}
+
+async function processReassign(queryParams, token) {
     try {
         // const { userId, tenantId, partnerId } = user;
         const { _offerId, _to, _currency, _chain } = queryParams;
@@ -46,6 +77,12 @@ async function processReassign(queryParams, user) {
         const expire = moment.utc().unix() + 3 * 60;
 
         const currency = getEnv().currencies[_chain][_currency];
+
+        const signature = await obtainReassignSignature(_to, _currency, _offerId, expire, token);
+
+        if (!signature.ok) {
+            return signature;
+        }
 
         return {
             ok: true,
@@ -55,11 +92,12 @@ async function processReassign(queryParams, user) {
                 _offer: _offerId,
                 _to,
             },
+            signature,
         };
     } catch (error) {
         return {
             ok: false,
-            code: BookingErrorsENUM.VerificationFailed,
+            code: ReassignErrorsENUM.VerificationFailed,
             error: constructError("QUERY", error, {
                 isLog: true,
                 methodName: "processReassign",

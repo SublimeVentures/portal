@@ -16,7 +16,6 @@ export default function Details({ data, onClick, items }) {
     const symbol = getSymbol(data);
     const notifications = items?.pages?.flat() || [];
     const hasNotifications = notifications.length > 0;
-    const { getReassignModalProps } = useReassign();
 
     return (
         <>
@@ -29,7 +28,7 @@ export default function Details({ data, onClick, items }) {
                             <DefinitionItem term="Invested">{formatCurrency(data.invested)}</DefinitionItem>
                             <DefinitionItem term="Vested">{formatCurrency(data.vested, symbol)}</DefinitionItem>
                         </dl>
-                        <ReassignModal {...getReassignModalProps()} data={data} />
+                        <ReassignModal data={data} />
                     </div>
                 </div>
                 <div>

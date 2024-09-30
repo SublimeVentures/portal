@@ -136,7 +136,7 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                                                 <div className={rowDivStyles}>
                                                     <dt className={rowDtStyles}>% Unlocked</dt>
                                                     <dd className={rowDdStyles}>
-                                                        {formatPercentage(t_unlock[offerPayout].p / 100)}
+                                                        {t_unlock ? formatPercentage(t_unlock[offerPayout].p / 100) : 0}
                                                     </dd>
                                                 </div>
                                                 <div className={rowDivStyles}>

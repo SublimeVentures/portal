@@ -13,6 +13,8 @@ export const PAYOUTS_QUERY = {
 
 const Payouts = ({ className }) => {
     const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery(PAYOUTS_QUERY);
+
+    console.log(pages);
     const isLargeDesktop = useMediaQuery(breakpoints.md);
     const tableVariant = isLargeDesktop ? PayoutTableVariants.vertical : PayoutTableVariants.horizontal;
     return (

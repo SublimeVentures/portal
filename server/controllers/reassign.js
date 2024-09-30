@@ -1,9 +1,9 @@
 const axios = require("axios");
 const { serializeError } = require("serialize-error");
 const { checkReassignQueryParams, processReassign } = require("../queries/reassign.query");
-const { authTokenName } = require("@/lib/authHelpers");
-const logger = require("@/lib/logger");
-const { ReassignErrorsENUM } = require("@/lib/enum/reassign");
+const { authTokenName } = require("../../src/lib/authHelpers");
+const logger = require("../../src/lib/logger");
+const { ReassignErrorsENUM } = require("../../src/lib/enum/reassign");
 
 async function obtainSignature(to, currency, offer, expire, token) {
     const signature = await axios.post(
@@ -34,32 +34,21 @@ async function obtainSignature(to, currency, offer, expire, token) {
     };
 }
 
-async function reassign(user, req) {
+async function reassign(req, user) {
     try {
         const queryParams = checkReassignQueryParams(req);
         if (!queryParams.ok) return queryParams;
 
-        const reassign = await processReassign(queryParams.data, user);
-        if (!reassign.ok) return reassign;
-
         const token = req.cookies[authTokenName];
 
-        const signature = await obtainSignature(
-            reassign._to,
-            reassign._currency,
-            reassign._offer,
-            reassign._expire,
-            token,
-        );
+        const reassignRes = await processReassign(queryParams.data, token);
 
-        if (!signature.ok) {
-            return signature;
-        }
+        if (!reassignRes.ok) return reassignRes;
 
         return {
             ok: true,
-            expire: reassign._expire,
-            signature: signature.data,
+            expire: reassignRes.reassign._expire,
+            signature: reassignRes.signature.data,
         };
     } catch (error) {
         logger.error(`ERROR :: [reassign]`, {
