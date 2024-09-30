@@ -42,7 +42,7 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     useEffect(() => {
         const value = dropdownCurrencyOptions[0]?.symbol || "";
         const isValidCurrency = value && value !== "...";
-    
+
         if (!selectedCurrency & isValidCurrency) {
             setSelectedCurrency(value);
         }
@@ -170,8 +170,13 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
     };
 
     return (
-        <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
+        <Modal
+            open={model}
+            onClose={closeModal}
+            variant={transactionSuccessful ? "pattern" : "default"}
+            forceMount={true}
+        >
             {content()}
         </Modal>
     );
-};
+}

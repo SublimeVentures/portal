@@ -7,12 +7,12 @@ import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
+
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });
-
     return (
         <>
-            <Metadata title="Opportunity" />
+            <Metadata title={state?.offer?.name} description={state?.offer?.description} />
             <div className="text-white flex flex-col md:grid md:grid-cols-12 gap-4 grow lg:overflow-y-auto lg:-mx-5 lg:px-5 lg:pr-3 lg:-mt-4 lg:pt-4 lg:pb-4 3xl:-mx-8 3xl:pl-8 3xl:pr-6 3xl:-mt-2 3xl:pt-2 3xl:pb-4 lg:mb-10">
                 <Overview className="col-span-12" />
                 <Phases className="col-span-12" />
@@ -85,6 +85,5 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 };
 
 AppOfferDetails.getLayout = function (page) {
-    return <AppLayout title="Opportunities">{page}</AppLayout>;
+    return <AppLayout title={`Opportunities > ${page?.props?.state?.offer?.name}`}>{page}</AppLayout>;
 };
-

@@ -22,10 +22,11 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <Image
                         src={getResearchBgSrc(slug)}
                         alt={`Background image for ${name} offer`}
-                        className="object-cover rounded select-none pointer-events-none bg-primary-800"
+                        className="object-cover rounded select-none pointer-events-none bg-primary-800 w-full"
                         width={500}
                         height={130}
                         priority
+                        sizes="(max-width: 768px) 75vw, (max-width: 1023px) 33vw, (max-width: 1920px) 25vw, 20vw"
                     />
                 </div>
 
@@ -45,7 +46,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
             </div>
 
             <div className="mt-4 mb-2 px-4">
-                <Progress value={progress} />
+                <Progress value={progress} aria-label={`${name} fundraising progress`} />
             </div>
 
             <div className="m-4 px-2.5 lg:px-4 flex justify-between items-center bg-primary-600 rounded-full text-xs font-light text-foreground lg:text-sm leading-5 lg:leading-7">
