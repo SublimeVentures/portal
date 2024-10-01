@@ -133,6 +133,13 @@ async function getLatestOffers(query, tenantId, partnerId) {
                         )`),
                     },
                 },
+                include: [
+                    {
+                        model: models.partner,
+                        attributes: [],
+                        required: false,
+                    },
+                ],
             },
         ],
         raw: true,
