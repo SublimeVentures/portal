@@ -6,10 +6,16 @@ import { reassignOfferAllocation } from "@/v2/fetchers/reassign.fetcher";
 
 export default function useReassign(data, chainId, dropdownCurrencyOptions) {
     const { offerId } = data;
+
     const [isReassignModalOpen, setIsReassignModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const [to, setTo] = useState(null);
     const [signature, setSignature] = useState(null);
     const [expire, setExpire] = useState(null);
     const [chosenCurrency, setChosenCurrency] = useState(false);
+
     const closeReassignModal = useCallback(() => setIsReassignModalOpen(false), []);
 
     const openReassignModal = useCallback(() => setIsReassignModalOpen(true), []);
@@ -32,22 +38,30 @@ export default function useReassign(data, chainId, dropdownCurrencyOptions) {
 
     const onSubmit = useCallback(
         async (values) => {
-            console.log(values);
-            console.log(chosenCurrencyAddress);
-            console.log("submit!!!!!!!!");
             const res = await reassignOfferAllocation(offerId, chosenCurrencyAddress, values.to, chainId);
 
             if (res?.ok) {
-                setSignature(res);
+                setTo(values.to);
+                setSignature(res.signature);
+                setExpire(res.expire);
+            } else {
+                setSignature(null);
+                setExpire(null);
+                setTo(null);
             }
         },
         [chainId, chosenCurrency, dropdownCurrencyOptions, offerId, chosenCurrencyAddress],
     );
 
     return {
+        inputs: { signature, expire, offerId, currency: chosenCurrencyAddress, to },
         getReassignFormProps: () => ({
             form,
             handleSubmit: form.handleSubmit(onSubmit),
+            loading,
+            setLoading,
+            error,
+            setError,
             isDisabled,
         }),
         getReassignModalProps: () => ({
@@ -57,6 +71,10 @@ export default function useReassign(data, chainId, dropdownCurrencyOptions) {
             currency: chosenCurrency,
             openModal: openReassignModal,
             closeModal: closeReassignModal,
+            data: {
+                signature,
+                expire,
+            },
             useGetReassignPrice,
         }),
     };

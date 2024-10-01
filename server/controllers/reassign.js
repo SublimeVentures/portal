@@ -1,38 +1,7 @@
-const axios = require("axios");
 const { serializeError } = require("serialize-error");
 const { checkReassignQueryParams, processReassign } = require("../queries/reassign.query");
 const { authTokenName } = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
-const { ReassignErrorsENUM } = require("../../src/lib/enum/reassign");
-
-async function obtainSignature(to, currency, offer, expire, token) {
-    const signature = await axios.post(
-        `${process.env.AUTHER}/reassign/sign`,
-        {
-            to,
-            currency,
-            offer,
-            expire,
-            token,
-        },
-        {
-            headers: {
-                "content-type": "application/json",
-            },
-        },
-    );
-    if (!signature?.data?.ok) {
-        return {
-            ok: false,
-            code: ReassignErrorsENUM.BAD_SIGNATURE,
-        };
-    }
-
-    return {
-        ok: true,
-        data: signature.data.data,
-    };
-}
 
 async function reassign(req, user) {
     try {
