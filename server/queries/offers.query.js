@@ -217,7 +217,7 @@ const query_getOtcList = `
         (
             SELECT COUNT(*)
             FROM "otcDeal" od
-            WHERE od."offerId" = o.id
+            WHERE od."otcId" = o.otc
               AND od."isFilled" = FALSE
               AND od."isCancelled" = FALSE
               AND od."onchainIdMaker" IS NOT NULL
@@ -239,10 +239,12 @@ const query_getOtcList = `
 
 async function getOtcList(partnerId, tenantId) {
     try {
-        return await db.query(query_getOtcList, {
+        const otcList = await db.query(query_getOtcList, {
             type: QueryTypes.SELECT,
             replacements: { partnerId, tenantId },
         });
+
+        return otcList;
     } catch (error) {
         constructError("QUERY", error, { isLog: true, methodName: "getOtcList" });
     }

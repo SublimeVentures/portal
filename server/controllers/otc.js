@@ -49,7 +49,7 @@ async function getUserAllocation(user) {
 async function getOffers(req) {
     try {
         const { tenantId, partnerId } = req.user;
-        return await getActiveOffers(Number(req.params.id), req.query);
+        return await getActiveOffers(Number(req.params.id), req.query, tenantId, partnerId);
     } catch (error) {
         logger.error(`ERROR :: [getOffers] OTC`, { error: serializeError(error) });
         return [];
