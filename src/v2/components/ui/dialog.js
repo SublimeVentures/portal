@@ -34,19 +34,7 @@ const dialogVariants = cva([], {
 });
 
 const DialogContent = forwardRef(
-    (
-        {
-            className,
-            children,
-            variant,
-            handleClose,
-            close = true,
-            closeClassName = "hidden md:block",
-            closeProps,
-            ...props
-        },
-        ref,
-    ) => (
+    ({ className, children, variant, handleClose, close = true, closeClassName, closeProps, ...props }, ref) => (
         <DialogPortal>
             <DialogOverlay />
             <DialogPrimitive.Content

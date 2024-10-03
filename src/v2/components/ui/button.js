@@ -8,7 +8,8 @@ const buttonVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-primary hover:enabled:bg-primary-600",
+                default:
+                    "bg-primary border border-primary hover:enabled:bg-primary-600 hover:enabled:border-primary-600",
                 accent: "bg-accent hover:enabled:bg-accent-600 group-hover/button:bg-accent-600",
                 gradient: "bg-gradient-to-r from-primary to-primary-600 hover:enabled:opacity-80",
                 outline:

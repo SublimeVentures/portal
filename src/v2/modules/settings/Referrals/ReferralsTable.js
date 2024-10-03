@@ -114,7 +114,7 @@ export default function ReferalsTable() {
     });
 
     return (
-        <div className="h-full">
+        <div className="flex flex-col h-full overflow-hidden">
             <Table table={table} isLoading={false} colCount={columns.length} />
         </div>
     );

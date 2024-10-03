@@ -72,6 +72,7 @@ const detailsColumn = columnHelper.accessor("details", {
             </Button>
         );
     },
+    enableSorting: false,
 });
 
 const chainColumn = columnHelper.accessor("chain", {
@@ -85,6 +86,7 @@ const chainColumn = columnHelper.accessor("chain", {
             </DynamicIconGroup>
         );
     },
+    enableSorting: false,
 });
 
 const marketColumn = columnHelper.accessor("name", {
@@ -100,6 +102,7 @@ const marketColumn = columnHelper.accessor("name", {
             </span>
         );
     },
+    enableSorting: false,
 });
 
 const actionColumn = columnHelper.accessor("action", {

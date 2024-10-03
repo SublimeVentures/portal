@@ -52,26 +52,29 @@ export default function Markets() {
     return (
         <Card
             variant={isDesktop ? "static" : "none"}
-            className="p-0 flex flex-col xl:h-full flex-shrink-0 overflow-hidden xl:py-3.5 xl:px-5"
+            className="p-0 flex flex-col shrink-0 overflow-hidden xl:py-3.5 xl:px-5 xl:h-full"
         >
             <div className="xl:mb-4">
                 <div className="hidden items-center justify-between 2xl:flex">
                     <h3 className="py-4 text-1xl font-medium text-foreground md:text-lg 2xl:block">Select Markets</h3>
                     {!!currentMarket && (
-                        <Button variant="link" onClick={handleResetMarket}>
+                        <Button
+                            variant="secondary"
+                            onClick={handleResetMarket}
+                            className="text-accent bg-accent/15 hover:bg-accent/30"
+                        >
                             Latest Deals
                         </Button>
                     )}
                 </div>
                 <Search
                     ref={inputRef}
-                    name="Search Name"
+                    name={isDesktop ? "Search market" : "Search (Tap to see the list)"}
                     value={searchValue}
                     onClose={() => setIsPopoverOpen(false)}
                     onChange={handleSearchChange}
                     onClick={openPopover}
                     isOpen={isPopoverOpen}
-                    className="w-full"
                 />
                 <div className="relative w-full xl:hidden">
                     <Popover open={isPopoverOpen} onOpenChange={openPopover}>
