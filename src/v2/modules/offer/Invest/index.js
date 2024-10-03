@@ -18,7 +18,7 @@ export default function Investment({ session, className }) {
 
     const displayGuaranteed =
         !!upgradesUse?.guaranteedUsed &&
-        guaranteedUsed?.alloUsed != guaranteedUsed?.alloMax &&
+        upgradesUse.guaranteedUsed?.alloUsed != upgradesUse.guaranteedUsed?.alloMax &&
         phaseCurrent.phase != PhaseId.Unlimited &&
         !offer.isLaunchpad;
 
