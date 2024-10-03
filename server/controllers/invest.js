@@ -243,7 +243,16 @@ function checkReserveSpotQueryParams(req) {
     }
 }
 
-async function obtainSignature(offerId, amount, hash, expires, token) {
+async function obtainSignature(offerId, amount, hash, expires, partnerId, chainId, token) {
+    console.log("obtrainSignature", {
+        offerId,
+        amount,
+        hash,
+        expires,
+        partnerId,
+        chainId,
+        token,
+    });
     const signature = await axios.post(
         `${process.env.AUTHER}/invest/sign`,
         {
@@ -251,6 +260,8 @@ async function obtainSignature(offerId, amount, hash, expires, token) {
             amount,
             hash,
             expires,
+            partnerId,
+            chainId,
             token,
         },
         {
@@ -290,6 +301,8 @@ async function reserveSpot(user, req) {
             reservation.data.amount,
             reservation.data.hash,
             reservation.data.expires,
+            user.partnerId,
+            queryParams.data._chain,
             token,
         );
 
