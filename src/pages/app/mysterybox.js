@@ -187,6 +187,7 @@ export default function AppLootbox({ session }) {
                     closeBuy();
                 }}
                 buyModalProps={buyModalProps}
+                userId={userId}
             />
             <ClaimMysteryBoxModal
                 model={claimModal}

@@ -61,6 +61,7 @@ const BlockchainSteps = ({ data }) => {
         network_shouldRun,
     ]);
 
+    // liquidity
     const liquidity_isReady = steps.liquidity && (steps.network ? state.network.isFinished : !state.liquidity.lock);
     const liquidity_shouldRun = !state.liquidity.isFinished && liquidity_isReady;
 
@@ -79,6 +80,7 @@ const BlockchainSteps = ({ data }) => {
         }
     }, [liquidity_balance?.balance, liquidity_balance?.fetchStatus]);
 
+    // allowance
     const allowance_isReady = steps?.liquidity
         ? state.liquidity.isFinished
         : steps?.network
@@ -146,6 +148,7 @@ const BlockchainSteps = ({ data }) => {
         }
     }, [allowance_current?.allowance, allowance_shouldRun, allowance_set?.confirm?.data]);
 
+    // prerequisite
     const prerequisite_isReady = steps.allowance
         ? state.allowance.isFinished
         : steps?.liquidity

@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/router";
 import GenericModal from "@/components/Modal/GenericModal";
-import PAGE from "@/routes";
+import PAGE, { API } from "@/routes";
 import Linker from "@/components/link";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import { tenantIndex } from "@/lib/utils";
@@ -13,12 +13,31 @@ import { METHOD } from "@/components/BlockchainSteps/utils";
 import useGetToken from "@/lib/hooks/useGetToken";
 import BlockchainSteps from "@/components/BlockchainSteps";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import { reserveMysterybox } from "@/fetchers/mysterbox.fetcher";
 
 const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
 
 const { externalLinks } = getTenantConfig();
 
-export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
+export const blockchainPrerequisite = async (params) => {
+    const { tenant, token, network } = params;
+    const { chainId } = network
+    const transaction = await reserveMysterybox({ tenant, chainId, token, network });
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: { hash: transaction.hash },
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
+
+export default function BuyMysteryBoxModal({ model, setter, buyModalProps, userId }) {
+
     const { order, setOrder } = buyModalProps;
     const router = useRouter();
 
@@ -68,6 +87,12 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.MYSTERYBOX,
+
+                userId,
+                prerequisiteTextWaiting: "Generate hash",
+                prerequisiteTextProcessing: "Generating hash",
+                prerequisiteTextSuccess: "Hash obtained",
+                prerequisiteTextError: "Couldn't generate hash",
             },
             token,
             setTransactionSuccessful,

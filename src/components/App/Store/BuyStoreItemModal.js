@@ -13,12 +13,30 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { tenantIndex } from "@/lib/utils";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import { reserveUpgrade } from "@/fetchers/store.fetcher";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const { externalLinks } = getTenantConfig();
 
-export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
+export const blockchainPrerequisite = async (params) => {
+    const { tenant, token, network, upgradeId } = params;
+    const { chainId } = network
+    const transaction = await reserveUpgrade({ tenant, chainId, token, network, upgradeId });
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: { hash: transaction.hash },
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
+
+export default function BuyStoreItemModal({ model, setter, buyModalProps, userId }) {
     const { order, setOrder } = buyModalProps;
     const router = useRouter();
     const { getCurrencyStore, account, activeDiamond, network } = useEnvironmentContext();
@@ -66,6 +84,12 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.UPGRADE,
+
+                userId,
+                prerequisiteTextWaiting: "Generate hash",
+                prerequisiteTextProcessing: "Generating hash",
+                prerequisiteTextSuccess: "Hash obtained",
+                prerequisiteTextError: "Couldn't generate hash",
             },
             token,
             setTransactionSuccessful,
