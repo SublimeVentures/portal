@@ -18,7 +18,7 @@ export default function MarketDetails({ src, alt, offer, className }) {
     return (
         <dl
             className={cn(
-                "relative py-4 px-8 3xl:min-w-96 grid grid-flow-col items-center bg-foreground/[.1] rounded md:gap-x-4",
+                "relative py-4 px-8 3xl:min-w-96 grid grid-flow-col items-center bg-foreground/[.1] rounded md:gap-x-4 select-none",
                 className,
             )}
         >
@@ -36,7 +36,7 @@ export default function MarketDetails({ src, alt, offer, className }) {
                         <Image
                             src={partnerLogo}
                             alt={alt}
-                            className="relative flex shrink-0 bg-black overflow-hidden rounded-full"
+                            className="relative flex shrink-0 bg-black overflow-hidden rounded-full pointer-events-none"
                             width={50}
                             height={50}
                         />

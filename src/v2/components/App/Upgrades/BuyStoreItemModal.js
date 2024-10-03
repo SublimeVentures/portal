@@ -48,6 +48,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
         setTimeout(() => {
             setOrder(null);
             setTransactionSuccessful(false);
+            setAmount(1);
         }, 400);
     };
 
@@ -183,7 +184,12 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     };
 
     return (
-        <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
+        <Modal
+            open={model}
+            onClose={closeModal}
+            variant={transactionSuccessful ? "pattern" : "default"}
+            forceMount={true}
+        >
             {content()}
         </Modal>
     );

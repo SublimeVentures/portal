@@ -5,7 +5,7 @@ import { offersKeys } from "@/v2/constants";
 
 export default function useOffersInfiniteQuery(query = {}) {
     return useInfiniteQuery({
-        queryKey: offersKeys.queryOffersVc(query),
+        queryKey: offersKeys.offersVc(query),
         queryFn: ({ pageParam: offset = 0 }) => fetchOfferList({ ...query, offset }),
         getNextPageParam: ({ limit, offset, count }) => {
             const cursor = limit + offset;

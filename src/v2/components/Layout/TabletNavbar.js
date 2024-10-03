@@ -8,13 +8,13 @@ export default function TabletNavbar() {
     const router = useRouter();
 
     return (
-        <nav className="py-2 bg-primary-700 rounded hidden sm:block">
-            <ul className="px-2 flex items-center justify-between">
+        <nav className="py-1 bg-primary-700 rounded hidden sm:block md:py-1.5">
+            <ul className="px-1 flex items-center justify-between md:px-2">
                 {tabletMenu.map(({ name, path }) => (
                     <li
                         key={path}
                         className={cn(
-                            "py-2 px-4 text-xs text-foreground whitespace-nowrap rounded cursor-pointer hover:bg-primary/[.5]",
+                            "p-2 text-xs text-foreground whitespace-nowrap rounded cursor-pointer hover:bg-primary/[.5] md:px-4",
                             { "bg-gradient-to-r from-primary to-primary-600 font-medium": router.pathname === path },
                         )}
                     >

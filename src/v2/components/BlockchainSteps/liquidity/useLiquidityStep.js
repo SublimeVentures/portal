@@ -9,10 +9,17 @@ export default function useLiquidityStep(state, data, dispatch) {
     const chainId = useChainId();
     const { steps, token, params } = data;
 
-    const liquidity_isReady = steps.liquidity && (steps.network ? state.network.isFinished : !state.liquidity.lock);
+    const liquidity_isReady = !!steps.liquidity && (steps.network ? state.network.isFinished : !state.liquidity.lock);
     const liquidity_shouldRun = !state.liquidity.isFinished && liquidity_isReady;
 
-    const liquidity_balance = useGetTokenBalance(liquidity_shouldRun, token, chainId, params.account, !steps.liquidity);
+    const liquidity_balance = useGetTokenBalance(
+        liquidity_shouldRun,
+        token,
+        chainId,
+        params.account,
+        data.params.liquidity,
+        !steps.liquidity,
+    );
     const liquidity_isFinished = params.liquidity <= liquidity_balance?.balance;
 
     useEffect(() => {
@@ -27,15 +34,13 @@ export default function useLiquidityStep(state, data, dispatch) {
         }
     }, [liquidity_balance?.balance, liquidity_balance?.fetchStatus]);
 
-    const balance = liquidity_isReady ? liquidity_balance : [];
-
     return {
         stepLiquidity: getStepState(STEPS.LIQUIDITY, state.liquidity, {
+            ...liquidity_balance,
             token,
             params,
             liquidity_isFinished,
             liquidity_isReady,
-            ...balance,
         }),
     };
 }

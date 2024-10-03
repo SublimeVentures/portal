@@ -27,6 +27,7 @@ const DEFAULT_STATE = {
     sharedContracts: {},
     settings: {},
     activeDiamond: "",
+    networkToggle: false,
 };
 
 const EnvironmentContext = createContext({
@@ -112,10 +113,9 @@ export const EnvironmentProvider = ({ children, initialData }) => {
 
     useEffect(() => {
         const isNetworkSupported = !!chains.find((el) => el.id === chain?.id);
-
         updateEnvironmentProps(
             [
-                { path: "network.isSupported", value: isNetworkSupported },
+                { path: "network.isSupported", value: accountIsConnected ? isNetworkSupported : undefined },
                 { path: "network.chainId", value: chain?.id },
                 { path: "network.chains", value: chains },
                 { path: "network.name", value: chain?.name },
@@ -249,6 +249,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         currencyStore: environmentProps.currencyStore,
         currencyStaking: environmentProps.currencyStaking,
         settings: environmentProps.settings,
+        networkToggle: environmentProps.networkToggle,
         getCurrencySettlement,
         getCurrencyStore,
         getCurrencySymbolByAddress,

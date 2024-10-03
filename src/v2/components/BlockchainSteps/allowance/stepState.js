@@ -4,12 +4,12 @@ export const stepAllowance = (state, data) => {
     console.log("BIX :: ALLOWANCE :: step state", state, data);
     let result = {};
 
-    if (!data.allowance_isReady) {
+    if (data.allowance_isReady) {
         result = handlePending({
             content: "Checking allowance",
             text: "We are currently verifying your allowance status. Please wait a moment.",
         });
-    } else {
+
         if (state.isFinished) {
             result = handleSuccess({
                 content: "Allowance approved",
@@ -49,12 +49,9 @@ export const stepAllowance = (state, data) => {
                 content: "Rechecking allowance",
                 text: "We are rechecking your allowance. Please wait a moment.",
             });
-        } else {
-            result = handlePending({
-                content: "Checking allowance",
-                text: "We are verifying your allowance status. Please wait a moment.",
-            });
         }
+    } else {
+        result = handlePending();
     }
 
     console.log("BIX :: ALLOWANCE :: step state result", result, state, data);

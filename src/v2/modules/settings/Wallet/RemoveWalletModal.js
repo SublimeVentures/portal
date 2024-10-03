@@ -42,7 +42,7 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
             const result = await removeUserWallet(wallet);
 
             if (result?.ok) {
-                queryClient.invalidateQueries([settingsKeys.wallets]);
+                queryClient.invalidateQueries(settingsKeys.wallets);
                 setStatus(STATUS.SUCCESS);
             } else {
                 setStatus(STATUS.FAILURE);

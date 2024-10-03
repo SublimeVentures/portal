@@ -12,6 +12,11 @@ export const NETWORKS = Object.freeze({
 
 export const AirdropNetworkEnum = Object.freeze({
     sol: 501,
+    eth: 1,
+    matic: 137,
+    bsc: 56,
+    avax: 43114,
+    sepolia: 11155111,
 });
 
 export const AIRDROP_NETWORKS = Object.freeze({

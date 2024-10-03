@@ -23,7 +23,7 @@ export default function Table({ table, isLoading, colCount = 4 }) {
         <Card variant="static" className="p-0 flex flex-col h-full">
             <div className="p-2 h-5 rounded-t bg-gradient-to-r from-primary to-primary-600" />
 
-            <div className="py-2 px-4 h-full min-h-96 block-scrollbar overflow-hidden md:overflow-y-auto">
+            <div className="py-2 px-4 h-full block-scrollbar overflow-hidden md:overflow-y-auto">
                 <table className="table-inline md:table">
                     <thead className="table-head">
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -52,11 +52,11 @@ export default function Table({ table, isLoading, colCount = 4 }) {
                         ) : (
                             table.getRowModel().rows.map((row) => (
                                 <Fragment key={row.id}>
-                                    <tr className="table-body-row">
+                                    <tr className="table-body-row group">
                                         {row.getVisibleCells().map((cell) => (
                                             <td
                                                 key={cell.id}
-                                                className="table-data"
+                                                className="table-data group-hover:bg-foreground/[.3]"
                                                 data-label={cell.column.columnDef.header}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

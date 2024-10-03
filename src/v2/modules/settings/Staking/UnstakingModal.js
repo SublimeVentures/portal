@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import useGetToken from "@/lib/hooks/useGetToken";
 import {
     Dialog,
     DialogContent,
@@ -15,13 +17,30 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { METHOD } from "@/components/BlockchainSteps/utils";
+import { settingsKeys } from "@/v2/constants";
 
-export default function UnstakingModal({ staking = {} }) {
+export default function UnstakingModal({ userId, staking = {} }) {
     const { currencyStaking, activeCurrencyStaking, account, activeDiamond } = useEnvironmentContext();
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
     const { stakeSize } = staking;
 
+    const [isOpen, setIsOpen] = useState(false);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+
+    const { data: wallets } = useQuery({
+        queryKey: settingsKeys.userWallets(userId),
+        queryFn: () => fetchUserWallets(),
+        refetchOnWindowFocus: true,
+    });
+
+    const registeredOriginalWallet = wallets?.find((el) => el.isHolder)?.wallet;
+
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
+
+    const token = useGetToken(stakingCurrency?.contract);
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -30,22 +49,25 @@ export default function UnstakingModal({ staking = {} }) {
                 transaction: true,
             },
             params: {
-                requiredNetwork: stakingCurrency.chainId,
+                requiredNetwork: stakingCurrency?.chainId ?? 0,
                 account: account.address,
                 buttonText: "Unstake",
                 contract: activeDiamond,
+                delegated: wallet,
                 transactionType: METHOD.UNSTAKE,
             },
+            token,
             setTransactionSuccessful,
         };
     }, [stakingCurrency?.contract, activeDiamond]);
 
-    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { all, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [isOpen],
     });
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" aria-label="Unstake">
                     Unstake

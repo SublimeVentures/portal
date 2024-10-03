@@ -121,7 +121,7 @@ const InputFunds = forwardRef(
                         min={min}
                         max={max}
                         step={step}
-                        value={value}
+                        value={`${value}`}
                         {...props}
                         className="bg-transparent w-full border-0 cursor-pointer outline-none font-light"
                     />

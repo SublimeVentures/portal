@@ -22,7 +22,7 @@ SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 // @Todo - Set the header height in the calc function. The mobile header hasn't been created yet, so I added 100px
 const sheetVariants = cva(
-    "bg-sheet-gradient fixed z-50 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 w-full md:h-dvh md:w-[595px]",
+    "bg-sheet-gradient fixed z-50 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 w-full h-dvh md:w-[595px]",
     {
         variants: {
             side: {
@@ -40,7 +40,7 @@ const SheetContent = forwardRef(({ side, className, children, ...props }, ref) =
     <SheetPortal>
         <SheetOverlay className="hidden sm:block" />
         <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
-            <SheetPrimitive.Close className="hidden absolute z-50 right-9 top-11 rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
+            <SheetPrimitive.Close className="absolute z-50 right-6 top-6 sm:right-9 sm:top-11 rounded transition-opacity outline-none hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary sm:block">
                 <IconButton name="Close" variant="secondary" comp="div" icon={CrossIcon} className="p-3.5" />
             </SheetPrimitive.Close>
 

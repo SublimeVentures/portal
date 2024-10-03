@@ -62,6 +62,7 @@ module.exports = {
                 26: "6.5rem", // 104px
                 30: "7.5rem", // 120px
                 46: "11.5rem", // 184px
+                50: "12.5rem", // 200px
                 116: "29rem", // 464px
             },
             fontSize: {
@@ -69,7 +70,7 @@ module.exports = {
                 "2xs": ".625rem", // 10px
             },
             fontFamily: {
-                body: ["Poppins", "sans-serif"],
+                body: ["var(--base-font)", "sans-serif"],
             },
             borderRadius: {
                 "4xl": "2rem",
@@ -81,9 +82,7 @@ module.exports = {
                 "sheet-gradient": `linear-gradient(151deg, ${primary[950]} 0%, ${primary[700]} 49%, ${primary[950]} 100%)`,
                 "navbar-gradient": `linear-gradient(to top, ${primary[950]} 0%, ${primary[950]} 50%, transparent 100%)`,
                 "settings-gradient": `linear-gradient(125deg, ${primary[900]} 0%, ${primary[700]} 49%, ${primary[700]} 50%, ${primary[900]} 100%)`,
-
                 "premium-banner": "url('/img/premium-banner.png')",
-                "empty-investment-pattern": "url('/img/bg/investments/empty@1400.jpg')",
                 "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
                 "sheet-pattern": "url('/img/sheet-pattern.png')",
                 gradient: "linear-gradient(var(--tw-gradient-angle), var(--tw-gradient-stops))",
@@ -97,20 +96,20 @@ module.exports = {
                 DEFAULT: "0px 3px 30px var(--tw-shadow-color, rgb(0 0 0 / 0.05))",
                 accent: "0 3px 30px #FDC171",
             },
-        },
-        keyframes: {
-            "accordion-down": {
-                from: { height: "0" },
-                to: { height: "var(--radix-accordion-content-height)" },
+            keyframes: {
+                "accordion-down": {
+                    from: { height: "0" },
+                    to: { height: "var(--radix-accordion-content-height)" },
+                },
+                "accordion-up": {
+                    from: { height: "var(--radix-accordion-content-height)" },
+                    to: { height: "0" },
+                },
             },
-            "accordion-up": {
-                from: { height: "var(--radix-accordion-content-height)" },
-                to: { height: "0" },
+            animation: {
+                "accordion-down": "accordion-down 0.1s ease-out",
+                "accordion-up": "accordion-up 0.1s ease-out",
             },
-        },
-        animation: {
-            "accordion-down": "accordion-down 0.1s ease-out",
-            "accordion-up": "accordion-up 0.1s ease-out",
         },
         angle: {
             30: "30deg",

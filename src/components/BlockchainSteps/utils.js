@@ -15,9 +15,10 @@ import abi_upgrade_based from "../../../abi/UpgradeFacet.json";
 import abi_mb_generic from "../../../abi/genericMysteryBox.abi.json";
 import abi_mb_based from "../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
+
+import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
+import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
-import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
-import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
 
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
@@ -199,6 +200,7 @@ export const getMethod = (type, token, params) => {
                 validHash(params?.booking?.signature) &&
                 validNumber(params?.booking.expires) &&
                 validNumber(params?.booking.amount);
+
             return isValid
                 ? {
                       ok: true,

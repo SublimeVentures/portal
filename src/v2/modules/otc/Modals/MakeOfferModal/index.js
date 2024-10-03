@@ -23,10 +23,12 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { ExternalLinks } from "@/routes";
 
+// import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
     const {
         transactionSuccessful,
         textCopy,
+        amount,
         currentMarket,
         getSelectedMarketProps,
         getOfferTabsProps,
@@ -42,21 +44,24 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
             </SheetHeader>
 
             <SheetBody>
-                <div className="h-full my-4 mr-4 block-scrollbar overflow-y-auto">
+                <div className="block-scrollbar sm:overflow-y-auto">
                     {transactionSuccessful ? (
                         <MakeTransactionSuccess market={currentMarket.name} textCopy={textCopy} amount={amount} />
                     ) : (
-                        <div className="mx-4 sm:px-10">
-                            <div className="mb-2 py-4 px-2 flex flex-col gap-4 bg-foreground/[.02] rounded">
-                                <SelectedMarket {...getSelectedMarketProps()} />
-                                <OfferTabs {...getOfferTabsProps()} />
-                                <OfferForm {...getOfferFormProps()} />
-                            </div>
+                        <div className="h-full my-4 sm:mr-4">
+                            <div className="mx-4 sm:px-10">
+                                <div className="mb-2 py-4 px-2 flex flex-col gap-4 bg-foreground/[.02] rounded">
+                                    <SelectedMarket {...getSelectedMarketProps()} />
+                                    <OfferTabs {...getOfferTabsProps()} />
+                                    <OfferForm {...getOfferFormProps()} />
+                                </div>
 
-                            <BlockchainSteps {...getBlockchainStepsProps()} />
+                                <BlockchainSteps {...getBlockchainStepsProps()} />
+                            </div>
                         </div>
                     )}
                 </div>
+                {/* <Test {...all}/> */}
             </SheetBody>
 
             <SheetFooter>
@@ -85,26 +90,20 @@ export default function MakeOfferModal() {
     const { selectedTab, blockchainInteractionDataSELL, blockchainInteractionDataBUY, ...content } =
         useCreateOfferModalLogic(isMakeModalOpen, setIsMakeModalOpen);
 
-    const { resetState: resetSellState, ...buyBlockchainStep } = useBlockchainStep({
+    const { ...buyBlockchainStep } = useBlockchainStep({
         data: blockchainInteractionDataSELL,
+        deps: [selectedTab, isMakeModalOpen],
     });
-    const { resetState: resetBuyState, ...sellBlockchainStep } = useBlockchainStep({
+
+    const { ...sellBlockchainStep } = useBlockchainStep({
         data: blockchainInteractionDataBUY,
+        deps: [selectedTab, isMakeModalOpen],
     });
-
-    const handleModalChange = (isOpen) => {
-        if (!isOpen) {
-            resetBuyState();
-            resetSellState();
-        }
-
-        setIsMakeModalOpen(isOpen);
-    };
 
     return (
-        <Sheet open={isMakeModalOpen} onOpenChange={handleModalChange}>
+        <Sheet open={isMakeModalOpen} onOpenChange={setIsMakeModalOpen}>
             <SheetTrigger asChild>
-                <Button>Create offer</Button>
+                <Button>Create Offer</Button>
             </SheetTrigger>
             <MakeOfferModalContent
                 content={content}

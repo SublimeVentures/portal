@@ -5,7 +5,7 @@ import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 import { PhaseId, Phases } from "@/v2/lib/phases";
 
 // Mocked values for phases testing purposes
-// const targetDate = moment("2024-09-10 15:05", "YYYY-MM-DD HH:mm"), countStart = targetDate.unix(), duration = 60;
+// const targetDate = moment("2024-09-17 14:00", "YYYY-MM-DD HH:mm"), countStart = targetDate.unix(), duration = 500000;
 // const useOfferDetailsQuery = () => ({ data: {
 //     d_open: countStart,
 //     isLaunchpad: true,

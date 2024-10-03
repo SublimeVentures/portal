@@ -4,7 +4,7 @@ import MakeOfferModal from "../Modals/MakeOfferModal";
 import useCurrentView from "../logic/useCurrentView";
 import { otcViews } from "../logic/constants";
 import { offersFilters } from "../logic/filters";
-import { Button } from "@/v2/components/ui/button";
+import { Button, buttonVariants } from "@/v2/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -119,10 +119,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                                 });
 
                                 return (
-                                    <div
-                                        key={key}
-                                        className="px-4 flex items-center text-white text-xs 3xl:text-sm font-light bg-primary-800 rounded"
-                                    >
+                                    <div key={key} className={cn(buttonVariants({ variant: "secondary" }))}>
                                         {filter.name}
                                         <button className="ml-2" onClick={() => handleFilterRemove(key)}>
                                             <Cross1Icon />

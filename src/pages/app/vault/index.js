@@ -17,7 +17,7 @@ import { storeOwnedItemsQueryOptions } from "@/v2/hooks/useStoreOwnedItemsQuery"
 import { payoutsInfiniteQueryOptions } from "@/v2/hooks/usePayoutsInfiniteQuery";
 
 export const getServerSideProps = async ({ req, res }) => {
-    return await processServerSideData(req, res, routes.App, async (account, token) => {
+    return await processServerSideData(req, res, routes.App, async (_, token) => {
         const config = {
             headers: {
                 Cookie: `${authTokenName}=${token}`,
@@ -41,7 +41,10 @@ export const getServerSideProps = async ({ req, res }) => {
 function IndexPage() {
     return (
         <>
-            <Metadata title="Vault" />
+            <Metadata
+                title="Vault"
+                description="Vault Dashboard: Manage your investment portfolio, track returns, investments, and upcoming payments all in one place. Quick access to statistics and the latest updates."
+            />
             <div className="grow lg:overflow-y-auto lg:-mx-4 lg:px-4 lg:pb-6 3xl:pb-12">
                 <div className="3xl:h-full 3xl:min-h-[888px] flex flex-col gap-8 lg:grid lg:grid-cols-10 lg:gap-8 3xl:gap-x-13 3xl:gap-y-10 3xl:grid-cols-6 3xl:grid-rows-9">
                     <Statistics className="md:col-span-3 3xl:col-span-2 3xl:row-span-4" />

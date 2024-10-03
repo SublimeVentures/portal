@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { STEP_STATE } from "@/components/BlockchainSteps/enums";
 
 function useBlockchainButton(steps, state, params, extraState) {
@@ -6,37 +7,38 @@ function useBlockchainButton(steps, state, params, extraState) {
 
     const processButtonState = () => {
         console.log("BIX :: BUTTON STATE", steps, extraState);
+
         if (params.buttonCustomLock) {
             return {
                 text: params.buttonCustomText,
                 lock: params.buttonCustomLock,
             };
         }
-        if (steps.network && extraState?.stepNetwork?.state === STEP_STATE.PROCESSING) {
+        if (steps.network && extraState?.network?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Analysing checkpoints",
                 lock: true,
             };
         }
-        if (steps.liquidity && extraState?.stepLiquidity?.state === STEP_STATE.PROCESSING) {
+        if (steps.liquidity && extraState?.liquidity?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Analysing checkpoints",
                 lock: true,
             };
         }
-        if (steps.allowance && extraState?.stepAllowance?.state === STEP_STATE.PROCESSING) {
+        if (steps.allowance && extraState?.allowance?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Analysing checkpoints",
                 lock: true,
             };
         }
-        if (steps.prerequisite && extraState?.stepPrerequisite?.state === STEP_STATE.PROCESSING) {
+        if (steps.prerequisite && extraState?.prerequisite?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Analysing checkpoints",
                 lock: true,
             };
         }
-        if (steps.transaction && extraState?.stepTransaction?.state === STEP_STATE.PROCESSING) {
+        if (steps.transaction && extraState?.transaction?.state === STEP_STATE.PROCESSING) {
             return {
                 text: "Analysing checkpoints",
                 lock: true,
@@ -51,9 +53,8 @@ function useBlockchainButton(steps, state, params, extraState) {
 
     useEffect(() => {
         const buttonState = processButtonState();
-        console.log("BIX :: BUTTON STATE", buttonState);
 
-        if (buttonState.lock) {
+        if (buttonState.lock || state.status === STEP_STATE.PENDING) {
             setResult(buttonState);
         } else {
             const timeoutId = setTimeout(() => {
@@ -66,11 +67,11 @@ function useBlockchainButton(steps, state, params, extraState) {
             return () => clearTimeout(timeoutId);
         }
     }, [
-        extraState.stepNetwork?.state,
-        extraState.stepLiquidity?.state,
-        extraState?.stepAllowance?.state,
-        extraState?.stepPrerequisite?.state,
-        extraState?.stepTransaction?.state,
+        extraState.network?.state,
+        extraState.liquidity?.state,
+        extraState?.allowance?.state,
+        extraState?.prerequisite?.state,
+        extraState?.transaction?.state,
     ]);
 
     useEffect(() => {

@@ -117,3 +117,12 @@ export const fetchOfferParticipants = async (offerId, config) => {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchOfferParticipants", enableSentry: true });
     }
 };
+
+export const cancelOfferParticipant = async (offerId, participantId) => {
+    try {
+        const { data } = await axiosPrivate.delete(`${API.offerList}/${offerId}/participants/${participantId}`);
+        return data;
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "cancelOfferParticipant", enableSentry: true });
+    }
+};

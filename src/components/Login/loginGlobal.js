@@ -68,13 +68,13 @@ export default function LoginGlobal({ ssrData }) {
     return (
         <>
             <div className={`min-h-screen bg-app-bg`}>
-                <div className="bg min-h-screen"></div>
+                <div className="bg-[url(https://cdn.basedvc.fund/webapp/bg.jpg)] bg-cover min-h-screen"></div>
                 <div
                     className="text-white flex pt-20  flex-grow min-h-screen flex-col justify-center sm:flex-row"
                     style={{ marginTop: "calc(-100vh)" }}
                 >
-                    <div className={"p-10 flex flex-col justify-center"}>
-                        <div className=" flex flex-col p-10 blurred glareBg  w-full sm:w-auto min-w-[340px]">
+                    <div className={"mx-auto px-0 py-10 sm:mx-0 sm:px-10 flex flex-col justify-center"}>
+                        <div className=" flex flex-col px-6 py-10 sm:p-10 blurred glareBg  w-full sm:w-auto min-w-[340px] shadow shadow-white/10 sm:shadow-white/25 backdrop-blur-md">
                             <div className="text-3xl font-bold">
                                 <span className={"text-app-success"}>Login</span> with
                             </div>
@@ -143,34 +143,40 @@ export default function LoginGlobal({ ssrData }) {
                                     }}
                                 />
                             </div>
-                            <div className="flex flex-1 items-end pt-10 fullWidthButton btn-narrow">
+                            <div className="flex-1 items-end pt-10 fullWidthButton btn-narrow">
                                 <RoundButton
                                     text={"CONNECT WALLET"}
                                     isLoading={isLoginLoading}
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={"text-sm sm"}
+                                    size={
+                                        "text-sm sm w-full border border-white rounded-full text-white h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/25"
+                                    }
                                     handler={() => handleConnect()}
                                 />
                             </div>
-                            <div className="my-10 h-px w-full barHor"></div>
-                            <div className="flex flex-1 items-end fullWidthButton btn-narrow disabled">
+                            <div className="my-10 h-px w-full barHor bg-gradient-to-r from-transparent via-white/50 via-50% to-transparent"></div>
+                            <div className="flex-1 items-end fullWidthButton btn-narrow disabled">
                                 <RoundButton
                                     text={"Discord"}
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={"text-sm sm"}
+                                    size={
+                                        "text-sm sm w-full border border-white/25 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/[0.1] pointer-events-none"
+                                    }
                                 />
                             </div>
-                            <div className="flex flex-1 items-end pt-2 fullWidthButton btn-narrow disabled">
+                            <div className="flex-1 items-end pt-2 fullWidthButton btn-narrow disabled">
                                 <RoundButton
                                     text={"E-mail"}
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={"text-sm sm"}
+                                    size={
+                                        "text-sm sm w-full border border-white/35 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/[0.1] pointer-events-none"
+                                    }
                                 />
                             </div>
                         </div>

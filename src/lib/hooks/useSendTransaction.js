@@ -56,7 +56,7 @@ const calculateBigIntMultiplier = (value, multiplier) => {
 
 const GAS_MULTIPLIER = 1;
 const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
-const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1000;
+const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1;
 
 const useCalculateGas = (args) => {
     const { query = {}, ...params } = args;
@@ -99,9 +99,8 @@ const useCalculateGas = (args) => {
 };
 
 function useSendTransaction(isEnabled, method, chainId, account) {
-    if (method?.stop) {
-        return true;
-    }
+    if (method?.stop ?? false) return true;
+
     if (!method) {
         method = {
             name: "",
@@ -161,8 +160,8 @@ function useSendTransaction(isEnabled, method, chainId, account) {
     });
 
     const write = useWriteContract();
-
     const confirmEnabled = write.isSuccess;
+
     const confirm = useWaitForTransactionReceipt({
         confirmations: confirmations,
         hash: write?.data,
@@ -196,8 +195,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     return {
         isError: simulate.isError || write.isError || confirm.isError || gas.isError,
-        error: processError(simulate.error, write.error, confirm.error, gas.error),
-        // error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage,
+        error: simulate.error?.shortMessage || write.error?.shortMessage || confirm.error?.shortMessage || gas?.error,
         isLoading:
             simulate.isFetching ||
             write.isFetching ||
@@ -206,7 +204,6 @@ function useSendTransaction(isEnabled, method, chainId, account) {
             write.isLoading ||
             confirm.isLoading ||
             write.isPending,
-        // isLoading: simulate.isFetching || write.isFetching || confirm.isFetching ||  simulate.isLoading || write.isLoading || confirm.isLoading || confirm.isPending || write.isPending,
         simulate,
         write,
         confirm,

@@ -67,11 +67,12 @@ const detailsColumn = columnHelper.accessor("details", {
         const slug = info.row.original.slug;
 
         return (
-            <Button asChild size="small" variant="accent">
+            <Button asChild size="small" variant="accent" className="w-full">
                 <Link href={`${routes.Opportunities}/${slug}`}>Details</Link>
             </Button>
         );
     },
+    enableSorting: false,
 });
 
 const chainColumn = columnHelper.accessor("chain", {
@@ -85,6 +86,7 @@ const chainColumn = columnHelper.accessor("chain", {
             </DynamicIconGroup>
         );
     },
+    enableSorting: false,
 });
 
 const marketColumn = columnHelper.accessor("name", {
@@ -100,6 +102,7 @@ const marketColumn = columnHelper.accessor("name", {
             </span>
         );
     },
+    enableSorting: false,
 });
 
 const actionColumn = columnHelper.accessor("action", {
@@ -112,10 +115,10 @@ const actionColumn = columnHelper.accessor("action", {
         const offerDetails = info.row.original;
 
         return (
-            <div className="flex flex-row justify-end gap-1 lg:justify-start">
+            <div className="flex flex-row justify-end gap-1 lg:justify-stretch">
                 {ownership.ok &&
                     (ownership.isActive ? (
-                        <CancelOfferModal offerDetails={offerDetails} />
+                        <CancelOfferModal offerDetails={offerDetails} className="w-full" />
                     ) : (
                         <Tooltiper
                             wrapper={
@@ -128,7 +131,7 @@ const actionColumn = columnHelper.accessor("action", {
                         />
                     ))}
 
-                {!ownership.ok && <TakeOfferModal offerDetails={offerDetails} />}
+                {!ownership.ok && <TakeOfferModal offerDetails={offerDetails} className="w-full" />}
             </div>
         );
     },

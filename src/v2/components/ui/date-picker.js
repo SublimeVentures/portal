@@ -23,12 +23,13 @@ export function DatePicker({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant={variant} className={cn("flex justify-center items-center min-w-52", className)}>
+                <Button variant={variant} className={cn("flex justify-center items-center sm:min-w-52", className)}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {value ? (
                         <>
-                            {moment(value).format("LL")}
-                            <Button variant="secondary" className="px-2 -mr-5 ml-3" onClick={handleReset} asChild>
+                            <span className="hidden sm:inline">{moment(value).format("LL")}</span>
+                            <span className="sm:hidden">{moment(value).format("L")}</span>
+                            <Button variant="secondary" className="p-0 sm:p-2 -mr-5 ml-3" onClick={handleReset} asChild>
                                 <span>
                                     <CrossIcon className="size-2" />
                                 </span>
@@ -44,7 +45,7 @@ export function DatePicker({
                 align={align}
                 className="px-4 py-6 w-auto border-transparent text-foreground bg-primary-900 [box-shadow:0px_0px_58px_rgba(0,_0,_0,_0.39)]"
             >
-                <h3 className="mb-6 font-normal text-lg">{label}</h3>
+                <h3 className="mb-6 font-base text-lg">{label}</h3>
                 <Calendar label={label} mode="single" selected={value} onSelect={onChange} initialFocus {...props} />
             </PopoverContent>
         </Popover>

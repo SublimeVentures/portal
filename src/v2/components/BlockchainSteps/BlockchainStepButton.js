@@ -1,9 +1,9 @@
-import { stepsStatus } from "./reducer";
-import { Button } from "@/v2/components/ui/button";
+import { STEPS_STATE } from "./enums";
 import { cn } from "@/lib/cn";
+import { Button } from "@/v2/components/ui/button";
 
 export default function BlockchainStepButton({ run, status, buttonLock, buttonText, className, variant }) {
-    const isIdle = status === stepsStatus.IDLE;
+    const isIdle = status === STEPS_STATE.PENDING;
 
     return (
         <Button

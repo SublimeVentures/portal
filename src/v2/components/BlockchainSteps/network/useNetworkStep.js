@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getStepState } from "../getStepState";
-import { STEPS } from "../enums";
+import { STEPS, STEPS_ACTIONS } from "../enums";
 import { networkAction } from "./reducer";
 import useGetNetwork from "@/lib/hooks/useGetNetwork";
 
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+
 export default function useNetworkStep(state, data, dispatch) {
+    const { network } = useEnvironmentContext();
     const { steps, params } = data;
 
-    const network_isReady = steps.network && !state.network.lock;
+    const network_isReady = !!steps.network && !state.network.lock;
     const network_shouldRun = !state.network.isFinished && network_isReady;
     const network_current = useGetNetwork(network_shouldRun, params.requiredNetwork);
     const network_isFinished = network_current.isValid;
@@ -23,7 +26,7 @@ export default function useNetworkStep(state, data, dispatch) {
                 },
             });
         }
-    }, [network_current.isValid, network_current?.network, network_shouldRun]);
+    }, [network_current.isValid, network_current?.network, network_shouldRun, network.chainId]);
 
     return {
         network_current,

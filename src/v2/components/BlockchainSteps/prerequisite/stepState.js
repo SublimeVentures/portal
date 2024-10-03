@@ -4,12 +4,15 @@ export const stepPrerequisite = (state, data) => {
     console.log("BIX :: PREREQUISITE :: step state", state, data);
     let result = {};
 
-    if (!data.prerequisite_isReady) {
-        result = handlePending({
-            content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
-            text: "Please wait while we validate your transaction details.",
-        });
-    } else {
+    if (data.prerequisite_isReady) {
+        // If prerequisite is the first step, it's always ready, so I've commented it out to keep the "Analyser tool" default text
+
+        // result = handlePending({
+        //     content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
+        //     text: "Please wait while we validate your transaction details."
+        // });
+        result = handlePending();
+
         if (state.isFinished) {
             result = handleSuccess({
                 content: data.params.prerequisiteTextSuccess ?? "Validation successful",
@@ -25,12 +28,9 @@ export const stepPrerequisite = (state, data) => {
                 content: data.params.prerequisiteTextError ?? "Validation failed",
                 text: data?.error ?? "An error occurred during the validation process. Please try again.",
             });
-        } else {
-            result = handlePending({
-                content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
-                text: "Please wait while we validate your transaction details.",
-            });
         }
+    } else {
+        result = handlePending();
     }
 
     console.log("BIX :: PREREQUISITE :: step state result", result, state, data);

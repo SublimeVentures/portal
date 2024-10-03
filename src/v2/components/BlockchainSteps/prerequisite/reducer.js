@@ -1,4 +1,4 @@
-import { stepsAction } from "../reducer";
+import { STEPS_ACTIONS } from "../enums";
 
 export const defaultPrerequisiteStep = {
     isFinished: false,
@@ -16,9 +16,9 @@ export function prerequisiteReducer(state, action) {
     const { type, payload } = action;
 
     switch (type) {
-        case stepsAction.START:
+        case STEPS_ACTIONS.START:
             return { ...state, lock: false };
-        case stepsAction.RESET:
+        case STEPS_ACTIONS.RESET:
             return { ...defaultPrerequisiteStep };
         case prerequisiteAction.SET_PREREQUISITE:
             return {

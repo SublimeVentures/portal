@@ -54,6 +54,7 @@ export const saveTransaction = async (offerId, networkChainId, price, amount, is
         return handleError(ErrorType.FETCHER, error, { methodName: "saveTransaction", enableSentry: true });
     }
 };
+
 export const getSignature = async (offerId, chainId, otcId, dealId, wallet) => {
     try {
         const { data } = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {

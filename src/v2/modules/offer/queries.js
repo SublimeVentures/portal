@@ -7,13 +7,14 @@ import { fetchOfferAllocation, fetchOfferDetails } from "@/fetchers/offer.fetche
 import { fetchUserInvestment } from "@/fetchers/vault.fetcher";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
+import { offersKeys } from "@/v2/constants";
 
 export function useOfferDetailsQuery() {
     const router = useRouter();
     const { slug } = router.query;
 
     const { error, refetch, ...data } = useQuery({
-        queryKey: ["offerDetails", slug],
+        queryKey: offersKeys.offerDetails(slug),
         queryFn: () => fetchOfferDetails(slug),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
@@ -44,7 +45,7 @@ export function useOfferAllocationQuery() {
     const { isClosed } = usePhaseInvestment();
 
     const { error, refetch, ...data } = useQuery({
-        queryKey: ["offerAllocation", offerId],
+        queryKey: offersKeys.offerAllocation(offerId),
         queryFn: () => fetchOfferAllocation(offerId),
         refetchOnMount: false,
         refetchOnWindowFocus: true,

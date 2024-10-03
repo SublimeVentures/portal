@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const iconButtonVariants = cva(
-    "flex items-center justify-center shrink-0 transition-hover text-white cursor-pointer outline-none",
+    "flex items-center justify-center shrink-0 transition-colors text-white cursor-pointer outline-none",
     {
         variants: {
             variant: {

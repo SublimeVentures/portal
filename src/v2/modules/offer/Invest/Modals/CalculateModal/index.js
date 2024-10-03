@@ -15,7 +15,7 @@ export default function CalculateModal() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <IconButton className="p-0" icon={BsCalculator} />
+                <IconButton className="p-0" icon={BsCalculator} aria-label="Profit calculator" />
             </DialogTrigger>
 
             <DialogContent className="max-w-[500px]">
@@ -26,7 +26,7 @@ export default function CalculateModal() {
                 <CalculateForm />
 
                 <DialogFooter className="flex items-center">
-                    <p className="max-w-72 text-sm font-regular text-green-500 text-center">
+                    <p className="max-w-64 text-xs font-regular text-green-500 text-center md:max-w-72 md:text-sm">
                         Usual multiplier for seed investment is between 20-50x.
                     </p>
                 </DialogFooter>
@@ -34,27 +34,3 @@ export default function CalculateModal() {
         </Dialog>
     );
 }
-
-// <RestoreHashModal
-//     restoreModalProps={restoreModalProps}
-//     model={isRestoreModal.open}
-//     setter={() => {
-//         setRestoreModal({ open: false, amount: 0 });
-//     }}
-// />
-// <ErrorModal
-//     errorModalProps={errorModalProps}
-//     model={isErrorModal.open}
-//     setter={() => {
-//         setErrorModal({ open: false, code: null });
-//     }}
-// />
-// {network?.isSupported && selectedCurrency && (
-//     <InvestModal
-//         investModalProps={investModalProps}
-//         model={isInvestModal}
-//         setter={() => {
-//             setInvestModal(false);
-//         }}
-//     />
-// )}

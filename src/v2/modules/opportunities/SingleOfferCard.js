@@ -10,24 +10,27 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
     return (
         <Card variant="dark" className="h-full flex flex-col lg:p-3">
             <div className="grow">
-                <div className="relative h-24 flex gap-2 lg:mb-12 lg:h-32">
+                <div className="relative h-22 flex gap-2 lg:mb-12 lg:h-32">
                     <Image
                         src={getResearchIconSrc(slug)}
-                        className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg"
+                        className="rounded lg:absolute lg:left-4 lg:-bottom-12 lg:shadow-lg select-none pointer-events-none bg-primary-800 aspect-square"
                         alt={`Avatar for ${name} offer`}
-                        width={90}
-                        height={90}
+                        width={88}
+                        height={88}
+                        priority
                     />
                     <Image
                         src={getResearchBgSrc(slug)}
                         alt={`Background image for ${name} offer`}
-                        className="object-cover rounded"
-                        width={1000}
-                        height={200}
+                        className="object-cover rounded select-none pointer-events-none bg-primary-800 w-full"
+                        width={500}
+                        height={130}
+                        priority
+                        sizes="(max-width: 768px) 75vw, (max-width: 1023px) 33vw, (max-width: 1920px) 25vw, 20vw"
                     />
                 </div>
 
-                <div className="py-4 flex justify-between items-center lg:px-4 lg:py-0 lg:items-start">
+                <div className="w-full py-4 flex justify-between items-center lg:px-4 lg:py-0 lg:items-start">
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}
@@ -43,7 +46,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
             </div>
 
             <div className="mt-4 mb-2 px-4">
-                <Progress value={progress} />
+                <Progress value={progress} aria-label={`${name} fundraising progress`} />
             </div>
 
             <div className="m-4 px-2.5 lg:px-4 flex justify-between items-center bg-primary-600 rounded-full text-xs font-light text-foreground lg:text-sm leading-5 lg:leading-7">

@@ -12,11 +12,12 @@ export const useOfferStatus = (offer) => {
     const state = phaseCurrent?.phaseName;
     const status = getStatus(phaseCurrent);
     const variant = BadgeVariants[status];
+
     return { state, status, variant };
 };
 
 export const offerProgressQueryOptions = (id) => ({
-    queryKey: offersKeys.queryOfferProgress(id),
+    queryKey: offersKeys.offerProgress(id),
     queryFn: () => fetchOfferProgress(id),
 });
 

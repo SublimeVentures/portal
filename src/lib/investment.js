@@ -198,40 +198,6 @@ function userInvestmentState(
     };
 }
 
-function tooltipInvestState(offer, allocationData, investmentAmount) {
-    if (allocationData.allocationUser_left === 0) {
-        return {
-            allocation: false,
-            message: `Maximum allocation filled`,
-        };
-    } else if (!allocationData.allocationUser_invested && investmentAmount < allocationData.allocationUser_min) {
-        return {
-            allocation: false,
-            message: `Minimum investment: $${allocationData.allocationUser_min.toLocaleString()}`,
-        };
-    } else if (investmentAmount % MIN_DIVISIBLE > 0 || investmentAmount <= 0) {
-        return {
-            allocation: false,
-            message: `Allocation has to be divisible by $${MIN_DIVISIBLE}`,
-        };
-    } else if (investmentAmount > allocationData.allocationUser_left) {
-        return {
-            allocation: false,
-            message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`,
-        };
-    } else if (investmentAmount <= allocationData.allocationUser_left) {
-        return {
-            allocation: true,
-            message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`,
-        };
-    } else {
-        return {
-            allocation: true,
-            message: `Maximum investment: $${allocationData.allocationUser_left.toLocaleString()}`,
-        };
-    }
-}
-
 function buttonInvestIsDisabled(
     allocationOffer,
     offerPhaseCurrent,
@@ -239,7 +205,6 @@ function buttonInvestIsDisabled(
     isAllocationOk,
     allocationData,
     isStakeLock,
-    userInvestmentState,
 ) {
     return (
         allocationOffer?.isPaused ||
@@ -266,26 +231,24 @@ function buttonInvestState(
     isAllocationOk,
     allocationData,
     isStakeLock,
-    userInvestmentState,
 ) {
     return {
-        text: buttonInvestText(allocationOffer, allocationData, offerPhaseCurrent.button),
-        isDisabled: buttonInvestIsDisabled(
+        btnText: buttonInvestText(allocationOffer, allocationData, offerPhaseCurrent.button),
+        isBtnDisabled: buttonInvestIsDisabled(
             allocationOffer,
             offerPhaseCurrent,
             investmentAmount,
             isAllocationOk,
             allocationData,
             isStakeLock,
-            userInvestmentState,
         ),
     };
 }
 
 module.exports = {
     MIN_DIVISIBLE,
+    MIN_ALLOCATION,
     userInvestmentState,
-    tooltipInvestState,
     buttonInvestState,
     getUserAllocationMax,
     roundAmount,

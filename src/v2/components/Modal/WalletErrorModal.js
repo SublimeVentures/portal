@@ -10,21 +10,20 @@ import { routes } from "@/v2/routes";
 
 const WalletErrorModal = ({ session: { wallets = [] } }) => {
     const {
-        account: { address },
+        account: { address, isConnected },
         environmentCleanup,
     } = useEnvironmentContext();
     const { reconnect } = useReconnect();
     const [isClient, setIsClient] = useState(false);
     const [guard, setGuard] = useState(true);
-    const isAddressSupported = wallets.includes(address);
-    const isOpen = isClient && (guard || !address) && !isAddressSupported;
+    const isAddressSupported = wallets.includes(address) && wallets.length > 0;
+    const isOpen = isConnected && isClient && (guard || !address) && !isAddressSupported;
     useEffect(() => {
         if (!isAddressSupported) {
             reconnect();
         }
     }, [isAddressSupported, address]);
     const router = useRouter();
-
     useEffect(() => {
         const showModalOnRoutes = [routes.Settings];
         setIsClient(true);
@@ -33,7 +32,6 @@ const WalletErrorModal = ({ session: { wallets = [] } }) => {
     if (!isClient) {
         return null;
     }
-
     return (
         <Dialog open={isOpen}>
             <DialogContent close={false}>

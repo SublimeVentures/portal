@@ -48,7 +48,8 @@ async function getUserAllocation(user) {
 
 async function getOffers(req) {
     try {
-        return await getActiveOffers(Number(req.params.id), req.query);
+        const { tenantId, partnerId } = req.user;
+        return await getActiveOffers(Number(req.params.id), req.query, tenantId, partnerId);
     } catch (error) {
         logger.error(`ERROR :: [getOffers] OTC`, { error: serializeError(error) });
         return [];
@@ -66,7 +67,8 @@ async function getHistory(req) {
 
 async function getLatestDeals(req) {
     try {
-        return await getLatestOffers(req.query);
+        const { tenantId, partnerId } = req.user;
+        return await getLatestOffers(req.query, tenantId, partnerId);
     } catch (error) {
         logger.error(`ERROR :: [getLatestDeals] OTC`, { error: serializeError(error) });
         return [];

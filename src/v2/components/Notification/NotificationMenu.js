@@ -34,7 +34,13 @@ const NotificationMenu = ({ isBlockedAlert }) => {
     return (
         <DropdownMenu open={open} onOpenChange={(value) => setOpen(value)}>
             <DropdownMenuTrigger asChild>
-                <IconButton icon={bellIcon} variant="transparent" shape="circle" className="p-3 outline-none" />
+                <IconButton
+                    icon={bellIcon}
+                    variant="transparent"
+                    shape="circle"
+                    className="p-3 outline-none"
+                    aria-label="Notifications"
+                />
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
@@ -54,7 +60,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                         onClick={() => setOpen(false)}
                         className="text-accent font-light leading-none hover:underline"
                     >
-                        Show all
+                        Show All
                     </Link>
                 </div>
 

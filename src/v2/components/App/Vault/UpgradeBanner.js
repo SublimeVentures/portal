@@ -20,14 +20,14 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
         <Card
             variant="none"
             border="none"
-            className={cn("relative flex group/button", className, {
+            href={routes.Upgrades}
+            className={cn("relative flex group/button select-none", className, {
                 "bg-banner-default bg-left bg-cover 3xl:bg-center bg-no-repeat py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
                     variant === VARIANTS.DEFAULT,
                 "bg-banner-vertical p-3 md:justify-end lg:w-116": variant === VARIANTS.VERTICAL,
             })}
         >
-            <Link
-                href={routes.Upgrades}
+            <div
                 className={cn("", {
                     "w-7/12 3xl:w-full": variant === VARIANTS.DEFAULT,
                     "block w-full md:w-1/2": variant === VARIANTS.VERTICAL,
@@ -75,14 +75,14 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                     <>
                         {variant === VARIANTS.DEFAULT && (
                             <CardTitle className="mb-2 text-base 3xl:text-2xl font-normal italic text-accent text-center">
-                                Acquired <span className="3xl:block font-semibold">premium</span>
+                                Acquired <span className="3xl:block font-semibold">Premium</span>
                             </CardTitle>
                         )}
-                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-5 gap-x-4">
+                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-4 gap-x-4">
                             {items.map((item) => (
                                 <Fragment key={item.id}>
-                                    <dt className="text-left">{item.name}</dt>
-                                    <dd className="px-1.5 bg-accent/[.2] text-accent first-of-type:rounded-t last-of-type:rounded-b w-6 text-center justify-self-end">
+                                    <dt className="text-left py-0.5">{item.name}</dt>
+                                    <dd className="px-1.5 bg-accent/[.2] text-accent first-of-type:rounded-t last-of-type:rounded-b w-6 text-center justify-self-end flex items-center justify-center">
                                         {item.amount}
                                     </dd>
                                 </Fragment>
@@ -90,7 +90,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                         </dl>
                     </>
                 )}
-            </Link>
+            </div>
         </Card>
     );
 };

@@ -4,6 +4,7 @@ const { models } = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
 const db = require("../services/db/definitions/db.init");
 const { TENANT } = require("../../src/lib/tenantHelper");
+const { constructError } = require("../utils/index");
 
 async function getOffersPublic() {
     try {
@@ -33,10 +34,7 @@ async function getOffersPublic() {
 
         return db.query(sqlQuery, { type: QueryTypes.SELECT });
     } catch (error) {
-        logger.error("QUERY :: [getOffersPublic]", {
-            error: serializeError(error),
-        });
-        return [];
+        return constructError("QUERY", error, { isLog: true, methodName: "getOffersPublic" });
     }
 }
 
@@ -114,39 +112,30 @@ async function getOfferList(partnerId, tenantId, { limit = 6, offset = 0, isSett
             offset,
         };
     } catch (error) {
-        logger.error("QUERY :: [getOfferList]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferList" });
     }
 
     return { count: 0, rows: [] };
 }
 
-const query_getOfferProgress = `
-    SELECT
-        CASE 
-            WHEN ol."alloTotal" > 0 THEN (ol."alloFilled" / ol."alloTotal") * 100
-            ELSE 0
-        END AS progress,
-        ol."alloFilled" AS filled
-    FROM
-        "offerLimit" ol
-    WHERE
-        ol."offerId" = :offerId;
-`;
-
 async function getOfferProgress(offerId) {
     try {
-        const result = await db.query(query_getOfferProgress, {
-            type: QueryTypes.SELECT,
-            replacements: { offerId },
+        const result = await models.offerLimit.findOne({
+            attributes: [
+                [
+                    Sequelize.literal(`CASE 
+                    WHEN "alloTotal" > 0 THEN ROUND(("alloFilled"::decimal / "alloTotal"::decimal) * 100, 2) 
+                    ELSE 0 
+                    END`),
+                    "progress",
+                ],
+                ["alloFilled", "filled"],
+            ],
+            where: { offerId },
         });
-
-        return result.length > 0 ? result[0] : null;
+        return result ? result.toJSON() : null;
     } catch (error) {
-        logger.error("QUERY :: [getOfferProgress]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferProgress" });
     }
 
     return null;
@@ -204,15 +193,14 @@ async function getLaunchpadList(partnerId, tenantId) {
             replacements: { partnerId, tenantId },
         });
     } catch (error) {
-        logger.error("QUERY :: [getLaunchpadList]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getLaunchpadList" });
     }
     return [];
 }
 
 const query_getOtcList = `
     SELECT
+        o.id,
         o.slug,
         o.name,
         o.ppu,
@@ -229,7 +217,7 @@ const query_getOtcList = `
         (
             SELECT COUNT(*)
             FROM "otcDeal" od
-            WHERE od."offerId" = o.id
+            WHERE od."otcId" = o.otc
               AND od."isFilled" = FALSE
               AND od."isCancelled" = FALSE
               AND od."onchainIdMaker" IS NOT NULL
@@ -239,10 +227,9 @@ const query_getOtcList = `
             LEFT JOIN "offerLimit" ol ON o.id = ol."offerId"
             LEFT JOIN "partner" p ON CAST(o."broughtBy" AS INTEGER) = p.id
     WHERE
-        o.otc != 0 AND
-        (
-                (o."isOtcExclusive" = FALSE) OR
-                (o."isOtcExclusive" = TRUE AND ol."partnerId" = :tenantId)
+        o.otc != 0 AND (
+            (o."isOtcExclusive" = true AND ol."partnerId" = :tenantId AND CAST(o."broughtBy" AS INTEGER) = :tenantId) OR
+            (o."isOtcExclusive" = false AND (ol."partnerId" = :tenantId OR ol."partnerId" = :partnerId))
         )
     GROUP BY
         o.id, p.id
@@ -252,14 +239,14 @@ const query_getOtcList = `
 
 async function getOtcList(partnerId, tenantId) {
     try {
-        return await db.query(query_getOtcList, {
+        const otcList = await db.query(query_getOtcList, {
             type: QueryTypes.SELECT,
             replacements: { partnerId, tenantId },
         });
+
+        return otcList;
     } catch (error) {
-        logger.error("QUERY :: [getOtcList]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOtcList" });
     }
     return [];
 }
@@ -311,10 +298,7 @@ async function getOfferDetails(slug, partnerId, tenantId, userId) {
             replacements: { slug, partnerId, tenantId, userId },
         });
     } catch (error) {
-        logger.error("QUERY :: [getOfferDetails]", {
-            error: serializeError(error),
-            slug,
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferDetails" });
     }
     return {};
 }
@@ -375,13 +359,31 @@ async function getOfferWithLimits(offerId) {
                 {
                     model: models.offerLimit,
                     as: "offerLimits",
+                    attributes: [
+                        "id",
+                        "offerId",
+                        "partnerId",
+                        "isTenantExclusive",
+                        "alloMin",
+                        "alloMax",
+                        "alloTotal",
+                        "d_open",
+                        "d_close",
+                        "lengthWhales",
+                        "lengthRaffle",
+                        "lengthFCFS",
+                        "lengthGuaranteed",
+                        "guaranteedIsExpired",
+                        "createdAt",
+                        "updatedAt",
+                    ],
                 },
             ],
         });
 
         return offer ? offer.get({ plain: true }) : null;
     } catch (error) {
-        console.error("Error fetching offer with limits:", error);
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferWithLimits" });
         return null;
     }
 }
@@ -399,27 +401,53 @@ async function getAllocation(userId) {
             raw: true,
         });
     } catch (error) {
-        logger.error("QUERY :: [getAllocation]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getAllocation" });
 
         return [];
     }
 }
 
-async function getOfferParticipants(offerId, userId) {
+async function getOfferParticipants(user, req) {
+    const { userId } = user;
+    const { id } = req.params;
+
     try {
-        return models[`z_participant_${offerId}`].findAll({
+        return models[`z_participant_${id}`].findAll({
             where: {
                 userId,
             },
         });
     } catch (error) {
-        logger.error("QUERY :: [getOfferParticipants]", {
-            error: serializeError(error),
-        });
+        constructError("QUERY", error, { isLog: true, methodName: "getOfferParticipants" });
 
         return [];
+    }
+}
+
+async function deleteOfferParticipants(user, req) {
+    const { userId } = user;
+    const { offerId, participantId } = req.params;
+
+    try {
+        const res = await models[`z_participant_${offerId}`].destroy({
+            where: {
+                userId,
+                id: participantId,
+                isConfirmedInitial: false,
+                isConfirmed: false,
+                isExpired: false,
+            },
+        });
+
+        if (res > 0) {
+            return { ok: true };
+        }
+
+        return { ok: false };
+    } catch (error) {
+        constructError("QUERY", error, { isLog: true, methodName: "deleteOfferParticipants" });
+
+        return { ok: false };
     }
 }
 
@@ -434,4 +462,5 @@ module.exports = {
     getOfferWithLimits,
     getAllocation,
     getOfferParticipants,
+    deleteOfferParticipants,
 };

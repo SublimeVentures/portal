@@ -33,7 +33,7 @@ export default function Investors() {
     }, []);
 
     return (
-        <div className="investorGradient flex flex-col justify-center text-white pt-10 uppercase pb-10">
+        <div className="bg-[linear-gradient(to_bottom,rgba(16,19,27,1)_0%,rgba(16,19,27,1)_85%,rgba(14,17,24,1)_100%)] flex flex-col justify-center text-white pt-10 uppercase pb-10">
             <div className="px-10 py-25 flex flex-col gap-10 flex-1">
                 <div className="flex flex-col text-white font-medium  text-center pb-10">
                     <div className="font-accent text-xs ml-1">WHO WE WORK with</div>

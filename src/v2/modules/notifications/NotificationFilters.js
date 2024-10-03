@@ -11,9 +11,9 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
     const props = unreadCount > 0 ? { count: `${unreadCount} unread` } : {};
 
     return (
-        <div className="flex flex-col items-center gap-4 3xl:gap-12 md:flex-row sm:mb-4 lg:mb-0">
-            <Title {...props}>My notifications</Title>
-            <div className="flex flex-col gap-4 md:flex-row">
+        <div className="flex flex-col items-center gap-4 3xl:gap-12 md:flex-row sm:mb-4 lg:mb-0 ">
+            <Title {...props}>My Notifications</Title>
+            <div className="w-full flex flex-col gap-4 md:flex-row">
                 <div className="flex items-center gap-2">
                     <DatePicker
                         className="w-full md:w-auto"
@@ -40,7 +40,10 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
                         value={typeId ?? 0}
                         onValueChange={(value) => handleInputChange("typeId", value === 0 ? null : value)}
                     >
-                        <SelectTrigger className="px-8 w-full md:w-auto" size="sm">
+                        <SelectTrigger
+                            className="px-8 w-full md:w-auto text-xs md:text-sm !leading-1 md:!leading-6"
+                            size="sm"
+                        >
                             <SelectValue placeholder="Event type" />
                         </SelectTrigger>
                         <SelectContent>

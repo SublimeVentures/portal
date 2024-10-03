@@ -49,7 +49,7 @@ export const ChainButton = ({ children, className, active, invalid, ...props }) 
     );
 };
 
-const Button = ({ chainId, isActive, children, onClick: onSuccess, className }) => {
+const Button = ({ chainId, isActive, children, onClick: onSuccess, className, ...props }) => {
     const { switchChain } = useSwitchChain();
     const [hasError, setHasError] = useState(false);
     const onError = () => {
@@ -79,6 +79,7 @@ const Button = ({ chainId, isActive, children, onClick: onSuccess, className }) 
                     );
                 }
             }}
+            {...props}
         >
             {children}
         </ChainButton>
@@ -104,11 +105,10 @@ const ChainSwitch = () => {
     const {
         network: { chains = [], chainId },
     } = data;
-    const [open, setOpen] = useState(false);
     return (
         <ChainGroup
             className={cn({
-                "w-11": !open,
+                "w-11": !data.networkToggle,
             })}
         >
             {chains.map((chain) => {
@@ -118,10 +118,13 @@ const ChainSwitch = () => {
                         key={chain.id}
                         isActive={isActive}
                         chainId={chain.id}
-                        onClick={() => setOpen((prev) => !prev)}
+                        onClick={() =>
+                            data.updateEnvironmentProps([{ path: "networkToggle", value: !data.networkToggle }])
+                        }
                         className={cn({
-                            "!hidden": !open && !isActive,
+                            "!hidden": !data.networkToggle && !isActive,
                         })}
+                        aria-label={`Switch to ${chain.name}`}
                     >
                         <ChainIcon chainId={chain.id} active={isActive} />
                     </Button>

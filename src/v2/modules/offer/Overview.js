@@ -13,9 +13,9 @@ import { Badge } from "@/v2/components/ui/badge";
 import { useOfferStatus } from "@/v2/modules/opportunities/useSingleOfferLogic";
 import { cn } from "@/lib/cn";
 
-const SocialButton = ({ href, icon: Icon }) => (
+const SocialButton = ({ href, icon: Icon, ...props }) => (
     <Button variant="secondary" className="px-2" asChild>
-        <Link href={href} target="_blank">
+        <Link href={href} target="_blank" {...props}>
             <Icon className="size-5 m-px" />
         </Link>
     </Button>
@@ -25,12 +25,15 @@ export default function Overview({ className }) {
     const { data: offer, isLoading } = useOfferDetailsQuery();
     const { getResearchIconSrc, getResearchBgSrc } = useImage();
     const { getResearchReportSrc } = useResearchAssets();
+
     const socials = [
-        { href: offer.url_web, icon: LanguageIcon },
-        { href: offer.url_twitter, icon: TwitterIcon },
-        { href: offer.url_discord, icon: DiscordIcon },
+        { href: offer.url_web, icon: LanguageIcon, type: "Website" },
+        { href: offer.url_twitter, icon: TwitterIcon, type: "Twitter" },
+        { href: offer.url_discord, icon: DiscordIcon, type: "Discord" },
     ].filter(({ href }) => href);
+
     const { state, variant } = useOfferStatus(offer);
+
     return (
         <div
             className={cn(
@@ -48,11 +51,11 @@ export default function Overview({ className }) {
                                 src={getResearchIconSrc(offer.slug)}
                                 alt={offer.name}
                                 fill={true}
-                                className="rounded object-cover"
+                                className="rounded object-cover select-none pointer-events-none"
                             />
                         )}
                     </div>
-                    <div className="grow">
+                    <div className="grow select-none">
                         {isLoading ? (
                             <>
                                 <Skeleton className="mb-0.5 md:mb-1.5 h-7 md:h-9" />
@@ -69,7 +72,7 @@ export default function Overview({ className }) {
                         )}
                     </div>
                 </div>
-                <div className="w-full md:order-3 text-sm md:text-base font-light empty:hidden">
+                <div className="w-full md:order-3 text-sm md:text-base font-light empty:hidden select-none">
                     {isLoading ? (
                         <>
                             <Skeleton className="mb-0.5" />
@@ -90,8 +93,8 @@ export default function Overview({ className }) {
                         </>
                     ) : (
                         <>
-                            {socials.map(({ href, icon: Icon }) => (
-                                <SocialButton key={href} href={href} icon={Icon} />
+                            {socials.map(({ href, icon: Icon, type }) => (
+                                <SocialButton key={href} href={href} icon={Icon} aria-label={`Go to ${type}`} />
                             ))}
                             <Button variant="outline" className="px-2" asChild>
                                 <Link
@@ -99,6 +102,7 @@ export default function Overview({ className }) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     download
+                                    arial-label="Download research report"
                                 >
                                     <DownloadIcon className="size-5" />
                                 </Link>
@@ -112,7 +116,7 @@ export default function Overview({ className }) {
                     src={getResearchBgSrc(offer.slug)}
                     alt={offer.name}
                     fill={true}
-                    className="rounded object-cover"
+                    className="rounded object-cover select-none pointer-events-none"
                 />
                 {isLoading ? (
                     <Skeleton className="rounded absolute inset-0 h-auto" />
@@ -121,7 +125,7 @@ export default function Overview({ className }) {
                         src={getResearchBgSrc(offer.slug)}
                         alt={offer.name}
                         fill={true}
-                        className="rounded object-cover"
+                        className="rounded object-cover select-none pointer-events-none"
                     />
                 )}
             </div>

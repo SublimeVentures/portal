@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import moment from "moment";
-import { Avatar } from "@/v2/components/ui/avatar";
+import Image from "next/image";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
@@ -48,19 +48,19 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
 
     const rowDivStyles = cn({
         "flex items-center justify-between w-full": variant === PayoutTableVariants.horizontal,
-        "block w-auto": variant === PayoutTableVariants.vertical,
+        "flex flex-col w-auto": variant === PayoutTableVariants.vertical,
     });
 
     const rowDdStyles = cn("md:text-base font-medium text-foreground", {
-        "order-1": variant === PayoutTableVariants.vertical,
-        "order-2": PayoutTableVariants.horizontal,
+        "order-2": variant === PayoutTableVariants.vertical,
+        "order-1": PayoutTableVariants.horizontal,
     });
     const rowDtStyles = cn("md:text-sm font-light text-foreground/[.25]", {
         "order-2": variant === PayoutTableVariants.vertical,
         "order-1": variant === PayoutTableVariants.horizontal,
     });
     return (
-        <Card variant="static" className={cn("p-0 flex flex-col", className)}>
+        <Card variant="static" className={cn("p-0 flex flex-col cursor-auto", className)}>
             <div className="p-2 h-5 rounded bg-gradient-to-r from-primary to-primary-600" />
             {!pages[0]?.rows?.length ? (
                 <div className="grow p-4">
@@ -94,26 +94,33 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                                         <li
                                             key={id}
                                             className={cn(
-                                                "p-4 flex items-center bg-foreground/[0.03] transition-hover hover:bg-foreground/[0.09]",
+                                                "p-4 flex items-center bg-foreground/[0.03] transition-colors hover:bg-foreground/[0.09]",
                                                 {
                                                     "flex-col": variant === PayoutTableVariants.horizontal,
                                                     "flex-row": variant === PayoutTableVariants.vertical,
                                                 },
                                             )}
                                         >
-                                            <Avatar session={{ img: getResearchIconSrc(slug) }} />
+                                            <Image
+                                                src={getResearchIconSrc(slug)}
+                                                alt={slug}
+                                                width={55}
+                                                height={55}
+                                                className="select-none pointer-events-none h-[55px] w-[55px] rounded-full overflow-hidden shrink-0"
+                                            />
                                             <dl
-                                                className={cn("w-full", {
+                                                className={cn("w-full select-none", {
                                                     "flex flex-col gap-2": variant === PayoutTableVariants.horizontal,
                                                     "ml-4 grid grid-cols-5 items-center justify-between gap-4":
                                                         variant === PayoutTableVariants.vertical,
                                                 })}
                                             >
                                                 <div className={rowDivStyles}>
-                                                    <CardTitle className={rowDdStyles}>{ticker}</CardTitle>
                                                     <dt className={rowDtStyles}>{name}</dt>
+                                                    <dd className={rowDdStyles}>{ticker}</dd>
                                                 </div>
                                                 <div className={rowDivStyles}>
+                                                    <dt className={rowDtStyles}>Status</dt>
                                                     <dd className={rowDdStyles}>
                                                         {isPending
                                                             ? isClaimed
@@ -125,23 +132,22 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                                                                 ? "Soon"
                                                                 : "Waiting"}
                                                     </dd>
-                                                    <dt className={rowDtStyles}>Status</dt>
                                                 </div>
                                                 <div className={rowDivStyles}>
+                                                    <dt className={rowDtStyles}>% Unlocked</dt>
                                                     <dd className={rowDdStyles}>
                                                         {formatPercentage(t_unlock[offerPayout].p / 100)}
                                                     </dd>
-                                                    <dt className={rowDtStyles}>% Unlocked</dt>
                                                 </div>
                                                 <div className={rowDivStyles}>
-                                                    <dd className={rowDdStyles}>{formatCurrency(amount)}</dd>
                                                     <dt className={rowDtStyles}>$ Unlocked</dt>
+                                                    <dd className={rowDdStyles}>{formatCurrency(amount)}</dd>
                                                 </div>
                                                 <div className={rowDivStyles}>
+                                                    <dt className={rowDtStyles}>Date</dt>
                                                     <dd className={rowDdStyles}>
                                                         {moment.unix(claimDate).format("YYYY-MM-DD")}
                                                     </dd>
-                                                    <dt className={rowDtStyles}>Date</dt>
                                                 </div>
                                             </dl>
                                         </li>

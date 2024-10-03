@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
@@ -18,10 +18,10 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { fetchUserWallets } from "@/fetchers/settings.fetcher";
-import { settingsKeys } from "@/v2/constants";
 import { METHOD } from "@/components/BlockchainSteps/utils";
+import { settingsKeys } from "@/v2/constants";
 
-export default function StakingModal({ session = {}, staking = {} }) {
+export default function StakingModal({ userId, staking = {} }) {
     const { name: tenantName, nft } = useTenantSpecificData();
     const { currencyStaking, activeCurrencyStaking, account, activeDiamond } = useEnvironmentContext();
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
@@ -32,7 +32,7 @@ export default function StakingModal({ session = {}, staking = {} }) {
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const { data: wallets } = useQuery({
-        queryKey: settingsKeys.userWallets(session.userId),
+        queryKey: settingsKeys.userWallets(userId),
         queryFn: () => fetchUserWallets(),
         refetchOnWindowFocus: true,
     });

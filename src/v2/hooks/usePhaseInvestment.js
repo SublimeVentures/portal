@@ -22,11 +22,6 @@ const processPhases = (phases, isSettled) => {
     };
 };
 
-// @TODO
-// We want to display information about the hovered phase when the user hovers over it.
-// Using phaseCurrent/phaseNext might not be the optimal approach for this functionality.
-// Consider implementing a more flexible solution to handle phase information display on hover.
-// Changing phaseNext make sure to adjust useEffect
 const calculatePhaseData = (phases, offer) => {
     const data = processPhases(phases, offer.isSettled);
 

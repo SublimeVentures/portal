@@ -94,18 +94,20 @@ export default function Navbar() {
     }, [scrollPosition]);
 
     return (
-        <div className="fixed w-full z-20 text-uppercase tracking-widest">
+        <div className="fixed w-full z-20 text-uppercase tracking-widest select-none">
             <div
                 className={`
-                ${!isOnTop || isMobileOpen ? "blurredBG" : ""} 
-                flex flex-row items-center w-full px-10 navShadow py-4`}
+                ${!isOnTop || isMobileOpen ? "backdrop-blur-md text-white" : ""} 
+                flex flex-row items-center w-full px-10 py-4 transition-all`}
             >
                 <Link href="/" onClick={disableMobile}>
                     <div className={`flex`}>
                         <DynamicIcon name={`logo_${process.env.NEXT_PUBLIC_TENANT}`} style={"w-17 text-white"} />
                     </div>
                 </Link>
-                <div className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 `}>
+                <div
+                    className={`text-end relative flex flex-1 justify-end hidden md:flex md:text-end md:pr-5 font-light select-none`}
+                >
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
                     })}
@@ -116,17 +118,17 @@ export default function Navbar() {
                         <div className={` burger ${isMobileOpen && "opened"}`}>
                             <div></div>
                         </div>
-                        <label>
-                            <input type="checkbox" id="check" defaultChecked={isMobileOpen} />
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                        <label className="flex flex-col w-10 cursor-pointer">
+                            <input type="checkbox" id="check" defaultChecked={isMobileOpen} className="hidden peer" />
+                            <span className="bg-white rounded h-0.5 my-1 w-1/2 peer-checked:origin-bottom peer-checked:hamburger-transform-1 transition-all"></span>
+                            <span className="bg-white rounded h-0.5 my-1 w-full peer-checked:origin-top peer-checked:hamburger-transform-2 transition-all"></span>
+                            <span className="bg-white rounded h-0.5 my-1 w-3/4 peer-checked:origin-bottom peer-checked:w-1/2 peer-checked:hamburger-transform-3 transition-all"></span>
                         </label>
                     </div>
                 </div>
             </div>
             {isMobileOpen && (
-                <div className="absolute flex flex-col w-full left-0 text-center py-5">
+                <div className="absolute flex flex-col w-full left-0 text-center py-5 backdrop-blur-md text-white transition-all">
                     {TENANT_MENU().map((el, i) => {
                         return buildLinks(el, i);
                     })}

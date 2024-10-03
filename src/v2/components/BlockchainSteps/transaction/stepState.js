@@ -4,12 +4,14 @@ export const stepTransaction = (state, data) => {
     console.log("BIX :: TRANSITION :: step state", state, data);
     let result = {};
 
-    if (!data.transaction_isReady) {
-        result = handlePending({
-            content: "Preparing transaction",
-            text: "We are setting up your transaction. Please wait a moment.",
-        });
-    } else {
+    if (data.transaction_isReady) {
+        // If transaction is the second step, it's always ready, so I've commented it out to keep the "Analyser tool" default text
+        // result = handleProcessing({
+        //     content: "Preparing transaction",
+        //     text: "We are setting up your transaction. Please wait a moment."
+        // });
+        result = handlePending();
+
         if (state.isFinished) {
             result = handleSuccess({
                 content: "Transaction confirmed",
@@ -25,12 +27,9 @@ export const stepTransaction = (state, data) => {
                 content: "Transaction failed",
                 text: data?.error ?? "An error occurred while sending your transaction. Please try again.",
             });
-        } else {
-            result = handlePending({
-                content: "Preparing transaction",
-                text: "We are setting up your transaction. Please wait a moment.",
-            });
         }
+    } else {
+        result = handlePending();
     }
 
     console.log("BIX :: TRANSITION :: step state result", result, state, data);
