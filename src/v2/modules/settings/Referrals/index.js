@@ -1,44 +1,22 @@
-import Link from "next/link";
-import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
+import ReferralsStatistics from "./ReferralsStatistics";
 import ReferralsSteps from "@/v2/modules/settings/Referrals/ReferralsSteps";
 import ReferralsTable from "@/v2/modules/settings/Referrals/ReferralsTable";
-import {
-    RewardStatisticCard,
-    DiscountsStatisticCard,
-    InvitersStatisticCard,
-} from "@/v2/components/App/Vault/StatisticsCard";
 
 export default function Referrals() {
     return (
-        <div className="flex flex-col gap-4 2xl:grid 2xl:grid-cols-3 2xl:h-full">
-            <div className="order-2 rounded 2xl:row-span-12 2xl:order-2">
-                <Card variant="none" className="flex flex-col gap-8 h-full bg-settings-gradient 2xl:py-6 2xl:px-12">
-                    <div>
-                        <CardTitle className="text-base md:text-lg font-medium text-white mb-1">
-                            Join Based Referral Program
-                        </CardTitle>
-                        <CardDescription className="text-xs md:text-sm font-light">
-                            Get free discounts and earn allocations. For more information, please read the{" "}
-                            <Link className="text-primary font-normal" href="/#">
-                                referral program
-                            </Link>{" "}
-                            details.
-                        </CardDescription>
-                    </div>
-
-                    <ReferralsSteps />
-                </Card>
+        <div className="mb-4 md:mb-12 flex flex-col gap-4 xl:mb-0 xl:h-full xl:overflow-hidden xl:grid xl:grid-cols-[440px_1fr] xl:grid-rows-1 xl:gap-8 3xl:grid-cols-[520px_1fr]">
+            <div className="block xl:hidden">
+                <ReferralsStatistics />
             </div>
-
-            <div className="order-1 flex flex-wrap gap-2 2xl:order-2 2xl:row-span-1 2xl:col-span-2 2xl:gap-4">
-                <RewardStatisticCard />
-                <InvitersStatisticCard />
-                <DiscountsStatisticCard value="10%" />
+            <div className="flex flex-col h-full overflow-hidden xl:order-1 xl:shrink-0">
+                <ReferralsSteps />
             </div>
-
-            <div className="order-3 2xl:col-span-2 2xl:row-span-11">
+            <div className="flex flex-col gap-4 xl:pb-0 xl:order-2 xl:gap-8">
+                <div className="hidden xl:block">
+                    <ReferralsStatistics />
+                </div>
                 <ReferralsTable />
             </div>
         </div>
     );
-};
+}

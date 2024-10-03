@@ -431,10 +431,11 @@ async function deleteOfferParticipants(user, req) {
     try {
         const res = await models[`z_participant_${offerId}`].destroy({
             where: {
-                id: participantId,
                 userId,
-                isConfirmedInitial: true,
+                id: participantId,
+                isConfirmedInitial: false,
                 isConfirmed: false,
+                isExpired: false,
             },
         });
 

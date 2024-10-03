@@ -92,6 +92,14 @@ async function getHistoryOffers(offerId, query) {
     });
 }
 
+// LEFT JOIN -> OFFER -> LOGIKA OK
+// isTenantExclusive - Nie powinno tutaj byc
+// isOtcExclusive: false -> wszystkie
+// isOtcExclusive: true -> BEZ NICH JESLI TENANT ID JEST INNY
+
+// isOtcExclusive -> TYLKO DLA TENANT DLA KTOREGO JEST broughtBy
+
+// getLatestDeals
 async function getLatestOffers(query, tenantId, partnerId) {
     const { sortId, sortOrder } = query;
 
@@ -114,8 +122,17 @@ async function getLatestOffers(query, tenantId, partnerId) {
         where: {
             isFilled: false,
             isCancelled: false,
+            onchainIdMaker: { [Op.ne]: null },
         },
         include: [
+            {
+                model: models.onchain,
+                attributes: [],
+                required: true, // Ensures INNER JOIN
+                on: {
+                    id: { [Op.eq]: db.col("otcDeal.onchainIdMaker") },
+                },
+            },
             {
                 model: models.offer,
                 attributes: [],
@@ -133,13 +150,6 @@ async function getLatestOffers(query, tenantId, partnerId) {
                         )`),
                     },
                 },
-                include: [
-                    {
-                        model: models.partner,
-                        attributes: [],
-                        required: false,
-                    },
-                ],
             },
         ],
         raw: true,
