@@ -26,8 +26,6 @@ export default function AppUpgrades({ session }) {
     const { getStoreSrc } = useImage();
     const { getCurrencyStore } = useEnvironmentContext();
 
-    console.log("getCurrencyStore", getCurrencyStore());
-
     const [isBuyModal, setBuyModal] = useState(false);
     const [order, setOrder] = useState(null);
 

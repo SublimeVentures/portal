@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { STEPS_STATE } from "./enums";
 import { cn } from "@/lib/cn";
@@ -52,26 +52,30 @@ const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
 };
 
 export default function BlockchainSteps({ content, steps, extraState, status }) {
+    console.log("content", content);
     return (
         <div className="mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded">
-            <motion.h3
-                key={`${content.content}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-base font-medium text-foreground text-center overflow-hidden md:text-lg"
-            >
-                {content.content}
-            </motion.h3>
-            <motion.p
-                key={`${content.text}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="h-18 text-sm font-light text-foreground text-center overflow-hidden"
-            >
-                {content.text}
-            </motion.p>
+            <AnimatePresence>
+                <motion.h3
+                    key={`${content.content}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-base font-medium text-foreground text-center overflow-hidden md:text-lg"
+                >
+                    {content.content}
+                </motion.h3>
+
+                <motion.p
+                    key={`${content.text}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="h-18 text-sm font-light text-foreground text-center overflow-hidden"
+                >
+                    {content.text}
+                </motion.p>
+            </AnimatePresence>
 
             <div className="relative flex justify-center h-[43px]">
                 <ChainIcon steps={steps} status={status} />

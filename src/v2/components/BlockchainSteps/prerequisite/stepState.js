@@ -5,12 +5,6 @@ export const stepPrerequisite = (state, data) => {
     let result = {};
 
     if (data.prerequisite_isReady) {
-        // If prerequisite is the first step, it's always ready, so I've commented it out to keep the "Analyser tool" default text
-
-        // result = handlePending({
-        //     content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
-        //     text: "Please wait while we validate your transaction details."
-        // });
         result = handlePending();
 
         if (state.isFinished) {
