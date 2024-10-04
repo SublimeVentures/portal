@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import NextImage from "next/image";
 import { cn } from "@/lib/cn";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
+import MutedText from "@/v2/components/ui/muted-text";
 
 export const Content = forwardRef(({ children, className, ...props }, ref) => (
     <div ref={ref} className={cn("flex flex-col items-center justify-center w-full", className)} {...props}>
@@ -64,10 +65,10 @@ export const Article = forwardRef(({ children, className, ...props }, ref) => (
 ));
 Article.displayName = "Article";
 
-export const Footer = forwardRef(({ children, className, ...props }, ref) => (
-    <p {...props} ref={ref} className={cn("text-xs md:text-sm text-white/50 text-center", className)}>
+export const Footer = forwardRef(({ children, ...props }, ref) => (
+    <MutedText {...props} ref={ref}>
         {children}
-    </p>
+    </MutedText>
 ));
 Footer.displayName = "Footer";
 

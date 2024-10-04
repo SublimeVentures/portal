@@ -15,7 +15,7 @@ export default function Statistics({ className }) {
             <div className="mb-5 sm:mb-4">
                 <Title>My Statistics</Title>
             </div>
-            <div className="flex flex-wrap gap-2 md:gap-4 grow lg:flex-col">
+            <div className="flex flex-wrap gap-2 md:gap-4 grow xl:flex-col">
                 <InvestedStatisticCard value={shortCurrencyFormatterWithSuffix(invested)} isLoading={isLoading} />
                 <ReturnStatisticCard value={shortCurrencyFormatterWithSuffix(stats.return)} isLoading={isLoading} />
                 <SizeStatisticCard value={count} isLoading={isLoading} last />

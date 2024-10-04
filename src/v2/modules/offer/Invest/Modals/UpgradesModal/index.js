@@ -2,7 +2,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { IoDiamond } from "react-icons/io5";
 
-import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment"
+import EmptyState from "../../../EmptyState";
+import { useOfferDetailsQuery, useUserPremiumQuery } from "../../../queries";
+import SingleUpgrade from "./SingleUpgrade";
+import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { queryClient } from "@/lib/queryCache";
 import { useUpgrade } from "@/fetchers/offer.fetcher";
 import { PremiumItemsENUM } from "@/lib/enum/store";
@@ -19,11 +22,7 @@ import {
 } from "@/v2/components/ui/dialog";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 
-import SingleUpgrade from "./SingleUpgrade";
-import EmptyState from "../../../EmptyState";
-import { useOfferDetailsQuery, useUserPremiumQuery } from "../../../queries";
-
-// @TODO 
+// @TODO
 // - Prevent from use increased upgrade on backed if the phase is wrong
 // - Return better error messages from backend - For example for wrong phase like above
 export default function UpgradesModal() {
@@ -34,8 +33,8 @@ export default function UpgradesModal() {
     const [selectedUpgrade, setSelectedUpgrade] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState(null);
-    
-    const filteredData = upgrade?.filter(item => item.id !== PremiumItemsENUM.MysteryBox);
+
+    const filteredData = upgrade?.filter((item) => item.id !== PremiumItemsENUM.MysteryBox);
     const isDataAvailable = filteredData?.length > 0;
     const upgradeDisabled = !isDataAvailable || isLoading || selectedUpgrade === null;
 
@@ -47,12 +46,12 @@ export default function UpgradesModal() {
         const res = await useUpgrade(offer.id, upgradeId);
 
         if (res?.ok) {
-            await queryClient.invalidateQueries(["premiumOwned"])
-            await queryClient.invalidateQueries(["userAllocation"])
+            await queryClient.invalidateQueries(["premiumOwned"]);
+            await queryClient.invalidateQueries(["userAllocation"]);
         } else {
-            setError(res.error)
+            setError(res.error);
         }
-        
+
         setSelectedUpgrade(null);
         setIsProcessing(false);
     };
@@ -92,7 +91,7 @@ export default function UpgradesModal() {
                             </div>
                         )}
 
-                        {(isDataAvailable && !isLoading) && (
+                        {isDataAvailable && !isLoading && (
                             <ul className="flex flex-col items-center justify-center gap-4 md:flex-row md:flex-wrap">
                                 {filteredData.map((upgrade) => (
                                     <li key={upgrade.id} className="w-full md:w-auto">
@@ -113,18 +112,16 @@ export default function UpgradesModal() {
                                 className="md:px-16 md:py-24"
                             />
                         )}
-                
+
                         {error && <p className="text-lg text-red-500 text-center">{error}</p>}
                     </div>
 
                     <DialogFooter className="flex items-center">
                         <div className="w-full flex flex-col gap-2 md:flex-row md:items-center md:justify-center">
                             <Button asChild variant="outline" disabled={isLoading || isProcessing}>
-                                <Link href={routes.Upgrades}>
-                                    Buy Upgrades
-                                </Link>
+                                <Link href={routes.Upgrades}>Buy Upgrades</Link>
                             </Button>
-                            
+
                             <Button
                                 disabled={upgradeDisabled || isProcessing}
                                 onClick={() => handleUpgradeUse(selectedUpgrade)}
@@ -132,13 +129,9 @@ export default function UpgradesModal() {
                                 Use Upgrade
                             </Button>
                         </div>
-
-                        {/* <div className="mx-auto">
-                            <Linker url={externalLinks.UPGRADES} />
-                        </div> */}
                     </DialogFooter>
                 </div>
             </DialogContent>
         </Dialog>
     );
-};
+}

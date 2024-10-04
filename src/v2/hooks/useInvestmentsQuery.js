@@ -3,8 +3,7 @@ import { fetchVault } from "@/fetchers/vault.fetcher";
 import { vaultKeys } from "@/v2/constants";
 
 const fetchInvestments = async (query, config) => {
-    const data = await fetchVault(query, config);
-    return data?.rows || [];
+    return await fetchVault(query, config);
 };
 
 export const investmentsQueryOptions = (query, config) => ({

@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import Lottie from "lottie-react";
 import moment from "moment";
 
@@ -27,6 +26,9 @@ import lottieSuccess from "@/assets/lottie/success.json";
 import { routes } from "@/v2/routes";
 
 import { Button } from "@/v2/components/ui/button";
+import { EXTERNAL_LINKS } from "@/lib/config/route.config.js";
+import MutedText from "@/v2/components/ui/muted-text";
+import ExternalLink from "@/v2/components/ui/external-link";
 
 const InvestModalContent = ({
     open,
@@ -147,21 +149,18 @@ const InvestModalContent = ({
             <DialogFooter className="flex items-center">
                 {transactionSuccessful ? (
                     <>
-                        <Button asChild className="w-full">
-                            <Link href={routes.App}>Check Vault</Link>
-                        </Button>
-                        <p className="max-w-72 text-sm text-foreground/50 text-center">
-                            What's next?
-                            {/* <Linker url={externalLinks.AFTER_INVESTMENT} /> */}
-                        </p>
+                        <Button onClick={() => handleCloseModal(true)}>Check Vault</Button>
+                        <MutedText className="max-w-72">
+                            What's next? <ExternalLink href={EXTERNAL_LINKS.AFTER_INVESTMENT}>Read more</ExternalLink>
+                        </MutedText>
                     </>
                 ) : (
                     <>
                         <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
-                        <p className="max-w-72 text-sm text-foreground/50 text-center">
-                            Booked allocation will be released when the timer runs to zero. Read more
-                            {/* <Linker url={ExternalLinks.BOOKING_SYSTEM} /> */}
-                        </p>
+                        <MutedText className="max-w-72">
+                            Booked allocation will be released when the timer runs to zero.{" "}
+                            <ExternalLink href={EXTERNAL_LINKS.BOOKING_SYSTEM}>Read more</ExternalLink>
+                        </MutedText>
                     </>
                 )}
             </DialogFooter>

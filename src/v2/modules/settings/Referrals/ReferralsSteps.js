@@ -1,8 +1,8 @@
-import Link from "next/link";
-
 import { Card, CardDescription, CardTitle } from "@/v2/components/ui/card";
 import Copy from "@/v2/components/Copy";
 import { shortenAddress } from "@/v2/lib/helpers";
+import ExternalLink from "@/v2/components/ui/external-link";
+import routes, { ExternalLinks } from "@/routes";
 
 const Title = ({ children }) => <div className="text-nowrap text-sm md:text-base text-foreground">{children}</div>;
 
@@ -21,17 +21,17 @@ const mockedTenantName = "based.VC";
 
 export default function ReferalsSteps() {
     return (
-        <Card variant="none" className="h-full w-full flex flex-col grow bg-settings-gradient overflow-hidden">
+        <Card
+            variant="none"
+            className="h-full w-full flex flex-col grow bg-settings-gradient overflow-hidden cursor-default"
+        >
             <div className="flex flex-col grow gap-4 block-scrollbar overflow-y-auto px-4">
                 <CardTitle className="text-base md:text-lg font-medium text-white mb-1">
                     Join Based Referral Program
                 </CardTitle>
                 <CardDescription className="text-xs md:text-sm font-light">
                     Get free discounts and earn allocations. For more information, please read the{" "}
-                    <Link className="text-primary font-normal" href="/#">
-                        referral program
-                    </Link>{" "}
-                    details.
+                    <ExternalLink href={ExternalLinks.REFERRAL_PROGRAM}>referral program</ExternalLink> details.
                 </CardDescription>
 
                 <div className="mt-8 mb-4 sm:p-4 sm:bg-foreground/[.06] sm:rounded sm:py-10 sm:px-8 flex flex-col grow">

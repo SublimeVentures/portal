@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { ChainIcon, ChainButton, ChainGroup } from "@/v2/components/App/Vault/ChainSwitch";
+import MutedText from "@/v2/components/ui/muted-text";
 
 const ChainListModal = () => {
     const { network } = useEnvironmentContext();
@@ -41,9 +42,7 @@ const ChainListModal = () => {
                     </div>
                     {error && <p className="text-error-500 text-center w-full mt-3">{error?.shortMessage}</p>}
                 </div>
-                <p className="text-xxs text-white/[.7] text-center">
-                    Current selection: {chain?.name || "Unknown chain"}
-                </p>
+                <MutedText>Current selection: {chain?.name || "Unknown chain"}</MutedText>
             </DialogContent>
         </Dialog>
     );

@@ -24,11 +24,8 @@ import { Button } from "@/v2/components/ui/button";
 
 const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
 
-export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
-    const { order, setOrder } = buyModalProps;
-
+const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, onClose, open }) => {
     const { account, activeDiamond, network, getCurrencyStore } = useEnvironmentContext();
-    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencyStore();
@@ -47,14 +44,6 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
             setSelectedCurrency(value);
         }
     }, [dropdownCurrencyOptions]);
-
-    const closeModal = () => {
-        setter();
-        setTimeout(() => {
-            setOrder(null);
-            setTransactionSuccessful(false);
-        }, 400);
-    };
 
     const token = useGetToken(selectedCurrency?.contract);
 
@@ -83,11 +72,11 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
             token,
             setTransactionSuccessful,
         };
-    }, [model, activeDiamond, order.price, selectedCurrency?.contract, price, amount]);
+    }, [open, activeDiamond, order.price, selectedCurrency?.contract, price, amount]);
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
-        deps: [model],
+        deps: [open],
     });
 
     const contentSuccess = () => {
@@ -107,11 +96,11 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                             <span className="text-xs font-light md:text-sm">Mystery Box</span>
                         </div>
                     </div>
-                    <Button className="w-full md:w-auto" onClick={closeModal}>
-                        Check inventory
+                    <Button className="w-full md:w-auto" onClick={onClose}>
+                        Mystery Box
                     </Button>
                 </Success.Article>
-                <Success.Footer>You can find your upgrade in your inventory</Success.Footer>
+                <Success.Footer>You can find your Mystery Box in Mystery Box page</Success.Footer>
             </Success.Content>
         );
     };
@@ -158,25 +147,38 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                             <Input readOnly className="w-full text-center" value={price} size="sm" />
                         </div>
                     </Grid>
-                    {model && <BlockchainSteps {...getBlockchainStepsProps()} />}
+                    <BlockchainSteps {...getBlockchainStepsProps()} />
                     <ModalButton className="w-full mt-4" {...getBlockchainStepButtonProps()} />
                 </Content>
             </>
         );
     };
+    return transactionSuccessful ? contentSuccess() : contentSteps();
+};
 
-    const content = () => {
-        return transactionSuccessful ? contentSuccess() : contentSteps();
+export default function BuyMysteryBoxModal({ onClose, open, buyModalProps }) {
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+
+    const handleClose = () => {
+        onClose();
+        buyModalProps?.setOrder(null);
+        setTransactionSuccessful(false);
     };
 
     return (
         <Modal
-            open={model}
-            onClose={closeModal}
+            open={open}
+            onClose={handleClose}
             variant={transactionSuccessful ? "pattern" : "default"}
             forceMount={true}
         >
-            {content()}
+            <ModalContent
+                {...buyModalProps}
+                transactionSuccessful={transactionSuccessful}
+                setTransactionSuccessful={setTransactionSuccessful}
+                open={open}
+                onClose={handleClose}
+            />
         </Modal>
     );
 }

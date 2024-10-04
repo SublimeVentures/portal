@@ -75,7 +75,10 @@ const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, st
                 type="number"
                 ref={ref}
                 readOnly={readOnly}
-                onChange={(e) => onValueChange?.(Number(e.target.value))}
+                onChange={(e) => {
+                    const value = Number(e.target.value);
+                    onValueChange?.(value < min ? min : value > max ? max : value);
+                }}
                 min={min}
                 max={max}
                 step={step}

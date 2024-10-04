@@ -14,10 +14,6 @@ module.exports = {
                 // body: ["Montserrat", "sans-serif"],
                 accent: ["Work Sans", "sans-serif"],
             },
-            fontSize: {
-                xxs: ["10px", { lineHeight: "1.375" }],
-                hero: ["48px", { lineHeight: "1.375" }],
-            },
         },
     },
     plugins: [
