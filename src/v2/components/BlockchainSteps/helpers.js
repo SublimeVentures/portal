@@ -39,11 +39,9 @@ export const getTextContent = (steps) => {
     const statePriority = [STEPS_STATE.ERROR, STEPS_STATE.PROCESSING, STEPS_STATE.PENDING, STEPS_STATE.SUCCESS];
 
     for (const priority of statePriority) {
-        const stepKeys = Object.keys(steps);
-
-        for (const key in stepKeys) {
-            if (steps[stepKey].state === priority) {
-                const { content, text } = steps[key];
+        for (const stepKey in steps) {
+            if (steps[stepKey] !== undefined && steps[stepKey].state === priority) {
+                const { content, text } = steps[stepKey];
 
                 if (!content && !text) {
                     continue;
@@ -53,6 +51,5 @@ export const getTextContent = (steps) => {
             }
         }
     }
-
     return defaultState;
 };
