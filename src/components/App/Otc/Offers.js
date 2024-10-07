@@ -19,7 +19,7 @@ import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 
 export default function OtcOffers({ propOffers }) {
     const { offers, vault, currentMarket, session, refetchOffers, offersIsSuccess, vaultIsSuccess } = propOffers;
-    const { wallets } = session;
+    const { wallets, partnerOtcFee } = session;
 
     const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
 
@@ -75,6 +75,7 @@ export default function OtcOffers({ propOffers }) {
     const interactOfferProps = {
         ...propOffers,
         offerDetails,
+        partnerOtcFee
     };
 
     const renderOfferTable = () => {
@@ -179,14 +180,14 @@ export default function OtcOffers({ propOffers }) {
                                                         type={TooltipType.Error}
                                                     />
                                                 ))}
-                                            {!ownership.ok && (
+                                            {/* {!ownership.ok && ( */}
                                                 <div
                                                     className="duration-300 hover:text-app-error cursor-pointer"
                                                     onClick={() => openTake(el)}
                                                 >
                                                     <IconCart className="w-6 h-6" />
                                                 </div>
-                                            )}
+                                            {/* )} */}
                                         </div>
                                     </td>
                                 </tr>
