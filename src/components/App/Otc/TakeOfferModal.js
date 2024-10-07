@@ -57,7 +57,7 @@ export const blockchainPrerequisite = async (params) => {
 };
 
 export default function TakeOfferModal({ model, setter, props }) {
-    const { vault, currentMarket, offerDetails, refetchVault, refetchOffers } = props;
+    const { vault, currentMarket, offerDetails, refetchVault, refetchOffers, partnerOtcFee } = props;
     const {
         getCurrencySymbolByAddress,
         getCurrencySettlement,
@@ -74,7 +74,7 @@ export default function TakeOfferModal({ model, setter, props }) {
         currentMarket && vault?.length > 0 ? vault.find((el) => el.id === currentMarket.offerId) : {};
     const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
-    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee;
+    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee + partnerOtcFee : otcFee;
 
     const customLocks = () => {
         if (!haveEnoughAllocation) return { lock: true, text: "Not enough allocation" };
@@ -186,6 +186,8 @@ export default function TakeOfferModal({ model, setter, props }) {
                     <div className={"text-right text-ellipsis overflow-hidden block"}>${cancelOfferPrice_parsed}</div>
                     <div className="font-bold">FEES</div>
                     <div className={"text-right"}>${otcFee}</div>
+                    <div className="font-bold">PARTNER FEES</div>
+                    <div className={"text-right"}>${partnerOtcFee}</div>
                     <hr />
                     <hr />
                     <div className="font-bold text-gold pt-2">TOTAL PAYMENT</div>
