@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Link from "next/link";
 
 import useCreateOfferModalLogic from "./useCreateOfferModalLogic";
 import MakeTransactionSuccess from "./MakeTransactionSuccess";
@@ -22,6 +21,8 @@ import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import { ExternalLinks } from "@/routes";
+import MutedText from "@/v2/components/ui/muted-text";
+import ExternalLink from "@/v2/components/ui/external-link";
 
 // import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
@@ -73,12 +74,9 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                     <BlockchainStepButton {...getBlockchainStepButtonProps()} />
                 )}
 
-                <p className="text-xxs text-foreground/[.5]">
-                    <Link href={ExternalLinks.OTC} target="_blank" rel="noopener noreferrer" className="underline">
-                        Read more
-                    </Link>{" "}
-                    before making an offer.
-                </p>
+                <MutedText>
+                    <ExternalLink href={ExternalLinks.OTC} /> before making an offer.
+                </MutedText>
             </SheetFooter>
         </SheetContent>
     );

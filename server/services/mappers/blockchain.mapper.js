@@ -36,4 +36,10 @@ const chainMap = {
         scannerName: "PolygonScan",
         scannerUrl: "https://polygonscan.com",
     },
+    11155111: {
+        name: "Sepolia",
+        currency: "ETH",
+        scannerName: "Sepolia EtherScan",
+        scannerUrl: "https://sepolia.etherscan.io",
+    },
 };

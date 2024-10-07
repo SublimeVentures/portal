@@ -45,90 +45,102 @@ export const FilterButton = ({ children, ...props }) => (
     </Button>
 );
 
-export default function InvestmentsList({ investments, views, query, onChange, className }) {
+function isEmptyObject(obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+export default function InvestmentsList({ count, views, query, onChange, className }) {
     const { view, sortBy = DEFAULT_SORT_BY } = query;
+    const { view: _, ...queryWithoutView } = query;
+    const isEmpty = count === 0 && isEmptyObject(queryWithoutView);
     return (
         <Header
             className={className}
             title="My Investments"
-            count={investments.length}
+            count={count}
             bannerClassName="hidden sm:flex lg:hidden 2xl:flex"
-            affix={<ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />}
+            affix={
+                isEmpty ? null : (
+                    <ViewRadio options={views} value={view} onChange={(view) => onChange({ ...query, view })} />
+                )
+            }
         >
-            <div className="flex items-center flex-wrap gap-2 sm:gap-4">
-                <DropdownMenu>
-                    <DropdownMenuButton variant="tertiary">Sort by</DropdownMenuButton>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>
-                            Sort by
-                            <DropdownMenuLabelReset
-                                onClick={() => {
-                                    onChange(exclude(query, "sortBy"));
+            {!isEmpty && (
+                <div className="flex items-center flex-wrap gap-2 sm:gap-4">
+                    <DropdownMenu>
+                        <DropdownMenuButton variant="tertiary">Sort by</DropdownMenuButton>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>
+                                Sort by
+                                <DropdownMenuLabelReset
+                                    onClick={() => {
+                                        onChange(exclude(query, "sortBy"));
+                                    }}
+                                >
+                                    Reset
+                                </DropdownMenuLabelReset>
+                            </DropdownMenuLabel>
+                            <DropdownMenuRadioGroup
+                                value={sortBy}
+                                onValueChange={(value) => {
+                                    onChange({ ...exclude(query, "sortBy"), sortBy: value });
                                 }}
                             >
-                                Reset
-                            </DropdownMenuLabelReset>
-                        </DropdownMenuLabel>
-                        <DropdownMenuRadioGroup
-                            value={sortBy}
-                            onValueChange={(value) => {
-                                onChange({ ...exclude(query, "sortBy"), sortBy: value });
-                            }}
-                        >
-                            <DropdownMenuRadioItem value={SORT_BY.CREATED_AT}>Created At</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value={SORT_BY.PERFORMANCE}>Performance</DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <DropdownMenu>
-                    <DropdownMenuButton variant="tertiary" icon={FilterAltIcon}>
-                        Filters
-                    </DropdownMenuButton>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>
+                                <DropdownMenuRadioItem value={SORT_BY.CREATED_AT}>Created At</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value={SORT_BY.PERFORMANCE}>Performance</DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                        <DropdownMenuButton variant="tertiary" icon={FilterAltIcon}>
                             Filters
-                            <DropdownMenuLabelReset
-                                onClick={() => {
-                                    onChange(exclude(query, ...Object.values(FILTERS)));
-                                }}
-                            >
-                                Reset
-                            </DropdownMenuLabelReset>
-                        </DropdownMenuLabel>
-                        {Object.keys(FILTERS).map((key) => {
+                        </DropdownMenuButton>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>
+                                Filters
+                                <DropdownMenuLabelReset
+                                    onClick={() => {
+                                        onChange(exclude(query, ...Object.values(FILTERS)));
+                                    }}
+                                >
+                                    Reset
+                                </DropdownMenuLabelReset>
+                            </DropdownMenuLabel>
+                            {Object.keys(FILTERS).map((key) => {
+                                return (
+                                    <DropdownMenuCheckboxItem
+                                        key={key}
+                                        checked={query[FILTERS[key]] ? true : false}
+                                        onCheckedChange={(checked) => {
+                                            onChange({
+                                                ...exclude(query, FILTERS[key]),
+                                                ...(checked ? { [FILTERS[key]]: true } : {}),
+                                            });
+                                        }}
+                                    >
+                                        {FILTERS_LABELS[key]}
+                                    </DropdownMenuCheckboxItem>
+                                );
+                            })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {Object.keys(FILTERS).map((key) => {
+                        if (query[FILTERS[key]]) {
                             return (
-                                <DropdownMenuCheckboxItem
+                                <FilterButton
                                     key={key}
-                                    checked={query[FILTERS[key]] ? true : false}
-                                    onCheckedChange={(checked) => {
-                                        onChange({
-                                            ...exclude(query, FILTERS[key]),
-                                            ...(checked ? { [FILTERS[key]]: true } : {}),
-                                        });
+                                    onClick={() => {
+                                        onChange(exclude(query, FILTERS[key]));
                                     }}
                                 >
                                     {FILTERS_LABELS[key]}
-                                </DropdownMenuCheckboxItem>
+                                </FilterButton>
                             );
-                        })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                {Object.keys(FILTERS).map((key) => {
-                    if (query[FILTERS[key]]) {
-                        return (
-                            <FilterButton
-                                key={key}
-                                onClick={() => {
-                                    onChange(exclude(query, FILTERS[key]));
-                                }}
-                            >
-                                {FILTERS_LABELS[key]}
-                            </FilterButton>
-                        );
-                    }
-                    return null;
-                })}
-            </div>
+                        }
+                        return null;
+                    })}
+                </div>
+            )}
         </Header>
     );
 }

@@ -60,6 +60,7 @@ export function getRedirectMessage(type, values) {
 export function getImageSrc({ typeId, offer, upgrade }, { getResearchIconSrc, getStoreSrc }) {
     switch (typeId) {
         case NotificationTypes.MYSTERY_BUY:
+            return "/img/mysterybox.webp";
         case NotificationTypes.UPGRADE_BUY:
             return getStoreSrc(upgrade?.img);
         default:

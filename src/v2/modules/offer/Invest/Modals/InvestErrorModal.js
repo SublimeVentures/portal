@@ -1,6 +1,8 @@
 // import { getTenantConfig } from "@/lib/tenantHelper";
 import { BookingErrorsENUM } from "@/lib/enum/invest";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
+import ExternalLink from "@/v2/components/ui/external-link";
+import { ExternalLinks } from "@/routes";
 
 export default function InvestErrorModal({ code = "", ...props }) {
     const { title, description } = getError(code);
@@ -12,7 +14,6 @@ export default function InvestErrorModal({ code = "", ...props }) {
                     <DialogTitle>Action Failed</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
-                
                 <div className="py-4 px-6 flex flex-col md:flex-row gap-4 items-center justify-between bg-error-900 rounded">
                     <div className="text-center md:text-left text-error/90">
                         <h3 className="font-medium text-base">{title}</h3>
@@ -22,7 +23,7 @@ export default function InvestErrorModal({ code = "", ...props }) {
             </DialogContent>
         </Dialog>
     );
-};
+}
 
 const messages = {
     [BookingErrorsENUM.BadCurrency]: {
@@ -30,7 +31,8 @@ const messages = {
         description: (
             <>
                 Your transaction could not be processed. <br />
-                Encountered error while processing payment currency. <br /><br />
+                Encountered error while processing payment currency. <br />
+                <br />
                 Please report the issue on Discord.
             </>
         ),
@@ -39,19 +41,19 @@ const messages = {
         title: "Overallocated Resources",
         description: (
             <>
-                There are some <span className="text-gold contents">pending transactions</span> that booked the
-                remaining allocation.
-                <br />
-                <br />
-            
-                <div className="font-bold">There is still a chance!</div>
-                <div>Bookings are <span className={"text-app-error contents"}>expiring after 15 minutes</span>.</div>
-                <br />
-                
-                Please wait for the button to enable back again!
-                {/* <div className="mt-5">
-                    <Linker url={externalLinks.BOOKING_SYSTEM} />
-                </div> */}
+                <div className="mb-8">
+                    There are some <span className="text-accent">pending transactions</span> that booked the remaining
+                    allocation.
+                </div>
+                <div className="mb-4">
+                    <span className="font-bold">There is still a chance!</span>
+                    <br />
+                    Bookings are <span className="text-error">expiring after 15 minutes</span>.
+                </div>
+                <div>
+                    Please wait for the button to enable back again!{" "}
+                    <ExternalLink href={ExternalLinks.BOOKING_SYSTEM} />
+                </div>
             </>
         ),
     },
@@ -59,14 +61,10 @@ const messages = {
         title: "Investment Paused",
         description: (
             <>
-                Investment is <span className="text-gold contents">currently paused</span>.
+                Investment is <span className="text-accent">currently paused</span>.
                 <br />
                 <br />
-                
-                Please wait for the Discord update from the staff.
-                {/* <div className="mt-5">
-                    <Linker url={externalLinks.OFFER_PHASES} />
-                </div> */}
+                Please wait for the Discord update from the staff. <ExternalLink href={ExternalLinks.OFFER_PHASES} />
             </>
         ),
     },
@@ -74,14 +72,10 @@ const messages = {
         title: "Investment Not Open",
         description: (
             <>
-                Investment is <span className="text-gold contents">not yet open</span>.
+                Investment is <span className="text-accent">not yet open</span>.
                 <br />
                 <br />
-
-                Don't cheat the timer!
-                {/* <div className="mt-5">
-                    <Linker url={externalLinks.OFFER_PHASES} />
-                </div> */}
+                Don't cheat the timer! <ExternalLink href={ExternalLinks.OFFER_PHASES} />
             </>
         ),
     },

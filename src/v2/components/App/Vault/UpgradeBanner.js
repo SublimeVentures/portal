@@ -1,5 +1,5 @@
 import { useMemo, Fragment } from "react";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
@@ -16,6 +16,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
     const { data = [] } = useStoreOwnedItemsQuery();
     const items = useMemo(() => data?.filter((el) => el.name !== "MysteryBox"), [data]);
     const isPremium = items?.length > 0;
+    const currentPath = usePathname();
     return (
         <Card
             variant="none"
@@ -25,6 +26,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                 "bg-banner-default bg-left bg-cover 3xl:bg-center bg-no-repeat py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
                     variant === VARIANTS.DEFAULT,
                 "bg-banner-vertical p-3 md:justify-end lg:w-116": variant === VARIANTS.VERTICAL,
+                "cursor-default pointer-none": currentPath === routes.Upgrades,
             })}
         >
             <div
@@ -46,6 +48,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                                     variant === VARIANTS.DEFAULT,
                                 "p-2.5 md:left-6 top-1/2 transform -translate-y-1/2 right-6":
                                     variant === VARIANTS.VERTICAL,
+                                hidden: currentPath === routes.Upgrades,
                             })}
                         />
                         <CardTitle
@@ -78,7 +81,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                                 Acquired <span className="3xl:block font-semibold">Premium</span>
                             </CardTitle>
                         )}
-                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-4 gap-x-4">
+                        <dl className="text-sm text-white grid grid-cols-[auto_auto] leading-4 gap-x-4 min-h-10 items-center">
                             {items.map((item) => (
                                 <Fragment key={item.id}>
                                     <dt className="text-left py-0.5">{item.name}</dt>

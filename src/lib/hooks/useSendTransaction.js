@@ -55,7 +55,7 @@ const calculateBigIntMultiplier = (value, multiplier) => {
 };
 
 const GAS_MULTIPLIER = 1;
-const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
+const MAX_FEE_PER_GAS_MULTIPLIER = 1;
 const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1;
 
 const useCalculateGas = (args) => {
@@ -161,7 +161,7 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     const write = useWriteContract();
     const confirmEnabled = write.isSuccess;
-    
+
     const confirm = useWaitForTransactionReceipt({
         confirmations: confirmations,
         hash: write?.data,
@@ -209,6 +209,6 @@ function useSendTransaction(isEnabled, method, chainId, account) {
         confirm,
         rando,
     };
-};
+}
 
 export default useSendTransaction;
