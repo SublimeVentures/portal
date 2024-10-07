@@ -207,8 +207,11 @@ async function reserveMysteryBox(req) {
         return {
             ok: true,
             hash: reservation.data.hash,
-            expires: reservation.data.expires,
+            expires: reservation.data.expireDate,
             signature: signature.data,
+            partnerId,
+            tenantId,
+            storePartnerId
         };
     } catch (error) {
         if (transaction) {

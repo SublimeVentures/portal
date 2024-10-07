@@ -15,6 +15,21 @@
                 "internalType": "address",
                 "name": "currency_",
                 "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "hash_",
+                "type": "string"
+            },
+            {
+                "internalType": "bytes",
+                "name": "signature_",
+                "type": "bytes"
+            },
+            {
+                "internalType": "uint256",
+                "name": "expire_",
+                "type": "uint256"
             }
         ],
         "name": "buyUpgrade",

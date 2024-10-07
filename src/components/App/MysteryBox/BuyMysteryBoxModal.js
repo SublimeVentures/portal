@@ -21,12 +21,12 @@ const { externalLinks } = getTenantConfig();
 
 export const blockchainPrerequisite = async (params) => {
     const { tenant, token, network } = params;
-    const { chainId } = network
+    const { chainId } = network;
     const transaction = await reserveMysterybox({ tenant, chainId, token, network });
     if (transaction.ok) {
         return {
             ok: true,
-            data: { hash: transaction.hash },
+            data: { hash: transaction.hash, ...transaction},
         };
     } else {
         return {
@@ -89,10 +89,10 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps, userI
                 transactionType: METHOD.MYSTERYBOX,
 
                 userId,
-                prerequisiteTextWaiting: "Generate hash",
-                prerequisiteTextProcessing: "Generating hash",
-                prerequisiteTextSuccess: "Hash obtained",
-                prerequisiteTextError: "Couldn't generate hash",
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,

@@ -118,7 +118,12 @@ const TENANT_UPGRADE = (params, token) => {
         default: {
             return {
                 name: "buyUpgrade",
-                inputs: [params.amount, params.upgradeId, token.contract],
+                inputs: [
+                    params.amount, 
+                    params.upgradeId, 
+                    token.contract,
+                    params.hash, params.signature, params.expires
+                ],
                 abi: abi_upgrade_based,
                 confirmations: 2,
                 contract: params.contract,
@@ -127,6 +132,7 @@ const TENANT_UPGRADE = (params, token) => {
     }
 };
 
+// @TODO
 const TENANT_MYSTERYBOX = (params, token) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.NeoTokyo: {
@@ -150,7 +156,11 @@ const TENANT_MYSTERYBOX = (params, token) => {
         default: {
             return {
                 name: "buyMysteryBox",
-                inputs: [params.amount, token.contract],
+                inputs: [
+                    params.amount,
+                    token.contract,
+                    params.hash, params.signature, params.expires
+                ],
                 abi: abi_mb_based,
                 confirmations: 2,
                 contract: params.contract,

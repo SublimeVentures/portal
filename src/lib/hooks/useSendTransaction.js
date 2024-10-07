@@ -173,10 +173,10 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     console.log(
         `useSendTransaction - render ${inputs ? inputs : "tempSend"}`,
-        isEnabled,
-        simulate.isSuccess,
-        !write.isPending,
-        !confirm?.data,
+        " | isEnabled: ", isEnabled,
+        " | isSuccess: ", simulate.isSuccess,
+        " | !isPending: ", !write.isPending,
+        " | !data: ", !confirm?.data,
     );
 
     useEffect(() => {

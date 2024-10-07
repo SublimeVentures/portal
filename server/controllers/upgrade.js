@@ -213,8 +213,6 @@ async function reserveUpgrade(req) {
         const queryParams = validateParams(req);
         if (!queryParams.ok) return queryParams;
 
-        console.log("queryParams", queryParams);
-
         const { userId, tenantId, partnerId, chainId, upgradeId } = queryParams.data;
 
         const reservationInProgress = await isReservationInProgress(userId, upgradeId);
@@ -251,8 +249,11 @@ async function reserveUpgrade(req) {
         return {
             ok: true,
             hash: reservation.data.hash,
-            expires: reservation.data.expires,
+            expires: reservation.data.expireDate,
             signature: signature.data,
+            partnerId,
+            tenantId,
+            storePartnerId: upgradeId
         };
     } catch (error) {
         if (transaction) {

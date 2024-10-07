@@ -26,7 +26,7 @@ export const blockchainPrerequisite = async (params) => {
     if (transaction.ok) {
         return {
             ok: true,
-            data: { hash: transaction.hash },
+            data: { hash: transaction.hash, ...transaction},
         };
     } else {
         return {
@@ -86,10 +86,10 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps, userId
                 transactionType: METHOD.UPGRADE,
 
                 userId,
-                prerequisiteTextWaiting: "Generate hash",
-                prerequisiteTextProcessing: "Generating hash",
-                prerequisiteTextSuccess: "Hash obtained",
-                prerequisiteTextError: "Couldn't generate hash",
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,
