@@ -5,11 +5,6 @@ export const stepTransaction = (state, data) => {
     let result = {};
 
     if (data.transaction_isReady) {
-        // If transaction is the second step, it's always ready, so I've commented it out to keep the "Analyser tool" default text
-        // result = handleProcessing({
-        //     content: "Preparing transaction",
-        //     text: "We are setting up your transaction. Please wait a moment."
-        // });
         result = handlePending();
 
         if (state.isFinished) {

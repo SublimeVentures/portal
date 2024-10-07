@@ -28,8 +28,6 @@ export default function AppUpgrades({ session }) {
     const { getCurrencyStore } = useEnvironmentContext();
     const client = useQueryClient();
 
-    console.log("getCurrencyStore", getCurrencyStore());
-
     const [isBuyModal, setBuyModal] = useState(false);
     const [order, setOrder] = useState(null);
 
