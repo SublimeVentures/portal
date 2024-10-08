@@ -27,8 +27,7 @@ import { queryClient } from "@/lib/queryCache";
 import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
-
-// import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
+import MutedText from "@/v2/components/ui/muted-text";
 
 export default function TakeOfferModal({ offerDetails, className }) {
     const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
@@ -162,8 +161,6 @@ export default function TakeOfferModal({ offerDetails, className }) {
                             </div>
                         </div>
                     </div>
-
-                    {/* <Test {...all} /> */}
                 </SheetBody>
 
                 <SheetFooter>
@@ -174,11 +171,11 @@ export default function TakeOfferModal({ offerDetails, className }) {
                     ) : (
                         <BlockchainStepButton {...getBlockchainStepButtonProps()} />
                     )}
-                    <p className="text-2xs md:text-sm font-light text-foreground/[.5]">
+                    <MutedText>
                         You will automatically receive ${currentMarket.ticker} tokens after settlement.
-                    </p>
+                    </MutedText>
                 </SheetFooter>
             </SheetContent>
         </Sheet>
     );
-};
+}

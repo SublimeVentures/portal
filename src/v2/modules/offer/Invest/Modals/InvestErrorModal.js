@@ -64,7 +64,7 @@ const messages = {
                 Investment is <span className="text-accent">currently paused</span>.
                 <br />
                 <br />
-                Please wait for the Discord update from the staff. <ExternalLink href={ExternalLinks.OFFER_PHASES} />
+                Please wait for the Discord update from the staff. <ExternalLink href={ExternalLinks.SUPPORT} />
             </>
         ),
     },
@@ -75,7 +75,7 @@ const messages = {
                 Investment is <span className="text-accent">not yet open</span>.
                 <br />
                 <br />
-                Don't cheat the timer! <ExternalLink href={ExternalLinks.OFFER_PHASES} />
+                Don't cheat the timer! <ExternalLink href={ExternalLinks.BOOKING_SYSTEM} />
             </>
         ),
     },

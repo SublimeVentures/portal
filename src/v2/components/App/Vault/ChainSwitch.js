@@ -90,7 +90,7 @@ export const ChainGroup = ({ children, className }) => {
     return (
         <div
             className={cn(
-                "flex items-center gap-5 p-1 rounded-full bg-no-repeat bg-left-top bg-[length:auto_100%]",
+                "flex items-center gap-5 p-1 rounded-full bg-no-repeat bg-left-top bg-[length:auto_100%] min-h-11",
                 className,
             )}
             style={{ backgroundImage: `url(${ChainsURL})` }}
