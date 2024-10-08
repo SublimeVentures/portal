@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import NotificationToast from "@/v2/components/Notification/NotificationToast";
+import NotificationToast from "../../components/App/Settings/Notifications/NotificationToast";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAO8LMDvud_ol6HsbjA0B_Z1Ogd3X_HL4c",
@@ -40,7 +40,10 @@ async function requestPushPermission(fcmInstance) {
     if (!fcmInstance) {
         return false;
     }
-    return Notification.permission === "granted";
+    if (Notification.permission !== "granted") {
+        return Notification.requestPermission().then((perm) => perm === "granted");
+    }
+    return true;
 }
 
 export function useFirebase() {
@@ -51,12 +54,8 @@ export function useFirebase() {
             const messaging = getMessaging(firebase);
             const allowed = await requestPushPermission(messaging);
             if (allowed) {
-                return getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY }).then((token) => {
-                    console.log("[FCM] Token received on hook");
-                    return token ?? null;
-                });
-            } else {
-                console.log("[FCM] Token blocked on hook");
+                const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY });
+                return token ?? null;
             }
         }
         return null;
@@ -70,12 +69,10 @@ export function useFirebase() {
         if (!firebase) return null;
         const fcm = getMessaging(firebase);
         onMessage(fcm, (payload) => {
-            console.log("[FCM] onMessage fired");
             toast.custom((t) => <NotificationToast t={t} notification={payload.notification} />, {
-                duration: Infinity,
+                duration: 5000,
             });
         });
-        console.log("[FCM] onMessage hook is set up");
         return fcm;
     };
 
