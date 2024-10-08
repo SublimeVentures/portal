@@ -54,9 +54,8 @@ export function useFirebase() {
             const messaging = getMessaging(firebase);
             const allowed = await requestPushPermission(messaging);
             if (allowed) {
-                return getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY }).then((token) => {
-                    return token ?? null;
-                });
+                const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY });
+                return token ?? null;
             }
         }
         return null;
