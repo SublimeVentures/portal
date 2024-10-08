@@ -54,8 +54,8 @@ async function saveUpgradeUse(userId, storePartnerId, offerId, amount, allocatio
 async function findStorePartnerId(storeId, tenantId) {
     const storePartnerRecord = await models.storePartner.findOne({
         where: {
-            storeId: storeId,
-            tenantId: tenantId
+            storeId,
+            tenantId
         }
     });
 
@@ -119,6 +119,33 @@ async function isReservationInProgress(userId, storeId) {
     }
 }
 
+async function expireUpgrade(userId, hash) {
+    try {
+        const mysteryBoxLockQuery = `
+            UPDATE public.upgradeLock
+            SET "isExpired" = true,
+                "updatedAt" = now()
+            WHERE "userId" = :userId
+              AND "hash" = :hash;
+        `;
+
+        return await db.query(mysteryBoxLockQuery, {
+            replacements: {
+                userId,
+                hash,
+            },
+            type: QueryTypes.UPDATE,
+        });
+    } catch (e) {
+        logger.error(`ERROR :: [expireUpgrade] for user ${userId} | hash: ${hash}`, {
+            offerId,
+            userId,
+            hash,
+        });
+    }
+    return true;
+}
+
 
 module.exports = {
     saveUpgradeUse,
@@ -126,4 +153,5 @@ module.exports = {
     findStorePartnerId,
     upsertUpgradeLock,
     isReservationInProgress,
+    expireUpgrade
 };

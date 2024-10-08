@@ -110,8 +110,8 @@ async function processMBUpgrade(transaction, claim, userId) {
 async function findStorePartnerId(storeId, tenantId) {
     const storePartnerRecord = await models.storePartner.findOne({
         where: {
-            storeId: storeId,
-            tenantId: tenantId
+            storeId,
+            tenantId,
         }
     });
 
@@ -175,6 +175,33 @@ async function isReservationInProgress(userId, storePartnerId) {
     }
 }
 
+async function expireMysteryBox(userId, hash) {
+    try {
+        const mysteryBoxLockQuery = `
+            UPDATE public.mysteryBoxLock
+            SET "isExpired" = true,
+                "updatedAt" = now()
+            WHERE "userId" = :userId
+              AND "hash" = :hash;
+        `;
+
+        return await db.query(mysteryBoxLockQuery, {
+            replacements: {
+                userId,
+                hash,
+            },
+            type: QueryTypes.UPDATE,
+        });
+    } catch (e) {
+        logger.error(`ERROR :: [expireMysteryBox] for user ${userId} | hash: ${hash}`, {
+            offerId,
+            userId,
+            hash,
+        });
+    }
+    return true;
+}
+
 module.exports = {
     pickMysteryBox,
     assignMysteryBox,
@@ -183,4 +210,5 @@ module.exports = {
     findStorePartnerId,
     upsertMysteryBoxLock,
     isReservationInProgress,
+    expireMysteryBox
 };

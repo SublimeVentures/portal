@@ -1,9 +1,19 @@
 [
   {
-    "inputs": [
+    "inputs":[
+      {
+        "internalType": "string",
+        "name": "hash_",
+        "type": "string"
+      },
       {
         "internalType": "uint256",
         "name": "amount_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expire_",
         "type": "uint256"
       },
       {
@@ -12,19 +22,19 @@
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "hash_",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "partnerId_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "storeId_",
+        "type": "uint256"
       },
       {
         "internalType": "bytes",
         "name": "signature_",
         "type": "bytes"
-      },
-      {
-        "internalType": "uint256",
-        "name": "expire_",
-        "type": "uint256"
       }
     ],
     "name": "buyMysteryBox",

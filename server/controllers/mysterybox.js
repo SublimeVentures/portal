@@ -6,6 +6,7 @@ const {
     upsertMysteryBoxLock,
     findStorePartnerId,
     isReservationInProgress,
+    expireMysteryBox,
 } = require("../queries/mysterybox.query");
 const db = require("../services/db/definitions/db.init");
 const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES } = require("../../src/lib/enum/store");
@@ -18,6 +19,7 @@ const { Op } = require('sequelize');
 const moment = require("moment");
 const { createHash } = require("./helpers");
 const { authTokenName } = require("../../src/lib/authHelpers");
+const axios = require("axios");
 
 async function processMysteryBox(userId, claim, transaction) {
     switch (claim.type) {
@@ -115,35 +117,33 @@ async function claim(user) {
 
 const validateParams = (req) => {
     const { body, user } = req;
-    const { chainId } = body;
+    const { chainId, amount } = body;
     const { userId, tenantId, accountId, partnerId } = user;
 
-    if (!tenantId || !userId || !accountId || !partnerId || !chainId) {
+    if (!tenantId || !userId || !accountId || !partnerId || !chainId || !amount) {
         return { ok: false, error: "Missing required parameters" };
     }
 
-    return { ok: true, data: { tenantId, userId, accountId, partnerId, chainId } };
+    return { ok: true, data: { tenantId, userId, accountId, partnerId, chainId, amount } };
 };
 
 
-async function obtainSignature(offerId, amount, hash, expires, partnerId, chainId, token) {
-    console.log("obtrainSignature", {
-        offerId,
-        amount,
-        hash,
-        expires,
-        partnerId,
-        chainId,
-        token,
+async function obtainSignature(hash, amount, expires, chainId, partnerId, storeId, token) {
+    console.log("MB obtrainSignature", {
+        hash, amount, expires, chainId, partnerId, storeId
     });
 
-    // @TODO
-    const signature = {
-        data: {
-            ok: true,
-            data: 'str_signature'
-        }
-    }
+    const signature = await axios.post(
+        `${process.env.AUTHER}/store/sign`,
+        {
+            hash, amount, expires, blockchainId: chainId, partnerId, storeId, token
+        },
+        {
+            headers: {
+                "content-type": "application/json",
+            },
+        },
+    );
     if (!signature?.data?.ok) {
         return {
             ok: false,
@@ -168,9 +168,7 @@ async function reserveMysteryBox(req) {
         const queryParams = validateParams(req);
         if (!queryParams.ok) return queryParams;
 
-        console.log("queryParams", queryParams);
-
-        const { userId, tenantId, partnerId, chainId } = queryParams.data;
+        const { userId, tenantId, chainId, amount } = queryParams.data;
 
         const storePartnerId = await findStorePartnerId(storeId, tenantId)
         const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
@@ -187,18 +185,13 @@ async function reserveMysteryBox(req) {
         if (!reservation.ok) {
             return reservation;
         }
-
+        
         const signature = await obtainSignature(
-            userId,
-            partnerId,
-            storePartnerId,
-            hash,
-            // reservation.data.expires,
-            token
+            hash, amount, expires, chainId, tenantId, storeId, token
         );
 
         if (!signature.ok) {
-            await expireAllocation(queryParams.data._offerId, userId, reservation.data.hash);
+            await expireMysteryBox(userId, hash);
             return signature;
         }
 
@@ -209,9 +202,8 @@ async function reserveMysteryBox(req) {
             hash: reservation.data.hash,
             expires: reservation.data.expireDate,
             signature: signature.data,
-            partnerId,
             tenantId,
-            storePartnerId
+            storeId
         };
     } catch (error) {
         if (transaction) {

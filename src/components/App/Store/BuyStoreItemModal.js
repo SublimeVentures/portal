@@ -20,9 +20,10 @@ const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 const { externalLinks } = getTenantConfig();
 
 export const blockchainPrerequisite = async (params) => {
-    const { tenant, token, network, upgradeId } = params;
-    const { chainId } = network
-    const transaction = await reserveUpgrade({ tenant, chainId, token, network, upgradeId });
+    const { network, amount, upgradeId } = params;
+    const { chainId } = network;
+    const transaction = await reserveUpgrade({ chainId, amount, storeId: upgradeId });
+
     if (transaction.ok) {
         return {
             ok: true,

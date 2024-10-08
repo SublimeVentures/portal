@@ -20,9 +20,9 @@ const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
 const { externalLinks } = getTenantConfig();
 
 export const blockchainPrerequisite = async (params) => {
-    const { tenant, token, network } = params;
+    const { tenant, token, network, amount, contract } = params;
     const { chainId } = network;
-    const transaction = await reserveMysterybox({ tenant, chainId, token, network });
+    const transaction = await reserveMysterybox({ tenant, chainId, token, network, amount, contract });
     if (transaction.ok) {
         return {
             ok: true,

@@ -119,10 +119,13 @@ const TENANT_UPGRADE = (params, token) => {
             return {
                 name: "buyUpgrade",
                 inputs: [
-                    params.amount, 
-                    params.upgradeId, 
-                    token.contract,
-                    params.hash, params.signature, params.expires
+                    params.prerequisite.hash,
+                    params.amount,
+                    params.prerequisite.storePartnerId,
+                    params.prerequisite.expires,
+                    params.prerequisite.tenantId,
+                    params.prerequisite.storeId,
+                    params.prerequisite.signature,
                 ],
                 abi: abi_upgrade_based,
                 confirmations: 2,
@@ -157,9 +160,13 @@ const TENANT_MYSTERYBOX = (params, token) => {
             return {
                 name: "buyMysteryBox",
                 inputs: [
+                    params.prerequisite.hash,
                     params.amount,
+                    params.prerequisite.expires,
                     token.contract,
-                    params.hash, params.signature, params.expires
+                    params.prerequisite.tenantId,
+                    params.prerequisite.storeId,
+                    params.prerequisite.signature,
                 ],
                 abi: abi_mb_based,
                 confirmations: 2,

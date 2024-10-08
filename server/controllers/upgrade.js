@@ -1,4 +1,4 @@
-const { saveUpgradeUse, fetchUpgradeUsed, upsertUpgradeLock, findStorePartnerId, isReservationInProgress } = require("../queries/upgrade.query");
+const { saveUpgradeUse, fetchUpgradeUsed, upsertUpgradeLock, findStorePartnerId, isReservationInProgress, expireUpgrade } = require("../queries/upgrade.query");
 const { PremiumItemsENUM } = require("../../src/lib/enum/store");
 const logger = require("../../src/lib/logger");
 
@@ -13,6 +13,7 @@ const { getUserAllocationMax, roundAmount } = require("../../src/lib/investment"
 const moment = require("moment");
 const { createHash } = require("./helpers");
 const { authTokenName } = require("../../src/lib/authHelpers");
+const axios = require("axios");
 
 async function useGuaranteed(offerId, user, transaction) {
     const { userId, partnerId, tenantId } = user;
@@ -161,35 +162,33 @@ async function useUpgrade(user, req) {
 
 const validateParams = (req) => {
     const { body, user } = req;
-    const { chainId, upgradeId } = body;
-    const { userId, tenantId, accountId, partnerId } = user;
+    const { chainId, amount, storeId } = body;
+    const { userId, tenantId, accountId } = user;
 
-    if (!tenantId || !userId || !accountId || !partnerId || !chainId || !upgradeId) {
+    if (!storeId || !userId || !accountId || !chainId || !amount || !tenantId) {
         return { ok: false, error: "Missing required parameters" };
     }
 
-    return { ok: true, data: { tenantId, userId, accountId, partnerId, chainId, upgradeId } };
+    return { ok: true, data: { tenantId, userId, accountId, chainId, amount, storeId } };
 };
 
 
-async function obtainSignature(offerId, amount, hash, expires, partnerId, chainId, token) {
-    console.log("obtrainSignature", {
-        offerId,
-        amount,
-        hash,
-        expires,
-        partnerId,
-        chainId,
-        token,
+async function obtainSignature(hash, amount, expires, chainId, partnerId, storeId, token) {
+    console.log("Buy upgrade obtrainSignature", {
+        hash, amount, expires, chainId, partnerId, storeId
     });
 
-    // @TODO
-    const signature = {
-        data: {
-            ok: true,
-            data: 'str_signature'
-        }
-    }
+    const signature = await axios.post(
+        `${process.env.AUTHER}/store/sign`,
+        {
+            hash, amount, expires, blockchainId: chainId, partnerId, storeId, token
+        },
+        {
+            headers: {
+                "content-type": "application/json",
+            },
+        },
+    );
     if (!signature?.data?.ok) {
         return {
             ok: false,
@@ -213,9 +212,10 @@ async function reserveUpgrade(req) {
         const queryParams = validateParams(req);
         if (!queryParams.ok) return queryParams;
 
-        const { userId, tenantId, partnerId, chainId, upgradeId } = queryParams.data;
+        const { userId, tenantId, chainId, amount, storeId } = queryParams.data;
 
-        const reservationInProgress = await isReservationInProgress(userId, upgradeId);
+        const storePartnerId = await findStorePartnerId(storeId, tenantId);
+        const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
         if (reservationInProgress) {
             throw new Error("Reservation is already in progress for this user and store");
         }
@@ -224,23 +224,16 @@ async function reserveUpgrade(req) {
         const expires = now + 10 * 60;
         const hash = createHash(`${userId}` + `${now}`);
 
-        const reservation = await upsertUpgradeLock(userId, upgradeId, chainId, hash, expires,  transaction);
+        const reservation = await upsertUpgradeLock(userId, storePartnerId, chainId, hash, expires, transaction);
 
         if (!reservation.ok) {
             return reservation;
         }
 
-        const signature = await obtainSignature(
-            userId,
-            partnerId,
-            upgradeId,
-            hash,
-            // reservation.data.expires,
-            token
-        );
+        const signature = await obtainSignature(hash, amount, expires, chainId, tenantId, storeId, token);
 
         if (!signature.ok) {
-            await expireAllocation(queryParams.data._offerId, userId, reservation.data.hash);
+            await expireUpgrade(userId, hash);
             return signature;
         }
 
@@ -251,15 +244,15 @@ async function reserveUpgrade(req) {
             hash: reservation.data.hash,
             expires: reservation.data.expireDate,
             signature: signature.data,
-            partnerId,
             tenantId,
-            storePartnerId: upgradeId
+            storePartnerId,
+            storeId,
         };
     } catch (error) {
         if (transaction) {
             await transaction.rollback();
         }
-        logger.error(`ERROR :: [reserveUpgrade]`, {
+        logger.error(`ERROR :: [reserveMysteryBox]`, {
             reqQuery: req.query,
             error: serializeError(error),
         });
