@@ -2,6 +2,7 @@ import { WagmiProvider } from "wagmi";
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/v2/components/ui/tooltip";
 import Layout from "@/components/Layout/Layout";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
@@ -39,6 +40,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                                 </HydrationBoundary>
                             </TooltipProvider>
                         </EnvironmentProvider>
+                        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
                     </QueryClientProvider>
                 </WagmiProvider>
             </ClientErrorBoundary>

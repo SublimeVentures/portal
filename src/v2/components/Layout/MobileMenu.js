@@ -28,13 +28,16 @@ const renderLogo = (componentName) => {
     return <TenantLogo />;
 };
 
-export default function MobileMenu({ isBlockedAlert }) {
+export default function MobileMenu({ isBlockedAlert, session }) {
     const router = useRouter();
-    const { environmentCleanup, networkToggle } = useEnvironmentContext();
+    const {
+        environmentCleanup,
+        networkToggle,
+        account: { address },
+    } = useEnvironmentContext();
     const { components } = useTenantSpecificData();
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [walletAddress] = useState("0x1234567890abcdef1234567890abcdef12345678"); // Mock address
 
     useEscapeKey(() => setIsMobileMenuOpen(false));
 
@@ -68,7 +71,7 @@ export default function MobileMenu({ isBlockedAlert }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="p-4 mt-8 text-xs font-normal text-foreground">{name}</h2>
+                <h2 className="p-4 mt-8 text-xs font-normal text-white/50">{name}</h2>
                 <ul className="flex flex-col gap-1">
                     {items.map(({ name, path }) => (
                         <li
@@ -101,7 +104,7 @@ export default function MobileMenu({ isBlockedAlert }) {
             <SheetPortal>
                 <SheetContent
                     style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                    className="fixed z-50 right-0 top-0 mt-[var(--alertHeight)] h-[calc(100vh_-_var(--alertHeight))] w-full flex flex-col bg-primary-950 transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
+                    className="fixed z-40 right-0 top-0 mt-[var(--alertHeight)] h-[calc(100vh_-_var(--alertHeight))] w-full flex flex-col bg-gradient angle-130 to-primary-800 from-primary-950 transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
                 >
                     <div className="p-4 w-full flex items-center justify-between">
                         <Link href={PAGE.App}>
@@ -135,7 +138,7 @@ export default function MobileMenu({ isBlockedAlert }) {
                                 {generateMenu("Account", profileMenu)}
                             </nav>
                             <div className="m-6 flex flex-col items-center">
-                                <h2 className="text-xs font-normal text-gray-100">Community</h2>
+                                <h2 className="text-xs font-normal text-white/50">Community</h2>
                                 <ul className="flex items-center gap-4">
                                     {socialMenu.map(({ icon, name, path }) => (
                                         <li key={name} className="pt-4">
@@ -153,11 +156,11 @@ export default function MobileMenu({ isBlockedAlert }) {
                             </div>
 
                             <div className="mt-auto flex flex-col items-center w-full gap-4">
-                                <Avatar size="large" session={null} />
+                                <Avatar size="large" session={session} />
                                 <Button className="w-full" variant="secondary" onClick={handleLogout}>
                                     Logout
                                 </Button>
-                                <p className="text-sm font-light text-foreground">{shortenAddress(walletAddress)}</p>
+                                <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
                             </div>
                         </div>
                     </div>

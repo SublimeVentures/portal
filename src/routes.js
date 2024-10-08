@@ -62,6 +62,7 @@ const ExternalLinksBased = {
     OTC: "https://info.basedvc.fund/OTC-fdad47130a0a49bbaa1a1e4c9fd95907",
     APPLY: "https://tally.so/r/mK5Pvk",
     WHALE_CLUB: "https://info.basedvc.fund/3VC-Whale-Club-5fea374623c1493d8af2b4b04914ab3e",
+    REFERRAL_PROGRAM: "https://info.basedvc.fund/",
     //todo: https://www.notion.so/basedvc/Investment-Cap-Model-5b685123fe3c43e9a29e6d8fa67be2a3 - to be fixed
 };
 
@@ -85,6 +86,7 @@ const ExternalLinksCitCap = {
 
     OTC: "https://info.citizencapital.fund/OTC-08ce38805290416eb073b139bd54e3f7",
     STAKING: "https://info.citizencapital.fund/BYTES-Staking-Requirement-f1621bfe909b41d797fd77ca784a8fa0",
+    REFERRAL_PROGRAM: "https://info.citizencapital.fund/",
 };
 
 const ExternalLinksCyberKongz = {
@@ -105,6 +107,7 @@ const ExternalLinksCyberKongz = {
     VAULT: "#",
     OTC: "#",
     STAKING: "#",
+    REFERRAL_PROGRAM: "#",
 };
 
 const ExternalLinksBAYC = {
@@ -123,6 +126,7 @@ const ExternalLinksBAYC = {
     VAULT: "https://info.apes.capital/overview/managing-your-investments",
     OTC: "https://info.apes.capital/overview/otc-sales",
     STAKING: "https://info.apes.capital/overview/how-to-join",
+    REFERRAL_PROGRAM: "https://info.apes.capital/",
 };
 
 function getTenantLinks() {

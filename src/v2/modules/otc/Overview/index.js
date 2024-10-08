@@ -23,7 +23,7 @@ export default function Overview() {
     return (
         <Card
             variant="none"
-            className="p-4 h-max flex flex-col w-full justify-between gap-4 bg-settings-gradient md:flex-row md:items-center"
+            className="p-4 h-max flex flex-col w-full justify-between gap-4 bg-settings-gradient md:flex-row md:items-center cursor-default"
         >
             {isLoading ? (
                 <Skeleton className="h-64 md:h-24" />

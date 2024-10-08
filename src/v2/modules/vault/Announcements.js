@@ -59,7 +59,7 @@ const Announcements = ({ className }) => {
                                     shape="circle"
                                     variant="accent"
                                     icon={ArrowIcon}
-                                    className="right-5 bottom-5 3xl:right-10 3xl:bottom-10 absolute"
+                                    className="right-5 bottom-5 3xl:right-10 3xl:bottom-10 absolute lg:hidden xl:block"
                                 />
                             </div>
                         </Card>

@@ -9,6 +9,7 @@ import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
 import { Button } from "@/v2/components/ui/button";
 import Modal from "@/v2/components/App/Vault/ClaimModal";
 import useImage from "@/v2/hooks/useImage";
+import MutedText from "@/v2/components/ui/muted-text";
 
 // aspect-[5/8]
 const InvestmentCardWrapper = ({ children, className }) => {
@@ -91,9 +92,7 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
             </Modal>
 
             {participatedDate && (
-                <p className="absolute left-0 bottom-1 py-2 w-full text-xxs font-light text-foreground/[.56] text-center select-none">
-                    Participated {participatedDate}
-                </p>
+                <MutedText className="absolute left-0 bottom-1 py-2 w-full">Participated {participatedDate}</MutedText>
             )}
         </InvestmentCardWrapper>
     );

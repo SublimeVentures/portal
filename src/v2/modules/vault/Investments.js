@@ -11,16 +11,18 @@ export const INVESTMENTS_QUERY = {
 };
 
 const Investments = ({ className }) => {
-    const { data: investments = [], isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
+    const { data: { rows: investments } = { rows: [] }, isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
     return (
         <div className={cn("flex flex-col", className)}>
             <div className="flex justify-between items-center mb-5 sm:mb-4">
                 <Title>My Investments</Title>
-                <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
-                    <Link href="/app/vault/investments">
-                        see all <ArrowIcon className="size-2.5 ml-2" />
-                    </Link>
-                </Button>
+                {investments.length > 0 && (
+                    <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
+                        <Link href="/app/vault/investments">
+                            see all <ArrowIcon className="size-2.5 ml-2" />
+                        </Link>
+                    </Button>
+                )}
             </div>
 
             {investments.length <= 0 && !isLoading ? (

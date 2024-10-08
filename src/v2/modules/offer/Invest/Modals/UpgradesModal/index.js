@@ -129,10 +129,6 @@ export default function UpgradesModal() {
                                 Use Upgrade
                             </Button>
                         </div>
-
-                        {/* <div className="mx-auto">
-                            <Linker url={externalLinks.UPGRADES} />
-                        </div> */}
                     </DialogFooter>
                 </div>
             </DialogContent>

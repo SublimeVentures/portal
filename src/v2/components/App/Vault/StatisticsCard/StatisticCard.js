@@ -19,13 +19,22 @@ export const ErrorStatisticCard = ({ actionFn }) => (
     </Card>
 );
 
-const StatisticCard = ({ title, value = 0, icon, isLoading = false, isError = false, last = false, className }) => {
+const StatisticCard = ({
+    title,
+    value = 0,
+    icon,
+    isLoading = false,
+    isError = false,
+    last = false,
+    className,
+    iconClassName,
+}) => {
     if (isLoading) return <SkeletonStatisticCard />;
     if (isError) return <ErrorStatisticCard actionFn={actionFn} />;
     return (
         <Card variant="accent" className={cn("grow flex items-center gap-x-5 cursor-auto select-none", className)}>
             <CardIcon
-                className={cn("bg-accent/[.1] text-accent shrink-0", { "hidden md:inline-block": last })}
+                className={cn("bg-accent/[.1] text-accent shrink-0", { "hidden md:inline-block": last }, iconClassName)}
                 icon={icon}
             />
             <div className={cn("", { "text-center w-full md:text-left md:w-auto": last })}>

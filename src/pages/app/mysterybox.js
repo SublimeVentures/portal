@@ -4,7 +4,6 @@ import Head from "next/head";
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import Image from "next/image";
 import routes, { ExternalLinks } from "@/routes";
 import { getCopy } from "@/lib/seoConfig";
@@ -16,10 +15,11 @@ import { processServerSideData } from "@/lib/serverSideHelpers";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { TENANT } from "@/lib/tenantHelper";
 import { AppLayout } from "@/v2/components/Layout";
-import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import { Button } from "@/v2/components/ui/button";
+import { formatCurrency } from "@/v2/helpers/formatters.js";
+import ExternalLink from "@/v2/components/ui/external-link";
 
 const ErrorModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
 const ClaimMysteryBoxModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimMysteryBoxModal"), {
@@ -128,19 +128,14 @@ export default function MysteryBoxPage({ session }) {
                             upgrades, exclusive NFTs, and valuable discounts. The depths hold secrets, waiting for you
                             to discover.
                         </p>
-                        <Link
-                            href={ExternalLinks.LOOTBOX}
-                            className="text-white inline-flex items-center gap-2 text-sm"
-                            target="_blank"
-                        >
+                        <ExternalLink href={ExternalLinks.LOOTBOX} className="text-white text-sm">
                             Learn more
-                            <ArrowIcon className="size-2" />
-                        </Link>
+                        </ExternalLink>
                     </div>
                     <BackdropCard className="mb-5">
                         <DefinitionList className="grid-cols-2 w-full sm:w-2/3">
                             <Definition term="Type">Stackable</Definition>
-                            <Definition term="Price">$150</Definition>
+                            <Definition term="Price">{formatCurrency(mysteryBox?.price)}</Definition>
                         </DefinitionList>
                         <Button
                             className="w-full sm:w-1/3"
@@ -182,13 +177,7 @@ export default function MysteryBoxPage({ session }) {
                     )}
                 </div>
             </div>
-            <BuyMysteryBoxModal
-                model={isBuyModal}
-                setter={() => {
-                    closeBuy();
-                }}
-                buyModalProps={buyModalProps}
-            />
+            <BuyMysteryBoxModal open={isBuyModal} onClose={closeBuy} buyModalProps={buyModalProps} />
             <ClaimMysteryBoxModal
                 model={claimModal}
                 setter={() => {

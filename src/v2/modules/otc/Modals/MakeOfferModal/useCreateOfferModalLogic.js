@@ -248,14 +248,14 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
                     control: form.control,
                     handleChange: handleAmountChange,
                     placeholder: "Offer amount",
-                    label: "Your offer ",
+                    label: "Your Offer ",
                 },
                 price: {
                     name,
                     control: form.control,
                     handleChange: handlePriceChange,
                     placeholder: "Desired amount",
-                    label: "You price",
+                    label: "Your Price",
                 },
                 currency: {
                     name,

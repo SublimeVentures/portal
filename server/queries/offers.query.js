@@ -237,6 +237,7 @@ const query_getOtcList = `
         MAX(ol.d_close) DESC NULLS LAST;
 `;
 
+// OTc Markets
 async function getOtcList(partnerId, tenantId) {
     try {
         const otcList = await db.query(query_getOtcList, {

@@ -13,7 +13,7 @@ const ExternalLinksBased = {
     WIKI: "https://info.basedvc.fund",
     DISCORD: "https://discord.gg/AsGvs6uRU8",
     TWITTER: "https://twitter.com/basedvcfund",
-    OTC: "https://info.basedvc.fund/OTC-fdad47130a0a49bbaa1a1e4c9fd95907",
+    OTC: "https://info.basedvc.fund/overview/otc-sales",
     APPLY: "https://tally.so/r/mK5Pvk",
     WHALE_CLUB: "https://info.basedvc.fund/3VC-Whale-Club-5fea374623c1493d8af2b4b04914ab3e",
     //todo: https://www.notion.so/basedvc/Investment-Cap-Model-5b685123fe3c43e9a29e6d8fa67be2a3 - to be fixed
