@@ -1,8 +1,17 @@
-const { saveUpgradeUse, fetchUpgradeUsed, upsertUpgradeLock, findStorePartnerId, isReservationInProgress, expireUpgrade } = require("../queries/upgrade.query");
+const { serializeError } = require("serialize-error");
+const moment = require("moment");
+const axios = require("axios");
+const {
+    saveUpgradeUse,
+    fetchUpgradeUsed,
+    upsertUpgradeLock,
+    findStorePartnerId,
+    isReservationInProgress,
+    expireUpgrade,
+} = require("../queries/upgrade.query");
 const { PremiumItemsENUM } = require("../../src/lib/enum/store");
 const logger = require("../../src/lib/logger");
 
-const { serializeError } = require("serialize-error");
 const { PremiumItemsParamENUM } = require("../../src/lib/enum/store");
 const db = require("../services/db/definitions/db.init");
 const { getStoreItemsOwnedByUser, updateUserUpgradeAmount } = require("../queries/storeUser.query");
@@ -10,10 +19,8 @@ const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
 const { getOfferWithLimits } = require("../queries/offers.query");
 const { bookAllocationGuaranteed } = require("../queries/invest.query");
 const { getUserAllocationMax, roundAmount } = require("../../src/lib/investment");
-const moment = require("moment");
-const { createHash } = require("./helpers");
 const { authTokenName } = require("../../src/lib/authHelpers");
-const axios = require("axios");
+const { createHash } = require("./helpers");
 
 async function useGuaranteed(offerId, user, transaction) {
     const { userId, partnerId, tenantId } = user;
@@ -34,11 +41,7 @@ async function useGuaranteed(offerId, user, transaction) {
         offer.offerLimits.find((el) => el.partnerId === tenantId) ||
         offer.offerLimits.find((el) => el.partnerId === partnerId && !el.isTenantExclusive);
 
-    const { allocationUser_max } = getUserAllocationMax(
-        user,
-        { ...offer, ...offerLimit },
-        upgradeIncreased,
-    );
+    const { allocationUser_max } = getUserAllocationMax(user, { ...offer, ...offerLimit }, upgradeIncreased);
 
     const maxAllocation = roundAmount(allocationUser_max);
     const amount = maxAllocation < PremiumItemsParamENUM.Guaranteed ? maxAllocation : PremiumItemsParamENUM.Guaranteed;
@@ -159,7 +162,6 @@ async function useUpgrade(user, req) {
     }
 }
 
-
 const validateParams = (req) => {
     const { body, user } = req;
     const { chainId, amount, storeId } = body;
@@ -172,16 +174,26 @@ const validateParams = (req) => {
     return { ok: true, data: { tenantId, userId, accountId, chainId, amount, storeId } };
 };
 
-
 async function obtainSignature(hash, amount, expires, chainId, partnerId, storeId, token) {
     console.log("Buy upgrade obtrainSignature", {
-        hash, amount, expires, chainId, partnerId, storeId
+        hash,
+        amount,
+        expires,
+        chainId,
+        partnerId,
+        storeId,
     });
 
     const signature = await axios.post(
         `${process.env.AUTHER}/store/sign`,
         {
-            hash, amount, expires, blockchainId: chainId, partnerId, storeId, token
+            hash,
+            amount,
+            expires,
+            blockchainId: chainId,
+            partnerId,
+            storeId,
+            token,
         },
         {
             headers: {
@@ -215,10 +227,10 @@ async function reserveUpgrade(req) {
         const { userId, tenantId, chainId, amount, storeId } = queryParams.data;
 
         const storePartnerId = await findStorePartnerId(storeId, tenantId);
-        const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
-        if (reservationInProgress) {
-            throw new Error("Reservation is already in progress for this user and store");
-        }
+        // const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
+        // if (reservationInProgress) {
+        //     throw new Error("Reservation is already in progress for this user and store");
+        // }
 
         const now = moment.utc().unix();
         const expires = now + 10 * 60;
