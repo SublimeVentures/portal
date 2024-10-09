@@ -21,11 +21,19 @@ export const stepNetwork = (state, data) => {
                 text: "Please wait while we switch to the selected network.",
             });
         } else if (data.error) {
-            result = handleError({
-                content: "Network switch error",
-                text:
-                    data?.error?.shortMessage ?? "An error occurred while switching networks. Please try again later.",
-            });
+            if (data.error.code === 4902) {
+                result = handleError({
+                    content: "Chain Not Supported",
+                    text: "The selected blockchain network is not supported by this application.",
+                });
+            } else {
+                result = handleError({
+                    content: "Network switch error",
+                    text:
+                        data?.error?.shortMessage ??
+                        "An error occurred while switching networks. Please try again later.",
+                });
+            }
         }
     } else {
         result = handlePending();

@@ -49,7 +49,7 @@ export default function SingleMarket({
                     />
                     <Tooltiper
                         wrapper={
-                            <span className="w-5 h-5 flex items-center justify-center text-2xs text-foreground/50 border border-foreground/50 rounded-full">
+                            <span className="w-5 h-5 flex items-center justify-center text-2xs text-foreground/50 leading-10 border border-foreground/50 rounded-full">
                                 {activeDealsCount}
                             </span>
                         }
