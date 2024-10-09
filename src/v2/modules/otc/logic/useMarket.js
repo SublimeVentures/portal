@@ -5,7 +5,7 @@ import { useSession } from "../logic/store";
 import { getMarkets } from "@/v2/fetchers/otc";
 
 export default function useMarket() {
-    const { userId: USER_ID } = useSession();
+    const { userId: USER_ID, partnerOtcFee } = useSession();
     const router = useRouter();
     const { market } = router.query;
 
@@ -40,5 +40,6 @@ export default function useMarket() {
         currentMarket,
         isLoading,
         handleResetMarket,
+        partnerOtcFee,
     };
 }
