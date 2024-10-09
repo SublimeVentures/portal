@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import NotificationToast from "../../components/App/Settings/Notifications/NotificationToast";
+import NotificationToast from "@/v2/components/Notification/NotificationToast";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAO8LMDvud_ol6HsbjA0B_Z1Ogd3X_HL4c",
