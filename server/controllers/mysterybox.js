@@ -1,3 +1,7 @@
+const { serializeError } = require("serialize-error");
+const { Op } = require("sequelize");
+const moment = require("moment");
+const axios = require("axios");
 const {
     pickMysteryBox,
     assignMysteryBox,
@@ -12,14 +16,10 @@ const db = require("../services/db/definitions/db.init");
 const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM, MYSTERY_TYPES } = require("../../src/lib/enum/store");
 const { getStoreItemsOwnedByUser, updateUserUpgradeAmount } = require("../queries/storeUser.query");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
 const { models } = require("../services/db/definitions/db.init");
-const { Op } = require('sequelize');
-const moment = require("moment");
-const { createHash } = require("./helpers");
 const { authTokenName } = require("../../src/lib/authHelpers");
-const axios = require("axios");
+const { createHash } = require("./helpers");
 
 async function processMysteryBox(userId, claim, transaction) {
     switch (claim.type) {
@@ -127,16 +127,26 @@ const validateParams = (req) => {
     return { ok: true, data: { tenantId, userId, accountId, partnerId, chainId, amount } };
 };
 
-
 async function obtainSignature(hash, amount, expires, chainId, partnerId, storeId, token) {
     console.log("MB obtrainSignature", {
-        hash, amount, expires, chainId, partnerId, storeId
+        hash,
+        amount,
+        expires,
+        chainId,
+        partnerId,
+        storeId,
     });
 
     const signature = await axios.post(
         `${process.env.AUTHER}/store/sign`,
         {
-            hash, amount, expires, blockchainId: chainId, partnerId, storeId, token
+            hash,
+            amount,
+            expires,
+            blockchainId: chainId,
+            partnerId,
+            storeId,
+            token,
         },
         {
             headers: {
@@ -170,11 +180,11 @@ async function reserveMysteryBox(req) {
 
         const { userId, tenantId, chainId, amount } = queryParams.data;
 
-        const storePartnerId = await findStorePartnerId(storeId, tenantId)
-        const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
-        if (reservationInProgress) {
-            throw new Error("Reservation is already in progress for this user and store");
-        }
+        const storePartnerId = await findStorePartnerId(storeId, tenantId);
+        // const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
+        // if (reservationInProgress) {
+        //     throw new Error("Reservation is already in progress for this user and store");
+        // }
 
         const now = moment.utc().unix();
         const expires = now + 10 * 60;
@@ -185,10 +195,8 @@ async function reserveMysteryBox(req) {
         if (!reservation.ok) {
             return reservation;
         }
-        
-        const signature = await obtainSignature(
-            hash, amount, expires, chainId, tenantId, storeId, token
-        );
+
+        const signature = await obtainSignature(hash, amount, expires, chainId, tenantId, storeId, token);
 
         if (!signature.ok) {
             await expireMysteryBox(userId, hash);
@@ -203,7 +211,7 @@ async function reserveMysteryBox(req) {
             expires: reservation.data.expireDate,
             signature: signature.data,
             tenantId,
-            storeId
+            storeId,
         };
     } catch (error) {
         if (transaction) {

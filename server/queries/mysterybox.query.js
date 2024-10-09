@@ -1,8 +1,8 @@
+const { Op, Sequelize, QueryTypes } = require("sequelize");
+const moment = require("moment");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, Sequelize, QueryTypes } = require("sequelize");
 const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM } = require("../../src/lib/enum/store");
-const moment = require("moment");
 
 async function pickMysteryBox(tenantId, transaction) {
     const rolledMysterybox = await models.storeMysterybox.findOne({
@@ -112,7 +112,7 @@ async function findStorePartnerId(storeId, tenantId) {
         where: {
             storeId,
             tenantId,
-        }
+        },
     });
 
     if (!storePartnerRecord) {
@@ -137,7 +137,7 @@ async function upsertMysteryBoxLock(userId, storePartnerId, chainId, hash, expir
             storePartnerId,
             hash,
             chainId,
-            expireDate: expires
+            expireDate: expires,
         },
         type: QueryTypes.RAW,
         transaction,
@@ -151,7 +151,7 @@ async function upsertMysteryBoxLock(userId, storePartnerId, chainId, hash, expir
 
     return {
         ok: true,
-        data: result[0][0], 
+        data: result[0][0],
     };
 }
 
@@ -161,17 +161,18 @@ async function isReservationInProgress(userId, storePartnerId) {
             where: {
                 userId,
                 storePartnerId,
-                isExpired: false, 
+                isExpired: false,
                 isFinished: false,
                 expireDate: {
-                    [Op.gt]: moment().unix() 
-                }
-            }
+                    [Op.gt]: moment().unix(),
+                },
+            },
         });
 
         return !!ongoingReservation;
     } catch (error) {
-        throw new Error('Failed to check reservation status');
+        console.error(error);
+        throw new Error("Failed to check reservation status");
     }
 }
 
@@ -210,5 +211,5 @@ module.exports = {
     findStorePartnerId,
     upsertMysteryBoxLock,
     isReservationInProgress,
-    expireMysteryBox
+    expireMysteryBox,
 };
