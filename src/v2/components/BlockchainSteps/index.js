@@ -52,10 +52,9 @@ const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
 };
 
 export default function BlockchainSteps({ content, steps, extraState, status }) {
-    console.log("content", content);
     return (
         <div className="mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded">
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 <motion.h3
                     key={`${content.content}`}
                     initial={{ opacity: 0 }}

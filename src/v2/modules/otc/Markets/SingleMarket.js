@@ -7,7 +7,17 @@ import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { routes } from "@/v2/routes";
 import { cn } from "@/lib/cn";
 
-export default function SingleMarket({ name, genre, slug, currentMarket, isManaged, ticker, ppu, dealStructure, activeDealsCount }) {
+export default function SingleMarket({
+    name,
+    genre,
+    slug,
+    currentMarket,
+    isManaged,
+    ticker,
+    ppu,
+    dealStructure,
+    activeDealsCount,
+}) {
     const { cdn } = useEnvironmentContext();
     const isSelected = currentMarket ? currentMarket.slug === slug : false;
 
@@ -32,14 +42,14 @@ export default function SingleMarket({ name, genre, slug, currentMarket, isManag
                 <p className="text-xs 3xl:text-sm font-light text-foreground/[.5] leading-none">{genre}</p>
                 <div className="flex items-center gap-1">
                     {getPayoutStructure(isManaged, ticker)}
-                    <Tooltiper 
+                    <Tooltiper
                         wrapper={<CiCircleInfo className="text-2xl text-foreground/[.5]" />}
                         text={`${dealStructure ? `${dealStructure}, ` : ""}Price: ${ppu ? `$${ppu}` : "TBA"}`}
                         type={TooltipType.Primary}
                     />
                     <Tooltiper
                         wrapper={
-                            <span className="w-5 h-5 flex items-center justify-center text-2xs text-foreground/50 border border-foreground/50 rounded-full">
+                            <span className="w-5 h-5 flex items-center justify-center text-2xs text-foreground/50 leading-10 border border-foreground/50 rounded-full">
                                 {activeDealsCount}
                             </span>
                         }
