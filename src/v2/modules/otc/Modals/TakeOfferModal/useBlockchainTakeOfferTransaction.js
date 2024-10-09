@@ -8,7 +8,7 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import { getUserAllocation } from "@/v2/fetchers/otc";
 
 export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
-    const { currentMarket } = useMarket();
+    const { currentMarket, partnerOtcFee } = useMarket();
     const { getCurrencySettlement, account, currencies, activeOtcContract, otcFee } = useEnvironmentContext();
     
     const { data: vault } = useQuery({
@@ -26,7 +26,7 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
     const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
     const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
-    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee;
+    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee + partnerOtcFee : otcFee;
 
     const customLocks = () => {
         if (!haveEnoughAllocation) return { lock: true, text: "Not enough allocation" };
@@ -80,6 +80,7 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
 
     return {
         totalPayment,
+        partnerOtcFee,
         transactionSuccessful,
         blockchainInteractionData,
         setTransactionSuccessful,
