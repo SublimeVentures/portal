@@ -37,7 +37,6 @@ const defaultState = Object.freeze({
 
 export const getTextContent = (steps) => {
     const statePriority = [STEPS_STATE.ERROR, STEPS_STATE.PROCESSING, STEPS_STATE.PENDING, STEPS_STATE.SUCCESS];
-
     for (const priority of statePriority) {
         for (const stepKey in steps) {
             if (steps[stepKey] !== undefined && steps[stepKey].state === priority) {

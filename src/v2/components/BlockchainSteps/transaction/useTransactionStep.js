@@ -72,4 +72,4 @@ export default function useTransactionStep(state, data, dispatch) {
             transaction_isReady,
         }),
     };
-};
+}

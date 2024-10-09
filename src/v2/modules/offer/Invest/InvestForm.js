@@ -8,4 +8,4 @@ export default function InvestForm({ children, form, onSubmit }) {
             </form>
         </Form>
     );
-};
+}

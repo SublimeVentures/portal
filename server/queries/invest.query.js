@@ -17,7 +17,7 @@ async function getOfferRaise(id) {
     }
     return {};
 }
- 
+
 async function investIncreaseAllocationReserved(offer, wantedAllocation, upgradeGuaranteed, transaction) {
     let effectiveAllocationReserved;
     let sumFilter = ` COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0)`;

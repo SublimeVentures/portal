@@ -7,7 +7,7 @@ const getReturnValues = (countDown) => {
     const hours = formatTimeUnit(Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
     const minutes = formatTimeUnit(Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60)));
     const seconds = formatTimeUnit(Math.floor((countDown % (1000 * 60)) / 1000));
-  
+
     return [days, hours, minutes, seconds];
 };
 
@@ -56,5 +56,5 @@ export const useCountdown = (targetDate, onComplete = () => {}) => {
         };
     }, [countDownDate, onComplete]);
 
-    return (countDown === null || countDown < 0) ? ["00", "00", "00", "00"] : getReturnValues(countDown);
+    return countDown === null || countDown < 0 ? ["00", "00", "00", "00"] : getReturnValues(countDown);
 };

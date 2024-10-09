@@ -151,4 +151,4 @@ export default function CancelOfferModal({ offerDetails, className }) {
             </SheetContent>
         </Sheet>
     );
-};
+}

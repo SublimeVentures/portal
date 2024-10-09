@@ -181,4 +181,4 @@ export default function TakeOfferModal({ offerDetails, className }) {
             </SheetContent>
         </Sheet>
     );
-};
+}

@@ -1,11 +1,11 @@
 import moment from "moment";
 
+import SinglePhase from "./SinglePhase";
+import PhaseSlider from "./PhaseSlider";
 import { cn } from "@/lib/cn";
 import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import Countdown, { defaultUnits } from "@/v2/components/Countdown";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
-import SinglePhase from "./SinglePhase";
-import PhaseSlider from "./PhaseSlider";
 
 // @TODO
 // - Show 'Whale' phase based on value from session - Currently I cannot see matching value in session. Should it be here as a filter or or in v2/hooks/usePhaseTimeline.js
@@ -39,14 +39,16 @@ export default function Phases({ className }) {
 
             <div className="mt-4 2xl:mr-16 2xl:mt-0">
                 {!isClosed && (
-                     <Countdown
+                    <Countdown
                         countStart={countStart}
                         onComplete={updatePhase}
-                        units={!isDesktop ? { days: "D . ", hours: "H . ", minutes: "M. ", seconds: "S" } : defaultUnits}
+                        units={
+                            !isDesktop ? { days: "D . ", hours: "H . ", minutes: "M. ", seconds: "S" } : defaultUnits
+                        }
                     />
                 )}
                 {!isClosed && <p className="mt-2 text-sm text-center md:hidden">Phase duration</p>}
             </div>
         </div>
     );
-};
+}

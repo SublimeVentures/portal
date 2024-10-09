@@ -1,11 +1,15 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
+import useCalculate from "./useCalculate";
 import { Input } from "@/v2/components/ui/input";
 import { IconButton } from "@/v2/components/ui/icon-button";
-import useCalculate from "./useCalculate";
 
 export default function CalculateForm() {
-    const { state: { amount, price, multiplier }, handleAmountChange, handleMultiplierChange } = useCalculate();
+    const {
+        state: { amount, price, multiplier },
+        handleAmountChange,
+        handleMultiplierChange,
+    } = useCalculate();
     const multiplierParsed = multiplier.toFixed(2);
 
     return (
@@ -14,7 +18,9 @@ export default function CalculateForm() {
                 <span className="text-base mb-2 lg:text-lg">Buying Allocation</span>
                 <div className="relative w-full ">
                     <Input type="fund" value={amount} onChange={handleAmountChange} className="px-4 w-full md:px-8" />
-                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">USD</span>
+                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">
+                        USD
+                    </span>
                 </div>
             </label>
 
@@ -28,9 +34,11 @@ export default function CalculateForm() {
                 <span className="text-base mb-2 lg:text-lg">Return</span>
                 <div className="relative w-full ">
                     <Input value={price} className="px-4 w-full md:px-8" />
-                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">USD</span>
+                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">
+                        USD
+                    </span>
                 </div>
             </label>
         </div>
     );
-};
+}

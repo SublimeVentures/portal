@@ -24,7 +24,6 @@ import { millisecondsInHour } from "@/constants/datetime";
 
 const { externalLinks } = getTenantConfig();
 
-
 const TABS = {
     BUY: 0,
     SELL: 1,

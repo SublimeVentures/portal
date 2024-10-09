@@ -1,8 +1,8 @@
 import { useCookies } from "react-cookie";
 import moment from "moment";
 
-import { routes } from "@/v2/routes";
 import { useOfferDetailsQuery } from "./queries";
+import { routes } from "@/v2/routes";
 
 const DEFAULT_STATE = {
     code: 0,
@@ -50,4 +50,4 @@ export default function useInvestContext() {
         setBooking,
         clearBooking,
     };
-};
+}

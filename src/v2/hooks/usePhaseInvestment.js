@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import moment from "moment";
 
-import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 import usePhaseTimeline from "./usePhaseTimeline";
+import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 
 const processPhases = (phases, isSettled) => {
     const now = moment.utc().unix();
@@ -11,7 +11,7 @@ const processPhases = (phases, isSettled) => {
     if (isSettled) {
         activeId = phases.length - 1;
     } else {
-        activeId = phases.findLastIndex(phase => now > phase.startDate);
+        activeId = phases.findLastIndex((phase) => now > phase.startDate);
         if (activeId === -1) activeId = 0;
     }
 
@@ -20,7 +20,7 @@ const processPhases = (phases, isSettled) => {
         activeId,
         isLast: phases.length - 1 === activeId,
     };
-}
+};
 
 const calculatePhaseData = (phases, offer) => {
     const data = processPhases(phases, offer.isSettled);
@@ -52,7 +52,7 @@ export default function usePhaseInvestment() {
 
         // Update to the next phase with timeToNextPhase
         const now = moment.utc();
-        const nextPhaseStart = moment.unix(phaseData.phaseNext?.startDate).add(10, 'milliseconds');
+        const nextPhaseStart = moment.unix(phaseData.phaseNext?.startDate).add(10, "milliseconds");
         const timeToNextPhase = nextPhaseStart.diff(now);
 
         const timeoutId = setTimeout(() => updatePhase(), timeToNextPhase);
@@ -62,8 +62,11 @@ export default function usePhaseInvestment() {
         };
     }, [phaseData, updatePhase]);
 
-    return useMemo(() => ({
-        ...phaseData,
-        updatePhase,
-    }), [phaseData, updatePhase]);
-};
+    return useMemo(
+        () => ({
+            ...phaseData,
+            updatePhase,
+        }),
+        [phaseData, updatePhase],
+    );
+}

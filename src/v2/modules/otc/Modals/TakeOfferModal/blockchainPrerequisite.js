@@ -5,7 +5,7 @@ import { getSignature } from "@/fetchers/otc.fetcher";
 export const blockchainPrerequisite = async (params) => {
     const { globalState, requiredNetwork, account, offerDetails } = params;
     console.log("TAK_OFFER_VALID", params);
-    
+
     const { extra: signature } = globalState.prerequisite;
     console.log(
         "TAK_OFFER_VALID2",
@@ -39,11 +39,10 @@ export const blockchainPrerequisite = async (params) => {
                 data: { signature: transaction.data },
             };
         } else {
-            
             //todo: error handling
             return {
                 ok: false,
             };
-        };
-    };
+        }
+    }
 };

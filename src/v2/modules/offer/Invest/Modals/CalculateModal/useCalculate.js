@@ -27,22 +27,22 @@ function reducer(state, action) {
         case ACTIONS.SET_MULTIPLIER: {
             const increment = action.payload;
             const newMultiplier = state.multiplier + (increment ? 5 : -5);
-            const clampedMultiplier =  Math.max(5, Math.round(newMultiplier / 5) * 5);
+            const clampedMultiplier = Math.max(5, Math.round(newMultiplier / 5) * 5);
             const price = calculatePrice(clampedMultiplier, state.amount);
 
             return { ...state, multiplier: clampedMultiplier, price };
         }
         default:
             return state;
-    };
-};
+    }
+}
 
 export default function useCalculate() {
     const [state, dispatch] = useReducer(reducer, defaultState);
 
     const handleAmountChange = useCallback((evt) => {
         let payload = evt.target.value;
-        payload = payload.replace(/^0+/, '') || '0';
+        payload = payload.replace(/^0+/, "") || "0";
         dispatch({ type: ACTIONS.SET_AMOUNT, payload });
     }, []);
 
@@ -55,4 +55,4 @@ export default function useCalculate() {
         handleAmountChange,
         handleMultiplierChange,
     };
-};
+}

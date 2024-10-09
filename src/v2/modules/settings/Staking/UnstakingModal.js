@@ -34,13 +34,14 @@ export default function UnstakingModal({ userId, staking = {} }) {
     });
 
     const registeredOriginalWallet = wallets?.find((el) => el.isHolder)?.wallet;
-    
-    const wallet = registeredOriginalWallet === account.address
-        ? "0x0000000000000000000000000000000000000000"
-        : registeredOriginalWallet;
+
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
 
     const token = useGetToken(stakingCurrency?.contract);
-    
+
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {

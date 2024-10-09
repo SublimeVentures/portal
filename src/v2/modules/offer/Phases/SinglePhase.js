@@ -5,16 +5,19 @@ export default function SinglePhase({ phase, phaseName, phaseDescription, curren
     return (
         <Tooltip>
             <TooltipTrigger
-                className={cn("px-4 py-2 text-sm border-2 rounded", 
-                    currentPhase === phase ? "text-foreground bg-primary border-primary" : "text-foreground/25 border-2 border-foreground/25"
-            )}
+                className={cn(
+                    "px-4 py-2 text-sm border-2 rounded",
+                    currentPhase === phase
+                        ? "text-foreground bg-primary border-primary"
+                        : "text-foreground/25 border-2 border-foreground/25",
+                )}
             >
                 {phaseName}
             </TooltipTrigger>
-            
+
             <TooltipContent>
                 <p>{phaseDescription}</p>
             </TooltipContent>
         </Tooltip>
     );
-};
+}

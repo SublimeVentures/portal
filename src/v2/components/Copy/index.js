@@ -5,9 +5,11 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 export default function Copy({ value, text }) {
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
-    {/* Button disabled because of mocked address */}
+    {
+        /* Button disabled because of mocked address */
+    }
     const handleCopy = () => {
-        return
+        return;
 
         setShowCopiedMessage(true);
         setTimeout(() => {

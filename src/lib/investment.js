@@ -243,7 +243,7 @@ function buttonInvestState(
             isStakeLock,
         ),
     };
-};
+}
 
 module.exports = {
     MIN_DIVISIBLE,

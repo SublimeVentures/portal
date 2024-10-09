@@ -38,3 +38,34 @@ export const logOutRefresh = async () => {
     }
     return false;
 };
+
+export const updateUser = async (update) => {
+    try {
+        const { data } = await axiosPrivate.patch(API.user, update);
+        return data;
+    } catch (error) {
+        return {
+            ok: false,
+            error,
+        };
+    }
+};
+
+export const fetchUser = async (config) => {
+    try {
+        const queryConfig = config?.token
+            ? {
+                  headers: {
+                      Cookie: `${authTokenName}=${config.token}`,
+                  },
+              }
+            : {};
+        const { data } = await axiosPrivate.get(API.user, { ...queryConfig });
+        return data;
+    } catch (error) {
+        return {
+            ok: false,
+            error,
+        };
+    }
+};
