@@ -26,7 +26,7 @@ import lottieSuccess from "@/assets/lottie/success.json";
 import { routes } from "@/v2/routes";
 
 import { Button } from "@/v2/components/ui/button";
-import { EXTERNAL_LINKS } from "@/lib/config/route.config.js";
+import { ExternalLinks } from "@/routes";
 import MutedText from "@/v2/components/ui/muted-text";
 import ExternalLink from "@/v2/components/ui/external-link";
 
@@ -151,7 +151,7 @@ const InvestModalContent = ({
                     <>
                         <Button onClick={() => handleCloseModal(true)}>Check Vault</Button>
                         <MutedText className="max-w-72">
-                            What's next? <ExternalLink href={EXTERNAL_LINKS.AFTER_INVESTMENT}>Read more</ExternalLink>
+                            What's next? <ExternalLink href={ExternalLinks.AFTER_INVESTMENT}>Read more</ExternalLink>
                         </MutedText>
                     </>
                 ) : (
@@ -159,7 +159,7 @@ const InvestModalContent = ({
                         <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
                         <MutedText className="max-w-72">
                             Booked allocation will be released when the timer runs to zero.{" "}
-                            <ExternalLink href={EXTERNAL_LINKS.BOOKING_SYSTEM}>Read more</ExternalLink>
+                            <ExternalLink href={ExternalLinks.BOOKING_SYSTEM}>Read more</ExternalLink>
                         </MutedText>
                     </>
                 )}

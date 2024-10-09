@@ -10,6 +10,7 @@ const NETWORKS = {
     1: "eth",
     137: "matic",
     56: "bsc",
+    11155111: "sepolia",
 };
 
 const checkIfNumberKey = (event) => {
