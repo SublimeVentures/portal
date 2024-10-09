@@ -4,7 +4,7 @@ import { deleteToken, getToken } from "firebase/messaging";
 import { useCookies } from "react-cookie";
 import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
 import {
-    fetchNotificationChannels,
+    fetchNotificationChannelsWithCategories,
     fetchNotificationPreferences,
     subscribeToPushCategory,
     unsubscribeFromPushCategory,
@@ -58,7 +58,7 @@ export default function NotificationsSettings({ session, onNewSettings }) {
         });
         const prepareNotificationChannels = async () => {
             try {
-                const res = await fetchNotificationChannels();
+                const res = await fetchNotificationChannelsWithCategories();
                 setNotificationOptions({
                     ...res,
                     channels: res.channels.filter(({ id }) => id !== "discord"),

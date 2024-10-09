@@ -3,7 +3,7 @@ import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { API } from "@/routes";
 import { tenantIndex } from "@/lib/utils";
 
-export const fetchNotificationChannels = async () => {
+export const fetchNotificationChannelsWithCategories = async () => {
     try {
         const { data } = await axiosPrivate.get(API.notificationChannels);
         return data;
