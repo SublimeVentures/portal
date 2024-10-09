@@ -1,10 +1,9 @@
+import useMarket from "../logic/useMarket";
+import { otcViews } from "../logic/constants";
+import useCurrentView from "../logic/useCurrentView";
 import LatestDealsTable from "./LatestDealsTable";
 import OffersTable from "./OffersTable";
 import HistoryTable from "./HistoryTable";
-
-import useMarket from '../logic/useMarket';
-import { otcViews } from "../logic/constants";
-import useCurrentView from '../logic/useCurrentView';
 
 export default function OTCTables() {
     const { currentMarket } = useMarket();
@@ -20,8 +19,8 @@ export default function OTCTables() {
                 return <OffersTable />;
             default:
                 return <OffersTable />;
-        };
+        }
     };
 
-    return renderTable()
+    return renderTable();
 }
