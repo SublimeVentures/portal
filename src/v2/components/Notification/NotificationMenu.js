@@ -73,7 +73,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                         ))}
                     </DropdownMenuGroup>
                 ) : (
-                    <div className="mt-10">
+                    <div className="my-10">
                         <h3 className="text-white text-sm text-center mb-1.5">No new notifications</h3>
                         <p className="text-white/75 text-xs text-center">
                             Check{" "}

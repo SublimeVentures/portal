@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 
-const ExternalLink = forwardRef(({ children = "Read more", className, ...props }, ref) => (
+const ExternalLink = forwardRef(({ children = "Read more", className, href, ...props }, ref) => (
     <Link
         ref={ref}
         className={cn(
@@ -12,6 +12,7 @@ const ExternalLink = forwardRef(({ children = "Read more", className, ...props }
         )}
         target="_blank"
         rel="noopener noreferrer"
+        href={href}
         {...props}
     >
         {children}
