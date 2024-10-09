@@ -12,6 +12,7 @@ const DEFAULT_STATE = {
     isClean: true,
     cdn: "",
     otcFee: 50,
+    otcPartnerFee: 0,
     walletGuard: true,
     network: {
         name: "",
