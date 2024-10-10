@@ -32,10 +32,12 @@ export default function WalletSettings({ session }) {
         queryKey: settingsKeys.userWallets(userId),
         queryFn: () => fetchUserWallets(),
         refetchOnWindowFocus: true,
+        initialData: [],
     });
 
-    const sortedWallets = wallets.sort((a, b) => a.isAirdrop - b.isAirdrop);
-    const isMaxWallets = wallets.length >= maxWallets;
+    const walletsArray = Array.isArray(wallets) ? wallets : [];
+    const sortedWallets = walletsArray.sort((a, b) => a.isAirdrop - b.isAirdrop);
+    const isMaxWallets = walletsArray.length >= maxWallets;
 
     return (
         <Card variant="none" className="flex flex-col h-full bg-settings-gradient overflow-hidden">

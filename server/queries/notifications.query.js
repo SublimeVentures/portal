@@ -1,8 +1,8 @@
 const { Op, Sequelize } = require("sequelize");
-const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
+const db = require("../services/db/definitions/db.init");
 const { NotificationTypes } = require("../../src/v2/enum/notifications");
-const logger = require("../../src/lib/logger");
+const errorTypeEnum = require("../../shared/enum/errorType.enum");
 
 function buildWhereFromAuthorizedQuery(user, query) {
     const { userId, tenantId } = user;
@@ -135,10 +135,88 @@ async function getNotifications(user, query) {
             offset,
         };
     } catch (error) {
-        logger.error("QUERY :: [getNotifications]", { error: serializeError(error) });
+        handleError(errorTypeEnum.QUERY, error, { methodName: "getNotifications", enableSentry: true });
     }
 
     return { count: 0, rows: [] };
 }
 
-module.exports = { getNotifications };
+async function getNotificationChannels() {
+    try {
+        const channels = await models.notificationChannel.findAll({
+            where: {
+                enabled: true,
+            },
+            raw: true,
+        });
+        const categories = await models.notificationChannelCategory.findAll({ raw: true });
+        return {
+            channels,
+            categories,
+        };
+    } catch (err) {
+        handleError(errorTypeEnum.QUERY, err, { methodName: "getNotificationChannels", enableSentry: true });
+        return {
+            channels: [],
+            categories: [],
+        };
+    }
+}
+
+async function getNotificationPreferences(userId, tenantId) {
+    const preferences = await models.notificationChannelPreference.findAll({
+        where: { userId, tenantId },
+    });
+    return preferences.reduce((acc, pref) => {
+        if (!acc[pref.channelCategoryId]) {
+            acc[pref.channelCategoryId] = {};
+        }
+        acc[pref.channelCategoryId][pref.channelId] = true;
+        return acc;
+    }, {});
+}
+
+async function setNotificationPreferences(userId, tenantId, updates) {
+    const transaction = await db.transaction();
+    try {
+        const updatesResult = await Promise.all(
+            updates.map((update) => {
+                if (update.enabled) {
+                    return models.notificationChannelPreference.findOrCreate({
+                        where: {
+                            userId,
+                            tenantId,
+                            channelId: update.channelId,
+                            channelCategoryId: update.categoryId,
+                        },
+                        transaction,
+                    });
+                } else {
+                    return models.notificationChannelPreference.destroy({
+                        where: {
+                            userId,
+                            tenantId,
+                            channelId: update.channelId,
+                            channelCategoryId: update.categoryId,
+                        },
+                        transaction,
+                    });
+                }
+            })
+        );
+        return updatesResult;
+    } catch (error) {
+        if (transaction) {
+            await transaction.rollback();
+        }
+        handleError(errorTypeEnum.QUERY, error, { methodName: "setNotificationPreferences", enableSentry: true });
+        return [];
+    }
+}
+
+module.exports = {
+    getNotifications,
+    getNotificationChannels,
+    getNotificationPreferences,
+    setNotificationPreferences,
+};

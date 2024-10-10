@@ -27,7 +27,7 @@ const statusReducer = (state = STEPS_STATE.PENDING, action) => {
             return STEPS_STATE.PENDING;
         default:
             return state;
-    };
+    }
 };
 
 export const combineReducers = (slices) => (state, action) => {

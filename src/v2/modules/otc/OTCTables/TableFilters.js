@@ -119,10 +119,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                                 });
 
                                 return (
-                                    <div
-                                        key={key}
-                                        className={cn(buttonVariants({ variant: "secondary" }))}
-                                    >
+                                    <div key={key} className={cn(buttonVariants({ variant: "secondary" }))}>
                                         {filter.name}
                                         <button className="ml-2" onClick={() => handleFilterRemove(key)}>
                                             <Cross1Icon />

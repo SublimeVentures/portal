@@ -7,7 +7,7 @@ export default function OtcMessage({ action, values = {} }) {
     const symbol = getCurrencySymbolByAddress(currency);
 
     if (!symbol) {
-        return null
+        return null;
     }
 
     return (

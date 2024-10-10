@@ -62,5 +62,4 @@ router.delete("/:offerId/participants/:participantId", async (req, res) => {
     return res.status(200).json(await deleteOfferParticipants(user, request));
 });
 
-
 module.exports = { router };

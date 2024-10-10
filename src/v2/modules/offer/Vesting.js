@@ -1,9 +1,8 @@
+import EmptyState from "./EmptyState";
 import { cn } from "@/lib/cn";
 import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 import { formatPercentage } from "@/v2/helpers/formatters";
-
-import EmptyState from "./EmptyState";
 
 const Definition = ({ term, children }) => (
     <>
@@ -26,7 +25,7 @@ export default function Vesting({ className }) {
                     </div>
                 )}
 
-                {(offer?.payouts?.length > 0 && !isLoading) && (
+                {offer?.payouts?.length > 0 && !isLoading && (
                     <ul className="-my-2 -mr-2 pr-2 max-h-80 overflow-y-auto md:max-h-44">
                         {offer.payouts.map((payout) => (
                             <li key={payout.id} className="my-2">
@@ -34,18 +33,14 @@ export default function Vesting({ className }) {
                                     <Definition term="Event">
                                         {payout.offerPayout === 1 ? "TGE" : `V${payout.offerPayout - 1}`}
                                     </Definition>
-                                    <Definition term="Date">
-                                        {payout.unlockDate}
-                                    </Definition>
-                                    <Definition term="Unlock">
-                                        {formatPercentage(payout.percentage / 100)}
-                                    </Definition>
+                                    <Definition term="Date">{payout.unlockDate}</Definition>
+                                    <Definition term="Unlock">{formatPercentage(payout.percentage / 100)}</Definition>
                                 </dl>
                             </li>
                         ))}
                     </ul>
                 )}
-                    
+
                 {offer.payouts.length === 0 && !isLoading && (
                     <EmptyState
                         heading="Vesting Details Unavailable"
@@ -55,4 +50,4 @@ export default function Vesting({ className }) {
             </div>
         </div>
     );
-};
+}

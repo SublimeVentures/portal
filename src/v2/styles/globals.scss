@@ -19,7 +19,7 @@
     .table-head {
       @apply relative;
     }
-    
+
     .table-head-cell {
       @apply px-6 pr-5 text-sm font-medium text-foreground normal-case text-left;
     }
@@ -66,22 +66,28 @@
   .transition-base {
     @apply transition-all duration-500 ease-in-out;
   }
+
   .transition-hover {
     @apply transition-all duration-100 ease-in-out;
   }
+
   .overlay {
     @apply fixed inset-0 z-50 bg-primary-950/[.75] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
+
   .flex-center {
     @apply flex items-center justify-center;
   }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
+
   .bg-pattern-blue {
     background-image: url('/img/bg/upgrades/blue.jpg');
     background-image: image-set(
@@ -93,6 +99,7 @@
         "/img/bg/upgrades/blue-762w@1x-q85.jpg" type("image/jpeg") 1x
     );
   }
+
   .bg-pattern-gold {
     background-image: url('/img/bg/upgrades/gold.jpg');
     background-image: image-set(
@@ -325,12 +332,12 @@
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+  -moz-appearance: textfield; /* Firefox */
 }
 
 .vault-investment::-webkit-scrollbar-track {
@@ -347,4 +354,12 @@ input[type=number] {
 .test6 {
   // background: linear-gradient(to top, theme('colors.primary.950'), transparent);
   background: linear-gradient(to top, theme('colors.primary.950') 0%, theme('colors.primary.950') 50%, transparent 100%);
+}
+
+.accordion-chevron {
+  transition: transform 300ms;
+}
+
+.accordion-trigger[data-state='open'] > .accordion-chevron {
+  transform: rotate(180deg);
 }

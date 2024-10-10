@@ -38,11 +38,12 @@ export default function StakingModal({ userId, staking = {} }) {
     });
 
     const registeredOriginalWallet = wallets?.find((el) => el.isHolder)?.wallet;
-    
-    const wallet = registeredOriginalWallet === account.address
-        ? "0x0000000000000000000000000000000000000000"
-        : registeredOriginalWallet;
-    
+
+    const wallet =
+        registeredOriginalWallet === account.address
+            ? "0x0000000000000000000000000000000000000000"
+            : registeredOriginalWallet;
+
     const token = useGetToken(stakingCurrency?.contract);
 
     const blockchainInteractionData = useMemo(() => {
@@ -68,7 +69,7 @@ export default function StakingModal({ userId, staking = {} }) {
             setTransactionSuccessful,
         };
     }, [stakingCurrency?.contract, activeDiamond, stakeSize, isOpen]);
-    
+
     const { getBlockchainStepsProps, getBlockchainStepButtonProps } = useBlockchainStep({
         data: blockchainInteractionData,
         deps: [isOpen],
@@ -77,7 +78,7 @@ export default function StakingModal({ userId, staking = {} }) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" aria-label="Open stake modal" onClick={() => setIsOpen(true)} >
+                <Button variant="outline" aria-label="Open stake modal" onClick={() => setIsOpen(true)}>
                     Stake
                 </Button>
             </DialogTrigger>
@@ -135,4 +136,4 @@ export default function StakingModal({ userId, staking = {} }) {
             </DialogContent>
         </Dialog>
     );
-};
+}

@@ -1,8 +1,8 @@
+const { serializeError } = require("serialize-error");
 const { saveUpgradeUse, fetchUpgradeUsed } = require("../queries/upgrade.query");
 const { PremiumItemsENUM } = require("../../src/lib/enum/store");
 const logger = require("../../src/lib/logger");
 
-const { serializeError } = require("serialize-error");
 const { PremiumItemsParamENUM } = require("../../src/lib/enum/store");
 const db = require("../services/db/definitions/db.init");
 const { getStoreItemsOwnedByUser, updateUserUpgradeAmount } = require("../queries/storeUser.query");
@@ -30,11 +30,7 @@ async function useGuaranteed(offerId, user, transaction) {
         offer.offerLimits.find((el) => el.partnerId === tenantId) ||
         offer.offerLimits.find((el) => el.partnerId === partnerId && !el.isTenantExclusive);
 
-    const { allocationUser_max } = getUserAllocationMax(
-        user,
-        { ...offer, ...offerLimit },
-        upgradeIncreased,
-    );
+    const { allocationUser_max } = getUserAllocationMax(user, { ...offer, ...offerLimit }, upgradeIncreased);
 
     const maxAllocation = roundAmount(allocationUser_max);
     const amount = maxAllocation < PremiumItemsParamENUM.Guaranteed ? maxAllocation : PremiumItemsParamENUM.Guaranteed;
