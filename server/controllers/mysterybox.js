@@ -180,10 +180,10 @@ async function reserveMysteryBox(req) {
         const { userId, tenantId, chainId, amount } = queryParams.data;
 
         const storePartnerId = await findStorePartnerId(storeId, tenantId);
-        const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
-        if (reservationInProgress) {
-            throw new Error("Reservation is already in progress for this user and store");
-        }
+        // const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
+        // if (reservationInProgress) {
+        //     throw new Error("Reservation is already in progress for this user and store");
+        // }
 
         const now = moment.utc().unix();
         const expires = now + 10 * 60;
