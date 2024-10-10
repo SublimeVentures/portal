@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMethod, getPrerequisite, METHOD } from "@/components/BlockchainSteps/utils";
+import { getMethod, getPrerequisite } from "@/components/BlockchainSteps/utils";
 
 const DEFAULT_STATE = {
     isError: false,

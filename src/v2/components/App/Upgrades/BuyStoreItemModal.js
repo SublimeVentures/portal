@@ -25,6 +25,7 @@ import Modal, {
 } from "@/v2/modules/upgrades/Modal";
 import Success from "@/v2/modules/upgrades/Success";
 import PAGE from "@/routes";
+import { reserveUpgrade } from "@/fetchers/store.fetcher";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -32,7 +33,25 @@ const UpgradeSymbol = ({ className }) => (
     <span className={cn("rounded-full size-4 inline-block shrink-0", className)}></span>
 );
 
-const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransactionSuccessful }) => {
+export const blockchainPrerequisite = async (params) => {
+    const { network, amount, upgradeId } = params;
+    const { chainId } = network;
+    const transaction = await reserveUpgrade({ chainId, amount, storeId: upgradeId });
+
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: transaction,
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
+
+const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransactionSuccessful, userId }) => {
     const { getCurrencyStore, account, activeDiamond, network, cdn } = useEnvironmentContext();
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
@@ -65,6 +84,12 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.UPGRADE,
+
+                userId,
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,
@@ -178,7 +203,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
     return transactionSuccessful ? contentSuccess() : contentSteps();
 };
 
-export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
+export default function BuyStoreItemModal({ model, setter, buyModalProps, userId }) {
     const client = useQueryClient();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
     const closeModal = () => {
@@ -197,6 +222,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     return (
         <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
             <ModalContent
+                userId={userId}
                 onClose={closeModal}
                 {...buyModalProps}
                 model={model}
