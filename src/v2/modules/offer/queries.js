@@ -7,7 +7,7 @@ import { fetchOfferAllocation, fetchOfferDetails } from "@/fetchers/offer.fetche
 import { fetchUserInvestment } from "@/fetchers/vault.fetcher";
 import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
-import { offersKeys } from "@/v2/constants";
+import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 
 export function useOfferDetailsQuery() {
     const router = useRouter();
@@ -75,7 +75,7 @@ export function useUserAllocationQuery() {
     const { isClosed } = usePhaseInvestment();
 
     const { error, refetch, ...data } = useQuery({
-        queryKey: ["userAllocation", offerId],
+        queryKey: userInvestmentsKeys.userAllocation(offerId),
         queryFn: () => fetchUserInvestment(offerId),
         refetchOnMount: false,
         cacheTime: 5 * 60 * 1000,
@@ -104,7 +104,7 @@ export function useUserAllocationQuery() {
 // @TODO - Create fetch SSR
 export function useUserPremiumQuery() {
     const { error, refetch, ...data } = useQuery({
-        queryKey: ["premiumOwned"],
+        queryKey: userInvestmentsKeys.premiumOwned(),
         queryFn: fetchStoreItemsOwned,
         refetchOnMount: true,
         refetchOnWindowFocus: false,

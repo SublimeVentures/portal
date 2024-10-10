@@ -20,6 +20,7 @@ import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import { Button } from "@/v2/components/ui/button";
 import { formatCurrency } from "@/v2/helpers/formatters.js";
 import ExternalLink from "@/v2/components/ui/external-link";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 const ErrorModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimErrorModal"), { ssr: false });
 const ClaimMysteryBoxModal = dynamic(() => import("@/v2/components/App/MysteryBox/ClaimMysteryBoxModal"), {
@@ -50,7 +51,7 @@ export default function MysteryBoxPage({ session }) {
     });
 
     const { data: premiumData, refetch: refetchStoreItems } = useQuery({
-        queryKey: ["premiumOwned", userId, tenantId],
+        queryKey: userInvestmentsKeys.premiumOwned([userId, tenantId]),
         queryFn: fetchStoreItemsOwned,
         refetchOnMount: false,
         refetchOnWindowFocus: false,

@@ -27,6 +27,7 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { NETWORKS } from "@/lib/utils";
 import { ButtonIconSize } from "@/components/Button/RoundButton";
 import MutedText from "@/v2/components/ui/muted-text";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 const Content = ({ offerDetails, setIsCancelModalOpen, isCancelModalOpen }) => {
     const { currentMarket } = useMarket();
@@ -52,7 +53,7 @@ const Content = ({ offerDetails, setIsCancelModalOpen, isCancelModalOpen }) => {
 
     if (transactionSuccessful) {
         queryClient.invalidateQueries(["otcOffers"]);
-        queryClient.invalidateQueries(["userAllocation"]);
+        queryClient.invalidateQueries(userInvestmentsKeys.userAllocation());
     }
 
     return (

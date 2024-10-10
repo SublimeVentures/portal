@@ -7,10 +7,11 @@ import { fetchOfferAllocationSsr, fetchOfferDetailsSsr } from "@/fetchers/offer.
 import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
-import { offersKeys } from "@/v2/constants";
+import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });
+
     return (
         <>
             <Metadata title={state?.offer?.name} description={state?.offer?.description} />
@@ -51,12 +52,12 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 
             const userId = account.userId;
             await queryClient.prefetchQuery({
-                queryKey: ["userAllocation", offerId, userId],
+                queryKey: userInvestmentsKeys.userAllocation([offerId, userId]),
                 queryFn: () => fetchUserInvestmentSsr(offerId, token),
             });
 
             const allocation = queryClient.getQueryData(offersKeys.offerAllocation(offerId));
-            const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
+            const userAllocation = queryClient.getQueryData(userInvestmentsKeys.userAllocation([offerId, userId]));
 
             if (!(allocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
                 throw Error("Data not fetched");

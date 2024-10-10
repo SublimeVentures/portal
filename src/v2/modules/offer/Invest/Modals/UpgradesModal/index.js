@@ -21,6 +21,7 @@ import {
     DialogTrigger,
 } from "@/v2/components/ui/dialog";
 import { Skeleton } from "@/v2/components/ui/skeleton";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 // @TODO
 // - Prevent from use increased upgrade on backed if the phase is wrong
@@ -46,8 +47,8 @@ export default function UpgradesModal() {
         const res = await useUpgrade(offer.id, upgradeId);
 
         if (res?.ok) {
-            await queryClient.invalidateQueries(["premiumOwned"]);
-            await queryClient.invalidateQueries(["userAllocation"]);
+            await queryClient.invalidateQueries(userInvestmentsKeys.premiumOwned());
+            await queryClient.invalidateQueries(userInvestmentsKeys.userAllocation());
         } else {
             setError(res.error);
         }

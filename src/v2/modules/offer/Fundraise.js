@@ -51,7 +51,7 @@ export default function Fundraise({ className }) {
             </div>
             <div>
                 <div className="flex justify-between items-end mb-4 select-none">
-                    <p className="text-xl md:text-3xl">{formatCurrency(offerAllocation.alloTotal)}</p>
+                    <p className="text-xl md:text-3xl">{formatCurrency(offerAllocation?.alloTotal ?? 0)}</p>
                     <p className="text-base md:text-lg text-success">{formatPercentage(progressValue / 100)} Filled</p>
                 </div>
                 <Progress value={progressValue} variant="success" />

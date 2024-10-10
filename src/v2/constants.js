@@ -46,3 +46,8 @@ export const offersKeys = {
     offerAllocation: (query) => createQueryKey("offer-allocation", query),
     offerParticipants: (query) => createQueryKey("offer-participants", query),
 };
+
+export const userInvestmentsKeys = {
+    userAllocation: (query) => createQueryKey("user-allocation", query),
+    premiumOwned: (query) => createQueryKey("premium-owned", query),
+};

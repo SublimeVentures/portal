@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import Lottie from "lottie-react";
 import moment from "moment";
@@ -149,7 +150,9 @@ const InvestModalContent = ({
             <DialogFooter className="flex items-center">
                 {transactionSuccessful ? (
                     <>
-                        <Button onClick={() => handleCloseModal(true)}>Check Vault</Button>
+                        <Button asChild>
+                            <Link href={routes.App}>Check Vault</Link>
+                        </Button>
                         <MutedText className="max-w-72">
                             What's next? <ExternalLink href={ExternalLinks.AFTER_INVESTMENT}>Read more</ExternalLink>
                         </MutedText>

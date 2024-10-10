@@ -16,7 +16,7 @@ import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
 import { millisecondsInHour } from "@/constants/datetime";
-import { offersKeys } from "@/v2/constants";
+import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 
 // @TODO - Tax amount depends of tier - logic not ready yet.
 export default function useInvest(session) {
@@ -126,7 +126,7 @@ export default function useInvest(session) {
         clearBooking();
 
         await Promise.all([
-            queryClient.invalidateQueries(["userAllocation"]),
+            queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
             queryClient.invalidateQueries(offersKeys.offerAllocation()),
         ]);
 
@@ -160,7 +160,7 @@ export default function useInvest(session) {
             if (!res.ok) {
                 await clearBooking();
                 setErrorModalState({ open: true, code: res.code });
-                queryClient.invalidateQueries(["userAllocation"]);
+                queryClient.invalidateQueries(userInvestmentsKeys.userAllocation());
             } else if (res.hash?.length > 5) {
                 const confirmedAmount = Number(res.amount);
                 setValue("investmentAmount", confirmedAmount);
