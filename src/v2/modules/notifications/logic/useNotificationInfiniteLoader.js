@@ -41,7 +41,6 @@ export default function useNotificationInfiniteLoader() {
         error,
         hasNextPage,
         fetchNextPage,
-        fetchPreviousPage,
     } = useNotificationInfiniteQuery(query);
 
     const handleInputChange = useCallback(
@@ -58,6 +57,12 @@ export default function useNotificationInfiniteLoader() {
         [router, query],
     );
 
+    const handleGetOlder = useCallback(() => {
+        const afterDate = query.after ? new Date(query.after) : new Date();
+        afterDate.setDate(afterDate.getDate() - 7);
+        handleInputChange("after", afterDate.toISOString().split("T")[0]);
+    }, [query, handleInputChange]);
+
     return {
         data: pages,
         isLoading,
@@ -69,8 +74,8 @@ export default function useNotificationInfiniteLoader() {
         getFiltersProps: useCallback(
             () => ({
                 query,
+                handleGetOlder,
                 handleInputChange,
-                fetchPreviousPage,
             }),
             [query, handleInputChange],
         ),
