@@ -13,3 +13,16 @@ export const claimMysterybox = async () => {
     }
     return [];
 };
+
+export const reserveMysterybox = async (params) => {
+    try {
+        const { data } = await axiosPrivate.post(API.reserveMysteryBox, params);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "reserveMysterybox", e });
+        }
+    }
+    return [];
+};
+

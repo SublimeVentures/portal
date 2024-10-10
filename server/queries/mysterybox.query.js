@@ -1,6 +1,7 @@
+const { Op, Sequelize, QueryTypes } = require("sequelize");
+const moment = require("moment");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
-const { Op, Sequelize, QueryTypes } = require("sequelize");
 const { MYSTERYBOX_CLAIM_ERRORS, PremiumItemsENUM } = require("../../src/lib/enum/store");
 
 async function pickMysteryBox(tenantId, transaction) {
@@ -106,9 +107,109 @@ async function processMBUpgrade(transaction, claim, userId) {
     }
 }
 
+async function findStorePartnerId(storeId, tenantId) {
+    const storePartnerRecord = await models.storePartner.findOne({
+        where: {
+            storeId,
+            tenantId,
+        },
+    });
+
+    if (!storePartnerRecord) {
+        throw new Error(`StorePartner not found for storeId: ${storeId} and tenantId: ${tenantId}`);
+    }
+
+    return storePartnerRecord.id;
+}
+
+async function upsertMysteryBoxLock(userId, storePartnerId, chainId, hash, expires, transaction) {
+    const mysteryBoxQuery = `
+        INSERT INTO public."mysteryBoxLock" ("userId", "storePartnerId", "hash", "chainId", "expireDate", "isExpired", "isFinished", "createdAt", "updatedAt")
+        VALUES (:userId, :storePartnerId, :hash, :chainId, :expireDate, false, false, NOW(), NOW())
+        ON CONFLICT ("hash") DO
+        UPDATE SET "expireDate" = EXCLUDED."expireDate", "isExpired" = false, "isFinished" = false, "updatedAt" = NOW()
+        RETURNING *;
+    `;
+
+    const result = await db.query(mysteryBoxQuery, {
+        replacements: {
+            userId,
+            storePartnerId,
+            hash,
+            chainId,
+            expireDate: expires,
+        },
+        type: QueryTypes.RAW,
+        transaction,
+    });
+
+    if (result[1] !== 1) {
+        return {
+            ok: false,
+        };
+    }
+
+    return {
+        ok: true,
+        data: result[0][0],
+    };
+}
+
+async function isReservationInProgress(userId, storePartnerId) {
+    try {
+        const ongoingReservation = await models.mysteryBoxLock.findOne({
+            where: {
+                userId,
+                storePartnerId,
+                isExpired: false,
+                isFinished: false,
+                expireDate: {
+                    [Op.gt]: moment().unix(),
+                },
+            },
+        });
+
+        return !!ongoingReservation;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to check reservation status");
+    }
+}
+
+async function expireMysteryBox(userId, hash) {
+    try {
+        const mysteryBoxLockQuery = `
+            UPDATE public.mysteryBoxLock
+            SET "isExpired" = true,
+                "updatedAt" = now()
+            WHERE "userId" = :userId
+              AND "hash" = :hash;
+        `;
+
+        return await db.query(mysteryBoxLockQuery, {
+            replacements: {
+                userId,
+                hash,
+            },
+            type: QueryTypes.UPDATE,
+        });
+    } catch (e) {
+        logger.error(`ERROR :: [expireMysteryBox] for user ${userId} | hash: ${hash}`, {
+            offerId,
+            userId,
+            hash,
+        });
+    }
+    return true;
+}
+
 module.exports = {
     pickMysteryBox,
     assignMysteryBox,
     processMBAllocation,
     processMBUpgrade,
+    findStorePartnerId,
+    upsertMysteryBoxLock,
+    isReservationInProgress,
+    expireMysteryBox,
 };

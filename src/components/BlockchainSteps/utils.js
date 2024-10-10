@@ -18,6 +18,8 @@ import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
+import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "@/components/App/MysteryBox/BuyMysteryBoxModal";
+import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/components/App/Store/BuyStoreItemModal";
 
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
@@ -116,7 +118,15 @@ const TENANT_UPGRADE = (params, token) => {
         default: {
             return {
                 name: "buyUpgrade",
-                inputs: [params.amount, params.upgradeId, token.contract],
+                inputs: [
+                    params.prerequisite.hash,
+                    params.amount,
+                    params.prerequisite.storePartnerId,
+                    params.prerequisite.expires,
+                    params.prerequisite.tenantId,
+                    params.prerequisite.storeId,
+                    params.prerequisite.signature,
+                ],
                 abi: abi_upgrade_based,
                 confirmations: 2,
                 contract: params.contract,
@@ -125,6 +135,7 @@ const TENANT_UPGRADE = (params, token) => {
     }
 };
 
+// @TODO
 const TENANT_MYSTERYBOX = (params, token) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.NeoTokyo: {
@@ -148,7 +159,15 @@ const TENANT_MYSTERYBOX = (params, token) => {
         default: {
             return {
                 name: "buyMysteryBox",
-                inputs: [params.amount, token.contract],
+                inputs: [
+                    params.prerequisite.hash,
+                    params.amount,
+                    params.prerequisite.expires,
+                    token.contract,
+                    params.prerequisite.tenantId,
+                    params.prerequisite.storeId,
+                    params.prerequisite.signature,
+                ],
                 abi: abi_mb_based,
                 confirmations: 2,
                 contract: params.contract,
@@ -433,6 +452,12 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.CLAIM: {
             return await prerequisite_claimPayout(params);
+        }
+        case METHOD.MYSTERYBOX: {
+            return await prerequisite_mysteryBoxBuy(params);
+        }
+        case METHOD.UPGRADE: {
+            return await prerequisite_upgradeBuy(params);
         }
         default: {
             return { ok: true, data: {} };

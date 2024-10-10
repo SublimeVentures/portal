@@ -13,12 +13,31 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { tenantIndex } from "@/lib/utils";
 import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
+import { reserveUpgrade } from "@/fetchers/store.fetcher";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
 const { externalLinks } = getTenantConfig();
 
-export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
+export const blockchainPrerequisite = async (params) => {
+    const { network, amount, upgradeId } = params;
+    const { chainId } = network;
+    const transaction = await reserveUpgrade({ chainId, amount, storeId: upgradeId });
+
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: { hash: transaction.hash, ...transaction},
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
+
+export default function BuyStoreItemModal({ model, setter, buyModalProps, userId }) {
     const { order, setOrder } = buyModalProps;
     const router = useRouter();
     const { getCurrencyStore, account, activeDiamond, network } = useEnvironmentContext();
@@ -66,6 +85,12 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.UPGRADE,
+
+                userId,
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,

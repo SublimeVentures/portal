@@ -24,7 +24,7 @@ const {
 } = getTenantConfig();
 
 export default function AppUpgrades({ session }) {
-    const { tenantId } = session;
+    const { tenantId, userId } = session;
     const { cdn, network, getCurrencyStore } = useEnvironmentContext();
     console.log("getCurrencyStore", getCurrencyStore());
 
@@ -112,6 +112,7 @@ export default function AppUpgrades({ session }) {
                     closeBuy();
                 }}
                 buyModalProps={buyModalProps}
+                userId={userId}
             />
         </>
     );
