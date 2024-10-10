@@ -1,23 +1,19 @@
 import PropTypes from "prop-types";
-import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/v2/components/ui/form";
 import { Input } from "@/v2/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/v2/components/ui/select";
 import { DynamicIcon } from "@/v2/components/ui/dynamic-icon";
 
-export const ReassignSignatureForm = ({
+export const ReassignForm = ({
     form,
     handleSubmit,
-    reassignPrice,
     dropdownCurrencyOptions,
     handleCurrencyChange,
+    handleAddressChange,
 }) => {
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit}>
-                <dl className="definition-section definition-grid">
-                    <DefinitionItem term="Market">{reassignPrice}</DefinitionItem>
-                </dl>
                 <FormField
                     name="to"
                     control={form.control}
@@ -28,7 +24,10 @@ export const ReassignSignatureForm = ({
                                 <Input
                                     {...field}
                                     autoComplete="false"
-                                    onChange={(evt) => field.onChange(evt, field.onChange)}
+                                    onChange={(evt) => {
+                                        handleAddressChange(evt.target.value);
+                                        field.onChange(evt, field.onChange);
+                                    }}
                                 />
                             </FormControl>
                         </FormItem>
@@ -65,15 +64,15 @@ export const ReassignSignatureForm = ({
                         </FormItem>
                     )}
                 />
-                <button type="submit">Submit</button>
             </form>
         </Form>
     );
 };
 
-ReassignSignatureForm.propTypes = {
+ReassignForm.propTypes = {
     reassignPrice: PropTypes.number,
     handleCurrencyChange: PropTypes.func,
+    handleAddressChange: PropTypes.func,
     handleSubmit: PropTypes.func,
     form: PropTypes.object,
     dropdownCurrencyOptions: PropTypes.object,

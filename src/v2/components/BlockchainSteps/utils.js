@@ -427,7 +427,7 @@ export const getMethod = (type, token, params) => {
             const isValid =
                 validHash(params?.prerequisite?.signature) &&
                 validNumber(params?.offer) &&
-                validNumber(params?.expire) &&
+                validNumber(params?.prerequisite?.expire) &&
                 validAddress(params?.currency) &&
                 validAddress(params?.to);
 

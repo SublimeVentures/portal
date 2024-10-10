@@ -19,6 +19,7 @@ import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
 
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
+import { blockchainPrerequisite as blockchain_reassign } from "@/v2/components/App/Vault/ReassignModal/prerequisite_reassign";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 
 import { TENANT } from "@/lib/tenantHelper";
@@ -428,10 +429,11 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.REASSIGN: {
+            console.log("METHOD_REASSIGN", params, abi_reassign);
             const isValid =
                 validHash(params?.prerequisite?.signature) &&
                 validNumber(params?.offer) &&
-                validNumber(params?.expire) &&
+                validNumber(params?.prerequisite.expire) &&
                 validAddress(params?.currency) &&
                 validAddress(params?.to);
 
@@ -475,6 +477,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.CLAIM: {
             return await prerequisite_claimPayout(params);
+        }
+        case METHOD.REASSIGN: {
+            return await blockchain_reassign(params);
         }
         default: {
             return { ok: true, data: {} };

@@ -12,8 +12,6 @@ export default function useReassign(data, chainId, dropdownCurrencyOptions) {
     const [error, setError] = useState(null);
 
     const [to, setTo] = useState(null);
-    const [signature, setSignature] = useState(null);
-    const [expire, setExpire] = useState(null);
     const [chosenCurrency, setChosenCurrency] = useState(false);
 
     const closeReassignModal = useCallback(() => setIsReassignModalOpen(false), []);
@@ -36,25 +34,10 @@ export default function useReassign(data, chainId, dropdownCurrencyOptions) {
         return { data, error, isLoading };
     };
 
-    const onSubmit = useCallback(
-        async (values) => {
-            const res = await reassignOfferAllocation(offerId, chosenCurrencyAddress, values.to, chainId);
-
-            if (res?.ok) {
-                setTo(values.to);
-                setSignature(res.signature);
-                setExpire(res.expire);
-            } else {
-                setSignature(null);
-                setExpire(null);
-                setTo(null);
-            }
-        },
-        [chainId, chosenCurrency, dropdownCurrencyOptions, offerId, chosenCurrencyAddress],
-    );
+    const onSubmit = useCallback(async () => {}, []);
 
     return {
-        inputs: { signature, expire, offerId, currency: chosenCurrencyAddress, to },
+        inputs: { offerId, currency: chosenCurrencyAddress, to },
         getReassignFormProps: () => ({
             form,
             handleSubmit: form.handleSubmit(onSubmit),
@@ -68,13 +51,10 @@ export default function useReassign(data, chainId, dropdownCurrencyOptions) {
             open: isReassignModalOpen,
             onOpenChange: setIsReassignModalOpen,
             handleCurrencyChange: setChosenCurrency,
+            handleAddressChange: setTo,
             currency: chosenCurrency,
             openModal: openReassignModal,
             closeModal: closeReassignModal,
-            data: {
-                signature,
-                expire,
-            },
             useGetReassignPrice,
         }),
     };

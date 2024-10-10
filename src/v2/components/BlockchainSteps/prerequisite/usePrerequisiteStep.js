@@ -42,6 +42,7 @@ export default function usePrerequisiteStep(state, data, network_current, dispat
         }
     }, [prerequisite.isFinished, prerequisite_shouldRun]);
 
+    console.log("getStepState_STEPS.PREREQUISITE", prerequisite);
     return {
         stepPrerequisite: getStepState(STEPS.PREREQUISITE, state.prerequisite, {
             ...prerequisite,

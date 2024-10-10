@@ -9,7 +9,8 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import useReassign from "@/v2/components/App/Vault/ReassignModal/useReassign";
-import { ReassignSignatureForm } from "@/v2/components/App/Vault/ReassignModal/ReassignSignatureForm";
+import { ReassignForm } from "@/v2/components/App/Vault/ReassignModal/ReassignForm";
+import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 
 export default function ReassignModal({ data = {} }) {
     const {
@@ -24,8 +25,16 @@ export default function ReassignModal({ data = {} }) {
         getReassignFormProps,
         inputs: { signature, expire, to, currency: currencyContract },
     } = useReassign(data, chainId, dropdownCurrencyOptions);
-    const { useGetReassignPrice, currency, handleCurrencyChange, open, onOpenChange, openModal, closeModal } =
-        getReassignModalProps();
+    const {
+        useGetReassignPrice,
+        currency,
+        handleAddressChange,
+        handleCurrencyChange,
+        open,
+        onOpenChange,
+        openModal,
+        closeModal,
+    } = getReassignModalProps();
     const { form, handleSubmit } = getReassignFormProps();
 
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
@@ -46,7 +55,10 @@ export default function ReassignModal({ data = {} }) {
             params: {
                 requiredNetwork: chainId,
                 account: account.address,
-                offerId: offerId,
+                offer: offerId,
+                currency: currencyContract,
+                to,
+                chain: chainId,
                 contract: diamonds[chainId],
                 buttonText: "Reassign",
                 prerequisiteTextWaiting: "Sign transaction",
@@ -55,7 +67,6 @@ export default function ReassignModal({ data = {} }) {
                 prerequisiteTextError: "Invalid transaction data",
                 transactionType: METHOD.REASSIGN,
                 liquidity: Number(reassignPrice),
-                inputs: [to, currencyContract, offerId, expire, signature],
             },
             token,
             setTransactionSuccessful,
@@ -79,22 +90,21 @@ export default function ReassignModal({ data = {} }) {
                             <span className="text-green-500 uppercase">{data.title}</span>
                         </DialogDescription>
                     </DialogHeader>
-                    {signature && expire ? (
-                        <>
-                            <dl className="definition-section ">
-                                <BlockchainSteps {...getBlockchainStepsProps()} />
-                            </dl>
-                            <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
-                        </>
-                    ) : (
-                        <ReassignSignatureForm
+                    <dl className="definition-section ">
+                        <dl className="definition-section definition-grid">
+                            <DefinitionItem term="Market">{reassignPrice}</DefinitionItem>
+                        </dl>
+                        <ReassignForm
                             form={form}
                             handleSubmit={handleSubmit}
                             reassignPrice={Number(reassignPrice)}
                             dropdownCurrencyOptions={dropdownCurrencyOptions}
                             handleCurrencyChange={handleCurrencyChange}
+                            handleAddressChange={handleAddressChange}
                         />
-                    )}
+                        <BlockchainSteps {...getBlockchainStepsProps()} />
+                    </dl>
+                    <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
                 </DialogContent>
             </Dialog>
             <button
