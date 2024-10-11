@@ -11,7 +11,7 @@ import { shortenAddress } from "@/v2/lib/helpers";
 import useImage from "@/v2/hooks/useImage";
 import { cancelOfferParticipant } from "@/fetchers/offer.fetcher";
 import { formatCurrency } from "@/v2/helpers/formatters";
-import { offersKeys } from "@/v2/constants";
+import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 import {
     Dialog,
     DialogTrigger,
@@ -77,6 +77,7 @@ export default function CancelReservationModal({ participantId, amount, date, is
                 await Promise.all([
                     queryClient.invalidateQueries(offersKeys.offerParticipants()),
                     queryClient.invalidateQueries(offersKeys.offerDetails()),
+                    queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
                 ]);
             }
         } catch (err) {

@@ -16,7 +16,7 @@ export default function InvestFormSubmit({ total, subtotal, tax, currency }) {
         <div className="space-y-6">
             <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base">
                 <Definition term="Subtotal">${subtotal}</Definition>
-                <Definition term="Tax Fees">{tax}%</Definition>
+                <Definition term="Fees">{tax}%</Definition>
             </dl>
 
             <div className="w-full h-[1px] bg-foreground/10"></div>
@@ -28,9 +28,7 @@ export default function InvestFormSubmit({ total, subtotal, tax, currency }) {
                         <DynamicIcon className="p-1 w-8 h-8" name={currency} />${total}
                     </div>
                 </div>
-                <p className="text-sm font-regular text-foreground/40 lg:col-start-1">
-                    Tax fees don't contribute to deals
-                </p>
+                <p className="text-sm font-regular text-foreground/40 lg:col-start-1">Fees don't contribute to deals</p>
             </div>
         </div>
     );

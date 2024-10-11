@@ -32,7 +32,7 @@ const isSellColumn = columnHelper.accessor("isSell", {
     cell: (info) => {
         const isSell = info.getValue();
         return (
-            <span className={cn("text-base", isSell ? "text-error" : "text-success")}>{isSell ? "Sell" : "Buy"}</span>
+            <span className={cn("text-base", isSell ? "text-error" : "text-success")}>{isSell ? "Ask" : "Bid"}</span>
         );
     },
 });

@@ -28,6 +28,7 @@ import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import MutedText from "@/v2/components/ui/muted-text";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 export default function TakeOfferModal({ offerDetails, className }) {
     const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
@@ -53,7 +54,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
         if (transactionSuccessful)
             await Promise.all([
                 queryClient.invalidateQueries(["otcOffers"]),
-                queryClient.invalidateQueries(["userAllocation"]),
+                queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
             ]).finally(() => setTransactionSuccessful(false));
         else setTransactionSuccessful(false);
 
@@ -109,7 +110,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                                     "text-success-500": !offerDetails.isSell,
                                                 })}
                                             >
-                                                {offerDetails.isSell ? "Sell" : "Buy"}
+                                                {offerDetails.isSell ? "Ask" : "Bid"}
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">

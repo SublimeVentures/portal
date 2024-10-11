@@ -92,7 +92,9 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
             </Modal>
 
             {participatedDate && (
-                <MutedText className="absolute left-0 bottom-1 py-2 w-full">Participated {participatedDate}</MutedText>
+                <MutedText className="absolute left-0 bottom-1 py-2 w-full md:text-xs">
+                    Participated {participatedDate}
+                </MutedText>
             )}
         </InvestmentCardWrapper>
     );

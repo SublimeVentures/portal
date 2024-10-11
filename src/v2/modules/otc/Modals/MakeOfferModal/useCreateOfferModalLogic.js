@@ -12,6 +12,7 @@ import useLocalStorage from "@/lib/hooks/useLocalStorage";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { getUserAllocation } from "@/v2/fetchers/otc";
 import { millisecondsInHour } from "@/constants/datetime";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 export const TABS = Object.freeze({ BUY: 0, SELL: 1 });
 export const DEFAULT_VALUES = Object.freeze({ MULTIPLIER: 1, MIN_ALLOCATION: 10, MAX_PRICE: 1000000 });
@@ -22,7 +23,7 @@ export default function useCreateOfferModalLogic(isModalOpen, setIsModalOpen) {
     const { getExpireData, setExpireData } = useLocalStorage();
 
     const { data: vault, refetch: refetchVault } = useQuery({
-        queryKey: ["userAllocation"],
+        queryKey: userInvestmentsKeys.userAllocation(),
         queryFn: getUserAllocation,
         refetchOnMount: false,
         refetchOnWindowFocus: false,

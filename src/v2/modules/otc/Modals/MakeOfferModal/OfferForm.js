@@ -36,7 +36,12 @@ const OfferField = ({ name, control, handleChange, ...props }) => {
                             {...field}
                             {...props}
                             type="fund"
-                            onChange={(evt) => handleChange(evt, field.onChange)}
+                            min={10}
+                            step={10}
+                            onChange={(evt) => {
+                                evt.preventDefault();
+                                handleChange(evt, field.onChange);
+                            }}
                         />
                     </FormControl>
                     <FormMessage />

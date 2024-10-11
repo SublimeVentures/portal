@@ -3,6 +3,7 @@ const { withSentryConfig } = require("@sentry/nextjs");
 /** @type {import("next").NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
+    trailingSlash: true,
     webpack(config) {
         config.module.rules.push(
             {
