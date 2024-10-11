@@ -20,7 +20,7 @@ export default function Claim({ data }) {
             params: {
                 requiredNetwork: data.currentPayout?.chainId,
                 account: account.address,
-                amount: Number(data.currentPayout?.amount),
+                amount: data.currentPayout?.claims?.length,
                 offerId: data.currentPayout?.offerId,
                 payoutId: data.currentPayout?.id,
                 claimId: data.currentPayout?.claims[0]?.id,
