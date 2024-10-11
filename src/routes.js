@@ -44,6 +44,8 @@ export const API = {
     notificationPreferences: "/api/notifications/preferences",
     pushSubscription: "/api/notifications/subscription",
     user: "/api/auth/user",
+    reserveMysteryBox: "/api/mysterybox/reserve",
+    reserveUpgrade: "/api/store/reserve",
 };
 
 const ExternalLinksBased = {

@@ -21,10 +21,28 @@ import { Input } from "@/v2/components/ui/input";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import Success from "@/v2/modules/upgrades/Success";
 import { Button } from "@/v2/components/ui/button";
+import { reserveMysterybox } from "@/fetchers/mysterbox.fetcher";
 
 const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
 
-const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, onClose, open }) => {
+export const blockchainPrerequisite = async (params) => {
+    const { tenant, network, amount, contract } = params;
+    const { chainId } = network;
+    const transaction = await reserveMysterybox({ tenant, chainId, network, amount, contract });
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: transaction,
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
+
+const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, onClose, open, userId }) => {
     const { account, activeDiamond, network, getCurrencyStore } = useEnvironmentContext();
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
@@ -68,6 +86,12 @@ const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, 
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.MYSTERYBOX,
+
+                userId,
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,
@@ -156,7 +180,7 @@ const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, 
     return transactionSuccessful ? contentSuccess() : contentSteps();
 };
 
-export default function BuyMysteryBoxModal({ onClose, open, buyModalProps }) {
+export default function BuyMysteryBoxModal({ onClose, open, buyModalProps, userId }) {
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const handleClose = () => {
@@ -174,6 +198,7 @@ export default function BuyMysteryBoxModal({ onClose, open, buyModalProps }) {
         >
             <ModalContent
                 {...buyModalProps}
+                userId={userId}
                 transactionSuccessful={transactionSuccessful}
                 setTransactionSuccessful={setTransactionSuccessful}
                 open={open}
