@@ -8,6 +8,7 @@ import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import useInvestmentsData from "@/v2/hooks/useInvestmentsData";
+import Modal from "@/v2/components/App/Vault/ClaimModal";
 import { Attributes } from "@/v2/components/App/Vault/InvestmentRow";
 import { Button } from "@/v2/components/ui/button";
 
@@ -79,10 +80,12 @@ const InvestmentCardMobile = ({ details, isLoading = false, isError = false }) =
                 <p className="w-full text-2xs font-light text-foreground/[.56]">
                     {participatedDate && `Participated ${participatedDate}`}
                 </p>
-                <Button className="w-full" variant={canClaim ? "accent" : "outline"}>
-                    <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
-                    <ArrowIcon className="ml-2 size-2" />
-                </Button>
+                <Modal data={data}>
+                    <Button className="w-full" variant={canClaim ? "accent" : "outline"}>
+                        <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
+                        <ArrowIcon className="ml-2 size-2" />
+                    </Button>
+                </Modal>
             </div>
         </InvestmentCardMobileWrapper>
     );

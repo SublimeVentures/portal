@@ -92,7 +92,7 @@ const Content = ({ offerDetails, setIsCancelModalOpen, isCancelModalOpen }) => {
                                                 "text-success-500": !offerDetails.isSell,
                                             })}
                                         >
-                                            {offerDetails.isSell ? "Sell" : "Buy"}
+                                            {offerDetails.isSell ? "Ask" : "Bid"}
                                         </span>
                                     </DefinitionItem>
                                     <DefinitionItem term="Blockchain">

@@ -53,7 +53,7 @@ export default function CalculateForm() {
             </label>
 
             <dl className="grid grid-cols-2 gap-2 text-sm font-light text-foreground/50 select-none">
-                <Definition term="Tax fees">{taxPercentage}%</Definition>
+                <Definition term="Fees">{taxPercentage}%</Definition>
                 <Definition term="Subtotal">${subtotal}</Definition>
             </dl>
         </div>

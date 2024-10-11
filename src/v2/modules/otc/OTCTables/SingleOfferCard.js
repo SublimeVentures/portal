@@ -43,7 +43,7 @@ export default function SingleOfferCard({ currentMarket, offer }) {
                         </DefinitionItem>
                         <DefinitionItem term="Type">
                             <span className={cn("font-bold", isSell ? "text-error" : "text-success-500")}>
-                                {isSell ? "Sell" : "Buy"}
+                                {isSell ? "Ask" : "Bid"}
                             </span>
                         </DefinitionItem>
                         <DefinitionItem term="Allocation">${amount}</DefinitionItem>
