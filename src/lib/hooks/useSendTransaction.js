@@ -35,12 +35,14 @@ const useEstimateContractGas = (args) => {
     const enabled = Boolean(abi && address && functionName && (query.enabled ?? true));
     const config = useConfig(args);
     const client = usePublicClient(config);
+
     const data = useQuery({
         queryKey: ["estimateContractGas", scopeKey],
         queryFn: () => estimateContractGas(client, args),
         ...query,
         enabled,
     });
+    console.log("estimateContractGas", args, data);
     return data;
 };
 
@@ -113,8 +115,10 @@ function useSendTransaction(isEnabled, method, chainId, account) {
 
     const { name, inputs, contract, abi, confirmations } = method;
 
+    // "gas_0xd95c0c3B9A7F3B82212510b747c8E6BC4d01c99D_trans_undefined_undefined_11155111_temp"
     const scope = `${account}_trans_${contract}_${name}_${chainId}_${inputs ? inputs[1] || inputs[0] : "temp"}`;
 
+    console.log("wheremethod", method, scope);
     const rando = {
         method,
         functionName: name,

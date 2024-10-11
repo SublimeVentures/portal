@@ -448,7 +448,7 @@ export const getMethod = (type, token, params) => {
                               params?.to,
                               params?.currency,
                               params?.offer,
-                              params?.expire,
+                              params.prerequisite.expire,
                               params.prerequisite.signature,
                           ],
                           abi: abi_reassign,

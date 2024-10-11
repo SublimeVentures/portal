@@ -8,7 +8,7 @@ export const blockchainPrerequisite = async (params) => {
 
         console.log("REASSIGN_SIGNATURE", transaction);
 
-        if (transaction.ok) {
+        if (transaction.ok && transaction.signature) {
             return {
                 ok: true,
                 data: { signature: transaction.signature, expire: transaction.expire },

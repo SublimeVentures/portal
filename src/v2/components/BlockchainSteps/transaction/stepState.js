@@ -21,6 +21,7 @@ export const stepTransaction = (state, data) => {
                 text: "Your transaction is being sent. Please wait for confirmation.",
             });
         } else if (data.isError) {
+            console.log("invalid signature", data, state);
             result = handleError({
                 content: "Transaction failed",
                 text: data?.error ?? "An error occurred while sending your transaction. Please try again.",

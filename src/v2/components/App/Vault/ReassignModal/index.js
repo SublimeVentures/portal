@@ -23,7 +23,7 @@ export default function ReassignModal({ data = {} }) {
     const {
         getReassignModalProps,
         getReassignFormProps,
-        inputs: { signature, expire, to, currency: currencyContract },
+        inputs: { to, currency: currencyContract },
     } = useReassign(data, chainId, dropdownCurrencyOptions);
     const {
         useGetReassignPrice,
@@ -71,7 +71,7 @@ export default function ReassignModal({ data = {} }) {
             token,
             setTransactionSuccessful,
         };
-    }, [chainId, account.address, offerId, reassignPrice, expire, signature]);
+    }, [chainId, account.address, offerId, currencyContract, to, reassignPrice, token]);
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
@@ -92,7 +92,7 @@ export default function ReassignModal({ data = {} }) {
                     </DialogHeader>
                     <dl className="definition-section ">
                         <dl className="definition-section definition-grid">
-                            <DefinitionItem term="Market">{reassignPrice}</DefinitionItem>
+                            <DefinitionItem term="Market">{Number(reassignPrice)}</DefinitionItem>
                         </dl>
                         <ReassignForm
                             form={form}

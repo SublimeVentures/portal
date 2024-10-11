@@ -12,7 +12,7 @@ export default function useReassign(data, chainId, dropdownCurrencyOptions) {
     const [error, setError] = useState(null);
 
     const [to, setTo] = useState(null);
-    const [chosenCurrency, setChosenCurrency] = useState(false);
+    const [chosenCurrency, setChosenCurrency] = useState(null);
 
     const closeReassignModal = useCallback(() => setIsReassignModalOpen(false), []);
 
