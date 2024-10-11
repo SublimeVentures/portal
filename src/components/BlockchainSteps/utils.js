@@ -21,7 +21,10 @@ import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/module
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 
 import { TENANT } from "@/lib/tenantHelper";
-export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+export const ETH_USDT =
+    process.env.ENV === "production"
+        ? "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+        : "0x1758B31Fbc07dF3269B3B51778c27d4213Cb2b81";
 
 export const METHOD = {
     NONE: 0,
@@ -188,6 +191,8 @@ const getTokenInWei = (amount, token) => {
     return result.toFixed();
 };
 
+const ETH_CHAIN_ID = process.env.ENV === "production" ? 1 : 11155111;
+
 export const getMethod = (type, token, params) => {
     switch (type) {
         case METHOD.INVEST: {
@@ -229,7 +234,7 @@ export const getMethod = (type, token, params) => {
             const isValid =
                 validAddress(token?.contract) && validAddress(params?.spender) && validAllowance(params?.allowance);
             const amount = getTokenInWei(params.allowance, token);
-            const confirmations = params.chainId === 1 ? 2 : 5;
+            const confirmations = params.chainId === ETH_CHAIN_ID ? 2 : 5;
             console.log("METHOD.ALLOWANCE", type, token, params, isValid);
 
             return isValid

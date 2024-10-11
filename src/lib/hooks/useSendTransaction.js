@@ -55,8 +55,8 @@ const calculateBigIntMultiplier = (value, multiplier) => {
 };
 
 const GAS_MULTIPLIER = 1;
-const MAX_FEE_PER_GAS_MULTIPLIER = 1;
-const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 1;
+const MAX_FEE_PER_GAS_MULTIPLIER = 1.5;
+const MAX_PRIORITY_FEE_PER_GAS_MULTIPLIER = 10;
 
 const useCalculateGas = (args) => {
     const { query = {}, ...params } = args;

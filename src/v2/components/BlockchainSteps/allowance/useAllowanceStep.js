@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useChainId } from "wagmi";
 import { getStepState } from "../getStepState";
 import { STEPS } from "../enums";
@@ -10,6 +10,7 @@ import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 export default function useAllowanceStep(state, data, dispatch) {
     const chainId = useChainId();
     const { steps, token, params } = data;
+    let [isNew, setIsNew] = useState(true);
 
     const allowance_isReady = steps?.liquidity
         ? state.liquidity.isFinished
@@ -30,7 +31,7 @@ export default function useAllowanceStep(state, data, dispatch) {
     );
 
     const allowance_mustRun =
-        allowance_shouldRun && allowance_current.isFetched && allowance_current.allowance < params.allowance;
+        isNew && allowance_shouldRun && allowance_current.isFetched && allowance_current.allowance < params.allowance;
 
     const allowance_methodReset = steps.allowance
         ? getMethod(METHOD.ALLOWANCE, token, { ...params, allowance: 0, chainId })
@@ -65,6 +66,20 @@ export default function useAllowanceStep(state, data, dispatch) {
         (state.allowance.executing &&
             !!allowance_set?.confirm?.data &&
             params.allowance <= allowance_current?.allowance);
+
+    // useEffect(() => {
+    //     if (allowance_isFinished) return;
+
+    //     const interval = setInterval(() => {
+    //         if (allowance_current?.allowance >= params.allowance) {
+    //             clearInterval(interval);
+    //         } else {
+    //             setIsNew((value) => !value);
+    //         }
+    //     }, 500);
+
+    //     return () => clearInterval(interval);
+    // }, [allowance_current, params.allowance, allowance_isFinished, allowance_set_reset, allowance_set]);
 
     useEffect(() => {
         if (allowance_shouldRun) {
