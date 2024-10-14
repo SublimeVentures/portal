@@ -24,7 +24,7 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const userAllocation =
-        currentMarket && vault?.length > 0 ? vault.find(({ id }) => id === currentMarket.offerId) ?? {} : {};
+        currentMarket && vault?.length > 0 ? vault.find(({ offerId }) => offerId === currentMarket.id) ?? {} : {};
     const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
     const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
