@@ -3,6 +3,7 @@ import EmptyState from "../EmptyState";
 import Invest from "./Invest";
 import CalculateModal from "./Modals/CalculateModal";
 import UpgradesModal from "./Modals/UpgradesModal";
+import { allUsedUpgradePhases } from "./Modals/UpgradesModal/utils";
 import { routes } from "@/v2/routes";
 import { PhaseId } from "@/v2/lib/phases";
 import { cn } from "@/lib/cn";
@@ -22,6 +23,8 @@ export default function Investment({ session, className }) {
         phaseCurrent.phase != PhaseId.Unlimited &&
         !offer.isLaunchpad;
 
+    const isUpgradeAvailable = allUsedUpgradePhases.includes(phaseCurrent.phase);
+
     return (
         <div className={cn("p-4 flex flex-col space-y-4 rounded bg-white/[.07] backdrop-blur-3xl", className)}>
             <div className="flex flex-wrap items-center justify-between gap-4 xl:flex-nowrap">
@@ -39,7 +42,7 @@ export default function Investment({ session, className }) {
                 </div>
 
                 <div className="ml-auto flex items-center gap-4 xl:order-3 xl:ml-0">
-                    <UpgradesModal />
+                    {isUpgradeAvailable && <UpgradesModal />}
                     <CalculateModal />
                 </div>
 

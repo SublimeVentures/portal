@@ -1,6 +1,8 @@
 import { PremiumItemsENUM, PremiumItemsParamENUM } from "@/lib/enum/store";
 import { PhaseId } from "@/v2/lib/phases";
 
+export const allUsedUpgradePhases = [PhaseId.Whale, PhaseId.Pending, PhaseId.FCFS];
+
 export const getUpgradesData = (id, allocationData, length) => {
     const maximumGuaranteedBooking = Math.min(allocationData.allocationUser_left, PremiumItemsParamENUM.Guaranteed);
 
@@ -9,13 +11,13 @@ export const getUpgradesData = (id, allocationData, length) => {
             name: "Guaranteed",
             description: `Books $${maximumGuaranteedBooking} allocation for first ${(length / 3600).toFixed(0)}h of the investment.`,
             phases: [PhaseId.Whale, PhaseId.Pending],
-            bg: "/img/upgrade-dialog-premium.png",
+            bg: "/img/upgrade/guaranteed.jpg",
         },
         [PremiumItemsENUM.Increased]: {
             name: "Increased",
             description: `Increase your maximum allocation by $${PremiumItemsParamENUM.Increased}.`,
             phases: [PhaseId.Whale, PhaseId.Pending, PhaseId.FCFS],
-            bg: "/img/bg/banner/default@2.webp",
+            bg: "/img/upgrade/increased.jpg",
         },
     };
 
