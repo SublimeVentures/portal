@@ -45,12 +45,15 @@ export default function ReassignModal({ data = {} }) {
 
     const token = useGetToken(currency?.contract || getCurrencySettlement()[0].contract);
 
+    const activeDiamond = diamonds[chainId];
+
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
                 liquidity: true,
                 network: true,
                 transaction: true,
+                allowance: true,
             },
             params: {
                 requiredNetwork: chainId,
@@ -59,19 +62,21 @@ export default function ReassignModal({ data = {} }) {
                 currency: currencyContract,
                 to,
                 chain: chainId,
-                contract: diamonds[chainId],
+                contract: activeDiamond,
+                spender: activeDiamond,
                 buttonText: "Reassign",
                 prerequisiteTextWaiting: "Sign transaction",
                 prerequisiteTextProcessing: "Getting signature",
                 prerequisiteTextSuccess: "Hash obtained",
                 prerequisiteTextError: "Invalid transaction data",
                 transactionType: METHOD.REASSIGN,
+                allowance: Number(reassignPrice),
                 liquidity: Number(reassignPrice),
             },
             token,
             setTransactionSuccessful,
         };
-    }, [chainId, account.address, offerId, currencyContract, to, reassignPrice, token]);
+    }, [chainId, account.address, offerId, currencyContract, to, reassignPrice, token, activeDiamond]);
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,

@@ -1,10 +1,10 @@
 import { reassignOfferAllocation } from "@/v2/fetchers/reassign.fetcher";
 export const blockchainPrerequisite = async (params) => {
     try {
-        const { offer, currency, to, chain } = params;
+        const { offer, currency, to, chain, account } = params;
         console.log("REASSIGN_SIGNATURE_VALID", params);
 
-        const transaction = await reassignOfferAllocation(offer, currency, to, chain);
+        const transaction = await reassignOfferAllocation(offer, currency, to, chain, account);
 
         console.log("REASSIGN_SIGNATURE", transaction);
 
@@ -14,7 +14,7 @@ export const blockchainPrerequisite = async (params) => {
                 data: { signature: transaction.signature, expire: transaction.expire },
             };
         } else {
-            //todo: error handling
+            // todo: error handling
             return {
                 ok: false,
             };

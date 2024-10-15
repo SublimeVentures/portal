@@ -5,13 +5,14 @@ const { getEnv } = require("../services/env");
 const { ReassignErrorsENUM } = require("../../src/lib/enum/reassign");
 
 function checkReassignQueryParams(req) {
-    let _offerId, _currency, _chain, _to;
+    let _offerId, _currency, _chain, _to, _sender;
 
     try {
         _offerId = Number(req.query.id);
         _currency = req.query.currency;
         _chain = req.query.chain;
         _to = req.query.to;
+        _sender = req.query.sender;
 
         if (_offerId < 1) {
             throw Error("Offer ID not valid");
@@ -24,6 +25,7 @@ function checkReassignQueryParams(req) {
                 _currency,
                 _chain,
                 _to,
+                _sender,
             },
         };
     } catch (error) {
@@ -39,7 +41,7 @@ function checkReassignQueryParams(req) {
     }
 }
 
-async function obtainReassignSignature(to, currency, offerId, expire, token) {
+async function obtainReassignSignature(to, currency, offerId, expire, _sender, token) {
     const signature = await axios.post(
         `${process.env.AUTHER}/reassign/sign`,
         {
@@ -47,6 +49,7 @@ async function obtainReassignSignature(to, currency, offerId, expire, token) {
             _currency: currency,
             _offer: offerId,
             _expire: expire,
+            _sender,
             token,
         },
         {
@@ -72,13 +75,13 @@ async function obtainReassignSignature(to, currency, offerId, expire, token) {
 async function processReassign(queryParams, token) {
     try {
         // const { userId, tenantId, partnerId } = user;
-        const { _offerId, _to, _currency, _chain } = queryParams;
+        const { _offerId, _to, _currency, _chain, _sender } = queryParams;
 
         const expire = moment.utc().unix() + 3 * 60;
 
         const currency = getEnv().currencies[_chain][_currency];
 
-        const signature = await obtainReassignSignature(_to, _currency, _offerId, expire, token);
+        const signature = await obtainReassignSignature(_to, _currency, _offerId, expire, _sender, token);
 
         if (!signature.ok) {
             return signature;
@@ -90,6 +93,7 @@ async function processReassign(queryParams, token) {
                 _currency: currency,
                 _expire: expire,
                 _offer: _offerId,
+                _sender,
                 _to,
             },
             signature,
