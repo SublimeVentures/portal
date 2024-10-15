@@ -23,9 +23,9 @@ export default function Login({ isAuthenticated }) {
 
     useEffect(() => {
         if (isAuthenticated) {
-            router.replace("/app");
+            router.replace(PAGE.App);
         }
-    }, []);
+    }, [isAuthenticated, router]);
 
     const { data } = useQuery({
         queryKey: ["partnerList"],
