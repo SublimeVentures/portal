@@ -17,7 +17,7 @@ export default function AppOfferDetails({ session, state }) {
             <Metadata title={state?.offer?.name} description={state?.offer?.description} />
             <div className="flex flex-col gap-4 grow text-white lg:overflow-y-auto lg:px-3 lg:-mx-3 lg:-mt-4 lg:mb-8 xl:grid xl:grid-cols-12 3xl:pl-8 3xl:-mx-8 3xl:pr-6 3xl:-mt-2">
                 <Overview className="col-span-12" />
-                <Phases className="col-span-12" />
+                <Phases className="col-span-12" session={session} />
                 <Invest className="col-span-7 xl:col-span-8 3xl:col-span-9" session={session} />
                 <Fundraise className="col-span-5 xl:col-span-4 3xl:col-span-3" />
                 <Vesting className="col-span-12 xl:col-span-4" />

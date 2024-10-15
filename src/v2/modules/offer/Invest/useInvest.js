@@ -128,6 +128,8 @@ export default function useInvest(session) {
         await Promise.all([
             queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
             queryClient.invalidateQueries(offersKeys.offerAllocation()),
+            queryClient.invalidateQueries(offersKeys.offerParticipants()),
+            queryClient.invalidateQueries(offersKeys.offerDetails()),
         ]);
 
         setIsLoading(false);
