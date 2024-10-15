@@ -93,10 +93,10 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                 />
                             ) : (
                                 <>
-                                    <h3 className="text-base md:text-lg font-medium text-foreground text-center">
+                                    <h3 className="text-base md:text-lg font-medium text-white text-center">
                                         Take OTC Offer
                                     </h3>
-                                    <p className="mb-2 text-sm font-light text-foreground text-center">
+                                    <p className="mb-2 text-sm font-light text-white text-center">
                                         {offerDetails.isSell
                                             ? "Are you sure you want to buy allocation from this SELL offer?"
                                             : "Are you sure you want to sell your allocation to this BUY offer?"}
@@ -131,10 +131,10 @@ export default function TakeOfferModal({ offerDetails, className }) {
                         <BlockchainSteps {...getBlockchainStepsProps()} />
 
                         <div>
-                            <h3 className="pb-2 pt-4 px-8 text-base font-medium text-foreground hidden md:block">
+                            <h3 className="pb-2 pt-4 px-8 text-base font-medium text-white hidden md:block">
                                 Overview
                             </h3>
-                            <div className="py-4 px-8 flex justify-between items-center bg-foreground/[.1]">
+                            <div className="py-4 px-8 flex justify-between items-center bg-white/10">
                                 <div className="flex items-center">
                                     <DynamicIcon
                                         className="mx-2 size-8 inline text-white rounded-full"
@@ -144,7 +144,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                         <DefinitionItem term="You Pay">${totalPayment}</DefinitionItem>
                                     </dl>
                                 </div>
-                                <ChevronRightIcon className="text-foreground" />
+                                <ChevronRightIcon className="text-white" />
                                 <div className="flex items-center">
                                     <Image
                                         src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
@@ -173,7 +173,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                         <BlockchainStepButton {...getBlockchainStepButtonProps()} />
                     )}
                     <MutedText>
-                        You will automatically receive ${currentMarket.ticker} tokens after settlement.
+                        Note: You will automatically receive {currentMarket.ticker} tokens after settlement.
                     </MutedText>
                 </SheetFooter>
             </SheetContent>

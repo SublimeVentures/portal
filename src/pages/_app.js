@@ -3,6 +3,7 @@ import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import font from "@tenant/lib/font";
 import { TooltipProvider } from "@/v2/components/ui/tooltip";
 import Layout from "@/components/Layout/Layout";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
@@ -13,7 +14,6 @@ import { queryClient } from "@/lib/queryCache";
 import "react-tooltip/dist/react-tooltip.css";
 import "@/v2/styles/globals.scss";
 import Push from "@/components/Push";
-import font from "@/v2/lib/font";
 
 export default function App({ Component, pageProps: { ...pageProps } }) {
     const { environmentData } = pageProps;

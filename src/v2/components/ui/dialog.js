@@ -23,8 +23,8 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const dialogVariants = cva([], {
     variants: {
         variant: {
-            accent: "dialog-gradient",
-            default: "bg-gradient angle-[114deg] from-primary-900 via-primary-700 to-primary-900",
+            accent: "bg-base border-base",
+            default: "bg-base",
             pattern: "bg-pattern",
         },
     },
@@ -51,7 +51,7 @@ const DialogContent = forwardRef(
                 {close && (
                     <DialogPrimitive.Close
                         className={cn(
-                            "absolute top-2.5 right-2.5 p-2.5 3xl:right-13 3xl:top-8 3xl:p-3.5 rounded opacity-70 ring-offset-background transition-base hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+                            "absolute top-2.5 right-2.5 p-2.5 3xl:right-13 3xl:top-8 3xl:p-3.5 rounded opacity-70 ring-offset-background transition-base hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary data-[state=open]:text-muted-foreground",
                             closeClassName,
                         )}
                         onClick={handleClose}
@@ -86,7 +86,7 @@ DialogFooter.displayName = "DialogFooter";
 const DialogTitle = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
         ref={ref}
-        className={cn("text-xl md:text-3xl font-normal md:font-medium text-foreground", className)}
+        className={cn("text-xl md:text-3xl font-normal md:font-medium text-white", className)}
         {...props}
     />
 ));
@@ -96,7 +96,7 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName;
 const DialogDescription = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Description
         ref={ref}
-        className={cn("text-xs font-normal text-foreground text-center md:text-lg md:text-left", className)}
+        className={cn("text-xs font-normal text-white text-center md:text-lg md:text-left", className)}
         {...props}
     />
 ));

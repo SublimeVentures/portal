@@ -19,11 +19,11 @@ const Empty = () => {
             variant="static"
             className="flex flex-col items-center justify-center h-full gap-4 text-white p-4 cursor-default"
         >
-            <div className="h-full w-full flex flex-col gap-4 justify-center items-center bg-foreground/[0.03] py-10">
-                <CardTitle className="text-base md:text-lg font-medium text-foreground">No offers found</CardTitle>
-                <CardDescription className="max-w-md text-xs md:text-sm font-light text-foreground/50 text-center">
-                    The offers tab is currently empty, but don&rsquo;t worry! This space will fill up as your
-                    investments mature and begin to pay out. Sit back, relax, and watch your returns grow over time.
+            <div className="h-full w-full flex flex-col gap-4 justify-center items-center bg-white/5 py-10">
+                <CardTitle className="text-base md:text-lg font-medium text-white">No offers found</CardTitle>
+                <CardDescription className="max-w-md text-xs md:text-sm font-light text-white/50 text-center">
+                    The offers tab is currently empty. This space will fill when offers are currently available. Check
+                    back at a later time.
                 </CardDescription>
             </div>
         </Card>

@@ -37,7 +37,7 @@ export default function Report({ className }) {
         fetchMeta();
     }, [slug]);
     return (
-        <div className={cn("rounded bg-white/[.07] backdrop-blur-3xl", className)}>
+        <div className={cn("rounded bg-alt border-alt", className)}>
             {parsePages.length > 0 && amount > 0 && <Flipbook pages={parsePages} startPage={1} zooms={[1, 1.5, 2]} />}
         </div>
     );

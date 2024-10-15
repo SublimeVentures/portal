@@ -7,7 +7,7 @@ const BAYCLogo = () => {
                 alt="Apes Capital"
             />
         </>
-    )
-}
+    );
+};
 
 export default BAYCLogo;

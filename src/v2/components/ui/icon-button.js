@@ -8,8 +8,8 @@ const iconButtonVariants = cva(
         variants: {
             variant: {
                 default: "bg-primary-700 hover:bg-primary",
-                primary: "bg-primary shadow shadow-primary hover:bg-primary/[.8] group-hover/button:bg-primary/[.8]",
-                accent: "bg-accent shadow shadow-accent hover:bg-accent/[.8] group-hover/button:bg-accent/[.8]",
+                primary: "bg-primary shadow shadow-primary hover:bg-primary/80 group-hover/button:bg-primary/80",
+                accent: "bg-secondary shadow shadow-secondary hover:bg-secondary/80 group-hover/button:bg-secondary/80",
                 gradient: "bg-gradient-to-r from-primary to-primary-600 text-white",
                 outline: "bg-transparent border border-white text-white",
                 transparent: "text-white/60 bg-transparent hover:bg-primary/30",

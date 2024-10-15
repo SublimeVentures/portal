@@ -75,7 +75,7 @@ export default function AddWalletForm({ wallets, networkList }) {
         <>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)}>
-                    <div className="pt-2 pb-8 px-8 flex flex-col gap-4 bg-foreground/[.06] rounded">
+                    <div className="pt-2 pb-8 px-8 flex flex-col gap-4 bg-white/5 rounded">
                         <div className="relative flex flex-col-reverse items-center md:flex-row">
                             <div className="flex items-center w-full">
                                 <FormField
@@ -109,7 +109,7 @@ export default function AddWalletForm({ wallets, networkList }) {
                                                     handleNetworkChange(value, address, field.onChange)
                                                 }
                                             >
-                                                <SelectTrigger className="border text-md bg-transparent text-foreground/[.6]">
+                                                <SelectTrigger className="border text-md bg-transparent text-white/60">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>

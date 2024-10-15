@@ -56,12 +56,12 @@ export default function Markets() {
         >
             <div className="xl:mb-4">
                 <div className="hidden items-center justify-between 2xl:flex">
-                    <h3 className="py-4 text-1xl font-medium text-foreground md:text-lg 2xl:block">Select Markets</h3>
+                    <h3 className="py-4 text-1xl font-medium text-white md:text-lg 2xl:block">Select Markets</h3>
                     {!!currentMarket && (
                         <Button
                             variant="secondary"
                             onClick={handleResetMarket}
-                            className="text-accent bg-accent/15 hover:bg-accent/30"
+                            className="text-secondary bg-secondary/15 hover:bg-secondary/30"
                         >
                             Latest Deals
                         </Button>

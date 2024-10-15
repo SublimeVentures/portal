@@ -22,7 +22,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
             variant="none"
             border="none"
             href={routes.Upgrades}
-            className={cn("relative flex group/button select-none", className, {
+            className={cn("relative flex group/button select-none border-alt", className, {
                 "bg-banner-default bg-left bg-cover 3xl:bg-center bg-no-repeat py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
                     variant === VARIANTS.DEFAULT,
                 "bg-banner-vertical p-3 md:justify-end lg:w-116": variant === VARIANTS.VERTICAL,
@@ -52,7 +52,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                             })}
                         />
                         <CardTitle
-                            className={cn("font-normal italic text-accent", {
+                            className={cn("font-normal italic text-secondary", {
                                 "text-base 3xl:text-2xl text-center mb-2": variant === VARIANTS.DEFAULT,
                                 "text-sm": variant === VARIANTS.VERTICAL,
                             })}
@@ -67,7 +67,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                             </span>
                         </CardTitle>
                         <CardDescription
-                            className={cn("text-sm font-light text-foreground", {
+                            className={cn("text-sm font-light text-white", {
                                 "text-center": variant === VARIANTS.DEFAULT,
                             })}
                         >
@@ -77,7 +77,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                 ) : (
                     <>
                         {variant === VARIANTS.DEFAULT && (
-                            <CardTitle className="mb-2 text-base 3xl:text-2xl font-normal italic text-accent text-center">
+                            <CardTitle className="mb-2 text-base 3xl:text-2xl font-normal italic text-secondary text-center">
                                 Acquired <span className="3xl:block font-semibold">Premium</span>
                             </CardTitle>
                         )}
@@ -85,7 +85,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                             {items.map((item) => (
                                 <Fragment key={item.id}>
                                     <dt className="text-left py-0.5">{item.name}</dt>
-                                    <dd className="px-1.5 bg-accent/[.2] text-accent first-of-type:rounded-t last-of-type:rounded-b w-6 text-center justify-self-end flex items-center justify-center">
+                                    <dd className="px-1.5 bg-secondary/20 text-secondary first-of-type:rounded-t last-of-type:rounded-b w-6 text-center justify-self-end flex items-center justify-center">
                                         {item.amount}
                                     </dd>
                                 </Fragment>

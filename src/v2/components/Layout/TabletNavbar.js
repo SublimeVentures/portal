@@ -14,7 +14,7 @@ export default function TabletNavbar() {
                     <li
                         key={path}
                         className={cn(
-                            "p-2 text-xs text-foreground whitespace-nowrap rounded cursor-pointer hover:bg-primary/[.5] md:px-4",
+                            "p-2 text-xs text-white whitespace-nowrap rounded cursor-pointer hover:bg-primary/50 md:px-4",
                             { "bg-gradient-to-r from-primary to-primary-600 font-medium": router.pathname === path },
                         )}
                     >

@@ -79,8 +79,8 @@ const Content = ({ offerDetails, setIsCancelModalOpen, isCancelModalOpen }) => {
                     ) : (
                         <>
                             <div className="definition-section">
-                                <h3 className="text-2xl font-medium text-foreground text-center">Cancel OTC Offer</h3>
-                                <p className="mb-2 text-md text-foreground text-center">
+                                <h3 className="text-2xl font-medium text-white text-center">Cancel OTC Offer</h3>
+                                <p className="mb-2 text-md text-white text-center">
                                     Are you sure you want to cancel this offer?
                                 </p>
                                 <dl className="definition-grid">

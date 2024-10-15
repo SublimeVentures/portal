@@ -3,8 +3,8 @@ import Image from "next/image";
 export default function SelectedMarket({ name, ticker, slug, cdn }) {
     return (
         <>
-            <h3 className="pt-4 px-8 text-base font-medium text-foreground">Market</h3>
-            <div className="py-2 px-8 flex flex-col gap-4 bg-foreground/[.06] rounded">
+            <h3 className="pt-4 px-8 text-base font-medium text-white">Market</h3>
+            <div className="py-2 px-8 flex flex-col gap-4 bg-white/5 rounded">
                 <div className="flex items-center">
                     <Image
                         src={`${cdn}/research/${slug}/icon.jpg`}
@@ -15,8 +15,8 @@ export default function SelectedMarket({ name, ticker, slug, cdn }) {
                     />
 
                     <div>
-                        <p className="text-sm md:text-base font-medium text-foreground">{name}</p>
-                        <p className="text-xs md:text-sm font-light text-foreground/[.75]">${ticker}</p>
+                        <p className="text-sm md:text-base font-medium text-white">{name}</p>
+                        <p className="text-xs md:text-sm font-light text-white/75">${ticker}</p>
                     </div>
                 </div>
             </div>

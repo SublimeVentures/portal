@@ -30,7 +30,7 @@ const DetailsView = ({ setView, ...props }) => {
 
     return (
         <>
-            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Status</h3>
+            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-white">Status</h3>
             <dl className="definition-grid definition-section">
                 <DefinitionItem term="Progress">{vestedPercentage}%</DefinitionItem>
                 <DefinitionItem term="Invested">{updateToLocalString(invested)}</DefinitionItem>
@@ -41,18 +41,15 @@ const DetailsView = ({ setView, ...props }) => {
                 </DefinitionItem>
             </dl>
 
-            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Performance</h3>
+            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-white">Performance</h3>
             <dl className="definition-grid definition-section">
-                <DefinitionItem
-                    term="TGE gain"
-                    className={cn(tgeParsed !== "TBA" ? "text-success-500" : "text-foreground")}
-                >
+                <DefinitionItem term="TGE gain" className={cn(tgeParsed !== "TBA" ? "text-success-500" : "text-white")}>
                     {tgeParsed}
                 </DefinitionItem>
                 {isManaged ? (
                     <DefinitionItem
                         term="Return"
-                        className={cn(tgeParsed !== "TBA" ? "text-success-500" : "text-foreground")}
+                        className={cn(tgeParsed !== "TBA" ? "text-success-500" : "text-white")}
                     >
                         +{updateToLocalString(performance, "%")}
                     </DefinitionItem>
@@ -61,7 +58,7 @@ const DetailsView = ({ setView, ...props }) => {
                 )}
             </dl>
 
-            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-foreground">Dates</h3>
+            <h3 className="pb-2 pt-4 px-8 text-lg font-medium text-white">Dates</h3>
             <dl className="definition-grid definition-section">
                 <DefinitionItem term="Participated">{getFormattedDate(participated)}</DefinitionItem>
                 <DefinitionItem term="Next Unlock">{nextUnlock !== 0 ? nextUnlock : "TBA"}</DefinitionItem>
@@ -72,7 +69,7 @@ const DetailsView = ({ setView, ...props }) => {
             {notifications && notifications.length > 0 ? (
                 <>
                     <div className="pb-2 pt-4 px-8 flex items-center">
-                        <h3 className="mr-4 text-lg font-medium text-foreground">Timeline</h3>
+                        <h3 className="mr-4 text-lg font-medium text-white">Timeline</h3>
                         <Button variant="link" onClick={() => setView(views.timeline)}>
                             <span>See all</span>
                             <ArrowIcon className="ml-1" />

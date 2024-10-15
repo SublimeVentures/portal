@@ -3,10 +3,10 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
-const rootVariants = cva("relative h-1 md:h-1.5 w-full overflow-hidden rounded-full", {
+const rootVariants = cva("relative h-1 md:h-1.5 w-full overflow-hidden rounded-xl", {
     variants: {
         variant: {
-            accent: "bg-accent/20",
+            accent: "bg-secondary/20",
             success: "bg-success/20",
         },
     },
@@ -15,10 +15,10 @@ const rootVariants = cva("relative h-1 md:h-1.5 w-full overflow-hidden rounded-f
     },
 });
 
-const indicatorVariants = cva("h-full w-full flex-1 bg-accent rounded", {
+const indicatorVariants = cva("h-full w-full flex-1 bg-secondary rounded", {
     variants: {
         variant: {
-            accent: "bg-accent",
+            accent: "bg-secondary",
             success: "bg-success",
         },
     },
@@ -30,7 +30,7 @@ const indicatorVariants = cva("h-full w-full flex-1 bg-accent rounded", {
 const blurVariants = cva("absolute z-20 -top-1 w-4 h-4 rounded-full blur", {
     variants: {
         variant: {
-            accent: "bg-accent",
+            accent: "bg-secondary",
             success: "bg-success",
         },
     },

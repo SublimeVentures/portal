@@ -7,7 +7,7 @@ export const stepNetwork = (state, data) => {
     if (data.network_isReady) {
         result = handlePending({
             content: "Network check",
-            text: "We are currently checking the network status. Please hold on.",
+            text: "We are currently checking the network status. Please wait a moment.",
         });
 
         if (state.isFinished) {

@@ -1,0 +1,38 @@
+@layer components {
+    .table {
+      @apply table-fixed border-separate border-spacing-y-3 w-full;
+      .table-head {
+        @apply relative;
+      }
+      .table-head-cell {
+        @apply px-6 pr-5 text-sm font-medium text-white normal-case text-left;
+      }
+      .table-body-row {
+        @apply transition-base first:rounded-l last:rounded-r item;
+      }
+      .table-data {
+        @apply table-cell py-4 px-6 text-xs text-white text-left before:content-none first:rounded-l last:rounded-r;
+      }
+    }
+    .table-inline {
+      @apply table-fixed w-full;
+      .table-head {
+        @apply absolute inset-0 p-0 m-[-1px] h-[1px] w-[1px] overflow-hidden;
+      }
+      .table-head-cell {
+        @apply text-sm font-normal text-white normal-case text-left;
+      }
+      .table-body-row {
+        @apply border-8 border-transparent;
+      }
+      .table-data {
+        @apply block px-5 py-1 text-xs text-right text-white transition-base before:content-[attr(data-label)] before:float-left before:font-bold before:text-white;
+      }
+    }
+    .definition-section {
+      @apply mb-2 mt-4 py-4 px-8 flex flex-col gap-6 bg-white/[.02] rounded;
+    }
+    .definition-grid {
+      @apply grid grid-cols-2 gap-4 items-center;
+    }
+}

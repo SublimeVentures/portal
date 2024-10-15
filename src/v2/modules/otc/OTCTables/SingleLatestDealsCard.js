@@ -16,7 +16,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
         <Card variant="static" className="p-0 h-max flex flex-col rounded-none rounded-b">
             <div className="h-2 rounded bg-gradient-to-r from-primary to-primary-600" />
 
-            <div className="m-3 mb-6 rounded bg-foreground/[0.05]">
+            <div className="m-3 mb-6 rounded bg-white/5">
                 <div className="p-4">
                     <dl className="py-2 px-4 grid grid-cols-2 grid-rows-4 grid-flow-col">
                         <DefinitionItem valueOnly term="Market">

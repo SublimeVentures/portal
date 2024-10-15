@@ -26,11 +26,11 @@ export default function CalculateForm() {
 
     return (
         <div className="flex flex-col gap-4">
-            <label className="w-full flex flex-col text-foreground">
+            <label className="w-full flex flex-col text-white">
                 <span className="text-base mb-2 lg:text-lg">Buying Allocation</span>
                 <div className="relative w-full ">
                     <Input type="fund" value={amount} onChange={handleAmountChange} className="px-4 w-full md:px-8" />
-                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">
+                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-white/50 font-light md:px-8">
                         USD
                     </span>
                 </div>
@@ -42,17 +42,17 @@ export default function CalculateForm() {
                 <IconButton variant="secondary" icon={FaChevronRight} onClick={() => handleMultiplierChange(true)} />
             </div>
 
-            <label className="w-full flex flex-col text-foreground">
+            <label className="w-full flex flex-col text-white">
                 <span className="text-base mb-2 lg:text-lg">Return total</span>
                 <div className="relative w-full ">
                     <Input value={price} className="px-4 w-full md:px-8" />
-                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-foreground/50 font-light md:px-8">
+                    <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-white/50 font-light md:px-8">
                         USD
                     </span>
                 </div>
             </label>
 
-            <dl className="grid grid-cols-2 gap-2 text-sm font-light text-foreground/50 select-none">
+            <dl className="grid grid-cols-2 gap-2 text-sm font-light text-white/50 select-none">
                 <Definition term="Fees">{taxPercentage}%</Definition>
                 <Definition term="Subtotal">${subtotal}</Definition>
             </dl>

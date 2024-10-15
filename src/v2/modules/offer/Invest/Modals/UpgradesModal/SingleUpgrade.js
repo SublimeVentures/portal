@@ -26,7 +26,7 @@ export default function SingleUpgrade({ id, amount = 0, isSelected, onSelect }) 
     return (
         <div
             className={cn(
-                "p-2.5 relative h-44 w-full flex gap-4 bg-foreground/10 border rounded cursor-pointer overflow-hidden transition-all ease-in-out",
+                "p-2.5 relative h-44 w-full flex gap-4 bg-white/10 border rounded cursor-pointer overflow-hidden transition-all ease-in-out",
                 "md:h-[400px] md:max-w-72 md:items-end md:bg-[#0A1C30]",
                 isSelected ? "border-primary" : "border-transparent",
                 !isValidPhase && amount <= 0 && "cursor-not-allowed",
@@ -54,8 +54,8 @@ export default function SingleUpgrade({ id, amount = 0, isSelected, onSelect }) 
             <div className="relative flex w-full md:p-4 md:flex-col md:gap-2">
                 <div className="w-full flex flex-col">
                     <div className="space-y-2">
-                        <h3 className="text-xl text-foreground">{upgrade.name}</h3>
-                        <p className="text-sm font-light text-foreground md:text-base">
+                        <h3 className="text-xl text-white">{upgrade.name}</h3>
+                        <p className="text-sm font-light text-white md:text-base">
                             {!isValidPhase
                                 ? "Can't use this upgrade during this phase."
                                 : isGuaranteedUpgradeUsed
@@ -66,7 +66,7 @@ export default function SingleUpgrade({ id, amount = 0, isSelected, onSelect }) 
                     <dl
                         className={cn(
                             "mt-auto px-4 py-2 flex items-center gap-x-6 gap-y-2 rounded md:mt-4",
-                            isValidPhase ? "text-accent bg-accent/10" : "text-red-500 bg-red-500/10",
+                            isValidPhase ? "text-secondary bg-secondary/10" : "text-red-500 bg-red-500/10",
                         )}
                     >
                         <dt>Owned</dt>
