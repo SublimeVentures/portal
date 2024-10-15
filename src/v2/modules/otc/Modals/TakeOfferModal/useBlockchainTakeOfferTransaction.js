@@ -28,7 +28,7 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
     const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
     const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
-    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee + partnerOtcFee : otcFee;
+    const totalPayment = offerDetails.price + otcFee + partnerOtcFee;
 
     const customLocks = () => {
         if (!haveEnoughAllocation) return { lock: true, text: "Not enough allocation" };
@@ -53,7 +53,7 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
                 amount: Number(totalPayment),
                 liquidity: Number(totalPayment),
                 allowance: Number(totalPayment),
-                offerDetails: offerDetails,
+                offerDetails,
                 spender: activeOtcContract,
                 contract: activeOtcContract,
                 buttonCustomText: text,
