@@ -12,6 +12,7 @@ const DEFAULT_STATE = {
     isClean: true,
     cdn: "",
     otcFee: 50,
+    partnerOtcFee: 0,
     walletGuard: true,
     network: {
         name: "",
@@ -102,6 +103,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
                         value: initialData.sharedContracts,
                     },
                     { path: "otcFee", value: initialData.otcFee },
+                    { path: "partnerOtcFee", value: initialData.partnerOtcFee },
                     { path: "settings", value: initialData.setup },
                     { path: "cdn", value: initialData.cdn },
                     { path: "isClean", value: false },
@@ -237,6 +239,7 @@ export const EnvironmentProvider = ({ children, initialData }) => {
         },
         walletGuard: environmentProps.walletGuard,
         otcFee: environmentProps.otcFee,
+        partnerOtcFee: environmentProps.partnerOtcFee,
         cdn: environmentProps.cdn,
         account: accountProp,
         activeDiamond: environmentProps.activeDiamond,

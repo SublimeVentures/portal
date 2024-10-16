@@ -23,6 +23,14 @@ import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStep
 import { ExternalLinks } from "@/routes";
 import MutedText from "@/v2/components/ui/muted-text";
 import ExternalLink from "@/v2/components/ui/external-link";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+
+const Definition = ({ term, children }) => (
+    <>
+        <dt>{term}:</dt>
+        <dd className="text-right justify-self-end font-medium">{children}</dd>
+    </>
+);
 
 // import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
@@ -36,6 +44,8 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
         getOfferFormProps,
     } = content;
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
+
+    const { otcFee, partnerOtcFee } = useEnvironmentContext();
 
     return (
         <SheetContent className="h-full flex flex-col rounded-t-lg">
@@ -56,6 +66,11 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                                     <OfferTabs {...getOfferTabsProps()} />
                                     <OfferForm {...getOfferFormProps()} />
                                 </div>
+
+                                <dl className="grid grid-cols-2 mx-4 gap-2 text-sm font-light text-foreground/50 select-none">
+                                    <Definition term="Fees">${otcFee}</Definition>
+                                    <Definition term="Partner fees">${partnerOtcFee}</Definition>
+                                </dl>
 
                                 <BlockchainSteps {...getBlockchainStepsProps()} />
                             </div>

@@ -34,7 +34,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
     const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
 
     const { currentMarket } = useMarket();
-    const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
+    const { getCurrencySymbolByAddress, network, otcFee, partnerOtcFee, cdn } = useEnvironmentContext();
 
     const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
         useBlockchainTakeOfferTransaction({ offerDetails });
@@ -123,6 +123,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                         <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
                                         <DefinitionItem term="Price">${cancelOfferPrice_parsed}</DefinitionItem>
                                         <DefinitionItem term="Fees">${otcFee}</DefinitionItem>
+                                        <DefinitionItem term="Partner fees">${partnerOtcFee}</DefinitionItem>
                                     </dl>
                                 </>
                             )}

@@ -31,7 +31,7 @@ import { userInvestmentsKeys } from "@/v2/constants";
 
 const Content = ({ offerDetails, setIsCancelModalOpen, isCancelModalOpen }) => {
     const { currentMarket } = useMarket();
-    const { network, cdn } = useEnvironmentContext();
+    const { network, cdn, otcFee, partnerOtcFee } = useEnvironmentContext();
 
     const { blockchainInteractionData, transactionSuccessful, setTransactionSuccessful } =
         useBlockchainCancelOfferTransaction({
@@ -114,6 +114,8 @@ const Content = ({ offerDetails, setIsCancelModalOpen, isCancelModalOpen }) => {
                                             <span>${cancelOfferPrice_parsed}</span>
                                         </DefinitionItem>
                                     )}
+                                    <DefinitionItem term="Fees">${otcFee}</DefinitionItem>
+                                    <DefinitionItem term="Partner fees">${partnerOtcFee}</DefinitionItem>
                                 </dl>
                             </div>
 

@@ -10,7 +10,8 @@ import { userInvestmentsKeys } from "@/v2/constants";
 
 export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
     const { currentMarket } = useMarket();
-    const { getCurrencySettlement, account, currencies, activeOtcContract, otcFee } = useEnvironmentContext();
+    const { getCurrencySettlement, account, currencies, activeOtcContract, otcFee, partnerOtcFee } =
+        useEnvironmentContext();
 
     const { data: vault } = useQuery({
         queryKey: userInvestmentsKeys.userAllocation(),
@@ -28,7 +29,7 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
     const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
     const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
-    const totalPayment = offerDetails.isSell ? offerDetails.price + otcFee : otcFee;
+    const totalPayment = (offerDetails.isSell ? offerDetails.price + otcFee : otcFee) + partnerOtcFee;
 
     const customLocks = () => {
         if (!haveEnoughAllocation) return { lock: true, text: "Not enough allocation" };
