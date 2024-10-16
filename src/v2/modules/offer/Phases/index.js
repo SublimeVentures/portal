@@ -7,6 +7,7 @@ import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import Countdown, { defaultUnits } from "@/v2/components/Countdown";
 import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { PhaseId } from "@/v2/lib/phases";
+import { TierId } from "@/v2/lib/tiers";
 
 // @TODO
 // - Show 'Whale' phase based on value from session - Currently I cannot see matching value in session. Should it be here as a filter or or in v2/hooks/usePhaseTimeline.js
@@ -16,7 +17,8 @@ export default function Phases({ className, session }) {
     const { phases, phaseNext, phaseCurrent, isClosed, updatePhase } = usePhaseInvestment();
     const countStart = moment.unix(phaseNext.startDate).valueOf();
 
-    const phaseList = session.isWhale ? phases : phases.filter((p) => p.phase !== PhaseId.Whale);
+    // Check if user is whale
+    const phaseList = session.tier.level === TierId.Level5 ? phases : phases.filter((p) => p.phase !== PhaseId.Whale);
 
     return (
         <div

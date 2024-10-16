@@ -4,9 +4,6 @@ import useCalculate from "./useCalculate";
 import { Input } from "@/v2/components/ui/input";
 import { IconButton } from "@/v2/components/ui/icon-button";
 
-// @TODO - Data taken from useInvest. Find better way to store it (tenant config?)
-const taxPercentage = 10;
-
 // @todo - create universal definition - taken from fundraise
 const Definition = ({ term, isLoading, children }) => (
     <>
@@ -15,12 +12,14 @@ const Definition = ({ term, isLoading, children }) => (
     </>
 );
 
-export default function CalculateForm() {
+export default function CalculateForm({ tax }) {
     const {
         state: { amount, price, multiplier },
         handleAmountChange,
         handleMultiplierChange,
     } = useCalculate();
+
+    const taxPercentage = Number(tax);
     const multiplierParsed = multiplier.toFixed(2);
     const subtotal = price - price * (taxPercentage / 100);
 

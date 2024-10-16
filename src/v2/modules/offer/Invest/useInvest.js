@@ -65,7 +65,7 @@ export default function useInvest(session) {
     );
     const investmentLocked = isBtnDisabled || isStakeLock;
     const hasAvailableFunds = userAllocation?.invested.total - userAllocation?.invested.invested > 0;
-    const tax = 10;
+    const tax = Number(session.tier.tax);
     const subtotal = investmentAmount - investmentAmount * (tax / 100);
 
     useEffect(() => {

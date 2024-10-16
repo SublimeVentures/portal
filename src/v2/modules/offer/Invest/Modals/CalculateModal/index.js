@@ -11,7 +11,7 @@ import {
     DialogTrigger,
 } from "@/v2/components/ui/dialog";
 
-export default function CalculateModal() {
+export default function CalculateModal({ tax }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -23,7 +23,7 @@ export default function CalculateModal() {
                     <DialogTitle>Profit Calculator</DialogTitle>
                 </DialogHeader>
 
-                <CalculateForm />
+                <CalculateForm tax={tax} />
 
                 <DialogFooter className="flex items-center">
                     <p className="max-w-64 text-xs font-regular text-green-500 text-center md:max-w-72 md:text-sm">
