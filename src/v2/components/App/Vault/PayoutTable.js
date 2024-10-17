@@ -9,8 +9,7 @@ import useImage from "@/v2/hooks/useImage";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 
 export const SkeletonPayoutTable = ({ count = 3 }) => (
-    <Card variant="static" className="p-0">
-        <div className="h-5 p-2 rounded bg-gradient-to-r from-primary to-primary-600" />
+    <Card variant="static" className="p-0 ribbon">
         <div className="p-4">
             {Array.from({ length: count }).map((_, index) => (
                 <Skeleton key={index} className="h-20 my-4" />
@@ -20,9 +19,7 @@ export const SkeletonPayoutTable = ({ count = 3 }) => (
 );
 
 export const ErrorPayoutTable = () => (
-    <Card variant="static" className="p-0">
-        <div className="p-2 h-5 rounded bg-gradient-to-r from-primary to-primary-600" />
-
+    <Card variant="static" className="p-0 ribbon">
         <div className="p-12">
             <AlertDestructive
                 title="Auth error"
@@ -51,27 +48,23 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
         "flex flex-col w-auto": variant === PayoutTableVariants.vertical,
     });
 
-    const rowDdStyles = cn("md:text-base font-medium text-foreground", {
+    const rowDdStyles = cn("md:text-base font-medium text-white", {
         "order-2": variant === PayoutTableVariants.vertical,
         "order-1": PayoutTableVariants.horizontal,
     });
-    const rowDtStyles = cn("md:text-sm font-light text-foreground/[.25]", {
+    const rowDtStyles = cn("md:text-sm font-light text-white/25", {
         "order-2": variant === PayoutTableVariants.vertical,
         "order-1": variant === PayoutTableVariants.horizontal,
     });
     return (
-        <Card variant="static" className={cn("p-0 flex flex-col cursor-auto", className)}>
-            <div className="p-2 h-5 rounded bg-gradient-to-r from-primary to-primary-600" />
+        <Card variant="static" className={cn("p-0 flex flex-col cursor-auto ribbon", className)}>
             {!pages[0]?.rows?.length ? (
                 <div className="grow p-4">
-                    <div className="h-full flex flex-col gap-4 justify-center items-center bg-foreground/[0.03] py-10">
-                        <CardTitle className="text-base md:text-lg font-medium text-foreground">
-                            No payouts found
-                        </CardTitle>
-                        <CardDescription className="max-w-md text-xs md:text-sm font-light text-foreground/50 text-center">
-                            The payout tab is currently empty, but don't worry! This space will fill up as your
-                            investments mature and begin to pay out. Sit back, relax, and watch your returns grow over
-                            time.
+                    <div className="h-full flex flex-col gap-4 justify-center items-center bg-white/5 py-10">
+                        <CardTitle className="text-base md:text-lg font-medium text-white">No payouts found</CardTitle>
+                        <CardDescription className="max-w-md text-xs md:text-sm font-light text-white/50 text-center">
+                            The payout tab is currently empty. This space will fill up as your investments mature and
+                            payouts begin. Sit back, relax, and watch your returns grow over time.
                         </CardDescription>
                     </div>
                 </div>
@@ -93,13 +86,10 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                                     }) => (
                                         <li
                                             key={id}
-                                            className={cn(
-                                                "p-4 flex items-center bg-foreground/[0.03] transition-colors hover:bg-foreground/[0.09]",
-                                                {
-                                                    "flex-col": variant === PayoutTableVariants.horizontal,
-                                                    "flex-row": variant === PayoutTableVariants.vertical,
-                                                },
-                                            )}
+                                            className={cn("p-4 flex items-center item", {
+                                                "flex-col": variant === PayoutTableVariants.horizontal,
+                                                "flex-row": variant === PayoutTableVariants.vertical,
+                                            })}
                                         >
                                             <Image
                                                 src={getResearchIconSrc(slug)}

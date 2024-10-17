@@ -1,10 +1,12 @@
-import { useState } from "react";
-
+import { useState, useMemo } from "react";
+// eslint-disable-next-line import/namespace
+import * as chains from "wagmi/chains";
 import useCreateOfferModalLogic from "./useCreateOfferModalLogic";
 import MakeTransactionSuccess from "./MakeTransactionSuccess";
 import SelectedMarket from "./SelectedMarket";
 import OfferTabs from "./OfferTabs";
 import OfferForm from "./OfferForm";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import {
     Sheet,
     SheetClose,
@@ -20,12 +22,13 @@ import { Button } from "@/v2/components/ui/button";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
-import { ExternalLinks } from "@/routes";
 import MutedText from "@/v2/components/ui/muted-text";
-import ExternalLink from "@/v2/components/ui/external-link";
 
 // import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
+    const { network } = useEnvironmentContext();
+    const { chainId } = network;
+    const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
     const {
         transactionSuccessful,
         textCopy,
@@ -36,7 +39,9 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
         getOfferFormProps,
     } = content;
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = blockchainStep;
-
+    const offerFormProps = getOfferFormProps();
+    const offerTabsProps = getOfferTabsProps();
+    const currency = offerFormProps.getOfferFieldProps("currency");
     return (
         <SheetContent className="h-full flex flex-col rounded-t-lg">
             <SheetHeader>
@@ -51,10 +56,10 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                     ) : (
                         <div className="h-full my-4 sm:mr-4">
                             <div className="mx-4 sm:px-10">
-                                <div className="mb-2 py-4 px-2 flex flex-col gap-4 bg-foreground/[.02] rounded">
+                                <div className="mb-2 py-4 px-2 flex flex-col gap-4 bg-white/[.02] rounded">
                                     <SelectedMarket {...getSelectedMarketProps()} />
-                                    <OfferTabs {...getOfferTabsProps()} />
-                                    <OfferForm {...getOfferFormProps()} />
+                                    <OfferTabs {...offerTabsProps} />
+                                    <OfferForm {...offerFormProps} />
                                 </div>
 
                                 <BlockchainSteps {...getBlockchainStepsProps()} />
@@ -62,7 +67,6 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                         </div>
                     )}
                 </div>
-                {/* <Test {...all}/> */}
             </SheetBody>
 
             <SheetFooter>
@@ -73,10 +77,16 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                 ) : (
                     <BlockchainStepButton {...getBlockchainStepButtonProps()} />
                 )}
-
-                <MutedText>
-                    <ExternalLink href={ExternalLinks.OTC} /> before making an offer.
-                </MutedText>
+                {offerTabsProps.selectedTab === 0 && (
+                    <MutedText>
+                        Note: You will be buying the allocation using ${currency.value} on {chain?.name}.
+                    </MutedText>
+                )}
+                {offerTabsProps.selectedTab === 1 && (
+                    <MutedText>
+                        Note: You will be selling your allocation for ${currency.value} on {chain?.name}.
+                    </MutedText>
+                )}
             </SheetFooter>
         </SheetContent>
     );

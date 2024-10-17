@@ -10,7 +10,7 @@ const primary = {
     950: "#05060B",
 };
 
-const accent = {
+const secondary = {
     DEFAULT: "#DBB479",
     500: "#DBB479",
     600: "#BC9F72",
@@ -47,9 +47,8 @@ module.exports = {
                 "5xl": "2560px",
             },
             colors: {
-                foreground: "hsla(0, 0%, 100%)",
                 primary,
-                accent,
+                secondary,
                 success,
                 error,
             },
@@ -76,18 +75,7 @@ module.exports = {
                 "4xl": "2rem",
             },
             backgroundImage: {
-                "primary-gradient": `linear-gradient(122deg, ${primary[900]} 0%, ${primary[600]} 47%, ${primary[900]} 100%)`,
-                "primary-dark-gradient": `linear-gradient(270deg, hsla(211, 73%, 13%, 1) 0%, hsla(210, 17%, 5%, 0) 100%)`,
-                "banner-gradient": `linear-gradient(-90deg, #092039 25%, #0A0C0E00 75%);`,
-                "sheet-gradient": `linear-gradient(151deg, ${primary[950]} 0%, ${primary[700]} 49%, ${primary[950]} 100%)`,
-                "navbar-gradient": `linear-gradient(to top, ${primary[950]} 0%, ${primary[950]} 50%, transparent 100%)`,
-                "settings-gradient": `linear-gradient(125deg, ${primary[900]} 0%, ${primary[700]} 49%, ${primary[700]} 50%, ${primary[900]} 100%)`,
-                "premium-banner": "url('/img/premium-banner.png')",
-                "empty-investment-top-pattern": "url('/img/empty-investment-top-pattern.png')",
-                "sheet-pattern": "url('/img/sheet-pattern.png')",
                 gradient: "linear-gradient(var(--tw-gradient-angle), var(--tw-gradient-stops))",
-                pattern:
-                    "linear-gradient(0deg, rgba(9, 32, 57, 1) 0%, rgba(9, 32, 57, 1) 60%, rgba(9, 29, 51, 0.85) 70%, rgba(10, 12, 14, 0.75) 100%), url('/img/sheet-pattern.png')",
             },
             gridTemplateColumns: {
                 cards: "repeat(auto-fill, minmax(450px, 1fr))",

@@ -35,7 +35,7 @@ export default function AddWalletModal({ isOpen, setIsOpen, disabled, wallets })
 
             <DialogContent handleClose={() => setIsOpen(false)}>
                 <DialogHeader>
-                    <div className="h-8 w-8 flex items-center justify-center bg-error/[.25] text-error rounded-full md:hidden">
+                    <div className="h-8 w-8 flex items-center justify-center bg-error/25 text-error rounded-full md:hidden">
                         !
                     </div>
                     <DialogTitle>Add Wallet</DialogTitle>
@@ -43,7 +43,7 @@ export default function AddWalletModal({ isOpen, setIsOpen, disabled, wallets })
                 </DialogHeader>
 
                 <div className="flex items-center justify-center md:justify-start">
-                    <div className="hidden h-6 w-6 items-center justify-center bg-error/[.25] text-error rounded-full md:flex">
+                    <div className="hidden h-6 w-6 items-center justify-center bg-error/25 text-error rounded-full md:flex">
                         !
                     </div>
                     <p className="ml-2 text-md font-light text-error text-center md:text-lg md:text-left">
@@ -53,7 +53,7 @@ export default function AddWalletModal({ isOpen, setIsOpen, disabled, wallets })
 
                 <AddWalletForm networkList={filteredNetworks} wallets={wallets} />
 
-                <DialogFooter>
+                <DialogFooter className="md:hidden">
                     <Button variant="secondary" className="md:hidden" onClick={() => setIsOpen(false)}>
                         Close
                     </Button>

@@ -1,7 +1,7 @@
 export default function Title({ subtitle, children, count }) {
     return (
         <div className="sm:flex sm:gap-4 sm:items-center lg:block select-none">
-            <h3 className="text-lg sm:text-base lg:text-lg font-semibold sm:font-medium lg:font-normal text-foreground">
+            <h3 className="text-lg sm:text-base lg:text-lg font-semibold sm:font-medium lg:font-normal text-white">
                 {children}
                 <small className="text-xs sm:text-2xs font-light align-super ml-1 inline-block sm:min-w-5">
                     {count > 0 ? <>({count})</> : null}

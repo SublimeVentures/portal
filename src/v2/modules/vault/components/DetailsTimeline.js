@@ -1,22 +1,22 @@
 import PropTypes from "prop-types";
 
+import { views } from "./DetailsSidebar";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
 import { Button } from "@/v2/components/ui/button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
-import { views } from "./DetailsSidebar";
 
-export default function DetailsTimeline({ setView, notifications }) {    
+export default function DetailsTimeline({ setView, notifications }) {
     const hasNotifications = notifications.length > 0;
-    
+
     if (!hasNotifications) {
-        return <p className="p-4 my-8 text-center">No notifications found</p>
+        return <p className="p-4 my-8 text-center">No notifications found</p>;
     }
 
     return (
         <>
             <div className="w-full pb-2 pt-4 px-8 flex items-center justify-between">
                 <div className="flex items-center">
-                    <h3 className="text-lg font-medium text-foreground">Timeline</h3>
+                    <h3 className="text-lg font-medium text-white">Timeline</h3>
                 </div>
 
                 <Button variant="link" onClick={() => setView(views.details)}>
@@ -26,7 +26,7 @@ export default function DetailsTimeline({ setView, notifications }) {
             </div>
 
             <ul>
-                {notifications.map(item => (
+                {notifications.map((item) => (
                     <li key={item.id} className="group">
                         <TimelineItem item={item} />
                     </li>

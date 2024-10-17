@@ -42,8 +42,8 @@ const messages = {
         description: (
             <>
                 <div className="mb-8">
-                    There are some <span className="text-accent">pending transactions</span> that booked the remaining
-                    allocation.
+                    There are some <span className="text-secondary">pending transactions</span> that booked the
+                    remaining allocation.
                 </div>
                 <div className="mb-4">
                     <span className="font-bold">There is still a chance!</span>
@@ -61,7 +61,7 @@ const messages = {
         title: "Investment Paused",
         description: (
             <>
-                Investment is <span className="text-accent">currently paused</span>.
+                Investment is <span className="text-secondary">currently paused</span>.
                 <br />
                 <br />
                 Please wait for the Discord update from the staff. <ExternalLink href={ExternalLinks.SUPPORT} />
@@ -72,7 +72,7 @@ const messages = {
         title: "Investment Not Open",
         description: (
             <>
-                Investment is <span className="text-accent">not yet open</span>.
+                Investment is <span className="text-secondary">not yet open</span>.
                 <br />
                 <br />
                 Don't cheat the timer! <ExternalLink href={ExternalLinks.BOOKING_SYSTEM} />

@@ -47,11 +47,11 @@ const Announcements = ({ className }) => {
                                     <div>
                                         <h3
                                             data-ticker={`$${offer.ticker}`}
-                                            className="relative text-foreground text-base 3xl:text-3xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-[10px] 3xl:after:text-sm after:font-normal after:p-4 after:absolute after:-bottom-1"
+                                            className="relative text-white text-base 3xl:text-3xl font-medium after:content-[attr(data-ticker)] after:text-white after:text-[10px] 3xl:after:text-sm after:font-normal after:p-4 after:absolute after:-bottom-1"
                                         >
                                             {offer.name}
                                         </h3>
-                                        <p className="text-foreground text-xs 3xl:text-lg font-light">{offer.genre}</p>
+                                        <p className="text-white text-xs 3xl:text-lg font-light">{offer.genre}</p>
                                     </div>
                                 </div>
                                 <IconButton

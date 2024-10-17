@@ -4,9 +4,9 @@ import lottieSuccess from "@/assets/lottie/success.json";
 
 export default function TransactionSuccess({ title, description }) {
     return (
-        <> 
-            <h3 className="text-2xl font-medium text-foreground text-center">{title}</h3>
-            <p className="mb-2 text-md text-foreground text-center">{description}</p>
+        <>
+            <h3 className="text-2xl font-medium text-white text-center">{title}</h3>
+            <p className="mb-2 text-md text-white text-center">{description}</p>
 
             <Lottie
                 animationData={lottieSuccess}
@@ -15,5 +15,5 @@ export default function TransactionSuccess({ title, description }) {
                 style={{ width: "320px", margin: "30px auto 0px" }}
             />
         </>
-    )
+    );
 }

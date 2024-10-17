@@ -21,7 +21,7 @@ Accordion.displayName = "Accordion";
 const AccordionItem = forwardRef(({ children, title, ...props }, ref) => {
     return (
         <RadixAccordion.Item {...props} ref={ref} className="text-white">
-            <RadixAccordion.Header className="px-4 bg-foreground/[.05]">
+            <RadixAccordion.Header className="px-4 bg-white/5">
                 <RadixAccordion.Trigger className="accordion-trigger md:py-2 flex items-center w-full text-left justify-between">
                     <span>{title}</span>
                     <ChevronDownIcon className="accordion-chevron" aria-hidden />

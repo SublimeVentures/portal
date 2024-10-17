@@ -82,7 +82,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                 hidden: !currentMarket && isDesktop,
             })}
         >
-            <h3 className="text-[24px] text-foreground whitespace-nowrap md:text-[16px]">
+            <h3 className="text-[24px] text-white whitespace-nowrap md:text-[16px]">
                 {currentMarket ? (
                     <>
                         <span className="inline-block whitespace-nowrap">

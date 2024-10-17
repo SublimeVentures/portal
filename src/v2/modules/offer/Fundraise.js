@@ -36,18 +36,18 @@ export default function Fundraise({ className }) {
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
 
     return (
-        <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl space-y-6", className)}>
+        <div className={cn("p-6 rounded bg-alt space-y-6 border-alt", className)}>
             <div className="flex gap-2 items-center">
                 <h2 className="text-xl md:text-2xl font-medium select-none">Fundraise Goal</h2>
-                <Tooltip>
+                {/* <Tooltip>
                     <TooltipTrigger
-                        className="size-4 rounded-full bg-white/[.14] text-2xs flex items-center justify-center cursor-help hover:bg-white/[.2] transition-colors duration-200"
+                        className="size-4 rounded-full bg-white/15 text-2xs flex items-center justify-center cursor-help hover:bg-white/20 transition-colors duration-200"
                         asChild
                     >
                         <span>?</span>
                     </TooltipTrigger>
                     <TooltipContent>Something to show</TooltipContent>
-                </Tooltip>
+                </Tooltip> */}
             </div>
             <div>
                 <div className="flex justify-between items-end mb-4 select-none">

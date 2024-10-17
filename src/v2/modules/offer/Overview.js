@@ -35,12 +35,7 @@ export default function Overview({ className }) {
     const { state, variant } = useOfferStatus(offer);
 
     return (
-        <div
-            className={cn(
-                "p-6 rounded flex flex-col 3xl:flex-row gap-4 md:gap-6 bg-white/[.07] backdrop-blur-3xl",
-                className,
-            )}
-        >
+        <div className={cn("p-6 rounded flex flex-col 3xl:flex-row gap-4 md:gap-6 bg-alt border-alt", className)}>
             <div className="flex gap-6 md:gap-8 flex-1 flex-wrap">
                 <div className="flex grow gap-6 md:gap-8 items-center h-19 md:size-26">
                     <div className="relative size-19 md:size-26">

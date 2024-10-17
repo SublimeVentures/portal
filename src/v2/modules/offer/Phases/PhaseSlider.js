@@ -34,7 +34,7 @@ export default function PhaseSlider() {
                                 "mx-[6px] min-w-[calc(50%_-_12px)] h-full flex items-center justify-center shrink-0 text-sm text-center border rounded",
                                 {
                                     "bg-primary border-primary": currentPhaseIndex === idx,
-                                    "text-foreground/25 border-foreground/25": currentPhaseIndex !== idx,
+                                    "text-white/25 border-white/25": currentPhaseIndex !== idx,
                                 },
                             )}
                         >

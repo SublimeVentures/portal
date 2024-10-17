@@ -74,7 +74,7 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
 
             <DialogContent handleClose={() => setIsOpen(false)}>
                 <DialogHeader>
-                    <div className="h-8 w-8 flex items-center justify-center bg-error/[.25] text-error rounded-full md:hidden">
+                    <div className="h-8 w-8 flex items-center justify-center bg-error/25 text-error rounded-full md:hidden">
                         !
                     </div>
                     <DialogTitle>{isSuccess ? "Removed" : "Remove"} wallet</DialogTitle>
@@ -86,7 +86,7 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
                 </DialogHeader>
 
                 {!isSuccess ? (
-                    <div className="py-4 px-8 flex flex-col gap-4 bg-foreground/[.06] text-white text-center rounded">
+                    <div className="py-4 px-8 flex flex-col gap-4 bg-white/5 text-white text-center rounded">
                         {address}
                     </div>
                 ) : null}

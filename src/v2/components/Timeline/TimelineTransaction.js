@@ -13,7 +13,7 @@ export default function TimelineTransaction({ item }) {
 
     return (
         <Link
-            className="inline-flex items-center text-xs space-x-2 text-foreground/[.5] cursor-pointer transition-colors hover:underline"
+            className="inline-flex items-center text-xs space-x-2 text-white/50 cursor-pointer transition-colors hover:underline"
             target="_blank"
             href={`${chainData.scannerUrl}/tx/${item.onchain.txID}`}
         >

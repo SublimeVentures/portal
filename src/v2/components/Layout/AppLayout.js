@@ -45,11 +45,7 @@ export default function LayoutApp({ children, title, contentClassName }) {
 
     const isBlockedAlert = stakingEnabled && !isStaked;
     return (
-        <div
-            className={cn(
-                "bg-primary-950 sm:bg-gradient angle-30 to-primary-800 from-primary-900 flex flex-col lg:flex-row h-screen relative",
-            )}
-        >
+        <div className={cn("bg-primary-950 sm:bg-body flex flex-col lg:flex-row h-screen relative")}>
             {isBlockedAlert && <BlockedAlert currency={stakingCurrency?.symbol} />}
             <DesktopLayout
                 isBlockedAlert={isBlockedAlert}

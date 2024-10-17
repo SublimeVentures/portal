@@ -41,8 +41,8 @@ export const ErrorInvestmentRow = ({ actionFn }) => {
 
 const Definition = ({ title, children, disabled = false }) => {
     const disabledClassName = {
-        "text-foreground/[.4]": disabled,
-        "text-foreground": !disabled,
+        "text-white/40": disabled,
+        "text-white": !disabled,
     };
     return (
         <div
@@ -106,15 +106,15 @@ const InvestmentRow = ({ details, isLoading = false, isError = false }) => {
                 <Avatar session={{ img: logo }} />
 
                 <div>
-                    <CardTitle className="mb-1 text-xs md:text-sm font-medium md:text-normal text-foreground leading-none">
+                    <CardTitle className="mb-1 text-xs md:text-sm font-medium md:text-normal text-white leading-none">
                         {coin}
                     </CardTitle>
-                    <p className="text-xs md:text-sm font-light text-foreground">{title}</p>
+                    <p className="text-xs md:text-sm font-light text-white">{title}</p>
                 </div>
 
                 <Attributes details={data} className="grid-cols-4 col-span-4" />
 
-                <p className="text-sm font-light text-foreground/[.56]">
+                <p className="text-sm font-light text-white/55">
                     {participatedDate && `Participated ${participatedDate}`}
                 </p>
 

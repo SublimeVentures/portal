@@ -1,9 +1,7 @@
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
+import Logo from "@tenant/components/Logo";
 import MobileMenu from "./MobileMenu";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
 import { Button } from "@/v2/components/ui/button";
 import { ChainSwitch } from "@/v2/components/App/Vault";
@@ -12,11 +10,6 @@ import { shortenAddress } from "@/v2/lib/helpers";
 import PAGE from "@/routes";
 import { cn } from "@/lib/cn";
 
-const renderLogo = (componentName) => {
-    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
-    return <TenantLogo />;
-};
-
 export default function Header({ title, isBlockedAlert, className, session }) {
     const {
         environmentCleanup,
@@ -24,29 +17,29 @@ export default function Header({ title, isBlockedAlert, className, session }) {
         networkToggle,
     } = useEnvironmentContext();
 
-    const { components } = useTenantSpecificData();
-
     const handleLogout = () => environmentCleanup();
     return (
         <header className={cn("flex justify-between shrink-0", className)}>
             <div className="flex justify-between items-center w-full h-max text-white">
                 <div className={cn("lg:hidden", { "w-0 overflow-hidden": networkToggle })}>
                     <Link href={PAGE.App}>
-                        <div className="flex items-center">{renderLogo(components.logo)}</div>
+                        <div className="flex items-center">
+                            <Logo />
+                        </div>
                     </Link>
                 </div>
                 <div className="hidden items-baseline lg:flex">
                     {title && (
-                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-foreground select-none">
+                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-white select-none">
                             {title}
                         </h2>
                     )}
                 </div>
                 <div className="flex items-center gap-4 justify-self-end">
                     <div className="hidden items-center gap-4 md:flex select-none">
-                        <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
+                        <p className="text-sm font-light text-white">{shortenAddress(address ?? "")}</p>
                         <Avatar className="size-13 pointer-events-none" session={session} />
-                        <div className="mx-2 h-6 w-0.5 bg-foreground" />
+                        <div className="mx-2 h-6 w-0.5 bg-white" />
                     </div>
                     <NotificationMenu />
                     <ChainSwitch />

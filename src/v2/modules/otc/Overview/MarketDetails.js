@@ -3,10 +3,10 @@ import { cn } from "@/lib/cn";
 
 export const DescriptionListHelper = ({ term, children }) => (
     <>
-        <dt className="text-center md:text-left text-sm 3xl:text-base font-light text-foreground/[.5] leading-none whitespace-nowrap">
+        <dt className="text-center md:text-left text-sm 3xl:text-base font-light text-white/50 leading-none whitespace-nowrap">
             {term}
         </dt>
-        <dd className="text-center md:text-left text-sm 3xl:text-base font-medium 3xl:font-light text-foreground leading-none whitespace-nowrap">
+        <dd className="text-center md:text-left text-sm 3xl:text-base font-medium 3xl:font-light text-white leading-none whitespace-nowrap">
             {children}
         </dd>
     </>
@@ -18,7 +18,7 @@ export default function MarketDetails({ src, alt, offer, className }) {
     return (
         <dl
             className={cn(
-                "relative py-4 px-8 3xl:min-w-96 grid grid-flow-col items-center bg-foreground/[.1] rounded md:gap-x-4 select-none",
+                "relative py-4 px-8 3xl:min-w-96 grid grid-flow-col items-center bg-white/10 rounded md:gap-x-4 select-none",
                 className,
             )}
         >

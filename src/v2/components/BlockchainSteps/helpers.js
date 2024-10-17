@@ -32,7 +32,7 @@ export const countSteps = (steps) => {
 
 const defaultState = Object.freeze({
     content: "Analyser Tool",
-    text: "This will guide you through each step for a seamless purchase",
+    text: "This will guide you through each step for a seamless purchase.",
 });
 
 export const getTextContent = (steps) => {

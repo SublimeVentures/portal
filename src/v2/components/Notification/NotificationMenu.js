@@ -45,11 +45,11 @@ const NotificationMenu = ({ isBlockedAlert }) => {
 
             <DropdownMenuContent
                 style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                className="w-screen z-50 h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] flex flex-col rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-gradient-primary pb-0 max-h-[var(--radix-dropdown-menu-content-available-height)]"
+                className="w-screen z-50 h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] flex flex-col rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-base pb-0 max-h-[var(--radix-dropdown-menu-content-available-height)]"
             >
-                <div className="mb-4 px-8 flex items-baseline justify-between text-foreground text-base leading-none">
+                <div className="mb-4 px-8 flex items-baseline justify-between text-white text-base leading-none">
                     <div>
-                        <h3 className="inline text-foreground text-xl leading-none">Notifications</h3>
+                        <h3 className="inline text-white text-xl leading-none">Notifications</h3>
                         {/* <p className="ml-2 inline">
                             New <span className="font-light">(2)</span>
                         </p> */}
@@ -58,7 +58,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                     <Link
                         href={routes.Notifications}
                         onClick={() => setOpen(false)}
-                        className="text-accent font-light leading-none hover:underline"
+                        className="text-secondary font-light leading-none hover:underline"
                     >
                         Show All
                     </Link>
@@ -79,7 +79,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                             Check{" "}
                             <Link
                                 href={routes.Notifications}
-                                className="text-accent hover:underline"
+                                className="text-secondary hover:underline"
                                 onClick={() => setOpen(false)}
                             >
                                 this page

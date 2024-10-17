@@ -1,0 +1,50 @@
+@layer utilities {
+    .bg-pattern-blue {}
+  
+    .bg-pattern-gold {}
+  
+    .bg-banner-default {
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1)), url("https://cdn.citizencapital.fund/webapp/bgCitCap.jpg");
+        background-position: right center !important;
+    }
+  
+    .bg-banner-vertical {
+        background-image: url("https://cdn.citizencapital.fund/webapp/bgCitCap.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+  
+    .bg-empty-investment-pattern {
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1)), url("https://cdn.citizencapital.fund/webapp/bgCitCap.jpg");
+    }
+
+    .bg-sheet-pattern {
+        background-image: url('https://cdn.citizencapital.fund/webapp/bgCitCap.jpg');
+        background-position: center top;
+        background-size: cover;
+    }
+    .bg-empty-investment-top-pattern {
+        background-image: url('https://cdn.citizencapital.fund/webapp/bgCitCap.jpg');
+    }
+    .bg-base {
+        @apply bg-black;
+    }
+    .bg-alt {}
+    .bg-body {
+        @apply bg-black;
+    }
+
+    .border-base {
+        @apply border border-primary/50;
+    }
+
+    .ribbon {}
+
+    .border-accent {
+        @apply border border-secondary/50;
+    }
+
+    .border-alt {
+        @apply border border-primary/50;
+    }
+}

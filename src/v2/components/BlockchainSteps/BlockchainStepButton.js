@@ -8,7 +8,7 @@ export default function BlockchainStepButton({ run, status, buttonLock, buttonTe
     return (
         <Button
             variant={isIdle ? variant : "outline"}
-            className={cn(className, { "border-accent text-accent": !isIdle })}
+            className={cn(className, { "border-secondary text-secondary": !isIdle })}
             onClick={run}
             disabled={buttonLock}
         >
