@@ -27,10 +27,12 @@ const nextConfig = {
                     {
                         source: `/:path((?!${nonRewritablePaths.join("|")}).*)`,
                         destination: "/app/:path*",
+                        basePath: undefined,
                     },
                     {
                         source: "/",
                         destination: "/app",
+                        basePath: undefined,
                     },
                 ],
             };
@@ -41,12 +43,12 @@ const nextConfig = {
         if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
             return [
                 {
-                    source: "/app",
+                    source: "/app/",
                     destination: "/",
                     permanent: true,
                 },
                 {
-                    source: "/app/vault",
+                    source: "/app/vault/",
                     destination: "/",
                     permanent: true,
                 },
