@@ -1,6 +1,6 @@
 import { Poppins } from "next/font/google";
 
-const poppins = Poppins({
+const font = Poppins({
     weight: ["300", "400", "500", "600", "700", "800", "900"],
     style: ["normal", "italic"],
     subsets: ["latin"],
@@ -8,4 +8,9 @@ const poppins = Poppins({
     variable: "--base-font",
 });
 
-export default poppins;
+const fonts = {
+    base: font,
+    accent: font,
+};
+
+export default fonts;

@@ -17,7 +17,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-white/50 mt-16 select-none">
+                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-white/60 mt-16 select-none font-heading">
                     {name}
                 </h2>
                 <ul className="flex flex-col gap-2">
@@ -59,7 +59,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
                 </nav>
 
                 <div className="mt-auto flex flex-col items-center">
-                    <h2 className="text-sm font-light text-white/60 select-none">Community</h2>
+                    <h2 className="text-sm font-light text-white/60 select-none font-heading">Community</h2>
 
                     <ul className="pt-2 flex items-center">
                         {socialMenu.map(({ icon, name, path }) => (

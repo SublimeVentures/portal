@@ -8,7 +8,7 @@ import Title from "@/v2/modules/opportunities/Title";
 export default function NotificationFilters({ query, handleInputChange, handleGetOlder }) {
     const { after, before, typeId } = query;
     const unreadCount = 0;
-    const props = unreadCount > 0 ? { count: `${unreadCount} unread` } : {};
+    const props = unreadCount > 0 ? { count: `${unreadCount} unread` } : { count: null };
 
     return (
         <div className="flex flex-col items-center gap-4 sm:mb-4 md:flex-row lg:mb-0 3xl:gap-x-12">

@@ -24,7 +24,7 @@ export default function Phases({ className }) {
         >
             {isDesktop ? (
                 <div className="flex flex-col items-center space-y-4 2xl:flex-row 2xl:space-y-0">
-                    <h2 className="text-lg font-semibold 2xl:mr-4 select-none">Phases</h2>
+                    <h2 className="2xl:mr-4 text-xl md:text-2xl font-medium font-heading">Phases</h2>
                     <ul className="flex flex-wrap justify-center items-center gap-4">
                         {phases.map((phase) => (
                             <li key={phase.phase}>

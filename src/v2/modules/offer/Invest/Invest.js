@@ -23,7 +23,7 @@ export default function Invest({ session }) {
         <div className="px-6 py-4 h-full bg-white/5 rounded 3xl:py-8 3xl:px-12">
             <div className="relative flex flex-col flex-1 justify-center items-center">
                 <div className="w-full">
-                    <h3 className="mb-12 text-base lg:text-xl">My Contribution</h3>
+                    <h3 className="mb-12 font-heading lg:text-xl">My Contribution</h3>
                     <InvestForm {...getInvestFormProps()}>
                         <InvestFormFields {...getInvestFormFieldsProps()} />
                         <InvestFormSummary {...getInvestFormSummaryProps()} />

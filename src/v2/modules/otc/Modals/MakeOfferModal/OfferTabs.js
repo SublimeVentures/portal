@@ -15,7 +15,7 @@ const Label = ({ label, text, description }) => (
 export default function OfferTabs({ allocationMax, selectedTab, handleSelectTab }) {
     return (
         <div className="pt-4 px-8">
-            <h3 className="mb-4 text-base font-medium text-white">Type</h3>
+            <h3 className="mb-4 text-base font-medium text-white font-heading">Type</h3>
             <RadioGroup value={selectedTab} onValueChange={handleSelectTab} className="flex flex-row md:flex-col">
                 <div className="flex items-center cursor-pointer">
                     <RadioGroupItem value={TABS.BUY} id={TABS.BUY} />

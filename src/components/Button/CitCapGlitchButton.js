@@ -7,7 +7,16 @@ export const CitCaGlitchButtonState = {
     hero: "hero",
 };
 
-export function CitCapGlitchButton({ text, state, handler, isLoading, isDisabled, icon, isFullwidth }) {
+export function CitCapGlitchButton({
+    text,
+    state = "",
+    handler,
+    isLoading,
+    isDisabled,
+    icon,
+    isFullwidth,
+    innerClassName = "",
+}) {
     const [isExecuting, setExecuting] = useState(false);
 
     const click = async () => {
@@ -27,8 +36,8 @@ export function CitCapGlitchButton({ text, state, handler, isLoading, isDisabled
             className={`
             ${state}
             ${isDisabled ? "disabled" : ""}
-            shakeBtn font-accent before:content-[attr(text)] after:content-[attr(text)]  
-             ${process.env.NEXT_PUBLIC_TENANT == "19" ? "!pt-[6px]" : "glitch"}
+            block relative outline-none bg-none cursor-pointer border border-white text-white py-1.5 px-5 font-heading hover:bg-white hover:text-black transition-color
+             ${process.env.NEXT_PUBLIC_TENANT == "19" ? "" : "glitch text-sm"}
             `}
             data-text={text}
             onClick={() => click()}
@@ -36,7 +45,7 @@ export function CitCapGlitchButton({ text, state, handler, isLoading, isDisabled
             <span
                 className={`
                 flex flex-row justify-center items-center text-nowrap
-                 ${process.env.NEXT_PUBLIC_TENANT == "19" ? "!pt-[3px]" : ""}
+                ${innerClassName}
             `}
             >
                 {isLoading ? (

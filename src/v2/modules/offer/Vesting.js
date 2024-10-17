@@ -16,7 +16,7 @@ export default function Vesting({ className }) {
 
     return (
         <div className={cn("p-6 rounded bg-alt flex flex-col gap-6 select-none border-alt", className)}>
-            <h2 className="text-xl md:text-2xl font-medium">Vesting details</h2>
+            <h2 className="text-xl md:text-2xl font-medium font-heading">Vesting details</h2>
 
             <div className="h-full min-h-40">
                 {isLoading && (

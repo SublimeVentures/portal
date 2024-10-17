@@ -30,7 +30,7 @@ export default function Header({ title, isBlockedAlert, className, session }) {
                 </div>
                 <div className="hidden items-baseline lg:flex">
                     {title && (
-                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-white select-none">
+                        <h2 className="text-lg font-semibold lg:text-2xl lg:font-medium text-white select-none font-heading">
                             {title}
                         </h2>
                     )}

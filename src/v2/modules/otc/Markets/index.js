@@ -56,7 +56,9 @@ export default function Markets() {
         >
             <div className="xl:mb-4">
                 <div className="hidden items-center justify-between 2xl:flex">
-                    <h3 className="py-4 text-1xl font-medium text-white md:text-lg 2xl:block">Select Markets</h3>
+                    <h3 className="py-4 text-1xl font-medium text-white md:text-lg 2xl:block font-heading">
+                        Select Markets
+                    </h3>
                     {!!currentMarket && (
                         <Button
                             variant="secondary"

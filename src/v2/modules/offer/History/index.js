@@ -35,7 +35,7 @@ export default function History({ className }) {
 
     return (
         <div className={cn("p-6 rounded bg-alt flex flex-col gap-6 select-none border-alt", className)}>
-            <h2 className="ext-xl md:text-2xl font-medium">History</h2>
+            <h2 className="text-xl md:text-2xl font-medium font-heading">History</h2>
 
             <div className="h-full min-h-40">
                 {isLoading && (
