@@ -23,7 +23,7 @@ export default function CalculateModal({ taxPercentage }) {
                     <DialogTitle>Profit Calculator</DialogTitle>
                 </DialogHeader>
 
-                <CalculateForm taxPercentage={taxPercentage} />
+                <CalculateForm fee={taxPercentage} />
 
                 <DialogFooter className="flex items-center">
                     <p className="max-w-64 text-xs font-regular text-green-500 text-center md:max-w-72 md:text-sm">

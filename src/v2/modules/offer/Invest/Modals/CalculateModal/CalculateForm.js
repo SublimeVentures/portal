@@ -12,7 +12,7 @@ const Definition = ({ term, isLoading, children }) => (
     </>
 );
 
-export default function CalculateForm({ taxPercentage }) {
+export default function CalculateForm({ fee }) {
     const {
         state: { amount, price, multiplier },
         handleAmountChange,
@@ -20,7 +20,7 @@ export default function CalculateForm({ taxPercentage }) {
     } = useCalculate();
 
     const multiplierParsed = multiplier.toFixed(2);
-    const subtotal = price - price * (taxPercentage / 100);
+    const subtotal = price - price * (fee / 100);
 
     return (
         <div className="flex flex-col gap-4">
@@ -51,7 +51,7 @@ export default function CalculateForm({ taxPercentage }) {
             </label>
 
             <dl className="grid grid-cols-2 gap-2 text-sm font-light text-foreground/50 select-none">
-                <Definition term="Fees">{taxPercentage}%</Definition>
+                <Definition term="Fees">{fee}%</Definition>
                 <Definition term="Subtotal">${subtotal}</Definition>
             </dl>
         </div>
