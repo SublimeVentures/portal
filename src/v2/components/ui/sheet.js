@@ -22,7 +22,7 @@ SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 // @Todo - Set the header height in the calc function. The mobile header hasn't been created yet, so I added 100px
 const sheetVariants = cva(
-    "bg-base fixed z-50 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 w-full h-dvh md:w-[595px]",
+    "bg-base !fixed !z-50 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 w-full h-dvh md:w-[595px]",
     {
         variants: {
             side: {
