@@ -45,7 +45,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
 
             <DropdownMenuContent
                 style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                className="w-screen z-50 h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] flex flex-col rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-base pb-0 max-h-[var(--radix-dropdown-menu-content-available-height)]"
+                className="w-screen !z-50 h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] flex flex-col rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-base pb-0 max-h-[var(--radix-dropdown-menu-content-available-height)]"
             >
                 <div className="mb-4 px-8 flex items-baseline justify-between text-white text-base leading-none">
                     <div>
