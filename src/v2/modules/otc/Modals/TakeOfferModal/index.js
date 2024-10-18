@@ -93,7 +93,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                 />
                             ) : (
                                 <>
-                                    <h3 className="text-base md:text-lg font-medium text-white text-center">
+                                    <h3 className="text-base md:text-lg font-medium text-white text-center font-heading">
                                         Take OTC Offer
                                     </h3>
                                     <p className="mb-2 text-sm font-light text-white text-center">
@@ -131,7 +131,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                         <BlockchainSteps {...getBlockchainStepsProps()} />
 
                         <div>
-                            <h3 className="pb-2 pt-4 px-8 text-base font-medium text-white hidden md:block">
+                            <h3 className="pb-2 pt-4 px-8 text-base font-medium text-white hidden md:block font-heading">
                                 Overview
                             </h3>
                             <div className="py-4 px-8 flex justify-between items-center bg-white/10">

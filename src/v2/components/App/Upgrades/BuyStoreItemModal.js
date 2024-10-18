@@ -152,7 +152,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                                     <span className="flex items-center gap-3">
                                         <UpgradeSymbol
                                             className={cn({
-                                                "bg-accent": order.id === 1,
+                                                "bg-secondary": order.id === 1,
                                                 "bg-primary": order.id === 2,
                                             })}
                                         />

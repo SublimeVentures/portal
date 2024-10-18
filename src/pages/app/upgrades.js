@@ -64,7 +64,7 @@ export default function AppUpgrades({ session }) {
             <Head>
                 <title>{title}</title>
             </Head>
-            <Header title="Supercharge your investments" className="sm:mb-4 lg:mb-0" />
+            <Header title="Supercharge your investments" className="sm:mb-4 lg:mb-0" count={null} />
             <div className="flex flex-col md:flex-row md:grow md:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12 select-none">
                 {!!storeData &&
                     storeData.map((data, index) => (
@@ -88,8 +88,8 @@ export default function AppUpgrades({ session }) {
                             />
                             <div className="w-4/5 sm:w-1/2 lg:w-4/5 mx-auto sm:mx-0 lg:mx-auto text-center sm:text-left lg:text-center">
                                 <h1
-                                    className={cn("text-lg 3xl:text-3xl font-medium mb-4", {
-                                        "text-accent": !index,
+                                    className={cn("text-lg 3xl:text-3xl font-medium mb-4 font-heading", {
+                                        "text-secondary": !index,
                                         "text-primary": !!index,
                                     })}
                                 >

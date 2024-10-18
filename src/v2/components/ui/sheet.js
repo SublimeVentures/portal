@@ -84,7 +84,7 @@ SheetBody.displayName = "SheetBody";
 const SheetTitle = forwardRef(({ className, ...props }, ref) => (
     <SheetPrimitive.Title
         ref={ref}
-        className={cn("text-2xl md:text-3xl font-medium text-white", className)}
+        className={cn("text-2xl md:text-3xl font-medium text-white font-heading", className)}
         {...props}
     />
 ));

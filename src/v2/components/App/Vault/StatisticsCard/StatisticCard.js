@@ -43,7 +43,7 @@ const StatisticCard = ({
             />
             <div className={cn("", { "text-center w-full md:text-left md:w-auto": last })}>
                 <CardTitle className="text-xs md:text-sm font-light text-white text-nowrap">{title}</CardTitle>
-                <p className="text-sm md:text-lg font-medium text-white">{value}</p>
+                <p className="text-sm md:text-lg font-medium text-white font-heading">{value}</p>
             </div>
         </Card>
     );

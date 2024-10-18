@@ -7,5 +7,9 @@ const font = Roboto_Mono({
     display: "swap",
     variable: "--base-font",
 });
+const fonts = {
+    base: font,
+    accent: font,
+};
 
-export default font;
+export default fonts;

@@ -43,7 +43,7 @@ export default function WalletSettings({ session }) {
         <Card variant="none" className="flex flex-col h-full bg-base overflow-hidden border-alt">
             <div className="p-4 flex justify-between items-center select-none">
                 <div>
-                    <CardTitle className="text-lg font-medium">Wallet Connected</CardTitle>
+                    <CardTitle className="text-lg font-medium font-heading">Wallet Connected</CardTitle>
                     <CardDescription className="text-md">Payouts will be sent to this wallet</CardDescription>
                 </div>
 

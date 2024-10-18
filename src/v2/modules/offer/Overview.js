@@ -59,7 +59,7 @@ export default function Overview({ className }) {
                         ) : (
                             <>
                                 <div className="flex mb-0.5 md:mb-1.5 gap-4">
-                                    <h1 className="text-xl md:text-3xl font-medium">{offer.name}</h1>
+                                    <h1 className="text-xl md:text-3xl font-medium font-heading">{offer.name}</h1>
                                     <Badge variant={variant}>{state}</Badge>
                                 </div>
                                 <p className="text-base md:text-lg font-light">{offer.genre}</p>

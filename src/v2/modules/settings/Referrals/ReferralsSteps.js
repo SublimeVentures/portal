@@ -26,7 +26,7 @@ export default function ReferalsSteps() {
             className="h-full w-full flex flex-col grow bg-base overflow-hidden cursor-default border-alt"
         >
             <div className="flex flex-col grow gap-4 block-scrollbar overflow-y-auto px-4">
-                <CardTitle className="text-base md:text-lg font-medium text-white mb-1">
+                <CardTitle className="text-base md:text-lg font-medium text-white mb-1 font-heading">
                     Join Based Referral Program
                 </CardTitle>
                 <CardDescription className="text-xs md:text-sm font-light">

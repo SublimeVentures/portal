@@ -70,6 +70,8 @@ module.exports = {
             },
             fontFamily: {
                 body: ["var(--base-font)", "sans-serif"],
+                heading: ["var(--accent-font)", "sans-serif"],
+                button: ["var(--base-font)", "sans-serif"],
             },
             borderRadius: {
                 "4xl": "2rem",

@@ -25,7 +25,8 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                     dangerouslySetInnerHTML={{
                         __html: `
                         :root {
-                            --base-font: ${font.style.fontFamily};
+                            --base-font: ${font.base.style.fontFamily};
+                            --accent-font: ${font.accent.style.fontFamily};
                         }`,
                     }}
                 />

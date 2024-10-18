@@ -60,7 +60,7 @@ export default function BlockchainSteps({ content, steps, extraState, status }) 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="text-base font-medium text-white text-center overflow-hidden md:text-lg"
+                    className="text-base font-medium text-white text-center overflow-hidden md:text-lg font-heading"
                 >
                     {content.content}
                 </motion.h3>

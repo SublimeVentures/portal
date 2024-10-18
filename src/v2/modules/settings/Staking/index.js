@@ -80,7 +80,9 @@ export default function Staking({ session }) {
 
                         <div>
                             <div className="hidden items-center gap-4 2xl:flex mb-4">
-                                <CardTitle className="my-1 text-2xl font-medium text-white">Staking</CardTitle>
+                                <CardTitle className="my-1 text-2xl font-medium text-white font-heading">
+                                    Staking
+                                </CardTitle>
                                 {isNew ? <Badge variant="warning">New</Badge> : null}
                             </div>
 

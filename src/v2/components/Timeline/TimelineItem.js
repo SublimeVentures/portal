@@ -28,7 +28,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
             <div
                 className={cn(
                     "my-2 py-4 px-6 w-full flex flex-col gap-2 rounded",
-                    isRead ? "item" : "item-active",
+                    showTimeline ? (isRead ? "item" : "item-active") : null,
                     className,
                 )}
             >

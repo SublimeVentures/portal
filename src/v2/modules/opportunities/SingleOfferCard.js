@@ -34,7 +34,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}
-                            className="relative text-white text-2xl font-medium leading-none mb-2 after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:px-3 after:leading-none after:align-top md:after:align-middle"
+                            className="relative text-white text-2xl font-medium leading-none mb-2 after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:px-3 after:leading-none after:align-top md:after:align-middle font-heading"
                         >
                             {name}
                         </h3>

@@ -61,7 +61,9 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
             {!pages[0]?.rows?.length ? (
                 <div className="grow p-4">
                     <div className="h-full flex flex-col gap-4 justify-center items-center bg-white/5 py-10">
-                        <CardTitle className="text-base md:text-lg font-medium text-white">No payouts found</CardTitle>
+                        <CardTitle className="text-base md:text-lg font-medium text-white font-heading">
+                            No payouts found
+                        </CardTitle>
                         <CardDescription className="max-w-md text-xs md:text-sm font-light text-white/50 text-center">
                             The payout tab is currently empty. This space will fill up as your investments mature and
                             payouts begin. Sit back, relax, and watch your returns grow over time.

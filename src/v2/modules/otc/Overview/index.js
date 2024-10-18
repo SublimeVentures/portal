@@ -38,7 +38,7 @@ export default function Overview() {
                             height={100}
                         />
                         <div className="w-full select-none">
-                            <h3 className="text-base font-medium 3xl:text-3xl text-white leading-none">
+                            <h3 className="text-base font-medium 3xl:text-3xl text-white leading-none font-heading">
                                 {name}
                                 <small className="ml-1.5 font-light align-super text-2xs 3xl:text-base">
                                     ${ticker}

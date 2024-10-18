@@ -106,7 +106,7 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
         <>
             <Form {...form}>
                 <div className="pt-2 pb-4 px-8 flex flex-col bg-white/5 rounded">
-                    <h3 className="pt-4 pb-4 text-base font-medium text-white">Your offer</h3>
+                    <h3 className="pt-4 pb-4 text-base font-medium text-white font-heading">Your offer</h3>
                     <div className="w-full flex items-center pb-2">
                         <div className="w-full flex items-center">
                             <div className="relative w-full">

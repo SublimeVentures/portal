@@ -5,7 +5,7 @@
         @apply relative;
       }
       .table-head-cell {
-        @apply px-6 pr-5 text-sm font-medium text-white normal-case text-left;
+        @apply px-6 pr-5 text-sm font-medium text-white normal-case text-left font-heading;
       }
       .table-body-row {
         @apply transition-base first:rounded-l last:rounded-r item;

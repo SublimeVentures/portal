@@ -86,7 +86,7 @@ DialogFooter.displayName = "DialogFooter";
 const DialogTitle = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
         ref={ref}
-        className={cn("text-xl md:text-3xl font-normal md:font-medium text-white", className)}
+        className={cn("text-xl md:text-3xl font-normal md:font-medium text-white font-heading", className)}
         {...props}
     />
 ));

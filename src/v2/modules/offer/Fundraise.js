@@ -38,7 +38,7 @@ export default function Fundraise({ className }) {
     return (
         <div className={cn("p-6 rounded bg-alt space-y-6 border-alt", className)}>
             <div className="flex gap-2 items-center">
-                <h2 className="text-xl md:text-2xl font-medium select-none">Fundraise Goal</h2>
+                <h2 className="text-xl md:text-2xl font-medium select-none font-heading">Fundraise Goal</h2>
                 {/* <Tooltip>
                     <TooltipTrigger
                         className="size-4 rounded-full bg-white/15 text-2xs flex items-center justify-center cursor-help hover:bg-white/20 transition-colors duration-200"

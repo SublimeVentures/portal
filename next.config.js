@@ -7,6 +7,7 @@ const nextConfig = {
     trailingSlash: true,
     webpack(config) {
         config.resolve.alias["@tenant"] = path.resolve(__dirname, "src/v2/tenants", process.env.NEXT_PUBLIC_TENANT);
+
         config.module.rules.push(
             {
                 test: /\.svg$/i,
