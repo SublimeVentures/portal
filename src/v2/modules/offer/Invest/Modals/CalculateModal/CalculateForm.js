@@ -12,14 +12,13 @@ const Definition = ({ term, isLoading, children }) => (
     </>
 );
 
-export default function CalculateForm({ tax }) {
+export default function CalculateForm({ taxPercentage }) {
     const {
         state: { amount, price, multiplier },
         handleAmountChange,
         handleMultiplierChange,
     } = useCalculate();
 
-    const taxPercentage = Number(tax);
     const multiplierParsed = multiplier.toFixed(2);
     const subtotal = price - price * (taxPercentage / 100);
 
