@@ -65,72 +65,76 @@ export default function AppUpgrades({ session }) {
                 <title>{title}</title>
             </Head>
             <Header title="Supercharge your investments" className="sm:mb-4 lg:mb-0" count={null} />
-            <div className="flex flex-col md:flex-row md:grow md:overflow-hidden lg:overflow-auto gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12 select-none">
-                {!!storeData &&
-                    storeData.map((data, index) => (
-                        <Card
-                            key={data.id}
-                            variant={data.id === 1 ? "accent" : "static"}
-                            className={cn(
-                                "cursor-auto text-white flex-1 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
-                                {
-                                    "!bg-pattern-gold": data.id === 1,
-                                    "!bg-pattern-blue": data.id !== 1,
-                                },
-                            )}
-                        >
-                            <Image
-                                src={getStoreSrc(data.img)}
-                                className="rounded-full size-46 sm:size-32 3xl:size-80 pointer-events-none"
-                                alt={data.name}
-                                width={320}
-                                height={320}
-                            />
-                            <div className="w-4/5 sm:w-1/2 lg:w-4/5 mx-auto sm:mx-0 lg:mx-auto text-center sm:text-left lg:text-center">
-                                <h1
-                                    className={cn("text-lg 3xl:text-3xl font-medium mb-4 font-heading", {
-                                        "text-secondary": !index,
-                                        "text-primary": !!index,
-                                    })}
-                                >
-                                    {data.name}
-                                </h1>
-                                <p className=" text-xs 3xl:text-base font-light">{data.description}</p>
-                            </div>
-                            <BackdropCard className="w-11/12 sm:w-full 3xl:w-9/12 3xl:mx-auto">
-                                <DefinitionList className="w-full sm:w-2/3">
-                                    <Definition term="Type">{data.id === 1 ? "Not Stackable" : "Stackable"}</Definition>
-                                    <Definition term="Price">
-                                        {data.price} {currency && getCurrency(currency.symbol)}
-                                    </Definition>
-                                </DefinitionList>
-                                {data.availability < 1 ? (
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                className="w-full sm:w-1/3"
-                                                variant={data.id === 1 ? "accent" : "default"}
-                                                disabled={data.availability < 1}
-                                                onClick={() => openBuy(data)}
-                                            >
-                                                Buy
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>No more {data.name} available for purchase</TooltipContent>
-                                    </Tooltip>
-                                ) : (
-                                    <Button
-                                        className="w-full sm:w-1/3"
-                                        variant={data.id === 1 ? "accent" : "default"}
-                                        disabled={data.availability < 1}
-                                        onClick={() => openBuy(data)}
-                                    >
-                                        Buy
-                                    </Button>
+            <div className="lg:overflow-auto lg:-mr-4 lg:pr-4 flex grow">
+                <div className="min-h-min flex flex-col md:flex-row md:grow md:overflow-hidden gap-7 sm:gap-4 lg:gap-6 3xl:gap-11 pointer-events-none group lg:mb-12 select-none">
+                    {!!storeData &&
+                        storeData.map((data, index) => (
+                            <Card
+                                key={data.id}
+                                variant={data.id === 1 ? "accent" : "static"}
+                                className={cn(
+                                    "cursor-auto text-white flex-1 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center min-h-min",
+                                    {
+                                        "!bg-pattern-gold": data.id === 1,
+                                        "!bg-pattern-blue": data.id !== 1,
+                                    },
                                 )}
-                            </BackdropCard>
-                        </Card>
-                    ))}
+                            >
+                                <Image
+                                    src={getStoreSrc(data.img)}
+                                    className="rounded-full size-46 sm:size-32 3xl:size-80 pointer-events-none"
+                                    alt={data.name}
+                                    width={320}
+                                    height={320}
+                                />
+                                <div className="w-4/5 sm:w-1/2 lg:w-4/5 mx-auto sm:mx-0 lg:mx-auto text-center sm:text-left lg:text-center">
+                                    <h1
+                                        className={cn("text-lg 3xl:text-3xl font-medium mb-4 font-heading", {
+                                            "text-secondary": !index,
+                                            "text-primary": !!index,
+                                        })}
+                                    >
+                                        {data.name}
+                                    </h1>
+                                    <p className=" text-xs 3xl:text-base font-light">{data.description}</p>
+                                </div>
+                                <BackdropCard className="w-11/12 sm:w-full 3xl:w-9/12 3xl:mx-auto">
+                                    <DefinitionList className="w-full sm:w-2/3">
+                                        <Definition term="Type">
+                                            {data.id === 1 ? "Not Stackable" : "Stackable"}
+                                        </Definition>
+                                        <Definition term="Price">
+                                            {data.price} {currency && getCurrency(currency.symbol)}
+                                        </Definition>
+                                    </DefinitionList>
+                                    {data.availability < 1 ? (
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    className="w-full sm:w-1/3"
+                                                    variant={data.id === 1 ? "accent" : "default"}
+                                                    disabled={data.availability < 1}
+                                                    onClick={() => openBuy(data)}
+                                                >
+                                                    Buy
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>No more {data.name} available for purchase</TooltipContent>
+                                        </Tooltip>
+                                    ) : (
+                                        <Button
+                                            className="w-full sm:w-1/3"
+                                            variant={data.id === 1 ? "accent" : "default"}
+                                            disabled={data.availability < 1}
+                                            onClick={() => openBuy(data)}
+                                        >
+                                            Buy
+                                        </Button>
+                                    )}
+                                </BackdropCard>
+                            </Card>
+                        ))}
+                </div>
             </div>
             <BuyStoreItemModal model={isBuyModal} setter={closeBuy} buyModalProps={buyModalProps} />
         </>
