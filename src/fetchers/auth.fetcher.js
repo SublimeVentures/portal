@@ -13,7 +13,7 @@ export const logIn = async (message, signature, tenant, partner, type) => {
 
         return {
             ok: false,
-            error: e.response?.data?.error || "Error processing login",
+            error: error.response?.data?.error || "Error processing login",
         };
     }
 };

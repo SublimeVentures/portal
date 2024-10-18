@@ -28,7 +28,7 @@ const basedRoutes = {
     Tokenomics: "/tokenomics",
     ToS: "/terms",
     Privacy: "/privacy",
-    App: "/vault",
+    App: "/",
     Opportunities: "/offer",
     Launchpad: "/launchpad",
     OTC: "/otc",
