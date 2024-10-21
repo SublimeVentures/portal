@@ -46,7 +46,7 @@ const Investments = ({ className }) => {
                             investments.map((item) => (
                                 <li
                                     key={item.id}
-                                    className="h-full snap-start md:[&:nth-last-child(2)]:hidden sm:last:hidden xl:[&:nth-last-child(2)]:block 3xl:last:block"
+                                    className="h-full snap-start md:[&:nth-last-child(2)]:hidden sm:[&:nth-last-child(3)]:hidden xl:[&:nth-last-child(2)]:block 3xl:[&:nth-last-child(3)]:block"
                                 >
                                     <InvestmentCard details={item} isLoading={isLoading} />
                                 </li>
