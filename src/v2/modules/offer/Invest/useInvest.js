@@ -65,7 +65,7 @@ export default function useInvest(session) {
 
     const investmentLocked = isBtnDisabled || isStakeLock;
     const hasAvailableFunds = userAllocation?.invested.total - userAllocation?.invested.invested > 0;
-    const subtotal = investmentAmount - investmentAmount * (session.tier.taxPercentage / 100);
+    const subtotal = investmentAmount - investmentAmount * (session.tier.fee / 100);
 
     useEffect(() => {
         const cachedData = getExpireData(amountStorageKey);
@@ -156,13 +156,7 @@ export default function useInvest(session) {
 
             const contract = dropdownCurrencyOptions.find((option) => option.symbol === currency)?.contract;
 
-            const res = await fetchHash(
-                offerId,
-                investmentAmount,
-                session.tier.taxPercentage,
-                contract,
-                network.chainId,
-            );
+            const res = await fetchHash(offerId, investmentAmount, session.tier.fee, contract, network.chainId);
 
             if (!res.ok) {
                 await clearBooking();
@@ -230,7 +224,7 @@ export default function useInvest(session) {
             total: investmentAmount,
             currency,
             subtotal,
-            taxPercentage: session.tier.taxPercentage,
+            fee: session.tier.fee,
         }),
         getInvestFormSubmitProps: () => ({
             isBtnDisabled,
