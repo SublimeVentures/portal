@@ -7,15 +7,15 @@ const Checkbox = forwardRef(({ className, ...props }, ref) => (
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
-            "aspect-square h-4 w-4 shrink-0 rounded border border-foreground text-foreground shadow cursor-pointer transition-all",
-            "hover:border-accent hover:shadow-accent focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:border-foreground",
-            "data-[state=checked]:border-accent data-[state=checked]:shadow-accent data-[state=checked]:hover:border-accent data-[state=checked]:hover:shadow-accent",
+            "aspect-square h-4 w-4 shrink-0 rounded border border-white text-white shadow cursor-pointer transition-all",
+            "hover:border-secondary hover:shadow-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:border-white",
+            "data-[state=checked]:border-secondary data-[state=checked]:shadow-secondary data-[state=checked]:hover:border-secondary data-[state=checked]:hover:shadow-secondary",
             className,
         )}
         {...props}
     >
         <CheckboxPrimitive.Indicator className={cn("relative flex items-center justify-center text-current")}>
-            <div className="absolute h-2.5 w-2.5 rounded-[2px] bg-accent" />
+            <div className="absolute h-2.5 w-2.5 rounded-[2px] bg-secondary" />
         </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
 ));
@@ -27,7 +27,7 @@ const CheckboxField = ({ id, children, ...props }) => (
         <Checkbox {...props} id={id} />
         <label
             htmlFor={id}
-            className="text-sm font-light text-foreground leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-light text-white leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
             {children}
         </label>

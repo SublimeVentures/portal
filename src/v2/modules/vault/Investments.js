@@ -17,7 +17,7 @@ const Investments = ({ className }) => {
             <div className="flex justify-between items-center mb-5 sm:mb-4">
                 <Title>My Investments</Title>
                 {investments.length > 0 && (
-                    <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
+                    <Button variant="link" className="ml-auto text-secondary capitalize text-xs md:text-sm p-0" asChild>
                         <Link href="/app/vault/investments">
                             see all <ArrowIcon className="size-2.5 ml-2" />
                         </Link>

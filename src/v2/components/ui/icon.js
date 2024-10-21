@@ -6,9 +6,9 @@ import { cn } from "@/lib/cn";
 const IconVariants = cva("relative flex justify-center items-center rounded-full", {
     variants: {
         color: {
-            default: "text-primary bg-primary/[.1]",
-            accent: "text-accent bg-accent/[.1]",
-            destructive: "text-error bg-error/[.1]",
+            default: "text-primary bg-primary/10",
+            accent: "text-secondary bg-secondary/10",
+            destructive: "text-error bg-error/10",
         },
         size: {
             default: "size-14",

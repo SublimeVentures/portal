@@ -35,12 +35,7 @@ export default function Overview({ className }) {
     const { state, variant } = useOfferStatus(offer);
 
     return (
-        <div
-            className={cn(
-                "p-6 rounded flex flex-col 3xl:flex-row gap-4 md:gap-6 bg-white/[.07] backdrop-blur-3xl",
-                className,
-            )}
-        >
+        <div className={cn("p-6 rounded flex flex-col 3xl:flex-row gap-4 md:gap-6 bg-alt border-alt", className)}>
             <div className="flex gap-6 md:gap-8 flex-1 flex-wrap">
                 <div className="flex grow gap-6 md:gap-8 items-center h-19 md:size-26">
                     <div className="relative size-19 md:size-26">
@@ -64,7 +59,7 @@ export default function Overview({ className }) {
                         ) : (
                             <>
                                 <div className="flex mb-0.5 md:mb-1.5 gap-4">
-                                    <h1 className="text-xl md:text-3xl font-medium">{offer.name}</h1>
+                                    <h1 className="text-xl md:text-3xl font-medium font-heading">{offer.name}</h1>
                                     <Badge variant={variant}>{state}</Badge>
                                 </div>
                                 <p className="text-base md:text-lg font-light">{offer.genre}</p>

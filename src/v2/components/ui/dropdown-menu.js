@@ -53,7 +53,7 @@ export const DropdownMenuItem = React.forwardRef(({ className, inset, ...props }
     <DropdownMenuPrimitive.Item
         ref={ref}
         className={cn(
-            "relative flex cursor-default select-none items-center rounded-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+            "relative flex cursor-default select-none items-center rounded-sm outline-none transition-colors focus:bg-secondary focus:text-secondary-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
             className,
         )}
         {...props}
@@ -66,7 +66,7 @@ export const DropdownMenuLabel = React.forwardRef(({ children, ...props }, forwa
         <DropdownMenuPrimitive.Label
             {...props}
             ref={forwardedRef}
-            className="mb-4 px-8 flex items-baseline justify-between text-foreground text-base leading-none"
+            className="mb-4 px-8 flex items-baseline justify-between text-white text-base leading-none"
         >
             {children}
         </DropdownMenuPrimitive.Label>
@@ -89,17 +89,17 @@ export const DropdownMenuCheckboxItem = React.forwardRef(({ className, children,
             {...props}
             ref={forwardedRef}
             className={cn(
-                "group mx-2 px-6 py-2 relative flex items-center gap-6 text-foreground bg-transparent rounded hover:bg-foreground/[.1] cursor-pointer select-none outline-none transition-colors",
+                "group mx-2 px-6 py-2 relative flex items-center gap-6 text-white bg-transparent rounded hover:bg-white/10 cursor-pointer select-none outline-none transition-colors",
                 className,
             )}
         >
             <div
                 className={cn(
-                    "aspect-square h-4 w-4 shrink-0 rounded text-foreground border shadow cursor-pointer transition-all group-hover:border-accent group-hover:shadow-accent group-data-[state=checked]:border-accent group-data-[state=checked]:shadow-accent",
+                    "aspect-square h-4 w-4 shrink-0 rounded text-white border shadow cursor-pointer transition-all group-hover:border-secondary group-hover:shadow-secondary group-data-[state=checked]:border-secondary group-data-[state=checked]:shadow-secondary",
                 )}
             >
                 <DropdownMenuPrimitive.ItemIndicator className="w-full h-full flex items-center justify-center">
-                    <div className="h-2.5 w-2.5 rounded-[2px] bg-accent" />
+                    <div className="h-2.5 w-2.5 rounded-[2px] bg-secondary" />
                 </DropdownMenuPrimitive.ItemIndicator>
             </div>
             {children}
@@ -113,18 +113,18 @@ export const DropdownMenuRadioItem = React.forwardRef(({ className, children, ..
         <DropdownMenuPrimitive.RadioItem
             ref={ref}
             className={cn(
-                "group mx-2 px-6 py-2 relative flex items-center gap-6 text-foreground bg-transparent rounded hover:bg-foreground/[.1] cursor-pointer select-none outline-none transition-colors",
+                "group mx-2 px-6 py-2 relative flex items-center gap-6 text-white bg-transparent rounded hover:bg-white/10 cursor-pointer select-none outline-none transition-colors",
                 className,
             )}
             {...props}
         >
             <div
                 className={cn(
-                    "aspect-square h-4 w-4 shrink-0 rounded-full text-foreground border shadow cursor-pointer transition-all group-hover:border-accent group-hover:shadow-accent group-data-[state=checked]:border-accent group-data-[state=checked]:shadow-accent",
+                    "aspect-square h-4 w-4 shrink-0 rounded-full text-white border shadow cursor-pointer transition-all group-hover:border-secondary group-hover:shadow-secondary group-data-[state=checked]:border-secondary group-data-[state=checked]:shadow-secondary",
                 )}
             >
                 <DropdownMenuPrimitive.ItemIndicator className="w-full h-full flex items-center justify-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-accent" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-secondary" />
                 </DropdownMenuPrimitive.ItemIndicator>
             </div>
 

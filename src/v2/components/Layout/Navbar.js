@@ -42,7 +42,7 @@ export default function Navbar() {
                                     variant={isSelected ? "gradient" : "transparent"}
                                 />
                                 <span
-                                    className={cn("mt-1 text-[12px] text-foreground font-medium text-center", {
+                                    className={cn("mt-1 text-[12px] text-white font-medium text-center", {
                                         "text-primary": isSelected,
                                     })}
                                 >

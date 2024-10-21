@@ -24,8 +24,8 @@ const TabsTrigger = forwardRef(({ className, ...props }, ref) => (
         className={cn(
             "py-2 px-8 inline-flex items-center justify-center border text-sm font-light text-white rounded transition-hover whitespace-nowrap cursor-pointer",
             "leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-            "bg-transparent border border-primary/[.5] hover:border-primary",
-            "data-[state=active]:bg-primary-800 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:border-primary-800",
+            "bg-transparent border border-primary/50 hover:border-primary",
+            "data-[state=active]:bg-primary-800 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:border-primary-800",
             className,
         )}
         {...props}

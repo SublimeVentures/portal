@@ -1,29 +1,29 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import DetailsView from "./DetailsView";
+import TimelineView from "./TimelineView";
 import { Button } from "@/v2/components/ui/button";
 import { Avatar } from "@/v2/components/ui/avatar";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetBody,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetBody,
+    SheetTitle,
+    SheetTrigger,
 } from "@/v2/components/ui/sheet";
 
-import DetailsView from "./DetailsView";
-import TimelineView from "./TimelineView";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import GoBackIcon from "@/v2/assets/svg/go-back.svg";
 
-export const views = Object.freeze({ details: 'details', timeline: 'timeline' })
+export const views = Object.freeze({ details: "details", timeline: "timeline" });
 
 const variants = {
-    initial: direction => ({
+    initial: (direction) => ({
         x: direction === views.details ? 250 : -250,
         opacity: 0,
     }),
@@ -32,7 +32,7 @@ const variants = {
         opacity: 1,
         transition: { duration: 0.2 },
     },
-    exit: direction => ({
+    exit: (direction) => ({
         x: direction === views.details ? -250 : 250,
         opacity: 0,
         transition: { duration: 0.2 },
@@ -85,23 +85,25 @@ const TokenDetails = () => {
                             variants={variants}
                             className="absolute w-full"
                         >
-                            <div className="mx-10 my-4 sm:px-10">
-                                {renderView(currentView)}
-                            </div>
+                            <div className="mx-10 my-4 sm:px-10">{renderView(currentView)}</div>
                         </motion.div>
                     </AnimatePresence>
                 </SheetBody>
 
                 <SheetFooter>
                     <SheetClose asChild>
-                        <Button variant="accent" type="submit">Claim</Button>
+                        <Button variant="secondary" type="submit">
+                            Claim
+                        </Button>
                     </SheetClose>
-                    
-                    <p className="text-xxs text-foreground/[.5]">You will automatically receive GMRX token after settlement.</p>
-                </SheetFooter> 
+
+                    <p className="text-xxs text-white/50">
+                        You will automatically receive GMRX token after settlement.
+                    </p>
+                </SheetFooter>
             </SheetContent>
         </Sheet>
-  );
+    );
 };
 
 export default TokenDetails;

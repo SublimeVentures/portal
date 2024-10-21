@@ -11,7 +11,7 @@ const Search = forwardRef(
     ({ className, placehoder = "Search", btnText = "Search", isActive = false, ...props }, ref) => {
         return (
             <div className="relative">
-                <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/[.5]" />
+                <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
                 <Input type="search" placeholder={placehoder} className="pl-9" {...props} />
 
                 <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -20,7 +20,7 @@ const Search = forwardRef(
                             name="Exit"
                             icon={IoClose}
                             size={8}
-                            className={cn({ "bg-foreground/[.1] hover:bg-error-500": props["aria-invalid"] })}
+                            className={cn({ "bg-white/10 hover:bg-error-500": props["aria-invalid"] })}
                         />
                     ) : (
                         <Button type="submit" variant={props["aria-invalid"] ? "destructive" : "gradient"}>

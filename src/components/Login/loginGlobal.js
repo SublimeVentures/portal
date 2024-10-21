@@ -164,7 +164,7 @@ export default function LoginGlobal({ ssrData }) {
                                     isWide={true}
                                     zoom={1.1}
                                     size={
-                                        "text-sm sm w-full border border-white/25 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/[0.1] pointer-events-none"
+                                        "text-sm sm w-full border border-white/25 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/10 pointer-events-none"
                                     }
                                 />
                             </div>
@@ -175,7 +175,7 @@ export default function LoginGlobal({ ssrData }) {
                                     isWide={true}
                                     zoom={1.1}
                                     size={
-                                        "text-sm sm w-full border border-white/35 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/[0.1] pointer-events-none"
+                                        "text-sm sm w-full border border-white/35 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/10 pointer-events-none"
                                     }
                                 />
                             </div>

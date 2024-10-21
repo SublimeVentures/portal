@@ -26,19 +26,19 @@ export default function Investment({ session, className }) {
     const isUpgradeAvailable = allUsedUpgradePhases.includes(phaseCurrent.phase);
 
     return (
-        <div className={cn("p-4 flex flex-col space-y-4 rounded bg-white/[.07] backdrop-blur-3xl", className)}>
+        <div className={cn("p-4 flex flex-col space-y-4 rounded bg-alt border-alt", className)}>
             <div className="flex flex-wrap items-center justify-between gap-4 xl:flex-nowrap">
                 <div className="flex gap-2 items-center">
-                    <h2 className="text-lg font-semibold select-none">Invest</h2>
-                    <Tooltip>
+                    <h2 className="text-xl md:text-2xl font-medium font-heading">Invest</h2>
+                    {/* <Tooltip>
                         <TooltipTrigger
-                            className="size-4 rounded-full bg-white/[.14] text-2xs flex items-center justify-center cursor-help hover:bg-white/[.2] transition-colors duration-200"
+                            className="size-4 rounded-full bg-white/15 text-2xs flex items-center justify-center cursor-help hover:bg-white/20 transition-colors duration-200"
                             asChild
                         >
                             <span>?</span>
                         </TooltipTrigger>
                         <TooltipContent>Something to show</TooltipContent>
-                    </Tooltip>
+                    </Tooltip> */}
                 </div>
 
                 <div className="ml-auto flex items-center gap-4 xl:order-3 xl:ml-0">
@@ -55,7 +55,7 @@ export default function Investment({ session, className }) {
                 <div className="h-96">
                     <EmptyState
                         heading="Investment closed"
-                        description="While this investment is no longer active, you can still explore other options. Check out our OTC page for secondary market opportunities or visit our Opportunity Page for the latest investment opportunities. Stay ahead of the game and discover new ways to grow your portfolio!"
+                        description="Although this investment is no longer available, you can explore other opportunities. Head over to our OTC page for secondary market options or visit our Opportunity page to find the latest investments."
                         cta={{ text: "Opportunities", href: routes.Opportunities, variant: "outline" }}
                         secondaryCta={{
                             text: "OTC Market",

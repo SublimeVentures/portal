@@ -106,8 +106,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                 <Success.Kicker>Success!</Success.Kicker>
                 <Success.Title>Thank you for purchasing</Success.Title>
                 <Success.Description>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua.
+                    You can use this {order.name} upgrade on future investment opportunities.
                 </Success.Description>
                 <Success.Article>
                     <div className="flex items-center gap-5 grow w-full md:w-auto">
@@ -153,7 +152,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                                     <span className="flex items-center gap-3">
                                         <UpgradeSymbol
                                             className={cn({
-                                                "bg-accent": order.id === 1,
+                                                "bg-secondary": order.id === 1,
                                                 "bg-primary": order.id === 2,
                                             })}
                                         />

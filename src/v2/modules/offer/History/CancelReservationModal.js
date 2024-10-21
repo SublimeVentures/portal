@@ -28,7 +28,7 @@ import CrossIcon from "@/v2/assets/svg/cross.svg";
 // Code from Mystery Box
 function DefinitionTerm({ children, className }) {
     return (
-        <dt className={cn("text-xs text-foreground/70 font-light self-end md:leading-7 3xl:text-sm", className)}>
+        <dt className={cn("text-xs text-white/70 font-light self-end md:leading-7 3xl:text-sm", className)}>
             {children}
         </dt>
     );
@@ -36,7 +36,7 @@ function DefinitionTerm({ children, className }) {
 
 function DefinitionDescription({ children, className }) {
     return (
-        <dd className={cn("text-sm text-foreground font-medium text-nowrap leading-7 3xl:text-base", className)}>
+        <dd className={cn("text-sm text-white font-medium text-nowrap leading-7 3xl:text-base", className)}>
             {children}
         </dd>
     );
@@ -106,7 +106,7 @@ export default function CancelReservationModal({ participantId, amount, date, is
                     <DialogDescription>Are you sure you want to cancel following reservation?</DialogDescription>
                 </DialogHeader>
 
-                <div className="my-2 px-4 py-4 flex flex-col gap-x-4 bg-white/[.04] md:px-8 md:flex-row">
+                <div className="my-2 px-4 py-4 flex flex-col gap-x-4 bg-white/5 md:px-8 md:flex-row">
                     <DefinitionList className="grid-cols-[45%,1fr] grid-rows-6 w-full md:grid-cols-[72px,auto,auto,auto,auto] md:grid-rows-1">
                         <Definition term="Logo" termClassName="sr-only" descClassName="row-span-2">
                             <div className="h-full flex items-center justify-center w-12">
@@ -135,7 +135,7 @@ export default function CancelReservationModal({ participantId, amount, date, is
                 </div>
 
                 <DialogFooter className="md:flex-row items-center justify-between">
-                    <p className="order-2 text-xs text-foreground/50 md:order-1 md:text-sm">
+                    <p className="order-2 text-xs text-white/50 md:order-1 md:text-sm">
                         Investment amount will be send back to your wallet within 3 days.
                     </p>
                     <div className="w-full order-1 flex flex-col-reverse gap-2 md:w-max md:flex-row md:items-center md:order-2">

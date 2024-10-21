@@ -8,7 +8,7 @@ const { externalLinks } = getTenantConfig();
 
 export default function Investors() {
     return (
-        <div className="calloutGradient flex flex-col justify-center text-white ">
+        <div className="bg-black flex flex-col justify-center text-white ">
             <div className="px-10 py-25  flex flex-col gap-10 flex-1 mx-auto xl:max-w-[1400px]">
                 <div className="flex flex-col items-center mx-auto gap-10 md:flex-row">
                     <a href={externalLinks.DISCORD} target="_blank" rel="noreferrer">
@@ -18,7 +18,9 @@ export default function Investors() {
                             isPrimary={false}
                             isWide={true}
                             zoom={1.1}
-                            size={"text-sm sm"}
+                            size={
+                                "text-sm border border-white rounded-full text-white h-16 px-14 uppercase tracking-[0.5rem] font-light shadow shadow-white/25"
+                            }
                             icon={<DiscordIcon className={ButtonIconSize.hero} />}
                         />
                     </a>
@@ -32,7 +34,9 @@ export default function Investors() {
                             isPrimary={false}
                             isWide={true}
                             zoom={1.1}
-                            size={"text-sm sm"}
+                            size={
+                                "text-sm border border-white rounded-full text-white h-16 px-14 uppercase tracking-[0.5rem] font-light shadow shadow-white/25"
+                            }
                             icon={<TwitterIcon className={ButtonIconSize.hero} />}
                         />
                     </a>

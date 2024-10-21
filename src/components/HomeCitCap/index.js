@@ -10,7 +10,7 @@ export default function HomeCitCap({ account }) {
         <ErrorProvider>
             <Hero account={account} />
             <Highlights />
-            <Investors />
+            <Investors className="bg-black" />
             <About />
             <Callout />
         </ErrorProvider>

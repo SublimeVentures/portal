@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import debounce from "lodash.debounce";
 import { Content as SheetContent, Close as SheetClose } from "@radix-ui/react-dialog";
-
+import Logo from "@tenant/components/Logo";
 import { layoutStyles } from "./AppLayout";
 import { Sheet, SheetPortal, SheetTrigger } from "@/v2/components/ui/sheet";
 import NotificationMenu from "@/v2/components/Notification/NotificationMenu";
@@ -15,18 +14,12 @@ import { IconButton } from "@/v2/components/ui/icon-button";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { shortenAddress } from "@/v2/lib/helpers";
 import { cn } from "@/lib/cn";
-import { useTenantSpecificData } from "@/v2/helpers/tenant";
 import { useEscapeKey } from "@/v2/hooks";
 import tailwindConfig from "@/../tailwind/config.core";
 import MenuIcon from "@/v2/assets/svg/menu.svg";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
 import { mainMenu, profileMenu, socialMenu } from "@/v2/menus";
 import PAGE from "@/routes";
-
-const renderLogo = (componentName) => {
-    const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
-    return <TenantLogo />;
-};
 
 export default function MobileMenu({ isBlockedAlert, session }) {
     const router = useRouter();
@@ -35,7 +28,6 @@ export default function MobileMenu({ isBlockedAlert, session }) {
         networkToggle,
         account: { address },
     } = useEnvironmentContext();
-    const { components } = useTenantSpecificData();
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -77,7 +69,7 @@ export default function MobileMenu({ isBlockedAlert, session }) {
                         <li
                             key={name}
                             className={cn(
-                                "text-xl leading-8 font-normal text-foreground hover:bg-primary-600 rounded cursor-pointer",
+                                "text-xl leading-8 font-normal text-white hover:bg-primary-600 rounded cursor-pointer",
                             )}
                         >
                             <Link href={path} className="block px-8">
@@ -109,7 +101,7 @@ export default function MobileMenu({ isBlockedAlert, session }) {
                     <div className="p-4 w-full flex items-center justify-between">
                         <Link href={PAGE.App}>
                             <div className={cn("flex items-center", { "w-0 overflow-hidden": networkToggle })}>
-                                {renderLogo(components.logo)}
+                                <Logo />
                             </div>
                         </Link>
                         <div className="flex items-center gap-4">
@@ -160,7 +152,7 @@ export default function MobileMenu({ isBlockedAlert, session }) {
                                 <Button className="w-full" variant="secondary" onClick={handleLogout}>
                                     Logout
                                 </Button>
-                                <p className="text-sm font-light text-foreground">{shortenAddress(address ?? "")}</p>
+                                <p className="text-sm font-light text-white">{shortenAddress(address ?? "")}</p>
                             </div>
                         </div>
                     </div>

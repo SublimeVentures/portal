@@ -8,7 +8,7 @@ export default function Title({ children, subtitle, className }) {
                 className,
             )}
         >
-            <h2 className={cn("text-nowrap text-sm lg:text-lg text-white font-normal")}>{children}</h2>
+            <h2 className={cn("text-nowrap text-sm lg:text-lg text-white font-normal font-heading")}>{children}</h2>
             {subtitle && <p className="text-xs lg:text-sm font-light text-white/50">{subtitle}</p>}
         </div>
     );

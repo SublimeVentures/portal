@@ -22,7 +22,7 @@ SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 // @Todo - Set the header height in the calc function. The mobile header hasn't been created yet, so I added 100px
 const sheetVariants = cva(
-    "bg-sheet-gradient fixed z-50 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 w-full h-dvh md:w-[595px]",
+    "bg-base !fixed !z-50 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 w-full h-dvh md:w-[595px]",
     {
         variants: {
             side: {
@@ -54,7 +54,7 @@ SheetContent.displayName = SheetPrimitive.Content.displayName;
 const SheetHeader = ({ className, ...props }) => (
     <div className="gradient-border-sheet-header before:rounded-l-4xl">
         <div className="bg-sheet-pattern bg-cover bg-center bg-no-repeat sm:rounded-l-4xl sm:mt-0.5 sm:ml-0.5">
-            <div className="bg-primary-950/[.6] sm:rounded-l-4xl">
+            <div className="bg-primary-950/60 sm:rounded-l-4xl">
                 <div
                     className={cn(
                         "min-h-44 relative pb-7 pt-11 px-9 flex flex-col items-center justify-center text-center",
@@ -84,7 +84,7 @@ SheetBody.displayName = "SheetBody";
 const SheetTitle = forwardRef(({ className, ...props }, ref) => (
     <SheetPrimitive.Title
         ref={ref}
-        className={cn("text-2xl md:text-3xl font-medium text-foreground", className)}
+        className={cn("text-2xl md:text-3xl font-medium text-white font-heading", className)}
         {...props}
     />
 ));
@@ -92,7 +92,7 @@ const SheetTitle = forwardRef(({ className, ...props }, ref) => (
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
 const SheetDescription = forwardRef(({ className, ...props }, ref) => (
-    <SheetPrimitive.Description ref={ref} className={cn("text-lg font-light text-foreground", className)} {...props} />
+    <SheetPrimitive.Description ref={ref} className={cn("text-lg font-light text-white", className)} {...props} />
 ));
 
 SheetDescription.displayName = SheetPrimitive.Description.displayName;

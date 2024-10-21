@@ -23,13 +23,15 @@ export const stepLiquidity = (state, data) => {
         } else if (data.isError) {
             result = handleError({
                 content: "Error occurred",
-                text: data?.error?.shortMessage ?? "An error occurred while checking the liquidity. Please try again.",
+                text:
+                    data?.error?.shortMessage ??
+                    "An error occurred while checking the availability of funds. Please try again.",
                 action: data.refetch,
             });
         } else if (data.isFetched && data.isSuccess && !data.liquidity_isFinished) {
             result = handleError({
                 content: `Insufficient funds`,
-                text: `Your current balance is too low to complete this transaction. Your wallet doesn't hold ${data.params.liquidity?.toLocaleString()} ${data.token.symbol}. Please add more funds.`,
+                text: `Your current balance is too low. Your wallet doesn't hold ${data.params.liquidity?.toLocaleString()} ${data.token.symbol}. Please add more funds and try again.`,
                 action: data.refetch,
             });
         }

@@ -52,11 +52,9 @@ export default function Staking({ session }) {
     const staking = useStaking({ tenantId, session, account });
 
     return (
-        <Card variant="none" className="w-full flex flex-col bg-settings-gradient select-none cursor-auto 2xl:flex-row">
+        <Card variant="none" className="w-full flex flex-col bg-base select-none cursor-auto 2xl:flex-row border-alt">
             <div className="mb-4 flex items-center gap-4 2xl:hidden">
-                <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-foreground">
-                    Staking
-                </CardTitle>
+                <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-white">Staking</CardTitle>
                 {isNew ? <Badge variant="warning">New</Badge> : null}
             </div>
 
@@ -82,7 +80,9 @@ export default function Staking({ session }) {
 
                         <div>
                             <div className="hidden items-center gap-4 2xl:flex mb-4">
-                                <CardTitle className="my-1 text-2xl font-medium text-foreground">Staking</CardTitle>
+                                <CardTitle className="my-1 text-2xl font-medium text-white font-heading">
+                                    Staking
+                                </CardTitle>
                                 {isNew ? <Badge variant="warning">New</Badge> : null}
                             </div>
 
@@ -92,7 +92,7 @@ export default function Staking({ session }) {
                                         <DefinitionItem
                                             className="font-bold text-sm"
                                             term={typeof field.term === "function" ? field.term(session) : field.term}
-                                            ddClassName="text-foreground text-sm font-light"
+                                            ddClassName="text-white text-sm font-light"
                                         >
                                             {typeof field.value === "function" ? field.value(session) : field.value}
                                         </DefinitionItem>
@@ -109,7 +109,7 @@ export default function Staking({ session }) {
                     {stakingEnabled ? (
                         <StakingDetails session={session} staking={staking} />
                     ) : (
-                        <div className="mb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-foreground font-medium bg-foreground/[.02] text-center rounded">
+                        <div className="mb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-white font-medium bg-white/[.02] text-center rounded">
                             Staking available soon
                         </div>
                     )}

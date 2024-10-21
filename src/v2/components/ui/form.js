@@ -58,7 +58,7 @@ const FormLabel = forwardRef(({ className, ...props }, ref) => {
     return (
         <Label
             ref={ref}
-            className={cn("text-md font-medium text-foreground/[.9]", error && "text-error", className)}
+            className={cn("text-md font-medium text-white/90", error && "text-error", className)}
             htmlFor={formItemId}
             {...props}
         />
@@ -87,12 +87,7 @@ const FormDescription = forwardRef(({ className, ...props }, ref) => {
     const { formDescriptionId } = useFormField();
 
     return (
-        <p
-            ref={ref}
-            id={formDescriptionId}
-            className={cn("text-[0.8rem] text-muted-foreground", className)}
-            {...props}
-        />
+        <p ref={ref} id={formDescriptionId} className={cn("text-[0.8rem] text-muted-white", className)} {...props} />
     );
 });
 

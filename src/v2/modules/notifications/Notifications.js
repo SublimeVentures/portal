@@ -19,7 +19,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
             {data.length > 0 || isFetching ? (
                 <Card
                     variant="none"
-                    className="flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12 p-0 cursor-auto"
+                    className="flex flex-col h-full overflow-hidden bg-base lg:mb-6 3xl:mb-12 p-0 cursor-auto border-alt"
                 >
                     <div className="py-4 flex flex-col h-full overflow-y-auto pr-4">
                         {isFetching ? (
@@ -57,7 +57,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
                         No notifications found
                     </CardTitle>
                     <CardDescription className="max-w-2xl text-lg md:text-3xl font-semibold text-center">
-                        Explore elite investment avenues curated for the astute investor
+                        Discover top-tier investment options tailored for the savvy investor
                     </CardDescription>
                     <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
                         <Button className="w-full collap:w-auto" variant="outline" asChild>

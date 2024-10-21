@@ -40,10 +40,10 @@ export default function WalletSettings({ session }) {
     const isMaxWallets = walletsArray.length >= maxWallets;
 
     return (
-        <Card variant="none" className="flex flex-col h-full bg-settings-gradient overflow-hidden">
+        <Card variant="none" className="flex flex-col h-full bg-base overflow-hidden border-alt">
             <div className="p-4 flex justify-between items-center select-none">
                 <div>
-                    <CardTitle className="text-lg font-medium">Wallet Connected</CardTitle>
+                    <CardTitle className="text-lg font-medium font-heading">Wallet Connected</CardTitle>
                     <CardDescription className="text-md">Payouts will be sent to this wallet</CardDescription>
                 </div>
 
@@ -69,11 +69,11 @@ export default function WalletSettings({ session }) {
                                   return (
                                       <li
                                           key={wallet.wallet}
-                                          className="mb-4 py-4 px-8 flex justify-between items-center bg-foreground/[.02] rounded"
+                                          className="mb-4 py-4 px-8 flex justify-between items-center item rounded"
                                       >
                                           <div className="flex flex-col gap-4">
                                               <div className="flex items-center gap-2">
-                                                  <h4 className="text-foreground">{address}</h4>
+                                                  <h4 className="text-white">{address}</h4>
                                                   {isAirdrop && (
                                                       <Badge variant="warning">{AIRDROP_NETWORKS[chainId]}</Badge>
                                                   )}

@@ -83,7 +83,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
 
     return (
         <div>
-            <div className="flex flex-col rounded gap-2 2xl:p-2 2xl:flex-row 2xl:bg-foreground/[.03]">
+            <div className="flex flex-col rounded gap-2 2xl:p-2 2xl:flex-row 2xl:bg-white/5">
                 <FormField
                     name="investmentAmount"
                     control={control}
@@ -96,7 +96,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                                     onChange={(evt) => handleChange(evt, field.onChange)}
                                     value={formatNumber(amount || "")}
                                     aria-invalid={errors.investmentAmount ? "true" : "false"}
-                                    className="w-full bg-foreground/[.06] text-sm 2xl:text-base"
+                                    className="w-full bg-white/5 text-sm 2xl:text-base"
                                 />
                             </FormControl>
                             <FormLabel
@@ -112,21 +112,21 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                 <div className="w-full flex items-center gap-2 2xl:w-max 3xl:gap-4">
                     <Button
                         type="button"
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-white/5 text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetMin}
                     >
                         Min.
                     </Button>
                     <Button
                         type="button"
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-white/5 text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetHalf}
                     >
                         50%
                     </Button>
                     <Button
                         type="button"
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-white/5 text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetMax}
                     >
                         Max.
@@ -141,7 +141,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                             <FormControl>
                                 <Select {...field} onValueChange={(val) => handleSelectCurrency(val, field.onChange)}>
                                     <SelectTrigger
-                                        className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52"
+                                        className="w-full h-full bg-white/5 2xl:w-46 3xl:w-52"
                                         aria-label="Select currency"
                                     >
                                         <SelectValue />
