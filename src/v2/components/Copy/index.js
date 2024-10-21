@@ -19,7 +19,7 @@ export default function Copy({ value, text }) {
 
     return (
         <CopyToClipboard text={value} onCopy={handleCopy}>
-            <span className="text-sm flex items-center gap-3">
+            <span className="text-xs flex items-center gap-3 md:text-sm">
                 <span>{text}</span>{" "}
                 {showCopiedMessage ? <CheckIcon className="w-6 h-6" /> : <CopyIcon className="w-6 h-6" />}
             </span>

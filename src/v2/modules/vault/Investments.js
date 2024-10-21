@@ -11,20 +11,21 @@ export const INVESTMENTS_QUERY = {
 };
 
 const Investments = ({ className }) => {
-    const { data: vaults = [], isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
-
+    const { data: { rows: investments } = { rows: [] }, isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
     return (
         <div className={cn("flex flex-col", className)}>
             <div className="flex justify-between items-center mb-5 sm:mb-4">
                 <Title>My Investments</Title>
-                <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
-                    <Link href="/app/vault/investments">
-                        see all <ArrowIcon className="size-2.5 ml-2" />
-                    </Link>
-                </Button>
+                {investments.length > 0 && (
+                    <Button variant="link" className="ml-auto text-accent capitalize text-xs md:text-sm p-0" asChild>
+                        <Link href="/app/vault/investments">
+                            see all <ArrowIcon className="size-2.5 ml-2" />
+                        </Link>
+                    </Button>
+                )}
             </div>
 
-            {vaults.length <= 0 && !isLoading ? (
+            {investments.length <= 0 && !isLoading ? (
                 <EmptyInvestments />
             ) : (
                 <div className="relative md:grow md:flex md:flex-col">
@@ -42,10 +43,10 @@ const Investments = ({ className }) => {
                                 </li>
                             </>
                         ) : (
-                            vaults.map((item) => (
+                            investments.map((item) => (
                                 <li
                                     key={item.id}
-                                    className="h-full snap-start xl:[&:nth-last-child(2)]:block 3xl:last:block"
+                                    className="h-full snap-start md:[&:nth-last-child(2)]:hidden sm:last:hidden xl:[&:nth-last-child(2)]:block 3xl:last:block"
                                 >
                                     <InvestmentCard details={item} isLoading={isLoading} />
                                 </li>

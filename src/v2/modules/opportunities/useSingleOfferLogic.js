@@ -17,7 +17,7 @@ export const useOfferStatus = (offer) => {
 };
 
 export const offerProgressQueryOptions = (id) => ({
-    queryKey: offersKeys.queryOfferProgress(id),
+    queryKey: offersKeys.offerProgress(id),
     queryFn: () => fetchOfferProgress(id),
 });
 

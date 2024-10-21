@@ -36,39 +36,19 @@ const defaultState = Object.freeze({
 });
 
 export const getTextContent = (steps) => {
-    const state = { content: "", text: "" };
+    const statePriority = [STEPS_STATE.ERROR, STEPS_STATE.PROCESSING, STEPS_STATE.PENDING, STEPS_STATE.SUCCESS];
+    for (const priority of statePriority) {
+        for (const stepKey in steps) {
+            if (steps[stepKey] !== undefined && steps[stepKey].state === priority) {
+                const { content, text } = steps[stepKey];
 
-    for (const stepKey in steps) {
-        if (Object.prototype.hasOwnProperty.call(steps, stepKey)) {
-            const step = steps[stepKey];
+                if (!content && !text) {
+                    continue;
+                }
 
-            if (step.state === STEPS_STATE.ERROR) {
-                return {
-                    content: step.content,
-                    text: step.text,
-                };
-            }
-
-            if (step.state === STEPS_STATE.SUCCESS) {
-                state.content = step.content;
-                state.text = step.text;
-            }
-
-            if (step.state === STEPS_STATE.PROCESSING) {
-                state.content = step.content;
-                state.text = step.text;
-            }
-
-            if (step.state === STEPS_STATE.PENDING) {
-                state.content = step.content;
-                state.text = step.text;
+                return { content, text };
             }
         }
     }
-
-    if (!state.content && !state.text) {
-        return defaultState;
-    }
-
-    return state;
+    return defaultState;
 };

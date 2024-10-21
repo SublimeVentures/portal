@@ -4,14 +4,14 @@ import Wallet from "./Wallet";
 
 export default function General({ session, wallets }) {
     return (
-        <div className="flex flex-col gap-4 2xl:gap-x-8 2xl:gap-y-0 2xl:grid 2xl:grid-cols-3 2xl:h-full">
-            <div className="2xl:row-span-12">
+        <div className="mb-4 md:mb-12 flex flex-col gap-4 xl:mb-0 xl:h-full xl:overflow-hidden xl:grid xl:grid-cols-[440px_1fr] xl:grid-rows-1 xl:gap-8 3xl:grid-cols-[520px_1fr]">
+            <div className="order-2 flex flex-col h-full overflow-hidden xl:order-1 xl:shrink-0">
                 <Notifications />
             </div>
-            <div className="2xl:row-span-1 2xl:col-span-2">
-                <Staking session={session} />
-            </div>
-            <div className="2xl:row-span-11 2xl:col-span-2">
+            <div className="order-1 flex flex-col gap-4 xl:pb-0 xl:order-2 xl:gap-8">
+                <div className="flex flex-col shrink-0 overflow-hidden">
+                    <Staking session={session} />
+                </div>
                 <Wallet wallets={wallets} />
             </div>
         </div>

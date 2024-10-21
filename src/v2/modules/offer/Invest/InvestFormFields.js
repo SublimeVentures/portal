@@ -112,21 +112,21 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                 <div className="w-full flex items-center gap-2 2xl:w-max 3xl:gap-4">
                     <Button
                         type="button"
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm 2xl:text-base 2xl:px-4 3xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetMin}
                     >
                         Min.
                     </Button>
                     <Button
                         type="button"
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm 2xl:text-base 2xl:px-4 3xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetHalf}
                     >
                         50%
                     </Button>
                     <Button
                         type="button"
-                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm 2xl:text-base 2xl:px-4 3xl:px-8"
+                        className="px-1 h-full w-full text-primary bg-foreground/[.06] text-sm border-none 2xl:text-base 2xl:px-4 3xl:px-8"
                         onClick={handleSetMax}
                     >
                         Max.
@@ -140,7 +140,10 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
                         <FormItem className="mt-8 relative 2xl:mt-0">
                             <FormControl>
                                 <Select {...field} onValueChange={(val) => handleSelectCurrency(val, field.onChange)}>
-                                    <SelectTrigger className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52">
+                                    <SelectTrigger
+                                        className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52"
+                                        aria-label="Select currency"
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>

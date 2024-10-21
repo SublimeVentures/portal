@@ -1,16 +1,16 @@
 import { dehydrate, useQuery } from "@tanstack/react-query";
+
 import { authTokenName } from "@/lib/authHelpers";
 import { processServerSideData } from "@/lib/serverSideHelpers";
 import { queryClient } from "@/lib/queryCache";
-import { cacheOptions } from "@/v2/helpers/query";
 import { fetchOfferList, fetchOfferStats } from "@/fetchers/offer.fetcher";
-import { AppLayout, Metadata } from "@/v2/components/Layout";
+import { cacheOptions } from "@/v2/helpers/query";
 import Opportunities from "@/v2/modules/opportunities/Opportunities";
 import useOffersInfiniteQuery from "@/v2/modules/opportunities/useOffersInfiniteQuery";
+import { AppLayout, Metadata } from "@/v2/components/Layout";
 import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
 import routes from "@/routes";
-
 import { offersKeys } from "@/v2/constants";
 
 export default function AppOpportunities({ session }) {
@@ -37,7 +37,7 @@ export default function AppOpportunities({ session }) {
         isLoading: isStatsLoading,
         isError: isStatsError,
     } = useQuery({
-        queryKey: offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }),
+        queryKey: offersKeys.offersStats({ TENANT_ID, PARTNER_ID }),
         queryFn: fetchOfferStats,
         ...cacheOptions,
     });
@@ -85,11 +85,11 @@ export const getServerSideProps = async ({ req, res }) => {
             },
         };
         await queryClient.prefetchQuery({
-            queryKey: offersKeys.queryOffersVc({ TENANT_ID, PARTNER_ID }),
+            queryKey: offersKeys.offersVc({ TENANT_ID, PARTNER_ID }),
             queryFn: () => fetchOfferList(null, config),
         });
         await queryClient.prefetchQuery({
-            queryKey: offersKeys.queryOffersStats({ TENANT_ID, PARTNER_ID }),
+            queryKey: offersKeys.offersStats({ TENANT_ID, PARTNER_ID }),
             queryFn: () => fetchOfferStats(null, config),
         });
 

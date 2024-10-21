@@ -1,19 +1,19 @@
-import { useAccount, useSwitchChain } from "wagmi";
+import { useSwitchChain } from "wagmi";
 // eslint-disable-next-line import/namespace
 import * as chains from "wagmi/chains";
 import { useMemo } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { ChainIcon, ChainButton, ChainGroup } from "@/v2/components/App/Vault/ChainSwitch";
+import MutedText from "@/v2/components/ui/muted-text";
 
 const ChainListModal = () => {
-    const { isConnected, chainId } = useAccount();
     const { network } = useEnvironmentContext();
     const { switchChain, error } = useSwitchChain();
 
-    const { chains: current = [], isSupported, isLoading } = network;
+    const { chains: current = [], chainId, isSupported = true, isLoading = true } = network;
     const chain = useMemo(() => Object.values(chains).find(({ id }) => id === chainId), [chainId]);
-    const isOpen = !isSupported && isConnected && !isLoading;
+    const isOpen = !isLoading && !isSupported;
 
     return (
         <Dialog open={isOpen}>
@@ -42,9 +42,7 @@ const ChainListModal = () => {
                     </div>
                     {error && <p className="text-error-500 text-center w-full mt-3">{error?.shortMessage}</p>}
                 </div>
-                <p className="text-xxs text-white/[.7] text-center">
-                    Current selection: {chain?.name || "Unknown chain"}
-                </p>
+                <MutedText>Current selection: {chain?.name || "Unknown chain"}</MutedText>
             </DialogContent>
         </Dialog>
     );

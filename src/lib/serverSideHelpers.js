@@ -17,6 +17,7 @@ async function handleCustomLogic(account, accessToken, customLogicCallback) {
 
 async function processServerSideData(req, res, route, customLogicCallback) {
     const session = await verifyID(req);
+    console.log("INFO - session:", session);
     let accessToken = req.cookies[authTokenName];
     let accountData = session.user;
     if (session.auth) {

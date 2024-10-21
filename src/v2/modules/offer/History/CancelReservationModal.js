@@ -8,9 +8,10 @@ import { queryClient } from "@/lib/queryCache";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { cn } from "@/lib/cn";
 import { shortenAddress } from "@/v2/lib/helpers";
+import useImage from "@/v2/hooks/useImage";
 import { cancelOfferParticipant } from "@/fetchers/offer.fetcher";
 import { formatCurrency } from "@/v2/helpers/formatters";
-import useImage from "@/v2/hooks/useImage";
+import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 import {
     Dialog,
     DialogTrigger,
@@ -74,8 +75,9 @@ export default function CancelReservationModal({ participantId, amount, date, is
 
             if (res?.ok) {
                 await Promise.all([
-                    queryClient.invalidateQueries(["offerParticipants"]),
-                    queryClient.invalidateQueries(["offerDetails"]),
+                    queryClient.invalidateQueries(offersKeys.offerParticipants()),
+                    queryClient.invalidateQueries(offersKeys.offerDetails()),
+                    queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
                 ]);
             }
         } catch (err) {

@@ -19,7 +19,7 @@
     .table-head {
       @apply relative;
     }
-    
+
     .table-head-cell {
       @apply px-6 pr-5 text-sm font-medium text-foreground normal-case text-left;
     }
@@ -66,77 +66,167 @@
   .transition-base {
     @apply transition-all duration-500 ease-in-out;
   }
+
   .transition-hover {
     @apply transition-all duration-100 ease-in-out;
   }
+
   .overlay {
-    @apply fixed inset-0 z-50 bg-primary-900/[.7] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
+    @apply fixed inset-0 z-50 bg-primary-950/[.75] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
   }
+
   .flex-center {
     @apply flex items-center justify-center;
   }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-  }
-  .bg-pattern-blue {
-    background-image: url('/img/bg/upgrades/blue@1.webp');
-  }
-  .bg-pattern-gold {
-    background-image: url('/img/bg/upgrades/gold@1.webp');
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  @media screen and (--webkit-min-device-pixel-ratio: 2), screen and (min-resolution: 192dpi) {
+  .bg-pattern-blue {
+    background-image: url('/img/bg/upgrades/blue.jpg');
+    background-image: image-set(
+        "/img/bg/upgrades/blue-762w@2x-q50.avif" type("image/avif") 2x,
+        "/img/bg/upgrades/blue-762w@1x-q50.avif" type("image/avif") 1x,
+        "/img/bg/upgrades/blue-762w@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/upgrades/blue-762w@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/upgrades/blue-762w@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/upgrades/blue-762w@1x-q85.jpg" type("image/jpeg") 1x
+    );
+  }
+
+  .bg-pattern-gold {
+    background-image: url('/img/bg/upgrades/gold.jpg');
+    background-image: image-set(
+        "/img/bg/upgrades/gold-762w@2x-q50.avif" type("image/avif") 2x,
+        "/img/bg/upgrades/gold-762w@1x-q50.avif" type("image/avif") 1x,
+        "/img/bg/upgrades/gold-762w@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/upgrades/gold-762w@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/upgrades/gold-762w@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/upgrades/gold-762w@1x-q85.jpg" type("image/jpeg") 1x
+    );
+  }
+
+  @media md {
     .bg-pattern-blue {
-      background-image: url('/img/bg/upgrades/blue@3.webp');
+        background-image: image-set(
+            "/img/bg/upgrades/blue-1920w@2x-q50.avif" type("image/avif") 2x,
+            "/img/bg/upgrades/blue-1920w@1x-q50.avif" type("image/avif") 1x,
+            "/img/bg/upgrades/blue-1920w@2x-q85.webp" type("image/webp") 2x,
+            "/img/bg/upgrades/blue-1920w@1x-q85.webp" type("image/webp") 1x,
+            "/img/bg/upgrades/blue-1920w@2x-q85.jpg" type("image/jpeg") 2x,
+            "/img/bg/upgrades/blue-1920w@1x-q85.jpg" type("image/jpeg") 1x
+        );
     }
     .bg-pattern-gold {
-      background-image: url('/img/bg/upgrades/gold@3.webp');
+        background-image: image-set(
+            "/img/bg/upgrades/gold-1920w@2x-q50.avif" type("image/avif") 2x,
+            "/img/bg/upgrades/gold-1920w@1x-q50.avif" type("image/avif") 1x,
+            "/img/bg/upgrades/gold-1920w@2x-q85.webp" type("image/webp") 2x,
+            "/img/bg/upgrades/gold-1920w@1x-q85.webp" type("image/webp") 1x,
+            "/img/bg/upgrades/gold-1920w@2x-q85.jpg" type("image/jpeg") 2x,
+            "/img/bg/upgrades/gold-1920w@1x-q85.jpg" type("image/jpeg") 1x
+        );
     }
   }
 
   .bg-mystery-box {
-    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@640.jpg');
+    background-image: url("/img/bg/mysterybox/bg-640w.jpg");
+    background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+        "/img/bg/mysterybox/bg-640w@2x-q50.avif" type("image/avif") 2x,
+        "/img/bg/mysterybox/bg-640w@1x-q50.avif" type("image/avif") 1x,
+        "/img/bg/mysterybox/bg-640w@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/mysterybox/bg-640w@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/mysterybox/bg-640w@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/mysterybox/bg-640w@1x-q85.jpg" type("image/jpeg") 1x
+    );
   }
 
   @screen sm {
+    background-image: url("/img/bg/mysterybox/bg-1280w.jpg");
     .bg-mystery-box {
-      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1280.jpg');
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+        "/img/bg/mysterybox/bg-1280w@2x-q50.avif" type("image/avif") 2x,
+        "/img/bg/mysterybox/bg-1280w@1x-q50.avif" type("image/avif") 1x,
+        "/img/bg/mysterybox/bg-1280w@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/mysterybox/bg-1280w@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/mysterybox/bg-1280w@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/mysterybox/bg-1280w@1x-q85.jpg" type("image/jpeg") 1x
+    );
     }
   }
 
   @screen lg {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@1920.jpg');
+        background-image: url("/img/bg/mysterybox/bg-1920w.jpg");
+      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+        "/img/bg/mysterybox/bg-1920w@2x-q50.avif" type("image/avif") 2x,
+        "/img/bg/mysterybox/bg-1920w@1x-q50.avif" type("image/avif") 1x,
+        "/img/bg/mysterybox/bg-1920w@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/mysterybox/bg-1920w@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/mysterybox/bg-1920w@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/mysterybox/bg-1920w@1x-q85.jpg" type("image/jpeg") 1x
+      );
     }
   }
 
   @screen 3xl {
     .bg-mystery-box {
-      background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), url('/img/bg/mysterybox/bg@3840.jpg');
+        background-image: url("/img/bg/mysterybox/bg-3840w.jpg");
+        background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+            url("/img/bg/mysterybox/bg-3840w@2x-q50.avif") type("image/avif") 2x,
+            url("/img/bg/mysterybox/bg-3840w@1x-q50.avif") type("image/avif") 1x,
+            url("/img/bg/mysterybox/bg-3840w@2x-q85.webp") type("image/webp") 2x,
+            url("/img/bg/mysterybox/bg-3840w@1x-q85.webp") type("image/webp") 1x,
+            url("/img/bg/mysterybox/bg-3840w@2x-q85.jpg") type("image/jpeg") 2x,
+            url("/img/bg/mysterybox/bg-3840w@1x-q85.jpg") type("image/jpeg") 1x
+          );
     }
   }
 
   .bg-banner-default {
-    background-image: url('/img/bg/banner/default-vertical@1.jpg');
+    background-image: url('/img/bg/banner/default-vertical.jpg');
+    background-image: image-set(
+        "/img/bg/banner/default-vertical@2x-q50.avif" type("image/avif") 2x,
+        "/img/bg/banner/default-vertical@1x-q50.avif" type("image/avif") 1x,
+        "/img/bg/banner/default-vertical@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/banner/default-vertical@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/banner/default-vertical@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/banner/default-vertical@1x-q85.jpg" type("image/jpeg") 1x
+    );
     background-position: 40% center;
   }
 
   @screen 3xl {
     .bg-banner-default {
-      background-image: url('/img/bg/banner/default@2.webp');
+      background-image: url('/img/bg/banner/default.jpg');
+      background-image: image-set(
+        "/img/bg/banner/default@1x-q75.avif" type("image/avif"),
+        "/img/bg/banner/default@1x-q85.webp" type("image/webp"),
+        "/img/bg/banner/default@1x-q85.jpg" type("image/jpeg")
+    );
     }
   }
 
   .bg-banner-vertical {
     background-color: theme('colors.primary.900');
-    background-image: url('/img/bg/banner/vertical@2x.jpg');
+    background-image: url('/img/bg/banner/vertical.jpg');
     background-position: left center;
     background-size: auto 100%;
     background-repeat: no-repeat;
+    background-image: image-set(
+        "/img/bg/banner/vertical@2x-q85.avif" type("image/avif") 2x,
+        "/img/bg/banner/vertical@1x-q85.avif" type("image/avif") 1x,
+        "/img/bg/banner/vertical@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/banner/vertical@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/banner/vertical@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/banner/vertical@1x-q85.jpg" type("image/jpeg") 1x
+    );
   }
 
   .hamburger-transform-1 {
@@ -147,6 +237,41 @@
   }
   .hamburger-transform-3 {
     transform: translate(17px, -3px) rotateZ(45deg);
+  }
+
+  .bg-empty-investment-pattern {
+    background-image: url('/img/bg/investments/empty.jpg');
+    background-image: image-set(
+        "/img/bg/investments/empty-320w@2x-q85.avif" type("image/avif") 2x,
+        "/img/bg/investments/empty-320w@1x-q85.avif" type("image/avif") 1x,
+        "/img/bg/investments/empty-320w@2x-q85.webp" type("image/webp") 2x,
+        "/img/bg/investments/empty-320w@1x-q85.webp" type("image/webp") 1x,
+        "/img/bg/investments/empty-320w@2x-q85.jpg" type("image/jpeg") 2x,
+        "/img/bg/investments/empty-320w@1x-q85.jpg" type("image/jpeg") 1x
+    );
+  }
+
+  @screen md {
+    .bg-empty-investment-pattern {
+        background-image: image-set(
+            "/img/bg/investments/empty-762w@2x-q85.avif" type("image/avif") 2x,
+            "/img/bg/investments/empty-762w@1x-q85.avif" type("image/avif") 1x,
+            "/img/bg/investments/empty-762w@2x-q85.webp" type("image/webp") 2x,
+            "/img/bg/investments/empty-762w@1x-q85.webp" type("image/webp") 1x,
+            "/img/bg/investments/empty-762w@2x-q85.jpg" type("image/jpeg") 2x,
+            "/img/bg/investments/empty-762w@1x-q85.jpg" type("image/jpeg") 1x
+        );
+    }
+  }
+
+  @screen 3xl {
+    .bg-empty-investment-pattern {
+        background-image: image-set(
+            "/img/bg/investments/empty-1920w@1x-q85.avif" type("image/avif") 1x,
+            "/img/bg/investments/empty-1920w@1x-q85.webp" type("image/webp") 1x,
+            "/img/bg/investments/empty-1920w@1x-q85.jpg" type("image/jpeg") 1x
+        );
+    }
   }
 }
 
@@ -207,12 +332,12 @@
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+  -moz-appearance: textfield; /* Firefox */
 }
 
 .vault-investment::-webkit-scrollbar-track {
@@ -229,4 +354,12 @@ input[type=number] {
 .test6 {
   // background: linear-gradient(to top, theme('colors.primary.950'), transparent);
   background: linear-gradient(to top, theme('colors.primary.950') 0%, theme('colors.primary.950') 50%, transparent 100%);
+}
+
+.accordion-chevron {
+  transition: transform 300ms;
+}
+
+.accordion-trigger[data-state='open'] > .accordion-chevron {
+  transform: rotate(180deg);
 }

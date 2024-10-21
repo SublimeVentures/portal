@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMethod, getPrerequisite, METHOD } from "@/components/BlockchainSteps/utils";
+import { getMethod, getPrerequisite } from "@/components/BlockchainSteps/utils";
 
 const DEFAULT_STATE = {
     isError: false,
@@ -70,6 +70,7 @@ function useGetPrerequisite(isEnabled, params, globalState, token) {
                 extra: null,
                 isFinished: false,
                 isError: false,
+                error: null,
             });
         }
     }, [isEnabled]);

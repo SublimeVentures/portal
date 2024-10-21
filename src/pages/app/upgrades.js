@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import routes from "@/routes";
 import { AppLayout } from "@/v2/components/Layout";
@@ -18,6 +18,7 @@ import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import useImage from "@/v2/hooks/useImage";
 import { getCopy } from "@/lib/seoConfig";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
 
 const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
 
@@ -25,8 +26,7 @@ export default function AppUpgrades({ session }) {
     const { tenantId } = session;
     const { getStoreSrc } = useImage();
     const { getCurrencyStore } = useEnvironmentContext();
-
-    console.log("getCurrencyStore", getCurrencyStore());
+    const client = useQueryClient();
 
     const [isBuyModal, setBuyModal] = useState(false);
     const [order, setOrder] = useState(null);
@@ -42,15 +42,15 @@ export default function AppUpgrades({ session }) {
     const storeData = response?.filter((el) => el.id !== PremiumItemsENUM.MysteryBox);
     const currency = getCurrencyStore()[0];
 
-    useEffect(() => {
-        if (order) {
-            setBuyModal(true);
-        }
-    }, [order]);
-
     const closeBuy = () => {
         setBuyModal(false);
         refetch();
+        client.refetchQueries({ queryKey: ["store-items", "owned"] });
+    };
+
+    const openBuy = (order) => {
+        setOrder(order);
+        setBuyModal(true);
     };
 
     const buyModalProps = {
@@ -59,7 +59,6 @@ export default function AppUpgrades({ session }) {
     };
 
     const title = `Upgrades - ${getCopy("NAME")}`;
-
     return (
         <>
             <Head>
@@ -70,7 +69,7 @@ export default function AppUpgrades({ session }) {
                 {!!storeData &&
                     storeData.map((data, index) => (
                         <Card
-                            key={data.slug}
+                            key={data.id}
                             variant={data.id === 1 ? "accent" : "static"}
                             className={cn(
                                 "cursor-auto text-white flex-1 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap lg:flex-col gap-4 3xl:gap-11 py-8 lg:py-4 3xl:py-14 items-center justify-center pointer-events-auto group-hover:opacity-25 hover:!opacity-100 !bg-cover bg-center",
@@ -105,25 +104,35 @@ export default function AppUpgrades({ session }) {
                                         {data.price} {currency && getCurrency(currency.symbol)}
                                     </Definition>
                                 </DefinitionList>
-                                <Button
-                                    className="w-full sm:w-1/3"
-                                    variant={data.id === 1 ? "accent" : "default"}
-                                    disabled={data.availability < 1}
-                                    onClick={() => setOrder(data)}
-                                >
-                                    Buy
-                                </Button>
+                                {data.availability < 1 ? (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                className="w-full sm:w-1/3"
+                                                variant={data.id === 1 ? "accent" : "default"}
+                                                disabled={data.availability < 1}
+                                                onClick={() => openBuy(data)}
+                                            >
+                                                Buy
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>No more {data.name} available for purchase</TooltipContent>
+                                    </Tooltip>
+                                ) : (
+                                    <Button
+                                        className="w-full sm:w-1/3"
+                                        variant={data.id === 1 ? "accent" : "default"}
+                                        disabled={data.availability < 1}
+                                        onClick={() => openBuy(data)}
+                                    >
+                                        Buy
+                                    </Button>
+                                )}
                             </BackdropCard>
                         </Card>
                     ))}
             </div>
-            <BuyStoreItemModal
-                model={isBuyModal}
-                setter={() => {
-                    closeBuy();
-                }}
-                buyModalProps={buyModalProps}
-            />
+            <BuyStoreItemModal model={isBuyModal} setter={closeBuy} buyModalProps={buyModalProps} />
         </>
     );
 }

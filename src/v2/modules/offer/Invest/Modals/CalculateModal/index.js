@@ -15,7 +15,7 @@ export default function CalculateModal() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <IconButton className="p-0" icon={BsCalculator} />
+                <IconButton className="p-0" icon={BsCalculator} aria-label="Profit calculator" />
             </DialogTrigger>
 
             <DialogContent className="max-w-[500px]">

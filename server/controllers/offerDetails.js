@@ -41,6 +41,7 @@ async function getParamOfferDetails(user, req) {
         lengthGuaranteed: offer.lengthGuaranteed,
         payouts: offer.payouts,
         participants: offer.participants,
+        otc: offer.otc,
     };
 }
 

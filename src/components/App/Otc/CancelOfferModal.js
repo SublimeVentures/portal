@@ -75,7 +75,7 @@ export default function CancelOfferModal({ model, setter, props }) {
                     <div className={"text-right text-app-success"}>{currentMarket?.name}</div>
                     <div className="font-bold">TYPE</div>
                     <div className={`text-right ${offerDetails?.isSell ? "text-app-error" : "text-app-success"} `}>
-                        {offerDetails?.isSell ? "SELL" : "BUY"}
+                        {offerDetails?.isSell ? "ASK" : "BID"}
                     </div>
                     <div className="font-bold">BLOCKCHAIN</div>
                     <div className="flex flex-row justify-end items-center overflow-hidden whitespace-nowrap">

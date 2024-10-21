@@ -27,7 +27,8 @@ import { queryClient } from "@/lib/queryCache";
 import { NETWORKS } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
-// import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
+import MutedText from "@/v2/components/ui/muted-text";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 export default function TakeOfferModal({ offerDetails, className }) {
     const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
@@ -38,7 +39,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
     const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
         useBlockchainTakeOfferTransaction({ offerDetails });
 
-    const { all, resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
         deps: [isTakeModalOpen],
     });
@@ -53,7 +54,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
         if (transactionSuccessful)
             await Promise.all([
                 queryClient.invalidateQueries(["otcOffers"]),
-                queryClient.invalidateQueries(["userAllocation"]),
+                queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
             ]).finally(() => setTransactionSuccessful(false));
         else setTransactionSuccessful(false);
 
@@ -109,7 +110,7 @@ export default function TakeOfferModal({ offerDetails, className }) {
                                                     "text-success-500": !offerDetails.isSell,
                                                 })}
                                             >
-                                                {offerDetails.isSell ? "Sell" : "Buy"}
+                                                {offerDetails.isSell ? "Ask" : "Bid"}
                                             </span>
                                         </DefinitionItem>
                                         <DefinitionItem term="Blockchain">
@@ -161,8 +162,6 @@ export default function TakeOfferModal({ offerDetails, className }) {
                             </div>
                         </div>
                     </div>
-
-                    {/* <Test {...all} /> */}
                 </SheetBody>
 
                 <SheetFooter>
@@ -173,9 +172,9 @@ export default function TakeOfferModal({ offerDetails, className }) {
                     ) : (
                         <BlockchainStepButton {...getBlockchainStepButtonProps()} />
                     )}
-                    <p className="text-2xs md:text-sm font-light text-foreground/[.5]">
+                    <MutedText>
                         You will automatically receive ${currentMarket.ticker} tokens after settlement.
-                    </p>
+                    </MutedText>
                 </SheetFooter>
             </SheetContent>
         </Sheet>

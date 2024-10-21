@@ -82,10 +82,10 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                             <Fragment key={index}>
                                 {rows.map(
                                     ({
-                                        offer: { ticker, name, slug, t_unlock },
-                                        offerPayout,
+                                        offer: { ticker, name, slug },
                                         id,
                                         claims: [{ amount, isClaimed }],
+                                        percentage,
                                         isPending,
                                         isUpcoming,
                                         isSoon,
@@ -136,7 +136,7 @@ const PayoutTable = ({ variant = PayoutTableVariants.horizontal, pages = [], isL
                                                 <div className={rowDivStyles}>
                                                     <dt className={rowDtStyles}>% Unlocked</dt>
                                                     <dd className={rowDdStyles}>
-                                                        {t_unlock ? formatPercentage(t_unlock[offerPayout].p / 100) : 0}
+                                                        {formatPercentage(percentage / 100)}
                                                     </dd>
                                                 </div>
                                                 <div className={rowDivStyles}>

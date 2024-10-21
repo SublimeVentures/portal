@@ -5,13 +5,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { NotificationTypeNames } from "@/v2/enum/notifications";
 import Title from "@/v2/modules/opportunities/Title";
 
-export default function NotificationFilters({ query, handleInputChange, fetchPreviousPage }) {
+export default function NotificationFilters({ query, handleInputChange, handleGetOlder }) {
     const { after, before, typeId } = query;
     const unreadCount = 0;
     const props = unreadCount > 0 ? { count: `${unreadCount} unread` } : {};
 
     return (
-        <div className="flex flex-col items-center gap-4 3xl:gap-12 md:flex-row sm:mb-4 lg:mb-0 ">
+        <div className="flex flex-col items-center gap-4 sm:mb-4 md:flex-row lg:mb-0 3xl:gap-x-12">
             <Title {...props}>My Notifications</Title>
             <div className="w-full flex flex-col gap-4 md:flex-row">
                 <div className="flex items-center gap-2">
@@ -58,7 +58,12 @@ export default function NotificationFilters({ query, handleInputChange, fetchPre
                         </SelectContent>
                     </Select>
 
-                    <Button className="w-full md:w-auto" variant="secondary" onClick={fetchPreviousPage}>
+                    <Button
+                        className="w-full md:w-auto"
+                        variant="secondary"
+                        disabled={!query.after}
+                        onClick={handleGetOlder}
+                    >
                         Get older
                     </Button>
                 </div>

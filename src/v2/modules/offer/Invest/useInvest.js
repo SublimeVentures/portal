@@ -16,6 +16,7 @@ import usePhaseInvestment from "@/v2/hooks/usePhaseInvestment";
 import { useOfferDetailsStore } from "@/v2/modules/offer/store";
 import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
 import { millisecondsInHour } from "@/constants/datetime";
+import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 
 // @TODO - Tax amount depends of tier - logic not ready yet.
 export default function useInvest(session) {
@@ -101,11 +102,10 @@ export default function useInvest(session) {
     const openInvestmentModal = () => {
         if (isStakeLock) return;
 
-        queryClient.invalidateQueries(["offerParticipants"]), setIsInvestModalOpen(true);
+        queryClient.invalidateQueries(offersKeys.offerParticipants()), setIsInvestModalOpen(true);
     };
 
     const bookingRestore = async () => {
-        console.log("bookingRestore");
         const booking = getSavedBooking();
         const { amount, time } = booking || {};
 
@@ -126,8 +126,8 @@ export default function useInvest(session) {
         clearBooking();
 
         await Promise.all([
-            queryClient.invalidateQueries(["userAllocation"]),
-            queryClient.invalidateQueries(["offerAllocation"]),
+            queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
+            queryClient.invalidateQueries(offersKeys.offerAllocation()),
         ]);
 
         setIsLoading(false);
@@ -160,7 +160,7 @@ export default function useInvest(session) {
             if (!res.ok) {
                 await clearBooking();
                 setErrorModalState({ open: true, code: res.code });
-                queryClient.invalidateQueries(["userAllocation"]);
+                queryClient.invalidateQueries(userInvestmentsKeys.userAllocation());
             } else if (res.hash?.length > 5) {
                 const confirmedAmount = Number(res.amount);
                 setValue("investmentAmount", confirmedAmount);

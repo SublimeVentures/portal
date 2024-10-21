@@ -1,11 +1,11 @@
 import { cn } from "@/lib/cn";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
-import { useOfferDetailsQuery, useUserAllocationQuery } from "@/v2/modules/offer/queries";
-import { useOfferProgressQuery, useOfferStatus } from "@/v2/modules/opportunities/useSingleOfferLogic";
 import { OfferStatus } from "@/v2/modules/opportunities/helpers";
+import { useOfferProgressQuery, useOfferStatus } from "@/v2/modules/opportunities/useSingleOfferLogic";
+import { useOfferDetailsQuery, useUserAllocationQuery, useOfferAllocationQuery } from "@/v2/modules/offer/queries";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
 import { Progress } from "@/v2/components/ui/progress";
-import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import { Skeleton } from "@/v2/components/ui/skeleton";
+import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 
 const TBA_TEXT = "TBA";
 
@@ -26,6 +26,7 @@ const getTGE = (tge, ppu) =>
 export default function Fundraise({ className }) {
     const userAllocation = useUserAllocationQuery();
     const { data: offer, isLoading } = useOfferDetailsQuery();
+    const { data: offerAllocation } = useOfferAllocationQuery();
     const { status } = useOfferStatus(offer);
 
     const { data: { progress = 0, filled = 0 } = {} } = useOfferProgressQuery(offer.id, {
@@ -33,7 +34,6 @@ export default function Fundraise({ className }) {
     });
 
     const progressValue = status === OfferStatus.CLOSED ? 100 : progress;
-
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
 
     return (
@@ -52,7 +52,7 @@ export default function Fundraise({ className }) {
             </div>
             <div>
                 <div className="flex justify-between items-end mb-4 select-none">
-                    <p className="text-xl md:text-3xl">{formatCurrency(filled)}</p>
+                    <p className="text-xl md:text-3xl">{formatCurrency(offerAllocation?.alloTotal ?? 0)}</p>
                     <p className="text-base md:text-lg text-success">{formatPercentage(progressValue / 100)} Filled</p>
                 </div>
                 <Progress value={progressValue} variant="success" />

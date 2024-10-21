@@ -20,6 +20,7 @@ export default function Gtag() {
     return (
         <>
             <Head>
+                <link rel="dns-prefetch" href="https://www.googletagmanager.com/" />
                 <script
                     dangerouslySetInnerHTML={{
                         __html: `

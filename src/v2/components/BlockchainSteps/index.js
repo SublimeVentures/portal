@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { STEPS_STATE } from "./enums";
 import { cn } from "@/lib/cn";
@@ -44,7 +44,9 @@ const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
     return (
         <IconComponent
             style={colorSchemes[status]}
-            className={cn("absolute z-0", { "animate-pulse": (status = STEPS_STATE.PROCESSING) })}
+            className={cn("absolute z-0", {
+                "animate-pulse": status === STEPS_STATE.PROCESSING,
+            })}
         />
     );
 };
@@ -52,51 +54,44 @@ const ChainIcon = ({ steps, status = colorSchemes.PENDING }) => {
 export default function BlockchainSteps({ content, steps, extraState, status }) {
     return (
         <div className="mb-2 mt-4 py-4 px-8 flex flex-col items-center gap-4 bg-foreground/[.02] rounded">
-            <motion.h3
-                key={`${content.content}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-base font-medium text-foreground text-center overflow-hidden md:text-lg"
-            >
-                {content.content}
-            </motion.h3>
-            <motion.p
-                key={`${content.text}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="h-18 text-sm font-light text-foreground text-center overflow-hidden"
-            >
-                {content.text}
-            </motion.p>
+            <AnimatePresence mode="wait">
+                <motion.h3
+                    key={`${content.content}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-base font-medium text-foreground text-center overflow-hidden md:text-lg"
+                >
+                    {content.content}
+                </motion.h3>
+
+                <motion.p
+                    key={`${content.text}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="h-18 text-sm font-light text-foreground text-center overflow-hidden"
+                >
+                    {content.text}
+                </motion.p>
+            </AnimatePresence>
 
             <div className="relative flex justify-center h-[43px]">
                 <ChainIcon steps={steps} status={status} />
 
                 <ul className="relative flex items-center h-full justify-center w-max gap-3 overflow-hidden">
-                    {steps.network && (
-                        <BlockchainStep data={extraState.stepNetwork} stepsStatus={status} icon={LinkIcon} />
-                    )}
+                    {steps.network && <BlockchainStep data={extraState.network} status={status} icon={LinkIcon} />}
                     {steps.liquidity && (
-                        <BlockchainStep data={extraState.stepLiquidity} stepsStatus={status} icon={BalanceIcon} />
+                        <BlockchainStep data={extraState.liquidity} status={status} icon={BalanceIcon} />
                     )}
                     {steps.allowance && (
-                        <BlockchainStep
-                            data={extraState.stepAllowance}
-                            stepsStatus={status}
-                            icon={AccountBalanceIcon}
-                        />
+                        <BlockchainStep data={extraState.allowance} status={status} icon={AccountBalanceIcon} />
                     )}
                     {steps.transaction && (
-                        <BlockchainStep data={extraState.stepPrerequisite} stepsStatus={status} icon={PriorityIcon} />
+                        <BlockchainStep data={extraState.prerequisite} status={status} icon={PriorityIcon} />
                     )}
                     {steps.transaction && (
-                        <BlockchainStep
-                            data={extraState.stepTransaction}
-                            stepsStatus={status}
-                            icon={RocketLaunchIcon}
-                        />
+                        <BlockchainStep data={extraState.transaction} status={status} icon={RocketLaunchIcon} />
                     )}
                 </ul>
             </div>

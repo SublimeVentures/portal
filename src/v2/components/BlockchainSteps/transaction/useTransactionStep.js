@@ -25,8 +25,6 @@ export default function useTransactionStep(state, data, dispatch) {
         state.prerequisite.isFinished &&
         state.status !== 2;
 
-    // console.log('state.prerequisite', state.status, state.status !== 2, transaction_shouldRun)
-
     console.log("BIX :: TRANSACTION - shouldRun / isReady", transaction_shouldRun, transaction_isReady);
 
     console.log(

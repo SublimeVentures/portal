@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 const DateTimeDisplay = ({ children, type }) => {
     return (
         <div className="inline-flex text-foreground whitespace-nowrap">
-            <p className="mr-1">{children}</p>
+            <p className="mr-1 font-mono">{children}</p>
             <span>{type}</span>
         </div>
     );

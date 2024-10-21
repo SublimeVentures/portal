@@ -20,7 +20,7 @@ const Search = forwardRef(({ name, className, isOpen, onClick, onClose, ...props
                     ref={ref}
                     type="text"
                     placeholder={name}
-                    className="grow text-base text-light bg-transparent text-foreground placeholder:text-extralight placeholder:text-foreground/[.5] focus-visible:outline-none disabled:cursor-not-allowed"
+                    className="grow w-full text-sm text-light bg-transparent text-foreground placeholder:text-extralight placeholder:text-foreground/[.5] focus-visible:outline-none disabled:cursor-not-allowed md:text-base"
                     onClick={onClick}
                     {...props}
                 />
@@ -40,6 +40,7 @@ const Search = forwardRef(({ name, className, isOpen, onClick, onClose, ...props
         </div>
     );
 });
+
 Search.displayName = "Search";
 
 export default Search;

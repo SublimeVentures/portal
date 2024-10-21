@@ -8,14 +8,13 @@ function Calendar({ className, styles, showOutsideDays = true, ...props }) {
     return (
         <DayPicker
             showOutsideDays={showOutsideDays}
-            className={cn("sm:w-96", className)}
             classNames={{
                 caption: "mb-4 p-2 relative flex justify-center items-center bg-foreground/[.1] rounded",
                 caption_label: "text-xs sm:text-sm font-light",
                 nav: "space-x-1 flex items-center",
                 nav_button: cn(
                     buttonVariants({ variant: "link" }),
-                    "h-7 w-7 bg-transparent p-0 text-foreground hover:text-foreground",
+                    "bg-transparent text-foreground hover:text-foreground",
                 ),
                 nav_button_previous: "absolute left-1",
                 nav_button_next: "absolute right-1",

@@ -75,7 +75,10 @@ const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, st
                 type="number"
                 ref={ref}
                 readOnly={readOnly}
-                onChange={(e) => onValueChange?.(Number(e.target.value))}
+                onChange={(e) => {
+                    const value = Number(e.target.value);
+                    onValueChange?.(value < min ? min : value > max ? max : value);
+                }}
                 min={min}
                 max={max}
                 step={step}
@@ -99,7 +102,10 @@ const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, st
 });
 
 const InputFunds = forwardRef(
-    ({ className, size, readOnly, value, min, max, step, icon, onValueChange, label, after, ...props }, ref) => {
+    (
+        { className, size, readOnly, value, min = 0, max, step = 10, icon, onValueChange, label, after, ...props },
+        ref,
+    ) => {
         ref = ref || createRef();
 
         return (
@@ -117,6 +123,7 @@ const InputFunds = forwardRef(
                         type="number"
                         ref={ref}
                         readOnly={readOnly}
+                        onWheel={(e) => e.target.blur()}
                         onChange={(e) => onValueChange?.(Number(e.target.value))}
                         min={min}
                         max={max}

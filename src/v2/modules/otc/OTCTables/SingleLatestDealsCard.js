@@ -33,7 +33,7 @@ export default function SingleLatestDealsCard({ slug, isSell, multiplier, update
                         </DefinitionItem>
                         <DefinitionItem term="Type">
                             <span className={cn("font-bold", isSell ? "text-error" : "text-success-500")}>
-                                {isSell ? "Sell" : "Buy"}
+                                {isSell ? "Ask" : "Bid"}
                             </span>
                         </DefinitionItem>
                         <DefinitionItem term="Multiplier">{multiplier.toFixed(2)}x</DefinitionItem>

@@ -19,7 +19,7 @@ const EmptyInvestmentsEnhanced = () => {
         data: { offers = [] } = {},
         isError,
     } = useQuery({
-        queryKey: offersKeys.queryOffersVc(query),
+        queryKey: offersKeys.offersVc(query),
         queryFn: () => fetchOfferList(query),
         cacheTime: 5 * 60 * 1000,
         staleTime: 1 * 60 * 1000,

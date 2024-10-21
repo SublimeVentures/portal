@@ -22,14 +22,15 @@ const loadingInvestments = Array.from({ length: 10 }, (_, index) => ({ id: index
 function InvestmentsPage() {
     const router = useRouter();
     const { view = VIEW_TYPES.GRID, ...query } = router.query;
-    const { data: investments = loadingInvestments, isLoading } = useInvestmentsQuery(query);
+    const { data: { rows: investments = loadingInvestments, count } = { rows: [], count: 0 }, isLoading } =
+        useInvestmentsQuery(query);
 
     return (
         <>
             <Metadata title="My Investments" />
             <InvestmentsFilters
                 className="sm:flex-initial mb-4 lg:mb-0"
-                investments={investments}
+                count={count}
                 views={VIEWS}
                 query={{ view, ...query }}
                 onChange={(query) => {

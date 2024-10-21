@@ -5,10 +5,7 @@ export const stepTransaction = (state, data) => {
     let result = {};
 
     if (data.transaction_isReady) {
-        result = handleProcessing({
-            content: "Preparing transaction",
-            text: "We are setting up your transaction. Please wait a moment.",
-        });
+        result = handlePending();
 
         if (state.isFinished) {
             result = handleSuccess({
@@ -21,7 +18,6 @@ export const stepTransaction = (state, data) => {
                 text: "Your transaction is being sent. Please wait for confirmation.",
             });
         } else if (data.isError) {
-            console.log("invalid signature", data, state);
             result = handleError({
                 content: "Transaction failed",
                 text: data?.error ?? "An error occurred while sending your transaction. Please try again.",

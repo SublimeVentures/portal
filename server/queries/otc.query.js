@@ -1,4 +1,4 @@
-const { Op, Sequelize } = require("sequelize");
+const { Op, QueryTypes, Sequelize } = require("sequelize");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const { OTC_ERRORS } = require("../../src/lib/enum/otc");
@@ -92,50 +92,46 @@ async function getHistoryOffers(offerId, query) {
     });
 }
 
+const query_getLatestDeals = `
+    SELECT
+        od."id",
+        od."offerId",
+        od."isSell",
+        od."price",
+        od."amount",
+        od."createdAt",
+        od."price" / od."amount" AS "multiplier",
+        o."name",
+        o."slug"
+    FROM
+        "otcDeal" od
+    INNER JOIN
+        "offer" o ON o.otc = od."otcId"
+    INNER JOIN
+        "onchain" oc ON oc."id" = od."onchainIdMaker"
+    WHERE
+        o.display = true AND
+        od."isFilled" = false AND
+        od."isCancelled" = false AND
+        od."onchainIdMaker" IS NOT NULL AND
+        (
+            (o."isOtcExclusive" = false)
+            OR
+            (o."isOtcExclusive" = true AND o."broughtBy" = :tenantId)
+        )
+    ORDER BY
+        :order
+    LIMIT 10
+`;
+
 async function getLatestOffers(query, tenantId, partnerId) {
     const { sortId, sortOrder } = query;
 
     const order = constructOffersOrder(sortId, sortOrder);
 
-    return models.otcDeal.findAll({
-        order,
-        limit: 10,
-        attributes: [
-            "id",
-            "offerId",
-            "isSell",
-            "price",
-            "amount",
-            "createdAt",
-            [db.literal('"offer"."name"'), "name"],
-            [db.literal('"offer"."slug"'), "slug"],
-            [Sequelize.literal("price / amount"), "multiplier"],
-        ],
-        where: {
-            isFilled: false,
-            isCancelled: false,
-        },
-        include: [
-            {
-                model: models.offer,
-                attributes: [],
-                required: true,
-                where: {
-                    id: {
-                        [Sequelize.Op.in]: Sequelize.literal(`(
-                            SELECT "offerLimit"."offerId"
-                            FROM "offerLimit"
-                            WHERE (
-                                ("offerLimit"."isTenantExclusive" = false AND ("offerLimit"."partnerId" = ${partnerId} OR "offerLimit"."partnerId" = ${tenantId}))
-                                OR
-                                ("offerLimit"."isTenantExclusive" = true AND "offerLimit"."partnerId" = ${tenantId})
-                            )
-                        )`),
-                    },
-                },
-            },
-        ],
-        raw: true,
+    return await db.query(query_getLatestDeals, {
+        type: QueryTypes.SELECT,
+        replacements: { order, tenantId, partnerId },
     });
 }
 

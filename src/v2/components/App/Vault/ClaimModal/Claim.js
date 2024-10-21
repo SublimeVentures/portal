@@ -5,6 +5,7 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
+import MutedText from "@/v2/components/ui/muted-text";
 
 export default function Claim({ data }) {
     const { account, activeInvestContract, getCurrencySettlement } = useEnvironmentContext();
@@ -19,7 +20,7 @@ export default function Claim({ data }) {
             params: {
                 requiredNetwork: data.currentPayout?.chainId,
                 account: account.address,
-                amount: Number(data.currentPayout?.amount),
+                amount: data.currentPayout?.claims[0]?.amount,
                 offerId: data.currentPayout?.offerId,
                 payoutId: data.currentPayout?.id,
                 claimId: data.currentPayout?.claims[0]?.id,
@@ -39,7 +40,7 @@ export default function Claim({ data }) {
         <>
             <BlockchainSteps className="mt-auto" {...getBlockchainStepsProps()} />
             <ModalButton variant="accent" {...getBlockchainStepButtonProps()} />
-            <p className="text-white/50 text-2xs md:text-sm text-center">You will receive {symbol} after settlement.</p>
+            <MutedText>You will receive {symbol} after settlement.</MutedText>
         </>
     );
 }

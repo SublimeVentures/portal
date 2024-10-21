@@ -1,4 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import useGetToken from "@/lib/hooks/useGetToken";
@@ -22,6 +24,8 @@ import Modal, {
     SelectCurrency,
 } from "@/v2/modules/upgrades/Modal";
 import Success from "@/v2/modules/upgrades/Success";
+import PAGE from "@/routes";
+import { reserveUpgrade } from "@/fetchers/store.fetcher";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -29,10 +33,26 @@ const UpgradeSymbol = ({ className }) => (
     <span className={cn("rounded-full size-4 inline-block shrink-0", className)}></span>
 );
 
-export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
-    const { order, setOrder } = buyModalProps;
+export const blockchainPrerequisite = async (params) => {
+    const { network, amount, upgradeId } = params;
+    const { chainId } = network;
+    const transaction = await reserveUpgrade({ chainId, amount, storeId: upgradeId });
+
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: transaction,
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
+
+const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransactionSuccessful, userId }) => {
     const { getCurrencyStore, account, activeDiamond, network, cdn } = useEnvironmentContext();
-    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const [amount, setAmount] = useState(1);
@@ -42,14 +62,6 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
     useEffect(() => {
         setSelectedCurrency(dropdownCurrencyOptions[0]);
     }, [network.chainId]);
-
-    const closeModal = () => {
-        setter();
-        setTimeout(() => {
-            setOrder(null);
-            setTransactionSuccessful(false);
-        }, 400);
-    };
 
     const token = useGetToken(selectedCurrency?.contract);
 
@@ -72,6 +84,12 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.UPGRADE,
+
+                userId,
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,
@@ -99,18 +117,23 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                             <span className="text-xs font-light md:text-sm">Upgrade</span>
                         </div>
                     </div>
-                    <Button className="w-full md:w-auto" variant={order.id === 1 ? "accent" : "default"}>
-                        Upgrade store
+                    <Button className="w-full md:w-auto" variant={order.id === 1 ? "accent" : "default"} asChild>
+                        <Link href={PAGE.Upgrades} onClick={onClose}>
+                            Upgrades store
+                        </Link>
                     </Button>
                 </Success.Article>
-                <Success.Footer>You can find your upgrade in your inventory</Success.Footer>
+                <Success.Footer>You can find your upgrade in your vault</Success.Footer>
             </Success.Content>
         );
     };
     const contentSteps = () => {
         return (
             <>
-                <Image src="/img/upgrade-dialog-premium.png" alt={order.name} />
+                <Image
+                    src={order.id === 1 ? "/img/upgrade/guaranteed.jpg" : "/img/upgrade/increased.jpg"}
+                    alt={order.name}
+                />
                 <Content>
                     <Kicker>Upgrade</Kicker>
                     <Title
@@ -167,7 +190,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
                             <Input readOnly className="w-full text-center" value={price} size="sm" />
                         </div>
                     </Grid>
-                    {model && <BlockchainSteps {...getBlockchainStepsProps()} />}
+                    <BlockchainSteps {...getBlockchainStepsProps()} />
                     <ModalButton
                         className="w-full mt-4"
                         variant={order.id === 1 ? "accent" : "default"}
@@ -177,14 +200,35 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps }) {
             </>
         );
     };
+    return transactionSuccessful ? contentSuccess() : contentSteps();
+};
 
-    const content = () => {
-        return transactionSuccessful ? contentSuccess() : contentSteps();
+export default function BuyStoreItemModal({ model, setter, buyModalProps, userId }) {
+    const client = useQueryClient();
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+    const closeModal = () => {
+        setter();
+        setTransactionSuccessful(false);
     };
 
+    const refetchBanner = async () => {
+        const data = await client.refetchQueries({ queryKey: ["store-items", "owned"] });
+        return data;
+    };
+
+    if (transactionSuccessful) {
+        refetchBanner();
+    }
     return (
         <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
-            {content()}
+            <ModalContent
+                userId={userId}
+                onClose={closeModal}
+                {...buyModalProps}
+                model={model}
+                transactionSuccessful={transactionSuccessful}
+                setTransactionSuccessful={setTransactionSuccessful}
+            />
         </Modal>
     );
 }

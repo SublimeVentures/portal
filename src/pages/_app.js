@@ -1,9 +1,9 @@
 import { WagmiProvider } from "wagmi";
 import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
-
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/v2/components/ui/tooltip";
-import { TENANT } from "@/v2/helpers/tenant";
 import Layout from "@/components/Layout/Layout";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 import Gtag from "@/components/gtag";
@@ -12,12 +12,12 @@ import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
 import { queryClient } from "@/lib/queryCache";
 import "react-tooltip/dist/react-tooltip.css";
 import "@/v2/styles/globals.scss";
+import Push from "@/components/Push";
 import font from "@/v2/lib/font";
 
 export default function App({ Component, pageProps: { ...pageProps } }) {
     const { environmentData } = pageProps;
     const renderWithLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
-
     return (
         <>
             <Head>
@@ -40,10 +40,13 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                                 </HydrationBoundary>
                             </TooltipProvider>
                         </EnvironmentProvider>
+                        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
                     </QueryClientProvider>
                 </WagmiProvider>
             </ClientErrorBoundary>
             <Gtag />
+            <Push />
+            <Toaster position="top-right" gutter={-8} />
         </>
     );
 }

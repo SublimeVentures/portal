@@ -22,25 +22,29 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
                     className="flex flex-col h-full overflow-hidden bg-settings-gradient lg:mb-6 3xl:mb-12 p-0 cursor-auto"
                 >
                     <div className="py-4 flex flex-col h-full overflow-y-auto pr-4">
-                        <ol className="px-4 flex flex-col grow overflow-x-hidden py-2">
-                            {data.map((notification, idx) => {
-                                if (idx + 1 === data.length && hasNextPage) {
+                        {isFetching ? (
+                            <div className="px-4 flex flex-col grow overflow-x-hidden py-2">
+                                <TimelineSkeleton />
+                            </div>
+                        ) : (
+                            <ol className="px-4 flex flex-col grow overflow-x-hidden py-2">
+                                {data.map((notification, idx) => {
+                                    if (idx + 1 === data.length && hasNextPage) {
+                                        return (
+                                            <li ref={ref} key={notification.id} className="group">
+                                                <TimelineItem item={notification} />
+                                            </li>
+                                        );
+                                    }
+
                                     return (
-                                        <li ref={ref} key={notification.id} className="group">
-                                            <TimelineItem item={notification} />
+                                        <li key={notification.id} className="group">
+                                            <TimelineItem item={notification} showTimeline={data.length > 1} />
                                         </li>
                                     );
-                                }
-
-                                return (
-                                    <li key={notification.id} className="group">
-                                        <TimelineItem item={notification} />
-                                    </li>
-                                );
-                            })}
-
-                            {isFetching && <TimelineSkeleton />}
-                        </ol>
+                                })}
+                            </ol>
+                        )}
                     </div>
                 </Card>
             ) : (

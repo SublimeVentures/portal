@@ -32,14 +32,16 @@ export default function WalletSettings({ session }) {
         queryKey: settingsKeys.userWallets(userId),
         queryFn: () => fetchUserWallets(),
         refetchOnWindowFocus: true,
+        initialData: [],
     });
 
-    const sortedWallets = wallets.sort((a, b) => a.isAirdrop - b.isAirdrop);
-    const isMaxWallets = wallets.length >= maxWallets;
+    const walletsArray = Array.isArray(wallets) ? wallets : [];
+    const sortedWallets = walletsArray.sort((a, b) => a.isAirdrop - b.isAirdrop);
+    const isMaxWallets = walletsArray.length >= maxWallets;
 
     return (
-        <Card variant="none" className="flex flex-col gap-8 h-full w-full bg-settings-gradient md:py-6 md:px-12">
-            <div className="flex justify-between items-center select-none">
+        <Card variant="none" className="flex flex-col h-full bg-settings-gradient overflow-hidden">
+            <div className="p-4 flex justify-between items-center select-none">
                 <div>
                     <CardTitle className="text-lg font-medium">Wallet Connected</CardTitle>
                     <CardDescription className="text-md">Payouts will be sent to this wallet</CardDescription>
@@ -55,11 +57,11 @@ export default function WalletSettings({ session }) {
                 </div>
             </div>
 
-            <div>
+            <div className="p-4 h-full w-full flex block-scrollbar overflow-hidden md:overflow-y-auto">
                 {isLoading ? (
                     <Skeleton count={2} className="mb-4 h-20" />
                 ) : (
-                    <ul>
+                    <ul className="w-full">
                         {sortedWallets?.length
                             ? sortedWallets.map(({ wallet, isStaking, isDelegate, isAirdrop, chainId }) => {
                                   const address = isDesktop ? wallet : shortenAddress(wallet, 10);

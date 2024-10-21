@@ -32,7 +32,7 @@ const isSellColumn = columnHelper.accessor("isSell", {
     cell: (info) => {
         const isSell = info.getValue();
         return (
-            <span className={cn("text-base", isSell ? "text-error" : "text-success")}>{isSell ? "Sell" : "Buy"}</span>
+            <span className={cn("text-base", isSell ? "text-error" : "text-success")}>{isSell ? "Ask" : "Bid"}</span>
         );
     },
 });
@@ -72,6 +72,7 @@ const detailsColumn = columnHelper.accessor("details", {
             </Button>
         );
     },
+    enableSorting: false,
 });
 
 const chainColumn = columnHelper.accessor("chain", {
@@ -85,6 +86,7 @@ const chainColumn = columnHelper.accessor("chain", {
             </DynamicIconGroup>
         );
     },
+    enableSorting: false,
 });
 
 const marketColumn = columnHelper.accessor("name", {
@@ -100,6 +102,7 @@ const marketColumn = columnHelper.accessor("name", {
             </span>
         );
     },
+    enableSorting: false,
 });
 
 const actionColumn = columnHelper.accessor("action", {

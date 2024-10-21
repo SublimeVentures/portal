@@ -5,10 +5,7 @@ export const stepPrerequisite = (state, data) => {
     let result = {};
 
     if (data.prerequisite_isReady) {
-        result = handlePending({
-            content: data.params.prerequisiteTextWaiting ?? "Validating transaction",
-            text: "Please wait while we validate your transaction details.",
-        });
+        result = handlePending();
 
         if (state.isFinished) {
             result = handleSuccess({

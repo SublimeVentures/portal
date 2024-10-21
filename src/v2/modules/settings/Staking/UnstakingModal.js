@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import useGetToken from "@/lib/hooks/useGetToken";
 import {
     Dialog,
     DialogContent,
@@ -23,6 +24,7 @@ export default function UnstakingModal({ userId, staking = {} }) {
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
     const { stakeSize } = staking;
 
+    const [isOpen, setIsOpen] = useState(false);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const { data: wallets } = useQuery({
@@ -38,6 +40,8 @@ export default function UnstakingModal({ userId, staking = {} }) {
             ? "0x0000000000000000000000000000000000000000"
             : registeredOriginalWallet;
 
+    const token = useGetToken(stakingCurrency?.contract);
+
     const blockchainInteractionData = useMemo(() => {
         return {
             steps: {
@@ -45,23 +49,25 @@ export default function UnstakingModal({ userId, staking = {} }) {
                 transaction: true,
             },
             params: {
-                requiredNetwork: stakingCurrency.chainId,
+                requiredNetwork: stakingCurrency?.chainId ?? 0,
                 account: account.address,
                 buttonText: "Unstake",
                 contract: activeDiamond,
                 delegated: wallet,
                 transactionType: METHOD.UNSTAKE,
             },
+            token,
             setTransactionSuccessful,
         };
     }, [stakingCurrency?.contract, activeDiamond]);
 
-    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { all, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [isOpen],
     });
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" aria-label="Unstake">
                     Unstake

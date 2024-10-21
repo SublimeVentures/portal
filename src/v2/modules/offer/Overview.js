@@ -13,9 +13,9 @@ import { Badge } from "@/v2/components/ui/badge";
 import { useOfferStatus } from "@/v2/modules/opportunities/useSingleOfferLogic";
 import { cn } from "@/lib/cn";
 
-const SocialButton = ({ href, icon: Icon }) => (
+const SocialButton = ({ href, icon: Icon, ...props }) => (
     <Button variant="secondary" className="px-2" asChild>
-        <Link href={href} target="_blank">
+        <Link href={href} target="_blank" {...props}>
             <Icon className="size-5 m-px" />
         </Link>
     </Button>
@@ -27,9 +27,9 @@ export default function Overview({ className }) {
     const { getResearchReportSrc } = useResearchAssets();
 
     const socials = [
-        { href: offer.url_web, icon: LanguageIcon },
-        { href: offer.url_twitter, icon: TwitterIcon },
-        { href: offer.url_discord, icon: DiscordIcon },
+        { href: offer.url_web, icon: LanguageIcon, type: "Website" },
+        { href: offer.url_twitter, icon: TwitterIcon, type: "Twitter" },
+        { href: offer.url_discord, icon: DiscordIcon, type: "Discord" },
     ].filter(({ href }) => href);
 
     const { state, variant } = useOfferStatus(offer);
@@ -93,8 +93,8 @@ export default function Overview({ className }) {
                         </>
                     ) : (
                         <>
-                            {socials.map(({ href, icon: Icon }) => (
-                                <SocialButton key={href} href={href} icon={Icon} />
+                            {socials.map(({ href, icon: Icon, type }) => (
+                                <SocialButton key={href} href={href} icon={Icon} aria-label={`Go to ${type}`} />
                             ))}
                             <Button variant="outline" className="px-2" asChild>
                                 <Link
@@ -102,6 +102,7 @@ export default function Overview({ className }) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     download
+                                    arial-label="Download research report"
                                 >
                                     <DownloadIcon className="size-5" />
                                 </Link>

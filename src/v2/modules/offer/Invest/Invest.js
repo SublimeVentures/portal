@@ -1,13 +1,11 @@
-import InvestErrorModal from "../Invest/Modals/InvestErrorModal";
-import RestoreModal from "../Invest/Modals/RestoreModal";
 import InvestModal from "../Invest/Modals/InvestModal";
+import RestoreModal from "../Invest/Modals/RestoreModal";
+import InvestErrorModal from "../Invest/Modals/InvestErrorModal";
 import useInvest from "./useInvest";
 import InvestForm from "./InvestForm";
 import InvestFormFields from "./InvestFormFields";
 import InvestFormSummary from "./InvestFormSummary";
 import InvestFormSubmit from "./InvestFormSubmit";
-import Linker from "@/components/link";
-import { ExternalLinks } from "@/routes";
 
 export default function Invest({ session }) {
     const {
@@ -37,7 +35,7 @@ export default function Invest({ session }) {
                     {isBooked && (
                         <p className="text-sm text-green-500 text-center">
                             All spots booked! Awaiting blockchain confirmations. <br />
-                            <Linker url={ExternalLinks.BOOKING_SYSTEM} text="Check back soon." />
+                            {/* <Linker url={ExternalLinks.BOOKING_SYSTEM} text={"Check back soon."} /> */}
                         </p>
                     )}
                 </div>

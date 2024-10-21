@@ -21,14 +21,29 @@ import { Input } from "@/v2/components/ui/input";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import Success from "@/v2/modules/upgrades/Success";
 import { Button } from "@/v2/components/ui/button";
+import { reserveMysterybox } from "@/fetchers/mysterbox.fetcher";
 
 const isNetworkAvailable = tenantIndex !== TENANT.basedVC;
 
-export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
-    const { order, setOrder } = buyModalProps;
+export const blockchainPrerequisite = async (params) => {
+    const { tenant, network, amount, contract } = params;
+    const { chainId } = network;
+    const transaction = await reserveMysterybox({ tenant, chainId, network, amount, contract });
+    if (transaction.ok) {
+        return {
+            ok: true,
+            data: transaction,
+        };
+    } else {
+        return {
+            ok: false,
+            error: "Error generating hash",
+        };
+    }
+};
 
+const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, onClose, open, userId }) => {
     const { account, activeDiamond, network, getCurrencyStore } = useEnvironmentContext();
-    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const dropdownCurrencyOptions = getCurrencyStore();
@@ -39,13 +54,14 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
         }
     }, [network.chainId]);
 
-    const closeModal = () => {
-        setter();
-        setTimeout(() => {
-            setOrder(null);
-            setTransactionSuccessful(false);
-        }, 400);
-    };
+    useEffect(() => {
+        const value = dropdownCurrencyOptions[0]?.symbol || "";
+        const isValidCurrency = value && value !== "...";
+
+        if (!selectedCurrency & isValidCurrency) {
+            setSelectedCurrency(value);
+        }
+    }, [dropdownCurrencyOptions]);
 
     const token = useGetToken(selectedCurrency?.contract);
 
@@ -70,14 +86,21 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                 spender: activeDiamond,
                 contract: activeDiamond,
                 transactionType: METHOD.MYSTERYBOX,
+
+                userId,
+                prerequisiteTextWaiting: "Sign transaction",
+                prerequisiteTextProcessing: "Signing transaction",
+                prerequisiteTextSuccess: "Signing transaction obtained",
+                prerequisiteTextError: "Couldn't sign transaction",
             },
             token,
             setTransactionSuccessful,
         };
-    }, [model, activeDiamond, order.price, selectedCurrency?.contract, price, amount]);
+    }, [open, activeDiamond, order.price, selectedCurrency?.contract, price, amount]);
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
+        deps: [open],
     });
 
     const contentSuccess = () => {
@@ -97,14 +120,15 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                             <span className="text-xs font-light md:text-sm">Mystery Box</span>
                         </div>
                     </div>
-                    <Button className="w-full md:w-auto" onClick={closeModal}>
-                        Check inventory
+                    <Button className="w-full md:w-auto" onClick={onClose}>
+                        Mystery Box
                     </Button>
                 </Success.Article>
-                <Success.Footer>You can find your upgrade in your inventory</Success.Footer>
+                <Success.Footer>You can find your Mystery Box in Mystery Box page</Success.Footer>
             </Success.Content>
         );
     };
+
     const contentSteps = () => {
         return (
             <>
@@ -147,20 +171,39 @@ export default function BuyMysteryBoxModal({ model, setter, buyModalProps }) {
                             <Input readOnly className="w-full text-center" value={price} size="sm" />
                         </div>
                     </Grid>
-                    {model && <BlockchainSteps {...getBlockchainStepsProps()} />}
+                    <BlockchainSteps {...getBlockchainStepsProps()} />
                     <ModalButton className="w-full mt-4" {...getBlockchainStepButtonProps()} />
                 </Content>
             </>
         );
     };
+    return transactionSuccessful ? contentSuccess() : contentSteps();
+};
 
-    const content = () => {
-        return transactionSuccessful ? contentSuccess() : contentSteps();
+export default function BuyMysteryBoxModal({ onClose, open, buyModalProps, userId }) {
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+
+    const handleClose = () => {
+        onClose();
+        buyModalProps?.setOrder(null);
+        setTransactionSuccessful(false);
     };
 
     return (
-        <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
-            {content()}
+        <Modal
+            open={open}
+            onClose={handleClose}
+            variant={transactionSuccessful ? "pattern" : "default"}
+            forceMount={true}
+        >
+            <ModalContent
+                {...buyModalProps}
+                userId={userId}
+                transactionSuccessful={transactionSuccessful}
+                setTransactionSuccessful={setTransactionSuccessful}
+                open={open}
+                onClose={handleClose}
+            />
         </Modal>
     );
 }

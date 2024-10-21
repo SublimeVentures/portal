@@ -6,23 +6,25 @@ import { METHOD } from "@/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { getUserAllocation } from "@/v2/fetchers/otc";
+import { userInvestmentsKeys } from "@/v2/constants";
 
 export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
     const { currentMarket } = useMarket();
     const { getCurrencySettlement, account, currencies, activeOtcContract, otcFee } = useEnvironmentContext();
-    
+
     const { data: vault } = useQuery({
-        queryKey: ["userAllocation"],
+        queryKey: userInvestmentsKeys.userAllocation(),
         queryFn: getUserAllocation,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         cacheTime: 5 * 60 * 1000,
         staleTime: 3 * 60 * 1000,
     });
-        
+
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
-    
-    const userAllocation = (currentMarket && vault?.length > 0) ? vault.find(({ id }) => id === currentMarket.offerId) ?? {} : {};
+
+    const userAllocation =
+        currentMarket && vault?.length > 0 ? vault.find(({ id }) => id === currentMarket.offerId) ?? {} : {};
     const ownedAllocation = userAllocation?.invested ? userAllocation.invested - userAllocation.locked : 0;
     const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};
     const haveEnoughAllocation = offerDetails.isSell ? true : ownedAllocation >= offerDetails.amount;
@@ -84,4 +86,4 @@ export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
         blockchainInteractionData,
         setTransactionSuccessful,
     };
-};
+}

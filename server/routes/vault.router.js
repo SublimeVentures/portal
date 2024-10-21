@@ -20,12 +20,12 @@ const requestSchema = z.object({
             invalid_type_error: "Invalid sortOrder",
         })
         .optional(),
-    isUpcoming: z
+    isUpcoming: z.coerce
         .boolean({
             invalid_type_error: "Invalid isUpcoming",
         })
         .optional(),
-    canClaim: z
+    canClaim: z.coerce
         .boolean({
             invalid_type_error: "Invalid canClaim",
         })

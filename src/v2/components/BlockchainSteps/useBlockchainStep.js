@@ -18,7 +18,6 @@ export default function useBlockchainStep({ data, deps = [] }) {
     const [state, dispatch] = useReducer(mainReducer, initialState);
 
     useEffect(() => {
-        dispatch({ type: STEPS_ACTIONS.RESET });
         resetState();
     }, [
         params.price,
@@ -45,6 +44,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
 
     const resetState = () => {
         console.log("BIX :: PARAM CHANGED - reset writers");
+        dispatch({ type: STEPS_ACTIONS.RESET });
         allowance_set_reset?.write?.reset();
         allowance_set?.write?.reset();
         transaction?.write?.reset();
@@ -63,39 +63,40 @@ export default function useBlockchainStep({ data, deps = [] }) {
         [],
     );
 
-    useEffect(() => {
-        console.log(
-            `BIX :: RESET STATE`,
-            stepNetwork?.state,
-            stepLiquidity?.state,
-            stepAllowance?.state,
-            stepTransaction?.state,
-        );
+    // useEffect(() => {
+    //     console.log(
+    //         `BIX :: RESET STATE`,
+    //         stepNetwork?.state,
+    //         stepLiquidity?.state,
+    //         stepAllowance?.state,
+    //         stepTransaction?.state,
+    //     );
 
-        if (steps?.network && stepNetwork?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: networkAction.RESET_NETWORK });
-        }
-        if (steps?.liquidity && stepLiquidity?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: liquidityAction.RESET_LIQUIDITY });
-        }
-        if (steps?.allowance && stepAllowance?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: allowanceAction.RESET_ALLOWANCE });
-            transaction.write?.reset();
-        }
-        if (stepPrerequisite?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: prerequisiteAction.RESET_PREREQUISITE });
-            transaction.write?.reset();
-        }
-        if (steps?.transaction && stepTransaction?.state === STEPS_STATE.ERROR) {
-            dispatch({ type: transactionAction.RESET_TRANSACTION });
-        }
-    }, [
-        stepNetwork?.state,
-        stepLiquidity?.state,
-        stepAllowance?.state,
-        stepPrerequisite?.state,
-        stepTransaction?.state,
-    ]);
+    //     if (steps?.network && stepNetwork?.state === STEPS_STATE.ERROR) {
+    //         console.log('reset state', steps?.network, stepNetwork)
+    //         dispatch({ type: networkAction.RESET_NETWORK });
+    //     };
+    //     if (steps?.liquidity && stepLiquidity?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: liquidityAction.RESET_LIQUIDITY });
+    //     };
+    //     if (steps?.allowance && stepAllowance?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: allowanceAction.RESET_ALLOWANCE });
+    //         transaction.write?.reset();
+    //     };
+    //     if (stepPrerequisite?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: prerequisiteAction.RESET_PREREQUISITE });
+    //         transaction.write?.reset();
+    //     };
+    //     if (steps?.transaction && stepTransaction?.state === STEPS_STATE.ERROR) {
+    //         dispatch({ type: transactionAction.RESET_TRANSACTION });
+    //     };
+    // }, [
+    //     stepNetwork?.state,
+    //     stepLiquidity?.state,
+    //     stepAllowance?.state,
+    //     stepPrerequisite?.state,
+    //     stepTransaction?.state,
+    // ]);
 
     useEffect(() => {
         if (transaction_isFinished) {
@@ -105,16 +106,22 @@ export default function useBlockchainStep({ data, deps = [] }) {
     }, [transaction_isFinished]);
 
     const extraState = {
-        stepNetwork,
-        stepLiquidity,
-        stepAllowance,
-        stepPrerequisite,
-        stepTransaction,
+        network: stepNetwork,
+        liquidity: stepLiquidity,
+        allowance: stepAllowance,
+        prerequisite: stepPrerequisite,
+        transaction: stepTransaction,
     };
 
-    const buttonState = useBlockchainButton(steps, state, params, extraState);
-    const content = getTextContent(extraState);
+    const filteredExtraState = Object.keys(extraState).reduce((acc, key) => {
+        if (steps[key] || key === "prerequisite") {
+            acc[key] = extraState[key];
+        }
+        return acc;
+    }, {});
 
+    const buttonState = useBlockchainButton(steps, state, params, filteredExtraState);
+    const content = getTextContent(filteredExtraState);
     const statuses = Object.values(extraState)
         .map((item) => item?.state)
         .filter(Boolean);
@@ -134,7 +141,7 @@ export default function useBlockchainStep({ data, deps = [] }) {
             content,
             steps,
             status: state.status,
-            extraState,
+            extraState: filteredExtraState,
         }),
         getBlockchainStepButtonProps: () => ({
             run: debouncedRunProcess,
@@ -142,14 +149,14 @@ export default function useBlockchainStep({ data, deps = [] }) {
         }),
 
         // testing purposes
-        all: {
-            content,
-            steps,
-            status: state.status,
-            extraState,
-            resetState,
-            run: debouncedRunProcess,
-            ...buttonState,
-        },
+        // all: {
+        //     content,
+        //     steps,
+        //     status: state.status,
+        //     extraState,
+        //     resetState,
+        //     run: debouncedRunProcess,
+        //     ...buttonState,
+        // }
     };
 }

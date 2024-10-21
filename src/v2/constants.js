@@ -1,4 +1,6 @@
 // Source https://tkdodo.eu/blog/effective-react-query-keys#use-query-key-factories
+const createQueryKey = (key, query) => [key, ...(query ? [query] : [])];
+
 const settingsKeyValues = {
     wallets: "wallets",
 };
@@ -18,20 +20,6 @@ export const notificationKeys = {
     queryNotifications: (query) => [...notificationKeys.notifications, query],
     lastNotifications: [notificationsKeyValues.lastNotifications],
 };
-
-const offersKeyValues = {
-    offersVc: "offers-vc",
-    offerStats: "offer-stats",
-    offerProgress: "offer-progress",
-};
-
-export const offersKeys = {
-    offers: (query) => ["offers", ...(query ? [query] : [])],
-    queryOffersVc: (query) => [offersKeyValues.offersVc, query],
-    queryOffersStats: (query) => [offersKeyValues.offerStats, query],
-    queryOfferProgress: (query) => [offersKeyValues.offerProgress, query],
-};
-
 export const newsKeys = {
     news: (query) => ["news", ...(query ? [query] : [])],
 };
@@ -47,4 +35,19 @@ export const storeOwnedItemsKeys = {
 
 export const payoutsKeys = {
     payouts: (query) => ["payouts", ...(query ? [query] : [])],
+};
+
+export const offersKeys = {
+    offers: (query) => createQueryKey("offers", query),
+    offersVc: (query) => createQueryKey("offers-vc", query),
+    offersStats: (query) => createQueryKey("offers-stats", query),
+    offerDetails: (query) => createQueryKey("offer-details", query),
+    offerProgress: (query) => createQueryKey("offer-progress", query),
+    offerAllocation: (query) => createQueryKey("offer-allocation", query),
+    offerParticipants: (query) => createQueryKey("offer-participants", query),
+};
+
+export const userInvestmentsKeys = {
+    userAllocation: (query) => createQueryKey("user-allocation", query),
+    premiumOwned: (query) => createQueryKey("premium-owned", query),
 };

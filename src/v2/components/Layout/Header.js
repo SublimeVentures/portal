@@ -53,7 +53,7 @@ export default function Header({ title, isBlockedAlert, className, session }) {
                     <Button className="hidden lg:block" variant="secondary" onClick={handleLogout}>
                         Logout
                     </Button>
-                    <MobileMenu isBlockedAlert={isBlockedAlert} />
+                    <MobileMenu isBlockedAlert={isBlockedAlert} session={session} />
                 </div>
             </div>
         </header>

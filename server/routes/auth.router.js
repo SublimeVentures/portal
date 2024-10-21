@@ -7,6 +7,7 @@ const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
+const userController = require("../controllers/login/user");
 
 //LOGIN USER
 router.post("/login", async (req, res) => {
@@ -119,5 +120,9 @@ router.put("/login", async (req, res) => {
         return res.status(400).json({ ok: false });
     }
 });
+
+router.patch("/user", userController.updateUserData);
+
+router.get("/user", userController.getUser);
 
 module.exports = { router };
