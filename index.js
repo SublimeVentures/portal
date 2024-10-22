@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const { serializeError } = require("serialize-error");
 const logger = require("./src/lib/logger");
 const authMiddleware = require("./server/middlewares/auth.middleware");
+const checkTenant = require("./server/middlewares/checkTenant.middleware");
 
 const { connectDB } = require("./server/services/db");
 const { initCron } = require("./server/services/cron");
@@ -26,6 +27,8 @@ const { router: claimRoute } = require("./server/routes/claim.router.js");
 const { router: notificationsRoute } = require("./server/routes/notifications.router.js");
 const { router: networkRoute } = require("./server/routes/network.router.js");
 const { router: newsRoute } = require("./server/routes/news.router.js");
+const { router: referralRoute } = require("./server/routes/referral.router.js");
+const { router: referralClaimRoute } = require("./server/routes/referralClaim.router.js");
 
 const port = process.env.PORT || 3000;
 const dev = (process.env.ENV !== "production" && process.env.ENV !== "staging") || process.env.FORCE_DEV === "true";
@@ -59,7 +62,9 @@ nextApp.prepare().then(async () => {
     server.use("/api/notifications", authMiddleware, notificationsRoute);
     server.use("/api/network", authMiddleware, networkRoute);
     server.use("/api/news", authMiddleware, newsRoute);
-
+    server.use("/api/referral", authMiddleware, checkTenant, referralRoute);
+    server.use("/api/referral-claim", authMiddleware, checkTenant, referralClaimRoute);
+    
     // Default catch-all renders Next app
     server.all("*", (req, res) => {
         // if (!dev) {

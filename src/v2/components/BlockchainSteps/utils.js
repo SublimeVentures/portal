@@ -21,6 +21,7 @@ import { blockchainPrerequisite as prerequisite_upgradeBuy } from "../../compone
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
+import { blockchainPrerequisite as prerequisite_referralClaimPayout } from "@/v2/modules/referrals/Payout";
 
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
@@ -37,6 +38,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REFERRAL_CLAIM: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -440,6 +442,35 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+        case METHOD.REFERRAL_CLAIM: {
+            const isValid =
+                validAddress(params?.contract) &&
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.amount) &&
+                validNumber(params?.offerId) &&
+                validNumber(params?.claimId);
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "claimReferralPayouts",
+                          inputs: [
+                              params.offerId,
+                              params.claimId,
+                              params.amount,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_referralClaim,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
     }
 };
 
@@ -456,6 +487,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.CLAIM: {
             return await prerequisite_claimPayout(params);
+        }
+        case METHOD.REFERRAL_CLAIM: {
+            return await prerequisite_referralClaimPayout(params);
         }
         case METHOD.MYSTERYBOX: {
             return await prerequisite_mysteryBoxBuy(params);

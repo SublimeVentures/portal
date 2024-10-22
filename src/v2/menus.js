@@ -1,3 +1,4 @@
+import { IoPersonAdd as ReferralIcon } from "react-icons/io5";
 import PAGE, { ExternalLinks } from "@/routes";
 
 import NounStatisticsIcon from "@/v2/assets/svg/noun-statistics.svg";
@@ -28,6 +29,11 @@ export const mainMenu = [
     {
         name: "Upgrades",
         path: PAGE.Upgrades,
+        icon: DiamondIcon,
+    },
+    {
+        name: "Referrals",
+        path: PAGE.Referral,
         icon: DiamondIcon,
     },
 ];

@@ -19,6 +19,10 @@ function SkeletonTable({ span = 4, count = 5 }) {
 }
 
 export default function Table({ table, isLoading, colCount = 4 }) {
+    if (!table || !table.getRowModel) {
+        return <div>No data available</div>;
+    }
+
     return (
         <Card variant="static" className="p-0 flex flex-col h-full">
             <div className="p-2 h-5 rounded-t bg-gradient-to-r from-primary to-primary-600" />

@@ -16,11 +16,14 @@ import abi_mb_generic from "../../../abi/genericMysteryBox.abi.json";
 import abi_mb_based from "../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
 
+import abi_referralClaim from "../../../abi/ReferralClaimFacet.abi.json";
+
 import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "@/v2/components/App/MysteryBox/BuyMysteryBoxModal";
 import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/components/App/Upgrades/BuyStoreItemModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
+import { blockchainPrerequisite as prerequisite_referralClaimPayout } from "@/v2/modules/referrals/Payout";
 
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT =
@@ -40,6 +43,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REFERRAL_CLAIM: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -448,6 +452,35 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+        case METHOD.REFERRAL_CLAIM: {
+            const isValid =
+                validAddress(params?.contract) &&
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.amount) &&
+                validNumber(params?.offerId) &&
+                validNumber(params?.claimId);
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "claimReferralPayouts",
+                          inputs: [
+                              params.offerId,
+                              params.claimId,
+                              params.amount,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_referralClaim,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
     }
 };
 
@@ -464,6 +497,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.CLAIM: {
             return await prerequisite_claimPayout(params);
+        }
+        case METHOD.REFERRAL_CLAIM: {
+            return await prerequisite_referralClaimPayout(params);
         }
         case METHOD.MYSTERYBOX: {
             return await prerequisite_mysteryBoxBuy(params);

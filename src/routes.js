@@ -17,6 +17,7 @@ const PAGE = {
     Upgrades: "/app/upgrades",
     Settings: "/app/settings",
     Notifications: "/app/notifications",
+    Referral: "/app/referral",
 };
 
 export const API = {

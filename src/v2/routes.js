@@ -15,6 +15,13 @@ export const API_ROUTES = Object.freeze({
     network: NETWORK_API_ROUTES,
 });
 
+export const API_REFERRALS = Object.freeze({
+    referral: "/api/referral",
+    referrals: "/api/referral/referrals",
+    fetchReferralClaim: "/api/referral-claim",
+    fetchReferralClaimSign: "/api/referral-claim/sign",
+});
+
 export const routes = Object.freeze({
     Landing: "/",
     Join: "/join",
