@@ -40,7 +40,7 @@ export default function Investment({ session, className }) {
 
                 <div className="ml-auto flex items-center gap-4 xl:order-3 xl:ml-0">
                     <UpgradesModal />
-                    <CalculateModal taxPercentage={session.tier.taxPercentage} />
+                    <CalculateModal fee={session.tier.fee} />
                 </div>
 
                 <div className="w-full xl:ml-auto xl:order-2 xl:w-max">
