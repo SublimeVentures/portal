@@ -27,7 +27,7 @@ export default function Opportunities({ offers, stats, infiniteLoaderOpts, count
         <>
             <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-8">
                 <div className="mb-4 3xl:mb-0 w-full 2xl:w-5/12 3xl:w-1/2">
-                    <Title subtitle="We bring new industry giants to our community" count={count}>
+                    <Title subtitle="We bring new industry giants for our community" count={count}>
                         Funded Projects
                     </Title>
                 </div>

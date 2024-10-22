@@ -16,7 +16,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
             {showTimeline ? (
                 <div
                     className={cn(
-                        "mx-4 flex flex-col justify-between items-center gap-3 before:w-0 before:border-foreground/[.2] before:border before:h-[95%] after:w-0 after:border after:border-foreground/[.2] after:h-full group-first:before:border-none group-last:after:border-none",
+                        "mx-4 flex flex-col justify-between items-center gap-3 before:w-0 before:border-white/20 before:border before:h-[95%] after:w-0 after:border after:border-white/20 after:h-full group-first:before:border-none group-last:after:border-none",
                     )}
                 >
                     <div>
@@ -28,7 +28,7 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
             <div
                 className={cn(
                     "my-2 py-4 px-6 w-full flex flex-col gap-2 rounded",
-                    isRead ? "bg-foreground/[0.03]" : " bg-foreground/10",
+                    showTimeline ? (isRead ? "item" : "item-active") : null,
                     className,
                 )}
             >
@@ -44,20 +44,20 @@ const TimelineItem = forwardRef(({ item, showTimeline = true, isRead = true, cla
 
                         <div>
                             <div>
-                                <h3 className="inline mr-1 text-md font-semibold text-foreground">
+                                <h3 className="inline mr-1 text-md font-semibold text-white">
                                     {getNotificationTitle(item.typeId)}
                                 </h3>
-                                <p className="inline text-md font-light text-foreground/80">
+                                <p className="inline text-md font-light text-white/80">
                                     {getDescriptionMessage(item.typeId, item)}
                                 </p>
                             </div>
 
                             {item.onchain?.txID ? <TimelineTransaction item={item} /> : null}
-                            <dd className="text-md text-foreground/40">{getFormattedDate(item.createdAt)}</dd>
+                            <dd className="text-md text-white/40">{getFormattedDate(item.createdAt)}</dd>
                         </div>
                     </div>
 
-                    {!isRead ? <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-accent" /> : null}
+                    {!isRead ? <div className="w-1.5 h-1.5 bg-secondary rounded-full shadow-secondary" /> : null}
                 </div>
             </div>
         </div>

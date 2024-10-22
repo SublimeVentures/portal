@@ -1,25 +1,13 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-// import dynamic from "next/dynamic";
-
-// import ChangeNetwork from "@/components/Navigation/ChangeNetwork";
+import Logo from "@tenant/components/Logo";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import { cn } from "@/lib/cn";
 import PAGE from "@/routes";
 import { mainMenu, profileMenu, socialMenu } from "@/v2/menus";
-// import { useTenantSpecificData } from "@/v2/helpers/tenant";
-
-import BasedVCLogo from "@/v2/components/Tenant/Logo/basedVC";
-
-// @TODO - Render in the build time
-// const renderLogo = (componentName) => {
-//     const TenantLogo = dynamic(() => import(`@/v2/components/Tenant/Logo/${componentName}`), { ssr: true });
-//     return <TenantLogo />;
-// };
 
 export default function Sidebar({ isBlockedAlert = false, className }) {
     const router = useRouter();
-    // const { components } = useTenantSpecificData();
 
     const handleExternalLinkOpen = (evt, path) => {
         evt.preventDefault();
@@ -29,7 +17,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
     const generateMenu = (name, items) => {
         return (
             <>
-                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-foreground/50 mt-16 select-none">
+                <h2 className="px-6 lg:py-2 3xl:py-2.5 lg:mb-2 text-sm font-light text-white/60 mt-16 select-none font-heading">
                     {name}
                 </h2>
                 <ul className="flex flex-col gap-2">
@@ -37,7 +25,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
                         <li
                             key={path}
                             className={cn(
-                                "text-base font-normal text-foreground transition-colors hover:bg-primary/30 rounded cursor-pointer",
+                                "text-base font-normal text-white transition-colors hover:bg-primary/30 rounded cursor-pointer",
                                 {
                                     "bg-gradient-to-r from-primary to-primary-600 font-medium":
                                         router.pathname === path,
@@ -59,9 +47,8 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
             <div className={cn("lg:py-9 3xl:py-19 flex flex-col grow", { "mt-[var(--alertHeight)]": isBlockedAlert })}>
                 <div className="flex justify-between h-32">
                     <Link href={PAGE.App}>
-                        {/* <div className="flex items-center pb-12">{renderLogo(components.logo)}</div> */}
                         <div className="flex items-center pb-12">
-                            <BasedVCLogo />
+                            <Logo />
                         </div>
                     </Link>
                 </div>
@@ -72,7 +59,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
                 </nav>
 
                 <div className="mt-auto flex flex-col items-center">
-                    <h2 className="text-sm font-light text-white/60 select-none">Community</h2>
+                    <h2 className="text-sm font-light text-white/60 select-none font-heading">Community</h2>
 
                     <ul className="pt-2 flex items-center">
                         {socialMenu.map(({ icon, name, path }) => (

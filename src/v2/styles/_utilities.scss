@@ -1,0 +1,98 @@
+@layer utilities {
+    .item {
+        @apply bg-white/5 hover:bg-white/10 transition-colors;
+    }
+
+    .item-active {
+        @apply bg-white/10 hover:bg-white/15 transition-colors;
+    }
+
+    .transition-base {
+      @apply transition-all duration-500 ease-in-out;
+    }
+  
+    .transition-hover {
+      @apply transition-all duration-100 ease-in-out;
+    }
+  
+    .overlay {
+      @apply fixed inset-0 z-50 bg-primary-950/75 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0;
+    }
+  
+    .flex-center {
+      @apply flex items-center justify-center;
+    }
+  
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  
+    .bg-mystery-box {
+      background-image: url("/img/bg/mysterybox/bg-640w.jpg");
+      background-image: linear-gradient(to bottom, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+          "/img/bg/mysterybox/bg-640w@2x-q50.avif" type("image/avif") 2x,
+          "/img/bg/mysterybox/bg-640w@1x-q50.avif" type("image/avif") 1x,
+          "/img/bg/mysterybox/bg-640w@2x-q85.webp" type("image/webp") 2x,
+          "/img/bg/mysterybox/bg-640w@1x-q85.webp" type("image/webp") 1x,
+          "/img/bg/mysterybox/bg-640w@2x-q85.jpg" type("image/jpeg") 2x,
+          "/img/bg/mysterybox/bg-640w@1x-q85.jpg" type("image/jpeg") 1x
+      );
+    }
+  
+    @screen sm {
+      background-image: url("/img/bg/mysterybox/bg-1280w.jpg");
+      .bg-mystery-box {
+        background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+          "/img/bg/mysterybox/bg-1280w@2x-q50.avif" type("image/avif") 2x,
+          "/img/bg/mysterybox/bg-1280w@1x-q50.avif" type("image/avif") 1x,
+          "/img/bg/mysterybox/bg-1280w@2x-q85.webp" type("image/webp") 2x,
+          "/img/bg/mysterybox/bg-1280w@1x-q85.webp" type("image/webp") 1x,
+          "/img/bg/mysterybox/bg-1280w@2x-q85.jpg" type("image/jpeg") 2x,
+          "/img/bg/mysterybox/bg-1280w@1x-q85.jpg" type("image/jpeg") 1x
+      );
+      }
+    }
+  
+    @screen lg {
+      .bg-mystery-box {
+          background-image: url("/img/bg/mysterybox/bg-1920w.jpg");
+        background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+          "/img/bg/mysterybox/bg-1920w@2x-q50.avif" type("image/avif") 2x,
+          "/img/bg/mysterybox/bg-1920w@1x-q50.avif" type("image/avif") 1x,
+          "/img/bg/mysterybox/bg-1920w@2x-q85.webp" type("image/webp") 2x,
+          "/img/bg/mysterybox/bg-1920w@1x-q85.webp" type("image/webp") 1x,
+          "/img/bg/mysterybox/bg-1920w@2x-q85.jpg" type("image/jpeg") 2x,
+          "/img/bg/mysterybox/bg-1920w@1x-q85.jpg" type("image/jpeg") 1x
+        );
+      }
+    }
+  
+    @screen 3xl {
+      .bg-mystery-box {
+          background-image: url("/img/bg/mysterybox/bg-3840w.jpg");
+          background-image: linear-gradient(to right, theme('colors.primary.950') 0%, theme('colors.primary.950') 5%, rgba(0,0,0,0) 50%), image-set(
+              url("/img/bg/mysterybox/bg-3840w@2x-q50.avif") type("image/avif") 2x,
+              url("/img/bg/mysterybox/bg-3840w@1x-q50.avif") type("image/avif") 1x,
+              url("/img/bg/mysterybox/bg-3840w@2x-q85.webp") type("image/webp") 2x,
+              url("/img/bg/mysterybox/bg-3840w@1x-q85.webp") type("image/webp") 1x,
+              url("/img/bg/mysterybox/bg-3840w@2x-q85.jpg") type("image/jpeg") 2x,
+              url("/img/bg/mysterybox/bg-3840w@1x-q85.jpg") type("image/jpeg") 1x
+            );
+      }
+    }
+  
+    .hamburger-transform-1 {
+      transform: rotateZ(45deg) translate(4px, 0px);
+    }
+    .hamburger-transform-2 {
+      transform: rotateZ(-45deg);
+    }
+    .hamburger-transform-3 {
+      transform: translate(17px, -3px) rotateZ(45deg);
+    }
+}

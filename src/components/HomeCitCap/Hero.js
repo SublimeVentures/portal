@@ -15,13 +15,16 @@ export default function Hero({}) {
     }, []);
 
     return (
-        <div className="min-h-screen bg flex flex-col justify-center hero select-none">
+        <div className="min-h-screen bg-[linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),url(https://cdn.citizencapital.fund/webapp/bgCitCap.jpg)] bg-cover flex flex-col justify-center hero select-none">
             <div className="flex flex-col w-full md:max-w-[80%] md:mx-auto xl:max-w-[1200px]">
                 <div className="flex flex-col p-10 text-white font-medium md:max-w-[600px] md:justify-center">
-                    <div className={`font-accent ml-1 text-base mb-1`}>OFFICIAL INVESTMENT ARM OF NEO TOKYO</div>
+                    <div className={`font-heading ml-1 text-base mb-1`}>OFFICIAL INVESTMENT ARM OF NEO TOKYO</div>
                     <div className="text-hero">
-                        <h2 className="heroFont  glitch layers font-bold" data-text="CITIZEN CAPITAL">
-                            CITIZEN CAPITAL
+                        <h2
+                            className="text-[42px] relative glitch font-bold tracking-[10px] [filter:drop-shadow(0_1px_3px)]"
+                            data-text="CITIZEN CAPITAL"
+                        >
+                            <span className="text-nowrap">CITIZEN CAPITAL</span>
                         </h2>
                     </div>
                 </div>

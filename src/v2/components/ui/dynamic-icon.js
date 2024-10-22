@@ -5,20 +5,25 @@ import { cn } from "@/lib/cn";
 
 const IconVariants = cva("relative flex justify-center items-center rounded-full", {
     variants: {
-        color: {
-            default: "bg-gradient-to-b from-primary-600 to-primary p-1.5 shadow-[-4px_3px_6px_#0000003D",
-        },
         size: {
-            default: "p-.1.5 size-8",
+            default: "p-1.5 size-8",
         },
     },
     defaultVariants: {
-        color: "default",
         size: "default",
     },
 });
 
-export const DynamicIcon = ({ name = "", color, size, className, ...props }) => {
+const CURRENCY_BG_COLOR = {
+    USDC: "#2775CA",
+    USDT: "#53AE94",
+    ETH: "#627eeb",
+    MATIC: "#6d00f6",
+    BSC: "#f0b90c",
+    SEPOLIA: "#627eeb",
+};
+
+export const DynamicIcon = ({ name = "", size, className, ...props }) => {
     const [Icon, setIcon] = useState(null);
 
     useEffect(() => {
@@ -34,7 +39,13 @@ export const DynamicIcon = ({ name = "", color, size, className, ...props }) => 
 
     if (!Icon) return null;
 
-    return <Icon className={cn(IconVariants({ color, size, className }))} {...props} />;
+    return (
+        <Icon
+            className={cn(IconVariants({ size, className }))}
+            {...props}
+            style={{ backgroundColor: CURRENCY_BG_COLOR[name.toUpperCase()] }}
+        />
+    );
 };
 
 export const DynamicIconGroup = ({ children, className }) => {

@@ -30,11 +30,11 @@ const EmptyInvestmentsEnhanced = () => {
         <Card
             variant="none"
             border="none"
-            className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat"
+            className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat border-alt"
         >
             <CardTitle className="text-sm md:text-base text-center font-normal">No investments found</CardTitle>
             <CardDescription className="max-w-2xl text-lg md:text-3xl font-semibold text-center">
-                Explore elite investment avenues curated for the astute investor
+                Discover top-tier investment options tailored for the savvy investor
             </CardDescription>
             <div className="my-5 md:my-8 flex items-center gap-2.5 md:gap-4">
                 <Button className="w-full collap:w-auto" variant="outline" asChild>
@@ -55,10 +55,10 @@ const EmptyInvestmentsEnhanced = () => {
                         <AvatarFallback>CN</AvatarFallback>
                     </AvatarRoot>
                     <div className="text-left grow">
-                        <h4 className="text-lg font-medium text-foreground">{offer.ticker}</h4>
-                        <p className="text-sm font-light text-foreground">{offer.name}</p>
+                        <h4 className="text-lg font-medium text-white">{offer.ticker}</h4>
+                        <p className="text-sm font-light text-white">{offer.name}</p>
                     </div>
-                    <p className="max-w-[20ch] text-base text-foreground italic text-center md:text-left hidden md:block">
+                    <p className="max-w-[20ch] text-base text-white italic text-center md:text-left hidden md:block">
                         Latest exclusive investment opportunity
                     </p>
                     <IconButton

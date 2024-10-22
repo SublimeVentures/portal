@@ -34,11 +34,11 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                     <div>
                         <h3
                             data-ticker={`$${ticker}`}
-                            className="relative text-foreground text-2xl font-medium leading-none mb-2 after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:px-3 after:leading-none after:align-top md:after:align-middle"
+                            className="relative text-white text-2xl font-medium leading-none mb-2 after:content-[attr(data-ticker)] after:text-white after:text-2xs after:font-normal after:px-3 after:leading-none after:align-top md:after:align-middle font-heading"
                         >
                             {name}
                         </h3>
-                        <p className="text-foreground text-base font-light">{genre}</p>
+                        <p className="text-white text-base font-light">{genre}</p>
                     </div>
 
                     <Badge variant={btnVariant}>{state}</Badge>
@@ -49,7 +49,7 @@ export default function SingleOfferCard({ name, slug, genre, ticker, state, btnV
                 <Progress value={progress} aria-label={`${name} fundraising progress`} />
             </div>
 
-            <div className="m-4 px-2.5 lg:px-4 flex justify-between items-center bg-primary-600 rounded-full text-xs font-light text-foreground lg:text-sm leading-5 lg:leading-7">
+            <div className="m-4 px-2.5 lg:px-4 flex justify-between items-center bg-primary-600 rounded-xl text-xs font-light text-white lg:text-sm leading-5 lg:leading-7">
                 <p>{dateLabel}</p>
                 <time>{date}</time>
             </div>

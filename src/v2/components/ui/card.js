@@ -8,10 +8,10 @@ import { cn } from "@/lib/cn";
 const cardVariants = cva("group/card py-3.5 px-5 relative rounded transition-base cursor-pointer", {
     variants: {
         variant: {
-            default: "card-background",
-            accent: "card-gradient-accent",
-            static: "card-gradient",
-            dark: "card-dark",
+            default: "border-base hover:border-accent bg-base hover:bg-base",
+            accent: "border-accent bg-base",
+            static: "border-base bg-base",
+            dark: "border-base hover:border-accent bg-alt",
             none: "",
         },
     },
@@ -47,13 +47,13 @@ CardIcon.displayName = "CardIcon";
 
 const CardTitle = forwardRef(({ className, ...props }, ref) => (
     // eslint-disable-next-line jsx-a11y/heading-has-content
-    <h3 ref={ref} className={cn("text-foreground tracking-tight", className)} {...props} />
+    <h3 ref={ref} className={cn("text-white tracking-tight", className)} {...props} />
 ));
 
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = forwardRef(({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-foreground", className)} {...props} />
+    <p ref={ref} className={cn("text-white", className)} {...props} />
 ));
 
 CardDescription.displayName = "CardDescription";
@@ -62,7 +62,10 @@ const CardButton = forwardRef(({ className, ...props }, ref) => (
     <Button
         ref={ref}
         variant="outline"
-        className={cn("group-hover/card:bg-accent hover:!bg-accent-600 group-hover/card:border-transparent", className)}
+        className={cn(
+            "group-hover/card:bg-secondary hover:!bg-secondary-600 group-hover/card:border-transparent",
+            className,
+        )}
         {...props}
     />
 ));

@@ -109,8 +109,8 @@ const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, 
                 <Success.Kicker>Success!</Success.Kicker>
                 <Success.Title>Thank you for purchasing</Success.Title>
                 <Success.Description>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua.
+                    Open your {order.name} to see what treasures you have discovered. Save your redemption code to claim
+                    your treasures.
                 </Success.Description>
                 <Success.Article>
                     <div className="flex items-center gap-5 grow w-full md:w-auto">

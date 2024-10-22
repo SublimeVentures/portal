@@ -46,7 +46,7 @@ export const ErrorPartnershipCard = () => {
 
 const components = {
     a: ({ children, ...props }) => (
-        <a className="text-sm font-light text-accent/[.47]" {...props}>
+        <a className="text-sm font-light text-secondary/45" {...props}>
             {children}
         </a>
     ),
@@ -82,13 +82,13 @@ const PartnershipCard = ({ title, content, logos = [], isLoading, isError }) => 
             </ul>
             <div>
                 {title && (
-                    <CardTitle className="text-md md:text-lg 3xl:text-2xl text-center md:text-left 3xl:text-center font-normal text-foreground mb-3">
+                    <CardTitle className="text-md md:text-lg 3xl:text-2xl text-center md:text-left 3xl:text-center font-normal text-white mb-3">
                         {title}
                     </CardTitle>
                 )}
                 <ReactMarkdown
                     components={components}
-                    className="text-sm md:text-md 3xl:text-sm font-light text-center md:text-left 3xl:text-center text-foreground/[.47]"
+                    className="text-sm md:text-md 3xl:text-sm font-light text-center md:text-left 3xl:text-center text-white/45"
                 >
                     {content}
                 </ReactMarkdown>

@@ -20,7 +20,7 @@ export const stepAllowance = (state, data) => {
         } else if (data.isFetching || data.isLoading) {
             result = handleProcessing({
                 content: "Checking allowance",
-                text: "We are checking the current allowance. Please hold on.",
+                text: "We are checking the current allowance. Please wait a moment.",
             });
         } else if (data.allowance_set_reset.isError || data.allowance_set.isError || !!data.allowance_method_error) {
             result = handleError({
@@ -37,7 +37,7 @@ export const stepAllowance = (state, data) => {
         } else if (data.allowance_shouldRun) {
             result = handleProcessing({
                 content: "Checking allowance",
-                text: "We are checking the current allowance. Please hold on.",
+                text: "We are checking the current allowance. Please wait a moment.",
             });
         } else {
             result = handlePending({

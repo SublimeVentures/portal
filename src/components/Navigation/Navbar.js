@@ -76,14 +76,26 @@ export default function Navbar() {
         } else {
             if (!el.isExternal)
                 return (
-                    <Link href={el.link} key={i} className="mx-3 cursor-pointer ">
-                        <CitCapGlitchButton text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${el.name}`} />
+                    <Link href={el.link} key={i} className="mx-3 cursor-pointer overflow-hidden">
+                        <CitCapGlitchButton
+                            text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${el.name}`}
+                            state={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "" : "pt-2 before:hidden after:hidden"}`}
+                        />
                     </Link>
                 );
             else
                 return (
-                    <a href={el.link} key={i} target="_blank" className="mx-3 cursor-pointer " rel="noreferrer">
-                        <CitCapGlitchButton text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${el.name}`} />
+                    <a
+                        href={el.link}
+                        key={i}
+                        target="_blank"
+                        className="mx-3 cursor-pointer overflow-hidden"
+                        rel="noreferrer"
+                    >
+                        <CitCapGlitchButton
+                            text={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "_" : ""}${el.name}`}
+                            state={`${process.env.NEXT_PUBLIC_TENANT == "6" ? "" : "pt-2 before:hidden after:hidden"}`}
+                        />
                     </a>
                 );
         }

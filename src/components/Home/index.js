@@ -9,7 +9,7 @@ export default function HomeBased({ account }) {
         <>
             <Hero account={account} />
             <Highlights />
-            <Investors />
+            <Investors className="bg-[linear-gradient(to_bottom,rgba(16,19,27,1)_0%,rgba(16,19,27,1)_85%,rgba(14,17,24,1)_100%)]" />
             <About />
             <Callout />
         </>

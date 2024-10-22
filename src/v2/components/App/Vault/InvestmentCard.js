@@ -70,10 +70,10 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
         <InvestmentCardWrapper>
             <div className="mb-4 md:mb-8 flex justify-between items-center">
                 <div className="select-none">
-                    <CardTitle className="text-sm font-semibold md:text-lg md:font-medium text-foreground leading-none">
+                    <CardTitle className="text-sm font-semibold md:text-lg md:font-medium text-white leading-none">
                         {coin}
                     </CardTitle>
-                    <p className="text-xs font-light md:text-base text-foreground leading-none">{title}</p>
+                    <p className="text-xs font-light md:text-base text-white leading-none">{title}</p>
                 </div>
                 <Image
                     src={getResearchIconSrc(slug)}

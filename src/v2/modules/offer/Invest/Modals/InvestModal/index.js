@@ -132,8 +132,8 @@ const InvestModalContent = ({
                 />
             ) : (
                 <>
-                    <div className="p-4 flex flex-col items-center border border-foreground rounded">
-                        <h4 className="pb-2 text-xl text-foreground">Complete transfer in the next</h4>
+                    <div className="p-4 flex flex-col items-center border border-white rounded">
+                        <h4 className="pb-2 text-xl text-white">Complete transfer in the next</h4>
                         <Countdown
                             countStart={moment.unix(bookingDetails.expires).valueOf()}
                             onComplete={bookingExpire}

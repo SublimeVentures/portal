@@ -20,8 +20,8 @@ const RadioGroupItem = React.forwardRef(({ children, className, checked, ...prop
         <RadioGroupPrimitive.Item
             ref={ref}
             className={cn(
-                "p-2 w-full text-foreground/50 bg-transparent text-center cursor-pointer",
-                checked && "text-foreground bg-primary",
+                "p-2 w-full text-white/50 bg-transparent text-center cursor-pointer",
+                checked && "text-white bg-primary",
                 className,
             )}
             {...props}

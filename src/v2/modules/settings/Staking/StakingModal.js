@@ -112,15 +112,15 @@ export default function StakingModal({ userId, staking = {} }) {
                 ) : (
                     <>
                         <div className="grid grid-cols-2 gap-4 text-center">
-                            <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
-                                <dt className="text-foreground text-lg font-semibold">Detected NFTs</dt>
-                                <dd className="mt-2 text-foreground text-4xl">{nft[isS1 ? 0 : 1]}</dd>
+                            <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-white rounded">
+                                <dt className="text-white text-lg font-semibold">Detected NFTs</dt>
+                                <dd className="mt-2 text-white text-4xl">{nft[isS1 ? 0 : 1]}</dd>
                             </dl>
-                            <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
-                                <dt className="text-foreground text-lg font-semibold">
+                            <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-white rounded">
+                                <dt className="text-white text-lg font-semibold">
                                     {isStaked ? "Add" : "Required"} Stake
                                 </dt>
-                                <dd className="mt-2 text-foreground text-4xl">
+                                <dd className="mt-2 text-white text-4xl">
                                     {stakeSize} {stakingCurrency?.name}
                                 </dd>
                             </dl>

@@ -23,8 +23,8 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const dialogVariants = cva([], {
     variants: {
         variant: {
-            accent: "dialog-gradient",
-            default: "bg-gradient angle-[114deg] from-primary-900 via-primary-700 to-primary-900",
+            accent: "bg-base border-base",
+            default: "bg-base",
             pattern: "bg-pattern",
         },
     },
@@ -41,7 +41,7 @@ const DialogContent = forwardRef(
                 ref={ref}
                 className={cn(
                     dialogVariants({ variant }),
-                    "h-dvh sm:h-auto max-w-[700px] max-h-dvh w-full sm:w-11/12 fixed left-[50%] top-[50%] z-50 grid rounded translate-x-[-50%] translate-y-[-50%] gap-8 px-4 md:px-13 py-8 shadow-[0_0_58px_hsla(0, 0%, 0%, 0.38)]",
+                    "h-dvh sm:h-auto max-w-[700px] max-h-dvh w-full sm:w-11/12 !fixed left-[50%] top-[50%] !z-50 grid rounded translate-x-[-50%] translate-y-[-50%] gap-8 px-4 md:px-13 py-8 shadow-[0_0_58px_hsla(0, 0%, 0%, 0.38)]",
                     "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 md:w-full data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
                     className,
                 )}
@@ -51,7 +51,7 @@ const DialogContent = forwardRef(
                 {close && (
                     <DialogPrimitive.Close
                         className={cn(
-                            "absolute top-2.5 right-2.5 p-2.5 3xl:right-13 3xl:top-8 3xl:p-3.5 rounded opacity-70 ring-offset-background transition-base hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+                            "absolute top-2.5 right-2.5 p-2.5 3xl:right-13 3xl:top-8 3xl:p-3.5 rounded opacity-70 ring-offset-background transition-base hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary data-[state=open]:text-muted-foreground",
                             closeClassName,
                         )}
                         onClick={handleClose}
@@ -86,7 +86,7 @@ DialogFooter.displayName = "DialogFooter";
 const DialogTitle = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
         ref={ref}
-        className={cn("text-xl md:text-3xl font-normal md:font-medium text-foreground", className)}
+        className={cn("text-xl md:text-3xl font-normal md:font-medium text-white font-heading", className)}
         {...props}
     />
 ));
@@ -96,7 +96,7 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName;
 const DialogDescription = forwardRef(({ className, ...props }, ref) => (
     <DialogPrimitive.Description
         ref={ref}
-        className={cn("text-xs font-normal text-foreground text-center md:text-lg md:text-left", className)}
+        className={cn("text-xs font-normal text-white text-center md:text-lg md:text-left", className)}
         {...props}
     />
 ));

@@ -24,9 +24,7 @@ export default function Table({ table, isLoading, colCount = 4 }) {
     }
 
     return (
-        <Card variant="static" className="p-0 flex flex-col h-full">
-            <div className="p-2 h-5 rounded-t bg-gradient-to-r from-primary to-primary-600" />
-
+        <Card variant="static" className="p-0 flex flex-col h-full ribbon">
             <div className="py-2 px-4 h-full block-scrollbar overflow-hidden md:overflow-y-auto">
                 <table className="table-inline md:table">
                     <thead className="table-head">
@@ -56,11 +54,11 @@ export default function Table({ table, isLoading, colCount = 4 }) {
                         ) : (
                             table.getRowModel().rows.map((row) => (
                                 <Fragment key={row.id}>
-                                    <tr className="table-body-row group">
+                                    <tr className="table-body-row">
                                         {row.getVisibleCells().map((cell) => (
                                             <td
                                                 key={cell.id}
-                                                className="table-data group-hover:bg-foreground/[.3]"
+                                                className="table-data"
                                                 data-label={cell.column.columnDef.header}
                                             >
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
