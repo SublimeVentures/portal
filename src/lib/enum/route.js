@@ -1,3 +1,8 @@
+const { tenantIndex } = require("../utils");
+const { TENANT } = require("./tenant");
+
+const isTenantBased = tenantIndex === TENANT.basedVC;
+
 const PAGE = {
     Landing: "/",
     Join: "/join",
@@ -6,14 +11,14 @@ const PAGE = {
     Tokenomics: "/tokenomics",
     ToS: "/terms",
     Privacy: "/privacy",
-    App: "/app",
-    Opportunities: "/app/offer",
-    Launchpad: "/app/launchpad",
-    OTC: "/app/otc",
-    Notifs: "/app/latest",
-    Mysterybox: "/app/mysterybox",
-    Upgrades: "/app/upgrades",
-    Settings: "/app/settings",
+    App: isTenantBased ? "/" : "/app",
+    Opportunities: isTenantBased ? "/offer" : "/app/offer",
+    Launchpad: isTenantBased ? "/launchpad" : "/app/launchpad",
+    OTC: isTenantBased ? "/otc" : "/app/otc",
+    Notifs: isTenantBased ? "/latest" : "/app/latest",
+    Mysterybox: isTenantBased ? "/mysterybox" : "/app/mysterybox",
+    Upgrades: isTenantBased ? "/upgrades" : "/app/upgrades",
+    Settings: isTenantBased ? "/settings" : "/app/settings",
     NotFound: "/404",
 };
 
