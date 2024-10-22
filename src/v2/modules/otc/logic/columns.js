@@ -108,7 +108,7 @@ const marketColumn = columnHelper.accessor("name", {
 const actionColumn = columnHelper.accessor("action", {
     header: "Action",
     cell: (info) => {
-        const { wallets } = useSession();
+        const { wallets, tier } = useSession();
         const { account } = useEnvironmentContext();
 
         const ownership = isUserOffer(wallets, info.row.original.maker, account);
@@ -131,7 +131,9 @@ const actionColumn = columnHelper.accessor("action", {
                         />
                     ))}
 
-                {!ownership.ok && <TakeOfferModal offerDetails={offerDetails} className="w-full" />}
+                {!ownership.ok && (
+                    <TakeOfferModal otcFee={tier.otcFee} offerDetails={offerDetails} className="w-full" />
+                )}
             </div>
         );
     },
