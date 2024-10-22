@@ -105,7 +105,7 @@ const InvestModalContent = ({
         <DialogContent>
             <DialogHeader className="md:items-center">
                 <DialogTitle className="text-center flex items-center justify-center">
-                    {transactionSuccessful ? "Investment successful" : "Booking success"}
+                    {transactionSuccessful ? "Investment Successful" : "Booking Success"}
                 </DialogTitle>
                 <DialogDescription className="max-w-80 md:text-center">
                     {transactionSuccessful ? (

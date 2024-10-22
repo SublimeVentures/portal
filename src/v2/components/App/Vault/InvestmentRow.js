@@ -7,9 +7,14 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import useInvestmentsData from "@/v2/hooks/useInvestmentsData";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import { Button } from "@/v2/components/ui/button";
+import Modal from "@/v2/components/App/Vault/ClaimModal";
 
 const InvestmentRowWrapper = ({ children, className }) => {
-    return <Card className={cn("h-max py-5 px-8 hover:scale-[1.02] group/button", className)}>{children}</Card>;
+    return (
+        <Card className={cn("h-max py-5 px-8 hover:scale-[1.02] group/button cursor-default", className)}>
+            {children}
+        </Card>
+    );
 };
 
 export const SkeletonInvestmentRow = () => {
@@ -117,11 +122,12 @@ const InvestmentRow = ({ details, isLoading = false, isError = false }) => {
                 <p className="text-sm font-light text-white/55">
                     {participatedDate && `Participated ${participatedDate}`}
                 </p>
-
-                <Button variant={canClaim ? "accent" : "outline"}>
-                    <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
-                    <ArrowIcon className="ml-2 size-2" />
-                </Button>
+                <Modal data={data}>
+                    <Button variant={canClaim ? "accent" : "outline"}>
+                        <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
+                        <ArrowIcon className="ml-2 size-2" />
+                    </Button>
+                </Modal>
             </div>
         </InvestmentRowWrapper>
     );
