@@ -12,6 +12,9 @@ const defaultState = {
     multiplier: 10,
 };
 
+export const MAX_MULTIPLIER = 200;
+export const MIN_MULTIPLIER = 5;
+
 const calculatePrice = (multiplier, amount, fee) => {
     if (amount === 0 || Number(amount) === 0) return 0;
     const totalAmount = amount * multiplier;
@@ -33,7 +36,10 @@ function reducer(state, action) {
         case ACTIONS.SET_MULTIPLIER: {
             const { amount, fee } = action.payload;
             const newMultiplier = state.multiplier + (amount ? 5 : -5);
-            const clampedMultiplier = Math.max(5, Math.round(newMultiplier / 5) * 5);
+            const clampedMultiplier = Math.max(
+                MIN_MULTIPLIER,
+                Math.min(MAX_MULTIPLIER, Math.round(newMultiplier / 5) * 5),
+            );
             const price = calculatePrice(clampedMultiplier, state.amount, fee);
             const total = state.amount * clampedMultiplier ?? 0;
 

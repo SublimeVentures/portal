@@ -1,6 +1,7 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-import useCalculate from "./useCalculate";
+import useCalculate, { MAX_MULTIPLIER, MIN_MULTIPLIER } from "./useCalculate";
+import { cn } from "@/lib/cn";
 import { Input } from "@/v2/components/ui/input";
 import { IconButton } from "@/v2/components/ui/icon-button";
 
@@ -31,11 +32,24 @@ export default function CalculateForm({ fee = 10 }) {
                     </span>
                 </div>
             </label>
-
-            <div className="p-6 flex items-center justify-between w-full bg-green-500/10 rounded md:py-8 md:px-12">
-                <IconButton variant="secondary" icon={FaChevronLeft} onClick={() => handleMultiplierChange(false)} />
+            <div
+                className={cn("p-6 flex items-center justify-between w-full bg-green-500/10 rounded md:py-8 md:px-12")}
+            >
+                <IconButton
+                    variant="secondary"
+                    icon={FaChevronLeft}
+                    onClick={() => handleMultiplierChange(false)}
+                    disabled={multiplier <= MIN_MULTIPLIER}
+                    className={cn(multiplier <= MIN_MULTIPLIER ? "opacity-50 cursor-not-allowed" : "")}
+                />
                 <div className="text-4xl text-green-500">x{multiplierParsed}</div>
-                <IconButton variant="secondary" icon={FaChevronRight} onClick={() => handleMultiplierChange(true)} />
+                <IconButton
+                    variant="secondary"
+                    icon={FaChevronRight}
+                    onClick={() => handleMultiplierChange(true)}
+                    disabled={multiplier >= MAX_MULTIPLIER}
+                    className={cn(multiplier >= MAX_MULTIPLIER ? "opacity-50 cursor-not-allowed" : "")}
+                />
             </div>
 
             <label className="w-full flex flex-col text-white">
