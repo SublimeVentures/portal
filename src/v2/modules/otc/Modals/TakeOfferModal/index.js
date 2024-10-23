@@ -30,14 +30,14 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import MutedText from "@/v2/components/ui/muted-text";
 import { userInvestmentsKeys } from "@/v2/constants";
 
-export default function TakeOfferModal({ offerDetails, className }) {
+export default function TakeOfferModal({ otcFee, offerDetails, className }) {
     const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
 
     const { currentMarket } = useMarket();
-    const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
+    const { getCurrencySymbolByAddress, network, cdn } = useEnvironmentContext();
 
     const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
-        useBlockchainTakeOfferTransaction({ offerDetails });
+        useBlockchainTakeOfferTransaction({ offerDetails, otcFee });
 
     const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,

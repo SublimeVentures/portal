@@ -39,8 +39,8 @@ export default function useStaking({ tenantId, session, account }) {
         switch (tenantId) {
             case TENANT.basedVC:
                 return {
-                    // What values should we return here?
-                    // isStaked: session.isStaked,
+                    stakeMulti: session.stakeMulti,
+                    isStaked: session.isStaked,
                 };
             case TENANT.CyberKongz:
                 return {

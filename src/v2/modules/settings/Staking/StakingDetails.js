@@ -2,7 +2,7 @@ import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import { cn } from "@/lib/cn";
 
 export default function StakingDetails({ session, staking }) {
-    const { allocationBonus, staked, unstake, stakeReq, nextDate, nextDateH } = staking;
+    const { allocationBonus = 0, staked, unstake, stakeReq, nextDate, nextDateH } = staking;
 
     return (
         <>

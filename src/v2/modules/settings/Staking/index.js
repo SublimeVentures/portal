@@ -11,7 +11,10 @@ import { useTenantSpecificData, TENANT } from "@/v2/helpers/tenant";
 
 const TENANTS_STAKIMG = {
     [TENANT.basedVC]: {
-        fields: [{ term: "Nft ID:", value: (session) => `#${session.accountId}` }],
+        fields: [
+            { term: "Nft ID:", value: (session) => `#${session.accountId}` },
+            { term: "Tier:", value: (session) => `${session.tier.name}` },
+        ],
     },
     [TENANT.NeoTokyo]: {
         fields: [
@@ -45,6 +48,7 @@ const isNew = true;
 export default function Staking({ session }) {
     const { currencyStaking, account } = useEnvironmentContext();
     const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
+    // const stakingEnabled = true && session.stakingEnabled;
 
     const { id: tenantId } = useTenantSpecificData();
     const currentTenant = TENANTS_STAKIMG[tenantId] || {};
