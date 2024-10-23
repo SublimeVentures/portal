@@ -10,6 +10,7 @@ export const ReassignForm = ({
     dropdownCurrencyOptions,
     handleCurrencyChange,
     handleAddressChange,
+    disabled,
 }) => {
     return (
         <Form {...form}>
@@ -24,6 +25,7 @@ export const ReassignForm = ({
                                 <Input
                                     {...field}
                                     autoComplete="false"
+                                    disabled={disabled}
                                     onChange={(evt) => {
                                         handleAddressChange(evt.target.value);
                                         field.onChange(evt, field.onChange);
@@ -33,13 +35,18 @@ export const ReassignForm = ({
                         </FormItem>
                     )}
                 />
+                <br />
                 <FormField
                     name="currency"
                     control={form.control}
                     render={({ field }) => (
                         <FormItem className="mt-8 relative 2xl:mt-0">
                             <FormControl>
-                                <Select {...field} onValueChange={(val) => handleCurrencyChange(val, field.onChange)}>
+                                <Select
+                                    {...field}
+                                    onValueChange={(val) => handleCurrencyChange(val, field.onChange)}
+                                    disabled={disabled}
+                                >
                                     <SelectTrigger className="w-full h-full bg-foreground/[.06] 2xl:w-46 3xl:w-52">
                                         <SelectValue />
                                     </SelectTrigger>
@@ -55,10 +62,7 @@ export const ReassignForm = ({
                                     </SelectContent>
                                 </Select>
                             </FormControl>
-                            <FormLabel
-                                htmlFor="currency"
-                                className="absolute -left-0 -top-9 text-sm 2xl:-top-11 2xl:text-base"
-                            >
+                            <FormLabel htmlFor="currency" className="absolute -left-0 -top-9 2xl:-top-11 2xl:text-base">
                                 Select Currency
                             </FormLabel>
                         </FormItem>
@@ -76,4 +80,5 @@ ReassignForm.propTypes = {
     handleSubmit: PropTypes.func,
     form: PropTypes.object,
     dropdownCurrencyOptions: PropTypes.object,
+    disabled: PropTypes.bool,
 };

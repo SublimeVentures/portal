@@ -54,8 +54,8 @@ export const ErrorInvestmentCard = ({ actionFn }) => {
     );
 };
 
-const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
-    const data = useInvestmentsData(details);
+const InvestmentCard = ({ details, isLoading = false, isError = false, refetch }) => {
+    const data = useInvestmentsData(details, refetch);
     const { title, coin, slug, participatedDate, canClaim, isClaimSoon } = data;
     const { getResearchIconSrc } = useImage();
 

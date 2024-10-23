@@ -1,9 +1,9 @@
 import moment from "moment";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
-export default function useInvestmentsData(details) {
+export default function useInvestmentsData(details, refetch) {
     const { cdn } = useEnvironmentContext();
-    console.log(details);
+
     return {
         title: details?.offer?.name,
         coin: details?.offer?.ticker,
@@ -22,5 +22,6 @@ export default function useInvestmentsData(details) {
         nextPayout: details.nextPayout,
         currentPayout: details.currentPayout,
         offerId: details?.offer?.id,
+        refetchVaults: refetch,
     };
 }

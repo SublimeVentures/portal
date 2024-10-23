@@ -5,7 +5,6 @@ import { SheetBody } from "@/v2/components/ui/sheet";
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
-import useReassign from "@/v2/components/App/Vault/ReassignModal/useReassign";
 import ReassignModal from "@/v2/components/App/Vault/ReassignModal";
 
 export const getSymbol = (data) => {
