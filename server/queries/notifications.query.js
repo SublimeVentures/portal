@@ -1,4 +1,5 @@
 const { Op, Sequelize } = require("sequelize");
+const { addDays } = require("date-fns");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const { NotificationTypes } = require("../../src/v2/enum/notifications");
@@ -6,23 +7,23 @@ const errorTypeEnum = require("../../shared/enum/errorType.enum");
 
 function buildWhereFromAuthorizedQuery(user, query) {
     const { userId, tenantId } = user;
-    const { limit = 12, offset = 0, sort = "asc", ...whereQuery } = query;
+    const { limit = 12, offset = 0, sort = "desc", ...whereQuery } = query;
+    const { before, after, ...whereQueryRest } = whereQuery;
 
     const where = {};
     where["userId"] = userId;
     where["tenantId"] = { [Op.in]: [tenantId, null, 0] };
     if (whereQuery.before && whereQuery.after) {
         where["createdAt"] = {
-            [Op.between]: [whereQuery.before, whereQuery.after],
+            [Op.between]: [whereQuery.after, addDays(new Date(whereQuery.before), 1)],
         };
     } else if ("before" in whereQuery) {
-        where["createdAt"] = { [Op.lte]: new Date(whereQuery.before) };
+        where["createdAt"] = { [Op.lt]: addDays(new Date(whereQuery.before), 1) };
     } else if ("after" in whereQuery) {
         where["createdAt"] = { [Op.gte]: new Date(whereQuery.after) };
-    } else {
-        for (const [key, value] of Object.entries(whereQuery)) {
-            where[key] = value;
-        }
+    }
+    for (const [key, value] of Object.entries(whereQueryRest)) {
+        where[key] = value;
     }
 
     return {
@@ -65,7 +66,7 @@ async function getNotifications(user, query) {
             where,
             limit,
             offset,
-            order: [["id", sort.toUpperCase()]],
+            order: [["createdAt", sort.toUpperCase()]],
             include: [
                 {
                     model: models.offer,
@@ -202,7 +203,7 @@ async function setNotificationPreferences(userId, tenantId, updates) {
                         transaction,
                     });
                 }
-            })
+            }),
         );
         return updatesResult;
     } catch (error) {

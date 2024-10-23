@@ -39,7 +39,7 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
 
                                     return (
                                         <li key={notification.id} className="group">
-                                            <TimelineItem item={notification} showTimeline={data.length > 1} />
+                                            <TimelineItem item={notification} showTimeline={true} />
                                         </li>
                                     );
                                 })}
