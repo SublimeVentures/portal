@@ -101,15 +101,18 @@ export default function OffersTable() {
     });
 
     const isLoading = isMarketLoading || isOffersLoading;
+    const isEmpty = data.length === 0;
+
     return (
         <div className="flex flex-col h-full overflow-hidden">
             <TableFilters
+                isEmpty={isEmpty}
                 filters={filters}
                 handleToggleFilter={handleToggleFilter}
                 handleFilterRemove={handleFilterRemove}
             />
             <div className="hidden grow overflow-hidden md:block">
-                {data.length === 0 && !isLoading ? (
+                {isEmpty && !isLoading ? (
                     <Empty />
                 ) : (
                     <Table table={table} isLoading={isLoading} colCount={columns.length} />
