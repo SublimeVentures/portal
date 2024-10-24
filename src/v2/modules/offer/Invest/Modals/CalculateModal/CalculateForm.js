@@ -40,7 +40,9 @@ export default function CalculateForm({ fee = 10 }) {
                     icon={FaChevronLeft}
                     onClick={() => handleMultiplierChange(false)}
                     disabled={multiplier <= MIN_MULTIPLIER}
-                    className={cn(multiplier <= MIN_MULTIPLIER ? "opacity-50 cursor-not-allowed" : "")}
+                    className={cn(
+                        multiplier <= MIN_MULTIPLIER ? "opacity-50 cursor-not-allowed hover:bg-primary/10" : "",
+                    )}
                 />
                 <div className="text-4xl text-green-500">x{multiplierParsed}</div>
                 <IconButton
@@ -48,7 +50,9 @@ export default function CalculateForm({ fee = 10 }) {
                     icon={FaChevronRight}
                     onClick={() => handleMultiplierChange(true)}
                     disabled={multiplier >= MAX_MULTIPLIER}
-                    className={cn(multiplier >= MAX_MULTIPLIER ? "opacity-50 cursor-not-allowed" : "")}
+                    className={cn(
+                        multiplier >= MAX_MULTIPLIER ? "opacity-50 cursor-not-allowed hover:bg-primary/10" : "",
+                    )}
                 />
             </div>
 

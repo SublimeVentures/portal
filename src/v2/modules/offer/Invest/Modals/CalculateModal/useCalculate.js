@@ -16,7 +16,7 @@ export const MAX_MULTIPLIER = 200;
 export const MIN_MULTIPLIER = 5;
 
 const calculatePrice = (multiplier, amount, fee) => {
-    if (amount === 0 || Number(amount) === 0) return 0;
+    if (amount === 0) return 0;
     const totalAmount = amount * multiplier;
     const feeAmount = (totalAmount * fee) / totalAmount;
     const value = totalAmount - feeAmount;
@@ -27,7 +27,8 @@ const calculatePrice = (multiplier, amount, fee) => {
 function reducer(state, action) {
     switch (action.type) {
         case ACTIONS.SET_AMOUNT: {
-            const { amount, fee } = action.payload;
+            const { fee } = action.payload;
+            const amount = Number(action.payload.amount);
             const price = calculatePrice(state.multiplier, amount, fee);
             const total = amount * state.multiplier ?? 0;
 
