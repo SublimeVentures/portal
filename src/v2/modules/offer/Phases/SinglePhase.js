@@ -6,10 +6,10 @@ export default function SinglePhase({ phase, phaseName, phaseDescription, curren
         <Tooltip>
             <TooltipTrigger
                 className={cn(
-                    "px-4 py-2 text-sm border-2 rounded",
+                    "px-4 py-2 text-sm border-2 rounded cursor-default",
                     currentPhase === phase
                         ? "text-white bg-primary border-primary"
-                        : "text-white/25 border-2 border-white/25",
+                        : "text-white/25 border-2 border-white/25 cursor-default",
                 )}
             >
                 {phaseName}

@@ -33,7 +33,7 @@ export default function Details({ data, onClick, items }) {
                         <dl className="definition-grid">
                             {data.isManaged ? (
                                 <>
-                                    <DefinitionItem term="TGE gain">
+                                    <DefinitionItem term="TGE Gain">
                                         <PercentWrapper value={data.tgeGain} />
                                     </DefinitionItem>
                                     <DefinitionItem term="Return">
@@ -51,11 +51,11 @@ export default function Details({ data, onClick, items }) {
                     <div className="definition-section my-0">
                         <dl className="definition-grid">
                             <DefinitionItem term="Participated">{data.participatedDate}</DefinitionItem>
-                            <DefinitionItem term="Next unlock">{data.nextPayout?.unlockDate || "TBA"}</DefinitionItem>
+                            <DefinitionItem term="Next Unlock">{data.nextPayout?.unlockDate || "TBA"}</DefinitionItem>
                             <DefinitionItem term="Allocation Snapshot">
                                 {data.nextPayout?.snapshotDate || "TBA"}
                             </DefinitionItem>
-                            <DefinitionItem term="Claim date">{data.nextPayout?.claimDate || "TBA"}</DefinitionItem>
+                            <DefinitionItem term="Claim Date">{data.nextPayout?.claimDate || "TBA"}</DefinitionItem>
                         </dl>
                     </div>
                 </div>

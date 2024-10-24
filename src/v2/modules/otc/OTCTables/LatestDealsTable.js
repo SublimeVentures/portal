@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useReactTable, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, getSortedRowModel } from "@tanstack/react-table";
 
 import { latestDealsColumns as columns } from "../logic/columns";
-import TableFilters from "./TableFilters";
 import CardSkeleton from "./CardSkeleton";
 import SingleLatestDealsCard from "./SingleLatestDealsCard";
 import useMarket from "@/v2/modules/otc/logic/useMarket";
