@@ -24,7 +24,11 @@ const getTGE = (tge, ppu) =>
     tge > 0 && ppu ? `(${formatPercentage((tge - ppu) / ppu)}) ${formatCurrency(tge)}` : null;
 
 export default function Fundraise({ className }) {
-    const userAllocation = useUserAllocationQuery();
+    const userAllocation = useUserAllocationQuery({
+        refetchInterval: (query) => {
+            return query.state.data?.invested?.booked > 0 ? 10000 : false;
+        },
+    });
     const { data: offer, isLoading } = useOfferDetailsQuery();
     const { data: offerAllocation } = useOfferAllocationQuery();
     const { status } = useOfferStatus(offer);

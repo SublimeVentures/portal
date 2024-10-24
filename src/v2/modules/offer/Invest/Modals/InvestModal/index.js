@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Lottie from "lottie-react";
 import moment from "moment";
-
+import { useQueryClient } from "@tanstack/react-query";
 import CurrencySwitch from "./CurrencySwitch";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
@@ -25,11 +25,11 @@ import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep
 import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import lottieSuccess from "@/assets/lottie/success.json";
 import { routes } from "@/v2/routes";
-
 import { Button } from "@/v2/components/ui/button";
 import { ExternalLinks } from "@/routes";
 import MutedText from "@/v2/components/ui/muted-text";
 import ExternalLink from "@/v2/components/ui/external-link";
+import { vaultKeys } from "@/v2/constants";
 
 const InvestModalContent = ({
     open,
@@ -43,6 +43,7 @@ const InvestModalContent = ({
     const router = useRouter();
     const { account, activeInvestContract, getCurrencySettlement } = useEnvironmentContext();
     const { clearBooking, getSavedBooking } = useInvestContext();
+    const client = useQueryClient();
 
     const dropdownCurrencyOptions = getCurrencySettlement();
     const { partnerId } = useOfferDetailsStore();
@@ -56,6 +57,9 @@ const InvestModalContent = ({
     const handleSetTransactionSuccess = () => {
         setTransactionSuccessful(true);
         clearBooking();
+        client.invalidateQueries({
+            queryKey: vaultKeys.vault(),
+        });
     };
 
     const handleCloseModal = async (redirectToVault = false) => {
@@ -105,7 +109,7 @@ const InvestModalContent = ({
         <DialogContent>
             <DialogHeader className="md:items-center">
                 <DialogTitle className="text-center flex items-center justify-center">
-                    {transactionSuccessful ? "Investment successful" : "Booking success"}
+                    {transactionSuccessful ? "Investment Successful" : "Booking Success"}
                 </DialogTitle>
                 <DialogDescription className="max-w-80 md:text-center">
                     {transactionSuccessful ? (

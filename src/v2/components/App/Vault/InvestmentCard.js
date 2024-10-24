@@ -18,7 +18,7 @@ const InvestmentCardWrapper = ({ children, className }) => {
     return (
         <Card
             className={cn(
-                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button lg:max-w-200 3xl:max-w-[300px]",
+                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button lg:max-w-200 3xl:max-w-[300px] cursor-default",
                 className,
             )}
         >

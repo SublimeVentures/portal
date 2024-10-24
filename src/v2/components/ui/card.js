@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
 const cardVariants = cva("group/card py-3.5 px-5 relative rounded transition-base cursor-pointer", {
     variants: {
         variant: {
-            default: "border-base hover:border-accent bg-base hover:bg-base",
+            default: "border-base hover:border-accent bg-base hover:bg-accent",
             accent: "border-accent bg-base",
             static: "border-base bg-base",
             dark: "border-base hover:border-accent bg-alt",
