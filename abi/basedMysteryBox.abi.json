@@ -1,6 +1,6 @@
 [
   {
-    "inputs":[
+    "inputs": [
       {
         "internalType": "string",
         "name": "hash_",
@@ -17,11 +17,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "currency_",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "partnerId_",
         "type": "uint256"
@@ -30,6 +25,11 @@
         "internalType": "uint256",
         "name": "storeId_",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "currency_",
+        "type": "address"
       },
       {
         "internalType": "bytes",

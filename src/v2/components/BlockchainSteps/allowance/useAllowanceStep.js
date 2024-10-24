@@ -3,7 +3,7 @@ import { useChainId } from "wagmi";
 import { getStepState } from "../getStepState";
 import { STEPS } from "../enums";
 import { allowanceAction } from "./reducer";
-import { ETH_USDT, getMethod, METHOD } from "@/components/BlockchainSteps/utils";
+import { ETH_USDT, getMethod, METHOD } from "@/v2/components/BlockchainSteps/utils";
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 
