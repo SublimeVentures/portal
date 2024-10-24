@@ -28,7 +28,7 @@ export default function Sidebar({ isBlockedAlert = false, className }) {
                                 "text-base font-normal text-white transition-colors hover:bg-primary/30 rounded cursor-pointer",
                                 {
                                     "bg-gradient-to-r from-primary to-primary-600 font-medium":
-                                        router.pathname.includes(path),
+                                        router.pathname.substring(4) === path,
                                 },
                             )}
                         >

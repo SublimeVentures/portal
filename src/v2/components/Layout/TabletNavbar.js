@@ -18,7 +18,7 @@ export default function TabletNavbar() {
                                 "block p-2 text-xs text-white whitespace-nowrap rounded cursor-pointer hover:bg-primary/50 md:px-4",
                                 {
                                     "bg-gradient-to-r from-primary to-primary-600 font-medium":
-                                        router.pathname === path,
+                                        router.pathname.substring(4) === path,
                                 },
                             )}
                         >
