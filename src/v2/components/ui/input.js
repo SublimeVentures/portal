@@ -14,6 +14,9 @@ const readOnlyVariants = cva("", {
         readOnly: {
             true: "border-transparent hover:border-transparent focus:border-transparent",
         },
+        disabled: {
+            true: "text-white/20 border-transparent hover:border-transparent focus:border-transparent",
+        },
     },
 });
 
@@ -45,61 +48,71 @@ const controlVariants = (props) => {
 
 const wrapperVariants = (props) => cx(baseVariants(props), readOnlyVariants(props));
 
-const InputNumber = forwardRef(({ className, size, readOnly, value, min, max, step, onValueChange, ...props }, ref) => {
-    const sizeClasses = controlsSize({ size });
-    ref = ref || createRef();
-    const handleStepUp = () => {
-        if (ref.current) {
-            ref.current.stepUp();
-            onValueChange?.(Number(ref.current.value));
-        }
-    };
+const InputNumber = forwardRef(
+    ({ className, size, readOnly, value, min, max, step, onValueChange, disabled, ...props }, ref) => {
+        const sizeClasses = controlsSize({ size });
+        ref = ref || createRef();
+        const handleStepUp = () => {
+            if (ref.current) {
+                ref.current.stepUp();
+                onValueChange?.(Number(ref.current.value));
+            }
+        };
 
-    const handleStepDown = () => {
-        if (ref.current) {
-            ref.current.stepDown();
-            onValueChange?.(Number(ref.current.value));
-        }
-    };
+        const handleStepDown = () => {
+            if (ref.current) {
+                ref.current.stepDown();
+                onValueChange?.(Number(ref.current.value));
+            }
+        };
 
-    return (
-        <div className={cn("text-center", wrapperVariants({ size, readOnly }), className)}>
-            <button
-                className={cn(sizeClasses, buttonVariants({ size, readOnly: readOnly || min === value }))}
-                onClick={handleStepDown}
-                disabled={readOnly}
-            >
-                -
-            </button>
-            <input
-                type="number"
-                ref={ref}
-                readOnly={readOnly}
-                onChange={(e) => {
-                    const value = Number(e.target.value);
-                    onValueChange?.(value < min ? min : value > max ? max : value);
-                }}
-                min={min}
-                max={max}
-                step={step}
-                value={value}
-                {...props}
-                className={cn("bg-transparent w-full border-0 cursor-pointer outline-none text-center", sizeClasses)}
-            />
-            <button
-                className={cn(
-                    "text-center",
-                    sizeClasses,
-                    buttonVariants({ size, readOnly: readOnly || max === value }),
-                )}
-                onClick={handleStepUp}
-                disabled={readOnly}
-            >
-                +
-            </button>
-        </div>
-    );
-});
+        return (
+            <div className={cn("text-center", wrapperVariants({ size, readOnly, disabled }), className)}>
+                <button
+                    className={cn(
+                        sizeClasses,
+                        buttonVariants({ size, readOnly: readOnly || min === value || disabled }),
+                    )}
+                    onClick={handleStepDown}
+                    disabled={readOnly || disabled}
+                >
+                    -
+                </button>
+                <input
+                    type="number"
+                    ref={ref}
+                    readOnly={readOnly}
+                    onChange={(e) => {
+                        const value = Number(e.target.value);
+                        onValueChange?.(value < min ? min : value > max ? max : value);
+                    }}
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={value}
+                    disabled={disabled}
+                    {...props}
+                    className={cn(
+                        "bg-transparent w-full border-0 cursor-pointer outline-none text-center",
+                        sizeClasses,
+                        { "cursor-not-allowed": disabled },
+                    )}
+                />
+                <button
+                    className={cn(
+                        "text-center",
+                        sizeClasses,
+                        buttonVariants({ size, readOnly: readOnly || max === value || disabled }),
+                    )}
+                    onClick={handleStepUp}
+                    disabled={readOnly || disabled}
+                >
+                    +
+                </button>
+            </div>
+        );
+    },
+);
 
 const InputFunds = forwardRef(
     (

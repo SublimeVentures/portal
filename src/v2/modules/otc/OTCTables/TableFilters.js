@@ -70,7 +70,7 @@ const FiltersDropdown = ({ filters, options, handleToggleFilter }) => {
     );
 };
 
-export default function TableFilters({ filters = {}, handleToggleFilter, handleFilterRemove }) {
+export default function TableFilters({ filters = {}, isEmpty, handleToggleFilter, handleFilterRemove }) {
     const isDesktop = useMediaQuery(breakpoints.xl);
     const { currentMarket } = useMarket();
     const { activeView, handleChangeView } = useCurrentView();
@@ -100,7 +100,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                             {isOffersView ? "Show" : "Hide"} History
                         </Button>
                         <MakeOfferModal />
-                        {isOffersView && (
+                        {isOffersView && !isEmpty && (
                             <FiltersDropdown
                                 filters={filters}
                                 options={offersFilters}

@@ -12,7 +12,11 @@ function buildWhereFromAuthorizedQuery(user, query) {
 
     const where = {};
     where["userId"] = userId;
-    where["tenantId"] = { [Op.in]: [tenantId, null, 0] };
+    if (tenantId !== null && tenantId !== undefined) {
+        where[Op.or] = [{ tenantId: tenantId }, { tenantId: null }, { tenantId: 0 }];
+    } else {
+        where[Op.or] = [{ tenantId: null }, { tenantId: 0 }];
+    }
     if (whereQuery.before && whereQuery.after) {
         where["createdAt"] = {
             [Op.between]: [whereQuery.after, addDays(new Date(whereQuery.before), 1)],
@@ -105,13 +109,6 @@ async function getNotifications(user, query) {
                         dataId: "otcDealId",
                         typeIds: [NotificationTypes.OTC_CANCEL, NotificationTypes.OTC_MADE, NotificationTypes.OTC_TAKE],
                         as: "otcDeal",
-                    }),
-                    includeToNotification({
-                        model: "partner",
-                        attributes: [],
-                        dataId: "partnerId",
-                        typeIds: [NotificationTypes.INVESTMENT],
-                        as: "partner",
                     }),
                     includeToNotification({
                         model: "payout",

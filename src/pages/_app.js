@@ -35,7 +35,7 @@ export default function App({ Component, pageProps: { ...pageProps } }) {
                 <WagmiProvider config={config}>
                     <QueryClientProvider client={queryClient}>
                         <EnvironmentProvider initialData={environmentData}>
-                            <TooltipProvider>
+                            <TooltipProvider delayDuration={50}>
                                 <HydrationBoundary state={pageProps.dehydratedState}>
                                     {renderWithLayout(<Component {...pageProps} />)}
                                 </HydrationBoundary>

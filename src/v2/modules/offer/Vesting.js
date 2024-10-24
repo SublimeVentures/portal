@@ -33,7 +33,7 @@ export default function Vesting({ className }) {
                                     <Definition term="Event">
                                         {payout.offerPayout === 1 ? "TGE" : `V${payout.offerPayout - 1}`}
                                     </Definition>
-                                    <Definition term="Date">{payout.unlockDate}</Definition>
+                                    <Definition term="Date">{payout.unlockDate ?? "TBC"}</Definition>
                                     <Definition term="Unlock">{formatPercentage(payout.percentage / 100)}</Definition>
                                 </dl>
                             </li>
