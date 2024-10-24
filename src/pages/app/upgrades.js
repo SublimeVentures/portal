@@ -13,17 +13,17 @@ import { Card } from "@/v2/components/ui/card";
 import { cn } from "@/lib/cn";
 import { getCurrency } from "@/components/App/Store/helper";
 import { Button } from "@/v2/components/ui/button";
-import Header from "@/v2/components/App/Upgrades/Header";
+import Header from "@/v2/modules/upgrades/Header";
 import DefinitionList, { Definition } from "@/v2/modules/upgrades/DefinitionList";
 import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import useImage from "@/v2/hooks/useImage";
 import { getCopy } from "@/lib/seoConfig";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
 
-const BuyStoreItemModal = dynamic(() => import("@/v2/components/App/Upgrades/BuyStoreItemModal"), { ssr: false });
+const BuyStoreItemModal = dynamic(() => import("@/v2/modules/upgrades/BuyStoreItemModal"), { ssr: false });
 
 export default function AppUpgrades({ session }) {
-    const { tenantId } = session;
+    const { tenantId, userId } = session;
     const { getStoreSrc } = useImage();
     const { getCurrencyStore } = useEnvironmentContext();
     const client = useQueryClient();
@@ -136,7 +136,13 @@ export default function AppUpgrades({ session }) {
                         ))}
                 </div>
             </div>
-            <BuyStoreItemModal model={isBuyModal} setter={closeBuy} buyModalProps={buyModalProps} />
+            <BuyStoreItemModal
+                model={isBuyModal}
+                setter={closeBuy}
+                buyModalProps={buyModalProps}
+                userId={userId}
+                tenantId={tenantId}
+            />
         </>
     );
 }

@@ -26,6 +26,7 @@ import Modal, {
 import Success from "@/v2/modules/upgrades/Success";
 import PAGE from "@/routes";
 import { reserveUpgrade } from "@/fetchers/store.fetcher";
+import { fetchReservedStoreItems } from "@/v2/fetchers/upgrades";
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -126,6 +127,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
             </Success.Content>
         );
     };
+
     const contentSteps = () => {
         const buttonProps = getBlockchainStepButtonProps();
         return (
@@ -217,7 +219,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
     return transactionSuccessful ? contentSuccess() : contentSteps();
 };
 
-export default function BuyStoreItemModal({ model, setter, buyModalProps, userId }) {
+export default function BuyStoreItemModal({ model, setter, buyModalProps, userId, tenantId }) {
     const client = useQueryClient();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
     const closeModal = () => {
@@ -233,6 +235,45 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps, userId
     if (transactionSuccessful) {
         refetchBanner();
     }
+
+    const [reservationInfo, setReservationInfo] = useState({
+        hasReservation: false,
+        expirationTime: null,
+    });
+
+    useEffect(() => {
+        const fetchReservation = async () => {
+            try {
+                const result = await fetchReservedStoreItems(userId, tenantId, buyModalProps.order.id);
+                console.log('reservationInfo result', result)
+
+                setReservationInfo(result);
+            } catch (error) {
+                console.log('error', error)
+            }
+        };
+
+        if (userId && tenantId && buyModalProps.order.id) {
+            fetchReservation();
+        }
+    }, [userId, setter, tenantId, buyModalProps.order?.id, setReservationInfo]);
+
+    if (reservationInfo?.hasReservation) {
+        return (
+            <Modal open={model} onClose={closeModal}>
+                <ModalContent
+                    userId={userId}
+                    onClose={closeModal}
+                    {...buyModalProps}
+                    model={model}
+                    transactionSuccessful={false}
+                    errorMessage={`This item is reserved until ${new Date(reservationInfo.expirationTime).toLocaleString()}`}
+                />
+            </Modal>
+        );
+    }
+
+      
     return (
         <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
             <ModalContent

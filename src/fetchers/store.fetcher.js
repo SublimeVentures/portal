@@ -23,15 +23,3 @@ export const fetchStoreItemsOwned = async (query, config = {}) => {
     }
     return [];
 };
-
-export const reserveUpgrade = async (params) => {
-    try {
-        const { data } = await axiosPrivate.post(API.reserveUpgrade, params);
-        return data;
-    } catch (e) {
-        if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "reserveMysterybox", e });
-        }
-    }
-    return [];
-};

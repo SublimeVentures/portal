@@ -8,6 +8,7 @@ const {
     findStorePartnerId,
     isReservationInProgress,
     expireUpgrade,
+    getUpgradeReservations,
 } = require("../queries/upgrade.query");
 const { PremiumItemsENUM } = require("../../src/lib/enum/store");
 const logger = require("../../src/lib/logger");
@@ -240,7 +241,7 @@ async function reserveUpgrade(req) {
         const reservation = await upsertUpgradeLock(userId, storePartnerId, chainId, hash, expires, transaction);
 
         if (!reservation.ok) {
-            return reservation;
+            return reservation
         }
 
         const signature = await obtainSignature(hash, amount, expires, chainId, tenantId, storeId, token);
@@ -273,4 +274,23 @@ async function reserveUpgrade(req) {
     }
 }
 
-module.exports = { useUpgrade, reserveUpgrade };
+async function getReservedUpgrades(req) {
+    try {
+        const {
+            body: { userId, tenantId, storeId },
+        } = req;
+        if (!userId || !tenantId || !storeId) {
+            return { ok: false, error: "Missing required parameters" };
+        }
+    
+        return await getUpgradeReservations(userId, tenantId, storeId);
+    } catch (e) {
+        logger.error(`ERROR :: [getReserverUpgrades]`, {
+            reqQuery: req.query,
+            error: serializeError(error),
+        });
+        return { ok: false, error: error.message };
+    }
+}
+
+module.exports = { useUpgrade, reserveUpgrade, getReservedUpgrades };

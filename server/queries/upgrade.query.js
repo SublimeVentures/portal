@@ -145,6 +145,32 @@ async function expireUpgrade(userId, hash) {
     return true;
 }
 
+
+async function getUpgradeReservations(userId, tenantId, storeId) {
+    const storePartnerId = await findStorePartnerId(storeId, tenantId);
+
+    try {
+        const reservedItems = await models.upgradeLock.findAll({
+            where: {
+                userId,
+                storePartnerId,
+                isExpired: false,
+            }
+        });
+        
+        return reservedItems;
+    } catch (error) {
+        logger.error(
+            `ERROR :: [getUpgradeReservations] for user ${userId} | tenantId - ${tenantId}, storeId - ${storeId}`,
+            {
+                userId,
+                hash,
+            },
+        );
+    }
+    return true;
+}
+
 module.exports = {
     saveUpgradeUse,
     fetchUpgradeUsed,
@@ -152,4 +178,5 @@ module.exports = {
     upsertUpgradeLock,
     isReservationInProgress,
     expireUpgrade,
+    getUpgradeReservations
 };

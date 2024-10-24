@@ -17,7 +17,7 @@ import abi_mb_based from "../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../abi/neotokyoMysteryBox.abi.json";
 
 import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "@/v2/components/App/MysteryBox/BuyMysteryBoxModal";
-import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/components/App/Upgrades/BuyStoreItemModal";
+import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/modules/upgrades/BuyStoreItemModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";

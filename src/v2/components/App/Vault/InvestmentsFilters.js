@@ -13,7 +13,7 @@ import {
 import { Button } from "@/v2/components/ui/button";
 import CrossIcon from "@/v2/assets/svg/cross.svg";
 import FilterAltIcon from "@/v2/assets/svg/filter-alt.svg";
-import Header from "@/v2/components/App/Upgrades/Header";
+import Header from "@/v2/modules/upgrades/Header";
 
 const SORT_BY = {
     CREATED_AT: "createdAt",
