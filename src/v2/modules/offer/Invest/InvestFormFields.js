@@ -28,7 +28,7 @@ export default function InvestFormFields({ amount, handleAmountChange, handleCur
 
     const handleChange = useCallback((event, fieldOnChange) => {
         const { value } = event.target;
-        const newValue = value.replace(/\D/g, "");
+        const newValue = value.replace(/\D/g, "").slice(0, 10);
         const numericValue = newValue ? Number(newValue) : 0;
         const formattedValue = formatNumber(value);
 
