@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useCallback, useState } from "react";
 import { Skeleton, SkeletonCircle } from "@/v2/components/ui/skeleton";
 import { Card, CardTitle } from "@/v2/components/ui/card";
 import AlertDestructive from "@/v2/components/Alert/DestructiveAlert";
@@ -10,6 +11,7 @@ import { Button } from "@/v2/components/ui/button";
 import ClaimModal from "@/v2/components/App/Vault/ClaimModal";
 import useImage from "@/v2/hooks/useImage";
 import MutedText from "@/v2/components/ui/muted-text";
+import ReassignModal from "@/v2/components/App/Vault/ReassignModal";
 
 // aspect-[5/8]
 const InvestmentCardWrapper = ({ children, className }) => {
@@ -58,6 +60,12 @@ const InvestmentCard = ({ details, isLoading = false, isError = false, refetch }
     const data = useInvestmentsData(details, refetch);
     const { title, coin, slug, participatedDate, canClaim, isClaimSoon } = data;
     const { getResearchIconSrc } = useImage();
+    const [isReassignModalOpen, setIsReassignModalOpen] = useState(false);
+    const closeReassignModal = useCallback(() => {
+        console.log("close");
+        setIsReassignModalOpen(false);
+    }, []);
+    const openReassignModal = useCallback(() => setIsReassignModalOpen(true), []);
 
     if (isLoading) {
         return <SkeletonInvestmentCard />;
@@ -84,13 +92,17 @@ const InvestmentCard = ({ details, isLoading = false, isError = false, refetch }
                 />
             </div>
             <Attributes details={data} className="grow gap-2 mb-5 select-none" grid />
-            <ClaimModal data={data}>
+            <ClaimModal openReassignModal={openReassignModal} data={data}>
                 <Button variant={canClaim ? "accent" : "outline"} className="mb-3.5 mt-auto w-full font-xs">
                     <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
                     <ArrowIcon className="ml-2 size-2" />
                 </Button>
             </ClaimModal>
-
+            <ReassignModal
+                data={data}
+                isReassignModalOpen={isReassignModalOpen}
+                closeReassignModal={closeReassignModal}
+            />
             {participatedDate && (
                 <MutedText className="absolute left-0 bottom-1 py-2 w-full md:text-xs">
                     Participated {participatedDate}

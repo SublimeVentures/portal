@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { useContractRead } from "wagmi";
 import { useForm } from "react-hook-form";
 import abi_reassign from "../../../../../../abi/ReasignFacet.abi.json";
-import { reassignOfferAllocation } from "@/v2/fetchers/reassign.fetcher";
 
 export default function useReassign(data, chainId, dropdownCurrencyOptions) {
     const { offerId } = data;
