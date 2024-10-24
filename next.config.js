@@ -49,12 +49,12 @@ const nextConfig = {
         if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
             return [
                 {
-                    source: "/app/",
-                    destination: "/",
+                    source: "/",
+                    destination: "/vault/",
                     permanent: true,
                 },
                 {
-                    source: "/app/vault/",
+                    source: "/app/",
                     destination: "/",
                     permanent: true,
                 },
@@ -67,8 +67,8 @@ const nextConfig = {
         }
         return [
             {
-                source: "/app/vault/",
-                destination: "/app",
+                source: "/app/",
+                destination: "/app/vault/",
                 permanent: true,
             },
         ];
