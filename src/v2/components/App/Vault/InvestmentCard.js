@@ -61,10 +61,7 @@ const InvestmentCard = ({ details, isLoading = false, isError = false, refetch }
     const { title, coin, slug, participatedDate, canClaim, isClaimSoon } = data;
     const { getResearchIconSrc } = useImage();
     const [isReassignModalOpen, setIsReassignModalOpen] = useState(false);
-    const closeReassignModal = useCallback(() => {
-        console.log("close");
-        setIsReassignModalOpen(false);
-    }, []);
+    const closeReassignModal = useCallback(() => setIsReassignModalOpen(false), []);
     const openReassignModal = useCallback(() => setIsReassignModalOpen(true), []);
 
     if (isLoading) {

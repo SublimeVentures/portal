@@ -42,7 +42,7 @@ const useEstimateContractGas = (args) => {
         ...query,
         enabled,
     });
-    console.log("estimateContractGas", args, data);
+
     return data;
 };
 
