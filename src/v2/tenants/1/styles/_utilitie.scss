@@ -135,6 +135,10 @@
     .bg-base {
         @apply bg-gradient angle-130 from-primary-900 via-primary-700 via-50% to-primary-900;
     }
+    .bg-accent {
+        @apply bg-gradient angle-130 from-primary-500 to-primary-700;
+    }
+
     .bg-alt {
         @apply bg-white/5 backdrop-blur-3xl;
     }
