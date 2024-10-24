@@ -24,6 +24,7 @@ export const ReassignForm = ({
                             <FormControl>
                                 <Input
                                     {...field}
+                                    placeholder="wallet addres"
                                     autoComplete="false"
                                     disabled={disabled}
                                     onChange={(evt) => {

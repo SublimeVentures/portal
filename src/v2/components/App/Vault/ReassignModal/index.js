@@ -84,7 +84,6 @@ export default function ReassignModal({ data = {} }) {
 
     useEffect(() => {
         if (transactionSuccessful) {
-            console.log("refetchVaults");
             void data.refetchVaults();
         }
     }, [transactionSuccessful]);
@@ -121,7 +120,7 @@ export default function ReassignModal({ data = {} }) {
                         <BlockchainSteps {...getBlockchainStepsProps()} />
                     </dl>
                     <div className="flex w-full justify-center">
-                        {!transactionSuccessful && (
+                        {currencyContract && to && !transactionSuccessful && (
                             <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
                         )}
                     </div>
