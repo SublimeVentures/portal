@@ -18,7 +18,7 @@ export default function ReassignModal({ data = {}, isReassignModalOpen: open, cl
         network: { chainId },
         diamonds,
     } = useEnvironmentContext();
-    const dropdownCurrencyOptions = useMemo(() => getCurrencySettlement(), []);
+    const dropdownCurrencyOptions = useMemo(() => getCurrencySettlement(), [getCurrencySettlement]);
     const {
         getReassignModalProps,
         getReassignFormProps,
@@ -78,9 +78,6 @@ export default function ReassignModal({ data = {}, isReassignModalOpen: open, cl
             void data.refetchVaults();
         }
     }, [transactionSuccessful]);
-
-    console.log(closeModal);
-    console.log(open);
 
     return (
         <div className="max-h-screen w-full">
