@@ -30,7 +30,7 @@ export default function Navbar() {
             </div>
             <ul className="pt-4 px-4 mx-auto max-w-2xl flex items-center justify-between gap-4 sm:px-16">
                 {mainMenu.map(({ name, path, icon }) => {
-                    const isSelected = router.pathname === path;
+                    const isSelected = router.pathname.substring(4) === path;
 
                     return (
                         <li key={name}>
