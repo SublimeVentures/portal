@@ -17,11 +17,11 @@ import abi_mb_based from "../../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../../abi/neotokyoMysteryBox.abi.json";
 import abi_reassign from "../../../../abi/ReasignFacet.abi.json";
 
-import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "../../components/App/MysteryBox/BuyMysteryBoxModal";
-import { blockchainPrerequisite as prerequisite_upgradeBuy } from "../../components/App/Upgrades/BuyStoreItemModal";
+import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "@/v2/components/App/MysteryBox/BuyMysteryBoxModal";
+import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/components/App/Upgrades/BuyStoreItemModal";
+import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
+import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
-import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/components/App/Otc/TakeOfferModal";
-import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/components/App/Otc/MakeOfferModal";
 
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
@@ -128,6 +128,7 @@ const TENANT_UPGRADE = (params, token) => {
                     params.prerequisite.expires,
                     params.prerequisite.tenantId,
                     params.prerequisite.storeId,
+                    token.contract,
                     params.prerequisite.signature,
                 ],
                 abi: abi_upgrade_based,
@@ -165,9 +166,9 @@ const TENANT_MYSTERYBOX = (params, token) => {
                     params.prerequisite.hash,
                     params.amount,
                     params.prerequisite.expires,
-                    token.contract,
                     params.prerequisite.tenantId,
                     params.prerequisite.storeId,
+                    token.contract,
                     params.prerequisite.signature,
                 ],
                 abi: abi_mb_based,
@@ -226,6 +227,7 @@ export const getMethod = (type, token, params) => {
                           name: "invest",
                           inputs: [
                               params.booking.code,
+                              params.partnerId,
                               params.offerId,
                               params.amount,
                               params.booking.expires,

@@ -32,6 +32,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "currency_",
+        "type": "address"
+      },
+      {
         "internalType": "bytes",
         "name": "signature_",
         "type": "bytes"
