@@ -4,7 +4,7 @@ import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
 import { IconButton } from "@/v2/components/ui/icon-button";
 import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { cn } from "@/lib/cn";
-import { routes } from "@/v2/routes";
+import PAGE from "@/routes";
 import useStoreOwnedItemsQuery from "@/v2/hooks/useStoreOwnedItemsQuery";
 
 const VARIANTS = {
@@ -21,12 +21,12 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
         <Card
             variant="none"
             border="none"
-            href={routes.Upgrades}
+            href={PAGE.Upgrades}
             className={cn("relative flex group/button select-none border-alt", className, {
                 "bg-banner-default bg-left bg-cover 3xl:bg-center bg-no-repeat py-6 min-h-40 flex-col grow items-end justify-center 3xl:justify-end text-center":
                     variant === VARIANTS.DEFAULT,
                 "bg-banner-vertical p-3 md:justify-end lg:w-116": variant === VARIANTS.VERTICAL,
-                "cursor-default pointer-none": currentPath === routes.Upgrades,
+                "cursor-default pointer-none": currentPath === PAGE.Upgrades,
             })}
         >
             <div
@@ -48,7 +48,7 @@ const UpgradeCard = ({ className, variant = VARIANTS.DEFAULT }) => {
                                     variant === VARIANTS.DEFAULT,
                                 "p-2.5 md:left-6 top-1/2 transform -translate-y-1/2 right-6":
                                     variant === VARIANTS.VERTICAL,
-                                hidden: currentPath === routes.Upgrades,
+                                hidden: currentPath === PAGE.Upgrades,
                             })}
                         />
                         <CardTitle
