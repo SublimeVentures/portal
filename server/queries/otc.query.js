@@ -105,23 +105,22 @@ const query_getLatestDeals = `
         o."slug"
     FROM
         "otcDeal" od
-    INNER JOIN
-        "offer" o ON o.otc = od."otcId"
-    INNER JOIN
-        "onchain" oc ON oc."id" = od."onchainIdMaker"
+    JOIN
+        offer o ON o.id = od."offerId"
     WHERE
-        o.display = true AND
-        od."isFilled" = false AND
-        od."isCancelled" = false AND
-        od."onchainIdMaker" IS NOT NULL AND
-        (
-            (o."isOtcExclusive" = false)
-            OR
-            (o."isOtcExclusive" = true AND o."broughtBy" = :tenantId)
+        o.display = true
+        AND od."otcId" <> 0
+        AND od."otcId" = o."otc"
+        AND od."isFilled" = false
+        AND od."isCancelled" = false
+        AND od."onchainIdMaker" IS NOT NULL
+        AND (
+            o."isOtcExclusive" = false
+            OR (o."isOtcExclusive" = true AND o."broughtBy" = :tenantId)
         )
     ORDER BY
         :order
-    LIMIT 10
+    LIMIT 10;
 `;
 
 async function getLatestOffers(query, tenantId, partnerId) {
