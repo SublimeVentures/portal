@@ -8,6 +8,12 @@
 
 [Link to ClickUp task](https://example.org)
 
+## Required Actions
+
+- Migrations
+
+  None
+
 ## Checklist
 
 - [ ] Provided a screenshot (only if change is visible in UI)
