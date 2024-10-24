@@ -70,7 +70,7 @@ export function useOfferAllocationQuery() {
     return data;
 }
 
-export function useUserAllocationQuery() {
+export function useUserAllocationQuery(options) {
     const { offerId } = useOfferDetailsStore();
     const { isClosed } = usePhaseInvestment();
 
@@ -82,6 +82,7 @@ export function useUserAllocationQuery() {
         staleTime: 15 * 1000,
         refetchOnWindowFocus: !isClosed,
         enabled: Boolean(offerId),
+        ...options,
     });
 
     useEffect(() => {
