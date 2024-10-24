@@ -114,7 +114,7 @@ const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, 
                 </Success.Description>
                 <Success.Article>
                     <div className="flex items-center gap-5 grow w-full md:w-auto">
-                        <Success.Image src="/img/icon-chest.webp" alt={order.name} />
+                        <Success.Image src="/img/mysterybox.webp" alt={order.name} />
                         <div className="grow">
                             <h1 className="text-sm font-medium md:text-xl">{order.name}</h1>
                             <span className="text-xs font-light md:text-sm">Mystery Box</span>
