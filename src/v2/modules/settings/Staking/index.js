@@ -42,13 +42,10 @@ const TENANTS_STAKIMG = {
     },
 };
 
-// @TODO: When should we show "new" badge?
-const isNew = true;
-
 export default function Staking({ session }) {
     const { currencyStaking, account } = useEnvironmentContext();
-    const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
-    // const stakingEnabled = true && session.stakingEnabled;
+    // const stakingEnabled = currencyStaking?.length > 0 && session.stakingEnabled;
+    const stakingEnabled = true && session.stakingEnabled;
 
     const { id: tenantId } = useTenantSpecificData();
     const currentTenant = TENANTS_STAKIMG[tenantId] || {};
@@ -61,55 +58,65 @@ export default function Staking({ session }) {
                 <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-foreground">
                     Staking
                 </CardTitle>
-                {isNew ? <Badge variant="warning">New</Badge> : null}
+                {staking.staked ? <Badge variant="success">Staked</Badge> : <Badge variant="error">Not staked</Badge>}
             </div>
 
-            <div className="p-4 w-full bg-white/[.02] gap-7 rounded 2xl:flex 2xl:px-9 2xl:py-6">
-                <div className="aspect-square hidden shrink-0 2xl:block">
-                    <Image
-                        src={session.img ?? session.img_fallback}
-                        alt=""
-                        width={100}
-                        height={100}
-                        className="rounded w-full h-full pointer-events-none"
-                    />
-                </div>
-                <div className="w-full flex flex-col justify-center">
-                    <div className="mb-4 flex items-center gap-4 w-full xl:mb-0">
+            <div className="p-4 w-full bg-white/[.02] gap-7 rounded">
+                <div className="p-4 w-full 2xl:flex">
+                    <div className="mr-4 aspect-square hidden shrink-0 2xl:block">
                         <Image
                             src={session.img ?? session.img_fallback}
                             alt=""
                             width={100}
                             height={100}
-                            className="shrink-0 rounded 2xl:hidden pointer-events-none"
+                            className="rounded w-full h-full pointer-events-none"
                         />
+                    </div>
+                    <div className="w-full flex flex-col justify-center">
+                        <div className="mb-4 flex items-center gap-4 w-full xl:mb-0">
+                            <Image
+                                src={session.img ?? session.img_fallback}
+                                alt=""
+                                width={100}
+                                height={100}
+                                className="shrink-0 rounded 2xl:hidden pointer-events-none"
+                            />
 
-                        <div>
-                            <div className="hidden items-center gap-4 2xl:flex mb-4">
-                                <CardTitle className="my-1 text-2xl font-medium text-foreground">Staking</CardTitle>
-                                {isNew ? <Badge variant="warning">New</Badge> : null}
+                            <div>
+                                <div className="hidden items-center gap-4 2xl:flex mb-4">
+                                    <CardTitle className="my-1 text-2xl font-medium text-foreground">Staking</CardTitle>
+                                    {staking.staked ? (
+                                        <Badge variant="success">Staked</Badge>
+                                    ) : (
+                                        <Badge variant="error">Not staked</Badge>
+                                    )}
+                                </div>
+
+                                <div className="flex flex-col gap-x-4 gap-y-2 2xl:mb-4">
+                                    {currentTenant.fields?.map((field, index) => (
+                                        <dl key={index} className="flex gap-2">
+                                            <DefinitionItem
+                                                className="font-bold text-sm"
+                                                term={
+                                                    typeof field.term === "function" ? field.term(session) : field.term
+                                                }
+                                                ddClassName="text-foreground text-sm font-light"
+                                            >
+                                                {typeof field.value === "function" ? field.value(session) : field.value}
+                                            </DefinitionItem>
+                                        </dl>
+                                    ))}
+                                </div>
                             </div>
 
-                            <div className="flex flex-col flex-wrap gap-x-4 gap-y-2 2xl:flex-row 2xl:mb-4 ">
-                                {currentTenant.fields?.map((field, index) => (
-                                    <dl key={index} className="flex gap-2">
-                                        <DefinitionItem
-                                            className="font-bold text-sm"
-                                            term={typeof field.term === "function" ? field.term(session) : field.term}
-                                            ddClassName="text-foreground text-sm font-light"
-                                        >
-                                            {typeof field.value === "function" ? field.value(session) : field.value}
-                                        </DefinitionItem>
-                                    </dl>
-                                ))}
+                            <div className="hidden mb-auto ml-auto 2xl:block">
+                                {stakingEnabled && <StakingActions session={session} staking={staking} />}
                             </div>
-                        </div>
-
-                        <div className="hidden ml-auto 2xl:block">
-                            {stakingEnabled && <StakingActions session={session} staking={staking} />}
                         </div>
                     </div>
+                </div>
 
+                <div className="w-full">
                     {stakingEnabled ? (
                         <StakingDetails session={session} staking={staking} />
                     ) : (
@@ -119,7 +126,10 @@ export default function Staking({ session }) {
                     )}
                 </div>
             </div>
-            <div className="2xl:hidden">{stakingEnabled && <StakingActions session={session} staking={staking} />}</div>
+
+            <div className="mt-4 2xl:hidden">
+                {stakingEnabled && <StakingActions session={session} staking={staking} />}
+            </div>
         </Card>
     );
 }

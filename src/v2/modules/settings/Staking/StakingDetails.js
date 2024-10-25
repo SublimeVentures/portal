@@ -5,14 +5,16 @@ export default function StakingDetails({ session, staking }) {
     const { allocationBonus = 0, staked, unstake, stakeReq, nextDate, nextDateH } = staking;
 
     return (
-        <>
-            <dl className="2xl:py-3 2xl:px-8 2xl:bg-white/[.03] grid grid-cols-2 gap-4 rounded">
+        <div className="p-4">
+            <dl className="2xl:py-3 2xl:px-8 2xl:bg-white/[.03] w-full grid grid-cols-2 gap-4 rounded">
                 <DefinitionItem term="Allocation base">{session.multi * 100}%</DefinitionItem>
-                <DefinitionItem term="Allocation bonus">
+
+                {/* Only for citcap */}
+                {/* <DefinitionItem term="Allocation bonus">
                     <span className={cn(allocationBonus > 0 ? "text-success-500" : "text-foreground")}>
                         ${allocationBonus}
                     </span>
-                </DefinitionItem>
+                </DefinitionItem> */}
                 <DefinitionItem term="Allocation max">${session.stakeSize}</DefinitionItem>
                 <DefinitionItem term="Staked">
                     <span className={cn(staked > 0 ? "text-success-500" : "text-error-500")}>
@@ -24,7 +26,12 @@ export default function StakingDetails({ session, staking }) {
                         {nextDate > 3 ? `${nextDate} days` : `${nextDateH} hour${nextDateH > 1 ? "s" : ""}`}
                     </DefinitionItem>
                 ) : null}
+
+                <DefinitionItem term="Staking type (?)">Reverse staking</DefinitionItem>
+
+                {/* Single sided / Double sided  */}
+                <DefinitionItem term="Staking type 2 (?)">Single sided</DefinitionItem>
             </dl>
-        </>
+        </div>
     );
 }
