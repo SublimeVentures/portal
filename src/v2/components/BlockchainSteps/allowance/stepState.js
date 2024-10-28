@@ -12,6 +12,12 @@ export const stepAllowance = (state, data) => {
                 content: "Allowance approved",
                 text: "Your transaction allowance has been successfully approved.",
             });
+        } else if (data.allowanceRef.isError) {
+            result = handleError({
+                content: "Allowance Below Expected Amount",
+                text: "The approval of the new allowance failed because the amount is lower than expected.",
+                action: data.refetch,
+            });
         } else if (data.allowance_set_reset.isLoading || data.allowance_set.isLoading) {
             result = handleProcessing({
                 content: `Approving new allowance (${data.token.isSettlement ? `$${data.params.allowance}` : `${data.params.allowance} ${data.token.symbol}`})`,
