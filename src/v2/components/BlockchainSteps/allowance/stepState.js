@@ -14,7 +14,7 @@ export const stepAllowance = (state, data) => {
             });
         } else if (data.allowanceRef.isError) {
             result = handleError({
-                content: "Allowance Below Expected Amount",
+                content: "Allowance below expected amount",
                 text: "The approval of the new allowance failed because the amount is lower than expected.",
                 action: data.refetch,
             });
