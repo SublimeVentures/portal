@@ -256,6 +256,7 @@ export const getMethod = (type, token, params) => {
                 validAddress(token?.contract) && validAddress(params?.spender) && validAllowance(params?.allowance);
             const amount = getTokenInWei(params.allowance, token);
             const confirmations = params.chainId === ETH_CHAIN_ID ? 2 : 5;
+
             console.log("METHOD.ALLOWANCE", type, token, params, isValid);
 
             return isValid
@@ -274,6 +275,7 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+
         case METHOD.OTC_MAKE: {
             console.log("params.price", params.price.toString());
             const isValid =
@@ -285,7 +287,9 @@ export const getMethod = (type, token, params) => {
                 validAddress(token?.contract) &&
                 validAddress(params?.contract);
             const amount = getTokenInWei(params.price, token);
+
             console.log("amount", amount);
+
             return isValid
                 ? {
                       ok: true,

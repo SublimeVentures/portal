@@ -22,8 +22,10 @@ import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/componen
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
+import { blockchainPrerequisite as blockchain_reassign } from "@/v2/components/App/Vault/ReassignModal/prerequisite_reassign";
 
 import { TENANT } from "@/lib/tenantHelper";
+
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 export const METHOD = {
@@ -445,10 +447,11 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.REASSIGN: {
+            console.log("METHOD_REASSIGN", params, abi_reassign);
             const isValid =
                 validHash(params?.prerequisite?.signature) &&
                 validNumber(params?.offer) &&
-                validNumber(params?.prerequisite?.expire) &&
+                validNumber(params?.prerequisite.expire) &&
                 validAddress(params?.currency) &&
                 validAddress(params?.to);
 
@@ -463,7 +466,7 @@ export const getMethod = (type, token, params) => {
                               params?.to,
                               params?.currency,
                               params?.offer,
-                              params?.expire,
+                              params.prerequisite.expire,
                               params.prerequisite.signature,
                           ],
                           abi: abi_reassign,
@@ -498,6 +501,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.UPGRADE: {
             return await prerequisite_upgradeBuy(params);
+        }
+        case METHOD.REASSIGN: {
+            return await blockchain_reassign(params);
         }
         default: {
             return { ok: true, data: {} };

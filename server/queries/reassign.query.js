@@ -5,14 +5,8 @@ const { getEnv } = require("../services/env");
 const { ReassignErrorsENUM } = require("../../src/lib/enum/reassign");
 
 function checkReassignQueryParams(req) {
-    let _offerId, _currency, _chain, _to, _sender;
-
     try {
-        _offerId = Number(req.query.id);
-        _currency = req.query.currency;
-        _chain = req.query.chain;
-        _to = req.query.to;
-        _sender = req.query.sender;
+        const { id: _offerId, currency: _currency, chain: _chain, to: _to, sender: _sender } = req.query;
 
         if (_offerId < 1) {
             throw Error("Offer ID not valid");
@@ -74,7 +68,6 @@ async function obtainReassignSignature(to, currency, offerId, expire, _sender, t
 
 async function processReassign(queryParams, token) {
     try {
-        // const { userId, tenantId, partnerId } = user;
         const { _offerId, _to, _currency, _chain, _sender } = queryParams;
 
         const expire = moment.utc().unix() + 3 * 60;
