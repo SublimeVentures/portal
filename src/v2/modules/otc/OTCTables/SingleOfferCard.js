@@ -21,7 +21,8 @@ export default function SingleOfferCard({ currentMarket, offer }) {
     const { isSell, amount, price, multiplier, currency, chainId, maker } = offer;
 
     const { cdn, account, getCurrencySymbolByAddress } = useEnvironmentContext();
-    const { wallets } = useSession();
+    const { wallets, tier } = useSession();
+    const { otcFee } = tier;
 
     const ownership = isUserOffer(wallets, maker, account);
 
@@ -73,7 +74,7 @@ export default function SingleOfferCard({ currentMarket, offer }) {
                                 />
                             ))}
 
-                        {!ownership.ok && <TakeOfferModal className="w-full" offerDetails={offer} />}
+                        {!ownership.ok && <TakeOfferModal className="w-full" offerDetails={offer} otcFee={otcFee} />}
                     </div>
                 </div>
             </div>
