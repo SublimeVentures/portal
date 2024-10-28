@@ -130,7 +130,7 @@ export default function OffersTable() {
                         {data.length > 0 ? (
                             <ul className="flex flex-col gap-6">
                                 {data.map((offer) => (
-                                    <li key={offer.offerId}>
+                                    <li key={`mobile-${offer.offerId}-${offer.dealId}-${offer.id}`}>
                                         <SingleOfferCard currentMarket={currentMarket} offer={offer} />
                                     </li>
                                 ))}

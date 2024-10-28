@@ -24,6 +24,27 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import MutedText from "@/v2/components/ui/muted-text";
 
+const Content = ({ isMakeModalOpen, setIsMakeModalOpen }) => {
+    const { selectedTab, ...logic } = useCreateOfferModalLogic(isMakeModalOpen, setIsMakeModalOpen);
+    const { blockchainInteractionDataSELL, blockchainInteractionDataBUY, ...content } = logic;
+    const { ...buyBlockchainStep } = useBlockchainStep({
+        data: blockchainInteractionDataSELL,
+        deps: [selectedTab, isMakeModalOpen],
+    });
+
+    const { ...sellBlockchainStep } = useBlockchainStep({
+        data: blockchainInteractionDataBUY,
+        deps: [selectedTab, isMakeModalOpen],
+    });
+
+    return (
+        <MakeOfferModalContent
+            content={content}
+            blockchainStep={selectedTab === 1 ? buyBlockchainStep : sellBlockchainStep}
+        />
+    );
+};
+
 // import Test from "@/v2/modules/offer/Invest/Modals/InvestModal/Test"
 const MakeOfferModalContent = ({ content, blockchainStep }) => {
     const { network } = useEnvironmentContext();
@@ -43,7 +64,7 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
     const offerTabsProps = getOfferTabsProps();
     const currency = offerFormProps.getOfferFieldProps("currency");
     return (
-        <SheetContent className="h-full flex flex-col rounded-t-lg">
+        <>
             <SheetHeader>
                 <SheetTitle>{transactionSuccessful ? "Offer created" : "Create Offer"}</SheetTitle>
                 <SheetDescription>OTC Marketplace</SheetDescription>
@@ -88,35 +109,21 @@ const MakeOfferModalContent = ({ content, blockchainStep }) => {
                     </MutedText>
                 )}
             </SheetFooter>
-        </SheetContent>
+        </>
     );
 };
 
 export default function MakeOfferModal() {
     const [isMakeModalOpen, setIsMakeModalOpen] = useState(false);
 
-    const { selectedTab, blockchainInteractionDataSELL, blockchainInteractionDataBUY, ...content } =
-        useCreateOfferModalLogic(isMakeModalOpen, setIsMakeModalOpen);
-
-    const { ...buyBlockchainStep } = useBlockchainStep({
-        data: blockchainInteractionDataSELL,
-        deps: [selectedTab, isMakeModalOpen],
-    });
-
-    const { ...sellBlockchainStep } = useBlockchainStep({
-        data: blockchainInteractionDataBUY,
-        deps: [selectedTab, isMakeModalOpen],
-    });
-
     return (
         <Sheet open={isMakeModalOpen} onOpenChange={setIsMakeModalOpen}>
             <SheetTrigger asChild>
                 <Button>Create Offer</Button>
             </SheetTrigger>
-            <MakeOfferModalContent
-                content={content}
-                blockchainStep={selectedTab === 1 ? buyBlockchainStep : sellBlockchainStep}
-            />
+            <SheetContent className="h-full flex flex-col rounded-t-lg">
+                <Content isMakeModalOpen={isMakeModalOpen} setIsMakeModalOpen={setIsMakeModalOpen} />
+            </SheetContent>
         </Sheet>
     );
 }
