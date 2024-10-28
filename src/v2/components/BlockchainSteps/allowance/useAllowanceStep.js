@@ -70,19 +70,19 @@ export default function useAllowanceStep(state, data, dispatch) {
     const allowanceRef = useRef({ allowance: null, retry: 0, isError: false });
 
     useEffect(() => {
-        if (allowance_current.status === "success") {
+        if (allowance_current?.status === "success") {
             const { allowance: previousAllowance } = allowanceRef.current;
 
-            if (allowance_current.allowance !== previousAllowance && allowance_current.allowance !== 0) {
+            if (allowance_current?.allowance !== previousAllowance && allowance_current?.allowance !== 0) {
                 allowanceRef.current.retry += 1;
-                allowanceRef.current.allowance = allowance_current.allowance;
+                allowanceRef.current.allowance = allowance_current?.allowance;
 
-                if (params.allowance > allowance_current.allowance && allowanceRef.current.retry > 1) {
+                if (params.allowance > allowance_current?.allowance && allowanceRef.current.retry > 1) {
                     allowanceRef.current.isError = true;
                 }
             }
         }
-    }, [allowance_current]);
+    }, [allowance_current?.allowance, allowance_shouldRun]);
 
     // useEffect(() => {
     //     if (allowance_isFinished) return;
