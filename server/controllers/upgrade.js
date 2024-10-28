@@ -6,7 +6,6 @@ const {
     fetchUpgradeUsed,
     upsertUpgradeLock,
     findStorePartnerId,
-    isReservationInProgress,
     expireUpgrade,
     getUpgradeReservations,
 } = require("../queries/upgrade.query");
@@ -217,33 +216,56 @@ async function obtainSignature(hash, amount, expires, chainId, partnerId, storeI
 }
 
 async function reserveUpgrade(req) {
-    let transaction;
-
     try {
-        transaction = await db.transaction();
-        const token = req.cookies[authTokenName];
-
-        const queryParams = validateParams(req);
-        if (!queryParams.ok) return queryParams;
-
-        const { userId, tenantId, chainId, amount, storeId } = queryParams.data;
-
+        const { body, user } = req;
+        const { chainId, amount, storeId } = body;
+        const { userId, tenantId, accountId } = user;
+    
+        if (!storeId || !userId || !accountId || !chainId || !amount || !tenantId) {
+            return { ok: false, error: "Missing required parameters" };
+        }
+    
         const storePartnerId = await findStorePartnerId(storeId, tenantId);
-        // const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
-        // if (reservationInProgress) {
-        //     throw new Error("Reservation is already in progress for this user and store");
-        // }
-
         const now = moment.utc().unix();
-        const expires = now + 10 * 60;
+        const expireDate = now + 15 * 60;
         const hash = createHash(`${userId}` + `${now}`);
 
-        const reservation = await upsertUpgradeLock(userId, storePartnerId, chainId, hash, expires, transaction);
+        const reservation = await upsertUpgradeLock(userId, storePartnerId, chainId, hash, expireDate);
 
         if (!reservation.ok) {
             return reservation
         }
 
+        return {
+            ok: true,
+            hash,
+            expireDate,
+            tenantId,
+            storePartnerId,
+            storeId,
+        };
+    } catch (error) {
+        logger.error(`ERROR :: [reserveUpgrade]`, {
+            reqQuery: req.query,
+            error: serializeError(error),
+        });
+        return { ok: false, error: error.message };
+    }
+}
+
+async function sign(req) {
+    try {
+        const token = req.cookies[authTokenName];
+
+        const { body, user } = req;
+        const { chainId, amount, storeId, hash, expires } = body;
+        const { userId, tenantId } = user;
+    
+        if (!storeId || !userId || !chainId || !amount || !tenantId) {
+            return { ok: false, error: "Missing required parameters" };
+        }
+
+        const storePartnerId = await findStorePartnerId(storeId, tenantId);
         const signature = await obtainSignature(hash, amount, expires, chainId, tenantId, storeId, token);
 
         if (!signature.ok) {
@@ -251,22 +273,40 @@ async function reserveUpgrade(req) {
             return signature;
         }
 
-        await transaction.commit();
-
         return {
             ok: true,
-            hash: reservation.data.hash,
-            expires: reservation.data.expireDate,
+            hash,
+            expires,
             signature: signature.data,
             tenantId,
             storePartnerId,
             storeId,
         };
     } catch (error) {
-        if (transaction) {
-            await transaction.rollback();
+        logger.error(`ERROR :: [upgrade - sign]`, {
+            reqQuery: req.query,
+            error: serializeError(error),
+        });
+        return { ok: false, error: error.message };
+    }
+}
+
+const removeUpgradeBooking = async (req) => {
+    try {
+        const { body: { hash }, user: { userId } } = req;
+    
+        if (!hash || !userId) {
+            return { ok: false, error: "Missing required parameters | removeUpgradeBooking" };
         }
-        logger.error(`ERROR :: [reserveUpgrade]`, {
+
+        const result = await expireUpgrade(userId, hash);
+
+        return {
+            ok: true,
+            result
+        };
+    } catch (error) {
+        logger.error(`ERROR :: [removeUpgradeBooking]`, {
             reqQuery: req.query,
             error: serializeError(error),
         });
@@ -293,4 +333,4 @@ async function getReservedUpgrades(req) {
     }
 }
 
-module.exports = { useUpgrade, reserveUpgrade, getReservedUpgrades };
+module.exports = { useUpgrade, reserveUpgrade, getReservedUpgrades, sign, removeUpgradeBooking };

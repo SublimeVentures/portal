@@ -6,9 +6,9 @@ const {
     assignMysteryBox,
     processMBAllocation,
     processMBUpgrade,
-    upsertMysteryBoxLock,
     findStorePartnerId,
-    isReservationInProgress,
+    getMysteryBoxReservations,
+    upsertMysteryBoxLock,
     expireMysteryBox,
 } = require("../queries/mysterybox.query");
 const db = require("../services/db/definitions/db.init");
@@ -19,6 +19,7 @@ const { UPGRADE_ERRORS } = require("../enum/UpgradeErrors");
 const { BookingErrorsENUM } = require("../../src/lib/enum/invest");
 const { authTokenName } = require("../../src/lib/authHelpers");
 const { createHash } = require("./helpers");
+const { isNumber } = require("web3-validator");
 
 async function processMysteryBox(userId, claim, transaction) {
     switch (claim.type) {
@@ -114,18 +115,6 @@ async function claim(user) {
     }
 }
 
-const validateParams = (req) => {
-    const { body, user } = req;
-    const { chainId, amount } = body;
-    const { userId, tenantId, accountId, partnerId } = user;
-
-    if (!tenantId || !userId || !accountId || !partnerId || !chainId || !amount) {
-        return { ok: false, error: "Missing required parameters" };
-    }
-
-    return { ok: true, data: { tenantId, userId, accountId, partnerId, chainId, amount } };
-};
-
 async function obtainSignature(hash, amount, expires, chainId, partnerId, storeId, token) {
     console.log("MB obtrainSignature", {
         hash,
@@ -166,57 +155,37 @@ async function obtainSignature(hash, amount, expires, chainId, partnerId, storeI
     };
 }
 
-async function reserveMysteryBox(req) {
-    const storeId = 0;
-    let transaction;
-
+async function reserve(req) {
     try {
-        transaction = await db.transaction();
-        const token = req.cookies[authTokenName];
-
-        const queryParams = validateParams(req);
-        if (!queryParams.ok) return queryParams;
-
-        const { userId, tenantId, chainId, amount } = queryParams.data;
-
+        const { body, user } = req;
+        const { chainId, amount, storeId } = body;
+        const { userId, tenantId, accountId } = user;
+    
+        if (!isNumber(storeId) || !userId || !accountId || !chainId || !amount || !isNumber(tenantId)) {
+            return { ok: false, error: "Missing required parameters" };
+        }
+    
         const storePartnerId = await findStorePartnerId(storeId, tenantId);
-        // const reservationInProgress = await isReservationInProgress(userId, storePartnerId);
-        // if (reservationInProgress) {
-        //     throw new Error("Reservation is already in progress for this user and store");
-        // }
-
         const now = moment.utc().unix();
-        const expires = now + 10 * 60;
+        const expireDate = now + 15 * 60;
         const hash = createHash(`${userId}` + `${now}`);
 
-        const reservation = await upsertMysteryBoxLock(userId, storePartnerId, chainId, hash, expires, transaction);
+        const reservation = await upsertMysteryBoxLock(userId, storePartnerId, chainId, hash, expireDate);
 
         if (!reservation.ok) {
-            return reservation;
+            return reservation
         }
-
-        const signature = await obtainSignature(hash, amount, expires, chainId, tenantId, storeId, token);
-
-        if (!signature.ok) {
-            await expireMysteryBox(userId, hash);
-            return signature;
-        }
-
-        await transaction.commit();
 
         return {
             ok: true,
-            hash: reservation.data.hash,
-            expires: reservation.data.expireDate,
-            signature: signature.data,
+            hash,
+            expireDate,
             tenantId,
+            storePartnerId,
             storeId,
         };
     } catch (error) {
-        if (transaction) {
-            await transaction.rollback();
-        }
-        logger.error(`ERROR :: [reserveMysteryBox]`, {
+        logger.error(`ERROR :: [MysteryBox - reserve]`, {
             reqQuery: req.query,
             error: serializeError(error),
         });
@@ -224,4 +193,85 @@ async function reserveMysteryBox(req) {
     }
 }
 
-module.exports = { claim, reserveMysteryBox };
+async function sign(req) {
+    try {
+        const token = req.cookies[authTokenName];
+
+        const { body, user } = req;
+        const { chainId, amount, storeId, hash, expires } = body;
+        const { userId, tenantId } = user;
+    
+        if (!isNumber(storeId) || !userId || !chainId || !amount || !isNumber(tenantId)) {
+            return { ok: false, error: "Missing required parameters" };
+        }
+
+        const storePartnerId = await findStorePartnerId(storeId, tenantId);
+        const signature = await obtainSignature(hash, amount, expires, chainId, tenantId, storeId, token);
+
+        if (!signature.ok) {
+            await expireUpgrade(userId, hash);
+            return signature;
+        }
+
+        return {
+            ok: true,
+            hash,
+            expires,
+            signature: signature.data,
+            tenantId,
+            storePartnerId,
+            storeId,
+        };
+    } catch (error) {
+        logger.error(`ERROR :: [MysteryBox - sign]`, {
+            reqQuery: req.query,
+            error: serializeError(error),
+        });
+        return { ok: false, error: error.message };
+    }
+}
+
+const removeBooking = async (req) => {
+    try {
+        const { body: { hash }, user: { userId } } = req;
+    
+        if (!hash || !userId) {
+            return { ok: false, error: "Missing required parameters | removeUpgradeBooking" };
+        }
+
+        const result = await expireMysteryBox(userId, hash);
+
+        return {
+            ok: true,
+            result
+        };
+    } catch (error) {
+        logger.error(`ERROR :: [MysteryBox removeBooking]`, {
+            reqQuery: req.query,
+            error: serializeError(error),
+        });
+        return { ok: false, error: error.message };
+    }
+}
+
+
+async function getReservedMysteryBox(req) {
+    try {
+        const {
+            body: { userId, tenantId, storeId },
+        } = req;
+        if (!userId || !isNumber(tenantId) || !isNumber(storeId)) {
+            return { ok: false, error: "Missing required parameters" };
+        }
+    
+        return await getMysteryBoxReservations(userId, tenantId, storeId);
+    } catch (e) {
+        logger.error(`ERROR :: [getReservedMysteryBox]`, {
+            reqQuery: req.query,
+            error: serializeError(error),
+        });
+        return { ok: false, error: error.message };
+    }
+}
+
+module.exports = { claim, reserve, removeBooking, sign, getReservedMysteryBox };

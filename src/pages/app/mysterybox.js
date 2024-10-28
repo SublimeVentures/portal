@@ -178,7 +178,13 @@ export default function MysteryBoxPage({ session }) {
                     )}
                 </div>
             </div>
-            <BuyMysteryBoxModal open={isBuyModal} onClose={closeBuy} buyModalProps={buyModalProps} />
+            <BuyMysteryBoxModal
+                open={isBuyModal}
+                onClose={closeBuy}
+                buyModalProps={buyModalProps}
+                tenantId={tenantId}
+                userId={userId}
+            />
             <ClaimMysteryBoxModal
                 model={claimModal}
                 setter={() => {

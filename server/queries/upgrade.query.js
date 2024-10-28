@@ -66,8 +66,8 @@ async function findStorePartnerId(storeId, tenantId) {
     return storePartnerRecord.id;
 }
 
-async function upsertUpgradeLock(userId, upgradeId, chainId, hash, expires, transaction) {
-    const mysteryBoxQuery = `
+async function upsertUpgradeLock(userId, upgradeId, chainId, hash, expires) {
+    const storeQuery = `
         INSERT INTO public."upgradeLock" ("userId", "storePartnerId", "hash", "chainId", "expireDate", "isExpired", "isFinished", "createdAt", "updatedAt")
         VALUES (:userId, :storePartnerId, :hash, :chainId, :expireDate, false, false, NOW(), NOW())
         ON CONFLICT ("hash") DO
@@ -75,7 +75,7 @@ async function upsertUpgradeLock(userId, upgradeId, chainId, hash, expires, tran
         RETURNING *;
     `;
 
-    const result = await db.query(mysteryBoxQuery, {
+    const result = await db.query(storeQuery, {
         replacements: {
             userId,
             storePartnerId: upgradeId,
@@ -84,7 +84,6 @@ async function upsertUpgradeLock(userId, upgradeId, chainId, hash, expires, tran
             expireDate: expires,
         },
         type: QueryTypes.RAW,
-        transaction,
     });
 
     if (result[1] !== 1) {
@@ -99,37 +98,17 @@ async function upsertUpgradeLock(userId, upgradeId, chainId, hash, expires, tran
     };
 }
 
-async function isReservationInProgress(userId, storeId) {
-    try {
-        const ongoingReservation = await models.upgradeLock.findOne({
-            where: {
-                userId,
-                storePartnerId: storeId,
-                isExpired: false,
-                isFinished: false,
-                expireDate: {
-                    [Op.gt]: moment().unix(),
-                },
-            },
-        });
-
-        return !!ongoingReservation;
-    } catch (error) {
-        throw new Error("Failed to check reservation status");
-    }
-}
-
 async function expireUpgrade(userId, hash) {
     try {
-        const mysteryBoxLockQuery = `
-            UPDATE public.upgradeLock
+        const upgradeLockQuery = `
+            UPDATE public."upgradeLock"
             SET "isExpired" = true,
                 "updatedAt" = now()
             WHERE "userId" = :userId
               AND "hash" = :hash;
         `;
 
-        return await db.query(mysteryBoxLockQuery, {
+        return await db.query(upgradeLockQuery, {
             replacements: {
                 userId,
                 hash,
@@ -176,7 +155,6 @@ module.exports = {
     fetchUpgradeUsed,
     findStorePartnerId,
     upsertUpgradeLock,
-    isReservationInProgress,
     expireUpgrade,
     getUpgradeReservations
 };

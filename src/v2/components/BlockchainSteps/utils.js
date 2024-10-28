@@ -352,7 +352,11 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.MYSTERYBOX: {
-            const isValid = validNumber(params?.amount) && validAddress(params?.contract);
+            const isValid =
+                validNumber(params?.amount) &&
+                validAddress(params?.contract) &&
+                validHash(params?.hash) &&
+                validNumber(params?.expires);
             const method = TENANT_MYSTERYBOX(params, token);
             return isValid
                 ? {
@@ -366,9 +370,13 @@ export const getMethod = (type, token, params) => {
         }
         case METHOD.UPGRADE: {
             const isValid =
-                validNumber(params?.amount) && validNumber(params?.upgradeId) && validAddress(params?.contract);
+                validNumber(params?.amount) &&
+                validNumber(params?.upgradeId) &&
+                validAddress(params?.contract) &&
+                validHash(params?.hash) &&
+                validNumber(params?.expires);
             const method = TENANT_UPGRADE(params, token);
-            console.log("UPGRADEE", process.env.NEXT_PUBLIC_TENANT, method);
+            console.log("UPGRADE", process.env.NEXT_PUBLIC_TENANT, method);
             return isValid
                 ? {
                       ok: true,

@@ -52,7 +52,7 @@ export const Grid = forwardRef(({ className, children, ...props }, ref) => {
 Grid.displayName = "Grid";
 
 const UpgradeCurrency = ({ className, icon: Icon, style }) => (
-    <span className={cn("rounded size-5 inline-block p-1 shrink-0", className)} style={style}>
+    Icon && <span className={cn("rounded size-5 inline-block p-1 shrink-0", className)} style={style}>
         <Icon />
     </span>
 );

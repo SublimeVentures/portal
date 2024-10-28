@@ -1,9 +1,10 @@
+import * as Sentry from "@sentry/nextjs";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
-import { API } from '@/routes';
+import { API } from "@/routes";
 
-export const fetchReservedStoreItems = async (userId, tenantId, storeId) => {
+export const fetchReservedItems = async (userId, tenantId, storeId) => {
     try {
-        const { data: reservedItems } = await axiosPrivate.post(API.reservedUpgrades, {
+        const { data: reservedItems } = await axiosPrivate.post(API.reservedMysteryBox, {
             userId, tenantId, storeId
         });
 
@@ -29,38 +30,37 @@ export const fetchReservedStoreItems = async (userId, tenantId, storeId) => {
     }
 };
 
-
-export const reserveUpgrade = async (params) => {
+export const reserveMysterybox = async (params) => {
     try {
-        const { data } = await axiosPrivate.post(API.reserveUpgrade, params);
+        const { data } = await axiosPrivate.post(API.reserveMysteryBox, params);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "reserveUpgrade", e });
+            Sentry.captureException({ location: "reserveMysterybox", e });
         }
     }
     return [];
 };
 
-export const removeUpgradeBooking = async (params) => {
+export const removeMysteryBoxBooking = async (params) => {
     try {
-        const { data } = await axiosPrivate.post(API.removeUpgradeBooking, params);
+        const { data } = await axiosPrivate.post(API.removeMysteryBoxBooking, params);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "removeUpgradeBooking", e });
+            Sentry.captureException({ location: "removeMysteryBoxBooking", e });
         }
     }
     return [];
 };
 
-export const signUpgrade = async (params) => {
+export const signMysteryBox = async (params) => {
     try {
-        const { data } = await axiosPrivate.post(API.signUpgrade, params);
+        const { data } = await axiosPrivate.post(API.signMysteryBox, params);
         return data;
     } catch (e) {
         if (e?.status && e.status !== 401) {
-            Sentry.captureException({ location: "signUpgrade", e });
+            Sentry.captureException({ location: "signMysteryBox", e });
         }
     }
     return [];

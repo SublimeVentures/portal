@@ -66,8 +66,15 @@ export const API = {
     notificationPreferences: "/api/notifications/preferences",
     pushSubscription: "/api/notifications/subscription",
     user: "/api/auth/user",
+
+    signMysteryBox: "/api/mysterybox/sign",
     reserveMysteryBox: "/api/mysterybox/reserve",
+    removeMysteryBoxBooking: "/api/mysterybox/remove-booking-mystery-box",
+    reservedMysteryBox: "/api/mysterybox/reserved",
+
+    signUpgrade: "/api/store/sign",
     reserveUpgrade: "/api/store/reserve",
+    removeUpgradeBooking: "/api/store/remove-upgrade-booking",
     reservedUpgrades: "/api/store/reserved-upgrades",
 };
 

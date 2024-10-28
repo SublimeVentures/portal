@@ -25,8 +25,10 @@ import Modal, {
 } from "@/v2/modules/upgrades/Modal";
 import Success from "@/v2/modules/upgrades/Success";
 import PAGE from "@/routes";
-import { reserveUpgrade } from "@/fetchers/store.fetcher";
-import { fetchReservedStoreItems } from "@/v2/fetchers/upgrades";
+import { fetchReservedStoreItems, removeUpgradeBooking, reserveUpgrade, signUpgrade } from "@/v2/fetchers/upgrades";
+import Countdown from "@/v2/components/Countdown";
+import { useRouter } from "next/router";
+const moment = require("moment");
 
 const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 
@@ -35,9 +37,9 @@ const UpgradeSymbol = ({ className }) => (
 );
 
 export const blockchainPrerequisite = async (params) => {
-    const { network, amount, upgradeId } = params;
+    const { network, amount, upgradeId, hash, expires } = params;
     const { chainId } = network;
-    const transaction = await reserveUpgrade({ chainId, amount, storeId: upgradeId });
+    const transaction = await signUpgrade({ chainId, amount, storeId: upgradeId, hash, expires });
 
     if (transaction.ok) {
         return {
@@ -47,13 +49,22 @@ export const blockchainPrerequisite = async (params) => {
     } else {
         return {
             ok: false,
-            error: "Error generating hash",
+            error: "Error signing transaction",
         };
     }
 };
 
-const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransactionSuccessful, userId }) => {
+const ModalContent = ({
+    onClose,
+    order,
+    model,
+    transactionSuccessful,
+    setTransactionSuccessful,
+    userId,
+    tenantId
+}) => {
     const { getCurrencyStore, account, activeDiamond, network, cdn } = useEnvironmentContext();
+    const router = useRouter();
 
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const [amount, setAmount] = useState(1);
@@ -65,6 +76,11 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
     }, [network.chainId]);
 
     const token = useGetToken(selectedCurrency?.contract);
+
+    const [reservationInfo, setReservationInfo] = useState({
+        expires: null,
+        hash: null
+    });
 
     const blockchainInteractionData = useMemo(() => {
         return {
@@ -87,6 +103,8 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                 transactionType: METHOD.UPGRADE,
 
                 userId,
+                hash: reservationInfo.hash,
+                expires: reservationInfo.expireDate,
                 prerequisiteTextWaiting: "Sign transaction",
                 prerequisiteTextProcessing: "Signing transaction",
                 prerequisiteTextSuccess: "Signing transaction obtained",
@@ -95,11 +113,60 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
             token,
             setTransactionSuccessful,
         };
-    }, [model, token?.contract, activeDiamond, selectedCurrency?.contract, amount]);
+    }, [
+        model,
+        token?.contract,
+        activeDiamond,
+        selectedCurrency?.contract,
+        amount,
+        reservationInfo.hash,
+        reservationInfo.expireDate,
+    ]);
 
     const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
     });
+
+    const onCountdownComplete = async () => {
+        await removeUpgradeBooking({ hash: reservationInfo.hash })
+        router.reload();
+    }
+
+    useEffect(() => {
+        if (transactionSuccessful) {
+            removeUpgradeBooking({ hash: reservationInfo.hash });
+        }
+    }, [transactionSuccessful]);
+
+    const fetchReservation = async () => {
+        try {
+            const result = await fetchReservedStoreItems(userId, tenantId, order.id);
+            if (result.ok) {
+                const now = moment.utc().unix();
+                let reserveInfo;
+                if (result.hasReservation && result.expireDate > now) {
+                    reserveInfo = result;
+                } else {
+                    // If the time has expired, request a new hash and timestamp
+                    reserveInfo = await reserveUpgrade({
+                        chainId: network.chainId,
+                        amount: 1,
+                        storeId: order.id,
+                    });
+                }
+                setReservationInfo(reserveInfo);
+            }
+        } catch (error) {
+            console.error("Error fetching reservation:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (userId && tenantId && order.id) {
+            fetchReservation();
+        }
+    }, [userId, tenantId, order?.id, setReservationInfo]);
+
 
     const contentSuccess = () => {
         return (
@@ -146,7 +213,20 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                     >
                         {order.name}
                     </Title>
-                    <Description>{order.description}</Description>
+                    <Description className="mb-2 md:mb-2">{order.description}</Description>
+
+                    {reservationInfo?.expireDate && (
+                        <div className="p-4 mb-2 flex flex-col items-center border border-white rounded">
+                            <h4 className="pb-2 text-xl text-white">Complete your purchase in the next</h4>
+                            <Countdown
+                                countStart={moment.unix(reservationInfo?.expireDate).valueOf()}
+                                onComplete={onCountdownComplete}
+                                units={{ minutes: "m :", seconds: "s" }}
+                                className="text-2xl"
+                            />
+                        </div>
+                    )}
+
                     <Grid>
                         <div>
                             <Label>Upgrade type</Label>
@@ -236,44 +316,6 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps, userId
         refetchBanner();
     }
 
-    const [reservationInfo, setReservationInfo] = useState({
-        hasReservation: false,
-        expirationTime: null,
-    });
-
-    useEffect(() => {
-        const fetchReservation = async () => {
-            try {
-                const result = await fetchReservedStoreItems(userId, tenantId, buyModalProps.order.id);
-                console.log('reservationInfo result', result)
-
-                setReservationInfo(result);
-            } catch (error) {
-                console.log('error', error)
-            }
-        };
-
-        if (userId && tenantId && buyModalProps.order.id) {
-            fetchReservation();
-        }
-    }, [userId, setter, tenantId, buyModalProps.order?.id, setReservationInfo]);
-
-    if (reservationInfo?.hasReservation) {
-        return (
-            <Modal open={model} onClose={closeModal}>
-                <ModalContent
-                    userId={userId}
-                    onClose={closeModal}
-                    {...buyModalProps}
-                    model={model}
-                    transactionSuccessful={false}
-                    errorMessage={`This item is reserved until ${new Date(reservationInfo.expirationTime).toLocaleString()}`}
-                />
-            </Modal>
-        );
-    }
-
-      
     return (
         <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
             <ModalContent
@@ -283,6 +325,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps, userId
                 model={model}
                 transactionSuccessful={transactionSuccessful}
                 setTransactionSuccessful={setTransactionSuccessful}
+                tenantId={tenantId}
             />
         </Modal>
     );

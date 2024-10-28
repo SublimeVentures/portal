@@ -156,30 +156,10 @@ async function upsertMysteryBoxLock(userId, storePartnerId, chainId, hash, expir
     };
 }
 
-async function isReservationInProgress(userId, storePartnerId) {
-    try {
-        const ongoingReservation = await models.mysteryBoxLock.findOne({
-            where: {
-                userId,
-                storePartnerId,
-                isExpired: false,
-                isFinished: false,
-                expireDate: {
-                    [Op.gt]: moment().unix(),
-                },
-            },
-        });
-
-        return !!ongoingReservation;
-    } catch (error) {
-        throw new Error("Failed to check reservation status");
-    }
-}
-
 async function expireMysteryBox(userId, hash) {
     try {
         const mysteryBoxLockQuery = `
-            UPDATE public.mysteryBoxLock
+            UPDATE public."mysteryBoxLock"
             SET "isExpired" = true,
                 "updatedAt" = now()
             WHERE "userId" = :userId
@@ -201,6 +181,34 @@ async function expireMysteryBox(userId, hash) {
     }
     return true;
 }
+
+
+
+async function getMysteryBoxReservations(userId, tenantId, storeId) {
+    const storePartnerId = await findStorePartnerId(storeId, tenantId);
+
+    try {
+        const reservedItems = await models.mysteryBoxLock.findAll({
+            where: {
+                userId,
+                storePartnerId,
+                isExpired: false,
+            }
+        });
+        
+        return reservedItems;
+    } catch (error) {
+        logger.error(
+            `ERROR :: [getMysteryBoxReservations] for user ${userId} | tenantId - ${tenantId}, storeId - ${storeId}`,
+            {
+                userId,
+                hash,
+            },
+        );
+    }
+    return true;
+}
+
 module.exports = {
     pickMysteryBox,
     assignMysteryBox,
@@ -208,6 +216,6 @@ module.exports = {
     processMBUpgrade,
     findStorePartnerId,
     upsertMysteryBoxLock,
-    isReservationInProgress,
     expireMysteryBox,
+    getMysteryBoxReservations
 };

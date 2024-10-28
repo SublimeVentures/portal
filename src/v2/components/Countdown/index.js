@@ -24,7 +24,7 @@ export default function Countdown({ countStart, units = defaultUnits, onComplete
     const timeValues = { days, hours, minutes, seconds };
 
     return (
-        <time className={cn("flex gap-2", className)} date={endDate} pubdate>
+        <time className={cn("flex gap-2", className)} date={endDate} pubdate="true">
             {Object.keys(units).map((key) => {
                 const type = units[key];
                 return (
