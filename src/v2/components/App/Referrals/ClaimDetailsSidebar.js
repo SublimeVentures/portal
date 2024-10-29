@@ -21,15 +21,12 @@ export default function ClaimDetailsSidebar({ claimModalProps, payoutProps }) {
 
     const [isClaimDetailsOpen, setIsClaimDetailsOpen] = useState(false);
 
-   
-    const handleModalClose = () => {};
-
     return (
         <Sheet open={isClaimDetailsOpen} onOpenChange={setIsClaimDetailsOpen}>
             <SheetTrigger asChild>
                 <Button variant="accent">CLAIM</Button>
             </SheetTrigger>
-            <SheetContent className="h-full flex flex-col" onCloseAutoFocus={handleModalClose}>
+            <SheetContent className="h-full flex flex-col">
                 <SheetHeader>
                     <Image
                         src={`${cdn}/research/${claimDetailsModal?.offer?.slug}/icon.jpg`}
