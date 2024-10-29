@@ -38,6 +38,7 @@ const basedRoutes = {
     Upgrades: "/upgrades",
     Settings: "/settings",
     Notifications: "/notifications",
+    Referral: "/referral",
 };
 
 const PAGE = tenantIndex === TENANT.basedVC ? Object.freeze(basedRoutes) : Object.freeze(standardRoutes);
