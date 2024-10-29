@@ -1,5 +1,5 @@
 import { http, createConfig, fallback } from "wagmi";
-import { mainnet, polygon, bsc, avalanche, sepolia, baseSepolia } from "wagmi/chains";
+import { mainnet, polygon, bsc, avalanche, sepolia, base, baseSepolia } from "wagmi/chains";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
 import { RPCs } from "@/lib/blockchain";
 import { getTenantConfig } from "@/lib/tenantHelper";
@@ -21,7 +21,7 @@ const fallbackOptions = {
 const isProductionEnv = process.env.ENV === "production";
 
 export const config = createConfig({
-    chains: [...(isProductionEnv ? [mainnet, polygon] : [sepolia, baseSepolia]), bsc],
+    chains: [...(isProductionEnv ? [base, mainnet] : [sepolia, baseSepolia]), polygon, bsc],
     batch: { multicall: true },
     ssr: true,
     cacheTime: 0, //default: 4_000
@@ -37,6 +37,7 @@ export const config = createConfig({
     transports: {
         ...(isProductionEnv
             ? {
+                  [base.id]: fallback([http(RPCs[base.id].main, retryOptions)], fallbackOptions),
                   [mainnet.id]: fallback(
                       [
                           http(RPCs[mainnet.id].main, retryOptions),
