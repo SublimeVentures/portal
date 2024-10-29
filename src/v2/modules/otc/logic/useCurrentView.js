@@ -16,7 +16,7 @@ export default function useCurrentView() {
                 router.replace(routes.OTC, undefined, { shallow: true });
             }
         }
-    }, [view, router]);
+    }, [view, router.pathname]);
 
     useEffect(() => {
         if (currentView === otcViews.offers) {

@@ -31,7 +31,15 @@ const Definition = ({ term, children, termClassName, descClassName }) => (
 
 export default function History({ className }) {
     const { data: offer } = useOfferDetailsQuery();
-    const { data: participants = [], isLoading } = useOfferParticipantsQuery(offer.id, { enabled: !!offer.id });
+    const { data: participants = [], isLoading } = useOfferParticipantsQuery(offer.id, {
+        enabled: !!offer.id,
+        refetchInterval: (query) => {
+            const shouldRefetch = query?.state?.data?.some(({ isConfirmed, isConfirmedInitial, isExpired }) =>
+                [isConfirmed, isConfirmedInitial, isExpired].every((value) => value === false),
+            );
+            return shouldRefetch ? 10000 : false;
+        },
+    });
 
     return (
         <div className={cn("p-6 rounded bg-alt flex flex-col gap-6 select-none border-alt", className)}>

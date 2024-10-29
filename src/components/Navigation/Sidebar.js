@@ -206,7 +206,7 @@ export default function Sidebar({ session }) {
                         }}
                         className={cn("flex items-center px-5 py-2 bordered-container sidebar-item select-none", {
                             disabled: el.disabled,
-                            arl: router.pathname === el.link,
+                            arl: router.pathname.substring(4) === el.link,
                         })}
                     >
                         {el.icon}

@@ -127,6 +127,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
         );
     };
     const contentSteps = () => {
+        const buttonProps = getBlockchainStepButtonProps();
         return (
             <>
                 <Image
@@ -147,7 +148,13 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                     <Grid>
                         <div>
                             <Label>Upgrade type</Label>
-                            <Select placeholder="Select upgrade type" className="w-full" value={order.id} size="sm">
+                            <Select
+                                placeholder="Select upgrade type"
+                                className="w-full"
+                                value={order.id}
+                                size="sm"
+                                disabled={buttonProps.buttonLock}
+                            >
                                 <Option value={order.id}>
                                     <span className="flex items-center gap-3">
                                         <UpgradeSymbol
@@ -172,6 +179,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                                 readOnly={order.id === 1}
                                 onValueChange={setAmount}
                                 size="sm"
+                                disabled={buttonProps.buttonLock}
                             />
                         </div>
                         <div>
@@ -182,18 +190,25 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                                 value={selectedCurrency}
                                 size="sm"
                                 options={dropdownCurrencyOptions}
+                                disabled={buttonProps.buttonLock}
                             />
                         </div>
                         <div>
                             <Label>Total</Label>
-                            <Input readOnly className="w-full text-center" value={price} size="sm" />
+                            <Input
+                                readOnly
+                                className="w-full text-center"
+                                value={price}
+                                size="sm"
+                                disabled={buttonProps.buttonLock}
+                            />
                         </div>
                     </Grid>
                     <BlockchainSteps {...getBlockchainStepsProps()} />
                     <ModalButton
                         className="w-full mt-4"
                         variant={order.id === 1 ? "accent" : "default"}
-                        {...getBlockchainStepButtonProps()}
+                        {...buttonProps}
                     />
                 </Content>
             </>

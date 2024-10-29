@@ -15,6 +15,12 @@ const nonRewritablePaths = [
     "app",
     "favicon.ico",
     "favicon.svg",
+    "img",
+    "1",
+    "6",
+    "14",
+    "19",
+    "static",
 ];
 
 /** @type {import("next").NextConfig} */
@@ -31,7 +37,7 @@ const nextConfig = {
                     },
                     {
                         source: "/",
-                        destination: "/app",
+                        destination: "/app/vault",
                         basePath: undefined,
                     },
                 ],
@@ -43,12 +49,12 @@ const nextConfig = {
         if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
             return [
                 {
-                    source: "/app/",
-                    destination: "/",
+                    source: "/",
+                    destination: "/vault/",
                     permanent: true,
                 },
                 {
-                    source: "/app/vault/",
+                    source: "/app/",
                     destination: "/",
                     permanent: true,
                 },
@@ -59,7 +65,13 @@ const nextConfig = {
                 },
             ];
         }
-        return [];
+        return [
+            {
+                source: "/app/",
+                destination: "/app/vault/",
+                permanent: true,
+            },
+        ];
     },
     trailingSlash: true,
     webpack(config) {

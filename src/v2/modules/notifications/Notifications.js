@@ -7,7 +7,7 @@ import TimelineItem from "@/v2/components/Timeline/TimelineItem";
 import TimelineSkeleton from "@/v2/components/Timeline/TimelineSkeleton";
 import { Button } from "@/v2/components/ui/button";
 
-export default function NotificationList({ data = [], isFetching, hasNextPage, fetchNextPage }) {
+export default function NotificationList({ data = [], isFetching, isLoading, hasNextPage, fetchNextPage }) {
     const ref = useRef();
 
     useIntersectionObserver(ref, (isIntersecting) => {
@@ -16,35 +16,44 @@ export default function NotificationList({ data = [], isFetching, hasNextPage, f
 
     return (
         <>
-            {data.length > 0 || isFetching ? (
+            {data.length > 0 || isFetching || isLoading ? (
                 <Card
                     variant="none"
                     className="flex flex-col h-full overflow-hidden bg-base lg:mb-6 3xl:mb-12 p-0 cursor-auto border-alt"
                 >
                     <div className="py-4 flex flex-col h-full overflow-y-auto pr-4">
-                        {isFetching ? (
-                            <div className="px-4 flex flex-col grow overflow-x-hidden py-2">
-                                <TimelineSkeleton />
-                            </div>
-                        ) : (
-                            <ol className="px-4 flex flex-col grow overflow-x-hidden py-2">
-                                {data.map((notification, idx) => {
-                                    if (idx + 1 === data.length && hasNextPage) {
+                        <ol className="px-4 flex flex-col grow overflow-x-hidden py-2">
+                            {isLoading ? (
+                                Array.from({ length: 6 }).map((_, index) => (
+                                    <li key={index} className="group">
+                                        <TimelineSkeleton />
+                                    </li>
+                                ))
+                            ) : (
+                                <>
+                                    {data.map((notification, idx) => {
+                                        if (idx + 1 === data.length && hasNextPage) {
+                                            return (
+                                                <li ref={ref} key={notification.id} className="group">
+                                                    <TimelineItem item={notification} />
+                                                </li>
+                                            );
+                                        }
+
                                         return (
-                                            <li ref={ref} key={notification.id} className="group">
-                                                <TimelineItem item={notification} />
+                                            <li key={notification.id} className="group">
+                                                <TimelineItem item={notification} showTimeline={true} />
                                             </li>
                                         );
-                                    }
-
-                                    return (
-                                        <li key={notification.id} className="group">
-                                            <TimelineItem item={notification} showTimeline={data.length > 1} />
+                                    })}
+                                    {isFetching && (
+                                        <li className="group">
+                                            <TimelineSkeleton />
                                         </li>
-                                    );
-                                })}
-                            </ol>
-                        )}
+                                    )}
+                                </>
+                            )}
+                        </ol>
                     </div>
                 </Card>
             ) : (

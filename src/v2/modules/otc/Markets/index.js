@@ -27,12 +27,18 @@ export default function Markets() {
     const handleSearchChange = useCallback((evt) => setSearchValue(evt.target.value), []);
 
     const openPopover = useCallback(() => {
-        if (!isDesktop) {
+        if (!isDesktop && !isPopoverOpen) {
             setIsPopoverOpen(true);
         }
 
         inputRef.current.focus();
     }, [isDesktop, isPopoverOpen]);
+
+    const handleSearchClose = useCallback(() => {
+        if (isPopoverOpen) {
+            setIsPopoverOpen(false);
+        }
+    }, [isPopoverOpen]);
 
     useEffect(() => {
         if (isDesktop) {
@@ -73,7 +79,7 @@ export default function Markets() {
                     ref={inputRef}
                     name={isDesktop ? "Search market" : "Search (Tap to see the list)"}
                     value={searchValue}
-                    onClose={() => setIsPopoverOpen(false)}
+                    onClose={handleSearchClose}
                     onChange={handleSearchChange}
                     onClick={openPopover}
                     isOpen={isPopoverOpen}

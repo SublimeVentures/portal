@@ -27,8 +27,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
         staleTime: 1 * 30 * 1000,
     });
 
-    const newCount = 0;
-
+    // const newCount = 0;
     const [open, setOpen] = useState(false);
 
     return (

@@ -1,6 +1,7 @@
 import OtcMessage from "@/v2/components/Timeline/OTCMessage";
 import { NotificationTypes, NotificationTypeNames } from "@/v2/enum/notifications";
 import { PremiumItemsENUM } from "@/lib/enum/store";
+import { formatCurrency } from "@/v2/helpers/formatters";
 
 /**
  * @description Get the notification title based on the type
@@ -24,7 +25,7 @@ export function getDescriptionMessage(type, values) {
         case NotificationTypes.OTC_TAKE:
             return <OtcMessage action="Take" values={values.otcDeal} />;
         case NotificationTypes.INVESTMENT:
-            return `$${values.data.value} in ${values?.offer?.name}`;
+            return `${formatCurrency(values.data.amount)} in ${values?.offer?.name}`;
         case NotificationTypes.REFUND:
             return `Issued refund for $${values.data.amount}`;
         case NotificationTypes.CLAIM:

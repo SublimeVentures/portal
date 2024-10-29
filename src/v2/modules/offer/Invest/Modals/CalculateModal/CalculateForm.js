@@ -1,11 +1,9 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-import useCalculate from "./useCalculate";
+import useCalculate, { MAX_MULTIPLIER, MIN_MULTIPLIER } from "./useCalculate";
+import { cn } from "@/lib/cn";
 import { Input } from "@/v2/components/ui/input";
 import { IconButton } from "@/v2/components/ui/icon-button";
-
-// @TODO - Data taken from useInvest. Find better way to store it (tenant config?)
-const taxPercentage = 10;
 
 // @todo - create universal definition - taken from fundraise
 const Definition = ({ term, isLoading, children }) => (
@@ -15,14 +13,13 @@ const Definition = ({ term, isLoading, children }) => (
     </>
 );
 
-export default function CalculateForm() {
+export default function CalculateForm({ fee = 10 }) {
     const {
-        state: { amount, price, multiplier },
+        state: { amount, price, total, multiplier },
         handleAmountChange,
         handleMultiplierChange,
-    } = useCalculate();
+    } = useCalculate(fee);
     const multiplierParsed = multiplier.toFixed(2);
-    const subtotal = price - price * (taxPercentage / 100);
 
     return (
         <div className="flex flex-col gap-4">
@@ -35,17 +32,34 @@ export default function CalculateForm() {
                     </span>
                 </div>
             </label>
-
-            <div className="p-6 flex items-center justify-between w-full bg-green-500/10 rounded md:py-8 md:px-12">
-                <IconButton variant="secondary" icon={FaChevronLeft} onClick={() => handleMultiplierChange(false)} />
+            <div
+                className={cn("p-6 flex items-center justify-between w-full bg-green-500/10 rounded md:py-8 md:px-12")}
+            >
+                <IconButton
+                    variant="secondary"
+                    icon={FaChevronLeft}
+                    onClick={() => handleMultiplierChange(false)}
+                    disabled={multiplier <= MIN_MULTIPLIER}
+                    className={cn(
+                        multiplier <= MIN_MULTIPLIER ? "opacity-50 cursor-not-allowed hover:bg-primary/10" : "",
+                    )}
+                />
                 <div className="text-4xl text-green-500">x{multiplierParsed}</div>
-                <IconButton variant="secondary" icon={FaChevronRight} onClick={() => handleMultiplierChange(true)} />
+                <IconButton
+                    variant="secondary"
+                    icon={FaChevronRight}
+                    onClick={() => handleMultiplierChange(true)}
+                    disabled={multiplier >= MAX_MULTIPLIER}
+                    className={cn(
+                        multiplier >= MAX_MULTIPLIER ? "opacity-50 cursor-not-allowed hover:bg-primary/10" : "",
+                    )}
+                />
             </div>
 
             <label className="w-full flex flex-col text-white">
                 <span className="text-base mb-2 lg:text-lg">Return total</span>
                 <div className="relative w-full ">
-                    <Input value={price} className="px-4 w-full md:px-8" />
+                    <Input value={total} className="px-4 w-full md:px-8" />
                     <span className="px-4 absolute right-0 top-1/2 -translate-y-1/2 text-white/50 font-light md:px-8">
                         USD
                     </span>
@@ -53,8 +67,8 @@ export default function CalculateForm() {
             </label>
 
             <dl className="grid grid-cols-2 gap-2 text-sm font-light text-white/50 select-none">
-                <Definition term="Fees">{taxPercentage}%</Definition>
-                <Definition term="Subtotal">${subtotal}</Definition>
+                <Definition term="Fees">{fee}%</Definition>
+                <Definition term="Subtotal">${price}</Definition>
             </dl>
         </div>
     );
