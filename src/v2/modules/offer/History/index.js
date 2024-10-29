@@ -9,6 +9,8 @@ import { useOfferDetailsQuery } from "@/v2/modules/offer/queries";
 import { Skeleton } from "@/v2/components/ui/skeleton";
 import { formatCurrency } from "@/v2/helpers/formatters";
 import { offersKeys } from "@/v2/constants";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
+import { QuestionMark } from "@/v2/modules/offer/Fundraise";
 
 const offerParticipantsOptions = (offerId, config) => ({
     queryKey: offersKeys.offerParticipants(offerId),
@@ -27,6 +29,17 @@ const Definition = ({ term, children, termClassName, descClassName }) => (
         <dt className={cn("text-xs md:text-sm font-light", termClassName)}>{term}:</dt>
         <dd className={cn("text-sm md:text-base font-medium", descClassName)}>{children}</dd>
     </>
+);
+
+const Status = ({ children, tooltip, className }) => (
+    <Tooltip>
+        <TooltipTrigger asChild>
+            <span className={cn("cursor-pointer flex items-center gap-2", className)}>
+                <span>{children}</span> <QuestionMark />
+            </span>
+        </TooltipTrigger>
+        <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
 );
 
 export default function History({ className }) {
@@ -80,12 +93,38 @@ export default function History({ className }) {
                                             termClassName="order-2 md:order-3"
                                             descClassName="order-4 md:order-7"
                                         >
-                                            {participant.isConfirmed && <span className="text-success">Confirmed</span>}
-                                            {participant.isConfirmedInitial && !participant.isConfirmed && (
-                                                <span className="text-yellow-500">Internal check</span>
+                                            {participant.isConfirmed && (
+                                                <Status
+                                                    className="text-success"
+                                                    tooltip="Your booking has been confirmed."
+                                                >
+                                                    Confirmed
+                                                </Status>
                                             )}
-                                            {participant.isExpired && <span className="text-error">Expired</span>}
-                                            {isCancelAvailable && <span className="text-secondary">Booked</span>}
+                                            {participant.isConfirmedInitial && !participant.isConfirmed && (
+                                                <Status
+                                                    className="text-yellow-500"
+                                                    tooltip="Checking all activities to ensure the booking is correct."
+                                                >
+                                                    Internal check
+                                                </Status>
+                                            )}
+                                            {participant.isExpired && (
+                                                <Status
+                                                    className="text-error"
+                                                    tooltip="Your booking has expired. Please open a new booking."
+                                                >
+                                                    Expired
+                                                </Status>
+                                            )}
+                                            {isCancelAvailable && (
+                                                <Status
+                                                    className="text-secondary"
+                                                    tooltip="Your investment has been booked in the system."
+                                                >
+                                                    Booked
+                                                </Status>
+                                            )}
                                         </Definition>
                                         <Definition
                                             term="Amount"

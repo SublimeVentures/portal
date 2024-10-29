@@ -23,6 +23,17 @@ const getCurrency = (value) => (value > 0 ? formatCurrency(value) : null);
 const getTGE = (tge, ppu) =>
     tge > 0 && ppu ? `(${formatPercentage((tge - ppu) / ppu)}) ${formatCurrency(tge)}` : null;
 
+export const QuestionMark = ({ className }) => (
+    <span
+        className={cn(
+            "size-4 rounded-full bg-white/15 text-2xs flex items-center justify-center cursor-help hover:bg-white/20 transition-colors duration-200",
+            className,
+        )}
+    >
+        ?
+    </span>
+);
+
 export default function Fundraise({ className }) {
     const userAllocation = useUserAllocationQuery({
         refetchInterval: (query) => {
@@ -45,10 +56,9 @@ export default function Fundraise({ className }) {
                 <h2 className="text-xl md:text-2xl font-medium select-none font-heading">Fundraise Goal</h2>
                 {/* <Tooltip>
                     <TooltipTrigger
-                        className="size-4 rounded-full bg-white/15 text-2xs flex items-center justify-center cursor-help hover:bg-white/20 transition-colors duration-200"
                         asChild
                     >
-                        <span>?</span>
+                        <QuestionMark />
                     </TooltipTrigger>
                     <TooltipContent>Something to show</TooltipContent>
                 </Tooltip> */}
