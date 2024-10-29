@@ -21,7 +21,7 @@ const fallbackOptions = {
 const isProductionEnv = process.env.ENV === "production";
 
 export const config = createConfig({
-    chains: [...(isProductionEnv ? [mainnet] : [baseSepolia]), polygon, bsc],
+    chains: [...(isProductionEnv ? [mainnet, polygon] : [sepolia, baseSepolia]), bsc],
     batch: { multicall: true },
     ssr: true,
     cacheTime: 0, //default: 4_000
@@ -48,6 +48,7 @@ export const config = createConfig({
                   ),
               }
             : {
+                  [sepolia.id]: fallback([http(RPCs[sepolia.id].main, retryOptions)], fallbackOptions),
                   [baseSepolia.id]: fallback([http(RPCs[baseSepolia.id].main, retryOptions)], fallbackOptions),
               }),
         [polygon.id]: fallback(
