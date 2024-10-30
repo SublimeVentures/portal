@@ -15,9 +15,9 @@ export function getNotificationTitle(type) {
 export function getDescriptionMessage(type, values) {
     switch (type) {
         case NotificationTypes.MYSTERY_BUY:
-            return null;
+            return `Purchased ${values.data.amount} mystery ${values.data.amount === 1 ? 'box' : 'boxes'}`;
         case NotificationTypes.UPGRADE_BUY:
-            return `${PremiumItemsENUM.Guaranteed === values?.upgrade?.storeId ? "Guaranteed" : "Increased"} Allocation`;
+            return `Purchased ${values.data.amount} ${PremiumItemsENUM.Guaranteed === values?.upgrade?.storeId ? "Guaranteed" : "Increased"} Allocation`;
         case NotificationTypes.OTC_CANCEL:
             return <OtcMessage action="Cancel" values={values.otcDeal} />;
         case NotificationTypes.OTC_MADE:
