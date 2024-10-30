@@ -1,8 +1,9 @@
 const moment = require("moment/moment");
 const axios = require("axios");
-const { constructError } = require("../utils");
+const { constructError, repeatAsyncCheck } = require("../utils");
 const { getEnv } = require("../services/env");
 const { ReassignErrorsENUM } = require("../../src/lib/enum/reassign");
+const { models } = require("../services/db/definitions/db.init");
 
 function checkReassignQueryParams(req) {
     try {
@@ -103,4 +104,26 @@ async function processReassign(queryParams, token) {
     }
 }
 
-module.exports = { checkReassignQueryParams, processReassign };
+async function awaitForVaultReassign(req) {
+    try {
+        const { vaultId } = req.params;
+
+        const callback = async () => {
+            const vault = await models.vault.findOne({
+                where: {
+                    id: Number(vaultId),
+                    invested: 0,
+                },
+            });
+            return Boolean(vault);
+        };
+
+        const isVaultBecomeEmpty = await repeatAsyncCheck(callback);
+
+        return { ok: isVaultBecomeEmpty };
+    } catch (error) {
+        return constructError("QUERY", error, { isLog: true, methodName: "awaitForVaultReassign" });
+    }
+}
+
+module.exports = { checkReassignQueryParams, processReassign, awaitForVaultReassign };

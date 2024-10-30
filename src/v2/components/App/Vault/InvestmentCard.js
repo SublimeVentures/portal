@@ -12,6 +12,7 @@ import ClaimModal from "@/v2/components/App/Vault/ClaimModal";
 import useImage from "@/v2/hooks/useImage";
 import MutedText from "@/v2/components/ui/muted-text";
 import ReassignModal from "@/v2/components/App/Vault/ReassignModal";
+import { awaitForReassign } from "@/fetchers/vault.fetcher";
 
 // aspect-[5/8]
 const InvestmentCardWrapper = ({ children, className }) => {
@@ -60,8 +61,25 @@ const InvestmentCard = ({ details, isLoading = false, isError = false, refetch }
     const data = useInvestmentsData(details, refetch);
     const { title, coin, slug, participatedDate, canClaim, isClaimSoon } = data;
     const { getResearchIconSrc } = useImage();
+    const [reassignProcess, setReassignProcess] = useState(false);
     const [isReassignModalOpen, setIsReassignModalOpen] = useState(false);
-    const closeReassignModal = useCallback(() => setIsReassignModalOpen(false), []);
+
+    const closeReassignModal = useCallback(
+        async (isTransactionSuccessful) => {
+            setIsReassignModalOpen(false);
+            if (isTransactionSuccessful) {
+                setReassignProcess(true);
+                const data = await awaitForReassign(details.id);
+
+                if (data.ok) {
+                    refetch();
+                }
+                setReassignProcess(false);
+            }
+        },
+        [details, refetch],
+    );
+
     const openReassignModal = useCallback(() => setIsReassignModalOpen(true), []);
 
     if (isLoading) {
@@ -88,6 +106,13 @@ const InvestmentCard = ({ details, isLoading = false, isError = false, refetch }
                     className="overflow-hidden rounded-full size-10 pointer-events-none select-none bg-primary-800"
                 />
             </div>
+            {reassignProcess && (
+                <div className="absolute left-0 top-0 w-full h-full backdrop-blur flex-center z-10">
+                    <p className="text-xs font-light md:text-base bg:text-green-500 text-white animate-pulse leading-none">
+                        Reassigning Vault
+                    </p>
+                </div>
+            )}
             <Attributes details={data} className="grow gap-2 mb-5 select-none" grid />
             <ClaimModal openReassignModal={openReassignModal} data={data}>
                 <Button variant={canClaim ? "accent" : "outline"} className="mb-3.5 mt-auto w-full font-xs">

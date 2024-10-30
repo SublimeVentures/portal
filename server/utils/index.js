@@ -21,7 +21,7 @@ function getWhereClause(filters, mainKeys, strictKeys = [], jsonKeys = []) {
 
         return acc;
     }, {});
-};
+}
 
 function constructError(type, error, config) {
     const { isLog = true, message, methodName, force, enableSentry } = config;
@@ -38,7 +38,7 @@ function constructError(type, error, config) {
     }
 
     return { error: error.message || message, ok: false };
-};
+}
 
 /**
  * Utility function to construct pagination parameters
@@ -60,4 +60,22 @@ const getPaginationParams = (req) => {
     };
 };
 
-module.exports = { getWhereClause, constructError, getPaginationParams };
+const repeatAsyncCheck = async (callback, maxRetries = 15, delay = 1000) => {
+    let retries = 0;
+
+    while (retries < maxRetries) {
+        const res = await callback();
+
+        if (res) {
+            return true;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, delay));
+
+        retries++;
+    }
+
+    return false;
+};
+
+module.exports = { getWhereClause, constructError, getPaginationParams, repeatAsyncCheck };

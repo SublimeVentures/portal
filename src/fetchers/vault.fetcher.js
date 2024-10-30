@@ -53,3 +53,12 @@ export const fetchVaultStats = async (query, config) => {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchVaultStats", enableSentry: true });
     }
 };
+
+export const awaitForReassign = async (vaultId) => {
+    try {
+        const { data } = await axiosPrivate.get(`${API.reassignVault}/await/${vaultId}`);
+        return data;
+    } catch (error) {
+        return handleError(ErrorType.FETCHER, error, { methodName: "awaitForReassign", enableSentry: true });
+    }
+};

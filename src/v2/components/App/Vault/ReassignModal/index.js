@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import { DialogContent, DialogHeader, DialogTitle, Dialog } from "@/v2/components/ui/dialog";
 import { METHOD } from "@/components/BlockchainSteps/utils";
@@ -79,10 +79,17 @@ export default function ReassignModal({ data = {}, isReassignModalOpen: open, cl
         }
     }, [transactionSuccessful]);
 
+    const buttonProps = getBlockchainStepButtonProps();
+
+    const closeDialog = useCallback(
+        () => (buttonProps.buttonLock ? null : closeModal(transactionSuccessful)),
+        [buttonProps.buttonLock, closeModal, transactionSuccessful],
+    );
+
     return (
         <div className="max-h-screen w-full">
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent handleClose={closeModal}>
+                <DialogContent handleClose={closeDialog}>
                     <DialogHeader className="md:items-center">
                         <DialogTitle>
                             {transactionSuccessful ? (
@@ -107,13 +114,13 @@ export default function ReassignModal({ data = {}, isReassignModalOpen: open, cl
                                 dropdownCurrencyOptions={dropdownCurrencyOptions}
                                 handleCurrencyChange={handleCurrencyChange}
                                 handleAddressChange={handleAddressChange}
-                                disabled={getBlockchainStepsProps().buttonLock}
+                                disabled={buttonProps.buttonLock}
                             />
                             <BlockchainSteps {...getBlockchainStepsProps()} />
                         </dl>
                         <div className="flex w-full justify-center">
                             {currencyContract && to && !transactionSuccessful && (
-                                <BlockchainStepButton className="w-full md:w-64" {...getBlockchainStepButtonProps()} />
+                                <BlockchainStepButton className="w-full md:w-64" {...buttonProps} />
                             )}
                         </div>
                     </div>

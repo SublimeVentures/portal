@@ -1,5 +1,5 @@
 const express = require("express");
-const { reassign } = require("../controllers/reassign");
+const { reassign, awaitReassign } = require("../controllers/reassign");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -7,7 +7,13 @@ router.get("/", async (req, res) => {
 
     const reassignRes = await reassign(req, user);
 
-    return res.status(200).json(reassignRes);
+    return res.status(reassignRes.ok ? 200 : 500).json(reassignRes);
+});
+
+router.get("/await/:vaultId", async (req, res) => {
+    const awaitRes = await awaitReassign(req);
+
+    return res.status(awaitRes ? 200 : 500).json(awaitRes);
 });
 
 module.exports = { router };

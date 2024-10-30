@@ -1,7 +1,8 @@
 const { serializeError } = require("serialize-error");
-const { checkReassignQueryParams, processReassign } = require("../queries/reassign.query");
+const { checkReassignQueryParams, processReassign, awaitForVaultReassign } = require("../queries/reassign.query");
 const { authTokenName } = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
+const { constructError } = require("../utils");
 
 async function reassign(req, user) {
     try {
@@ -29,4 +30,20 @@ async function reassign(req, user) {
     }
 }
 
-module.exports = { reassign };
+async function awaitReassign(req) {
+    try {
+        const { vaultId } = req.params;
+        if (!vaultId) {
+            return constructError("CONTROLLER", new Error("Vault id is incorrect!"), {
+                isLog: true,
+                methodName: "awaitReassign",
+            });
+        }
+
+        return await awaitForVaultReassign(req);
+    } catch (error) {
+        return constructError("CONTROLLER", error, { isLog: true, methodName: "awaitReassign" });
+    }
+}
+
+module.exports = { reassign, awaitReassign };
