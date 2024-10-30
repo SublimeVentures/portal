@@ -43,12 +43,11 @@ export default function Fundraise({ className }) {
     const { data: offer, isLoading } = useOfferDetailsQuery();
     const { data: offerAllocation } = useOfferAllocationQuery();
     const { status } = useOfferStatus(offer);
-    const { data: { progress = 0, filled = 0 } = {} } = useOfferProgressQuery(offer.id, {
-        refetchInterval: status === OfferStatus.IN_PROGRESS ? 15000 : false,
-    });
+    const reserved = status === OfferStatus.CLOSED ? 0 : offerAllocation?.reserved;
 
-    const progressValue = status === OfferStatus.CLOSED ? 100 : progress;
+    const progressValue = status === OfferStatus.CLOSED ? 100 : offerAllocation?.progress ?? 0;
     const { data: { invested: { booked = 0, invested = 0 } = {} } = {} } = userAllocation;
+    const sum = progressValue + reserved;
 
     return (
         <div className={cn("p-6 rounded bg-alt space-y-6 border-alt", className)}>
@@ -66,9 +65,21 @@ export default function Fundraise({ className }) {
             <div>
                 <div className="flex justify-between items-end mb-4 select-none">
                     <p className="text-xl md:text-3xl">{formatCurrency(offerAllocation?.alloTotal ?? 0)}</p>
-                    <p className="text-base md:text-lg text-success">{formatPercentage(progressValue / 100)} Filled</p>
+                    <p className="text-base md:text-lg text-success">{formatPercentage(sum / 100)}</p>
                 </div>
-                <Progress value={progressValue} variant="success" />
+                <Progress value={[progressValue, progressValue + reserved]} variant="success" />
+                {status !== OfferStatus.CLOSED && (
+                    <>
+                        <p className="text-xs md:text-sm text-success mt-2 text-right">
+                            {formatPercentage(progressValue / 100)} Filled
+                        </p>
+                        {offerAllocation?.reserved > 0 && (
+                            <p className="text-xs md:text-sm text-success/50 mt-2 text-right">
+                                {formatPercentage(offerAllocation?.reserved / 100)} Booked
+                            </p>
+                        )}
+                    </>
+                )}
             </div>
             <div>
                 <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base select-none">
