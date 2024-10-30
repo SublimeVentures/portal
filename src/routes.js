@@ -1,6 +1,7 @@
+import { tenantIndex } from "./lib/utils";
 import { TENANT } from "@/lib/tenantHelper";
 
-const PAGE = {
+const standardRoutes = {
     Landing: "/",
     Join: "/join",
     Login: "/login",
@@ -18,6 +19,27 @@ const PAGE = {
     Settings: "/app/settings",
     Notifications: "/app/notifications",
 };
+
+const basedRoutes = {
+    Landing: "/",
+    Join: "/join",
+    Login: "/login",
+    Investments: "/investments",
+    Tokenomics: "/tokenomics",
+    ToS: "/terms",
+    Privacy: "/privacy",
+    App: "/vault",
+    Opportunities: "/offer",
+    Launchpad: "/launchpad",
+    OTC: "/otc",
+    Notifs: "/latest",
+    Mysterybox: "/mysterybox",
+    Upgrades: "/upgrades",
+    Settings: "/settings",
+    Notifications: "/notifications",
+};
+
+const PAGE = tenantIndex === TENANT.basedVC ? Object.freeze(basedRoutes) : Object.freeze(standardRoutes);
 
 export const API = {
     settingsWallets: "/api/settings/wallets",

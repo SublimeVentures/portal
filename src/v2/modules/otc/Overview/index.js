@@ -23,7 +23,7 @@ export default function Overview() {
     return (
         <Card
             variant="none"
-            className="p-4 h-max flex flex-col w-full justify-between gap-4 bg-settings-gradient md:flex-row md:items-center cursor-default"
+            className="p-4 h-max flex flex-col w-full justify-between gap-4 bg-base md:flex-row md:items-center cursor-default border-alt"
         >
             {isLoading ? (
                 <Skeleton className="h-64 md:h-24" />
@@ -38,13 +38,13 @@ export default function Overview() {
                             height={100}
                         />
                         <div className="w-full select-none">
-                            <h3 className="text-base font-medium 3xl:text-3xl text-foreground leading-none">
+                            <h3 className="text-base font-medium 3xl:text-3xl text-white leading-none font-heading">
                                 {name}
                                 <small className="ml-1.5 font-light align-super text-2xs 3xl:text-base">
                                     ${ticker}
                                 </small>
                             </h3>
-                            <p className="text-xs 3xl:text-xl font-light text-foreground">{genre}</p>
+                            <p className="text-xs 3xl:text-xl font-light text-white">{genre}</p>
                             <Button asChild variant="outline" className="3xl:hidden mt-2 w-full">
                                 <Link href={`${routes.Opportunities}/${slug}`}>
                                     Project Overview

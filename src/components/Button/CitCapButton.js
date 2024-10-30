@@ -27,9 +27,9 @@ export function CitCapButton({ text, isWhite, isLoading, isDisabled, isLoadingWi
     return (
         <div
             className={`
-            btnScramble 
+            leading-none text-xs font-heading uppercase font-semibold align-center p-4 w-full relative flex items-center justify-center
             cursor-pointer
-            ${isWhite ? "white" : "dark"}
+            ${isWhite ? "bg-white text-black" : "bg-dark text-white"}
             ${isLoading || isDisabled || isExecuting ? "disabled" : ""}  
         `}
             onClick={click}

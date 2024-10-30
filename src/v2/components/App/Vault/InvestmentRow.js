@@ -7,9 +7,14 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import useInvestmentsData from "@/v2/hooks/useInvestmentsData";
 import { formatCurrency, formatPercentage } from "@/v2/helpers/formatters";
 import { Button } from "@/v2/components/ui/button";
+import Modal from "@/v2/components/App/Vault/ClaimModal";
 
 const InvestmentRowWrapper = ({ children, className }) => {
-    return <Card className={cn("h-max py-5 px-8 hover:scale-[1.02] group/button", className)}>{children}</Card>;
+    return (
+        <Card className={cn("h-max py-5 px-8 hover:scale-[1.02] group/button cursor-default", className)}>
+            {children}
+        </Card>
+    );
 };
 
 export const SkeletonInvestmentRow = () => {
@@ -41,8 +46,8 @@ export const ErrorInvestmentRow = ({ actionFn }) => {
 
 const Definition = ({ title, children, disabled = false }) => {
     const disabledClassName = {
-        "text-foreground/[.4]": disabled,
-        "text-foreground": !disabled,
+        "text-white/40": disabled,
+        "text-white": !disabled,
     };
     return (
         <div
@@ -106,22 +111,23 @@ const InvestmentRow = ({ details, isLoading = false, isError = false }) => {
                 <Avatar session={{ img: logo }} />
 
                 <div>
-                    <CardTitle className="mb-1 text-xs md:text-sm font-medium md:text-normal text-foreground leading-none">
+                    <CardTitle className="mb-1 text-xs md:text-sm font-medium md:text-normal text-white leading-none">
                         {coin}
                     </CardTitle>
-                    <p className="text-xs md:text-sm font-light text-foreground">{title}</p>
+                    <p className="text-xs md:text-sm font-light text-white">{title}</p>
                 </div>
 
                 <Attributes details={data} className="grid-cols-4 col-span-4" />
 
-                <p className="text-sm font-light text-foreground/[.56]">
+                <p className="text-sm font-light text-white/55">
                     {participatedDate && `Participated ${participatedDate}`}
                 </p>
-
-                <Button variant={canClaim ? "accent" : "outline"}>
-                    <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
-                    <ArrowIcon className="ml-2 size-2" />
-                </Button>
+                <Modal data={data}>
+                    <Button variant={canClaim ? "accent" : "outline"}>
+                        <span>{canClaim || isClaimSoon ? (canClaim ? "Claim" : "Unlock soon") : "Details"}</span>
+                        <ArrowIcon className="ml-2 size-2" />
+                    </Button>
+                </Modal>
             </div>
         </InvestmentRowWrapper>
     );

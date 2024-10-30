@@ -31,11 +31,19 @@ const Definition = ({ term, children, termClassName, descClassName }) => (
 
 export default function History({ className }) {
     const { data: offer } = useOfferDetailsQuery();
-    const { data: participants = [], isLoading } = useOfferParticipantsQuery(offer.id, { enabled: !!offer.id });
+    const { data: participants = [], isLoading } = useOfferParticipantsQuery(offer.id, {
+        enabled: !!offer.id,
+        refetchInterval: (query) => {
+            const shouldRefetch = query?.state?.data?.some(({ isConfirmed, isConfirmedInitial, isExpired }) =>
+                [isConfirmed, isConfirmedInitial, isExpired].every((value) => value === false),
+            );
+            return shouldRefetch ? 10000 : false;
+        },
+    });
 
     return (
-        <div className={cn("p-6 rounded bg-white/[.07] backdrop-blur-3xl flex flex-col gap-6 select-none", className)}>
-            <h2 className="ext-xl md:text-2xl font-medium">History</h2>
+        <div className={cn("p-6 rounded bg-alt flex flex-col gap-6 select-none border-alt", className)}>
+            <h2 className="text-xl md:text-2xl font-medium font-heading">History</h2>
 
             <div className="h-full min-h-40">
                 {isLoading && (
@@ -51,7 +59,7 @@ export default function History({ className }) {
                                 !participant.isConfirmedInitial && !participant.isConfirmed && !participant.isExpired;
 
                             return (
-                                <li key={participant.id} className="bg-white/[.04] gap-x-4 px-4 md:px-8 py-4 flex my-2">
+                                <li key={participant.id} className="bg-white/5 gap-x-4 px-4 md:px-8 py-4 flex my-2">
                                     <dl className="grid gap-x-4 grid-cols-2 md:grid-cols-[repeat(4,auto)] md:grid-rows-1 grow">
                                         <Definition
                                             term="Hash"
@@ -77,7 +85,7 @@ export default function History({ className }) {
                                                 <span className="text-yellow-500">Internal check</span>
                                             )}
                                             {participant.isExpired && <span className="text-error">Expired</span>}
-                                            {isCancelAvailable && <span className="text-accent">Booked</span>}
+                                            {isCancelAvailable && <span className="text-secondary">Booked</span>}
                                         </Definition>
                                         <Definition
                                             term="Amount"
@@ -103,7 +111,7 @@ export default function History({ className }) {
                 {participants.length === 0 && !isLoading && (
                     <EmptyState
                         heading="Investment History Unavailable"
-                        description="Your investment history for this offer is currently empty, but no worries! As you make investments, this section will update. Check back later for more details as they become available."
+                        description="Your investment history for this offer is currently empty. As you make investments, this section will update. Check back after you have participated in investments."
                     />
                 )}
             </div>

@@ -70,7 +70,7 @@ const FiltersDropdown = ({ filters, options, handleToggleFilter }) => {
     );
 };
 
-export default function TableFilters({ filters = {}, handleToggleFilter, handleFilterRemove }) {
+export default function TableFilters({ filters = {}, isEmpty, handleToggleFilter, handleFilterRemove }) {
     const isDesktop = useMediaQuery(breakpoints.xl);
     const { currentMarket } = useMarket();
     const { activeView, handleChangeView } = useCurrentView();
@@ -82,7 +82,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                 hidden: !currentMarket && isDesktop,
             })}
         >
-            <h3 className="text-[24px] text-foreground whitespace-nowrap md:text-[16px]">
+            <h3 className="text-8 text-white whitespace-nowrap md:text-4 font-heading">
                 {currentMarket ? (
                     <>
                         <span className="inline-block whitespace-nowrap">
@@ -100,7 +100,7 @@ export default function TableFilters({ filters = {}, handleToggleFilter, handleF
                             {isOffersView ? "Show" : "Hide"} History
                         </Button>
                         <MakeOfferModal />
-                        {isOffersView && (
+                        {isOffersView && !isEmpty && (
                             <FiltersDropdown
                                 filters={filters}
                                 options={offersFilters}

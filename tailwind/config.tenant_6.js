@@ -1,73 +1,37 @@
 /** @type {import('tailwindcss').Config} */
+
+const primary = {
+    DEFAULT: "#ba2652",
+    500: "#ba2652",
+    600: "#961D42",
+    700: "#711532",
+    800: "#4C0D21",
+    900: "#2A0814",
+    950: "#15020A",
+};
+
+const secondary = {
+    DEFAULT: "#01c853",
+    500: "#01c853",
+    600: "#01B04A",
+};
+
 module.exports = {
     theme: {
         extend: {
-            fontSize: {
-                xxs: ["10px", { lineHeight: "1.375" }],
-                hero: ["55px", { lineHeight: "1.1" }],
+            borderRadius: {
+                none: "0",
+                sm: "0",
+                DEFAULT: "0",
+                md: "0",
+                lg: "0",
+                xl: "0",
+                "4xl": "0",
             },
-            fontWeight: {
-                // extrabold: '800',
+            colors: {
+                primary,
+                secondary,
             },
         },
     },
-    plugins: [
-        function ({ addUtilities }) {
-            // font-light - font-weight: 300
-            // font-accent - font-family: Work Sans, sans-serif
-            const newUtilities = {
-                ".card-content-dedicated": {
-                    "font-weight": 300,
-                    color: "rgb(185 37 81)",
-                    "text-transform": "uppercase",
-                    "font-size": "1.5rem",
-                },
-                ".card-table-header": {
-                    "font-family": "Work Sans, sans-serif",
-                    color: "rgb(185 37 81)",
-                    "font-weight": 300,
-                    "font-size": "1.5rem",
-                    "background-color": "rgb(0 0 0)",
-                    "text-transform": "uppercase",
-                },
-                ".card-content-description": {
-                    "font-weight": 300,
-                    "font-family": "Work Sans, sans-serif",
-                },
-                ".glow-normal": {
-                    "text-shadow": "rgba(211, 28, 91, 1) 0px 0px 12px",
-                },
-                ".header-text-dedicated": {
-                    color: "rgb(185 37 81)",
-                    "text-transform": "uppercase",
-                    "font-weight": 300,
-                },
-                ".page-header-text": {
-                    "font-weight": 300,
-                    "font-family": "Work Sans, sans-serif",
-                },
-                ".page-content-text": {
-                    "font-weight": 300,
-                    "font-family": "Work Sans, sans-serif",
-                },
-                ".page-table-header": {
-                    "font-family": "Work Sans, sans-serif",
-                    color: "rgb(185 37 81)",
-                    "font-weight": 300,
-                    "font-size": "1.5rem",
-                    "background-color": "rgb(0 0 0)",
-                    "text-transform": "uppercase",
-                },
-                ".background-text-dedicated": {
-                    color: "rgb(185 37 81)",
-                    fill: "rgb(245 164 0)",
-                },
-                ".background-text-description": {
-                    "font-family": "Work Sans, sans-serif",
-                },
-            };
-
-            addUtilities(newUtilities);
-        },
-    ],
 };

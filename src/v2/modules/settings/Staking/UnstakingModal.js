@@ -94,9 +94,9 @@ export default function UnstakingModal({ userId, staking = {} }) {
                     </>
                 ) : (
                     <>
-                        <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-foreground rounded">
-                            <dt className="text-foreground text-lg font-semibold">Current Stake</dt>
-                            <dd className="mt-2 text-foreground text-4xl">
+                        <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-white rounded">
+                            <dt className="text-white text-lg font-semibold">Current Stake</dt>
+                            <dd className="mt-2 text-white text-4xl">
                                 {stakeSize} {stakingCurrency?.symbol}
                             </dd>
                         </dl>

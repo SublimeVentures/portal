@@ -1,4 +1,5 @@
 import { dehydrate } from "@tanstack/react-query";
+import Link from "next/link";
 import { initStore } from "@/v2/modules/offer/store";
 import { AppLayout, Metadata } from "@/v2/components/Layout";
 import { processServerSideData } from "@/lib/serverSideHelpers";
@@ -8,6 +9,7 @@ import { fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import { routes } from "@/v2/routes";
 import { Overview, Phases, Invest, Fundraise, Vesting, History, Report } from "@/v2/modules/offer";
 import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
+import PAGE from "@/routes";
 
 export default function AppOfferDetails({ session, state }) {
     initStore({ session, ...state });
@@ -87,5 +89,15 @@ export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
 };
 
 AppOfferDetails.getLayout = function (page) {
-    return <AppLayout title={`Opportunities > ${page?.props?.state?.offer?.name}`}>{page}</AppLayout>;
+    return (
+        <AppLayout
+            title={
+                <>
+                    <Link href={PAGE.Opportunities}>Opportunities</Link> &gt; {page?.props?.state?.offer?.name}
+                </>
+            }
+        >
+            {page}
+        </AppLayout>
+    );
 };

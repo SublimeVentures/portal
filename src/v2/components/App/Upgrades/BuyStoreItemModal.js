@@ -106,8 +106,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                 <Success.Kicker>Success!</Success.Kicker>
                 <Success.Title>Thank you for purchasing</Success.Title>
                 <Success.Description>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua.
+                    You can use this {order.name} upgrade on future investment opportunities.
                 </Success.Description>
                 <Success.Article>
                     <div className="flex items-center gap-5 grow w-full md:w-auto">
@@ -128,6 +127,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
         );
     };
     const contentSteps = () => {
+        const buttonProps = getBlockchainStepButtonProps();
         return (
             <>
                 <Image
@@ -148,12 +148,18 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                     <Grid>
                         <div>
                             <Label>Upgrade type</Label>
-                            <Select placeholder="Select upgrade type" className="w-full" value={order.id} size="sm">
+                            <Select
+                                placeholder="Select upgrade type"
+                                className="w-full"
+                                value={order.id}
+                                size="sm"
+                                disabled={buttonProps.buttonLock}
+                            >
                                 <Option value={order.id}>
                                     <span className="flex items-center gap-3">
                                         <UpgradeSymbol
                                             className={cn({
-                                                "bg-accent": order.id === 1,
+                                                "bg-secondary": order.id === 1,
                                                 "bg-primary": order.id === 2,
                                             })}
                                         />
@@ -173,6 +179,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                                 readOnly={order.id === 1}
                                 onValueChange={setAmount}
                                 size="sm"
+                                disabled={buttonProps.buttonLock}
                             />
                         </div>
                         <div>
@@ -183,18 +190,25 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                                 value={selectedCurrency}
                                 size="sm"
                                 options={dropdownCurrencyOptions}
+                                disabled={buttonProps.buttonLock}
                             />
                         </div>
                         <div>
                             <Label>Total</Label>
-                            <Input readOnly className="w-full text-center" value={price} size="sm" />
+                            <Input
+                                readOnly
+                                className="w-full text-center"
+                                value={price}
+                                size="sm"
+                                disabled={buttonProps.buttonLock}
+                            />
                         </div>
                     </Grid>
                     <BlockchainSteps {...getBlockchainStepsProps()} />
                     <ModalButton
                         className="w-full mt-4"
                         variant={order.id === 1 ? "accent" : "default"}
-                        {...getBlockchainStepButtonProps()}
+                        {...buttonProps}
                     />
                 </Content>
             </>

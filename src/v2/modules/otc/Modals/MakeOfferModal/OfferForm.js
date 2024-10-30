@@ -13,13 +13,13 @@ const CURRENCY_ICON = {
     USDT: USDTIcon,
 };
 
-const CurrencyIcon = ({ className, icon: Icon }) => (
-    <span
-        className={cn(
-            "inline w-10 h-10 mr-4 rounded shrink-0 bg-gradient-to-b from-primary-600 to-primary p-1.5",
-            className,
-        )}
-    >
+const CURRENCY_BG_COLOR = {
+    USDC: "#2775CA",
+    USDT: "#53AE94",
+};
+
+const CurrencyIcon = ({ className, icon: Icon, style }) => (
+    <span className={cn("inline w-10 h-10 mr-4 rounded shrink-0 p-1.5", className)} style={style}>
         {Icon ? <Icon /> : "X"}
     </span>
 );
@@ -60,7 +60,7 @@ const OfferSelect = ({ name, control, options, handleChange }) => {
                 <FormItem className="w-[80px] self-center">
                     <FormControl>
                         <Select {...field} onValueChange={(val) => handleChange(val, field.onChange)}>
-                            <SelectTrigger className="text-xs md:text-sm border-none bg-transparent text-foreground/[.6] p-0 gap-1 md:gap-2">
+                            <SelectTrigger className="text-xs md:text-sm border-none bg-transparent text-white/60 p-0 gap-1 md:gap-2">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -105,8 +105,8 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
     return (
         <>
             <Form {...form}>
-                <div className="pt-2 pb-4 px-8 flex flex-col bg-foreground/[.06] rounded">
-                    <h3 className="pt-4 pb-4 text-base font-medium text-foreground">Your offer</h3>
+                <div className="pt-2 pb-4 px-8 flex flex-col bg-white/5 rounded">
+                    <h3 className="pt-4 pb-4 text-base font-medium text-white font-heading">Your offer</h3>
                     <div className="w-full flex items-center pb-2">
                         <div className="w-full flex items-center">
                             <div className="relative w-full">
@@ -133,12 +133,17 @@ export default function OfferForm({ form, cdn, market, multiplierParsed, getOffe
                         </div>
                     </div>
 
-                    <span className="text-base font-light pb-2 text-foreground text-center">x {multiplierParsed}</span>
+                    <span className="text-base font-light pb-2 text-white text-center">x {multiplierParsed}</span>
 
                     <div className="relative flex items-center">
                         <div className="flex items-center w-full">
                             <OfferField
-                                icon={<CurrencyIcon icon={CURRENCY_ICON[selectedCurrency]} />}
+                                icon={
+                                    <CurrencyIcon
+                                        icon={CURRENCY_ICON[selectedCurrency]}
+                                        style={{ backgroundColor: CURRENCY_BG_COLOR[selectedCurrency] }}
+                                    />
+                                }
                                 after={<OfferSelect {...getOfferFieldProps("currency")} />}
                                 {...getOfferFieldProps("price")}
                             />

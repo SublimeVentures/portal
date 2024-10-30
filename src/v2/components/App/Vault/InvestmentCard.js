@@ -16,7 +16,7 @@ const InvestmentCardWrapper = ({ children, className }) => {
     return (
         <Card
             className={cn(
-                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button lg:max-w-200 3xl:max-w-[300px]",
+                "relative flex flex-col py-5 px-4 md:py-8 md:px-5 h-full w-full hover:scale-[1.02] group/button lg:max-w-200 3xl:max-w-[300px] cursor-default",
                 className,
             )}
         >
@@ -70,10 +70,10 @@ const InvestmentCard = ({ details, isLoading = false, isError = false }) => {
         <InvestmentCardWrapper>
             <div className="mb-4 md:mb-8 flex justify-between items-center">
                 <div className="select-none">
-                    <CardTitle className="text-sm font-semibold md:text-lg md:font-medium text-foreground leading-none">
+                    <CardTitle className="text-sm font-semibold md:text-lg md:font-medium text-white leading-none">
                         {coin}
                     </CardTitle>
-                    <p className="text-xs font-light md:text-base text-foreground leading-none">{title}</p>
+                    <p className="text-xs font-light md:text-base text-white leading-none">{title}</p>
                 </div>
                 <Image
                     src={getResearchIconSrc(slug)}

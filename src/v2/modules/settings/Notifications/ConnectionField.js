@@ -34,7 +34,7 @@ export default function ConnectionField({
             });
 
     return (
-        <div className="p-4 bg-foreground/[.05] rounded shadow-lg">
+        <div className="p-4 bg-white/5 rounded shadow-lg">
             <label
                 htmlFor={id}
                 className={cn("flex items-center justify-between", {

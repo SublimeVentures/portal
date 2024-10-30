@@ -5,7 +5,7 @@ const columnHelper = createColumnHelper();
 
 const addressColumn = columnHelper.accessor("address", {
     header: "Address",
-    cell: (info) => <div className="text-accent">{shortenAddress(info.row.original.address)}</div>,
+    cell: (info) => <div className="text-secondary">{shortenAddress(info.row.original.address)}</div>,
 });
 const dateColumn = columnHelper.accessor("date", {
     header: "Date",

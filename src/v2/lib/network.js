@@ -2,6 +2,8 @@ export const NetworkEnum = Object.freeze({
     eth: 1,
     matic: 137,
     bsc: 56,
+    base: 8453,
+    sepolia_base: 84532,
 });
 
 export const NETWORKS = Object.freeze({

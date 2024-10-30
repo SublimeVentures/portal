@@ -1,10 +1,82 @@
+const path = require("path");
 const { withSentryConfig } = require("@sentry/nextjs");
+const { TENANT } = require("./src/lib/tenantHelper");
+
+const nonRewritablePaths = [
+    "_next",
+    "join",
+    "login",
+    "investments",
+    "tokenomics",
+    "terms",
+    "privacy",
+    "404",
+    "api",
+    "app",
+    "favicon.ico",
+    "favicon.svg",
+    "img",
+    "1",
+    "6",
+    "14",
+    "19",
+    "static",
+];
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
+    async rewrites() {
+        if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
+            return {
+                beforeFiles: [
+                    {
+                        source: `/:path((?!${nonRewritablePaths.join("|")}).*)`,
+                        destination: "/app/:path*",
+                        basePath: undefined,
+                    },
+                    {
+                        source: "/",
+                        destination: "/app/vault",
+                        basePath: undefined,
+                    },
+                ],
+            };
+        }
+        return [];
+    },
+    async redirects() {
+        if (Number.parseInt(process.env.NEXT_PUBLIC_TENANT) === TENANT.basedVC) {
+            return [
+                {
+                    source: "/",
+                    destination: "/vault/",
+                    permanent: true,
+                },
+                {
+                    source: "/app/",
+                    destination: "/",
+                    permanent: true,
+                },
+                {
+                    source: "/app/:path*",
+                    destination: "/:path*",
+                    permanent: true,
+                },
+            ];
+        }
+        return [
+            {
+                source: "/app/",
+                destination: "/app/vault/",
+                permanent: true,
+            },
+        ];
+    },
     trailingSlash: true,
     webpack(config) {
+        config.resolve.alias["@tenant"] = path.resolve(__dirname, "src/v2/tenants", process.env.NEXT_PUBLIC_TENANT);
+
         config.module.rules.push(
             {
                 test: /\.svg$/i,
@@ -52,15 +124,6 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    async redirects() {
-        return [
-            {
-                source: "/app",
-                destination: "/app/vault",
-                permanent: true,
-            },
-        ];
-    },
 };
 
 module.exports = nextConfig;
@@ -75,22 +138,10 @@ if (process.env.ENV !== "dev") {
             project: process.env.SENTRY_PROJECT,
         },
         {
-            // For all available options, see:
-            // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-            // Upload a larger set of source maps for prettier stack traces (increases build time)
             widenClientFileUpload: true,
-
-            // Transpiles SDK to be compatible with IE11 (increases bundle size)
             transpileClientSDK: true,
-
-            // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
             tunnelRoute: "/monitoring",
-
-            // Hides source maps from generated client bundles
             hideSourceMaps: true,
-
-            // Automatically tree-shake Sentry logger statements to reduce bundle size
             disableLogger: true,
         },
     );

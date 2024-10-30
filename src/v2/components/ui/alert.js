@@ -4,11 +4,11 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const alertVariants = cva(
-    "relative w-full rounded px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
+    "relative w-full rounded px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-white [&>svg~*]:pl-7",
     {
         variants: {
             variant: {
-                default: "border bg-background text-foreground",
+                default: "border bg-background text-white",
                 destructive: "text-error [&>svg]:text-error bg-error-900",
             },
         },
@@ -38,7 +38,7 @@ const AlertIcon = forwardRef(({ icon: Icon, className, ...props }, ref) => {
     return (
         <div
             ref={ref}
-            className={cn("size-12 flex items-center justify-center shrink-0 text-foreground rounded-full", className)}
+            className={cn("size-12 flex items-center justify-center shrink-0 text-white rounded-full", className)}
             {...props}
         >
             <Icon className="p-3 w-full h-full" />

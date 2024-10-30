@@ -1,0 +1,54 @@
+@layer utilities {
+    .bg-pattern-blue {}
+  
+    .bg-pattern-gold {}
+  
+    .bg-banner-default {
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1)), url("https://cdn.basedvc.fund/webapp/bg_19.png");
+        background-position: right center !important;
+    }
+  
+    .bg-banner-vertical {
+        background-image: url("https://cdn.basedvc.fund/webapp/bg_19.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+  
+    .bg-empty-investment-pattern {
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1)), url("https://cdn.basedvc.fund/webapp/bg_19.png");
+    }
+
+    .bg-sheet-pattern {
+        background-image: url('https://cdn.basedvc.fund/webapp/bg_19.png');
+        background-position: center top;
+        background-size: cover;
+    }
+    .bg-empty-investment-top-pattern {
+        background-image: url('https://cdn.basedvc.fund/webapp/bg_19.png');
+    }
+    .bg-pattern {
+        @apply bg-cover;
+        background-image: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0.85) 70%, rgba(0, 0, 0, 0.75) 100%), url('https://cdn.basedvc.fund/webapp/bg_19.png');
+    }
+    .bg-base {
+        @apply bg-black;
+    }
+    .bg-alt {}
+    .bg-body {
+        @apply bg-black;
+    }
+
+    .border-base {
+        @apply border border-primary/90;
+    }
+
+    .ribbon {}
+
+    .border-accent {
+        @apply border border-primary/90;
+    }
+
+    .border-alt {
+        @apply border border-primary/90;
+    }
+}

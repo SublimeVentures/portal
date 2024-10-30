@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChainId } from "wagmi";
 import { getStepState } from "../getStepState";
 import { STEPS } from "../enums";
 import { allowanceAction } from "./reducer";
-import { ETH_USDT, getMethod, METHOD } from "@/components/BlockchainSteps/utils";
+import { ETH_USDT, getMethod, METHOD } from "@/v2/components/BlockchainSteps/utils";
 import useSendTransaction from "@/lib/hooks/useSendTransaction";
 import useGetTokenAllowance from "@/lib/hooks/useGetTokenAllowance";
 
@@ -67,6 +67,23 @@ export default function useAllowanceStep(state, data, dispatch) {
             !!allowance_set?.confirm?.data &&
             params.allowance <= allowance_current?.allowance);
 
+    const allowanceRef = useRef({ allowance: null, retry: 0, isError: false });
+
+    useEffect(() => {
+        if (allowance_current?.status === "success") {
+            const { allowance: previousAllowance } = allowanceRef.current;
+
+            if (allowance_current?.allowance !== previousAllowance && allowance_current?.allowance !== 0) {
+                allowanceRef.current.retry += 1;
+                allowanceRef.current.allowance = allowance_current?.allowance;
+
+                if (params.allowance > allowance_current?.allowance && allowanceRef.current.retry > 1) {
+                    allowanceRef.current.isError = true;
+                }
+            }
+        }
+    }, [allowance_current?.allowance, allowance_shouldRun]);
+
     // useEffect(() => {
     //     if (allowance_isFinished) return;
 
@@ -112,6 +129,7 @@ export default function useAllowanceStep(state, data, dispatch) {
             allowance_isReady,
             allowance_method_error,
             allowance_shouldRun,
+            allowanceRef: allowanceRef.current,
         }),
     };
 }

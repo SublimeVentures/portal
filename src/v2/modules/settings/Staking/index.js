@@ -53,7 +53,7 @@ export default function Staking({ session }) {
     const staking = useStaking({ tenantId, session, account });
 
     return (
-        <Card variant="none" className="w-full flex flex-col bg-settings-gradient select-none cursor-auto 2xl:flex-row">
+        <Card variant="none" className="w-full flex flex-col bg-base select-none cursor-auto 2xl:flex-row border-alt">
             <div className="mb-4 flex items-center gap-4 2xl:hidden">
                 <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-foreground">
                     Staking
@@ -120,7 +120,7 @@ export default function Staking({ session }) {
                     {stakingEnabled ? (
                         <StakingDetails session={session} staking={staking} />
                     ) : (
-                        <div className="mb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-foreground font-medium bg-foreground/[.02] text-center rounded">
+                        <div className="mb-2 mt-4 py-4 px-8 flex flex-col gap-6 text-white font-medium bg-white/[.02] text-center rounded">
                             Staking available soon
                         </div>
                     )}

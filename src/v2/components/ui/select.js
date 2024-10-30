@@ -11,10 +11,10 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
-const SelectTrigger = forwardRef(({ className, children, size, ...props }, ref) => (
+const SelectTrigger = forwardRef(({ className, children, size, disabled, ...props }, ref) => (
     <SelectPrimitive.Trigger
         ref={ref}
-        className={cn(controlVariants({ size }), "group items-center justify-center gap-3", className)}
+        className={cn(controlVariants({ size, disabled }), "group items-center justify-center gap-3", className)}
         {...props}
     >
         <span className="grow group-data-[placeholder]:text-white/20 text-left overflow-hidden">{children}</span>
@@ -55,7 +55,7 @@ const SelectContent = forwardRef(({ className, children, position = "popper", ..
         <SelectPrimitive.Content
             ref={ref}
             className={cn(
-                "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md bg-primary-900 text-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+                "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md bg-primary-900 text-white shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
                 position === "popper" &&
                     "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
                 className,
@@ -112,10 +112,10 @@ const SelectSeparator = forwardRef(({ className, ...props }, ref) => (
 
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-const SelectSimple = ({ children, placeholder, className, onChange, value, size }) => {
+const SelectSimple = ({ children, placeholder, className, onChange, value, size, disabled, ...props }) => {
     return (
-        <Select onValueChange={onChange} value={value}>
-            <SelectTrigger className={className} size={size}>
+        <Select onValueChange={onChange} value={value} disabled={disabled} {...props}>
+            <SelectTrigger className={className} size={size} disabled={disabled}>
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>{children}</SelectContent>

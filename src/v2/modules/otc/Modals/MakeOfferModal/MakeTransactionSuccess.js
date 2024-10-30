@@ -5,8 +5,8 @@ import lottieOtc from "@/assets/lottie/otc.json";
 export default function TransactionSuccess({ market, textCopy, amount }) {
     return (
         <div className="mt-16 mb-4 my-4 sm:px-10 text-center">
-            <h3 className="text-3xl font-medium px-4 text-foreground">Congratulations!</h3>
-            <p className="my-4 text-lg text-foreground/[.9]">
+            <h3 className="text-3xl font-medium px-4 text-white">Congratulations!</h3>
+            <p className="my-4 text-lg text-white/90">
                 You have successfully created OTC offer to{" "}
                 <span className="text-success-500 font-bold">
                     {textCopy} ${amount}

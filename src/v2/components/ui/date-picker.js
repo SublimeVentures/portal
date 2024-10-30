@@ -43,10 +43,17 @@ export function DatePicker({
 
             <PopoverContent
                 align={align}
-                className="px-4 py-6 w-auto border-transparent text-foreground bg-primary-900 [box-shadow:0px_0px_58px_rgba(0,_0,_0,_0.39)]"
+                className="px-4 py-6 w-auto border-transparent text-white bg-primary-900 [box-shadow:0px_0px_58px_rgba(0,_0,_0,_0.39)]"
             >
                 <h3 className="mb-6 font-base text-lg">{label}</h3>
-                <Calendar label={label} mode="single" selected={value} onSelect={onChange} initialFocus {...props} />
+                <Calendar
+                    label={label}
+                    mode="single"
+                    selected={value ? new Date(value) : value}
+                    onSelect={onChange}
+                    initialFocus
+                    {...props}
+                />
             </PopoverContent>
         </Popover>
     );

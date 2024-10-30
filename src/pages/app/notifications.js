@@ -6,7 +6,8 @@ import useNotificationInfiniteLoader from "@/v2/modules/notifications/logic/useN
 import routes from "@/routes";
 
 export default function AppNotifications() {
-    const { data, isFetching, hasNextPage, fetchNextPage, getFiltersProps } = useNotificationInfiniteLoader();
+    const { data, isFetching, isLoading, hasNextPage, fetchNextPage, getFiltersProps } =
+        useNotificationInfiniteLoader();
     return (
         <>
             <Metadata title="History" />
@@ -14,6 +15,7 @@ export default function AppNotifications() {
             <Notifications
                 data={data}
                 isFetching={isFetching}
+                isLoading={isLoading}
                 hasNextPage={hasNextPage}
                 fetchNextPage={fetchNextPage}
             />
