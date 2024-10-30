@@ -60,7 +60,7 @@ export default function History({ className }) {
 
                             return (
                                 <li key={participant.id} className="bg-white/5 gap-x-4 px-4 md:px-8 py-4 flex my-2">
-                                    <dl className="grid gap-x-4 grid-cols-2 md:grid-cols-[repeat(4,auto)] md:grid-rows-1 grow">
+                                    <dl className="grid gap-x-4 grid-cols-2 md:grid-cols-[repeat(4,1fr)] md:grid-rows-1 grow">
                                         <Definition
                                             term="Hash"
                                             termClassName="hidden md:block md:order-1"
