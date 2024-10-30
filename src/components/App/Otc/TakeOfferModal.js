@@ -56,17 +56,13 @@ export const blockchainPrerequisite = async (params) => {
     }
 };
 
+const otcFee = 50;
+
+// component to remove
 export default function TakeOfferModal({ model, setter, props }) {
     const { vault, currentMarket, offerDetails, refetchVault, refetchOffers } = props;
-    const {
-        getCurrencySymbolByAddress,
-        getCurrencySettlement,
-        account,
-        currencies,
-        network,
-        activeOtcContract,
-        otcFee,
-    } = useEnvironmentContext();
+    const { getCurrencySymbolByAddress, getCurrencySettlement, account, currencies, network, activeOtcContract } =
+        useEnvironmentContext();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const selectedCurrency = offerDetails ? currencies[offerDetails.currency] : {};

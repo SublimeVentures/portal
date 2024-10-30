@@ -21,7 +21,7 @@ const { createHash } = require("./helpers");
 
 let CACHE = {};
 
-async function processBooking(offer, offerLimit, user, amount) {
+async function processBooking(offer, offerLimit, user, amount, feePercentage) {
     const { userId, tenantId, partnerId } = user;
 
     const { phaseCurrent } = phases({ ...offer, ...offerLimit });
@@ -63,6 +63,7 @@ async function processBooking(offer, offerLimit, user, amount) {
             partnerId,
             tenantId,
             amount,
+            feePercentage,
             hash,
             upgradeGuaranteed,
             transaction,
@@ -145,7 +146,7 @@ function checkInvestmentStateConditions(userId, tenantId, offer, offerLimit) {
 
 async function processReservation(queryParams, user) {
     const { userId, tenantId, partnerId } = user;
-    const { _offerId, _amount, _currency, _chain } = queryParams;
+    const { _offerId, _amount, _feePercentage, _currency, _chain } = queryParams;
 
     try {
         if (!CACHE[_offerId]?.expire || CACHE[_offerId].expire < moment.utc().unix()) {
@@ -175,7 +176,7 @@ async function processReservation(queryParams, user) {
         if (!checkIsReadyForStart.ok) return checkIsReadyForStart;
 
         //check conditions and book
-        const isBooked = await processBooking(CACHE[_offerId], offerLimit, user, _amount);
+        const isBooked = await processBooking(CACHE[_offerId], offerLimit, user, _amount, _feePercentage);
 
         if (!isBooked.ok) {
             return {
@@ -204,11 +205,12 @@ async function processReservation(queryParams, user) {
 }
 
 function checkReserveSpotQueryParams(req) {
-    let _offerId, _amount, _currency, _chain;
+    let _offerId, _amount, _feePercentage, _currency, _chain;
 
     try {
         _offerId = Number(req.query.id);
         _amount = Number(req.query.amount);
+        _feePercentage = Number(req.query.feePercentage);
         _currency = req.query.currency;
         _chain = req.query.chain;
 
@@ -221,6 +223,7 @@ function checkReserveSpotQueryParams(req) {
             data: {
                 _offerId,
                 _amount,
+                _feePercentage,
                 _currency,
                 _chain,
             },
@@ -230,6 +233,7 @@ function checkReserveSpotQueryParams(req) {
             error: serializeError(error),
             _offerId,
             _amount,
+            _feePercentage,
             _currency,
             _chain,
             params: req.query,

@@ -11,12 +11,12 @@ const Definition = ({ term, isLoading, children }) => (
     </>
 );
 
-export default function InvestFormSubmit({ total, subtotal, tax, currency }) {
+export default function InvestFormSubmit({ total, subtotal, fee, currency }) {
     return (
         <div className="space-y-6">
             <dl className="grid grid-cols-2 gap-2 md:gap-3 text-sm md:text-base">
                 <Definition term="Subtotal">${subtotal}</Definition>
-                <Definition term="Fees">{tax}%</Definition>
+                <Definition term="Fees">{fee}%</Definition>
             </dl>
 
             <div className="w-full h-[1px] bg-white/10"></div>
