@@ -38,7 +38,10 @@ export default function useStaking({ tenantId, session, account }) {
     const getDataBasedOnTenant = (tenantId) => {
         switch (tenantId) {
             case TENANT.basedVC:
-                return {};
+                return {
+                    stakeMulti: session.stakeMulti,
+                    isStaked: session.isStaked,
+                };
             case TENANT.CyberKongz:
                 return {
                     isFlexibleStaking: true,

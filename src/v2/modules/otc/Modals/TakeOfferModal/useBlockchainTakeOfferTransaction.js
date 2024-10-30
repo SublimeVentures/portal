@@ -8,9 +8,9 @@ import useGetToken from "@/lib/hooks/useGetToken";
 import { getUserAllocation } from "@/v2/fetchers/otc";
 import { userInvestmentsKeys } from "@/v2/constants";
 
-export default function useBlockchainTakeOfferTransaction({ offerDetails }) {
+export default function useBlockchainTakeOfferTransaction({ offerDetails, otcFee }) {
     const { currentMarket } = useMarket();
-    const { getCurrencySettlement, account, currencies, activeOtcContract, otcFee } = useEnvironmentContext();
+    const { getCurrencySettlement, account, currencies, activeOtcContract } = useEnvironmentContext();
 
     const { data: vault } = useQuery({
         queryKey: userInvestmentsKeys.userAllocation(),

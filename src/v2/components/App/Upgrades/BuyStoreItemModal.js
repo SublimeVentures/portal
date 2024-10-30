@@ -117,8 +117,8 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                         </div>
                     </div>
                     <Button className="w-full md:w-auto" variant={order.id === 1 ? "accent" : "default"} asChild>
-                        <Link href={PAGE.Upgrades} onClick={onClose}>
-                            Upgrades store
+                        <Link href={PAGE.App} onClick={onClose}>
+                            Vault
                         </Link>
                     </Button>
                 </Success.Article>
@@ -218,21 +218,15 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
 };
 
 export default function BuyStoreItemModal({ model, setter, buyModalProps, userId }) {
-    const client = useQueryClient();
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
     const closeModal = () => {
         setter();
         setTransactionSuccessful(false);
     };
-
-    const refetchBanner = async () => {
-        const data = await client.refetchQueries({ queryKey: ["store-items", "owned"] });
-        return data;
+    const handleTransactionSuccess = () => {
+        setTransactionSuccessful(true);
     };
 
-    if (transactionSuccessful) {
-        refetchBanner();
-    }
     return (
         <Modal open={model} onClose={closeModal} variant={transactionSuccessful ? "pattern" : "default"}>
             <ModalContent
@@ -241,7 +235,7 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps, userId
                 {...buyModalProps}
                 model={model}
                 transactionSuccessful={transactionSuccessful}
-                setTransactionSuccessful={setTransactionSuccessful}
+                setTransactionSuccessful={handleTransactionSuccess}
             />
         </Modal>
     );

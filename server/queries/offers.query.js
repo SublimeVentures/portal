@@ -411,12 +411,14 @@ async function getAllocation(userId) {
 async function getOfferParticipants(user, req) {
     const { userId } = user;
     const { id } = req.params;
+    const { sortBy = "createdAt", order = "DESC" } = req.query ?? {};
 
     try {
         return models[`z_participant_${id}`].findAll({
             where: {
                 userId,
             },
+            order: [[sortBy, order]],
         });
     } catch (error) {
         constructError("QUERY", error, { isLog: true, methodName: "getOfferParticipants" });

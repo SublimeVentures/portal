@@ -68,15 +68,16 @@ async function investUpsertParticipantReservation(
     partnerId,
     tenantId,
     amount,
+    feePercentage,
     hash,
     upgradeGuaranteed,
     transaction,
 ) {
     const participantsQuery = `
-            INSERT INTO public.z_participant_${offer.id} ("userId", "partnerId", "tenantId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
-            VALUES (:userId, :partnerId, :tenantId, :amount, :hash, :isGuaranteed, NOW(), NOW())
+            INSERT INTO public.z_participant_${offer.id} ("userId", "partnerId", "tenantId", "amount", "hash", "isGuaranteed", "feePercentage", "createdAt", "updatedAt")
+            VALUES (:userId, :partnerId, :tenantId, :amount, :hash, :isGuaranteed, :feePercentage, NOW(), NOW())
             ON CONFLICT ("userId", "hash") DO
-            UPDATE SET amount = EXCLUDED.amount, "updatedAt" = NOW()
+            UPDATE SET amount = EXCLUDED.amount, "updatedAt" = NOW(), "feePercentage" = EXCLUDED."feePercentage"
             RETURNING *;
         `;
 
@@ -89,6 +90,7 @@ async function investUpsertParticipantReservation(
             amount,
             hash,
             isGuaranteed: upgradeGuaranteed?.isExpired === false,
+            feePercentage,
         },
         type: QueryTypes.RAW,
         transaction,

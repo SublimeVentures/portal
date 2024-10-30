@@ -8,7 +8,7 @@ import { PhaseId, Phases } from "@/v2/lib/phases";
 // const targetDate = moment("2024-09-17 14:00", "YYYY-MM-DD HH:mm"), countStart = targetDate.unix(), duration = 500000;
 // const useOfferDetailsQuery = () => ({ data: {
 //     d_open: countStart,
-//     isLaunchpad: true,
+//     isLaunchpad: false,
 //     lengthWhales: duration,
 //     lengthRaffle: duration,
 //     lengthFCFS: duration,

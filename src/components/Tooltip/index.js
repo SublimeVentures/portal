@@ -11,14 +11,14 @@ export const TooltipType = {
     Accent: "app-accent2",
 };
 
-export function Tooltiper({ wrapper, text, type = TooltipType.Primary, className = "", ...rest }) {
+export function Tooltiper({ wrapper, text, type = TooltipType.Primary, className = "", as: Component = "a", ...rest }) {
     const [id] = useState(() => `component-${Math.random().toString(16).slice(2)}`);
 
     return (
         <>
-            <a id={id} className={cn(`text-${type} cursor-pointer`, className)} {...rest}>
+            <Component id={id} className={cn(`text-${type} cursor-pointer`, className)} {...rest}>
                 {wrapper}
-            </a>
+            </Component>
             <Tooltip
                 anchorSelect={`#${id}`}
                 className={`basic z-50 ${type === TooltipType.Error ? "bg-app-error opacity-100" : "bg-app-accent2"}`}
