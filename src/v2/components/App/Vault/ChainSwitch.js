@@ -12,6 +12,7 @@ const ICONS = {
     [NetworkEnum.eth]: EthereumIcon,
     [NetworkEnum.bsc]: BNBSmartChainIcon,
     [NetworkEnum.matic]: PolygonIcon,
+    [NetworkEnum.base]: EthereumIcon,
 };
 
 export const ChainIcon = ({ chainId, className, active }) => {
