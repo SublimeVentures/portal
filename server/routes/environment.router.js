@@ -13,9 +13,9 @@ router.get("/", async (req, res) => {
     try {
         const environment = envCache.get(`${user.tenantId}:${user.partnerId}`);
 
-        if (!environment?.otcFee) {
-            return await refreshPartnerEnvironment(user, res);
-        }
+        // if (!environment?.otcFee) {
+        //     return await refreshPartnerEnvironment(user, res);
+        // }
 
         return res.status(200).json({ ...environment });
     } catch (error) {

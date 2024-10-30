@@ -13,7 +13,7 @@ const Definition = ({ term, isLoading, children }) => (
     </>
 );
 
-export default function CalculateForm({ fee = 10 }) {
+export default function CalculateForm({ fee }) {
     const {
         state: { amount, price, total, multiplier },
         handleAmountChange,

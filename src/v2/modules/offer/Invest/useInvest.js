@@ -18,7 +18,6 @@ import { useOfferDetailsQuery, useOfferAllocationQuery, useUserAllocationQuery }
 import { millisecondsInHour } from "@/constants/datetime";
 import { offersKeys, userInvestmentsKeys } from "@/v2/constants";
 
-// @TODO - Tax amount depends of tier - logic not ready yet.
 export default function useInvest(session) {
     const { network, getCurrencySettlement } = useEnvironmentContext();
     const dropdownCurrencyOptions = getCurrencySettlement();
@@ -63,10 +62,10 @@ export default function useInvest(session) {
         allocationData,
         isStakeLock,
     );
+
     const investmentLocked = isBtnDisabled || isStakeLock;
     const hasAvailableFunds = userAllocation?.invested.total - userAllocation?.invested.invested > 0;
-    const tax = 10;
-    const subtotal = investmentAmount - investmentAmount * (tax / 100);
+    const subtotal = investmentAmount - investmentAmount * (session.tier.fee / 100);
 
     useEffect(() => {
         const cachedData = getExpireData(amountStorageKey);
@@ -128,6 +127,8 @@ export default function useInvest(session) {
         await Promise.all([
             queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
             queryClient.invalidateQueries(offersKeys.offerAllocation()),
+            queryClient.invalidateQueries(offersKeys.offerParticipants()),
+            queryClient.invalidateQueries(offersKeys.offerDetails()),
         ]);
 
         setIsLoading(false);
@@ -155,7 +156,7 @@ export default function useInvest(session) {
 
             const contract = dropdownCurrencyOptions.find((option) => option.symbol === currency)?.contract;
 
-            const res = await fetchHash(offerId, investmentAmount, contract, network.chainId);
+            const res = await fetchHash(offerId, investmentAmount, session.tier.fee, contract, network.chainId);
 
             if (!res.ok) {
                 await clearBooking();
@@ -223,7 +224,7 @@ export default function useInvest(session) {
             total: investmentAmount,
             currency,
             subtotal,
-            tax,
+            fee: session.tier.fee,
         }),
         getInvestFormSubmitProps: () => ({
             isBtnDisabled,

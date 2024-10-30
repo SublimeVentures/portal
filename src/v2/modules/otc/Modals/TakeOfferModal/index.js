@@ -30,16 +30,16 @@ import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import MutedText from "@/v2/components/ui/muted-text";
 import { userInvestmentsKeys } from "@/v2/constants";
 
-export default function TakeOfferModal({ offerDetails, className }) {
-    const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
-
+const TakeOfferModalContent = ({ otcFee, offerDetails, isTakeModalOpen }) => {
     const { currentMarket } = useMarket();
-    const { getCurrencySymbolByAddress, network, otcFee, cdn } = useEnvironmentContext();
+    const { getCurrencySymbolByAddress, network, cdn } = useEnvironmentContext();
 
-    const { totalPayment, transactionSuccessful, blockchainInteractionData, setTransactionSuccessful } =
-        useBlockchainTakeOfferTransaction({ offerDetails });
+    const { totalPayment, transactionSuccessful, blockchainInteractionData } = useBlockchainTakeOfferTransaction({
+        offerDetails,
+        otcFee,
+    });
 
-    const { resetState, getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
+    const { getBlockchainStepButtonProps, getBlockchainStepsProps } = useBlockchainStep({
         data: blockchainInteractionData,
         deps: [isTakeModalOpen],
     });
@@ -50,16 +50,124 @@ export default function TakeOfferModal({ offerDetails, className }) {
     const cancelOfferAmount_parsed = offerDetails?.amount?.toLocaleString();
     const cancelOfferPrice_parsed = offerDetails?.price?.toLocaleString();
 
-    const handleModalClose = async () => {
-        if (transactionSuccessful)
-            await Promise.all([
-                queryClient.invalidateQueries(["otcOffers"]),
-                queryClient.invalidateQueries(userInvestmentsKeys.userAllocation()),
-            ]).finally(() => setTransactionSuccessful(false));
-        else setTransactionSuccessful(false);
+    if (transactionSuccessful) {
+        queryClient.invalidateQueries(["otcOffers"]);
+        queryClient.invalidateQueries(userInvestmentsKeys.userAllocation());
+    }
 
-        resetState();
-    };
+    return (
+        <>
+            <SheetHeader>
+                <Image
+                    src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
+                    className="inline mx-2 rounded-full"
+                    alt=""
+                    width={100}
+                    height={100}
+                />
+                <SheetTitle>{currentMarket.name}</SheetTitle>
+                <SheetDescription>{currentMarket.genre}</SheetDescription>
+            </SheetHeader>
+
+            <SheetBody>
+                <div className="mx-10 my-4 sm:px-10">
+                    <div className="definition-section">
+                        {transactionSuccessful ? (
+                            <TransactionSuccess
+                                title="OTC Offer filled"
+                                description="You have successfully filled OTC offer."
+                            />
+                        ) : (
+                            <>
+                                <h3 className="text-base md:text-lg font-medium text-white text-center font-heading">
+                                    Take OTC Offer
+                                </h3>
+                                <p className="mb-2 text-sm font-light text-white text-center">
+                                    {offerDetails.isSell
+                                        ? "Are you sure you want to buy allocation from this SELL offer?"
+                                        : "Are you sure you want to sell your allocation to this BUY offer?"}
+                                </p>
+                                <dl className="definition-grid">
+                                    <DefinitionItem term="Market">{currentMarket.name}</DefinitionItem>
+                                    <DefinitionItem term="Type">
+                                        <span
+                                            className={cn({
+                                                "text-error-500": offerDetails.isSell,
+                                                "text-success-500": !offerDetails.isSell,
+                                            })}
+                                        >
+                                            {offerDetails.isSell ? "Ask" : "Bid"}
+                                        </span>
+                                    </DefinitionItem>
+                                    <DefinitionItem term="Blockchain">
+                                        <DynamicIcon
+                                            className="size-6 inline mx-2 rounded-full"
+                                            name={NETWORKS[chainDesired?.id]}
+                                        />
+                                        <span>{chainDesired?.name}</span>
+                                    </DefinitionItem>
+                                    <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
+                                    <DefinitionItem term="Price">${cancelOfferPrice_parsed}</DefinitionItem>
+                                    <DefinitionItem term="Fees">${otcFee}</DefinitionItem>
+                                </dl>
+                            </>
+                        )}
+                    </div>
+
+                    <BlockchainSteps {...getBlockchainStepsProps()} />
+
+                    <div>
+                        <h3 className="pb-2 pt-4 px-8 text-base font-medium text-white hidden md:block font-heading">
+                            Overview
+                        </h3>
+                        <div className="py-4 px-8 flex justify-between items-center bg-white/10">
+                            <div className="flex items-center">
+                                <DynamicIcon
+                                    className="mx-2 size-8 inline text-white rounded-full"
+                                    name={getCurrencySymbolByAddress(offerDetails.currency)}
+                                />
+                                <dl className="flex flex-col gap-2">
+                                    <DefinitionItem term="You Pay">${totalPayment}</DefinitionItem>
+                                </dl>
+                            </div>
+                            <ChevronRightIcon className="text-white" />
+                            <div className="flex items-center">
+                                <Image
+                                    src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
+                                    className="inline mx-2 rounded-full"
+                                    alt={`Cover image of token`}
+                                    width={35}
+                                    height={35}
+                                />
+                                <dl className="flex flex-col gap-2">
+                                    <DefinitionItem term="You Recieve">
+                                        {offerDetails.amount / currentMarket.ppu}
+                                    </DefinitionItem>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </SheetBody>
+
+            <SheetFooter>
+                {transactionSuccessful ? (
+                    <SheetClose asChild>
+                        <Button variant="accent">Close</Button>
+                    </SheetClose>
+                ) : (
+                    <BlockchainStepButton {...getBlockchainStepButtonProps()} />
+                )}
+                <MutedText>
+                    Note: You will automatically receive {currentMarket.ticker} tokens after settlement.
+                </MutedText>
+            </SheetFooter>
+        </>
+    );
+};
+
+export default function TakeOfferModal({ offerDetails, className, otcFee }) {
+    const [isTakeModalOpen, setIsTakeModalOpen] = useState(false);
 
     return (
         <Sheet open={isTakeModalOpen} onOpenChange={setIsTakeModalOpen}>
@@ -70,112 +178,8 @@ export default function TakeOfferModal({ offerDetails, className }) {
                 </Button>
             </SheetTrigger>
 
-            <SheetContent className="h-full flex flex-col rounded-t-lg" onCloseAutoFocus={handleModalClose}>
-                <SheetHeader>
-                    <Image
-                        src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
-                        className="inline mx-2 rounded-full"
-                        alt=""
-                        width={100}
-                        height={100}
-                    />
-                    <SheetTitle>{currentMarket.name}</SheetTitle>
-                    <SheetDescription>{currentMarket.genre}</SheetDescription>
-                </SheetHeader>
-
-                <SheetBody>
-                    <div className="mx-10 my-4 sm:px-10">
-                        <div className="definition-section">
-                            {transactionSuccessful ? (
-                                <TransactionSuccess
-                                    title="OTC Offer filled"
-                                    description="You have successfully filled OTC offer."
-                                />
-                            ) : (
-                                <>
-                                    <h3 className="text-base md:text-lg font-medium text-white text-center font-heading">
-                                        Take OTC Offer
-                                    </h3>
-                                    <p className="mb-2 text-sm font-light text-white text-center">
-                                        {offerDetails.isSell
-                                            ? "Are you sure you want to buy allocation from this SELL offer?"
-                                            : "Are you sure you want to sell your allocation to this BUY offer?"}
-                                    </p>
-                                    <dl className="definition-grid">
-                                        <DefinitionItem term="Market">{currentMarket.name}</DefinitionItem>
-                                        <DefinitionItem term="Type">
-                                            <span
-                                                className={cn({
-                                                    "text-error-500": offerDetails.isSell,
-                                                    "text-success-500": !offerDetails.isSell,
-                                                })}
-                                            >
-                                                {offerDetails.isSell ? "Ask" : "Bid"}
-                                            </span>
-                                        </DefinitionItem>
-                                        <DefinitionItem term="Blockchain">
-                                            <DynamicIcon
-                                                className="size-6 inline mx-2 rounded-full"
-                                                name={NETWORKS[chainDesired?.id]}
-                                            />
-                                            <span>{chainDesired?.name}</span>
-                                        </DefinitionItem>
-                                        <DefinitionItem term="Amount">${cancelOfferAmount_parsed}</DefinitionItem>
-                                        <DefinitionItem term="Price">${cancelOfferPrice_parsed}</DefinitionItem>
-                                        <DefinitionItem term="Fees">${otcFee}</DefinitionItem>
-                                    </dl>
-                                </>
-                            )}
-                        </div>
-
-                        <BlockchainSteps {...getBlockchainStepsProps()} />
-
-                        <div>
-                            <h3 className="pb-2 pt-4 px-8 text-base font-medium text-white hidden md:block font-heading">
-                                Overview
-                            </h3>
-                            <div className="py-4 px-8 flex justify-between items-center bg-white/10">
-                                <div className="flex items-center">
-                                    <DynamicIcon
-                                        className="mx-2 size-8 inline text-white rounded-full"
-                                        name={getCurrencySymbolByAddress(offerDetails.currency)}
-                                    />
-                                    <dl className="flex flex-col gap-2">
-                                        <DefinitionItem term="You Pay">${totalPayment}</DefinitionItem>
-                                    </dl>
-                                </div>
-                                <ChevronRightIcon className="text-white" />
-                                <div className="flex items-center">
-                                    <Image
-                                        src={`${cdn}/research/${currentMarket.slug}/icon.jpg`}
-                                        className="inline mx-2 rounded-full"
-                                        alt={`Cover image of token`}
-                                        width={35}
-                                        height={35}
-                                    />
-                                    <dl className="flex flex-col gap-2">
-                                        <DefinitionItem term="You Recieve">
-                                            {offerDetails.amount / currentMarket.ppu}
-                                        </DefinitionItem>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </SheetBody>
-
-                <SheetFooter>
-                    {transactionSuccessful ? (
-                        <SheetClose asChild>
-                            <Button variant="accent">Close</Button>
-                        </SheetClose>
-                    ) : (
-                        <BlockchainStepButton {...getBlockchainStepButtonProps()} />
-                    )}
-                    <MutedText>
-                        Note: You will automatically receive {currentMarket.ticker} tokens after settlement.
-                    </MutedText>
-                </SheetFooter>
+            <SheetContent className="h-full flex flex-col rounded-t-lg">
+                <TakeOfferModalContent offerDetails={offerDetails} isTakeModalOpen={isTakeModalOpen} otcFee={otcFee} />
             </SheetContent>
         </Sheet>
     );

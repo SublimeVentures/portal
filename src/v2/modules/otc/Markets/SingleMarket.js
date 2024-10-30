@@ -45,6 +45,7 @@ export default function SingleMarket({
                         wrapper={<CiCircleInfo className="text-2xl text-white/50" />}
                         text={`${dealStructure ? `${dealStructure}, ` : ""}Price: ${ppu ? `$${ppu}` : "TBA"}`}
                         type={TooltipType.Primary}
+                        as="span"
                     />
                     <Tooltiper
                         wrapper={
@@ -54,6 +55,7 @@ export default function SingleMarket({
                         }
                         text="Listed offers"
                         type={TooltipType.Primary}
+                        as="span"
                     />
                     <Tooltiper
                         wrapper={
@@ -63,6 +65,7 @@ export default function SingleMarket({
                         }
                         text="Offer details"
                         type={TooltipType.Primary}
+                        as="span"
                     />
                 </div>
             </div>
@@ -76,12 +79,14 @@ const getPayoutStructure = (isManaged, ticker) => {
             wrapper={<CiDollar className="text-2xl text-white/50" />}
             text="Payout in stablecoins"
             type={TooltipType.Primary}
+            as="span"
         />
     ) : (
         <Tooltiper
             wrapper={<CiBitcoin className="text-2xl text-white/50" />}
             text={`Payout in $${ticker}`}
             type={TooltipType.Primary}
+            as="span"
         />
     );
 };
