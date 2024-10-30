@@ -1,9 +1,13 @@
+const { serializeError } = require("serialize-error");
 const { models } = require("../services/db/definitions/db.init");
 const db = require("../services/db/definitions/db.init");
 const logger = require("../../src/lib/logger");
-const { serializeError } = require("serialize-error");
 
-async function getStoreItemsOwned(userId, tenantId) {
+async function getStoreItemsOwned(userId, tenantId, query = {}) {
+    let { sortBy = "storeId", order = "ASC" } = query;
+    if (sortBy === "storeId") {
+        sortBy = db.literal('"storePartner"."storeId"');
+    }
     try {
         return models.storeUser.findAll({
             where: {
@@ -32,6 +36,7 @@ async function getStoreItemsOwned(userId, tenantId) {
                 [db.literal('"storePartner->store"."name"'), "name"],
                 [db.literal('"storePartner"."img"'), "img"],
             ],
+            order: [[sortBy, order]],
             raw: true,
         });
     } catch (error) {
