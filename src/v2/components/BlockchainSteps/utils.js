@@ -5,6 +5,7 @@ import abi_claim from "../../../../abi/ClaimFacet.json";
 import abi_otc from "../../../../abi/OtcFacet.abi.json";
 import abi_invest from "../../../../abi/InvestFacet.abi.json";
 
+import abi_staking_basedvc from "../../../../abi/basedVcStaking.abi.json";
 import abi_staking_neotokyo from "../../../../abi/citcapStaking.abi.json";
 import abi_staking_generic from "../../../../abi/genericStaking.abi.json";
 
@@ -41,6 +42,15 @@ export const METHOD = {
 
 const TENANT_STAKE = (params) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return {
+                name: "stake",
+                inputs: [],
+                abi: abi_staking_basedvc,
+                confirmations: 2,
+                contract: params.contract,
+            };
+        }
         case TENANT.NeoTokyo: {
             return {
                 name: "stake",
@@ -73,6 +83,15 @@ const TENANT_STAKE = (params) => {
 
 const TENANT_UNSTAKE = (params) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
+        case TENANT.basedVC: {
+            return {
+                name: "unstake",
+                inputs: [],
+                abi: abi_staking_basedvc,
+                confirmations: 2,
+                contract: params.contract,
+            };
+        }
         case TENANT.NeoTokyo: {
             return {
                 name: "unstake",
