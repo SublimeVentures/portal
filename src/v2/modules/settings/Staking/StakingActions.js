@@ -9,9 +9,12 @@ export default function StakeActions({ session, staking }) {
     const { userId } = session;
 
     return (
-        <div className="flex flex-col gap-2 md:flex-row">
+        <div className="flex flex-col gap-2 2xl:flex-row">
             {!staked && <StakingModal userId={userId} staking={staking} />}
             {unstake && <UnstakingModal userId={userId} staking={staking} />}
+
+            {/* Add if reverse staking */}
+            {/* <Button variant="outline">Withdraw</Button> */}
 
             <Button asChild variant="gradient" aria-label="Buy tokens">
                 <Link href="/" target="_blank" rel="noopener noreferrer">

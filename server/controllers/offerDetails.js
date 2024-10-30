@@ -52,12 +52,14 @@ async function getOfferAllocation(req) {
 
         return {
             alloRes: allocation.alloRes,
-            alloFilled: allocation.alloFilled + allocation.alloFilledInjected,
-            alloGuaranteed: allocation.alloGuaranteed + allocation.alloGuaranteedInjected,
+            alloFilled: (allocation.alloFilled ?? 0) + (allocation.alloFilledInjected ?? 0),
+            alloGuaranteed: (allocation.alloGuaranteed ?? 0) + (allocation.alloGuaranteedInjected ?? 0),
             alloTotal: allocation.alloTotal,
             isPaused: allocation.isPaused,
             isSettled: allocation.isSettled,
             isRefund: allocation.isRefund,
+            progress: parseFloat((((allocation.alloFilled ?? 0) / (allocation.alloTotal ?? 1)) * 100).toFixed(2)),
+            reserved: parseFloat((((allocation.alloRes ?? 0) / (allocation.alloTotal ?? 1)) * 100).toFixed(2)),
         };
     } catch (error) {
         logger.error(`Can't fetch offerLimit`, {

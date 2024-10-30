@@ -40,19 +40,29 @@ const blurVariants = cva("absolute z-20 -top-1 w-4 h-4 rounded-full blur", {
 });
 
 const Progress = forwardRef(({ className, value, variant, ...props }, ref) => {
-    const translateX = 100 - (value || 0);
+    if (!Array.isArray(value)) {
+        value = [value];
+    }
 
     return (
         <div className="relative">
             <ProgressPrimitive.Root ref={ref} className={cn(rootVariants({ variant }), className)} {...props}>
-                <ProgressPrimitive.Indicator
-                    className={indicatorVariants({ variant })}
-                    style={{ transform: `translateX(-${translateX}%)` }}
-                />
+                {value.map((v, i) => (
+                    <ProgressPrimitive.Indicator
+                        key={i}
+                        className={indicatorVariants({ variant })}
+                        style={{
+                            transform: `translateX(-${100 - (v || 0)}%)`,
+                            opacity: i ? 0.5 : 1,
+                            top: 0,
+                            position: "absolute",
+                        }}
+                    />
+                ))}
             </ProgressPrimitive.Root>
 
-            {value > 0 && value < 100 ? (
-                <div className={blurVariants({ variant })} style={{ right: `calc(${translateX}% - 8px)` }} />
+            {value[0] > 0 && value[0] < 100 ? (
+                <div className={blurVariants({ variant })} style={{ right: `calc(${100 - (value[0] || 0)}% - 8px)` }} />
             ) : null}
         </div>
     );

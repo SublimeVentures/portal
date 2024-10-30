@@ -12,18 +12,6 @@ export default function InvestFormSubmit({ isBtnDisabled, btnText, investmentLoc
             >
                 {btnText}
             </Button>
-
-            {/* {(!isBtnDisabled && investmentLocked && hasAvailableFunds) && (
-                <Button 
-                    type="submit"
-                    name="invest"
-                    variant="gradient" 
-                    disabled={isBtnDisabled} 
-                    className="flex-grow basis-full sm:basis-auto"
-                >
-                    Restore
-                </Button>
-            )} */}
         </div>
     );
 }

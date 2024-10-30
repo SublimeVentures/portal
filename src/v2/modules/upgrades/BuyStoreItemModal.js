@@ -185,8 +185,8 @@ const ModalContent = ({
                         </div>
                     </div>
                     <Button className="w-full md:w-auto" variant={order.id === 1 ? "accent" : "default"} asChild>
-                        <Link href={PAGE.Upgrades} onClick={onClose}>
-                            Upgrades store
+                        <Link href={PAGE.App} onClick={onClose}>
+                            Vault
                         </Link>
                     </Button>
                 </Success.Article>
@@ -306,10 +306,8 @@ export default function BuyStoreItemModal({ model, setter, buyModalProps, userId
         setter();
         setTransactionSuccessful(false);
     };
-
-    const refetchBanner = async () => {
-        const data = await client.refetchQueries({ queryKey: ["store-items", "owned"] });
-        return data;
+    const handleTransactionSuccess = () => {
+        setTransactionSuccessful(true);
     };
 
     if (transactionSuccessful) {

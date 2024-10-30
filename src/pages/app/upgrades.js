@@ -19,6 +19,7 @@ import BackdropCard from "@/v2/modules/upgrades/BackdropCard";
 import useImage from "@/v2/hooks/useImage";
 import { getCopy } from "@/lib/seoConfig";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/v2/components/ui/tooltip";
+import { storeOwnedItemsKeys } from "@/v2/constants";
 
 const BuyStoreItemModal = dynamic(() => import("@/v2/modules/upgrades/BuyStoreItemModal"), { ssr: false });
 
@@ -45,7 +46,7 @@ export default function AppUpgrades({ session }) {
     const closeBuy = () => {
         setBuyModal(false);
         refetch();
-        client.refetchQueries({ queryKey: ["store-items", "owned"] });
+        client.invalidateQueries({ queryKey: storeOwnedItemsKeys.storeOwnedItems(), refetchType: "all" });
     };
 
     const openBuy = (order) => {

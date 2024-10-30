@@ -11,7 +11,6 @@ import routes from "@/routes";
 const DEFAULT_STATE = {
     isClean: true,
     cdn: "",
-    otcFee: 50,
     walletGuard: true,
     network: {
         name: "",
@@ -101,7 +100,6 @@ export const EnvironmentProvider = ({ children, initialData }) => {
                         path: "sharedContracts",
                         value: initialData.sharedContracts,
                     },
-                    { path: "otcFee", value: initialData.otcFee },
                     { path: "settings", value: initialData.setup },
                     { path: "cdn", value: initialData.cdn },
                     { path: "isClean", value: false },
@@ -236,7 +234,6 @@ export const EnvironmentProvider = ({ children, initialData }) => {
             switchChain,
         },
         walletGuard: environmentProps.walletGuard,
-        otcFee: environmentProps.otcFee,
         cdn: environmentProps.cdn,
         account: accountProp,
         activeDiamond: environmentProps.activeDiamond,
