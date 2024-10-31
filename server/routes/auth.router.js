@@ -2,17 +2,41 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const { serializeError } = require("serialize-error");
+const CryptoJS = require("crypto-js");
 const { refreshTokenName, authTokenName } = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
+const { simpleDecrypt } = require("../../src/lib/utils");
+
+const decrypt = async (encrypted) => {
+    try {
+        const decrypted = await CryptoJS.AES.decrypt(encrypted, String(process.env.IPDATA_SECRET_KEY)).toString();
+
+        const decryptedObject = JSON.parse(decrypted);
+
+        // Check if decryption is successful
+        if (!decryptedObject) {
+            console.error("Decryption failed, possibly due to incorrect key or corrupted data.");
+            return null; // or handle this case appropriately
+        }
+
+        return decryptedObject; // Return the decrypted IP address
+    } catch (error) {
+        console.error("Error during decryption:", error);
+        return null; // Handle decryption error
+    }
+};
 
 //LOGIN USER
 router.post("/login", async (req, res) => {
-    if (!req.body?.message || !req.body?.signature || !req.body?.tenant || !req.body?.partner)
-        return res.status(400).json({});
     try {
+        const { message, signature, tenant, partner, clientInfo } = req.body || {};
+        if (!message || !signature || !tenant || !partner || !clientInfo) {
+            return res.status(400).json({});
+        }
+
         const auth = await axios.post(`${process.env.AUTHER}/auth/login`, req.body, {
             headers: {
                 "content-type": "application/json",
@@ -23,7 +47,7 @@ router.post("/login", async (req, res) => {
 
         if (!result?.ok) throw Error(result?.error);
 
-        envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
+        envCache.set(`${tenant}:${partner}`, result.env);
 
         const session = await refreshCookies(result.token);
 

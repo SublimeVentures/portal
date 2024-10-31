@@ -33,6 +33,8 @@ const nextConfig = {
         DOMAIN: process.env.DOMAIN,
         JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
         NEXT_PUBLIC_ENV: process.env.ENV,
+        IPDATA_API_KEY: process.env.IPDATA_API_KEY,
+        IPDATA_SECRET_KEY: process.env.IPDATA_SECRET_KEY,
         TRUSTED_DOMAINS: process.env.TRUSTED_DOMAINS,
     },
     eslint: {

@@ -31,6 +31,25 @@ const CITIZENS_NAME = {
     elite: "Elite",
 };
 
+function simpleEncrypt(plainText, secretKey) {
+    let cipherText = "";
+    for (let i = 0; i < plainText.length; i++) {
+        console.log(cipherText);
+        cipherText += String.fromCharCode(plainText.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length));
+    }
+    console.log(cipherText);
+    return btoa(cipherText);
+}
+
+function simpleDecrypt(cipherText, secretKey) {
+    const decodedText = atob(cipherText);
+    let plainText = "";
+    for (let i = 0; i < decodedText.length; i++) {
+        plainText += String.fromCharCode(decodedText.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length));
+    }
+    return plainText;
+}
+
 module.exports = {
     sleeper,
     NETWORKS,
@@ -38,4 +57,6 @@ module.exports = {
     CITIZENS,
     CITIZENS_NAME,
     tenantIndex,
+    simpleEncrypt,
+    simpleDecrypt,
 };
