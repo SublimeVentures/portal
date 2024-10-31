@@ -2,21 +2,11 @@ import { useState } from "react";
 import { useSwitchChain } from "wagmi";
 import { cn } from "@/lib/cn";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
-import EthereumIcon from "@/v2/assets/svg/eth.svg";
-import PolygonIcon from "@/v2/assets/svg/matic.svg";
-import BNBSmartChainIcon from "@/v2/assets/svg/bnb.svg";
-import { NetworkEnum } from "@/v2/lib/network";
+import { ICONS } from "@/v2/lib/network";
 import ChainsURL from "@/v2/assets/svg/chains.svg?url";
 
-const ICONS = {
-    [NetworkEnum.eth]: EthereumIcon,
-    [NetworkEnum.bsc]: BNBSmartChainIcon,
-    [NetworkEnum.matic]: PolygonIcon,
-    [NetworkEnum.base]: EthereumIcon,
-};
-
 export const ChainIcon = ({ chainId, className, active }) => {
-    const Icon = ICONS[chainId] || ICONS[1];
+    const Icon = ICONS[chainId];
     return (
         <Icon
             className={cn(
@@ -106,6 +96,7 @@ const ChainSwitch = () => {
     const {
         network: { chains = [], chainId },
     } = data;
+
     return (
         <ChainGroup
             className={cn({
