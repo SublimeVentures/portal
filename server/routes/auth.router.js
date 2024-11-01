@@ -2,32 +2,11 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const { serializeError } = require("serialize-error");
-const CryptoJS = require("crypto-js");
 const { refreshTokenName, authTokenName } = require("../../src/lib/authHelpers");
 const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
-const { simpleDecrypt } = require("../../src/lib/utils");
-
-const decrypt = async (encrypted) => {
-    try {
-        const decrypted = await CryptoJS.AES.decrypt(encrypted, String(process.env.IPDATA_SECRET_KEY)).toString();
-
-        const decryptedObject = JSON.parse(decrypted);
-
-        // Check if decryption is successful
-        if (!decryptedObject) {
-            console.error("Decryption failed, possibly due to incorrect key or corrupted data.");
-            return null; // or handle this case appropriately
-        }
-
-        return decryptedObject; // Return the decrypted IP address
-    } catch (error) {
-        console.error("Error during decryption:", error);
-        return null; // Handle decryption error
-    }
-};
 
 //LOGIN USER
 router.post("/login", async (req, res) => {

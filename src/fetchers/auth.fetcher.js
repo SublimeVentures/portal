@@ -5,7 +5,7 @@ import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { simpleEncrypt } from "@/lib/utils";
 
 const ipdata = new IPData(`${process.env.IPDATA_API_KEY}`, {
-    max: 1000,
+    max: 15000,
     maxAge: 15 * 60 * 1000,
 });
 
