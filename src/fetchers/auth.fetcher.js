@@ -1,5 +1,4 @@
 import IPData from "ipdata";
-import CryptoJS from "crypto-js";
 import { axiosPublic } from "@/lib/axios/axiosPublic";
 import { API } from "@/routes";
 import { axiosPrivate } from "@/lib/axios/axiosPrivate";
@@ -7,20 +6,8 @@ import { simpleEncrypt } from "@/lib/utils";
 
 const ipdata = new IPData(`${process.env.IPDATA_API_KEY}`, {
     max: 1000,
-    maxAge: 10 * 60 * 1000,
+    maxAge: 15 * 60 * 1000,
 });
-
-const fetchIp = async () => {
-    try {
-        const ipinfo = await ipdata.lookup(); // Fetch IP data
-        const ip = ipinfo.ip;
-        const country = ipinfo.country_code;
-
-        return JSON.stringify({ ip, country });
-    } catch (error) {
-        console.error("Error fetching IP address:", error);
-    }
-};
 
 const fetchAndEncryptIp = async () => {
     try {
