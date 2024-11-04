@@ -19,7 +19,7 @@ router.post("/login", ipMiddleware, async (req, res) => {
 
         const auth = await axios.post(
             `${process.env.AUTHER}/auth/login`,
-            { ...req.body, userCountry: req.userCountry },
+            { ...req.body, ip: req.userIp },
             {
                 headers: {
                     "content-type": "application/json",
