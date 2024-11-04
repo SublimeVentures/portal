@@ -31,14 +31,6 @@ const CITIZENS_NAME = {
     elite: "Elite",
 };
 
-function simpleEncrypt(plainText, secretKey) {
-    let cipherText = "";
-    for (let i = 0; i < plainText.length; i++) {
-        cipherText += String.fromCharCode(plainText.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length));
-    }
-    return btoa(cipherText);
-}
-
 module.exports = {
     sleeper,
     NETWORKS,
@@ -46,5 +38,4 @@ module.exports = {
     CITIZENS,
     CITIZENS_NAME,
     tenantIndex,
-    simpleEncrypt,
 };

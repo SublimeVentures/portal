@@ -7,20 +7,25 @@ const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
+const { ipMiddleware } = require("../middleware/ipMiddleware");
 
 //LOGIN USER
-router.post("/login", async (req, res) => {
+router.post("/login", ipMiddleware, async (req, res) => {
     try {
-        const { message, signature, tenant, partner, clientInfo } = req.body || {};
-        if (!message || !signature || !tenant || !partner || !clientInfo) {
+        const { message, signature, tenant, partner } = req.body || {};
+        if (!message || !signature || !tenant || !partner) {
             return res.status(400).json({});
         }
 
-        const auth = await axios.post(`${process.env.AUTHER}/auth/login`, req.body, {
-            headers: {
-                "content-type": "application/json",
+        const auth = await axios.post(
+            `${process.env.AUTHER}/auth/login`,
+            { ...req.body, userCountry: req.userCountry },
+            {
+                headers: {
+                    "content-type": "application/json",
+                },
             },
-        });
+        );
 
         const result = auth.data;
 
@@ -41,7 +46,7 @@ router.post("/login", async (req, res) => {
 
         return res.status(200).json(result);
     } catch (error) {
-        logger.info(`LOGIN USER`, { error: serializeError(error), body: req.body });
+        logger.error(`LOGIN USER`, { error: serializeError(error), body: req.body });
         return res.status(400).json({});
     }
 });
