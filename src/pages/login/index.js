@@ -39,7 +39,8 @@ const TENANTS_LOGIN = (data) => {
 };
 
 export default function Login({ isAuthenticated }) {
-    let [errorModal, setErrorModal] = useState(null);
+    let [errorModal, setErrorModal] = useState(false);
+    const [errorType, setErrorType] = useState(null);
     const router = useRouter();
     const seo = seoConfig(PAGE.Login);
 
@@ -51,10 +52,12 @@ export default function Login({ isAuthenticated }) {
 
     useEffect(() => {
         if (router?.query?.error === LoginErrorsEnum.CREDENTIALS_ERROR) {
-            setErrorModal(LoginErrorsEnum.CREDENTIALS_ERROR);
+            setErrorModal(true);
+            setErrorType(LoginErrorsEnum.CREDENTIALS_ERROR);
         }
         if (router?.query?.error === LoginErrorsEnum.GEOLOCATION_ERROR) {
-            setErrorModal(LoginErrorsEnum.GEOLOCATION_ERROR);
+            setErrorModal(true);
+            setErrorType(LoginErrorsEnum.GEOLOCATION_ERROR);
         }
     }, [router.query]);
 
@@ -77,7 +80,7 @@ export default function Login({ isAuthenticated }) {
                 twitter={seo.twitter}
             />
             {TENANTS_LOGIN(data)}
-            <ErrorModal model={errorModal} setter={() => setErrorModal(false)} />
+            <ErrorModal model={errorModal} setter={() => setErrorModal(null)} errorType={errorType} />
         </>
     );
 }

@@ -4,10 +4,10 @@ import { ExternalLinks } from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
-const TENANTS_ERROR = (model) => {
+const TENANTS_ERROR = (model, errorType) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
-            if (model === LoginErrorsEnum.GEOLOCATION_ERROR) {
+            if (errorType === LoginErrorsEnum.GEOLOCATION_ERROR) {
                 return (
                     <>
                         <div className="mb-5">
@@ -39,7 +39,7 @@ const TENANTS_ERROR = (model) => {
             );
         }
         case TENANT.NeoTokyo: {
-            if (model === LoginErrorsEnum.GEOLOCATION_ERROR) {
+            if (errorType === LoginErrorsEnum.GEOLOCATION_ERROR) {
                 return (
                     <>
                         <div className="mb-5">
@@ -75,7 +75,7 @@ const TENANTS_ERROR = (model) => {
             );
         }
         case TENANT.CyberKongz: {
-            if (model === LoginErrorsEnum.GEOLOCATION_ERROR) {
+            if (errorType === LoginErrorsEnum.GEOLOCATION_ERROR) {
                 return (
                     <>
                         <div className="mb-5">
@@ -106,7 +106,7 @@ const TENANTS_ERROR = (model) => {
             );
         }
         case TENANT.BAYC: {
-            if (model === LoginErrorsEnum.GEOLOCATION_ERROR) {
+            if (errorType === LoginErrorsEnum.GEOLOCATION_ERROR) {
                 return (
                     <>
                         <div className="mb-5">
@@ -138,7 +138,7 @@ const TENANTS_ERROR = (model) => {
     }
 };
 
-export default function ErrorModal({ model, setter }) {
+export default function ErrorModal({ model, setter, errorType }) {
     const title = () => {
         return (
             <>
@@ -147,5 +147,7 @@ export default function ErrorModal({ model, setter }) {
         );
     };
 
-    return <GenericModal isOpen={!!model} closeModal={setter} title={title()} content={TENANTS_ERROR(model)} />;
+    return (
+        <GenericModal isOpen={!!model} closeModal={setter} title={title()} content={TENANTS_ERROR(model, errorType)} />
+    );
 }
