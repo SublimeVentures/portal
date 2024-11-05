@@ -39,7 +39,7 @@ const TENANTS_LOGIN = (data) => {
 };
 
 export default function Login({ isAuthenticated }) {
-    let [errorModal, setErrorModal] = useState(false);
+    let [errorModal, setErrorModal] = useState(null);
     const router = useRouter();
     const seo = seoConfig(PAGE.Login);
 
@@ -51,7 +51,10 @@ export default function Login({ isAuthenticated }) {
 
     useEffect(() => {
         if (router?.query?.error === LoginErrorsEnum.CREDENTIALS_ERROR) {
-            setErrorModal(true);
+            setErrorModal(LoginErrorsEnum.CREDENTIALS_ERROR);
+        }
+        if (router?.query?.error === LoginErrorsEnum.GEOLOCATION_ERROR) {
+            setErrorModal(LoginErrorsEnum.GEOLOCATION_ERROR);
         }
     }, [router.query]);
 

@@ -6,8 +6,9 @@ export const logIn = async (message, signature, tenant, partner, type) => {
     try {
         const { data } = await axiosPublic.post(API.auth, { message, signature, tenant, partner, type });
         return data;
-    } catch (e) {}
-    return false;
+    } catch (e) {
+        return e.response.data;
+    }
 };
 
 export const logOut = async () => {

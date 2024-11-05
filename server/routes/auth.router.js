@@ -46,8 +46,8 @@ router.post("/login", ipMiddleware, async (req, res) => {
 
         return res.status(200).json(result);
     } catch (error) {
-        logger.error(`LOGIN USER`, { error: serializeError(error), body: req.body });
-        return res.status(400).json({});
+        logger.error("LOGIN USER", { error: serializeError(error), body: req.body });
+        return res.status(400).json({ error: error.message });
     }
 });
 

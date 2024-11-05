@@ -50,7 +50,7 @@ export default function useLoginFlow() {
 
             const callbackUrl = router.query.callbackUrl;
 
-            const isAuth = await logIn(
+            const auth = await logIn(
                 message,
                 signature,
                 Number(process.env.NEXT_PUBLIC_TENANT),
@@ -58,13 +58,22 @@ export default function useLoginFlow() {
                 LOGIN_TYPE.WEB3,
             );
 
-            if (isAuth?.ok) {
+            if (auth?.ok) {
                 router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
-                router.push({
-                    pathname: routes.Login,
-                    query: { error: LoginErrorsEnum.CREDENTIALS_ERROR },
-                });
+                console.info(auth?.error, "autherror");
+                if (auth?.error === "Service is not available in your country") {
+                    router.push({
+                        pathname: routes.Login,
+                        query: { error: LoginErrorsEnum.GEOLOCATION_ERROR },
+                    });
+                } else {
+                    router.push({
+                        pathname: routes.Login,
+                        query: { error: LoginErrorsEnum.CREDENTIALS_ERROR },
+                    });
+                }
+
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
             }
