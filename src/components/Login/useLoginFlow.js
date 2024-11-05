@@ -61,7 +61,6 @@ export default function useLoginFlow() {
             if (auth?.ok) {
                 router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
-                console.info(auth?.error, "autherror");
                 if (auth?.error === "Service is not available in your country") {
                     router.push({
                         pathname: routes.Login,

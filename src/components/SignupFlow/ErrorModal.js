@@ -4,6 +4,9 @@ import { ExternalLinks } from "@/routes";
 import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
+const countries =
+    "United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq, Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin, Islands, Yemen";
+
 const TENANTS_ERROR = (model, errorType) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
@@ -13,12 +16,7 @@ const TENANTS_ERROR = (model, errorType) => {
                         <div className="mb-5">
                             Service is not available in your country
                             <p className="pt-5 pb-2 text-app-success font-bold text-center">Inaccessible Regions:</p>
-                            <p className="text-app-success text-center">
-                                United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying
-                                Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq,
-                                Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin
-                                Islands, Yemen
-                            </p>
+                            <p className="text-app-success text-center">{countries}</p>
                         </div>
                     </>
                 );
@@ -48,12 +46,7 @@ const TENANTS_ERROR = (model, errorType) => {
                             <br />
                             <br />
                             <p className="pt-5 pb-2 text-app-error font-bold">Inaccessible Regions:</p>
-                            <p className="text-app-error">
-                                United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying
-                                Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq,
-                                Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin
-                                Islands, Yemen
-                            </p>
+                            <p className="text-app-error">{countries}</p>
                         </div>
                     </>
                 );
@@ -82,12 +75,7 @@ const TENANTS_ERROR = (model, errorType) => {
                             You were stopped by <strong>THE KONG</strong>.<br />
                             <div>Service is not available in your country...</div>
                             <p className="pt-5 pb-2 text-app-error font-bold text-center">Inaccessible Regions:</p>
-                            <p className="text-app-error text-center">
-                                United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying
-                                Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq,
-                                Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin
-                                Islands, Yemen
-                            </p>
+                            <p className="text-app-error text-center">{countries}</p>
                         </div>
                     </>
                 );
@@ -113,12 +101,7 @@ const TENANTS_ERROR = (model, errorType) => {
                             You were stopped by <strong>APE GUARD</strong>.<br />
                             <div>Service is not available in your country...</div>
                             <p className="pt-5 pb-2 text-app-error font-bold text-center">Inaccessible Regions:</p>
-                            <p className="text-app-error text-center">
-                                United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying
-                                Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq,
-                                Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin
-                                Islands, Yemen
-                            </p>
+                            <p className="text-app-error text-center">{countries}</p>
                         </div>
                     </>
                 );
