@@ -106,7 +106,7 @@ const InvestModalContent = ({
     });
 
     return (
-        <DialogContent>
+        <DialogContent handleClose={handleCloseModal}>
             <DialogHeader className="md:items-center">
                 <DialogTitle className="text-center flex items-center justify-center">
                     {transactionSuccessful ? "Investment Successful" : "Booking Success"}
