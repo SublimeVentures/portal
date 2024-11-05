@@ -5,7 +5,7 @@ import { TENANT } from "@/lib/tenantHelper";
 import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
 const countries =
-    "United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq, Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin, Islands, Yemen";
+    "United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq, Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin, Islands, Yemen, Belarus, Myanmar, Central African Republic";
 
 const TENANTS_ERROR = (model, errorType) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
