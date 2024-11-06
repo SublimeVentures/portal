@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/cn";
+import { COLORS, NetworkEnum } from "@/v2/lib/network";
 
 const IconVariants = cva("relative flex justify-center items-center rounded-full", {
     variants: {
@@ -17,10 +18,11 @@ const IconVariants = cva("relative flex justify-center items-center rounded-full
 const CURRENCY_BG_COLOR = {
     USDC: "#2775CA",
     USDT: "#53AE94",
-    ETH: "#627eeb",
-    MATIC: "#6d00f6",
-    BSC: "#f0b90c",
-    SEPOLIA: "#627eeb",
+    ETH: COLORS[NetworkEnum.eth],
+    SEPOLIA: COLORS[NetworkEnum.sepolia],
+    BASE: COLORS[NetworkEnum.base],
+    MATIC: COLORS[NetworkEnum.matic],
+    BSC: COLORS[NetworkEnum.bsc],
 };
 
 export const DynamicIcon = ({ name = "", size, className, ...props }) => {
@@ -43,7 +45,7 @@ export const DynamicIcon = ({ name = "", size, className, ...props }) => {
         <Icon
             className={cn(IconVariants({ size, className }))}
             {...props}
-            style={{ backgroundColor: CURRENCY_BG_COLOR[name.toUpperCase()] }}
+            style={{ background: CURRENCY_BG_COLOR[name.toUpperCase()] }}
         />
     );
 };

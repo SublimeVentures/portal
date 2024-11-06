@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { ExternalLinks } from "@/routes";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/v2/components/ui/dialog";
+import ExternalLink from "@/v2/components/ui/external-link";
 
 export default function ClaimErrorModal({ model, setter, errorMessage }) {
     return (
@@ -10,7 +10,7 @@ export default function ClaimErrorModal({ model, setter, errorMessage }) {
                     <DialogTitle>Claim error</DialogTitle>
                 </DialogHeader>
                 <p className="text-lg text-white">
-                    {errorMessage} <Link href={ExternalLinks.LOOTBOX}>Read more</Link>.
+                    {errorMessage} <ExternalLink href={ExternalLinks.LOOTBOX} />
                 </p>
             </DialogContent>
         </Dialog>
