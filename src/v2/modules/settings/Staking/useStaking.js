@@ -1,19 +1,39 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 
 import { timeUntilNextUnstakeWindow } from "./helpers";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import useGetStakeRequirements from "@/lib/hooks/useGetStakeRequirements";
 import { updateStaking } from "@/fetchers/settings.fetcher";
 import { TENANT } from "@/v2/helpers/tenant";
 
 export default function useStaking({ tenantId, session, account }) {
     const router = useRouter();
+    const { diamonds } = useEnvironmentContext();
 
     const [staked, setStaked] = useState(() => session.isStaked ?? false);
-    const [_stakeReq, setStakeReq] = useState(() => session.stakeSize ?? 0);
-    const [stakeDate, setStakeDate] = useState(() => session.stakeDate ?? 0);
+    const [stakeReq, setStakeReq] = useState(0);
+    const [stakeDate, setStakeDate] = useState(0);
 
+    const uuid = `${session?.tenantId}_${session?.userId}`;
+    const chainId = Object.keys(diamonds)[0];
+    const diamond = diamonds[chainId];
+    const stakeData = useGetStakeRequirements(
+        true,
+        uuid,
+        diamond,
+        Number(process.env.NEXT_PUBLIC_TENANT),
+        Number(chainId),
+    );
+
+    const stakeOnCurrentWallet = session.stakedOn === account.address;
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
-    const unstakeDetails = timeUntilNextUnstakeWindow(unstakeDate, staked);
+    const unstakingData = timeUntilNextUnstakeWindow(
+        unstakeDate,
+        staked,
+        stakeData?.stakeLength[0],
+        stakeData?.stakeWithdraw[0],
+    );
 
     const refreshSession = useCallback(
         async (force = false) => {
@@ -22,7 +42,7 @@ export default function useStaking({ tenantId, session, account }) {
             if (!result?.ok) {
                 const updatedSession = result?.data?.updates ?? {};
 
-                if (updatedSession.isStaked) setStaked(updatedSession.isStaked);
+                if (updatedSession.isStaked) setStaked(true);
                 if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
                 if (updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate);
                 if (updatedSession.isStaked) router.reload();
@@ -32,8 +52,6 @@ export default function useStaking({ tenantId, session, account }) {
         },
         [account.address, router],
     );
-
-    useEffect(() => setStaked(session.isStaked), []);
 
     const getDataBasedOnTenant = (tenantId) => {
         switch (tenantId) {
@@ -65,8 +83,9 @@ export default function useStaking({ tenantId, session, account }) {
         stakeReq: session.stakeReq,
         stakeSize: session.stakeSize,
         isElite: session.isElite,
-        isS1: session.isS1,
-        ...unstakeDetails,
+        // isS1: session.isS1,
+        stakeOnCurrentWallet,
+        unstakingData,
         refreshSession,
         ...getDataBasedOnTenant(tenantId),
     };

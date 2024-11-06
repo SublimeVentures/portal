@@ -42,4 +42,16 @@ const chainMap = {
         scannerName: "Sepolia EtherScan",
         scannerUrl: "https://sepolia.etherscan.io",
     },
+    84532: {
+        name: "Base Sepolia",
+        currency: "ETH",
+        scannerName: "",
+        scannerUrl: "",
+    },
+    8453: {
+        name: "Base",
+        currency: "ETH",
+        scannerName: "",
+        scannerUrl: "",
+    },
 };

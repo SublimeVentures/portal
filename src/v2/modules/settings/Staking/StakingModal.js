@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
@@ -21,15 +21,43 @@ import { fetchUserWallets } from "@/fetchers/settings.fetcher";
 import { METHOD } from "@/components/BlockchainSteps/utils";
 import { settingsKeys } from "@/v2/constants";
 
+// const stakingCurrency = {
+//     chainId: 84532,
+//     contract: "0xBcf4b6EaD5e44A1FbcF58f8F55906d88290bC1c6",
+//     isSettlement: true,
+//     isStaking: true,
+//     isStore: false,
+//     name: "Based",
+//     precision: 18,
+//     symbol: "BASED",
+// }
+
+const stakingCurrency = {
+    chainId: 84532,
+    contract: "0x4200000000000000000000000000000000000006",
+    isSettlement: true,
+    isStaking: true,
+    isStore: false,
+    name: "WETH",
+    precision: 18,
+    symbol: "WETH",
+};
+
 export default function StakingModal({ userId, staking = {} }) {
     const { name: tenantName, nft } = useTenantSpecificData();
     const { currencyStaking, activeCurrencyStaking, account, activeDiamond } = useEnvironmentContext();
-    const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
-    const { stakeReq, isS1, isStaked } = staking;
+    const { stakeReq, isS1, isStaked, refreshSession } = staking;
+    // const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
 
+    // const [stakeSize, setStakeSize] = useState(stakeReq);
     const [isOpen, setIsOpen] = useState(false);
-    const [stakeSize, setStakeSize] = useState(stakeReq);
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+
+    useEffect(() => {
+        if (transactionSuccessful) {
+            refreshSession();
+        }
+    }, [transactionSuccessful]);
 
     const { data: wallets } = useQuery({
         queryKey: settingsKeys.userWallets(userId),
@@ -57,8 +85,8 @@ export default function StakingModal({ userId, staking = {} }) {
             params: {
                 requiredNetwork: stakingCurrency?.chainId,
                 account: account.address,
-                allowance: stakeSize,
-                liquidity: stakeSize,
+                allowance: stakeReq,
+                liquidity: stakeReq,
                 buttonText: "Stake",
                 contract: activeDiamond,
                 spender: activeDiamond,
@@ -68,7 +96,7 @@ export default function StakingModal({ userId, staking = {} }) {
             token,
             setTransactionSuccessful,
         };
-    }, [stakingCurrency?.contract, activeDiamond, stakeSize, isOpen]);
+    }, [stakingCurrency?.contract, activeDiamond, stakeReq, isOpen]);
 
     const { getBlockchainStepsProps, getBlockchainStepButtonProps } = useBlockchainStep({
         data: blockchainInteractionData,
@@ -97,7 +125,7 @@ export default function StakingModal({ userId, staking = {} }) {
                         ) : (
                             <>
                                 To partake in <span className="text-success-500">{tenantName}</span> investments, every
-                                investor must stake <span className="text-success-500">$</span> token.
+                                investor must stake <span className="text-success-500">{stakeReq} $</span> token.
                             </>
                         )}
                     </DialogDescription>
@@ -114,14 +142,14 @@ export default function StakingModal({ userId, staking = {} }) {
                         <div className="grid grid-cols-2 gap-4 text-center">
                             <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-white rounded">
                                 <dt className="text-white text-lg font-semibold">Detected NFTs</dt>
-                                <dd className="mt-2 text-white text-4xl">{nft[isS1 ? 0 : 1]}</dd>
+                                <dd className="mt-2 text-white text-3xl">{nft[isS1 ? 0 : 1]}</dd>
                             </dl>
                             <dl className="p-6 flex flex-col items-center justify-center h-full bg-transparent border border-white rounded">
                                 <dt className="text-white text-lg font-semibold">
                                     {isStaked ? "Add" : "Required"} Stake
                                 </dt>
-                                <dd className="mt-2 text-white text-4xl">
-                                    {stakeSize} {stakingCurrency?.name}
+                                <dd className="mt-2 text-white text-3xl">
+                                    {stakeReq} {stakingCurrency?.name}
                                 </dd>
                             </dl>
                         </div>
