@@ -38,6 +38,7 @@ router.get("/", async (req, res) => {
         if (!environment) {
             const refetchedEnviroment = await refreshPartnerEnvironment(user);
             if (refetchedEnviroment?.ok) {
+                envCache.set(`${user.tenantId}:${user.partnerId}`, refetchedEnviroment);
                 return res.status(200).json({ ...refetchedEnviroment });
             }
             throw new Error("Losted env cache!");
