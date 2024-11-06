@@ -27,6 +27,7 @@ async function processServerSideData(req, res, route, customLogicCallback) {
         const env = await fetchEnvironment(accessToken, authTokenName);
         if (!env.ok) {
             console.log("ERROR - filed env refetch");
+
             return {
                 redirect: {
                     permanent: true,
