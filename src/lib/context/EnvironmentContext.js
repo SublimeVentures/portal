@@ -220,8 +220,9 @@ export const EnvironmentProvider = ({ children, initialData }) => {
 
     const environmentCleanup = (softLogout) => {
         router.push(routes.Landing).then(async (el) => {
-            setEnvironmentProps(DEFAULT_STATE);
             softLogout ? await logOutRefresh() : await logOut();
+            setEnvironmentProps(DEFAULT_STATE);
+            softLogout ? null : router.reload();
         });
     };
 
