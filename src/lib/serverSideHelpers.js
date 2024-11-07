@@ -24,9 +24,10 @@ async function processServerSideData(req, res, route, customLogicCallback) {
         const { additionalProps, redirect } = await handleCustomLogic(accountData, accessToken, customLogicCallback);
         if (redirect) return { redirect };
 
-        const env = await fetchEnvironment(req.cookies[authTokenName], authTokenName);
+        const env = await fetchEnvironment(accessToken, authTokenName);
         if (!env.ok) {
             console.log("ERROR - filed env refetch");
+
             return {
                 redirect: {
                     permanent: true,
