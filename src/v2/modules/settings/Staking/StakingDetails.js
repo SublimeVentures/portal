@@ -11,7 +11,7 @@ export default function StakingDetails({ session, staking }) {
 
                 {/* Only for citcap */}
                 {/* <DefinitionItem term="Allocation bonus">
-                    <span className={cn(allocationBonus > 0 ? "text-success-500" : "text-foreground")}>
+                    <span className={cn(allocationBonus > 0 ? "text-success-500" : "text-white")}>
                         ${allocationBonus}
                     </span>
                 </DefinitionItem> */}
