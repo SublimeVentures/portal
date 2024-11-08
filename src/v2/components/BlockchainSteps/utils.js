@@ -23,6 +23,8 @@ import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/module
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 
+import { fetchTest } from "@/fetchers/staking.fetcher";
+
 import { TENANT } from "@/lib/tenantHelper";
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
@@ -40,13 +42,19 @@ export const METHOD = {
     CLAIM: 10,
 };
 
-const TENANT_STAKE = (params) => {
+const TENANT_STAKE = async (params) => {
+    console.log("-------TENANT_STAKE------", params);
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         // tx = await stakingContract.stake(0n, 1n, ethers.parseEther("100"),  0, block!.timestamp + 1000);
+        // const res = await fetchTest(offerId, investmentAmount, session.tier.fee, contract, network.chainId);
         case TENANT.basedVC: {
+            const res = await fetchTest();
+
+            const parsedValue = "100000000000000000000"; // ethers.parseEther("1")
+
             return {
                 name: "stake",
-                inputs: [],
+                inputs: [Number(res.tokenId), res.stakingScheduleId, parsedValue, 0, 0, 0],
                 abi: abi_staking_basedvc,
                 confirmations: 2,
                 contract: params.contract,
@@ -228,6 +236,8 @@ const getTokenInWei = (amount, token) => {
 };
 
 export const getMethod = (type, token, params) => {
+    console.log("getMethod", type, token, params);
+
     switch (type) {
         case METHOD.INVEST: {
             const isValid =

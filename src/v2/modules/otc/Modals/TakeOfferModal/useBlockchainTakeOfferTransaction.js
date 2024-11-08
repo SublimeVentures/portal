@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import useMarket from "@/v2/modules/otc/logic/useMarket";
-import { METHOD } from "@/components/BlockchainSteps/utils";
+import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 import useGetToken from "@/lib/hooks/useGetToken";
 import { getUserAllocation } from "@/v2/fetchers/otc";

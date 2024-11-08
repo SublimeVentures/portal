@@ -18,7 +18,7 @@ import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
 import { fetchUserWallets } from "@/fetchers/settings.fetcher";
-import { METHOD } from "@/components/BlockchainSteps/utils";
+import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import { settingsKeys } from "@/v2/constants";
 
 // const stakingCurrency = {
@@ -34,13 +34,13 @@ import { settingsKeys } from "@/v2/constants";
 
 const stakingCurrency = {
     chainId: 84532,
-    contract: "0x4200000000000000000000000000000000000006",
+    contract: "0xBcf4b6EaD5e44A1FbcF58f8F55906d88290bC1c6",
     isSettlement: true,
     isStaking: true,
     isStore: false,
-    name: "WETH",
+    name: "Based",
     precision: 18,
-    symbol: "WETH",
+    symbol: "BASED",
 };
 
 export default function StakingModal({ userId, staking = {} }) {
@@ -85,8 +85,10 @@ export default function StakingModal({ userId, staking = {} }) {
             params: {
                 requiredNetwork: stakingCurrency?.chainId,
                 account: account.address,
-                allowance: stakeReq,
-                liquidity: stakeReq,
+                // allowance: stakeReq,
+                // allowance: stakeReq,
+                liquidity: 1,
+                allowance: 1,
                 buttonText: "Stake",
                 contract: activeDiamond,
                 spender: activeDiamond,

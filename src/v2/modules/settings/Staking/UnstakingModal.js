@@ -16,7 +16,7 @@ import { Button } from "@/v2/components/ui/button";
 import BlockchainSteps from "@/v2/components/BlockchainSteps";
 import BlockchainStepButton from "@/v2/components/BlockchainSteps/BlockchainStepButton";
 import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep";
-import { METHOD } from "@/components/BlockchainSteps/utils";
+import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import { settingsKeys } from "@/v2/constants";
 
 export default function UnstakingModal({ userId, staking = {} }) {
