@@ -95,6 +95,7 @@
     "react-select": "5.8.0",
     "react-tooltip": "5.26.3",
     "rematrix": "0.7.2",
+    "request-ip": "3.3.0",
     "sequelize": "6.37.1",
     "serialize-error": "8.1.0",
     "swiper": "11.0.7",

@@ -14141,7 +14141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"request-ip@npm:^3.3.0":
+"request-ip@npm:3.3.0, request-ip@npm:^3.3.0":
   version: 3.3.0
   resolution: "request-ip@npm:3.3.0"
   checksum: 10c0/35ab5fcb29408cb72629b53207f00a443a60fe881ffb63e3b08a06c07dae3eee617522741bd0b035492153d6c9babe7f8d9f79c008d493d1e6638b0bd92cb02b
@@ -16316,6 +16316,7 @@ __metadata:
     react-select: "npm:5.8.0"
     react-tooltip: "npm:5.26.3"
     rematrix: "npm:0.7.2"
+    request-ip: "npm:3.3.0"
     sass: "npm:1.72.0"
     sequelize: "npm:6.37.1"
     serialize-error: "npm:8.1.0"

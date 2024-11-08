@@ -8,23 +8,29 @@ const { envCache } = require("../controllers/envionment");
 const { verifyID, buildCookie, refreshData } = require("../../src/lib/authHelpers");
 const { refreshCookies } = require("../controllers/login/tokenHelper");
 const userController = require("../controllers/login/user");
+const { ipMiddleware } = require("../middleware/ipMiddleware");
 
 //LOGIN USER
-router.post("/login", async (req, res) => {
-    if (!req.body?.message || !req.body?.signature || !req.body?.tenant || !req.body?.partner)
-        return res.status(400).json({});
+router.post("/login", ipMiddleware, async (req, res) => {
+    const { message, signature, tenant, partner } = req.body || {};
+    if (!message || !signature || !tenant || !partner) return res.status(400).json({});
+
     try {
-        const auth = await axios.post(`${process.env.AUTHER}/auth/login`, req.body, {
-            headers: {
-                "content-type": "application/json",
+        const auth = await axios.post(
+            `${process.env.AUTHER}/auth/login`,
+            { ...req.body, ip: req.userIp },
+            {
+                headers: {
+                    "content-type": "application/json",
+                },
             },
-        });
+        );
 
         const result = auth.data;
 
         if (!result?.ok) throw Error(result?.error);
 
-        envCache.set(`${req.body.tenant}:${req.body.partner}`, result.env);
+        envCache.set(`${tenant}:${partner}`, result.env);
 
         const session = await refreshCookies(result.token);
 
@@ -45,6 +51,8 @@ router.post("/login", async (req, res) => {
             message = "WalletAlreadyActive";
         } else if (error.message.includes("maximum wallet limit")) {
             message = "WalletsLimitReached";
+        } else if (error.message.includes("not available in your country")) {
+            message = "ServiceIsUnavailableInRegion";
         }
         return res.status(400).json({ error: message });
     }
