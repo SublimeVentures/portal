@@ -15,14 +15,17 @@ import abi_upgrade_based from "../../../../abi/UpgradeFacet.json";
 import abi_mb_generic from "../../../../abi/genericMysteryBox.abi.json";
 import abi_mb_based from "../../../../abi/basedMysteryBox.abi.json";
 import abi_mb_neotokyo from "../../../../abi/neotokyoMysteryBox.abi.json";
+import abi_reassign from "../../../../abi/ReasignFacet.abi.json";
 
 import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "@/v2/components/App/MysteryBox/BuyMysteryBoxModal";
 import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/components/App/Upgrades/BuyStoreItemModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
+import { blockchainPrerequisite as blockchain_reassign } from "@/v2/components/App/Vault/ReassignModal/prerequisite_reassign";
 
 import { TENANT } from "@/lib/tenantHelper";
+
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 export const METHOD = {
@@ -37,6 +40,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REASSIGN: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -442,6 +446,39 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+        case METHOD.REASSIGN: {
+            console.log("METHOD_REASSIGN", params, abi_reassign);
+            const isValid =
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.offer) &&
+                validNumber(params?.prerequisite.expire) &&
+                validAddress(params?.currency) &&
+                validAddress(params?.to);
+
+            console.log("validation REASSIGN", params, isValid, validHash(params?.prerequisite?.signature));
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "reassign",
+                          inputs: [
+                              params?.to,
+                              params?.currency,
+                              params?.offer,
+                              params.prerequisite.expire,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_reassign,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
     }
 };
 
@@ -464,6 +501,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.UPGRADE: {
             return await prerequisite_upgradeBuy(params);
+        }
+        case METHOD.REASSIGN: {
+            return await blockchain_reassign(params);
         }
         default: {
             return { ok: true, data: {} };

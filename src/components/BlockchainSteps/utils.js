@@ -4,6 +4,7 @@ import { BigNumber } from "bignumber.js";
 import abi_claim from "../../../abi/ClaimFacet.json";
 import abi_otc from "../../../abi/OtcFacet.abi.json";
 import abi_invest from "../../../abi/InvestFacet.abi.json";
+import abi_reassign from "../../../abi/ReasignFacet.abi.json";
 
 import abi_staking_neotokyo from "../../../abi/citcapStaking.abi.json";
 import abi_staking_generic from "../../../abi/genericStaking.abi.json";
@@ -20,6 +21,7 @@ import { blockchainPrerequisite as prerequisite_mysteryBoxBuy } from "@/v2/compo
 import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/components/App/Upgrades/BuyStoreItemModal";
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
+import { blockchainPrerequisite as blockchain_reassign } from "@/v2/components/App/Vault/ReassignModal/prerequisite_reassign";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
 
 import { TENANT } from "@/lib/tenantHelper";
@@ -40,6 +42,7 @@ export const METHOD = {
     UNSTAKE: 8,
     ALLOWANCE: 9,
     CLAIM: 10,
+    REASSIGN: 11,
 };
 
 const TENANT_STAKE = (params) => {
@@ -253,6 +256,7 @@ export const getMethod = (type, token, params) => {
                 validAddress(token?.contract) && validAddress(params?.spender) && validAllowance(params?.allowance);
             const amount = getTokenInWei(params.allowance, token);
             const confirmations = params.chainId === ETH_CHAIN_ID ? 2 : 5;
+
             console.log("METHOD.ALLOWANCE", type, token, params, isValid);
 
             return isValid
@@ -271,6 +275,7 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+
         case METHOD.OTC_MAKE: {
             console.log("params.price", params.price.toString());
             const isValid =
@@ -282,7 +287,9 @@ export const getMethod = (type, token, params) => {
                 validAddress(token?.contract) &&
                 validAddress(params?.contract);
             const amount = getTokenInWei(params.price, token);
+
             console.log("amount", amount);
+
             return isValid
                 ? {
                       ok: true,
@@ -448,6 +455,39 @@ export const getMethod = (type, token, params) => {
                       error: "Validation failed",
                   };
         }
+        case METHOD.REASSIGN: {
+            console.log("METHOD_REASSIGN", params, abi_reassign);
+            const isValid =
+                validHash(params?.prerequisite?.signature) &&
+                validNumber(params?.offer) &&
+                validNumber(params?.prerequisite.expire) &&
+                validAddress(params?.currency) &&
+                validAddress(params?.to);
+
+            console.log("validation REASSIGN", params, isValid, validHash(params?.prerequisite?.signature));
+
+            return isValid
+                ? {
+                      ok: true,
+                      method: {
+                          name: "reassign",
+                          inputs: [
+                              params?.to,
+                              params?.currency,
+                              params?.offer,
+                              params.prerequisite.expire,
+                              params.prerequisite.signature,
+                          ],
+                          abi: abi_reassign,
+                          confirmations: 2,
+                          contract: params.contract,
+                      },
+                  }
+                : {
+                      ok: false,
+                      error: "Validation failed",
+                  };
+        }
     }
 };
 
@@ -470,6 +510,9 @@ export const getPrerequisite = async (type, params) => {
         }
         case METHOD.UPGRADE: {
             return await prerequisite_upgradeBuy(params);
+        }
+        case METHOD.REASSIGN: {
+            return await blockchain_reassign(params);
         }
         default: {
             return { ok: true, data: {} };

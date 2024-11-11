@@ -45,6 +45,7 @@ export const API = {
     settingsWallets: "/api/settings/wallets",
     settingsStake: "/api/settings/stake",
     fetchVault: "/api/vault",
+    reassignVault: "/api/reassign",
     fetchPayout: "/api/payout/",
     fetchClaim: "/api/claim",
     claimMysterybox: "/api/mysterybox/claim",
