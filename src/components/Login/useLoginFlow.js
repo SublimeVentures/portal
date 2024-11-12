@@ -52,18 +52,19 @@ export default function useLoginFlow() {
 
             const callbackUrl = router.query.callbackUrl;
 
-            const isAuth = await logIn(
+            const auth = await logIn(
                 message,
                 signature,
                 Number(process.env.NEXT_PUBLIC_TENANT),
                 partner,
                 LOGIN_TYPE.WEB3,
             );
-            if (isAuth?.ok) {
+            if (auth?.ok) {
                 router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
+                console.log("autherror", auth);
                 setShow(true);
-                setMessage(isAuth?.error);
+                setMessage(auth?.error);
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
             }

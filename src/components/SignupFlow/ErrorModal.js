@@ -6,6 +6,9 @@ import { LoginErrorsEnum } from "@/constants/enum/login.enum";
 
 const { externalLinks } = getTenantConfig();
 
+const restrictedCountries =
+    "United States, Canada, China, Hong Kong, Singapore, United States Minor Outlying Islands, United Kingdom, Cuba, Afghanistan, Republic of the Congo, Ethiopia, Iran, Iraq, Lebanon, Libya, Somalia, South Korea, Russia, Syria, Sudan, Venezuela, British Virgin, Islands, Yemen, Belarus, Myanmar, Central African Republic";
+
 const TENANTS_ERROR = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
@@ -81,6 +84,16 @@ export default function ErrorModal({ isOpen, closeModal, errorMessage }) {
         content = <p className="text-app-success font-bold mb-5">Wallet already active.</p>;
     } else if (errorMessage === LoginErrorsEnum.WALLETS_LIMIT_REACHED) {
         content = <p className="text-app-success font-bold mb-5">Reached maximum wallets limit.</p>;
+    } else if (errorMessage === LoginErrorsEnum.GEOLOCATION_ERROR) {
+        content = (
+            <>
+                <div className="text-app-success mb-5">
+                    Service is not available in your country
+                    <p className="pt-5 pb-2 text-app-success font-bold text-center">Inaccessible Regions:</p>
+                    <p className="text-app-success text-center">{restrictedCountries}</p>
+                </div>
+            </>
+        );
     } else {
         content = TENANTS_ERROR();
     }
