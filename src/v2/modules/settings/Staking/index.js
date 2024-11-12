@@ -55,9 +55,7 @@ export default function Staking({ session }) {
     return (
         <Card variant="none" className="w-full flex flex-col bg-base select-none cursor-auto 2xl:flex-row border-alt">
             <div className="mb-4 flex items-center gap-4 2xl:hidden">
-                <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-foreground">
-                    Staking
-                </CardTitle>
+                <CardTitle className="text-base font-normal 2xl:text-lg 2xl:font-medium text-white">Staking</CardTitle>
                 {staking.staked ? <Badge variant="success">Staked</Badge> : <Badge variant="error">Not staked</Badge>}
             </div>
 
@@ -84,7 +82,7 @@ export default function Staking({ session }) {
 
                             <div>
                                 <div className="hidden items-center gap-4 2xl:flex mb-4">
-                                    <CardTitle className="my-1 text-2xl font-medium text-foreground">Staking</CardTitle>
+                                    <CardTitle className="my-1 text-2xl font-medium text-white">Staking</CardTitle>
                                     {staking.staked ? (
                                         <Badge variant="success">Staked</Badge>
                                     ) : (
@@ -100,7 +98,7 @@ export default function Staking({ session }) {
                                                 term={
                                                     typeof field.term === "function" ? field.term(session) : field.term
                                                 }
-                                                ddClassName="text-foreground text-sm font-light"
+                                                ddClassName="text-white text-sm font-light"
                                             >
                                                 {typeof field.value === "function" ? field.value(session) : field.value}
                                             </DefinitionItem>
