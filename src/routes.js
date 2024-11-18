@@ -68,6 +68,7 @@ export const API = {
     user: "/api/auth/user",
     reserveMysteryBox: "/api/mysterybox/reserve",
     reserveUpgrade: "/api/store/reserve",
+    stakingData: "/api/staking",
 };
 
 const ExternalLinksBased = {

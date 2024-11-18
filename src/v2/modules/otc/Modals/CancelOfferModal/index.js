@@ -145,7 +145,6 @@ export default function CancelOfferModal({ offerDetails, className }) {
             <SheetTrigger asChild>
                 <Button variant="outline" className={className}>
                     Cancel
-                    <ArrowIcon className="ml-2 size-2" />
                 </Button>
             </SheetTrigger>
             <SheetContent className="h-full flex flex-col rounded-t-lg">

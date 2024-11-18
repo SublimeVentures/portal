@@ -22,10 +22,9 @@ import { blockchainPrerequisite as prerequisite_upgradeBuy } from "@/v2/componen
 import { blockchainPrerequisite as prerequisite_otcMakeOffer } from "@/v2/modules/otc/Modals/MakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_otcTakeOffer } from "@/v2/modules/otc/Modals/TakeOfferModal/blockchainPrerequisite";
 import { blockchainPrerequisite as prerequisite_claimPayout } from "@/components/App/Vault/ClaimPayoutModal";
-
-import { fetchTest } from "@/fetchers/staking.fetcher";
-
+import { fetchStakingData } from "@/fetchers/staking.fetcher";
 import { TENANT } from "@/lib/tenantHelper";
+const moment = require("moment");
 export const ETH_USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 export const METHOD = {
@@ -42,19 +41,21 @@ export const METHOD = {
     CLAIM: 10,
 };
 
-const TENANT_STAKE = async (params) => {
-    console.log("-------TENANT_STAKE------", params);
+const TENANT_STAKE = async (params, token) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
-        // tx = await stakingContract.stake(0n, 1n, ethers.parseEther("100"),  0, block!.timestamp + 1000);
-        // const res = await fetchTest(offerId, investmentAmount, session.tier.fee, contract, network.chainId);
         case TENANT.basedVC: {
-            const res = await fetchTest();
+            const data = await fetchStakingData();
+            const amount = getTokenInWei(1, token);
+            // const amount = getTokenInWei(params.amount, token);
 
-            const parsedValue = "100000000000000000000"; // ethers.parseEther("1")
+            console.log("resdata", data);
+
+            const now = moment.utc().unix();
+            const timestamp = now + 10 * 60;
 
             return {
                 name: "stake",
-                inputs: [Number(res.tokenId), res.stakingScheduleId, parsedValue, 0, 0, 0],
+                inputs: [Number(data.tokenId), Number(data.stakingScheduleId), amount, 0, 0, timestamp],
                 abi: abi_staking_basedvc,
                 confirmations: 2,
                 contract: params.contract,
@@ -236,8 +237,6 @@ const getTokenInWei = (amount, token) => {
 };
 
 export const getMethod = (type, token, params) => {
-    console.log("getMethod", type, token, params);
-
     switch (type) {
         case METHOD.INVEST: {
             const isValid =
@@ -306,7 +305,6 @@ export const getMethod = (type, token, params) => {
                 validAddress(token?.contract) &&
                 validAddress(params?.contract);
             const amount = getTokenInWei(params.price, token);
-            console.log("amount", amount);
             return isValid
                 ? {
                       ok: true,
@@ -331,7 +329,6 @@ export const getMethod = (type, token, params) => {
         }
         case METHOD.OTC_CANCEL: {
             const isValid = validNumber(params?.otcId) && validNumber(params?.dealId) && validAddress(params?.contract);
-            console.log("CHECK PARAMS", params, isValid);
             return isValid
                 ? {
                       ok: true,
@@ -349,8 +346,6 @@ export const getMethod = (type, token, params) => {
                   };
         }
         case METHOD.OTC_TAKE: {
-            console.log("offerTakeParams", params);
-
             const isValid =
                 validNumber(params?.offerDetails?.otcId) &&
                 validNumber(params?.offerDetails?.dealId) &&
@@ -360,7 +355,6 @@ export const getMethod = (type, token, params) => {
                       validNumber(params?.prerequisite?.signature?.expiry) &&
                       validHash(params?.prerequisite?.signature?.hash)
                     : true;
-            console.log("offerTakeParams isValid", isValid);
 
             const nonce = params?.prerequisite?.signature?.nonce || 0;
             const expiry = params?.prerequisite?.signature?.expiry || 0;
@@ -416,7 +410,7 @@ export const getMethod = (type, token, params) => {
                 validNumber(params?.liquidity) &&
                 validAddress(params?.contract) &&
                 validAddress(token?.contract);
-            const method = TENANT_STAKE(params);
+            const method = TENANT_STAKE(params, token);
             return isValid
                 ? {
                       ok: true,
