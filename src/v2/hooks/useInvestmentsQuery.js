@@ -9,7 +9,6 @@ const fetchInvestments = async (query, config) => {
 export const investmentsQueryOptions = (query, config) => ({
     queryKey: vaultKeys.vault(query),
     queryFn: () => fetchInvestments(query, config),
-    staleTime: 1000 * 60 * 5,
 });
 
 export default function useInvestmentsQuery(query, options) {

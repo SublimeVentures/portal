@@ -25,7 +25,7 @@ export const newsKeys = {
 };
 
 export const vaultKeys = {
-    vault: (query) => ["vault", ...(query ? [query] : [])],
+    vault: (query) => ["vault", query ? JSON.stringify(query) : null],
     vaultStats: (query) => [...vaultKeys.vault(null), "stats", ...(query ? [query] : [])],
 };
 
