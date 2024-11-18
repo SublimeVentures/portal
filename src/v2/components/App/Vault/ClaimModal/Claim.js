@@ -22,7 +22,7 @@ export default function Claim({ data }) {
                 account: account.address,
                 amount: data.currentPayout?.claims[0]?.amount,
                 offerId: data.currentPayout?.offerId,
-                payoutId: data.currentPayout?.id,
+                payoutId: data.currentPayout?.offerPayout,
                 claimId: data.currentPayout?.claims[0]?.id,
                 contract: activeInvestContract,
                 buttonText: "Claim",
