@@ -41,14 +41,13 @@ export const METHOD = {
     CLAIM: 10,
 };
 
-const TENANT_STAKE = async (params, token) => {
+const TENANT_STAKE = (params, token) => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
-            const data = await fetchStakingData();
-            const amount = getTokenInWei(1, token);
-            // const amount = getTokenInWei(params.amount, token);
-
-            console.log("resdata", data);
+            // Move to params, get in session instead of here
+            // const data = await fetchStakingData();
+            const data = { tokenId: 1, stakingScheduleId: 0 };
+            const amount = getTokenInWei(params.allowance, token);
 
             const now = moment.utc().unix();
             const timestamp = now + 10 * 60;
@@ -305,6 +304,7 @@ export const getMethod = (type, token, params) => {
                 validAddress(token?.contract) &&
                 validAddress(params?.contract);
             const amount = getTokenInWei(params.price, token);
+
             return isValid
                 ? {
                       ok: true,
@@ -411,6 +411,9 @@ export const getMethod = (type, token, params) => {
                 validAddress(params?.contract) &&
                 validAddress(token?.contract);
             const method = TENANT_STAKE(params, token);
+
+            console.log("----23r312f23-f---", method);
+
             return isValid
                 ? {
                       ok: true,

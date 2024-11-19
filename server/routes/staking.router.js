@@ -1,12 +1,10 @@
 const express = require("express");
-const router = express.Router();
 const { stake } = require("../controllers/staking");
-const { verifyID } = require("../../src/lib/authHelpers");
+
+const router = express.Router();
 
 router.get("/", async (req, res) => {
-    const { auth, user } = await verifyID(req);
-    if (!auth) return res.status(401).json({});
-
+    const { user } = req;
     return res.status(200).json(await stake(user, req));
 });
 
