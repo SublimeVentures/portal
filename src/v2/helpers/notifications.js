@@ -15,7 +15,7 @@ export function getNotificationTitle(type) {
 export function getDescriptionMessage(type, values) {
     switch (type) {
         case NotificationTypes.MYSTERY_BUY:
-            return `Purchased ${values.data.amount} mystery box${values.data.amount < 1 ? 'es' : ''}`;
+            return `Purchased ${values.data.amount} mystery box${values.data.amount < 1 ? "es" : ""}`;
         case NotificationTypes.UPGRADE_BUY:
             return `Purchased ${values.data.amount} ${PremiumItemsENUM.Guaranteed === values?.upgrade?.storeId ? "Guaranteed" : "Increased"} Allocation${values.data.amount < 1 ? "s" : ""}`;
         case NotificationTypes.OTC_CANCEL:

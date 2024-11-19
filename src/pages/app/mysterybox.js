@@ -121,14 +121,19 @@ export default function MysteryBoxPage({ session }) {
             <div className="grow flex flex-col items-start justify-center lg:py-6 3xl:py-12 select-none">
                 <div className="3xl:w-[532px] md:max-w-[45%]">
                     <div className="flex flex-col items-start lg:gap-2 3xl:gap-4 mb-10 lg:mb-4 3xl:mb-10 pt-10 sm:pt-0">
-                        <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-secondary font-heading">
-                            The Sunken Mystery Box
-                        </h1>
-                        <p className="text-sm lg:text-xs 3xl:text-base font-light leading-7 lg:leading-4 3xl:leading-7 text-white/50 3xl:text-white mb-8 lg:mb-0">
-                            Unearth treasures from an ancient aquatic empire, including rare allocations, powerful
-                            upgrades, exclusive NFTs, and valuable discounts. The depths hold secrets, waiting for you
-                            to discover.
-                        </p>
+                        <BackdropCard className="mb-5">
+                            <div>
+                                <h1 className="font-semibold 3xl:font-medium text-base 3xl:text-3xl text-secondary font-heading mb-2">
+                                    The Sunken Mystery Box
+                                </h1>
+                                <p className="text-sm lg:text-xs 3xl:text-base font-light leading-7 lg:leading-4 3xl:leading-7 text-white/50 3xl:text-white mb-8 lg:mb-0">
+                                    Unearth treasures from an ancient aquatic empire, including rare allocations,
+                                    powerful upgrades, exclusive NFTs, and valuable discounts. The depths hold secrets,
+                                    waiting for you to discover.
+                                </p>
+                            </div>
+                        </BackdropCard>
+
                         <ExternalLink href={ExternalLinks.LOOTBOX} className="text-white text-sm">
                             Learn more
                         </ExternalLink>

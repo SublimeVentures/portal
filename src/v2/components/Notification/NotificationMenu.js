@@ -44,7 +44,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
 
             <DropdownMenuContent
                 style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                className="w-screen !z-50 h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] flex flex-col rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-base pb-0 max-h-[var(--radix-dropdown-menu-content-available-height)]"
+                className="w-screen min-h-[calc(100vh-190px)] sm:min-h-0 !z-50 h-[calc(100vh_-_var(--navbarHeight)_-_var(--headerHeight)_-_var(--alertHeight))] flex flex-col rounded-b-lg overflow-auto sm:rounded-b sm:mr-12 sm:max-w-96 sm:h-auto border-base pb-0 max-h-[var(--radix-dropdown-menu-content-available-height)]"
             >
                 <div className="mb-4 px-8 flex items-baseline justify-between text-white text-base leading-none">
                     <div>
@@ -64,7 +64,7 @@ const NotificationMenu = ({ isBlockedAlert }) => {
                 </div>
 
                 {data?.rows?.length ? (
-                    <DropdownMenuGroup className="overflow-y-auto overflow-x-hidden grow">
+                    <DropdownMenuGroup className="overflow-y-auto overflow-x-hidden grow sm:max-h-[calc(50vh)]">
                         {data?.rows.map((notification) => (
                             <DropdownMenuItem key={notification.id}>
                                 <TimelineItem className="bg-transparent" showTimeline={false} item={notification} />
