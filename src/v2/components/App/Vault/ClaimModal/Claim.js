@@ -16,6 +16,7 @@ export default function Claim({ data }) {
             steps: {
                 network: true,
                 transaction: true,
+                prerequisite: true,
             },
             params: {
                 requiredNetwork: data.currentPayout?.chainId,
@@ -36,6 +37,7 @@ export default function Claim({ data }) {
             setTransactionSuccessful: () => {},
         },
     });
+
     return (
         <>
             <BlockchainSteps className="mt-auto" {...getBlockchainStepsProps()} />

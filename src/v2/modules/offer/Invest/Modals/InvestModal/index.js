@@ -78,6 +78,7 @@ const InvestModalContent = ({
                 liquidity: true,
                 allowance: true,
                 transaction: true,
+                prerequisite: true,
             },
             params: {
                 liquidity: amountNumber,

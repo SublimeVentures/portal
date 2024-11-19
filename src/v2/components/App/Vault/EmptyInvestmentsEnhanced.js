@@ -30,7 +30,7 @@ const EmptyInvestmentsEnhanced = () => {
         <Card
             variant="none"
             border="none"
-            className="relative h-dvh md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat border-alt"
+            className="relative h-[calc(100vh-355px)] md:h-full w-full flex flex-col items-center justify-center gap-2 md:gap-4 grow bg-empty-investment-top-pattern bg-cover bg-center bg-no-repeat border-alt"
         >
             <CardTitle className="text-sm md:text-base text-center font-normal">No investments found</CardTitle>
             <CardDescription className="max-w-2xl text-lg md:text-3xl font-semibold text-center">

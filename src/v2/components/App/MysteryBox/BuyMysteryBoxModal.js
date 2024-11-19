@@ -75,6 +75,7 @@ const ModalContent = ({ order, transactionSuccessful, setTransactionSuccessful, 
                 liquidity: true,
                 allowance: true,
                 transaction: true,
+                prerequisite: true,
             },
             params: {
                 requiredNetwork: selectedCurrency.chainId,

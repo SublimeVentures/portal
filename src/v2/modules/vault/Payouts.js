@@ -20,7 +20,7 @@ const Payouts = ({ className }) => {
     return (
         <div className={cn("h-full", className)}>
             <div className="w-full flex items-center justify-between mb-5 sm:mb-4 lg:mb-2">
-                <Title>Payout table</Title>
+                <Title>Payouts Table</Title>
                 <Button variant="link" className="ml-auto text-secondary capitalize text-xs md:text-sm p-0" asChild>
                     <Link href="/app/vault/payouts">
                         see all <ArrowIcon className="size-2.5 ml-2" />

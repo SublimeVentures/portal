@@ -46,7 +46,7 @@ const Investments = ({ className }) => {
                             investments.map((item) => (
                                 <li
                                     key={item.id}
-                                    className="h-full snap-start md:[&:nth-last-child(2)]:hidden sm:[&:nth-last-child(3)]:hidden xl:[&:nth-last-child(2)]:block 3xl:[&:nth-last-child(3)]:block"
+                                    className="h-full snap-start md:[&:nth-last-child(n+3)]:hidden sm:[&:nth-last-child(n+4)]:hidden xl:[&:nth-last-child(2)]:block 3xl:[&:nth-last-child(3)]:block"
                                 >
                                     <InvestmentCard refetch={refetch} details={item} isLoading={isLoading} />
                                 </li>

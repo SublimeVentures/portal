@@ -111,7 +111,7 @@ export default function OffersTable() {
                 handleToggleFilter={handleToggleFilter}
                 handleFilterRemove={handleFilterRemove}
             />
-            <div className="hidden grow overflow-hidden md:block">
+            <div className="hidden grow overflow-hidden md:block h-[calc(100vh-550px)]">
                 {isEmpty && !isLoading ? (
                     <Empty />
                 ) : (

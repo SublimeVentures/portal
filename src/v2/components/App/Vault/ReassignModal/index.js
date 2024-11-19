@@ -43,6 +43,7 @@ export default function ReassignModal({ data = {}, isReassignModalOpen: open, cl
             steps: {
                 liquidity: true,
                 network: true,
+                prerequisite: true,
                 transaction: true,
                 allowance: true,
             },

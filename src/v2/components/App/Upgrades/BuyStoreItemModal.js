@@ -72,6 +72,7 @@ const ModalContent = ({ onClose, order, model, transactionSuccessful, setTransac
                 liquidity: true,
                 allowance: true,
                 transaction: true,
+                prerequisite: true,
             },
             params: {
                 requiredNetwork: selectedCurrency.chainId,
