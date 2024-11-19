@@ -17,7 +17,7 @@ const Empty = () => {
     return (
         <Card
             variant="static"
-            className="flex flex-col items-center justify-center h-full gap-4 text-white p-4 cursor-default"
+            className="flex flex-col items-center justify-center h-full gap-4 text-white p-4 cursor-default h-[calc(100vh-680px)]"
         >
             <div className="h-full w-full flex flex-col gap-4 justify-center items-center bg-white/5 py-10">
                 <CardTitle className="text-base md:text-lg font-medium text-white">No offers found</CardTitle>
