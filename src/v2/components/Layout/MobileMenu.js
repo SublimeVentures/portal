@@ -94,10 +94,7 @@ export default function MobileMenu({ isBlockedAlert, session }) {
             </SheetTrigger>
 
             <SheetPortal>
-                <SheetContent
-                    style={{ ...layoutStyles, "--alertHeight": isBlockedAlert ? layoutStyles["--alertHeight"] : "0px" }}
-                    className="fixed z-40 right-0 top-0 mt-[var(--alertHeight)] h-[calc(100vh_-_var(--alertHeight))] w-full flex flex-col bg-gradient angle-130 to-primary-800 from-primary-950 transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
-                >
+                <SheetContent className="fixed z-40 right-0 top-0 h-full w-full flex flex-col bg-gradient angle-130 to-primary-800 from-primary-950 transition ease-in-out overflow-auto mobile-scrollbar data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left">
                     <div className="p-4 w-full flex items-center justify-between">
                         <Link href={PAGE.App}>
                             <div className={cn("flex items-center", { "w-0 overflow-hidden": networkToggle })}>

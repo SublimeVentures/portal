@@ -27,6 +27,7 @@ const { router: notificationsRoute } = require("./server/routes/notifications.ro
 const { router: networkRoute } = require("./server/routes/network.router.js");
 const { router: newsRoute } = require("./server/routes/news.router.js");
 const { router: stakingRoute } = require("./server/routes/staking.router.js");
+const { router: reassignRoute } = require("./server/routes/reassign.router");
 
 const port = process.env.PORT || 3000;
 const dev = (process.env.ENV !== "production" && process.env.ENV !== "staging") || process.env.FORCE_DEV === "true";
@@ -61,6 +62,7 @@ nextApp.prepare().then(async () => {
     server.use("/api/network", authMiddleware, networkRoute);
     server.use("/api/news", authMiddleware, newsRoute);
     server.use("/api/staking", authMiddleware, stakingRoute);
+    server.use("/api/reassign", authMiddleware, reassignRoute);
 
     // Default catch-all renders Next app
     server.all("*", (req, res) => {

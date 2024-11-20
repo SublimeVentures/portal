@@ -14,7 +14,7 @@ const {
 
 export default function FourOhFour() {
     return (
-        <div className={"max-h-screen overflow-hidden"}>
+        <div className="max-h-screen overflow-hidden">
             <NextSeo title={title} description={DESCRIPTION} canonical={url} openGraph={og} twitter={twitter} />
             <NotFoundPage />
         </div>

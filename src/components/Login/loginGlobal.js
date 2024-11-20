@@ -1,11 +1,12 @@
 import Select, { components } from "react-select";
+
 import { RoundButton } from "@/components/Button/RoundButton";
 import useLoginFlow from "@/components/Login/useLoginFlow";
 import LoginModal from "@/components/SignupFlow/LoginModal";
 
 const CustomOption = (props) => {
     return (
-        <div className={"relative"} id={"aa"}>
+        <div className="relative" id="aa">
             <components.Option {...props}>
                 <div className={`flex flex-row items-center relative ${props.data.isDisabled ? "text-white" : ""} `}>
                     <div>
@@ -21,53 +22,43 @@ const CustomOption = (props) => {
                     </div>
                     <div className={"pl-1"}>{props.data.label}</div>
                     {props.data.isNew && (
-                        <div className={"right-2 absolute rounded-xl bg-outline px-2 py-1 text-xxs !text-white"}>
-                            NEW
-                        </div>
+                        <div className="right-2 absolute rounded-xl bg-outline px-2 py-1 text-xxs !text-white">NEW</div>
                     )}
                 </div>
-                {props.data.value === 1 && (
-                    <div className="absolute top-0 bottom-0 right-0 left-0 bg-black bg-opacity-50 flex justify-end items-center">
-                        <div className="rounded-xl bg-app-success px-2 py-1 text-xxs text-black mr-5">SALE SOON</div>
-                    </div>
-                )}
             </components.Option>
         </div>
     );
 };
+
 const CustomSingleValue = (props) => {
     return (
         <components.SingleValue {...props}>
-            <div className={"flex flex-row items-center"}>
+            <div className="flex flex-row items-center">
                 <div>
                     <img src={props.data.logo} style={{ width: 25, height: "auto", marginRight: 8 }} alt="" />
                 </div>
-                <div className={"pl-1"}> {props.data.label}</div>
+                <div className="pl-1">{props.data.label}</div>
             </div>
         </components.SingleValue>
     );
 };
 
 export default function LoginGlobal({ ssrData }) {
-    const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow();
     const dataSorted = ssrData.sort((a, b) => a.displayOrder - b.displayOrder);
-    const loginOptions = dataSorted.map((el) => {
-        return {
-            value: el.id,
-            label: el.name,
-            logo: el.logo,
-            isNew: el.isNewLabel,
-            isDisabled: el.id === 1,
-        };
-    });
+    const loginOptions = dataSorted.map((el) => ({
+        value: el.id,
+        label: el.name,
+        logo: el.logo,
+        isNew: el.isNewLabel,
+    }));
 
-    const handlePartnerChange = (option) => {
-        setPartner(option.value);
-    };
+    const { isLoginLoading, handleConnect, setPartner, loginData } = useLoginFlow(loginOptions[0].value);
+
+    const handlePartnerChange = (option) => setPartner(option.value);
 
     return (
         <>
-            <div className={`min-h-screen bg-app-bg`}>
+            <div className="min-h-screen">
                 <div className="bg-[url(https://cdn.basedvc.fund/webapp/bg.jpg)] bg-cover min-h-screen"></div>
                 <div
                     className="text-white flex pt-20  flex-grow min-h-screen flex-col justify-center sm:flex-row"
@@ -81,9 +72,9 @@ export default function LoginGlobal({ ssrData }) {
                             <div className={"mt-10 relative select"}>
                                 <Select
                                     options={loginOptions}
-                                    id={"selectPartner"}
-                                    instanceId={"selectPartnerID"}
-                                    inputId={"selectPartnerID"}
+                                    id="selectPartner"
+                                    instanceId="selectPartnerID"
+                                    inputId="selectPartnerID"
                                     isSearchable={true}
                                     defaultValue={loginOptions[0]}
                                     onChange={handlePartnerChange}
@@ -96,7 +87,7 @@ export default function LoginGlobal({ ssrData }) {
                                         Menu: (props) => <components.Menu {...props} className="menu" />,
                                     }}
                                     styles={{
-                                        menu: (provided, state) => ({
+                                        menu: (provided) => ({
                                             ...provided,
                                             backgroundColor: "#101d2d",
                                             boxShadow: "0 0 40px -10px #729db0",
@@ -145,45 +136,40 @@ export default function LoginGlobal({ ssrData }) {
                             </div>
                             <div className="flex-1 items-end pt-10 fullWidthButton btn-narrow">
                                 <RoundButton
-                                    text={"CONNECT WALLET"}
+                                    text="CONNECT WALLET"
                                     isLoading={isLoginLoading}
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={
-                                        "text-sm sm w-full border border-white rounded-full text-white h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/25"
-                                    }
-                                    handler={() => handleConnect()}
+                                    size="text-sm sm w-full border border-white rounded-full text-white h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/25"
+                                    handler={handleConnect}
                                 />
                             </div>
                             <div className="my-10 h-px w-full barHor bg-gradient-to-r from-transparent via-white/50 via-50% to-transparent"></div>
                             <div className="flex-1 items-end fullWidthButton btn-narrow disabled">
                                 <RoundButton
-                                    text={"Discord"}
+                                    text="Discord"
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={
-                                        "text-sm sm w-full border border-white/25 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/10 pointer-events-none"
-                                    }
+                                    size="text-sm sm w-full border border-white/25 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/10 pointer-events-none"
                                 />
                             </div>
                             <div className="flex-1 items-end pt-2 fullWidthButton btn-narrow disabled">
                                 <RoundButton
-                                    text={"E-mail"}
+                                    text="E-mail"
                                     isLoadingWithIcon={true}
                                     isWide={true}
                                     zoom={1.1}
-                                    size={
-                                        "text-sm sm w-full border border-white/35 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/10 pointer-events-none"
-                                    }
+                                    size="text-sm sm w-full border border-white/35 rounded-full text-white/25 h-16 px-7 uppercase tracking-[0.5rem] font-light shadow shadow-white/10 pointer-events-none"
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className={"flex flex-1  "}></div>
+                    <div className="flex flex-1"></div>
                 </div>
             </div>
+
             <LoginModal loginModalProps={loginData} />
         </>
     );

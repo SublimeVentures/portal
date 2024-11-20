@@ -6,6 +6,24 @@ const logger = require("../../src/lib/logger");
 const { envCache } = require("../controllers/envionment");
 const { buildCookie, authTokenName, refreshTokenName } = require("../../src/lib/authHelpers");
 
+async function refreshPartnerEnvironment(user) {
+    try {
+        const environment = await axios.post(
+            `${process.env.AUTHER}/environment/partner_refresh`,
+            { partnerId: user.partnerId, tenantId: user.tenantId },
+            {
+                headers: {
+                    "content-type": "application/json",
+                },
+            },
+        );
+        return environment.data;
+    } catch (error) {
+        logger.error(`ERROR :: GET ENV DATA`, { error: serializeError(error) });
+        return { ok: false };
+    }
+}
+
 //GET USER ENVIRONMENT DATA
 router.get("/", async (req, res) => {
     const { user } = req;
@@ -16,6 +34,15 @@ router.get("/", async (req, res) => {
         // if (!environment?.otcFee) {
         //     return await refreshPartnerEnvironment(user, res);
         // }
+
+        if (!environment) {
+            const refetchedEnviroment = await refreshPartnerEnvironment(user);
+            if (refetchedEnviroment?.ok) {
+                envCache.set(`${user.tenantId}:${user.partnerId}`, refetchedEnviroment);
+                return res.status(200).json({ ...refetchedEnviroment });
+            }
+            throw new Error("Losted env cache!");
+        }
 
         return res.status(200).json({ ...environment });
     } catch (error) {
@@ -28,25 +55,5 @@ router.get("/", async (req, res) => {
         return res.status(401).json({ ok: false });
     }
 });
-
-async function refreshPartnerEnvironment(user, res) {
-    try {
-        const environment = await axios.post(
-            `${process.env.AUTHER}/environment/partner_refresh`,
-            { partnerId: user.partnerId, tenantId: user.tenantId },
-            {
-                headers: {
-                    "content-type": "application/json",
-                },
-            },
-        );
-        const result = environment.data;
-        if (!result?.ok) return res.status(401).json({ ...result });
-        return res.status(200).json({ ...result });
-    } catch (error) {
-        logger.error(`ERROR :: GET ENV DATA`, { error: serializeError(error) });
-        return res.status(401).json({ ok: false });
-    }
-}
 
 module.exports = { router };

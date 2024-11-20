@@ -6737,14 +6737,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.6.8":
-  version: 1.6.8
-  resolution: "axios@npm:1.6.8"
+"axios@npm:1.7.4":
+  version: 1.7.4
+  resolution: "axios@npm:1.7.4"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/0f22da6f490335479a89878bc7d5a1419484fbb437b564a80c34888fc36759ae4f56ea28d55a191695e5ed327f0bad56e7ff60fb6770c14d1be6501505d47ab9
+  checksum: 10c0/5ea1a93140ca1d49db25ef8e1bd8cfc59da6f9220159a944168860ad15a2743ea21c5df2967795acb15cbe81362f5b157fdebbea39d53117ca27658bab9f7f17
   languageName: node
   linkType: hard
 
@@ -7618,7 +7618,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:0.6.0, cookie@npm:^0.6.0":
+"cookie@npm:0.7.0":
+  version: 0.7.0
+  resolution: "cookie@npm:0.7.0"
+  checksum: 10c0/15c20c9b85431c8565b1750f9bccff0bd289b943d956e25fffce3b146e57934075965c8305a4e3a65a70622c9ed483e013daf9159d9c50f5c3f97f2e7c8117ac
+  languageName: node
+  linkType: hard
+
+"cookie@npm:^0.6.0":
   version: 0.6.0
   resolution: "cookie@npm:0.6.0"
   checksum: 10c0/f2318b31af7a31b4ddb4a678d024514df5e705f9be5909a192d7f116cfb6d45cbacf96a473fa733faa95050e7cff26e7832bb3ef94751592f1387b71c8956686
@@ -14134,7 +14141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"request-ip@npm:^3.3.0":
+"request-ip@npm:3.3.0, request-ip@npm:^3.3.0":
   version: 3.3.0
   resolution: "request-ip@npm:3.3.0"
   checksum: 10c0/35ab5fcb29408cb72629b53207f00a443a60fe881ffb63e3b08a06c07dae3eee617522741bd0b035492153d6c9babe7f8d9f79c008d493d1e6638b0bd92cb02b
@@ -16254,11 +16261,11 @@ __metadata:
     "@types/react": "npm:18.3.5"
     "@walletconnect/modal": "npm:2.6.2"
     autoprefixer: "npm:10.4.18"
-    axios: "npm:1.6.8"
+    axios: "npm:1.7.4"
     bignumber.js: "npm:9.1.2"
     class-variance-authority: "npm:0.7.0"
     clsx: "npm:2.1.0"
-    cookie: "npm:0.6.0"
+    cookie: "npm:0.7.0"
     cookie-parser: "npm:1.4.6"
     cross-env: "npm:7.0.3"
     date-fns: "npm:3.6.0"
@@ -16309,6 +16316,7 @@ __metadata:
     react-select: "npm:5.8.0"
     react-tooltip: "npm:5.26.3"
     rematrix: "npm:0.7.2"
+    request-ip: "npm:3.3.0"
     sass: "npm:1.72.0"
     sequelize: "npm:6.37.1"
     serialize-error: "npm:8.1.0"

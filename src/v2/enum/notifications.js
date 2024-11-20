@@ -24,6 +24,7 @@ const NotificationTypes = {
     INVESTMENT: 6,
     REFUND: 7,
     CLAIM: 8,
+    REASSIGN: 9,
     OTCS: [3, 4, 5],
 };
 
@@ -40,6 +41,8 @@ const NotificationTypeNames = {
     [NotificationTypes.OTC_CANCEL]: "OTC Cancelled",
     [NotificationTypes.MYSTERY_BUY]: "Mystery Box obtained",
     [NotificationTypes.UPGRADE_BUY]: "Acquired upgrade",
+    [NotificationTypes.UPGRADE_BUY]: "Acquired upgrade",
+    [NotificationTypes.REASSIGN]: "Vault Reassign",
 };
 
 module.exports = {

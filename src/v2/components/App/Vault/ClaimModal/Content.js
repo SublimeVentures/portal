@@ -14,7 +14,7 @@ const ArrowLeftIcon = forwardRef(({ className, ...props }, ref) => (
 ));
 ArrowLeftIcon.displayName = "ArrowLeftIcon";
 
-export default function Content({ data }) {
+export default function Content({ data, openReassignModal }) {
     const { title, coin, logo, offerId } = data;
     const [timeline, setTimeline] = useState(false);
     const { data: notifications } = useNotificationInfiniteQuery({ limit: 1, offerId });
@@ -48,7 +48,12 @@ export default function Content({ data }) {
             {timeline && hasNotifications ? (
                 <Timeline data={data} onCloseClick={handleCloseTimeline} />
             ) : (
-                <Details data={data} onClick={handleOpenTimeline} items={notifications} />
+                <Details
+                    data={data}
+                    onClick={handleOpenTimeline}
+                    items={notifications}
+                    openReassignModal={openReassignModal}
+                />
             )}
         </>
     );

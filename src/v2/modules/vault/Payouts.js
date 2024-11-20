@@ -13,8 +13,10 @@ export const PAYOUTS_QUERY = {
 
 const Payouts = ({ className }) => {
     const { data: { pages = [] } = {}, isLoading } = usePayoutsInfiniteQuery(PAYOUTS_QUERY);
+
     const isLargeDesktop = useMediaQuery(breakpoints.md);
     const tableVariant = isLargeDesktop ? PayoutTableVariants.vertical : PayoutTableVariants.horizontal;
+
     return (
         <div className={cn("h-full", className)}>
             <div className="w-full flex items-center justify-between mb-5 sm:mb-4 lg:mb-2">

@@ -33,7 +33,12 @@ const FiltersDropdown = ({ filters, options, handleToggleFilter }) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="tertiary">Filters</Button>
+                <Button variant="tertiary" className="relative">
+                    Filters{" "}
+                    {Object.entries(filters).length !== 0 && (
+                        <span className="size-2 rounded bg-secondary shadow shadow-secondary absolute -right-1 -top-1"></span>
+                    )}
+                </Button>
             </DropdownMenuTrigger>
 
             <DropdownMenuPortal>
@@ -100,7 +105,7 @@ export default function TableFilters({ filters = {}, isEmpty, handleToggleFilter
                             {isOffersView ? "Show" : "Hide"} History
                         </Button>
                         <MakeOfferModal />
-                        {isOffersView && !isEmpty && (
+                        {isOffersView && !(isEmpty && Object.entries(filters).length === 0) && (
                             <FiltersDropdown
                                 filters={filters}
                                 options={offersFilters}
@@ -108,7 +113,7 @@ export default function TableFilters({ filters = {}, isEmpty, handleToggleFilter
                             />
                         )}
 
-                        <div className="flex flex-wrap items-stretch gap-4 2xl:flex-row-reverse">
+                        {/* <div className="flex flex-wrap items-stretch gap-4 2xl:flex-row-reverse">
                             {Object.entries(filters).map(([key, value]) => {
                                 const filter = offersFilters.find((f) => {
                                     if (["isSell"].includes(key)) {
@@ -128,7 +133,7 @@ export default function TableFilters({ filters = {}, isEmpty, handleToggleFilter
                                     </div>
                                 );
                             })}
-                        </div>
+                        </div> */}
                     </>
                 )}
             </div>

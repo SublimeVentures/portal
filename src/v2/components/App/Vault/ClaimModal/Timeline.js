@@ -4,11 +4,9 @@ import { SheetBody } from "@/v2/components/ui/sheet";
 import { useNotificationInfiniteQuery } from "@/v2/modules/notifications/logic/useNotificationInfiniteLoader";
 import TimelineItem from "@/v2/components/Timeline/TimelineItem";
 import TimelineSkeleton from "@/v2/components/Timeline/TimelineSkeleton";
-import { Button } from "@/v2/components/ui/button";
-import ArrowIcon from "@/v2/assets/svg/arrow.svg";
 import { useIntersectionObserver } from "@/v2/hooks";
 
-export default function Timeline({ data, onCloseClick }) {
+export default function Timeline({ data }) {
     const { offerId } = data;
     const {
         data: notifications = [],

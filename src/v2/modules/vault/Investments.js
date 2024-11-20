@@ -11,7 +11,7 @@ export const INVESTMENTS_QUERY = {
 };
 
 const Investments = ({ className }) => {
-    const { data: { rows: investments } = { rows: [] }, isLoading } = useInvestmentsQuery(INVESTMENTS_QUERY);
+    const { data: { rows: investments } = { rows: [] }, isLoading, refetch } = useInvestmentsQuery(INVESTMENTS_QUERY);
     return (
         <div className={cn("flex flex-col", className)}>
             <div className="flex justify-between items-center mb-5 sm:mb-4">
@@ -48,7 +48,7 @@ const Investments = ({ className }) => {
                                     key={item.id}
                                     className="h-full snap-start md:[&:nth-last-child(2)]:hidden sm:[&:nth-last-child(3)]:hidden xl:[&:nth-last-child(2)]:block 3xl:[&:nth-last-child(3)]:block"
                                 >
-                                    <InvestmentCard details={item} isLoading={isLoading} />
+                                    <InvestmentCard refetch={refetch} details={item} isLoading={isLoading} />
                                 </li>
                             ))
                         )}

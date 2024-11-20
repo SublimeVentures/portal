@@ -20,7 +20,7 @@ const LOGIN_TYPE = {
     WEB3: 1,
 };
 
-export default function useLoginFlow() {
+export default function useLoginFlow(initialPartner = 0) {
     const router = useRouter();
     const { setShow, setMessage } = useContext(ErrorModalContext);
 
@@ -28,7 +28,7 @@ export default function useLoginFlow() {
     const [isSigningMessage, setIsSigningMessage] = useState(false);
     const [loginModalOpen, setLoginModalOpen] = useState(false);
     const [isLoginLoading, setIsLoginLoading] = useState(false);
-    const [partner, setPartner] = useState(0);
+    const [partner, setPartner] = useState(initialPartner);
 
     const {
         address: accountAddress,
@@ -52,18 +52,19 @@ export default function useLoginFlow() {
 
             const callbackUrl = router.query.callbackUrl;
 
-            const isAuth = await logIn(
+            const auth = await logIn(
                 message,
                 signature,
                 Number(process.env.NEXT_PUBLIC_TENANT),
                 partner,
                 LOGIN_TYPE.WEB3,
             );
-            if (isAuth?.ok) {
+            if (auth?.ok) {
                 router.replace(callbackUrl && isUrlTrusted(callbackUrl) ? callbackUrl : routes.App);
             } else {
+                console.log("autherror", auth);
                 setShow(true);
-                setMessage(isAuth?.error);
+                setMessage(auth?.error);
                 setIsSigningMessage(false);
                 setIsLoginLoading(false);
             }
