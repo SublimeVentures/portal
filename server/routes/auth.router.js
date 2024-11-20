@@ -15,10 +15,8 @@ router.post("/login", ipMiddleware, async (req, res) => {
     const { message, signature, tenant, partner } = req.body || {};
 
     if (
-        message === null ||
-        message === undefined ||
-        signature === null ||
-        signature === undefined ||
+        !message ||
+        !signature ||
         tenant === null ||
         tenant === undefined ||
         partner === null ||
