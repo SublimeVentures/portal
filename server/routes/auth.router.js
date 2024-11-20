@@ -13,7 +13,17 @@ const { ipMiddleware } = require("../middleware/ipMiddleware");
 //LOGIN USER
 router.post("/login", ipMiddleware, async (req, res) => {
     const { message, signature, tenant, partner } = req.body || {};
-    if (!message || !signature || !tenant || !partner) return res.status(400).json({});
+
+    if (
+        !message ||
+        !signature ||
+        tenant === null ||
+        tenant === undefined ||
+        partner === null ||
+        partner === undefined
+    ) {
+        return res.status(400).json({});
+    }
 
     try {
         const auth = await axios.post(
