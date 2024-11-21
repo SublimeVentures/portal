@@ -51,7 +51,7 @@ export default function AddWalletModal({ isOpen, setIsOpen, disabled, wallets })
                     </p>
                 </div>
 
-                <AddWalletForm networkList={filteredNetworks} wallets={wallets} />
+                <AddWalletForm networkList={filteredNetworks} wallets={wallets} setIsOpen={setIsOpen} />
 
                 <DialogFooter className="md:hidden">
                     <Button variant="secondary" className="md:hidden" onClick={() => setIsOpen(false)}>

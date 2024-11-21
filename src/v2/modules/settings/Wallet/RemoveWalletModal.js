@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { removeUserWallet } from "@/fetchers/settings.fetcher";
@@ -44,6 +44,7 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
             if (result?.ok) {
                 queryClient.invalidateQueries(settingsKeys.wallets);
                 setStatus(STATUS.SUCCESS);
+                setIsOpen(false);
             } else {
                 setStatus(STATUS.FAILURE);
                 setError(result?.error);
@@ -53,6 +54,10 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
             setError(err.shortMessage);
         }
     };
+
+    useEffect(() => {
+        setError(STATUS.IDLE);
+    }, [isOpen]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -90,14 +95,16 @@ export default function RemoveWalletModal({ isOpen, setIsOpen, wallet }) {
                         {address}
                     </div>
                 ) : null}
-
+                <div className="-mb-2 mt-2 text-center text-app-error h-[10px]">
+                    {STATUS.IDLE !== error ? error : ""}
+                </div>
                 <DialogFooter>
                     {isSuccess ? (
                         <Button variant="outline" onClick={() => setIsOpen(false)}>
                             Close
                         </Button>
                     ) : (
-                        <Button variant="destructive" onClick={handleRemoveWallet}>
+                        <Button disabled={status === STATUS.LOADING} variant="destructive" onClick={handleRemoveWallet}>
                             Remove wallet
                         </Button>
                     )}

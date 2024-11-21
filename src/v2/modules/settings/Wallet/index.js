@@ -8,7 +8,6 @@ import { Card, CardTitle, CardDescription } from "@/v2/components/ui/card";
 import { Badge } from "@/v2/components/ui/badge";
 import { CheckboxField } from "@/v2/components/ui/checkbox";
 import { Skeleton } from "@/v2/components/ui/skeleton";
-import useMediaQuery, { breakpoints } from "@/v2/hooks/useMediaQuery";
 import { shortenAddress } from "@/v2/lib/helpers";
 import { fetchUserWallets } from "@/fetchers/settings.fetcher";
 import { settingsKeys } from "@/v2/constants";
@@ -18,7 +17,6 @@ export const maxWallets = 3;
 
 export default function WalletSettings({ session }) {
     const { updateEnvironmentProps } = useEnvironmentContext();
-    const isDesktop = useMediaQuery(breakpoints.lg);
 
     const [isAddWalletModalOpen, setIsAddWalletModalOpen] = useState(false);
     const [isRemoveWalletModalOpen, setIsRemoveWalletModalOpen] = useState(false);
@@ -64,7 +62,7 @@ export default function WalletSettings({ session }) {
                     <ul className="w-full">
                         {sortedWallets?.length
                             ? sortedWallets.map(({ wallet, isStaking, isDelegate, isAirdrop, chainId }) => {
-                                  const address = isDesktop ? wallet : shortenAddress(wallet, 10);
+                                  const address = shortenAddress(wallet, 10);
 
                                   return (
                                       <li

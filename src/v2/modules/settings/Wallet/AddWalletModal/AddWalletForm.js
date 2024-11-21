@@ -19,7 +19,7 @@ const FormStatusEnum = Object.freeze({
     ERROR: "ERROR",
 });
 
-export default function AddWalletForm({ wallets, networkList }) {
+export default function AddWalletForm({ wallets, networkList, setIsOpen }) {
     const queryClient = useQueryClient();
 
     const [status, setStatus] = useState(FormStatusEnum.IDLE);
@@ -53,7 +53,7 @@ export default function AddWalletForm({ wallets, networkList }) {
     );
 
     const handleSubmit = async (values) => {
-        setStatus("loading");
+        setStatus(FormStatusEnum.LOADING);
 
         try {
             const isNewWallet = wallets.some((el) => el.wallet !== values.address);
@@ -64,7 +64,8 @@ export default function AddWalletForm({ wallets, networkList }) {
 
             await addUserWallet(values.address, values.network);
             setStatus(FormStatusEnum.SUCCESS);
-            queryClient.invalidateQueries(settingsKeys.wallets);
+            await queryClient.invalidateQueries(settingsKeys.wallets);
+            setIsOpen(false);
         } catch (error) {
             setErrorMessage(error.message ?? "An unknown error occurred");
             setStatus(FormStatusEnum.ERROR);
@@ -127,7 +128,12 @@ export default function AddWalletForm({ wallets, networkList }) {
                         </div>
                     </div>
 
-                    <Button type="submit" variant="gradient" className="mt-4 w-full">
+                    <Button
+                        disabled={status === FormStatusEnum.LOADING}
+                        type="submit"
+                        variant="gradient"
+                        className="mt-4 w-full"
+                    >
                         Add Wallet
                     </Button>
                 </form>
