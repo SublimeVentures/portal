@@ -6,12 +6,11 @@ import { Button } from "@/v2/components/ui/button";
 
 export default function StakeActions({ session, staking }) {
     const { staked, unstake } = staking;
-    const { userId } = session;
 
     return (
         <div className="flex flex-col gap-2 2xl:flex-row">
-            {!staked && <StakingModal userId={userId} staking={staking} />}
-            {unstake && <UnstakingModal userId={userId} staking={staking} />}
+            {!staked && <StakingModal session={session} staking={staking} />}
+            {unstake && <UnstakingModal session={session} staking={staking} />}
 
             {/* Add if reverse staking */}
             {/* <Button variant="outline">Withdraw</Button> */}

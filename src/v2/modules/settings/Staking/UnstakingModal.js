@@ -19,7 +19,7 @@ import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep
 import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import { settingsKeys } from "@/v2/constants";
 
-export default function UnstakingModal({ userId, staking = {} }) {
+export default function UnstakingModal({ session, staking = {} }) {
     const { currencyStaking, activeCurrencyStaking, account, activeDiamond } = useEnvironmentContext();
     const stakingCurrency = activeCurrencyStaking?.name ? activeCurrencyStaking : currencyStaking[0];
     const { stakeSize } = staking;
@@ -28,7 +28,7 @@ export default function UnstakingModal({ userId, staking = {} }) {
     const [transactionSuccessful, setTransactionSuccessful] = useState(false);
 
     const { data: wallets } = useQuery({
-        queryKey: settingsKeys.userWallets(userId),
+        queryKey: settingsKeys.userWallets(session.userId),
         queryFn: () => fetchUserWallets(),
         refetchOnWindowFocus: true,
     });

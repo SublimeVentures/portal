@@ -94,10 +94,10 @@ export default function Staking({ session }) {
                                         <dl key={index} className="flex gap-2">
                                             <DefinitionItem
                                                 className="font-bold text-sm"
+                                                ddClassName="text-white text-sm font-light"
                                                 term={
                                                     typeof field.term === "function" ? field.term(session) : field.term
                                                 }
-                                                ddClassName="text-white text-sm font-light"
                                             >
                                                 {typeof field.value === "function" ? field.value(session) : field.value}
                                             </DefinitionItem>

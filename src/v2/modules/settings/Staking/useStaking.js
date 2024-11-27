@@ -11,7 +11,7 @@ export default function useStaking({ tenantId, session, account }) {
     const router = useRouter();
     const { diamonds } = useEnvironmentContext();
 
-    const [staked, setStaked] = useState(() => session.isStaked ?? false);
+    const [isStaked, setIsStaked] = useState(() => session.isStaked ?? false);
     const [stakeReq, setStakeReq] = useState(0);
     const [stakeDate, setStakeDate] = useState(0);
 
@@ -30,7 +30,7 @@ export default function useStaking({ tenantId, session, account }) {
     const unstakeDate = session?.stakeDate ? session.stakeDate : stakeDate;
     const unstakingData = timeUntilNextUnstakeWindow(
         unstakeDate,
-        staked,
+        isStaked,
         stakeData?.stakeLength[0],
         stakeData?.stakeWithdraw[0],
     );
@@ -42,7 +42,7 @@ export default function useStaking({ tenantId, session, account }) {
             if (!result?.ok) {
                 const updatedSession = result?.data?.updates ?? {};
 
-                if (updatedSession.isStaked) setStaked(true);
+                if (updatedSession.isStaked) setIsStaked(true);
                 if (updatedSession.stakeSize) setStakeReq(updatedSession.stakeSize);
                 if (updatedSession.stakeDate) setStakeDate(updatedSession.stakeDate);
                 if (updatedSession.isStaked) router.reload();
@@ -79,11 +79,9 @@ export default function useStaking({ tenantId, session, account }) {
     };
 
     return {
-        staked,
-        stakeReq: session.stakeReq,
+        isStaked,
+        isDoubleSided: session.isDoubleSided,
         stakeSize: session.stakeSize,
-        isElite: session.isElite,
-        // isS1: session.isS1,
         stakeOnCurrentWallet,
         unstakingData,
         refreshSession,
