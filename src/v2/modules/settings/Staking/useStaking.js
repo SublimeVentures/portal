@@ -35,6 +35,8 @@ export default function useStaking({ tenantId, session, account }) {
         stakeData?.stakeWithdraw[0],
     );
 
+    console.log("---TEST---", diamond, chainId, stakeData);
+
     const refreshSession = useCallback(
         async (force = false) => {
             const result = await updateStaking(account.address);

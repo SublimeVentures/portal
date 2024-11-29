@@ -45,13 +45,22 @@ export const METHOD = {
     REASSIGN: 11,
 };
 
-const TENANT_STAKE = (params, token) => {
+const TENANT_STAKE = async (params, token) => {
+    // const isDoubleSided = false;
+    // const data = await fetchStakingData(isDoubleSided);
+
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
             // Move to params, get in session instead of here
-            // const data = await fetchStakingData();
-            const data = { tokenId: 1, stakingScheduleId: 0 };
+            // params.isDobuleSided
+            // const isDoubleSided = false;
+            // const data = await fetchStakingData(isDoubleSided);
+            // console.log('isDoubleSided-1', isDoubleSided)
+            // await fetchStakingData(isDoubleSided);
+            // const data = { tokenId: 1, stakingScheduleId: 0 };
             const amount = getTokenInWei(params.allowance, token);
+
+            console.log("data", data);
 
             const now = moment.utc().unix();
             const timestamp = now + 10 * 60;
@@ -127,7 +136,7 @@ const TENANT_UNSTAKE = (params) => {
 };
 
 const TENANT_UPGRADE = (params, token) => {
-    console.log("dupeks ", Number(process.env.NEXT_PUBLIC_TENANT), TENANT.BAYC);
+    console.log("dupeks xx", Number(process.env.NEXT_PUBLIC_TENANT), TENANT.BAYC);
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.NeoTokyo: {
             return {

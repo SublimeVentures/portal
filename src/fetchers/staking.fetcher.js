@@ -3,9 +3,9 @@ import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 import { handleError } from "@/v2/lib/error";
 import { API } from "@/routes";
 
-export const fetchStakingData = async () => {
+export const fetchStakingData = async (isDoubleSided) => {
     try {
-        const { data } = await axiosPrivate.get(API.stakingData);
+        const { data } = await axiosPrivate.post(API.stakingData, { isDoubleSided: true });
         return data;
     } catch (error) {
         return handleError(ErrorType.FETCHER, error, { methodName: "fetchHash", enableSentry: true });

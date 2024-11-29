@@ -9,6 +9,8 @@ import useBlockchainStep from "@/v2/components/BlockchainSteps/useBlockchainStep
 import { METHOD } from "@/v2/components/BlockchainSteps/utils";
 import { settingsKeys } from "@/v2/constants";
 
+import useGetStakeRequirements from "@/lib/hooks/useGetStakeRequirements";
+
 const stakingCurrency = {
     chainId: 84532,
     contract: "0xBcf4b6EaD5e44A1FbcF58f8F55906d88290bC1c6",

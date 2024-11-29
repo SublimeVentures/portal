@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StakingSingleSided from "./StakingSingleSided";
 import StakingDoubleSided from "./StakingDoubleSided";
 import useSingeSidedStaking from "./useSingleSidedStaking";
 import useDoubleSidedStaking from "./useDoubleSidedStaking";
 import { useTenantSpecificData } from "@/v2/helpers/tenant";
+import { fetchStakingData } from "@/fetchers/staking.fetcher";
 
 import {
     Dialog,
@@ -39,6 +40,10 @@ export default function StakingModal({ session, staking = {} }) {
     const singleSidedStaking = useSingeSidedStaking({ isOpen, userId: session.userId });
     const doubleSidedStaking = useDoubleSidedStaking({ isOpen, userId: session.userId });
     const isSuccess = singleSidedStaking.transactionSuccessful || doubleSidedStaking.transactionSuccessful;
+
+    useEffect(() => {
+        fetchStakingData();
+    }, []);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

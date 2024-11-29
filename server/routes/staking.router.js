@@ -3,7 +3,7 @@ const { stake } = require("../controllers/staking");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
     const { user } = req;
     return res.status(200).json(await stake(user, req));
 });

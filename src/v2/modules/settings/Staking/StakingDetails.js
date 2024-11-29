@@ -1,22 +1,8 @@
 import DefinitionItem from "@/v2/components/Definition/DefinitionItem";
 import { cn } from "@/lib/cn";
 
-// Other
-// <DefinitionItem term="Staking type (?)">Reverse staking</DefinitionItem>
-// <DefinitionItem term="Allocation base">{session.multi * 100}%</DefinitionItem>
-// <DefinitionItem term="Allocation max">${session.stakeSize}</DefinitionItem>
-
-// Citicap only:
-// <DefinitionItem term="Allocation bonus">
-//   <span className={cn(allocationBonus > 0 ? "text-success-500" : "text-white")}>
-//     ${allocationBonus}
-//   </span>
-// </DefinitionItem>
-
-export default function StakingDetails({ session, staking }) {
+export default function StakingDetails({ staking }) {
     const { isStaked, isDoubleSided, unstake, stakeSize, nextDate, nextDateH } = staking;
-
-    console.log("isStaked", isStaked);
 
     return (
         <div className="p-4">
