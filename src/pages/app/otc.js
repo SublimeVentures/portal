@@ -19,6 +19,10 @@ import { processServerSideData } from "@/lib/serverSideHelpers";
 
 export default function AppOtc({ session }) {
     const router = useRouter();
+    useEffect(() => {
+        router.push(routes.App);
+    }, [router]);
+
     const { market } = router.query;
     const { userId: USER_ID } = session;
 
