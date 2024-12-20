@@ -122,11 +122,11 @@ export default function Sidebar({ session }) {
                 link: PAGE.Launchpad,
                 icon: TENANT_LOGO_LAUNCHPAD[Number(process.env.NEXT_PUBLIC_TENANT)],
             },
-            // {
-            //     name: "OTC",
-            //     link: PAGE.OTC,
-            //     icon: <IconExchange className="w-8 mr-3 text-2xl" />,
-            // },
+            {
+                name: "OTC",
+                link: PAGE.OTC,
+                icon: <IconExchange className="w-8 mr-3 text-2xl" />,
+            },
             {
                 name: "Upgrades",
                 link: PAGE.Upgrades,
