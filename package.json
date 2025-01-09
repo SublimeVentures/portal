@@ -66,6 +66,7 @@
     "rematrix": "0.7.2",
     "sequelize": "6.37.1",
     "serialize-error": "8.1.0",
+    "sqlite3": "5.1.7",
     "swiper": "11.0.7",
     "tailwind-merge": "2.2.2",
     "typescript": "5.4.2",

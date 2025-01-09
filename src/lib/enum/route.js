@@ -1,7 +1,7 @@
 const PAGE = {
     Landing: "/",
     Join: "/join",
-    Login: "/login",
+    Login: "https://spring.net/discover/basedvc",
     Investments: "/investments",
     Tokenomics: "/tokenomics",
     ToS: "/terms",

@@ -13,11 +13,7 @@ const { externalLinks } = getTenantConfig();
 const TENANT_MENU = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
-            return [
-                { name: "APPLY", link: externalLinks.APPLY, isExternal: true },
-                { name: "DOCS", link: externalLinks.WIKI, isExternal: true },
-                { name: "INVESTMENTS", link: "investments" },
-            ];
+            return [];
         }
         case TENANT.NeoTokyo: {
             return [
