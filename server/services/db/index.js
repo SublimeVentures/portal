@@ -1,16 +1,12 @@
-const db = require("./definitions/db.init");
-const logger = require("../../../src/lib/logger");
-const { fetchEnv } = require("../env");
+const { Sequelize } = require("sequelize");
 
-async function connectDB() {
-    try {
-        await db.authenticate();
-        logger.info("|---- DB: connected");
-        await fetchEnv();
-    } catch (error) {
-        logger.error("connectDB", error);
-        process.exit(1);
-    }
-}
+const sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: ":memory:",
+    logging: false,
+    define: {
+        freezeTableName: true,
+    },
+});
 
-module.exports = { connectDB };
+module.exports = sequelize;
