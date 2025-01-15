@@ -12,11 +12,7 @@ const isBaseVCTenant = tenantIndex === TENANT.basedVC;
 const TENANT_MENU = () => {
     switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
         case TENANT.basedVC: {
-            return [
-                { name: "APPLY", link: ExternalLinks.APPLY, isExternal: true },
-                { name: "DOCS", link: ExternalLinks.WIKI, isExternal: true },
-                { name: "INVESTMENTS", link: "investments" },
-            ];
+            return [];
         }
         case TENANT.NeoTokyo: {
             return [
