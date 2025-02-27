@@ -1,299 +1,366 @@
-import moment from 'moment'
-import {useEffect, useState} from "react";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import IconWait from "@/assets/svg/Wait.svg";
-import IconPantheon from "@/assets/svg/Pantheon.svg";
-import IconWhale from "@/assets/svg/Whale.svg";
-import IconLock from "@/assets/svg/Lock.svg";
-import IconCalculator from "@/assets/svg/Calculator.svg";
-import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
-import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-import {parseMaxAllocation} from "@/lib/phases/parsePhase";
-import {expireHash, fetchHash} from "@/fetchers/invest.fetcher";
-import {useSession} from "next-auth/react";
+import moment from "moment";
+import { useEffect, useState, Fragment } from "react";
+import { Transition } from "@headlessui/react";
+import debounce from "lodash.debounce";
+import { IoCloseCircleOutline as IconCancel } from "react-icons/io5";
+import { ButtonIconSize } from "@/components/Button/RoundButton";
+import "@leenguyen/react-flip-clock-countdown/dist/index.css";
+import { PhaseId } from "@/lib/phases";
+import { fetchHash } from "@/fetchers/invest.fetcher";
 import ErrorModal from "@/components/App/Offer/ErrorModal";
+import UpgradesModal from "@/components/App/Offer/UpgradesModal";
 import InvestModal from "@/components/App/Offer/InvestModal";
-import {useCookies} from 'react-cookie';
 import RestoreHashModal from "@/components/App/Offer/RestoreHashModal";
 import CalculateModal from "@/components/App/Offer/CalculateModal";
-import {useNetwork} from "wagmi";
-import {Transition} from "@headlessui/react";
-import {Fragment} from "react";
-import IconCancel from "@/assets/svg/Cancel.svg";
 import Dropdown from "@/components/App/Dropdown";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import { checkIfNumberKey, tenantIndex } from "@/lib/utils";
+import { IconButton } from "@/components/Button/IconButton";
+import { Tooltiper, TooltipType } from "@/components/Tooltip";
+import { buttonInvestState, tooltipInvestState, userInvestmentState } from "@/lib/investment";
+import Linker from "@/components/link";
+import { ExternalLinks } from "@/routes";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import DynamicIcon from "@/components/Icon";
+import { ICONS } from "@/lib/icons";
+import { useInvestContext } from "@/components/App/Offer/InvestContext";
+import { TENANT } from "@/lib/tenantHelper";
 
-export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
+const isBaseVCTenant = tenantIndex === TENANT.basedVC;
+
+export default function OfferDetailsInvestPhases({ paramsInvestPhase }) {
     const {
         offer,
-        phases,
-        activePhase,
-        isLastPhase,
-        feedPhases: refreshInvestmentPhase,
-        currencies,
-        refetchAllocation,
+        phaseCurrent,
+        session,
+        refetchOfferAllocation,
         refetchUserAllocation,
-        allocation
+        allocation,
+        userInvested,
+        userAllocationState,
+        upgradesUse,
+        premiumData,
+        refetchPremiumData,
     } = paramsInvestPhase;
-    const {data: session} = useSession()
-    const {chain} = useNetwork()
+    const { network, getCurrencySettlement } = useEnvironmentContext();
+    const { clearBooking, bookingDetails, setBooking, getSavedBooking } = useInvestContext();
 
-    const [isErrorModal, setErrorModal] = useState(false)
-    const [errorMsg, setErrorMsg] = useState("")
+    const [isInvestModal, setInvestModal] = useState(false);
+    const [isCalculateModal, setCalculateModal] = useState(false);
+    const [isUpgradeModal, setUpgradeModal] = useState(false);
 
-    const [isRestoreHash, setRestoreHashModal] = useState(false)
-    const [allocationOld, setOldAllocation] = useState(0)
+    const [isRestoreModal, setRestoreModal] = useState({
+        open: false,
+        amount: 0,
+    });
+    const [isErrorModal, setErrorModal] = useState({ open: false, code: null });
 
-    const [isInvestModal, setInvestModal] = useState(false)
-    const [isCalculateModal, setCalculateModal] = useState(false)
+    const [investmentAmount, setInvestmentAmount] = useState(0);
+    const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("");
+    const [showInputInfo, setShowInputInfo] = useState(false);
+    const [showClean, setShowClean] = useState(false);
+    const [investButtonDisabled, setInvestButtonDisabled] = useState(false);
+    const [isError, setIsError] = useState({});
 
-    const [expires, setExpires] = useState(0)
-    const [isAllocationOk, setIsAllocationOk] = useState(true)
-    const [isButtonLoading, setButtonLoading] = useState(false)
-    const [isFilled, setFilled] = useState(false)
+    const [allocationData, setAllocationData] = useState({
+        allocationUser_max: 0,
+        allocationUser_min: 0,
+        allocationUser_left: 0,
+        allocationUser_invested: 0,
+        allocationOffer_left: 0,
+        allocationUser_guaranteed: 0,
+        offer_isProcessing: false,
+        offer_isSettled: false,
+    });
 
-    const [investmentCurrency, setInvestmentCurrency] = useState(0)
-    const [maxAllocation, setMaxAllocation] = useState(0)
-    const [hash, setHash] = useState(0)
+    const [isButtonLoading, setButtonLoading] = useState(false); //done
+    const [investButtonText, setInvestButtonText] = useState("");
+    const isStakeLock = session?.stakingEnabled ? !session.isStaked : false;
+    const investmentLocked = investButtonDisabled || isStakeLock;
 
-    const [investmentAmount, setInvestmentAmount] = useState(0)
-    const [investmentAmountFormatted, setInvestmentAmountFormatted] = useState("")
-    const [showInputInfo, setShowInputInfo] = useState(false)
-    const [showClean, setShowClean] = useState(false)
-    let [isError, setIsError] = useState({})
+    const displayGuaranteed =
+        !!upgradesUse.guaranteedUsed &&
+        phaseCurrent.phase != PhaseId.Unlimited &&
+        upgradesUse?.guaranteedUsed?.alloUsed != upgradesUse?.guaranteedUsed?.alloMax &&
+        !offer.isLaunchpad;
 
-
-    const [cookies, setCookie, removeCookie] = useCookies();
-
-    const {ACL, amt} = session.user
-    const {id, alloTotal, isPaused} = offer
-
-    const currentPhase = phases[activePhase]
-    const nextPhase = isLastPhase ? currentPhase : phases[activePhase + 1]
-
-    const isProcessing = alloTotal <= allocation?.alloFilled + allocation?.alloRes
-    const investButtonDisabled = currentPhase?.isDisabled || isAllocationOk || isFilled || isPaused || isProcessing
-
-    const selectedChain = chain?.id ? chain.id : Object.keys(currencies)[0]
-    const currencyList = currencies[selectedChain] ? Object.keys(currencies[selectedChain]).map(el => {
-        let currency = currencies[selectedChain][el]
-        currency.address = el
-        return currency
-    }) : [{}]
-
-    const currencyNames = currencyList.map(el => el.symbol)
-    const selectedCurrency = currencyList[investmentCurrency]
-
-    const cookieReservation = `hash_${id}`
-
-    const checkIfNumber = (event) => {
-        if (event.key.length === 1 && /\D/.test(event.key)) {
-            return;
-        }
-    }
+    const [selectedCurrency, setSelectedCurrency] = useState({});
+    const dropdownCurrencyOptions = getCurrencySettlement();
 
     const setValue = (data) => {
-        if (!Number.isInteger(data)) {
-            data = data.replace(/[^0-9]/g, '')
-        }
-        setInvestmentAmount(data)
-        let formatted = Number(data).toLocaleString()
-        if(formatted==0) {
-            formatted = ""
-        }
-        setInvestmentAmountFormatted(formatted)
-    }
+        try {
+            if (!Number.isInteger(data)) {
+                data = data.replace(/[^0-9]/g, "");
+            }
+            setInvestmentAmount(data);
 
+            let formatted = Number(data).toLocaleString();
+            if (formatted == 0) {
+                formatted = "";
+            }
+
+            setInvestmentAmountFormatted(formatted);
+        } catch (error) {
+            // Error handling: do nothing or log the error if needed
+            console.error("Error in setValue:", error);
+        }
+    };
     const isInputActive = () => {
-            return investmentAmount > 0
-    }
-
+        return investmentAmount > 0;
+    };
     const onInputChange = (event) => {
-        setValue(event.target.value)
-    }
-
+        setValue(event.target.value);
+    };
     const getInvestmentButtonIcon = () => {
-        switch (currentPhase.icon) {
-            case "wait": {
-                return <IconWait className={ButtonIconSize.invest}/>
+        switch (phaseCurrent.phase) {
+            case PhaseId.Pending: {
+                return <DynamicIcon name={ICONS.WAIT} style={ButtonIconSize.invest} fill={"white"} />;
             }
-            case "vote": {
-                return <IconPantheon className={ButtonIconSize.invest}/>
+            case PhaseId.Open:
+            case PhaseId.FCFS:
+            case PhaseId.Unlimited: {
+                return <DynamicIcon name={ICONS.WHALE} style={ButtonIconSize.invest} />;
             }
-            case "invest": {
-                return <IconWhale className={ButtonIconSize.invest}/>
-            }
-            case "closed": {
-                return <IconLock className={ButtonIconSize.invest}/>
+            case PhaseId.Closed: {
+                return <DynamicIcon name={ICONS.LOCK} style={ButtonIconSize.invest} />;
             }
         }
-    }
+    };
 
-    const bookingExpire = () => {
-        removeCookie(cookieReservation)
-        setHash(0)
-        setExpires(0)
-        setInvestModal(false)
-        setRestoreHashModal(false)
-        refetchAllocation()
-    }
-
-    const afterInvestmentCleanup = () => {
-        removeCookie(cookieReservation)
-        refetchUserAllocation()
-    }
-
-    const openInvestmentModal = (hash, expires) => {
-        setHash(hash)
-        setExpires(Number(expires))
-        setInvestModal(true)
-    }
+    const openInvestmentModal = () => {
+        if (isStakeLock) {
+            return;
+        }
+        setInvestModal(true);
+    };
 
     const startInvestmentProcess = async () => {
-        setButtonLoading(true)
-        const response = await fetchHash(id, investmentAmount, selectedCurrency.address, chain.id)
-        if (!response.ok) {
-            setErrorMsg(response.code)
-            setErrorModal(true)
-            refetchAllocation()
-        } else {
-            setCookie(cookieReservation, `${response.hash}_${investmentAmount}_${response.expires}`, {expires: new Date(response.expires * 1000)})
-            openInvestmentModal(response.hash, response.expires)
+        if (
+            (investmentAmount > 0 &&
+                allocationData.allocationUser_max > 0 &&
+                allocationData.allocationUser_min > 0 &&
+                allocationData.allocationUser_left > 0 &&
+                investmentAmount <= allocationData.allocationUser_left) ||
+            userInvested?.invested.total - userInvested?.invested.invested > 0
+        ) {
+            setButtonLoading(true);
+            const response = await fetchHash(offer.id, investmentAmount, selectedCurrency?.contract, network.chainId);
+            if (!response.ok) {
+                await clearBooking();
+                setErrorModal({ open: true, code: response.code });
+                refetchOfferAllocation();
+            } else if (response.hash?.length > 5) {
+                const confirmedAmount = Number(response.amount);
+                setValue(confirmedAmount);
+                setBooking(response);
+                openInvestmentModal();
+            }
+            setButtonLoading(false);
         }
-        setButtonLoading(false)
-    }
+    };
 
-    const processExistingSession = async (cookie) => {
-        setButtonLoading(true)
-        const cookieData = cookie.split('_')
-
-        if (Number(cookieData[2]) < moment().unix()) {
-            removeCookie(cookieReservation)
-            await startInvestmentProcess()
-        } else if (Number(cookieData[1]) === Number(investmentAmount)) {
-            openInvestmentModal(cookieData[0], cookieData[2])
-        } else {
-            setOldAllocation(Number(cookieData[1]))
-            setExpires(Number(cookieData[2]))
-            setRestoreHashModal(true)
+    const processExistingSession = async () => {
+        setButtonLoading(true);
+        try {
+            const savedTimestamp = bookingDetails.expires;
+            const savedAmount = bookingDetails.amount;
+            if (savedTimestamp < moment.utc().unix()) {
+                clearBooking();
+                await startInvestmentProcess();
+            } else if (savedAmount === Number(investmentAmount)) {
+                openInvestmentModal();
+            } else {
+                console.log("restore ", savedAmount);
+                setRestoreModal({
+                    open: true,
+                    amount: savedAmount,
+                });
+            }
+        } catch (e) {
+            await clearBooking();
+            await startInvestmentProcess();
         }
-
-        setButtonLoading(false)
-    }
-
-    const bookingRestore = async () => {
-        setRestoreHashModal(false)
-        const cookieData = cookies[cookieReservation].split('_')
-        setValue(Number(cookieData[1]))
-        openInvestmentModal(cookieData[0], cookieData[2])
-    }
-
-    const bookingCreateNew = async () => {
-        setButtonLoading(true)
-        removeCookie(cookieReservation)
-        setRestoreHashModal(false)
-        const cookieData = cookies[cookieReservation].split('_')
-        expireHash(id, cookieData[0])
-        await startInvestmentProcess()
-    }
+        setButtonLoading(false);
+    };
 
     const makeInvestment = async () => {
-        if (!!cookies && Object.keys.length > 0 && cookies[cookieReservation]?.length > 0) {
-            await processExistingSession(cookies[cookieReservation])
+        const test = getSavedBooking();
+        if (getSavedBooking().ok) {
+            await processExistingSession();
         } else {
-            await startInvestmentProcess()
+            await startInvestmentProcess();
         }
-    }
+    };
+
+    const debouncedMakeInvestment = debounce(makeInvestment, 5000, {
+        leading: true,
+        trailing: false,
+    });
+
+    const bookingRestore = async () => {
+        const amount = getSavedBooking().amount;
+        setRestoreModal({ open: false, amount: amount });
+        setValue(amount);
+        openInvestmentModal();
+    };
+
+    const bookingCreateNew = async () => {
+        setButtonLoading(true);
+        setRestoreModal({ open: false, amount: 0 });
+        clearBooking();
+        await startInvestmentProcess();
+    };
+
+    const bookingExpire = async () => {
+        setRestoreModal({ open: false, amount: 0 });
+        setInvestModal(false);
+        await afterInvestmentCleanup();
+    };
+
+    const afterInvestmentCleanup = async () => {
+        setButtonLoading(true);
+        clearBooking();
+        await Promise.all([refetchUserAllocation(), refetchOfferAllocation()]);
+
+        setButtonLoading(false);
+    };
 
     useEffect(() => {
-        if (alloTotal <= allocation?.alloFilled + allocation?.alloRes) {
-            setFilled(true)
+        setSelectedCurrency(dropdownCurrencyOptions[0]);
+    }, [network?.chainId]);
+
+    useEffect(() => {
+        if (allocationData?.allocationUser_min) {
+            setValue(allocationData.allocationUser_min);
         } else {
-            setFilled(false)
+            setValue(offer.alloMin);
         }
-        const allocationLeft = alloTotal - allocation?.alloFilled - allocation?.alloRes
-        const calcMaxAllo = parseMaxAllocation(ACL, amt, offer, activePhase, allocationLeft)
-        setMaxAllocation(calcMaxAllo)
-    }, [allocation?.alloFilled, allocation?.alloRes])
-
-    useEffect(() => {
-        setInvestmentCurrency(0)
-    }, [chain])
-
-    useEffect(() => {
-          setValue(offer.alloMin)
-    }, []);
-
-    useEffect(() => {
-        if (investmentAmount < offer.alloMin) {
-            setIsAllocationOk(true)
-            return setIsError({state: true, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-        } else if (investmentAmount > maxAllocation) {
-            setIsAllocationOk(true)
-            return setIsError({state: true, msg: `Maximum investment: $${maxAllocation.toLocaleString()}`})
-        } else {
-            if(investmentAmount % 100 > 0) {
-                setIsAllocationOk(true)
-                return setIsError({state: true, msg: `Allocation has to be divisible by $100`})
-            }
-            setIsAllocationOk(false)
-            return setIsError({state: false, msg: `Minimum investment: $${offer.alloMin.toLocaleString()}`})
-        }
-
-    }, [investmentAmount]);
+    }, [allocationData?.allocationUser_min]);
 
     useEffect(() => {
         if (showInputInfo) {
-            setShowClean(showInputInfo)
+            setShowClean(showInputInfo);
         } else {
             setTimeout(() => {
-                setShowClean(showInputInfo)
+                setShowClean(showInputInfo);
             }, 500);
         }
     }, [showInputInfo]);
 
+    useEffect(() => {
+        if (!offer) return;
+        const allocations = userInvestmentState(
+            session,
+            offer,
+            phaseCurrent,
+            upgradesUse,
+            userInvested?.invested?.total,
+            allocation ? allocation : {},
+        );
+        setAllocationData({ ...allocations });
+        const { allocation: allocationIsValid, message } = tooltipInvestState(offer, allocations, investmentAmount);
+        setIsError({ state: !allocationIsValid, msg: message });
+        const { isDisabled, text } = buttonInvestState(
+            allocation ? allocation : {},
+            phaseCurrent,
+            investmentAmount,
+            allocationIsValid,
+            allocations,
+            isStakeLock,
+            userInvested?.invested,
+        );
 
+        setInvestButtonDisabled(isDisabled);
+        setInvestButtonText(text);
+    }, [
+        allocation?.alloFilled,
+        allocation?.alloRes,
+        upgradesUse?.increasedUsed?.amount,
+        upgradesUse?.guaranteedUsed?.amount,
+        upgradesUse?.guaranteedUsed?.alloUsed,
+        userInvested?.invested?.total,
+        investmentAmount,
+        phaseCurrent?.phase,
+    ]);
 
-    const restoreModalProps = {expires, allocationOld, investmentAmount, bookingExpire, bookingRestore, bookingCreateNew}
-    const errorModalProps = {code: errorMsg}
-    const calculateModalProps = {investmentAmount, maxAllocation, offer}
+    const restoreModalProps = {
+        allocationOld: isRestoreModal.amount,
+        investmentAmount,
+        bookingExpire,
+        bookingRestore,
+        bookingCreateNew,
+    };
+    const errorModalProps = {
+        code: isErrorModal.code,
+    };
+    const upgradesModalProps = {
+        phaseCurrent,
+        offer: offer,
+        refetchUserAllocation,
+        userAllocationState,
+        upgradesUse,
+        premiumData,
+        refetchPremiumData,
+        allocationUserLeft: allocationData.allocationUser_left,
+    };
+    const calculateModalProps = {
+        investmentAmount,
+        allocationData,
+        offer,
+    };
     const investModalProps = {
-        expires,
         investmentAmount,
         offer,
-        bookingExpire,
-        hash,
         selectedCurrency,
-        afterInvestmentCleanup
-    }
-
-    console.log("restoreModalProps",restoreModalProps)
+        bookingExpire,
+        afterInvestmentCleanup,
+    };
 
     return (
-        <div className="flex flex-1 flex-col items-center">
-            <div
-                className="flex flex-col flex-wrap justify-center items-center pt-5 sinvest:flex-row sinvest:pr-5 sinvest:self-end sinvest:items-start">
-                <div className="text-lg mt-3 mb-5 sinvest:mb-0 sinvest:mr-3 sinvest:mt-[0.70rem]">Phase <span
-                    className="text-gold uppercase  font-[500]">{currentPhase.step}</span> ends in
+        <div className="flex flex-1 flex-col items-center justify-center relative">
+            <div className={"absolute right-5 top-5"}>
+                <div className={"flex flex-row items-center text-gold"}>
+                    {displayGuaranteed && (
+                        <div className={"mr-3 font-bold glow select-none"}>
+                            <Tooltiper
+                                wrapper={`GUARANTEED`}
+                                text={`$${allocationData.allocationUser_guaranteed} left`}
+                                type={TooltipType.Primary}
+                            />
+                        </div>
+                    )}
+                    <div className="flex gap-2 flex-row justify-center align-center items-center">
+                        <IconButton
+                            zoom={1.1}
+                            size="w-12 p-3"
+                            noBorder={!isBaseVCTenant}
+                            icon={<DynamicIcon name={ICONS.CALCULATOR} style="background-text-dedicated" />}
+                            handler={() => setCalculateModal(true)}
+                        />
+                        {!offer?.isLaunchpad && (
+                            <IconButton
+                                zoom={1.1}
+                                size="w-12 p-3"
+                                noBorder={!isBaseVCTenant}
+                                icon={<DynamicIcon name={ICONS.DIAMOND} style="background-text-dedicated" />}
+                                handler={() => setUpgradeModal(true)}
+                            />
+                        )}
+                    </div>
                 </div>
-                <FlipClockCountdown
-                    className="flip-clock"
-                    onComplete={() => refreshInvestmentPhase()}
-                    to={moment.unix(nextPhase.start)}
-                    labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
-                />
             </div>
-
-            <div className="mt-15 xl:mt-auto">
-                <div className="currency-input-group relative">
-                    <div className={`relative centr ${investmentAmount > 0 ? 'active' : ''}`}>
+            <div className="lg:mt-auto">
+                <div className="currency-input-group relative mt-20 ">
+                    <div className={`relative centr ${investmentAmount > 0 ? "active" : ""}`}>
                         <label className="absolute text-accent block">Investment size</label>
-                        <input tabIndex="0"
-                               value={investmentAmountFormatted}
-                               onChange={onInputChange}
-                               onKeyDown={checkIfNumber}
-                               onFocus={() => setShowInputInfo(true)}
-                               onBlur={() => setShowInputInfo(false)}
-                               className={`h-17 text-xl px-4 ${isInputActive ? 'highlight' : ''} ${investmentAmount >= offer.alloMin && investmentAmount <= maxAllocation ? 'valid' : ''} ${investmentAmount < offer.alloMin || investmentAmount > maxAllocation ? 'invalid' : ''}`}
+                        <input
+                            tabIndex="0"
+                            value={investmentAmountFormatted}
+                            onChange={onInputChange}
+                            onKeyDown={checkIfNumberKey}
+                            onFocus={() => setShowInputInfo(true)}
+                            onBlur={() => setShowInputInfo(false)}
+                            className={`h-17 text-xl px-4 ${isInputActive ? "highlight" : ""} ${investmentAmount >= allocationData.allocationUser_min && investmentAmount <= allocationData.allocationUser_max ? "valid" : ""} ${investmentAmount < allocationData.allocationUser_min || investmentAmount > allocationData.allocationUser_max ? "invalid" : ""}`}
                         />
 
                         <Transition appear show={showClean} as={Fragment}>
@@ -306,13 +373,23 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                             >
-                                <div className="absolute top-5 right-5 cursor-pointer " onClick={() => {
-                                    setValue(offer.alloMin)
-                                }}><IconCancel className="w-6 opacity-70"/></div>
+                                <div
+                                    className="absolute top-5 right-5 cursor-pointer "
+                                    onClick={() => {
+                                        setValue(allocationData.allocationUser_min);
+                                    }}
+                                >
+                                    <IconCancel className="w-6 h-6 opacity-70" />
+                                </div>
                             </Transition.Child>
                         </Transition>
                     </div>
-                    <Dropdown options={currencyNames} classes={'customSize'} propSelected={setInvestmentCurrency} position={investmentCurrency}/>
+                    <Dropdown
+                        options={dropdownCurrencyOptions}
+                        selector={"symbol"}
+                        classes={"customSize"}
+                        propSelected={setSelectedCurrency}
+                    />
                     <Transition appear show={showInputInfo} as={Fragment}>
                         <Transition.Child
                             as={Fragment}
@@ -324,46 +401,94 @@ export default function OfferDetailsInvestPhases({paramsInvestPhase}) {
                             leaveTo="opacity-0"
                         >
                             <div
-                                className={`select-none absolute px-4 py-2 status text-sm ${isError?.state ? 'error' : ''}`}>{isError?.msg}</div>
+                                className={`select-none absolute px-4 py-2 status text-sm ${isError?.state ? "error" : ""}`}
+                            >
+                                {isError?.msg}
+                            </div>
                         </Transition.Child>
                     </Transition>
-
                 </div>
             </div>
-
-            <div className="flex flex-row flex-wrap justify-center gap-2 pt-10 pb-10">
-                <div className={investButtonDisabled ? 'disabled' : ''}>
-                    <RoundButton text={isFilled ? 'Processing...' : currentPhase.copy} isPrimary={true}
-                                 showParticles={true}
-                                 isLoading={isButtonLoading} is3d={true} isWide={true} zoom={1.1}
-                                 handler={makeInvestment}
-                                 size={'text-sm sm'} icon={getInvestmentButtonIcon()}/>
+            <div className={"text-app-success text-center min-h-[68px] py-5 px-2"}>
+                {allocationData.offer_isProcessing && allocationData.allocationUser_guaranteed === 0 && (
+                    <div>
+                        All spots booked! Awaiting blockchain confirmations. <br />
+                        <Linker url={ExternalLinks.BOOKING_SYSTEM} text={"Check back soon."} />
+                    </div>
+                )}
+            </div>
+            <div className="flex flex-row flex-wrap justify-center gap-2 pb-10 px-2 items-center">
+                <div className={investmentLocked ? "disabled" : ""}>
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={investButtonText}
+                        isPrimary={true}
+                        state={"success"}
+                        showParticles={true}
+                        isLoading={isButtonLoading}
+                        is3d={true}
+                        isWide={true}
+                        zoom={1.1}
+                        handler={debouncedMakeInvestment}
+                        size={"text-sm sm"}
+                        icon={getInvestmentButtonIcon()}
+                    />
                 </div>
-                <div className="hidden sinvest:flex">
-                    <RoundButton text={'Calculate'} isWide={true} zoom={1.1} size={'text-sm sm'}
-                                 handler={() => setCalculateModal(true)}
-                                 icon={<IconCalculator className={ButtonIconSize.hero}/>}/>
-
-                </div>
-                <div className="flex sinvest:hidden">
-                    <RoundButton text={''} isWide={true} zoom={1.1} size={'text-sm icon'}
-                                 handler={() => setCalculateModal(true)}
-                                 icon={<IconCalculator className={ButtonIconSize.small}/>}/>
-                </div>
+                {investmentLocked && userInvested?.invested.total - userInvested?.invested.invested > 0 && (
+                    <UniButton
+                        type={ButtonTypes.BASE}
+                        text={"Restore"}
+                        isPrimary={true}
+                        state={"success"}
+                        showParticles={true}
+                        isLoading={isButtonLoading}
+                        is3d={true}
+                        isWide={true}
+                        zoom={1.1}
+                        handler={debouncedMakeInvestment}
+                        size={"text-sm sm"}
+                        icon={getInvestmentButtonIcon()}
+                    />
+                )}
             </div>
 
-            <RestoreHashModal restoreModalProps={restoreModalProps} model={isRestoreHash} setter={() => {
-                setRestoreHashModal(false)
-            }}/>
-            <CalculateModal calculateModalProps={calculateModalProps} model={isCalculateModal} setter={() => {
-                setCalculateModal(false)
-            }}/>
-            <ErrorModal errorModalProps={errorModalProps} model={isErrorModal} setter={() => {
-                setErrorModal(false)
-            }}/>
-            <InvestModal investModalProps={investModalProps} model={isInvestModal} setter={() => {
-                setInvestModal(false)
-            }}/>
+            <CalculateModal
+                calculateModalProps={calculateModalProps}
+                model={isCalculateModal}
+                setter={() => {
+                    setCalculateModal(false);
+                }}
+            />
+            <UpgradesModal
+                upgradesModalProps={upgradesModalProps}
+                model={isUpgradeModal}
+                setter={() => {
+                    setUpgradeModal(false);
+                }}
+            />
+            <RestoreHashModal
+                restoreModalProps={restoreModalProps}
+                model={isRestoreModal.open}
+                setter={() => {
+                    setRestoreModal({ open: false, amount: 0 });
+                }}
+            />
+            <ErrorModal
+                errorModalProps={errorModalProps}
+                model={isErrorModal.open}
+                setter={() => {
+                    setErrorModal({ open: false, code: null });
+                }}
+            />
+            {network?.isSupported && selectedCurrency && (
+                <InvestModal
+                    investModalProps={investModalProps}
+                    model={isInvestModal}
+                    setter={() => {
+                        setInvestModal(false);
+                    }}
+                />
+            )}
         </div>
-    )
+    );
 }

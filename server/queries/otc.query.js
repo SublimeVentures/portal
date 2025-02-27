@@ -1,125 +1,192 @@
-const {models} = require('../services/db/index');
-const db = require("../services/db");
-const {Op} = require("sequelize");
+const { models } = require("../services/db/definitions/db.init");
+const db = require("../services/db/definitions/db.init");
+const { Op } = require("sequelize");
+const { OTC_ERRORS } = require("../../src/lib/enum/otc");
 
-async function getActiveOffers(offerId) {
-    return models.otcDeals.findAll({
-        attributes: ['dealId', 'offerId', 'buyer', 'seller', 'amount', 'price', 'hashCreate', 'createdAt'],
-        where: {offerId, state: 0},
-        raw: true
-    })
+///////////
+///queries
+//////////
+async function getActiveOffers(otcId) {
+    return models.otcDeal.findAll({
+        attributes: [
+            "id",
+            "offerId",
+            "otcId",
+            "dealId",
+            "price",
+            "amount",
+            "currency",
+            "isSell",
+            "maker",
+            [db.literal('"onchain"."chainId"'), "chainId"], // Alias 'chainId' from onchain
+        ],
+        where: {
+            otcId,
+            isFilled: false,
+            isCancelled: false,
+            onchainIdMaker: { [Op.ne]: null },
+        },
+        include: {
+            model: models.onchain,
+            attributes: [],
+            required: true, // Ensures INNER JOIN
+            on: {
+                id: { [Op.eq]: db.col("otcDeal.onchainIdMaker") },
+            },
+        },
+        raw: true,
+    });
 }
 
 async function getHistoryOffers(offerId) {
-    return models.otcDeals.findAll({
-        attributes: ['dealId', 'offerId', 'buyer', 'seller', 'amount', 'price', 'updatedAt'],
-        where: {offerId, state: 1},
-        raw: true
-    })
+    return models.otcDeal.findAll({
+        attributes: [
+            "id",
+            "offerId",
+            "price",
+            "amount",
+            "isSell",
+            [db.literal('"onchain"."chainId"'), "chainId"],
+            "updatedAt",
+        ],
+        where: { offerId, isFilled: true },
+        include: {
+            model: models.onchain,
+            attributes: [],
+            required: true, // Ensures INNER JOIN
+        },
+        raw: true,
+    });
 }
 
-async function saveOtcHash(networkChainId, isTaker, hash, address, nftId, acl, isBuyer, offerId, amount, price) {
-    const owner = acl === 0 ? nftId : address
-    const data = {
+async function getUserPendingOffers(wallet) {
+    return models.otcLock.findAll({
+        attributes: ["expiryDate"],
+        where: { isExpired: false, wallet },
+        include: {
+            model: models.otcDeals,
+            attributes: ["id", "otcId", "dealId", "price", "amount"],
+        },
+        raw: true,
+    });
+}
+
+///////////
+///events
+//////////
+async function saveOtcHash(address, chainId, offerId, hash, price, amount, isSell) {
+    const newOtcDeal = await models.otcDeal.create({
+        offerId,
+        price,
         amount,
-        price
-    }
+        hash,
+        isSell,
+        chainId,
+        maker: address,
+    });
 
-    try {
-        const result = await db.transaction(async (t) => {
+    return {
+        ok: !!newOtcDeal,
+    };
+}
+async function checkDealBeforeSigning(offerId, chainId, otcId, dealId, transaction) {
+    const deal = await models.otcDeal.findOne({
+        where: {
+            offerId,
+            otcId,
+            dealId,
+            isCancelled: false,
+            isFilled: false,
+            "$onchain.chainId$": chainId,
+        },
+        include: [
+            {
+                model: models.offer,
+                attributes: ["id", "otc"],
+            },
+            {
+                model: models.onchain,
+                attributes: ["chainId"],
+                on: {
+                    id: { [Op.eq]: db.col("otcDeal.onchainIdMaker") },
+                },
+            },
+        ],
+        raw: true,
+        transaction: transaction,
+    });
 
-                if (!isBuyer) { //if i'm seller, check if i have enough free allocation
-                    const booked = await models.vaults.increment({"locked": amount}, {
-                        where: {
-                            [Op.and]: [
-                                db.literal(`"owner" = '${owner}' AND "offerId" = ${offerId} AND ("locked" + ${amount} <= "invested")`)
-                            ]
-                        }
-                    }, {transaction: t});
-
-                    if (!booked[0][1]) throw new Error("NOT_ENOUGH_ALLOCATION");
-                }
-
-                await models.otcPending.create({
-                    hash,
-                    address,
-                    nftId,
-                    acl,
-                    isBuyer,
-                    offerId,
-                    networkChainId,
-                    isTaker,
-                    data,
-                }, {transaction: t})
-
-                return true;
-            }
-        );
-
-        return {
-            ok: true,
-            hash: hash
-        }
-
-    } catch (error) {
+    if (!deal) {
+        await transaction.rollback();
         return {
             ok: false,
-            code: error.message,
-        }
+            error: OTC_ERRORS.BadDeal,
+        };
     }
+
+    if (deal.otcId !== deal["offer.otc"] || deal["onchain.chainId"] !== chainId) {
+        await transaction.rollback();
+        return {
+            ok: false,
+            error: OTC_ERRORS.BadMarket,
+        };
+    }
+
+    return {
+        ok: true,
+        data: deal,
+    };
 }
 
-async function removeOtcHash(offerId, networkChainId, hash, address, nftId, acl) {
-    const owner = acl === 0 ? nftId : address
-    const filter = acl === 0 ? {nftId, acl} : {address, acl}
-
-    try {
-        await db.transaction(async (t) => {
-                const isProcessing = await models.otcPending.findOne({
-                    where: {
-                        offerId,
-                        isTaker: true,
-                        isExpired: false,
-                        hashRelated: hash
-                    },
-                    raw: true
-                }, {transaction: t})
-
-                if (isProcessing) throw new Error("TRANSACTION_PROCESSING");
-
-                const status = await models.otcPending.update({isExpired: true}, {
-                    where: {
-                        ...filter,
-                        hash,
-                        offerId
-                    },
-                    raw: true,
-                    returning: true,
-                }, {transaction: t})
-                if (status[0] === 0) throw new Error("NO_PENDING_UPDATE");
-
-                const amount = status[1][0].data.amount
-                const booked = await models.vaults.decrement({"locked": amount}, {
-                    where: {
-                        [Op.and]: [
-                            db.literal(`"owner" = '${owner}' AND "offerId" = ${offerId} AND ("locked" - ${amount} >= 0)`)
-                        ]
-                    }
-                }, {transaction: t});
-
-                if (!booked[0][1]) throw new Error("UNLOCK_IMPOSSIBLE");
-
-                return true;
-            }
-        );
-        return true
-
-
-    } catch (error) {
-        //todo: logger
-        console.log("error", error)
-        return false
+async function processSellOtcDeal(userId, deal, transaction) {
+    const locked = await models.vault.increment(
+        { locked: deal.amount },
+        {
+            where: {
+                [Op.and]: [
+                    db.literal(
+                        `"userId" = ${userId} AND "offerId" = ${deal["offer.id"]} AND ("locked" + ${deal.amount} <= "invested")`,
+                    ),
+                ],
+            },
+            transaction,
+        },
+    );
+    if (!locked[0][1]) {
+        await transaction.rollback();
+        return {
+            ok: false,
+            error: OTC_ERRORS.NotEnoughAllocation,
+        };
     }
+    return {
+        ok: true,
+        data: locked,
+    };
 }
 
-module.exports = {getActiveOffers, getHistoryOffers, saveOtcHash, removeOtcHash}
+async function saveOtcLock(userId, wallet, deal, expireDate, transaction) {
+    await models.otcLock.create(
+        {
+            userId,
+            wallet,
+            offerId: deal["offer.id"],
+            otcDealId: deal.id,
+            expiryDate: expireDate,
+            isExpired: false,
+            amount: deal.amount,
+            isSell: deal.isSell,
+        },
+        { transaction },
+    );
+}
+
+module.exports = {
+    getActiveOffers,
+    getHistoryOffers,
+    saveOtcHash,
+    checkDealBeforeSigning,
+    getUserPendingOffers,
+    processSellOtcDeal,
+    saveOtcLock,
+};

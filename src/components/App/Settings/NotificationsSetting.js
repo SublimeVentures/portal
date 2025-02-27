@@ -1,9 +1,7 @@
-
 export default function NotificationsSetting({}) {
     // let {image, name, starts, ends} = offer
 
     return (
-
         <>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1">
                 <div className="text-xl uppercase font-medium text-outline mb-2">CHANNELS</div>
@@ -25,7 +23,6 @@ export default function NotificationsSetting({}) {
                     <div className="flex-1 ">DISCORD</div>
                     <div className="tabular-nums">+117%</div>
                 </div>
-
             </div>
             <div className="flex flex-col rounded-xl bg-navy-accent p-5 gap-1 justify-start flex-1 ">
                 <div className="text-xl uppercase font-medium text-outline mb-2">NOTIFICATIONS</div>
@@ -42,9 +39,7 @@ export default function NotificationsSetting({}) {
                     <div className="flex-1 ">CLAIMABLE</div>
                     <div className="">$35 000</div>
                 </div>
-
             </div>
         </>
-
-    )
+    );
 }

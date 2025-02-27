@@ -1,26 +1,33 @@
-const { models } = require('../services/db/index');
+const TENANT = {
+    basedVC: 1,
+};
 
 async function getEnvironment() {
-    // const isDev = process.env.NODE_ENV !== 'production'; //todo: fix
-    const isDev = true;
-    const envVars = await models.environment.findAll({raw: true});
-    const multichain = await models.multichain.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
-    const currencies = await models.currencies.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
-    let env = Object.assign({}, ...(envVars.map(item => ({ [item.name]: item.value }) )));
-    let parsedCurrencies = {}
-    let parsedMultichain = {}
-    currencies.forEach(el => {
-        if(!parsedCurrencies[el.networkChainId]) parsedCurrencies[el.networkChainId] = {}
-        parsedCurrencies[el.networkChainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
-    })
-    multichain.forEach(el => {
-        parsedMultichain[el.networkChainId] = el.address
-    })
-    env.currencies = parsedCurrencies
-    env.multichain = parsedMultichain
-    env.isDev = isDev;
+    const environment = {
+        tenant: {},
+        currencies: {},
+        stats: {
+            partners: 0,
+            funded: 0,
+            launchpad: 0,
+            vc: 0,
+        },
+    };
 
-    return env
+    environment.currencies = {
+        1: {
+            "0x0": {
+                name: "Mock Token",
+                symbol: "MTK",
+                precision: 18,
+                isSettlement: true,
+                isStore: true,
+                isStaking: false,
+            },
+        },
+    };
+
+    return environment;
 }
 
-module.exports = { getEnvironment }
+module.exports = { getEnvironment };

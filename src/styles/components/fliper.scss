@@ -1,42 +1,41 @@
 .flip-clock {
-  --fcc-flip-duration: 0.5s!important; /* transition duration when flip card */
-  --fcc-digit-block-width: 25px!important;; /* width of digit card */
-  --fcc-digit-block-height: 40px!important;; /* height of digit card, highly recommend in even number */
-  --fcc-digit-font-size: 20px!important;; /* font size of digit */
-  //--fcc-digit-block-width: 30px!important;; /* width of digit card */
-  //--fcc-digit-block-height: 60px!important;; /* height of digit card, highly recommend in even number */
-  //--fcc-digit-font-size: 30px!important;; /* font size of digit */
-  --fcc-digit-color: #000000!important;; /* color of digit */
-  //--fcc-label-font-size: 14px!important;; /* font size of label */
-  --fcc-label-font-size: 11px!important;; /* font size of label */
-  --fcc-label-color: theme('colors.black')!important; /* color of label */
-  --fcc-background: #ffffff!important;; /* background of digit card */
-  --fcc-divider-color: #000000!important;; /* color of divider */
-  --fcc-divider-height: 0px!important;; /* height of divider */
-  --fcc-separator-size: 4px!important;; /* size of colon */
-  --fcc-separator-color: #fff!important;; /* color of colon */
+    --fcc-flip-duration: 0.5s !important; /* transition duration when flip card */
+    --fcc-digit-block-width: 25px !important; /* width of digit card */
+    --fcc-digit-block-height: 40px !important; /* height of digit card, highly recommend in even number */
+    --fcc-digit-font-size: 20px !important; /* font size of digit */
+    //--fcc-digit-block-width: 30px!important;; /* width of digit card */
+    //--fcc-digit-block-height: 60px!important;; /* height of digit card, highly recommend in even number */
+    //--fcc-digit-font-size: 30px!important;; /* font size of digit */
+    --fcc-digit-color: #000000 !important; /* color of digit */
+    //--fcc-label-font-size: 14px!important;; /* font size of label */
+    --fcc-label-font-size: 11px !important; /* font size of label */
+    --fcc-label-color: theme("colors.white") !important; /* color of label */
+    --fcc-background: #ffffff !important; /* background of digit card */
+    --fcc-divider-color: #000000 !important; /* color of divider */
+    --fcc-divider-height: 0px !important; /* height of divider */
+    --fcc-separator-size: 4px !important; /* size of colon */
+    --fcc-separator-color: #fff !important; /* color of colon */
 }
 
-@media screen and (max-width: 520px) {
-  /* adjust some properties to make the countdown responsive */
-  .flip-clock {
-    --fcc-label-color: theme('colors.white')!important;
-    --fcc-digit-block-width: 20px!important;; /* width of digit card */
-    --fcc-digit-block-height: 50px!important;; /* height of digit card, highly recommend in even number */
-    --fcc-digit-font-size: 20px!important;; /* font size of digit */
-    --fcc-label-font-size: 10px!important;; /* font size of label */
-  }
-}
+//@media screen and (max-width: 520px) {
+//  /* adjust some properties to make the countdown responsive */
+//  .flip-clock {
+//    --fcc-label-color: theme('colors.white')!important;
+//    --fcc-digit-block-width: 20px!important;; /* width of digit card */
+//    --fcc-digit-block-height: 50px!important;; /* height of digit card, highly recommend in even number */
+//    --fcc-digit-font-size: 20px!important;; /* font size of digit */
+//    --fcc-label-font-size: 12px!important;; /* font size of label */
+//  }
+//}
 
-
-@media (min-width: 521px) and (max-width: 700px) {
-  /* adjust some properties to make the countdown responsive */
-  .flip-clock {
-    --fcc-label-color: theme('colors.white')!important;
-    --fcc-digit-block-width: 30px!important;; /* width of digit card */
-    --fcc-digit-block-height: 60px!important;; /* height of digit card, highly recommend in even number */
-    --fcc-digit-font-size: 30px!important;; /* font size of digit */
-    --fcc-label-font-size: 14px!important;; /* font size of label */
-
-  }
-}
+//@media (min-width: 521px) and (max-width: 700px) {
+//  /* adjust some properties to make the countdown responsive */
+//  .flip-clock {
+//    --fcc-label-color: theme('colors.white')!important;
+//    --fcc-digit-block-width: 30px!important;; /* width of digit card */
+//    --fcc-digit-block-height: 60px!important;; /* height of digit card, highly recommend in even number */
+//    --fcc-digit-font-size: 30px!important;; /* font size of digit */
+//    --fcc-label-font-size: 14px!important;; /* font size of label */
+//
+//  }
+//}

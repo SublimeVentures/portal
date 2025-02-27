@@ -1,9 +1,5 @@
-
 .aboutBg {
-  //background-image:    url('static/images/bg2.jpg');
-  background-image:    url('/img/aboutBG.jpg');
-  background-size:     cover;                      /* <------ */
-  background-repeat:   no-repeat;
-  background-position: center center;              /* optional, center the image */
-
+    background-size: cover; /* <------ */
+    background-repeat: no-repeat;
+    background-position: center center; /* optional, center the image */
 }

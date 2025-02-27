@@ -1,20 +1,13 @@
-const express = require('express')
+const express = require("express");
 const router = express.Router();
-const {getAccessToken} = require("../services/auth");
-const {reserveSpot, reserveExpire, replaceCurrency} = require("../controllers/invest");
+const { reserveSpot, reserveExpire, reserveExpireAll } = require("../controllers/invest");
+const { verifyID } = require("../../src/lib/authHelpers");
 
-router.get('/', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+router.get("/", async (req, res) => {
+    const { auth, user } = await verifyID(req);
+    if (!auth) return res.status(401).json({});
 
-    return res.status(200).json(await reserveSpot(session, req))
+    return res.status(200).json(await reserveSpot(user, req));
 });
 
-router.get('/hash', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
-
-    return res.status(200).json(await reserveExpire(session, req))
-});
-
-module.exports = {router}
+module.exports = { router };

@@ -1,211 +1,352 @@
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import IconCart from "@/assets/svg/Cart.svg";
-import IconCancel from "@/assets/svg/Cancel.svg";
-import IconHistory from "@/assets/svg/History.svg";
-import {useState} from "react";
-import dynamic from "next/dynamic";
-import {useEffect} from "react";
-import Empty from "@/components/App/Empty";
-import {IconButton} from "@/components/Button/IconButton";
-import {useQuery} from "@tanstack/react-query";
-import {fetchHistory, fetchOffers} from "@/fetchers/otc.fetcher";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
+import { IoCartOutline as IconCart, IoCloseCircleOutline as IconCancel } from "react-icons/io5";
+import { GoHistory as IconHistory } from "react-icons/go";
+import { ButtonIconSize } from "@/components/Button/RoundButton";
+import Empty from "@/components/App/Empty";
+import { IconButton } from "@/components/Button/IconButton";
+import { fetchHistory } from "@/fetchers/otc.fetcher";
 import Loader from "@/components/App/Loader";
 import MakeOfferModal from "@/components/App/Otc/MakeOfferModal";
-const SellModal = dynamic(() => import('@/components/App/Otc/MakeOfferModal'), {ssr: false,})
-const CancelModal = dynamic(() => import('@/components/App/Otc/CancelModal'), {ssr: false,})
-const BuyModal = dynamic(() => import('@/components/App/Otc/BuyModal'), {ssr: false,})
+import CancelOfferModal from "@/components/App/Otc/CancelOfferModal";
+import { NETWORKS } from "@/lib/utils";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import DynamicIcon from "@/components/Icon";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { Tooltiper, TooltipType } from "@/components/Tooltip";
+import TakeOfferModal from "@/components/App/Otc/TakeOfferModal";
 
+export default function OtcOffers({ propOffers }) {
+    const { offers, vault, currentMarket, session, refetchOffers, offersIsSuccess, vaultIsSuccess } = propOffers;
+    const { wallets } = session;
 
-export default function OtcOffers({propOffers}) {
-    let { offers, vault, currentMarket, session, refetchOffers} = propOffers
-    const [isSellModal, setIsSellModal] = useState(false);
-    const [isBuyModal, setIsBuyModal] = useState(false);
-    const [buyOffer, setBuyOffer] = useState(false);
-    const [isCancelModal, setIsCancelModal] = useState(false);
-    const [cancelOffer, setCancelOffer] = useState(false);
+    const { getCurrencySymbolByAddress, account } = useEnvironmentContext();
+
+    const [isMakeOfferModal, setIsMakeOfferModal] = useState(false);
+    const [isCancelOfferModal, setIsCancelOfferModal] = useState(false);
+    const [isTakeOfferModal, setIsTakeOfferModal] = useState(false);
+
+    const [offerDetails, setOfferDetails] = useState(false);
 
     const [showHistory, setShowHistory] = useState(false);
 
-    const haveAllocation = vault.find(el=> el.offerId === currentMarket.id)
+    const haveAllocation = vault && currentMarket ? vault.find((el) => el.id === currentMarket.offerId) : null;
 
-    const user = session.user.ACL === 0 ? session.user.id : session.user.address
-
-
-    const {isSuccess: historyIsSuccess, data: history, refetch: refetchHistory} = useQuery({
-            queryKey: ["otcHistory", currentMarket?.id],
-            queryFn: () => fetchHistory(currentMarket?.id),
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 5 * 60 * 1000,
-            staleTime: 3 * 60 * 1000,
-            enabled: showHistory
-        }
-    );
-
+    const { isSuccess: historyIsSuccess, data: history } = useQuery({
+        queryKey: ["otcHistory", currentMarket?.offerId],
+        queryFn: () => fetchHistory(currentMarket?.offerId),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 3 * 60 * 1000,
+        enabled: showHistory,
+    });
 
     const openCancel = (offer) => {
-        setCancelOffer(offer)
-        setIsCancelModal(true)
-    }
+        setOfferDetails(offer);
+        setIsCancelOfferModal(true);
+    };
 
-    const openBuy = (offer) => {
-        setBuyOffer(offer)
-        setIsBuyModal(true)
+    const openTake = (offer) => {
+        setOfferDetails(offer);
+        setIsTakeOfferModal(true);
+    };
+
+    function isUserOffer(userWallets, checkWallet) {
+        return {
+            ok: userWallets.includes(checkWallet),
+            isActive: account?.address === checkWallet,
+        };
     }
 
     useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
-
-    useEffect(() => {
-        if(!showHistory) {
-            refetchOffers()
+        if (!showHistory) {
+            refetchOffers();
+        } else {
         }
     }, [showHistory]);
 
+    const makeOfferProps = {
+        ...propOffers,
+        allocation: haveAllocation,
+    };
+
+    const interactOfferProps = {
+        ...propOffers,
+        offerDetails,
+    };
 
     const renderOfferTable = () => {
-        return  <table>
-            <thead className="bg-navy ">
-            <tr>
-
-                <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
-                    <label>ALLOCATION</label></th>
-                <th className="font-bold text-sm text-left  sm:py-4 sm:px-2">
-                    <label>PRICE</label>
-                </th>
-                <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                    <label>MULTIPLIER</label></th>
-                <th className="font-bold text-sm text-leftsm:py-4 sm:pl-2 sm:pr-5">
-                    <label>ACTION</label></th>
-            </tr>
-            </thead>
-            <tbody>
-            {offers.length === 0 && <tr>
-                <td colSpan="4" className={"text-center pt-3"}>
-                    <Empty text={"No offers on this market"} maxSize={280}/>
-                </td>
-            </tr>}
-            {offers.length !== 0 && offers.map(el => {
-                return <tr key={el.dealId}
-                           className="hoverTable transition-all duration-300 hover:text-black">
-
-                    <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
-                        data-label="ALLOCATION">${el.amount}</td>
-                    <td className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
-                        data-label="PRICE">${el.price}</td>
-                    <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2"
-                        data-label="MULTIPLIER"><span
-                        className="text-app-success">{Number(el.price / el.amount).toFixed(2)}x</span>
-                    </td>
-                    <td className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
-                        data-label="ACTION">
-                        <div className={'flex flex-row gap-1 justify-end sm:justify-center'}>
-                            {user == el.seller &&
-                                <div className={'duration-300 hover:text-app-error cursor-pointer'} onClick={() => openCancel(el)}>
-                                    <IconCancel className={'w-6'}/>
-                                </div>
-                            }
-                            {user != el.seller &&
-                                <div className={'duration-300 hover:text-app-error cursor-pointer'} onClick={()=> openBuy(el)}>
-                                    <IconCart className={'w-6'}/>
-                                </div>
-                            }
-                        </div>
-
-
-                    </td>
-                </tr>
-            })}
-
-
-            </tbody>
-        </table>
-    }
+        return (
+            <table>
+                <thead className="bg-navy-2">
+                    <tr>
+                        <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
+                            <label>TYPE</label>
+                        </th>
+                        <th className="font-bold text-sm text-left  sm:py-4 sm:px-2">
+                            <label>ALLOCATION</label>
+                        </th>
+                        <th className="font-bold text-sm text-left  sm:py-4 sm:px-2">
+                            <label>PRICE</label>
+                        </th>
+                        <th className="font-bold text-sm text-left sm:py-4 sm:px-2 sm:text-center">
+                            <label>MULTIPLIER</label>
+                        </th>
+                        <th className="font-bold text-sm text-right sm:py-4 sm:px-2 sm:text-center">
+                            <label>CHAIN</label>
+                        </th>
+                        <th className="font-bold text-sm text-leftsm:py-4 sm:pl-2 sm:pr-5">
+                            <label>ACTION</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {offers.length === 0 && (
+                        <tr>
+                            <td colSpan="6" className={"text-center pt-3"}>
+                                <Empty text={"No offers on this market"} maxSize={280} />
+                            </td>
+                        </tr>
+                    )}
+                    {offers.length !== 0 &&
+                        offers.map((el) => {
+                            const ownership = isUserOffer(wallets, el.maker);
+                            return (
+                                <tr key={el.id} className="hoverTable transition-all duration-300 hover:text-black">
+                                    <td
+                                        className={`${el.isSell ? "text-app-error" : "text-app-success"} font-bold text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2`}
+                                        data-label="TYPE"
+                                    >
+                                        {el.isSell ? "SELL" : "BUY"}
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="ALLOCATION"
+                                    >
+                                        ${el.amount.toLocaleString()}
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="PRICE"
+                                    >
+                                        <span className={"text-ellipsis overflow-hidden block"}>
+                                            ${el.price.toLocaleString()}
+                                        </span>
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="MULTIPLIER"
+                                    >
+                                        <span className="text-app-success">
+                                            {Number(el.price / el.amount).toFixed(2)}x
+                                        </span>
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="CHAIN"
+                                    >
+                                        <span className="flex flex-row flex-1 justify-center gap-2">
+                                            <DynamicIcon
+                                                name={getCurrencySymbolByAddress(el.currency)}
+                                                style={ButtonIconSize.hero3}
+                                            />
+                                            <DynamicIcon name={NETWORKS[el.chainId]} style={ButtonIconSize.hero3} />
+                                        </span>
+                                    </td>
+                                    <td
+                                        className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
+                                        data-label="ACTION"
+                                    >
+                                        <div className="flex flex-row gap-1 justify-end sm:justify-center">
+                                            {ownership.ok &&
+                                                (ownership.isActive ? (
+                                                    <div
+                                                        className="duration-300 hover:text-app-error cursor-pointer"
+                                                        onClick={() => openCancel(el)}
+                                                    >
+                                                        <IconCancel className="w-6 h-6" />
+                                                    </div>
+                                                ) : (
+                                                    <Tooltiper
+                                                        wrapper={
+                                                            <div className="disabled duration-300 hover:text-app-error cursor-pointer">
+                                                                <IconCancel className="w-6 h-6" />
+                                                            </div>
+                                                        }
+                                                        text="Created from other wallet"
+                                                        type={TooltipType.Error}
+                                                    />
+                                                ))}
+                                            {!ownership.ok && (
+                                                <div
+                                                    className="duration-300 hover:text-app-error cursor-pointer"
+                                                    onClick={() => openTake(el)}
+                                                >
+                                                    <IconCart className="w-6 h-6" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                </tbody>
+            </table>
+        );
+    };
 
     const renderOfferHistoryTable = () => {
-        return  <table>
-            <thead className="bg-navy ">
-            <tr>
-
-                <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
-                    <label>DATE</label></th>
-                <th className="font-bold text-sm text-left  sm:py-4 sm:px-2">
-                    <label>MULTIPLIER</label>
-                </th>
-                <th className="font-bold text-sm text-left sm:py-4 sm:px-2">
-                    <label>PRICE</label></th>
-                <th className="font-bold text-sm text-left sm:py-4 sm:pl-2 sm:pr-5">
-                    <label>ALLOCATION</label></th>
-            </tr>
-            </thead>
-            <tbody>
-
-            {(!history || !historyIsSuccess) && <tr>
-                <td colSpan="4" className={"text-center pt-3"}>
-                    <Loader/>
-                </td>
-            </tr>}
-            {!!history && history.length === 0 && <tr>
-                <td colSpan="4" className={"text-center pt-3"}>
-                    <Empty text={"No history on this market"} maxSize={280}/>
-                </td>
-            </tr>}
-            {!!history && history.length !== 0 && history.map(el => {
-                return <tr key={el.dealId}
-                           className="hoverTable transition-all duration-300 hover:text-black">
-
-                    <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2"
-                        data-label="DATE">{moment(el.updatedAt).utc().local().format("YYYY-MM-DD")}</td>
-                    <td className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
-                        data-label="MULTIPLIER">
-                        <span className="text-app-success"> {Number(el.price / el.amount).toFixed(2)}x</span>
-
-                    </td>
-                    <td className="text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:px-2"
-                        data-label="PRICE">${el.price}
-                    </td>
-                    <td className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
-                        data-label="ALLOCATION">
-                        ${el.amount}
-                    </td>
-                </tr>
-            })}
-
-
-            </tbody>
-        </table>
-    }
+        return (
+            <table>
+                <thead className="bg-navy-2">
+                    <tr>
+                        <th className="font-bold text-sm text-left sm:py-4 sm:pl-5 sm:pr-2">
+                            <label>TYPE</label>
+                        </th>
+                        <th className="font-bold text-sm text-left  sm:py-4 sm:px-2">
+                            <label>ALLOCATION</label>
+                        </th>
+                        <th className="font-bold text-sm text-left  sm:py-4 sm:px-2">
+                            <label>PRICE</label>
+                        </th>
+                        <th className="font-bold text-sm text-left sm:py-4 sm:px-2 sm:text-center">
+                            <label>MULTIPLIER</label>
+                        </th>
+                        <th className="font-bold text-sm text-right sm:py-4 sm:px-2 sm:text-center">
+                            <label>CHAIN</label>
+                        </th>
+                        <th className="font-bold text-sm text-leftsm:py-4 sm:pl-2 sm:pr-5">
+                            <label>DATE</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {(!history || !historyIsSuccess) && (
+                        <tr>
+                            <td colSpan="6" className={"text-center pt-3"}>
+                                <Loader />
+                            </td>
+                        </tr>
+                    )}
+                    {!!history && history.length === 0 && (
+                        <tr>
+                            <td colSpan="6" className={"text-center pt-3"}>
+                                <Empty text={"No history on this market"} maxSize={280} />
+                            </td>
+                        </tr>
+                    )}
+                    {!!history &&
+                        history.length !== 0 &&
+                        history.map((el) => {
+                            return (
+                                <tr key={el.id} className="hoverTable transition-all duration-300 hover:text-black">
+                                    <td
+                                        className={`${el.isSell ? "text-app-error" : "text-app-success"} font-bold text-sm text-right px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pl-5 sm:pr-2`}
+                                        data-label="TYPE"
+                                    >
+                                        {el.isSell ? "SELL" : "BUY"}
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="ALLOCATION"
+                                    >
+                                        ${el.amount.toLocaleString()}
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-left  sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="PRICE"
+                                    >
+                                        ${el.price.toLocaleString()}
+                                    </td>
+                                    <td
+                                        className="text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="MULTIPLIER"
+                                    >
+                                        <span className="text-app-success">
+                                            {Number(el.price / el.amount).toFixed(2)}x
+                                        </span>
+                                    </td>
+                                    <td
+                                        className=" text-sm text-right px-5 py-1 sm:text-center sm:px-2 sm:py-4 sm:px-2"
+                                        data-label="CHAIN"
+                                    >
+                                        <span className="flex flex-row flex-1 justify-center">
+                                            <DynamicIcon name={NETWORKS[el.chainId]} style={ButtonIconSize.hero3} />
+                                        </span>
+                                    </td>
+                                    <td
+                                        className="text-sm text-center px-5 py-1 sm:text-left sm:px-2 sm:py-4 sm:pr-5 sm:pl-2"
+                                        data-label="ACTION"
+                                    >
+                                        {moment(el.updatedAt).utc().local().format("YYYY-MM-DD")}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                </tbody>
+            </table>
+        );
+    };
 
     return (
         <>
-            <div className="rounded-xl bg-navy-accent flex flex-1 rounded ">
-                <div className="overflow-x-auto flex flex-col flex-1">
-                    <div className="p-5 flex flex-row relative">
-                        <div className="text-xl uppercase font-medium text-outline flex flex-1">
-                            Offers {showHistory && "History"}
-                        </div>
-                        <div className="absolute right-5 top-3 flex flex-row gap-5 items-center">
-                            <RoundButton text={'TRADE'} isWide={true} size={'text-sm xs'} handler={() => setIsSellModal(true)}
-                                         icon={<IconCart className={ButtonIconSize.hero}/>}/>
+            <div className="bordered-container bg-navy-accent flex flex-1 offerWrap">
+                <div className="overflow-x-auto flex flex-col flex-1 bg-navy-accent">
+                    <div className="p-5 flex flex-row relative page-table-header">
+                        <div className="flex glowNormal header">Offers {showHistory && "History"}</div>
+                        <div className="absolute right-5 top-3 flex flex-row gap-5 items-center ">
+                            <UniButton
+                                type={ButtonTypes.BASE}
+                                text="MAKE OFFER"
+                                isWide={true}
+                                size="text-sm xs"
+                                zoom={1.1}
+                                handler={() => setIsMakeOfferModal(true)}
+                                icon={<IconCart className={ButtonIconSize.hero} />}
+                            />
                             <div>
-                                <IconButton zoom={1.1} size={'p-3'} noBorder={false} icon={<IconHistory className={"w-5"}/>} handler={() => setShowHistory((current)=> !current)} />
-
+                                <IconButton
+                                    zoom={1.1}
+                                    size="p-3"
+                                    icon={<IconHistory />}
+                                    handler={() => setShowHistory((current) => !current)}
+                                />
                             </div>
-
                         </div>
                     </div>
-                    {showHistory ? renderOfferHistoryTable() : renderOfferTable()}
+                    {!offersIsSuccess || !vaultIsSuccess || (!historyIsSuccess && showHistory) ? (
+                        <Loader />
+                    ) : showHistory ? (
+                        renderOfferHistoryTable()
+                    ) : (
+                        renderOfferTable()
+                    )}
                 </div>
             </div>
-
-            <MakeOfferModal model={isSellModal} setter={() => {setIsSellModal(false)}} props={{...propOffers, ...{allocation: haveAllocation}}}/>
-            {/*<CancelModal model={isCancelModal} setter={() => {setIsCancelModal(false)}} props={{...propOffers, ...{cancelOffer}}}/>*/}
-            {/*<BuyModal model={isBuyModal} setter={() => {setIsBuyModal(false)}} props={{...propOffers, ...{buyOffer}}}/>*/}
+            <MakeOfferModal
+                model={isMakeOfferModal}
+                setter={() => {
+                    setIsMakeOfferModal(false);
+                }}
+                props={{ ...makeOfferProps }}
+            />
+            <CancelOfferModal
+                model={isCancelOfferModal}
+                setter={() => {
+                    setIsCancelOfferModal(false);
+                }}
+                props={{ ...interactOfferProps }}
+            />
+            <TakeOfferModal
+                model={isTakeOfferModal}
+                setter={() => {
+                    setIsTakeOfferModal(false);
+                }}
+                props={{ ...interactOfferProps }}
+            />
         </>
-
-
-
-    )
+    );
 }

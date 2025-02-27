@@ -1,0 +1,145 @@
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - production
+
+name: PRODUCTION - deploy on ECS
+
+env:
+  AWS_DEFAULT_REGION: us-west-2
+  SECRETS: template
+  APP: webapp
+  ENV: production
+  ECS_TASK_DEFINITION: .aws/production-task-definition.json
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  HUSKY: 0
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    strategy:
+      matrix:
+#        tenant: [ apes ]
+        tenant: [ based, citcap, kongz, apes ]
+        include:
+          - tenant: based
+            cluster: based-production-webapp-cluster
+            service: based-production-webapp-service
+            domain: basedvc.fund
+            tenant_id: 1
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+          - tenant: citcap
+            cluster: citcap-production-webapp-cluster
+            service: citcap-production-webapp-service
+            domain: citizencapital.fund
+            tenant_id: 6
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+          - tenant: kongz
+            cluster: kongz-production-webapp-cluster
+            service: kongz-production-webapp-service
+            domain: kongzcapital.fund
+            tenant_id: 14
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+          - tenant: apes
+            cluster: apes-production-webapp-cluster
+            service: apes-production-webapp-service
+            domain: apes.capital
+            tenant_id: 19
+            aws_region_eu: eu-central-1
+            aws_region_us: us-west-2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.ORG_PAT }}
+          fetch-depth: 0
+
+      - name: Checkout submodule to staging branch
+        run: |
+          git submodule update --init --recursive ./server/services/db/definitions
+          cd ./server/services/db/definitions
+          git fetch --all --prune --tags
+          git checkout -b production origin/production || git checkout production
+          git pull origin production
+          cd -
+
+      - name: Fetch secrets
+        run: |
+          aws secretsmanager get-secret-value --secret-id ${{ env.SECRETS }}/${{ env.ENV }}/${{ env.APP }} --query SecretString --output text > .env
+          echo NEXT_PUBLIC_TENANT=${{ matrix.tenant_id }} >> .env
+          echo DOMAIN=https://${{ matrix.domain }} >> .env
+          echo TRUSTED_DOMAINS="https://${{ matrix.domain }} https://www.${{ matrix.domain }} " >> .env
+        env:
+          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        env:
+          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:$IMAGE_TAG"
+          docker build --build-arg AWS_DEFAULT_REGION=${{ env.AWS_DEFAULT_REGION }} -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo IMAGE_URI=$IMAGE_URI >> $GITHUB_ENV
+
+#      - name: Pull latest image from Amazon ECR
+#        run: |
+#          # Get the latest image URI
+#          LATEST_IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}:056e326"
+#          echo IMAGE_URI=$LATEST_IMAGE_URI >> $GITHUB_ENV
+
+      - name: Make Python Script Executable [gen. task def]
+        run: chmod +x .github/scripts/update_task_definition.py
+
+      - name: Update ECS Task Definition File US
+        run: |
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region_us }}
+
+      - name: Deploy new code US
+        run: |
+          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
+          cat $UPDATED_TASK_DEFINITION
+          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "Registered Task Definition: $revision"
+          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+          echo "Service updated to use new task definition revision"
+          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ matrix.aws_region_us }}
+
+      - name: Update ECS Task Definition File EU
+        run: |
+          python .github/scripts/update_task_definition.py ${{ env.ECS_TASK_DEFINITION }} ${{ env.IMAGE_URI }} ${{ matrix.tenant }} ${{ env.ENV }} ${{ env.APP }}  ${{ matrix.aws_region_eu }}
+
+      - name: Deploy new code EU
+        run: |
+          FAMILY="${{ matrix.tenant }}-${{ env.ENV }}-${{ env.APP }}-td"
+          UPDATED_TASK_DEFINITION=".github/scripts/${{ matrix.tenant }}-production-task-definition.json"
+          cat $UPDATED_TASK_DEFINITION
+          revision=$(aws ecs register-task-definition --family "$FAMILY" --cli-input-json file://$UPDATED_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "Registered Task Definition: $revision"
+          aws ecs update-service --cluster ${{ matrix.cluster }} --service ${{ matrix.service }} --task-definition "$revision"
+          echo "Service updated to use new task definition revision"
+          aws ecs wait services-stable --cluster ${{ matrix.cluster }} --services ${{ matrix.service }}
+          echo "Deployment to ECS service ${{ matrix.service }} in cluster ${{ matrix.cluster }} completed successfully"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ matrix.aws_region_eu }}

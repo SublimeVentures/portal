@@ -1,112 +1,55 @@
-require('dotenv').config()
-require('dotenv').config({ path: `.env.local`, override: true });
-const express = require('express');
-const next = require('next');
-const url = require('url');
-// const cluster = require('cluster');
-// const numCPUs = require('os').cpus().length;
+require("dotenv").config();
+const url = require("url");
+const express = require("express");
+const next = require("next");
+
 const cookieParser = require("cookie-parser");
+const { serializeError } = require("serialize-error");
+const logger = require("./src/lib/logger");
 
-const {connectDB} = require("./server/services/db/utils");
-const {connectWeb3} = require("./server/services/web3");
+const port = process.env.PORT || 3000;
+const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
+const hostname = process.env.HOSTNAME;
 
-const {router: validateRoute} = require("./server/routes/validate.router.js");
-const {router: publicRoute} = require("./server/routes/public.router.js");
-const {router: offerRoute} = require("./server/routes/offer.router.js");
-const {router: chainRoute} = require("./server/routes/payable.router.js");
-const {router: investRoute} = require("./server/routes/invest.router.js");
-const {router: vaultRoute} = require("./server/routes/vault.router.js");
-const {router: otcRoute} = require("./server/routes/otc.router.js");
+const nextApp = next({ dir: ".", dev, hostname, port });
+const nextHandler = nextApp.getRequestHandler();
 
-const port = process.env.PORT || 3000
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = process.env.HOSTNAME
+nextApp.prepare().then(async () => {
+    const server = express();
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: true }));
+    server.use(cookieParser());
 
-// Multi-process to utilize all CPU cores.
-// if (!dev && cluster.isMaster) {
-//     console.log(`Node cluster master ${process.pid} is running`);
-//
-//     // Fork workers.
-//     for (let i = 0; i < numCPUs; i++) {
-//         cluster.fork();
-//     }
-//
-//     cluster.on('exit', (worker, code, signal) => {
-//         console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
-//     });
-//
-// } else {
-    const nextApp = next({dir: '.', dev, hostname, port});
-    const nextHandler = nextApp.getRequestHandler();
-
-    nextApp.prepare().then(async () => {
-        const server = express();
-        await connectDB()
-        await connectWeb3()
-
-        // if (!dev) {
-        //     // Enforce SSL & HSTS in production
-        //     server.use(function (req, res, next) {
-        //         const proto = req.headers["x-forwarded-proto"];
-        //         if (proto === "https") {
-        //             res.set({
-        //                 'Strict-Transport-Security': 'maxAllocation-age=31557600' // one-year
-        //             });
-        //             return next();
-        //         }
-        //         res.redirect("https://" + req.headers.host + req.url);
-        //     });
-        // }
-
-        // Static files
-        // https://github.com/zeit/next.js/tree/4.2.3#user-content-static-file-serving-eg-images
-        // server.use('/static', express.static(path.join(__dirname, 'static'), {
-        //     maxAge: dev ? '0' : '365d'e
-        // }));
-        //
-        // // Example server-side routing
-        // server.get('/a', (req, res) => {
-        //     return nextApp.render(req, res, '/b', req.query)
-        // })
-        //
-        // // Example server-side routing
-        // server.get('/b', (req, res) => {
-        //     return nextApp.render(req, res, '/a', req.query)
-        // })
-
-
-        server.use(express.json());
-        server.use(express.urlencoded({ extended: true }));
-        server.use(cookieParser());
-
-        server.use('/api/validate', validateRoute);
-        server.use('/api/public', publicRoute);
-        server.use('/api/offer', offerRoute);
-        server.use('/api/chain', chainRoute);
-        server.use('/api/invest', investRoute);
-        server.use('/api/vault', vaultRoute);
-        server.use('/api/otc', otcRoute);
-
-        // Default catch-all renders Next app
-        server.all('*', (req, res) => {
-            // res.set({
-            //   'Cache-Control': 'public, maxAllocation-age=3600'
-            // });
+    // Default catch-all renders Next app
+    server.all("*", (req, res) => {
+        if (req.url === "/") {
+            res.set({
+                "Cache-Control": dev ? "no-store" : "public, max-age=604800, must-revalidate",
+            });
             const parsedUrl = url.parse(req.url, true);
-            nextHandler(req, res, parsedUrl);
-        });
+            return nextHandler(req, res, parsedUrl);
+        }
 
-        server.listen(port, (err) => {
-            if (err) throw err;
-            console.log(`Listening on http://localhost:${port}`);
-        });
+        const allowedPaths = ["/assets", "/_next", "/api"];
+
+        if (allowedPaths.some((path) => req.url.startsWith(path))) {
+            res.set({
+                "Cache-Control": dev ? "no-store" : "public, max-age=604800, must-revalidate",
+            });
+            const parsedUrl = url.parse(req.url, true);
+            return nextHandler(req, res, parsedUrl);
+        }
+
+        return res.redirect("https://spring.net/discover/basedvc");
     });
-// }
 
-
-
-
-
-
-
-
+    server.listen(port, (error) => {
+        if (error) {
+            logger.error(`ERROR :: Server listener`, {
+                error: serializeError(error),
+            });
+            throw error;
+        }
+        logger.warn(`Listening on PORT:${port}`);
+    });
+});

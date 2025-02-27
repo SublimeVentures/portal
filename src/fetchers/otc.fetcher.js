@@ -1,70 +1,90 @@
-import axios from "axios";
+import * as Sentry from "@sentry/nextjs";
+import { axiosPrivate } from "@/lib/axios/axiosPrivate";
 
 export const fetchMarkets = async () => {
-    console.log("Fetching Market List");
     try {
-        let url = `/api/otc/markets`
-        const {data} = await axios.get(url)
-        console.log("fetchMarkets",data)
-        return data
-    } catch(e) {
-        console.log("e: fetchMarkets",e)
+        const url = `/api/otc/markets`;
+        const { data } = await axiosPrivate.get(url);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchMarkets", e });
+        }
     }
-    return {}
-}
+    return {};
+};
 
-
-export const fetchOffers = async (offerId) => {
-    console.log("Fetching Market Offer");
+export const fetchOffers = async (otcId) => {
+    if (!otcId) return [];
     try {
-        let url = `/api/otc/offers/${offerId}`
-        console.log("url", url)
-        const {data} = await axios.get(url)
-        return data
-    } catch(e) {
-        console.log("e: fetchOffers",e)
+        const url = `/api/otc/offers/${otcId}`;
+        const { data } = await axiosPrivate.get(url);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchOffers", e });
+        }
     }
-    return {}
-}
+    return [];
+};
 
 export const fetchHistory = async (offerId) => {
-    console.log("Fetching Market Filled");
     try {
-        let url = `/api/otc/history/${offerId}`
-        const {data} = await axios.get(url)
-        return data
-    } catch(e) {
-        console.log("e: fetchFilled",e)
+        const url = `/api/otc/history/${offerId}`;
+        const { data } = await axiosPrivate.get(url);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchHistory", e });
+        }
     }
-    return {}
-}
+    return {};
+};
 
-export const saveTransaction = async (offerId, networkChainId, isBuyer, amount, price) => {
-    console.log("Fetching Save Transaction");
+export const saveTransaction = async (offerId, networkChainId, price, amount, isSell, account) => {
     try {
-        const {data} = await axios.post(`/api/otc/${offerId}/create`, {
-            isBuyer,
-            amount,
+        const { data } = await axiosPrivate.post(`/api/otc/${offerId}/create`, {
+            networkChainId,
             price,
-            networkChainId
-        })
-        return data
-    } catch(e) {
-        console.log("e: fetchFilled",e)
+            amount,
+            isSell,
+            account,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "saveTransaction", e });
+        }
     }
-    return {}
-}
+    return {};
+};
+export const getSignature = async (offerId, chainId, otcId, dealId, wallet) => {
+    try {
+        const { data } = await axiosPrivate.post(`/api/otc/${offerId}/sign`, {
+            chainId,
+            otcId,
+            dealId,
+            wallet,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "getSignature", e });
+        }
+    }
+    return {};
+};
 
 export const removeTransaction = async (offerId, hash) => {
-    console.log("Fetching Remove Transaction");
     try {
-        const {data} = await axios.post(`/api/otc/${offerId}/remove`, {
-            hash
-        })
-        return data
-    } catch(e) {
-        console.log("e: removeTransaction",e)
+        const { data } = await axiosPrivate.post(`/api/otc/${offerId}/remove`, {
+            hash,
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "removeTransaction", e });
+        }
     }
-    return {}
-}
-
+    return {};
+};
