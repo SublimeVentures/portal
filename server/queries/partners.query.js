@@ -1,23 +1,24 @@
-const {models} = require('../services/db/index');
+const { models } = require("../services/db/definitions/db.init");
+const { Op } = require("sequelize");
+const logger = require("../../src/lib/logger");
+
+const { serializeError } = require("serialize-error");
 
 async function getPublicPartners() {
-    return await models.partners.findAll({
-        attributes: ['logo', 'name'],
-        where: {
-            isVisible: true
-        },
-        raw: true
-    });
+    try {
+        return await models.partner.findAll({
+            attributes: ["logo", "name", "slug", "id", "acl", "displayOrder", "isNewLabel"],
+            where: {
+                isVisible: true,
+            },
+            raw: true,
+        });
+    } catch (error) {
+        logger.error("QUERY :: [getPublicPartners]", {
+            error: serializeError(error),
+        });
+    }
+    return [];
 }
 
-async function getPartners(isDev) {
-    return await models.partners.findAll({
-        where: {
-            isEnabled: true
-        },
-        include: {model: models.networks, where: {isDev}},
-        raw: true
-    });
-}
-
-module.exports = {getPublicPartners, getPartners}
+module.exports = { getPublicPartners };

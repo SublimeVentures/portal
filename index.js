@@ -1,112 +1,75 @@
-require('dotenv').config()
-require('dotenv').config({ path: `.env.local`, override: true });
-const express = require('express');
-const next = require('next');
-const url = require('url');
-// const cluster = require('cluster');
-// const numCPUs = require('os').cpus().length;
+require("dotenv").config();
+const url = require("url");
+const express = require("express");
+const next = require("next");
+
 const cookieParser = require("cookie-parser");
+const { serializeError } = require("serialize-error");
+const logger = require("./src/lib/logger");
+const authMiddleware = require("./server/middlewares/auth.middleware");
 
-const {connectDB} = require("./server/services/db/utils");
-const {connectWeb3} = require("./server/services/web3");
+const { connectDB } = require("./server/services/db");
+const { initCron } = require("./server/services/cron");
 
-const {router: validateRoute} = require("./server/routes/validate.router.js");
-const {router: publicRoute} = require("./server/routes/public.router.js");
-const {router: offerRoute} = require("./server/routes/offer.router.js");
-const {router: chainRoute} = require("./server/routes/payable.router.js");
-const {router: investRoute} = require("./server/routes/invest.router.js");
-const {router: vaultRoute} = require("./server/routes/vault.router.js");
-const {router: otcRoute} = require("./server/routes/otc.router.js");
+const { router: authRoute } = require("./server/routes/auth.router.js");
+const { router: envRoute } = require("./server/routes/environment.router.js");
+const { router: publicRoute } = require("./server/routes/public.router.js");
+const { router: offerRoute } = require("./server/routes/offer.router.js");
+const { router: investRoute } = require("./server/routes/invest.router.js");
+const { router: vaultRoute } = require("./server/routes/vault.router.js");
+const { router: otcRoute } = require("./server/routes/otc.router.js");
+const { router: mysteryboxRoute } = require("./server/routes/mysterybox.router");
+const { router: storeRoute } = require("./server/routes/store.router.js");
+const { router: settingsRoute } = require("./server/routes/settings.router.js");
+const { router: payoutRoute } = require("./server/routes/payout.router.js");
+const { router: claimRoute } = require("./server/routes/claim.router.js");
 
-const port = process.env.PORT || 3000
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = process.env.HOSTNAME
+const port = process.env.PORT || 3000;
+const dev = process.env.ENV !== "production" || process.env.FORCE_DEV === "true";
+const hostname = process.env.HOSTNAME;
 
-// Multi-process to utilize all CPU cores.
-// if (!dev && cluster.isMaster) {
-//     console.log(`Node cluster master ${process.pid} is running`);
-//
-//     // Fork workers.
-//     for (let i = 0; i < numCPUs; i++) {
-//         cluster.fork();
-//     }
-//
-//     cluster.on('exit', (worker, code, signal) => {
-//         console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
-//     });
-//
-// } else {
-    const nextApp = next({dir: '.', dev, hostname, port});
-    const nextHandler = nextApp.getRequestHandler();
+const nextApp = next({ dir: ".", dev, hostname, port });
+const nextHandler = nextApp.getRequestHandler();
 
-    nextApp.prepare().then(async () => {
-        const server = express();
-        await connectDB()
-        await connectWeb3()
+nextApp.prepare().then(async () => {
+    await connectDB();
+    await initCron();
 
-        // if (!dev) {
-        //     // Enforce SSL & HSTS in production
-        //     server.use(function (req, res, next) {
-        //         const proto = req.headers["x-forwarded-proto"];
-        //         if (proto === "https") {
-        //             res.set({
-        //                 'Strict-Transport-Security': 'maxAllocation-age=31557600' // one-year
-        //             });
-        //             return next();
-        //         }
-        //         res.redirect("https://" + req.headers.host + req.url);
-        //     });
-        // }
+    const server = express();
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: true }));
+    server.use(cookieParser());
 
-        // Static files
-        // https://github.com/zeit/next.js/tree/4.2.3#user-content-static-file-serving-eg-images
-        // server.use('/static', express.static(path.join(__dirname, 'static'), {
-        //     maxAge: dev ? '0' : '365d'e
-        // }));
-        //
-        // // Example server-side routing
-        // server.get('/a', (req, res) => {
-        //     return nextApp.render(req, res, '/b', req.query)
-        // })
-        //
-        // // Example server-side routing
-        // server.get('/b', (req, res) => {
-        //     return nextApp.render(req, res, '/a', req.query)
-        // })
+    server.use("/api/auth", authRoute);
+    server.use("/api/public", publicRoute);
 
+    server.use("/api/environment", authMiddleware, envRoute);
+    server.use("/api/offer", authMiddleware, offerRoute);
+    server.use("/api/invest", authMiddleware, investRoute);
+    server.use("/api/vault", authMiddleware, vaultRoute);
+    server.use("/api/otc", authMiddleware, otcRoute);
+    server.use("/api/mysterybox", authMiddleware, mysteryboxRoute);
+    server.use("/api/store", authMiddleware, storeRoute);
+    server.use("/api/settings", authMiddleware, settingsRoute);
+    server.use("/api/payout", authMiddleware, payoutRoute);
+    server.use("/api/claim", authMiddleware, claimRoute);
 
-        server.use(express.json());
-        server.use(express.urlencoded({ extended: true }));
-        server.use(cookieParser());
-
-        server.use('/api/validate', validateRoute);
-        server.use('/api/public', publicRoute);
-        server.use('/api/offer', offerRoute);
-        server.use('/api/chain', chainRoute);
-        server.use('/api/invest', investRoute);
-        server.use('/api/vault', vaultRoute);
-        server.use('/api/otc', otcRoute);
-
-        // Default catch-all renders Next app
-        server.all('*', (req, res) => {
-            // res.set({
-            //   'Cache-Control': 'public, maxAllocation-age=3600'
-            // });
-            const parsedUrl = url.parse(req.url, true);
-            nextHandler(req, res, parsedUrl);
+    // Default catch-all renders Next app
+    server.all("*", (req, res) => {
+        res.set({
+            "Cache-Control": dev ? "no-store" : "public, max-age=604800, must-revalidate",
         });
-
-        server.listen(port, (err) => {
-            if (err) throw err;
-            console.log(`Listening on http://localhost:${port}`);
-        });
+        const parsedUrl = url.parse(req.url, true);
+        nextHandler(req, res, parsedUrl);
     });
-// }
 
-
-
-
-
-
-
-
+    server.listen(port, (error) => {
+        if (error) {
+            logger.error(`ERROR :: Server listener`, {
+                error: serializeError(error),
+            });
+            throw error;
+        }
+        logger.warn(`Listening on PORT:${port}`);
+    });
+});

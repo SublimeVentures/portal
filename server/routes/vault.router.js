@@ -1,21 +1,41 @@
-const express = require('express')
+const express = require("express");
 const router = express.Router();
-const {getAccessToken} = require("../services/auth");
-const {userInvestment, userVault} = require("../controllers/vault");
+const { z } = require("zod");
+const { userVault } = require("../controllers/vault");
+const queryMiddleware = require("../middlewares/query.middleware");
 
-router.get('/', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
-
-    return res.status(200).json(await userInvestment(session, req))
+const requestSchema = z.object({
+    limit: z
+        .number({
+            invalid_type_error: "Invalid limit",
+        })
+        .optional(),
+    sortBy: z
+        .enum(["createdAt", "performance"], {
+            invalid_type_error: "Invalid sortBy",
+        })
+        .optional(),
+    sortOrder: z
+        .enum(["ASC", "DESC"], {
+            invalid_type_error: "Invalid sortOrder",
+        })
+        .optional(),
+    isUpcoming: z
+        .boolean({
+            invalid_type_error: "Invalid isUpcoming",
+        })
+        .optional(),
+    canClaim: z
+        .boolean({
+            invalid_type_error: "Invalid canClaim",
+        })
+        .optional(),
 });
 
-router.get('/all', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+router.get("/all", queryMiddleware(requestSchema), async (req, res) => {
+    const { user, ...request } = req;
 
-    return res.status(200).json(await userVault(session, req))
+    return res.status(200).json(await userVault(user, request));
 });
 
-
-module.exports = {router}
+module.exports = { router };

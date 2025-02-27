@@ -1,78 +1,159 @@
-const {models} = require('../services/db/index');
-const db = require('../services/db/index');
-const {Op} = require("sequelize");
+const { Op, QueryTypes } = require("sequelize");
+const { serializeError } = require("serialize-error");
+const { models } = require("../services/db/definitions/db.init");
+const db = require("../services/db/definitions/db.init");
+const logger = require("../../src/lib/logger");
 
 async function getOfferRaise(id) {
-    return models.raises.findOne({
-        where: {id},
-        include: {
-            attributes: ['id', 'alloTotalPartner'],
-            model: models.offers
-        }
-    })
-}
-
-async function bookAllocation(offerId, isSeparatePool, totalAllocation, address, hash, amount, acl, tokenId) {
-    let sumFilter
-    let variable
-    if (isSeparatePool) {
-        variable = "alloResPartner"
-        sumFilter = `"offerId" = ${offerId} AND COALESCE("alloResPartner",0) + COALESCE("alloFilledPartner",0) + COALESCE("alloSidePartner",0) <= ${totalAllocation}`
-    } else {
-        variable = "alloRes"
-        sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloSide",0) <= ${totalAllocation}`
-    }
-
-    const date = new Date().toISOString();
-    const participants = `
-        INSERT INTO public.participants_${offerId} (address, "nftId", amount, acl, hash, "createdAt", "updatedAt")
-        VALUES ('${address}', '${tokenId}', '${amount}', '${acl}', '${hash}', '${date}', '${date}')
-            on conflict("address", "hash") do
-        update set amount=EXCLUDED.amount, "acl"=EXCLUDED."acl", "nftId"=EXCLUDED."nftId", "updatedAt"=EXCLUDED."updatedAt";
-    `
     try {
-
-        const result = await db.transaction(async (t) => {
-                const booked = await models.raises.increment({[variable]: amount}, {
-                    where: {
-                        [Op.and]: [
-                            db.literal(sumFilter)
-                        ]
-                    }
-                }, {transaction: t});
-
-                if (!booked[0][1]) throw new Error("Not enough allocation");
-
-                await db.query(participants, {
-                    transaction: t,
-                    model: models.participants,
-                    mapToModel: true // pass true here if you have any mapped fields
-                });
-
-                return true;
-            }
-        );
-
-        return result
-
-    } catch
-        (error) {
-        console.log("Transaction error", error)
-        return false
+        return await models.offerLimit.findOne({
+            where: { offerId: id },
+            attributes: ["alloRes", "alloFilled", "alloGuaranteed", "alloTotal", "isPaused", "isSettled", "isRefund"],
+        });
+    } catch (error) {
+        logger.error(`QUERY :: [getOfferRaise] for ${id} `, {
+            error: serializeError(error),
+        });
     }
+    return {};
 }
 
-async function expireAllocation(offerId, address, hash) {
-    const participants = `
-            UPDATE public.participants_${offerId} 
-            SET "isExpired"=true, "updatedAt"='${new Date().toISOString()}' 
-            WHERE "address"='${address}' AND "hash" = '${hash}';
-    `
+async function investIncreaseAllocationReserved(offer, wantedAllocation, upgradeGuaranteed, transaction) {
+    let effectiveAllocationReserved;
+    let sumFilter = ` COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0)`;
 
-    await db.query(participants, {
-        model: models.participants,
+    if (upgradeGuaranteed?.isExpired === false) {
+        const guaranteedAllocationLeft = upgradeGuaranteed.alloMax - upgradeGuaranteed.alloUsed;
+        let alloGuaranteed;
+
+        if (wantedAllocation - guaranteedAllocationLeft > 0) {
+            effectiveAllocationReserved = wantedAllocation - guaranteedAllocationLeft;
+            alloGuaranteed = guaranteedAllocationLeft;
+        } else {
+            effectiveAllocationReserved = 0;
+            alloGuaranteed = wantedAllocation;
+        }
+
+        sumFilter += ` + ${effectiveAllocationReserved} - ${alloGuaranteed} <= ${offer?.offerLimits?.[0].alloTotal}`;
+    } else {
+        effectiveAllocationReserved = wantedAllocation;
+        sumFilter += ` + ${wantedAllocation} <= ${offer?.offerLimits?.[0]?.alloTotal}`;
+    }
+
+    const updateQuery = `
+        UPDATE "offerLimit"
+        SET "alloRes" = "alloRes" + ${effectiveAllocationReserved}
+        WHERE "offerId" = ${offer.id}
+          AND ${sumFilter}
+            RETURNING *;
+    `;
+
+    const result = await db.query(updateQuery, {
+        type: QueryTypes.UPDATE,
+        transaction,
     });
+
+    console.log("investIncreaseAllocationReserved", result, updateQuery);
+
+    return {
+        ok: result[0].length === 1,
+        data: result[0][0],
+    };
 }
 
+async function investUpsertParticipantReservation(
+    offer,
+    userId,
+    partnerId,
+    tenantId,
+    amount,
+    hash,
+    upgradeGuaranteed,
+    transaction,
+) {
+    const participantsQuery = `
+            INSERT INTO public.z_participant_${offer.id} ("userId", "partnerId", "tenantId", "amount", "hash", "isGuaranteed", "createdAt", "updatedAt")
+            VALUES (:userId, :partnerId, :tenantId, :amount, :hash, :isGuaranteed, NOW(), NOW())
+            ON CONFLICT ("userId", "hash") DO
+            UPDATE SET amount = EXCLUDED.amount, "updatedAt" = NOW()
+            RETURNING *;
+        `;
 
-module.exports = {getOfferRaise, bookAllocation, expireAllocation}
+    // Execute the query using a raw query execution
+    const result = await db.query(participantsQuery, {
+        replacements: {
+            userId,
+            partnerId,
+            tenantId,
+            amount,
+            hash,
+            isGuaranteed: upgradeGuaranteed?.isExpired === false,
+        },
+        type: QueryTypes.RAW,
+        transaction,
+    });
+
+    if (result[1] !== 1)
+        return {
+            ok: false,
+        };
+
+    return {
+        ok: result[1],
+        data: result[0][0],
+    };
+}
+
+async function expireAllocation(offerId, userId, hash) {
+    try {
+        const participantsQuery = `
+            UPDATE public.z_participant_${offerId}
+            SET "isExpired" = true,
+                "updatedAt" = now()
+            WHERE "userId" = :userId
+              AND "hash" = :hash
+              AND "onchainId" is null;
+        `;
+
+        return await db.query(participantsQuery, {
+            replacements: {
+                userId,
+                hash,
+            },
+            type: QueryTypes.UPDATE,
+        });
+    } catch (e) {
+        logger.error(`ERROR :: [expireAllocation] for ${offerId} `, {
+            offerId,
+            userId,
+            hash,
+        });
+    }
+    return true;
+}
+
+async function bookAllocationGuaranteed(offerId, amount, totalAllocation, transaction) {
+    let sumFilter = `"offerId" = ${offerId} AND COALESCE("alloRes",0) + COALESCE("alloFilled",0) + COALESCE("alloGuaranteed",0) + COALESCE("alloFilledInjected",0) + COALESCE("alloGuaranteedInjected",0) + ${amount} <= ${totalAllocation}`;
+
+    const booked = await models.offerLimit.increment(
+        { alloGuaranteed: amount },
+        {
+            where: {
+                [Op.and]: [db.literal(sumFilter)],
+            },
+            transaction,
+        },
+    );
+
+    return {
+        ok: booked[0][1],
+    };
+}
+
+module.exports = {
+    getOfferRaise,
+    bookAllocationGuaranteed,
+    expireAllocation,
+    investIncreaseAllocationReserved,
+    investUpsertParticipantReservation,
+};

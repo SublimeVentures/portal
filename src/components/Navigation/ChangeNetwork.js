@@ -1,69 +1,59 @@
-import {useAccount, useNetwork, useSwitchNetwork} from "wagmi";
-import IconEth from "@/assets/svg/Eth.svg";
-import IconMatic from "@/assets/svg/Matic.svg";
-import IconBsc from "@/assets/svg/Bsc.svg";
 import GenericModal from "@/components/Modal/GenericModal";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
+import { ButtonIconSize } from "@/components/Button/RoundButton";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { NETWORKS } from "@/lib/utils";
+import DynamicIcon from "@/components/Icon";
 
 export default function ChangeNetwork() {
-    const {chain, chains} = useNetwork()
-    const {error, isLoading, pendingChainId, switchNetwork} = useSwitchNetwork()
-    const {isConnected} = useAccount()
-
-    const isNetworkSupported = !!chains.find(el => el.id === chain?.id)
-
-    const buttonText = (x) => {
-        if (isLoading && pendingChainId === x.id) return 'Switching...'
-        else return x.name
-    }
-    const buttonDisabled = (x) => isLoading && pendingChainId === x.id && !error
-
+    const { network, account } = useEnvironmentContext();
+    const { chains, error, isSupported, isLoading, switchChain } = network;
+    const { isConnected } = account;
 
     const title = () => {
         return (
             <>
                 Chain <span className="text-app-error">not supported</span>
             </>
-        )
-    }
-
-    const getIcon = (index) => {
-        if (index === 0) return <IconEth className={ButtonIconSize.hero}/>
-        else if (index === 1) return <IconMatic className={ButtonIconSize.hero}/>
-        else if (index === 2) return <IconBsc className={ButtonIconSize.hero}/>
-    }
+        );
+    };
 
     const content = () => {
         return (
             <div>
-                Currently, platform <span className="text-gold">supports {chains.length} chains</span>.<br/>
+                Currently our platform <span className="text-gold">supports {chains?.length} chains</span>
+                .<br />
                 Please switch to one of these to continue.
-                <div className="flex flex-col my-10 gap-5 fullWidth">
-                    {chains.map((x, index) => (
-                        <RoundButton
+                <div className="flex flex-col mt-10 gap-5 fullWidth items-center fullWidthButton">
+                    {chains?.map((x) => (
+                        <UniButton
                             key={x.id}
+                            type={ButtonTypes.BASE}
                             handler={() => {
-                                if (!isLoading) switchNetwork?.(x.id)
+                                if (!isLoading) switchChain({ chainId: x.id });
                             }}
-                            text={buttonText(x)}
+                            text={x.name}
                             isWide={true}
                             zoom={1.05}
-                            size={'text-sm sm'}
-                            isDisabled={buttonDisabled(x)}
-                            icon={getIcon(index)}
+                            size={"text-sm sm"}
+                            isDisabled={isLoading && !error}
+                            icon={<DynamicIcon name={NETWORKS[x?.id]} style={ButtonIconSize.hero4} />}
                         />
-
                     ))}
                 </div>
-
-                <div
-                    className="text-app-error text-center">{error && error.message}</div>
-                <div className="mt-5"><a href="#" target="_blank">Read more.</a></div>
+                <div className="text-app-error text-center h-[26px]">{error && error.shortMessage}</div>
             </div>
-        )
-    }
+        );
+    };
 
     return (
-        <GenericModal isOpen={!isNetworkSupported && isConnected} closeModal={() => {}} title={title()} content={content()} persistent={true} noClose={true}/>
-    )
+        <GenericModal
+            isOpen={!isSupported && isConnected}
+            closeModal={() => {}}
+            title={title()}
+            content={content()}
+            persistent={true}
+            noClose={true}
+        />
+    );
 }

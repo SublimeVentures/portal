@@ -1,30 +1,45 @@
-import axios from "axios";
+import * as Sentry from "@sentry/nextjs";
+import { axiosPrivate } from "@/lib/axios/axiosPrivate";
+import { API } from "@/routes";
+import { authTokenName } from "@/lib/authHelpers";
+import { axiosPublic } from "@/lib/axios/axiosPublic";
 
 export const fetchUserInvestment = async (offerId) => {
-    console.log("Fetching Vault List");
     try {
-        let url = `/api/vault?offer=${offerId}`
-        const {data} = await axios.get(url)
-        return data
-    } catch(e) {
-        console.log("e: fetchInvestment",e)
-    }
-    return {}
-}
-
-export const fetchVault = async (acl, address) => {
-    console.log("fetchInvestments",acl, address)
-    try {
-        let url = `/api/vault/all`
-        if(acl !== undefined) {
-            url+= `?acl=${acl}&address=${address}`
+        const { data } = await axiosPrivate.get(`${API.offerDetails}${offerId}/state`);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchUserInvestment", e });
         }
-        console.log("url",url)
-        const {data} = await axios.get(url)
-        return data
-    } catch(e) {
-        console.log("e: fetchOfferDetails",e)
     }
-    return {}
-}
+    return 0;
+};
 
+export const fetchUserInvestmentSsr = async (offerId, token) => {
+    try {
+        const { data } = await axiosPublic.get(`${API.offerDetails}${offerId}/state`, {
+            headers: {
+                Cookie: `${authTokenName}=${token}`,
+            },
+        });
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchUserInvestment", e });
+        }
+    }
+    return 0;
+};
+
+export const fetchVault = async () => {
+    try {
+        const { data } = await axiosPrivate.get(API.fetchVault);
+        return data;
+    } catch (e) {
+        if (e?.status && e.status !== 401) {
+            Sentry.captureException({ location: "fetchVault", e });
+        }
+    }
+    return [];
+};

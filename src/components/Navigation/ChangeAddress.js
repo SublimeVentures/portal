@@ -1,48 +1,94 @@
-import {useAccount} from "wagmi";
+import { useReconnect } from "wagmi";
+import { useEffect } from "react";
 import GenericModal from "@/components/Modal/GenericModal";
-import {signOut, useSession} from "next-auth/react";
-import {useEffect} from "react";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
 
-export default function ChangeAddress() {
-    const {isConnected, address} = useAccount()
-    const {data: session} = useSession()
-    const userAddress = session?.user?.address
-    const isAddressNotSupported = (userAddress !== undefined && address !== undefined && userAddress !== address)
+export default function ChangeAddress({ session }) {
+    const { wallets } = session;
+    const { account, environmentCleanup, walletGuard } = useEnvironmentContext();
+    const { reconnect } = useReconnect();
+    const userAddress = account?.address;
 
+    const isAddressSupported = Boolean(
+        walletGuard && userAddress !== undefined && wallets.find((el) => el === userAddress),
+    );
 
     useEffect(() => {
-        if (!isConnected) {
-            signOut({callbackUrl: "/"})
+        if (!isAddressSupported) {
+            reconnect();
         }
-    }, [isConnected]);
+    }, [isAddressSupported, account]);
 
     const title = () => {
         return (
             <>
                 Wallet <span className="text-app-error">error</span>
             </>
-        )
-    }
+        );
+    };
 
-    const content = () => {
+    const contentWrongWallet = () => {
         return (
-            <div className={"flex flex-1 flex-col"}>
-                You've changed the wallet account. <br/>
-                Please use the account you logged in with.
-                <div className={"flex flex-col my-10"}>
-                    <div className="text-app-success">Signed</div>
-                    <div className="truncate text-app-success">{userAddress}</div>
-                    <div className="text-app-error mt-5">Current</div>
-                    <div className="truncate text-app-error">{address}</div>
+            <div className="flex flex-1 flex-col">
+                You&apos;ve changed the wallet account. <br />
+                You can only use wallets approved in the <span className="contents text-app-success">Setting</span>{" "}
+                page.
+                <div className="my-10">
+                    <div className="glowNormal font-bold pb-2 w-full text-center">Unknown Wallet</div>
+                    <div className="text-xs p-2 bg-slides text-center bordered-container">{userAddress}</div>
                 </div>
-
-                <div className="mt-auto"><a href="#" target="_blank">Read more.</a></div>
+                <div className="mt-auto w-full">
+                    <div className="w-full fullWidth">
+                        <UniButton
+                            type={ButtonTypes.BASE}
+                            state="danger ml-auto"
+                            text="Logout"
+                            isWide={true}
+                            zoom={1.1}
+                            size="text-sm sm"
+                            handler={() => {
+                                environmentCleanup();
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
-        )
-    }
+        );
+    };
+    const contentWalletDisconnected = () => {
+        return (
+            <div className="flex flex-1 flex-col">
+                <p className="pb-5">Your wallet is disconnected. If you're using a crypto extension, check it.</p>
+                <div className="mt-auto w-full">
+                    <div className="w-full fullWidth">
+                        <UniButton
+                            type={ButtonTypes.BASE}
+                            state="danger ml-auto"
+                            text="Logout"
+                            isWide={true}
+                            zoom={1.1}
+                            size="text-sm sm"
+                            handler={() => {
+                                environmentCleanup();
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const content = () => (userAddress ? contentWrongWallet() : contentWalletDisconnected());
 
     return (
-        <GenericModal isOpen={isAddressNotSupported} closeModal={() => {
-        }} title={title()} content={content()} persistent={true} noClose={true}/>
-    )
+        <GenericModal
+            isOpen={!isAddressSupported}
+            closeModal={() => {}}
+            title={title()}
+            content={content()}
+            persistent={true}
+            noClose={true}
+        />
+    );
 }

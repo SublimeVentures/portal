@@ -13,10 +13,13 @@
 
 # production
 /build
-
+.eslintcache
 # misc
 .DS_Store
 *.pem
+newrelic_agent.log
+./newrelic_agent.log
+dump.rdb
 
 # debug
 npm-debug.log*
@@ -26,9 +29,31 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env.*
+.env*.*
+# local env files
+.env.production
+.env.local
+!/.env.example
 
+.history/
+
+.env
 # vercel
 .vercel
 
 # Sentry Auth Token
 .sentryclirc
+
+# Yarn 4
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+# Sentry Config File
+.sentryclirc
+
+.idea

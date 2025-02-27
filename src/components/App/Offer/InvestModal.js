@@ -1,160 +1,179 @@
-import GenericModal from "@/components/Modal/GenericModal";
-import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import moment from "moment";
-import {useState , useEffect} from "react";
-import TransactStep from "@/components/App/Transactions/TransactStep";
-import LiquidityStep from "@/components/App/Transactions/LiquidityStep";
-import {RoundButton} from "@/components/Button/RoundButton";
+import { useMemo, useState, useEffect } from "react";
+import Lottie from "lottie-react";
+import { useRouter } from "next/router";
+import GenericModal from "@/components/Modal/GenericModal";
 import PAGE from "@/routes";
-import Link from "next/link";
-import {useSession} from "next-auth/react";
-import StakeStep from "@/components/App/Transactions/StakeStep";
-import {ACL as ACLs}  from "@/lib/acl";
-import {getInvestFunction} from "@/components/App/Transactions/TransactionSteps";
+import Linker from "@/components/link";
+import { ButtonTypes, UniButton } from "@/components/Button/UniButton";
+import lottieSuccess from "@/assets/lottie/success.json";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { useInvestContext } from "@/components/App/Offer/InvestContext";
+import BlockchainSteps from "@/components/BlockchainSteps";
+import { METHOD } from "@/components/BlockchainSteps/utils";
+import useGetToken from "@/lib/hooks/useGetToken";
+import CustomFlipClockCountdown from "@/components/FlipClockCountdown";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
-export const StakeSteps = {
-    Select: 0,
-    Use: 1,
-    Skip: 2
-}
+const { externalLinks } = getTenantConfig();
 
-export default function InvestModal({model, setter, investModalProps}) {
-    const {expires, investmentAmount, offer, selectedCurrency, hash, afterInvestmentCleanup, bookingExpire} = investModalProps
-    const {data: session} = useSession()
-    const {ACL, id, address} = session.user
+export default function InvestModal({ model, setter, investModalProps }) {
+    const router = useRouter();
+    const { investmentAmount, offer, selectedCurrency, bookingExpire, afterInvestmentCleanup, partnerId } =
+        investModalProps;
 
-    const [stepStake, setStepStake] = useState(StakeSteps.Select)
-    const [stepLiquidity, setStepLiquidity] = useState(false)
-    const [stepInvestment, setStepInvestment] = useState(false)
-    const [errors, setError] = useState(false)
+    const { account, activeInvestContract } = useEnvironmentContext();
 
-    const amountLocale = Number(investmentAmount).toLocaleString()
+    const { bookingDetails, clearBooking } = useInvestContext();
 
-    const usingStakedFunds = stepStake === StakeSteps.Use
-    const stepLiquidityReady = (ACL === ACLs.Whale && stepStake === StakeSteps.Skip) || ACL !== ACLs.Whale
-    const stepLiquidityFinished = stepLiquidity || usingStakedFunds
+    const [transactionSuccessful, setTransactionSuccessful] = useState(false);
+    const amountLocale = Number(investmentAmount).toLocaleString();
 
-    const investFunction = getInvestFunction(ACL, usingStakedFunds, investmentAmount, offer, selectedCurrency, hash, id)
-
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
-
-
-    const closeModal = () => {
-        setter()
-        if(stepInvestment) {
-            afterInvestmentCleanup()
+    const closeModal = async (redirectToVault) => {
+        setter();
+        if (transactionSuccessful) {
+            await afterInvestmentCleanup();
         }
         setTimeout(() => {
-            setStepStake(StakeSteps.Select)
-            setStepLiquidity(false)
-            setStepInvestment(false)
-        }, 1000);
-    }
+            setTransactionSuccessful(false);
+        }, 400);
 
-    const stepProps = {
-        ...{amount: investmentAmount},
-        offer,
-        selectedCurrency,
-        hash,
-        session
-    }
+        if (redirectToVault) {
+            router.push(PAGE.App);
+        }
+    };
 
-    const stepStakeProps = {
-        stepStake,
-        setStepStake,
-    }
+    useEffect(() => {
+        if (transactionSuccessful) {
+            clearBooking();
+        }
+    }, [transactionSuccessful]);
 
-    const stepLiquidityProps = {
-        isReady: stepLiquidityReady,
-        isFinished: stepLiquidityFinished,
-        setFinished: setStepLiquidity,
-        ...stepProps
-    }
+    const token = useGetToken(selectedCurrency?.contract);
 
-
-    const stepTransactProps = {
-        isReady: stepLiquidityFinished,
-        isFinished: stepInvestment,
-        setFinished: setStepInvestment,
-        writeFunction: investFunction,
-        errorHandler: setError,
-        userAddress: address,
-        ...stepProps
-    }
-
+    const blockchainInteractionData = useMemo(() => {
+        return {
+            steps: {
+                liquidity: true,
+                allowance: true,
+                transaction: true,
+            },
+            params: {
+                liquidity: Number(investmentAmount),
+                allowance: Number(investmentAmount),
+                amount: Number(investmentAmount),
+                account: account.address,
+                booking: bookingDetails,
+                offerId: offer.id,
+                partnerId,
+                spender: activeInvestContract,
+                buttonText: "Transfer funds",
+                prerequisiteTextWaiting: "Generate hash",
+                prerequisiteTextProcessing: "Generating hash",
+                prerequisiteTextSuccess: "Hash obtained",
+                prerequisiteTextError: "Couldn't generate hash",
+                transactionType: METHOD.INVEST,
+            },
+            token,
+            setTransactionSuccessful,
+        };
+    }, [investmentAmount, account, token?.contract, bookingDetails?.code, model, activeInvestContract]);
 
     const title = () => {
         return (
             <>
-                {stepInvestment ?
-                    <>Investment <span className="text-app-success">successful</span></>
-                    :
-                    <>Booking <span className="text-app-success">success</span></>
-                }
+                {transactionSuccessful ? (
+                    <>
+                        Investment <span className="text-app-success">successful</span>
+                    </>
+                ) : (
+                    <>
+                        Booking <span className="text-app-success">success</span>
+                    </>
+                )}
             </>
-        )
-    }
+        );
+    };
 
     const contentSuccess = () => {
         return (
-            <div className=" flex flex-col flex-1">
-                <div>Congratulations! You have successfully invested <span className="text-app-success font-bold">${amountLocale}</span> in <span className="font-bold text-app-success">{offer.name}</span>.</div>
-                <lottie-player
-                    autoplay
-                    loop
-                    style={{width: '320px', margin: '30px auto 0px'}}
-                    mode="normal"
-                    src="/static/lottie/success.json"
-                />
-                <div className="flex flex-1 justify-center items-center py-10 fullWidth">
-                    <Link href={PAGE.Vault} className={" w-full fullWidth"}>
-                        <RoundButton text={'Check Vault'} isLoading={false} isDisabled={false} is3d={false} isWide={true} zoom={1.1} size={'text-sm sm'} />
-                    </Link>
+            <div className="flex flex-col flex-1">
+                <div>
+                    Congratulations! You have successfully invested{" "}
+                    <span className="text-app-success font-bold">${amountLocale}</span> in{" "}
+                    <span className="font-bold text-app-success">{offer.name}</span>.
                 </div>
-                <div className="mt-auto"><a href="#" target="_blank" className="text-outline">What's next? Read more.</a></div>
+                <Lottie
+                    animationData={lottieSuccess}
+                    loop={true}
+                    autoplay={true}
+                    style={{ width: "320px", margin: "30px auto 0px" }}
+                />
+
+                <div className="flex flex-1 justify-center items-center py-10 fullWidth">
+                    <div className="w-full fullWidth" onClick={() => closeModal(true)}>
+                        <UniButton
+                            type={ButtonTypes.BASE}
+                            text="Check Vault"
+                            state="danger"
+                            isLoading={false}
+                            isDisabled={false}
+                            is3d={false}
+                            isWide={true}
+                            zoom={1.1}
+                            size="text-sm sm"
+                        />
+                    </div>
+                </div>
+                <div className="mt-auto">
+                    What's next? <Linker url={externalLinks.AFTER_INVESTMENT} />
+                </div>
             </div>
-        )
-    }
+        );
+    };
     const contentSteps = () => {
         return (
             <div className="flex flex-1 flex-col">
-                <div>You have successfully booked <span
-                    className="text-gold font-medium">${amountLocale}</span> allocation
-                    in <span className="font-bold">{offer.name}</span>.
+                <div>
+                    You have successfully booked <span className="text-gold font-medium">${amountLocale}</span>{" "}
+                    allocation in <span className="font-bold text-gold ">{offer.name}</span>.
                 </div>
                 <div className="pt-10 pb-5 flex flex-col items-center">
-                    <div className="pb-2">Your allocation is safely booked for</div>
-                    <FlipClockCountdown
+                    <div className="pb-2">Complete transfer in the next</div>
+                    <CustomFlipClockCountdown
                         className="flip-clock"
                         onComplete={() => bookingExpire()}
-                        to={moment.unix(expires)}
-                        labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
-                        labelStyle={{fontSize: 10, fontWeight: 500, textTransform: 'uppercase', color: 'white'}}
+                        to={moment.unix(bookingDetails.expires).valueOf()}
+                        labels={["DAYS", "HOURS", "MINUTES", "SECONDS"]}
+                        labelStyle={{
+                            fontSize: 10,
+                            fontWeight: 500,
+                            textTransform: "uppercase",
+                            color: "white",
+                        }}
                     />
-                    <div className="mt-5"><strong>No need for gas wars!</strong></div>
-                    <div>Execute transactions carefully.</div>
                 </div>
-                <div className="flex flex-col flex-1 gap-2 pb-2 justify-content">
 
-                    {ACL === ACLs.Whale &&
-                        <StakeStep stepProps={{...stepProps, ...stepStakeProps}} />
-                    }
-                        <LiquidityStep stepProps={{...stepProps, ...stepLiquidityProps}} />
-                        <TransactStep stepProps={{...stepProps, ...stepTransactProps}}/>
+                {model && <BlockchainSteps data={blockchainInteractionData} />}
+                <div>
+                    Booked allocation will be released when the timer runs to zero.{" "}
+                    <Linker url={externalLinks.BOOKING_SYSTEM} />
                 </div>
-                <div className="">Booked allocation will be released when the timer runs to zero. <a
-                    href="#" target="_blank" className="text-app-error">Read more.</a></div>
             </div>
-        )
-    }
-
+        );
+    };
 
     const content = () => {
-       return stepInvestment ? contentSuccess() : contentSteps()
-    }
+        return transactionSuccessful ? contentSuccess() : contentSteps();
+    };
 
-    return (<GenericModal isOpen={model} closeModal={closeModal} title={title()} content={content()} persistent={true}/>)
+    return (
+        <GenericModal
+            isOpen={model}
+            closeModal={() => closeModal()}
+            title={title()}
+            content={content()}
+            persistent={true}
+        />
+    );
 }
-

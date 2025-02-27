@@ -1,135 +1,262 @@
-import LayoutApp from '@/components/Layout/LayoutApp';
-import {OfferDetailsParams} from "@/components/App/Offer/OfferDetailsParams";
-import {OfferDetailsInvest} from "@/components/App/Offer/OfferDetailsInvest";
-import dynamic from "next/dynamic";
-import {queryClient} from "@/lib/web3/queryCache";
-import {ACL as ACLs} from "@/lib/acl";
-import {fetchOfferAllocation, fetchOfferDetails} from "@/fetchers/offer.fetcher";
-import {dehydrate, useQuery} from "@tanstack/react-query";
-import {useRouter} from "next/router";
-const OfferDetailsFlipbook = dynamic(() => import('@/components/App/Offer/OfferDetailsFlipbook'), {ssr: false,})
-import {getToken} from "next-auth/jwt"
-import {useSession} from "next-auth/react";
-import {fetchUserInvestment} from "@/fetchers/vault.fetcher";
+import { dehydrate, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { NextSeo } from "next-seo";
+import { useEffect, useState } from "react";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import {
+    fetchOfferAllocation,
+    fetchOfferAllocationSsr,
+    fetchOfferDetails,
+    fetchOfferDetailsSsr,
+} from "@/fetchers/offer.fetcher";
+import { fetchUserInvestment, fetchUserInvestmentSsr } from "@/fetchers/vault.fetcher";
 import Loader from "@/components/App/Loader";
 import Empty from "@/components/App/Empty";
-import {NextSeo} from "next-seo";
+import { phases } from "@/lib/phases";
+import routes from "@/routes";
+import PAGE from "@/routes";
+import { PremiumItemsENUM } from "@/lib/enum/store";
+import { queryClient } from "@/lib/queryCache";
+import { processServerSideData } from "@/lib/serverSideHelpers";
+import OfferDetailsTopBar from "@/components/App/Offer/OfferDetailsTopBar";
+import { OfferDetailsParams } from "@/components/App/Offer/OfferDetailsParams";
+import OfferDetailsInvestPhases from "@/components/App/Offer/OfferDetailsInvestPhases";
+import OfferDetailsInvestClosed from "@/components/App/Offer/OfferDetailsInvestClosed";
+import OfferDetailsDetails from "@/components/App/Offer/OfferDetailsAbout";
+import { InvestProvider } from "@/components/App/Offer/InvestContext";
+import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
+const { NAME } = getTenantConfig().seo;
 
-export const AppOfferDetails = () => {
-    const {data: session, status} = useSession()
-    const router = useRouter()
-    const {slug} = router.query
-    const ACL = session?.user?.ACL
-    const address = session?.user?.address
-    const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
+export const AppOfferDetails = ({ session }) => {
+    const router = useRouter();
+    const { slug } = router.query;
+    const { userId, tenantId, partnerId } = session;
 
-    const {isSuccess: offerDetailsState, data: offerData} = useQuery({
-            queryKey: ["offerDetails", {slug, aclCache}],
-            queryFn: () => fetchOfferDetails(slug, ACL, address),
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 30 * 60 * 1000,
-            staleTime: 15 * 60 * 1000,
-            enabled: ACL >= 0
-        }
-    );
+    let [phaseIsClosed, setPhaseIsClosed] = useState(false);
+    let [phaseCurrent, setPhaseCurrent] = useState(false);
+    let [phaseNext, setPhaseNext] = useState(false);
 
-    console.log("offerData",offerData)
-
-    const {data: allocation, refetch: refetchAllocation} = useQuery({
-            queryKey: ["offerAllocation", offerData?.offer?.id],
-            queryFn: () => fetchOfferAllocation(offerData?.offer?.id),
-            refetchOnMount: true,
-            refetchOnWindowFocus: true,
-            enabled: !!offerData?.offer?.id,
-            refetchInterval: 15000
-        }
-    );
-
-    const {data: userAllocation, refetch: refetchUserAllocation} = useQuery({
-            queryKey: ["userAllocation", offerData?.offer?.id, address],
-            queryFn: () => fetchUserInvestment(offerData?.offer?.id),
-            refetchOnMount: false,
-            refetchOnWindowFocus: true,
-            enabled: !!offerData?.offer?.id,
-        }
-    );
-
-
-    const paramsInvest = {
-        offer: offerData?.offer,
-        currencies: offerData?.currencies,
-        refetchUserAllocation,
-        refetchAllocation,
-        allocation
-    }
-
-    const paramsParams = {
-        offer: offerData?.offer,
-        allocation,
-        userAllocation
-    }
-
-    const pageTitle = `${!offerDetailsState ?  "Loading" : offerData?.offer?.name}  - Invest - 3VC`
-
-    const renderPage = () => {
-        if (status !== "authenticated" || !offerDetailsState) return <Loader/>
-        if (!offerData.offer || Object.keys(offerData.offer).length === 0) return <Empty/>
-        return (
-                <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                    <div className="flex flex-row col-span-12 xl:col-span-8 rounded-xl bg">
-                        <OfferDetailsInvest paramsInvest={paramsInvest}/>
-                    </div>
-                    <div
-                        className="flex flex-col col-span-12 gap-5 mobile:gap-10 sinvest:flex-row xl:col-span-4 xl:!flex-col xl:gap-0">
-                        <OfferDetailsParams paramsParams={paramsParams}/>
-                    </div>
-
-                    <div className="flex flex-col col-span-12 ">
-                        <OfferDetailsFlipbook offer={offerData.offer}/>
-                    </div>
-                </div>
-        )
-    }
-
-    return (
-        <>
-            <NextSeo title={pageTitle}/>
-            {renderPage()}
-        </>
-    )
-}
-
-
-export const getServerSideProps = async ({params, req}) => {
-    const {slug} = params
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        encryption: true
-    })
-    const ACL = token?.user?.ACL
-    const address = token?.user?.address
-
-    const aclCache = ACL !== ACLs.PartnerInjected ? ACL : address
-
-    await queryClient.prefetchQuery({
-        queryKey: ["offerDetails", {slug, aclCache}],
-        queryFn: () => fetchOfferDetails(slug, ACL, address),
+    const {
+        isSuccess: offerDetailsState,
+        data: offerData,
+        error: errorOfferDetails,
+        refetch: refetchOfferDetails,
+    } = useQuery({
+        queryKey: ["offerDetails", slug],
+        queryFn: () => fetchOfferDetails(slug),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
         cacheTime: 30 * 60 * 1000,
         staleTime: 15 * 60 * 1000,
-    })
+    });
 
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient)
+    const offerId = offerData?.id;
+    const {
+        isSuccess: offerAllocationState,
+        data: allocation,
+        error: errorOfferAllocation,
+        refetch: refetchOfferAllocation,
+    } = useQuery({
+        queryKey: ["offerAllocation", offerId],
+        queryFn: () => fetchOfferAllocation(offerId),
+        refetchOnMount: false,
+        refetchOnWindowFocus: true,
+        refetchInterval: 15000,
+        // refetchInterval: phaseIsClosed ? false : 15000,
+    });
+
+    const {
+        isSuccess: userAllocationState,
+        data: userAllocation,
+        refetch: refetchUserAllocation,
+        error: errorUserAllocation,
+    } = useQuery({
+        queryKey: ["userAllocation", offerId, userId],
+        queryFn: () => fetchUserInvestment(offerData?.id),
+        refetchOnMount: false,
+        refetchOnWindowFocus: !phaseIsClosed,
+        enabled: !!offerData?.id,
+    });
+
+    const { data: premiumData, refetch: refetchPremiumData } = useQuery({
+        queryKey: ["premiumOwned", userId, tenantId],
+        queryFn: fetchStoreItemsOwned,
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 5 * 1000,
+    });
+
+    useEffect(() => {
+        try {
+            if (errorOfferDetails) {
+                refetchOfferDetails().then((el) => {
+                    if (errorOfferDetails) {
+                        throw Error("Offer details fetch fail");
+                    }
+                });
+            }
+            if (errorOfferAllocation) {
+                refetchOfferAllocation().then((el) => {
+                    if (errorOfferAllocation) {
+                        throw Error("Offer allocations fetch fail");
+                    }
+                });
+            }
+            if (errorUserAllocation) {
+                refetchUserAllocation().then((el) => {
+                    if (errorUserAllocation) {
+                        throw Error("User allocations fetch fail");
+                    }
+                });
+            }
+        } catch (error) {
+            router.push(PAGE.Opportunities);
         }
-    }
-}
+    }, [errorOfferDetails, errorOfferAllocation, errorUserAllocation]);
+
+    const feedPhases = () => {
+        if (!offerData?.id) return;
+        const { isClosed, phaseCurrent, phaseNext } = phases({
+            ...offerData,
+            ...allocation,
+        });
+        setPhaseIsClosed(isClosed);
+        setPhaseCurrent(phaseCurrent);
+        setPhaseNext(phaseNext);
+    };
+
+    const paramsBar = {
+        offer: offerData,
+        phaseCurrent,
+        phaseNext,
+        phaseIsClosed,
+        refreshInvestmentPhase: feedPhases,
+    };
+
+    const guaranteedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Guaranteed);
+    const increasedUsed = userAllocation?.upgrades?.find((el) => el.id === PremiumItemsENUM.Increased);
+
+    const paramsInvest = {
+        offer: offerData,
+        refetchUserAllocation,
+        userAllocationState,
+        refetchOfferAllocation,
+        userInvested: userAllocation,
+        allocation,
+        session,
+        upgradesUse: { guaranteedUsed, increasedUsed },
+        phaseCurrent,
+        premiumData,
+        refetchPremiumData,
+        partnerId,
+    };
+
+    const paramsParams = {
+        offer: offerData,
+        allocation,
+        userInvested: userAllocation?.invested,
+        phaseIsClosed,
+        refetchUserAllocation,
+    };
+
+    const renderPage = () => {
+        if (!offerDetailsState || !offerAllocationState || !userAllocationState || !phaseNext) return <Loader />;
+        if (!offerData?.id || Object.keys(offerData).length === 0) return <Empty />;
+
+        return (
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                <OfferDetailsTopBar paramsBar={paramsBar} />
+                <div className="bordered-container bg flex flex-row col-span-12 lg:col-span-7 xl:col-span-8">
+                    {!phaseIsClosed ? (
+                        <OfferDetailsInvestPhases paramsInvestPhase={paramsInvest} />
+                    ) : (
+                        <OfferDetailsInvestClosed />
+                    )}
+                </div>
+                <div className="flex flex-col col-span-12 lg:col-span-5 xl:col-span-4">
+                    <OfferDetailsParams paramsParams={paramsParams} />
+                </div>
+                <div className="flex flex-col col-span-12">
+                    <OfferDetailsDetails offer={offerData} />
+                </div>
+            </div>
+        );
+    };
+
+    useEffect(() => {
+        if (!offerData?.ok) {
+            router.push(routes.Opportunities);
+        }
+        feedPhases();
+    }, [offerData, allocation?.isSettled, allocation?.isPaused]);
+
+    const pageTitle = `${!offerDetailsState ? "Loading" : offerData?.name}  - Invest - ${NAME}`;
+    return (
+        <>
+            <NextSeo title={pageTitle} />
+            <InvestProvider initialData={offerId}>{renderPage()}</InvestProvider>
+        </>
+    );
+};
+
+export const getServerSideProps = async ({ req, res, resolvedUrl, query }) => {
+    const customLogicCallback = async (account, token) => {
+        const slug = query.slug;
+
+        try {
+            await queryClient.prefetchQuery({
+                queryKey: ["offerDetails", slug],
+                queryFn: () => fetchOfferDetailsSsr(slug, token),
+                cacheTime: 30 * 60 * 1000,
+                staleTime: 15 * 60 * 1000,
+            });
+            const offerDetails = queryClient.getQueryData(["offerDetails", slug]);
+
+            const offerId = offerDetails.id;
+
+            if (!offerId) {
+                throw Error("Offer not specified");
+            }
+
+            await queryClient.prefetchQuery({
+                queryKey: ["offerAllocation", offerId],
+                queryFn: () => fetchOfferAllocationSsr(offerId, token),
+            });
+            const userId = account.userId;
+            await queryClient.prefetchQuery({
+                queryKey: ["userAllocation", offerId, userId],
+                queryFn: () => fetchUserInvestmentSsr(offerId, token),
+            });
+
+            const offerAllocation = queryClient.getQueryData(["offerAllocation", offerId]);
+            const userAllocation = queryClient.getQueryData(["userAllocation", offerId, userId]);
+
+            if (!(offerAllocation.alloFilled >= 0) || !(userAllocation.invested.booked >= 0)) {
+                throw Error("Data not fetched");
+            }
+            return {
+                additionalProps: {
+                    dehydratedState: dehydrate(queryClient),
+                },
+            };
+        } catch (error) {
+            return {
+                redirect: {
+                    permanent: true,
+                    destination: routes.Opportunities,
+                },
+            };
+        }
+    };
+
+    return await processServerSideData(req, res, resolvedUrl, customLogicCallback);
+};
 
 AppOfferDetails.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
 };
 
-export default AppOfferDetails
+export default AppOfferDetails;

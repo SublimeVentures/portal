@@ -1,74 +1,103 @@
-import LayoutApp from '@/components/Layout/LayoutApp';
-import OfferItem from "@/components/App/Offer/OfferItem";
-import {queryClient} from "@/lib/web3/queryCache";
-import {dehydrate, useQuery} from "@tanstack/react-query";
-import {fetchOfferList} from "@/fetchers/offer.fetcher";
-import {useSession} from "next-auth/react";
-import {getToken} from "next-auth/jwt";
-import Loader from "@/components/App/Loader";
-import {ACL as ACLs} from "@/lib/acl";
-import Empty from "@/components/App/Empty";
 import Head from "next/head";
 
-export default function AppOffer() {
-    const { data: session, status } = useSession()
-    const ACL = session?.user?.ACL
-    const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : session?.user?.address
+import { useQuery } from "@tanstack/react-query";
+import { BiMoneyWithdraw as IconMoney, BiNetworkChart as IconNetwork } from "react-icons/bi";
+import Empty from "@/components/App/Empty";
+import IconStars from "@/assets/svg/Stars.svg";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import Loader from "@/components/App/Loader";
+import OfferItem from "@/components/App/Offer/OfferItem";
+import Stat from "@/components/Stat";
+import { fetchOfferList } from "@/fetchers/offer.fetcher";
+import { tenantIndex } from "@/lib/utils";
+import { processServerSideData } from "@/lib/serverSideHelpers";
+import routes from "@/routes";
+import { useEnvironmentContext } from "@/lib/context/EnvironmentContext";
+import { getTenantConfig, TENANT } from "@/lib/tenantHelper";
 
-    const { isLoading, data: investments, isError } = useQuery({
-            queryKey: ["offerList", {ACL, ADDRESS}],
-            queryFn: () => fetchOfferList(ACL),
-            cacheTime: 30 * 60 * 1000,
-            staleTime: 15 * 60 * 1000,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            enabled: ACL >= 0
-        }
-    );
+const { NAME } = getTenantConfig().seo;
+
+export default function AppOffer({ session }) {
+    const TENANT_ID = session.tenantId;
+    const PARTNER_ID = session.partnerId;
+    const { cdn } = useEnvironmentContext();
+
+    const {
+        isLoading,
+        data: response,
+        isError,
+    } = useQuery({
+        queryKey: ["offerList", { TENANT_ID, PARTNER_ID }],
+        queryFn: fetchOfferList,
+        cacheTime: 5 * 60 * 1000,
+        staleTime: 1 * 60 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+    });
+
+    const offerList = response?.offers[0].rows;
+    const offerListRender = offerList ? offerList : [];
+    const stats = response?.stats;
+    const partners = stats && stats?.partners ? stats.partners : 0;
+    const projectsInvested = stats && stats?.vc ? stats.vc : 0;
+    const funded = `$${Number(stats ? stats.funded : 0).toLocaleString()}`;
 
     const renderPage = () => {
-        if(status !== "authenticated") return <Loader/>
-        if(!investments || investments.length === 0) return  <Empty/>
-
+        if (isLoading) return <Loader />;
+        if (!offerListRender || offerListRender.length === 0 || isError) return <Empty />;
         return (
-                <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                    {!!investments && investments.map(el =>
-                        <OfferItem offer={el} key={el.slug} ACL={ACL}/>
-                    )}
+            <div className="grid grid-cols-12 gap-y-8  mobile:gap-10">
+                {!!offerList && offerListRender.map((el) => <OfferItem offer={el} cdn={cdn} key={el.slug} />)}
+            </div>
+        );
+    };
+
+    const title = `Opportunities - ${NAME}`;
+    return (
+        <>
+            <Head>
+                <title>{title}</title>
+            </Head>
+            <div className="flex flex-col justify-between gap-7 xl:flex-row">
+                <div className="flex flex-col justify-center">
+                    <div className="glow text-3xl page-header-text">Funded Projects</div>
+                    <div className="text-outline text-md mt-2 white min-w-[250px]">
+                        We bring new industry giants to our community
+                    </div>
                 </div>
-        )
-    }
-
-    return <>
-        <Head>
-            <title>Opportunities - 3VC</title>
-        </Head>
-        {renderPage()}
-    </>
+                <div className="flex flex-1 2xl:max-w-[900px] w-full">
+                    <div className="w-full flex gap-5 flex-col md:flex-row">
+                        <Stat
+                            color="gold"
+                            title="Investments"
+                            value={projectsInvested}
+                            icon={<IconStars className={"w-9 text-2xl"} />}
+                        />
+                        {tenantIndex === TENANT.basedVC && (
+                            <Stat
+                                color="teal"
+                                title="Partners"
+                                value={partners}
+                                icon={<IconNetwork className="w-7 text-2xl" />}
+                            />
+                        )}
+                        <Stat
+                            color={"blue"}
+                            title={"Raised"}
+                            value={funded}
+                            icon={<IconMoney className={"w-7 text-2xl"} />}
+                        />
+                    </div>
+                </div>
+            </div>
+            {renderPage()}
+        </>
+    );
 }
 
-export const getServerSideProps = async({req}) => {
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        encryption: true
-    })
-    const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : token?.user?.address
-
-    await queryClient.prefetchQuery({
-        queryKey: ["offerList", {ACL, ADDRESS}],
-        queryFn: ()=>fetchOfferList(ACL, ADDRESS),
-        cacheTime: 30 * 60 * 1000,
-        staleTime: 15 * 60 * 1000
-    })
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient)
-        }
-    }
-}
-
+export const getServerSideProps = async ({ req, res }) => {
+    return await processServerSideData(req, res, routes.Opportunities);
+};
 
 AppOffer.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;

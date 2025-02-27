@@ -1,45 +1,55 @@
-import {SessionProvider} from "next-auth/react"
-import {WagmiConfig} from 'wagmi'
-import axios from 'axios';
-import {Hydrate, QueryClientProvider} from '@tanstack/react-query'
-import {client} from '@/lib/web3/wagmi'
-import {queryClient} from '@/lib/web3/queryCache'
-import Layout from '@/components/Layout/Layout';
-import 'react-tooltip/dist/react-tooltip.css';
-import '@/styles/globals.scss'
+import { HydrationBoundary, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider } from "wagmi";
+import { config } from "@/lib/wagmi";
+import { queryClient } from "@/lib/queryCache";
 
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL;
+import Layout from "@/components/Layout/Layout";
+import "react-tooltip/dist/react-tooltip.css";
+import "@/styles/globals.scss";
 
+import Gtag from "@/components/gtag";
+import { EnvironmentProvider } from "@/lib/context/EnvironmentContext";
 
-export default function App({Component, pageProps: {session, ...pageProps}}) {
-    const renderWithLayout =
-        Component.getLayout ||
-        function (page) {
-            return <Layout>{page}</Layout>;
-        };
+import { TENANT } from "@/lib/tenantHelper";
+import ClientErrorBoundary from "@/components/ClientErrorBoundary";
+
+switch (Number(process.env.NEXT_PUBLIC_TENANT)) {
+    case TENANT.basedVC: {
+        import("@/styles/tenants/basedVC.scss");
+        break;
+    }
+    case TENANT.NeoTokyo: {
+        import("@/styles/tenants/citcap.scss");
+        break;
+    }
+    case TENANT.CyberKongz: {
+        import("@/styles/tenants/cyberkongz.scss");
+        break;
+    }
+    case TENANT.BAYC: {
+        import("@/styles/tenants/bayc.scss");
+        break;
+    }
+}
+
+export default function App({ Component, pageProps: { ...pageProps } }) {
+    const { environmentData } = pageProps;
+    const renderWithLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
     return (
-        <WagmiConfig client={client}>
-            <SessionProvider session={session}>
-            {renderWithLayout(
+        <>
+            <ClientErrorBoundary>
+                <WagmiProvider config={config}>
                     <QueryClientProvider client={queryClient}>
-                        <Hydrate state={pageProps.dehydratedState}>
-                            <Component  {...pageProps} />
-                        </Hydrate>
+                        <EnvironmentProvider initialData={environmentData}>
+                            <HydrationBoundary state={pageProps.dehydratedState}>
+                                {renderWithLayout(<Component {...pageProps} />)}
+                            </HydrationBoundary>
+                        </EnvironmentProvider>
                     </QueryClientProvider>
-            )}
-            </SessionProvider>
-        </WagmiConfig>
+                </WagmiProvider>
+            </ClientErrorBoundary>
+            <Gtag />
+        </>
     );
-    // return renderWithLayout(
-    //     <WagmiConfig client={client}>
-    //         <SessionProvider session={session}>
-    //             <QueryClientProvider client={queryClient}>
-    //                 <Hydrate state={pageProps.dehydratedState}>
-    //                     <Component  {...pageProps} />
-    //                 </Hydrate>
-    //             </QueryClientProvider>
-    //         </SessionProvider>
-    //     </WagmiConfig>
-    // );
 }

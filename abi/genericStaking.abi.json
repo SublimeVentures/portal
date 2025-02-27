@@ -1,0 +1,175 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tier_",
+                "type": "uint256"
+            }
+        ],
+        "name": "canUnstake",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            }
+        ],
+        "name": "getRequirements",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address[]",
+                        "name": "contracts",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "stakeSize",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "withdrawWindow",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "length",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "stakingCurrency",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isNoGuard",
+                        "type": "bool"
+                    }
+                ],
+                "internalType": "struct StakePartner",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "wallet_",
+                "type": "address"
+            }
+        ],
+        "name": "getStake",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "size",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "stakedAt",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Stake",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            }
+        ],
+        "name": "stake",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount_",
+                "type": "uint256"
+            }
+        ],
+        "name": "stakeNoGuards",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "coldWallet_",
+                "type": "address"
+            }
+        ],
+        "name": "stakeV2",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "partnerId_",
+                "type": "uint256"
+            }
+        ],
+        "name": "unstake",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

@@ -1,0 +1,47 @@
+.btnScramble {
+    line-height: 1;
+    font-size: calc(12 / 16 * 1rem);
+    letter-spacing: 0;
+    font-family: "Roboto Mono", monospace;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    width: 100%;
+    position: relative;
+
+    &.white {
+        background: white;
+        color: black;
+    }
+    &.dark {
+        color: white;
+        background-color: rgb(20, 20, 20);
+        border: 1px solid rgb(255, 255, 255);
+    }
+
+    &:hover {
+        .underlineHover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    }
+
+    .underlineHover::after {
+        bottom: -2px;
+        background-color: black;
+    }
+}

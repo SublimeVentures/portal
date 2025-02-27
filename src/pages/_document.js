@@ -1,22 +1,21 @@
-import {Html, Head, Main, NextScript} from 'next/document'
-import Gtag from "@/components/gtag";
+import { Html, Head, Main, NextScript } from "next/document";
+import { getTenantConfig } from "@/lib/tenantHelper";
+
+const { favicon } = getTenantConfig();
 
 export default function Document() {
     return (
         <Html lang="en">
             <Head>
-                <link rel="stylesheet" href={`/browser/index-920ff239.css`}/>
-                <link rel="preconnect" href="https://fonts.googleapis.com"/>
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
-                <link
-                    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&family=Work+Sans:wght@300;400;500&display=swap"
-                    rel="stylesheet"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+                <link rel="icon" href={favicon} sizes="any" />
             </Head>
             <body>
-            <Gtag/>
-            <Main/>
-            <NextScript/>
+                <Main />
+                <div id="portal-root" />
+                <NextScript />
             </body>
         </Html>
-    )
+    );
 }

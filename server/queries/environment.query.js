@@ -1,26 +1,127 @@
-const { models } = require('../services/db/index');
+const { QueryTypes } = require("sequelize");
+const { models } = require("../services/db/definitions/db.init");
+const db = require("../services/db/definitions/db.init");
+const { TENANT } = require("../../src/lib/tenantHelper");
 
 async function getEnvironment() {
-    // const isDev = process.env.NODE_ENV !== 'production'; //todo: fix
-    const isDev = true;
-    const envVars = await models.environment.findAll({raw: true});
-    const multichain = await models.multichain.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
-    const currencies = await models.currencies.findAll({include: {model: models.networks, where: {isDev}}, raw: true});
-    let env = Object.assign({}, ...(envVars.map(item => ({ [item.name]: item.value }) )));
-    let parsedCurrencies = {}
-    let parsedMultichain = {}
-    currencies.forEach(el => {
-        if(!parsedCurrencies[el.networkChainId]) parsedCurrencies[el.networkChainId] = {}
-        parsedCurrencies[el.networkChainId][el.address] = {name: el.name, symbol: el.symbol, precision: el.precision, isSettlement: el.isSettlement}
-    })
-    multichain.forEach(el => {
-        parsedMultichain[el.networkChainId] = el.address
-    })
-    env.currencies = parsedCurrencies
-    env.multichain = parsedMultichain
-    env.isDev = isDev;
+    //initialize environment
+    let environment = {};
 
-    return env
+    //PARAMS :: fetch global `environment`
+    const envVars = await models.environment.findAll({ raw: true });
+    let partnerSpecific = {};
+    envVars.forEach((item) => {
+        if (item.partnerId !== null) {
+            if (item.partnerId === Number(process.env.NEXT_PUBLIC_TENANT)) {
+                if (!partnerSpecific[item.name]) {
+                    partnerSpecific[item.name] = {};
+                }
+                partnerSpecific[item.name][item.partnerId] = item.value ? item.value : item.valueJSON;
+            }
+        } else {
+            environment[item.name] = item.value ? item.value : item.valueJSON;
+        }
+    });
+
+    // Process partner-specific variables
+    Object.keys(partnerSpecific).forEach((name) => {
+        const partners = partnerSpecific[name];
+        const partnerIds = Object.keys(partners);
+
+        if (partnerIds.length === 1) {
+            const partnerId = partnerIds[0];
+            if (!environment[`tenant`]) {
+                environment[`tenant`] = {};
+            }
+            environment[`tenant`][name] = partners[partnerId];
+        } else {
+            // If more than one partnerId, add directly to env
+            environment[name] = partners;
+        }
+    });
+
+    // //PARAM :: `currencies`
+    const currencies = await models.currency.findAll({
+        attributes: [
+            "address",
+            "name",
+            "symbol",
+            "precision",
+            "isSettlement",
+            "isStore",
+            "isStaking",
+            "chainId",
+            "partnerId",
+        ],
+        raw: true,
+    });
+    let currenciesAll = {};
+
+    currencies.forEach((el) => {
+        if (!currenciesAll[el.chainId]) currenciesAll[el.chainId] = {};
+        currenciesAll[el.chainId][el.address] = {
+            name: el.name,
+            symbol: el.symbol,
+            precision: el.precision,
+            isSettlement: el.isSettlement,
+            isStore: el.isStore,
+            isStaking: el.isStaking,
+        };
+    });
+    environment.currencies = currenciesAll;
+    //
+    //PARAM :: `stats`
+    environment.stats = {};
+    //-- PARAM :: `stats.partners`
+    const partners = await models.partner.findAll({
+        where: { isEnabled: true, isPartner: true },
+        raw: true,
+    });
+    environment.stats.partners = partners.length;
+    //-- PARAM :: `stats.funded`
+
+    const query_funded = `
+        SELECT 
+            o.*,
+            array_agg(ol."partnerId") AS offerLimits,
+            MAX(ol."alloRaised") AS "alloRaised"
+        FROM 
+            offer o
+        LEFT JOIN 
+            "offerLimit" ol ON o.id = ol."offerId"
+        GROUP BY 
+            o.id
+        ;
+    `;
+
+    const offers = await db.query(query_funded, { type: QueryTypes.SELECT });
+
+    let funded = 0;
+    const TENANT_ID = Number(process.env.NEXT_PUBLIC_TENANT);
+    if (TENANT_ID === TENANT.basedVC) {
+        funded = offers.map((item) => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
+    } else {
+        const filteredOffers = offers.filter(
+            (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
+        );
+
+        funded = filteredOffers.map((item) => item.alloRaised || 0).reduce((prev, next) => prev + next, 0);
+    }
+    environment.stats.funded =
+        TENANT_ID === TENANT.basedVC
+            ? funded + Number(environment?.investedInjected ? environment?.investedInjected : 0)
+            : funded;
+
+    environment.stats.launchpad = offers.filter(
+        (offer) =>
+            offer.isLaunchpad && Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
+    ).length;
+
+    environment.stats.vc = offers.filter(
+        (offer) => Array.isArray(offer.offerlimits) && offer.offerlimits.includes(parseInt(TENANT_ID)),
+    ).length;
+
+    return environment;
 }
 
-module.exports = { getEnvironment }
+module.exports = { getEnvironment };

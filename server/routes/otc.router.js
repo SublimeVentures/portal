@@ -1,42 +1,31 @@
-const express = require('express')
+const express = require("express");
 const router = express.Router();
-const {getAccessToken} = require("../services/auth");
-const {getMarkets, getOffers, getHistory, createOffer, removeOffer} = require("../controllers/otc");
+const { getMarkets, getOffers, getHistory, createOffer, signOffer } = require("../controllers/otc");
 
-router.get('/markets', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+router.get("/markets", async (req, res) => {
+    const { user } = req;
 
-    return res.status(200).json(await getMarkets(session, req))
+    return res.status(200).json(await getMarkets(user));
 });
 
-router.get('/offers/:id', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
-
-    return res.status(200).json(await getOffers(session, req))
+router.get("/offers/:id", async (req, res) => {
+    return res.status(200).json(await getOffers(req));
 });
 
-router.post('/:id/create', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
-
-    return res.status(200).json(await createOffer(session, req))
+router.get("/history/:id", async (req, res) => {
+    return res.status(200).json(await getHistory(req));
 });
 
-router.post('/:id/remove', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+router.post("/:id/create", async (req, res) => {
+    const { user, ...request } = req;
 
-    return res.status(200).json(await removeOffer(session, req))
+    return res.status(200).json(await createOffer(user, request));
 });
 
-router.get('/history/:id', async (req, res) => {
-    const session = await getAccessToken(req)
-    if (!session) return res.status(401).json({})
+router.post("/:id/sign", async (req, res) => {
+    const { user, ...request } = req;
 
-    return res.status(200).json(await getHistory(session, req))
+    return res.status(200).json(await signOffer(user, request));
 });
 
-
-module.exports = {router}
+module.exports = { router };

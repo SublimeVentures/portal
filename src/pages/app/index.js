@@ -1,53 +1,109 @@
-import LayoutApp from '@/components/Layout/LayoutApp';
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import RoundBanner from "@/components/App/RoundBanner";
-import ReadIcon from "@/assets/svg/Read.svg";
-import Stats from "@/components/App/Dashboard/Stats";
-import Profile from "@/components/App/Dashboard/Profile";
-import LatestInvestment from "@/components/App/Dashboard/LatestInvestment";
-import Updates from "@/components/App/Dashboard/Updates";
-import Head from 'next/head'
-import {useEffect} from "react";
+import { useQuery } from "@tanstack/react-query";
+import Head from "next/head";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import VaultItem from "@/components/App/Vault/VaultItem";
+import { fetchVault } from "@/fetchers/vault.fetcher";
+import Loader from "@/components/App/Loader";
+import EmptyVault from "@/components/App/EmptyVault";
+import { processServerSideData } from "@/lib/serverSideHelpers";
+import routes from "@/routes";
+import { fetchStoreItemsOwned } from "@/fetchers/store.fetcher";
+import DetailsSidebar from "@/components/App/Vault/DetailsSidebar";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
-export default function AppDashboard() {
-    useEffect(() => {
-        import('@lottiefiles/lottie-player');
-    }, []);
+const UserSummary = dynamic(() => import("@/components/App/Vault/UserSummary"), { ssr: false });
 
+const {
+    seo: { NAME },
+} = getTenantConfig();
 
+export default function AppVault({ session }) {
+    const userId = session.userId;
+    const tenantId = session.tenantId;
+    const [claimModal, setClaimModal] = useState(false);
+    const [claimModalDetails, setClaimModalDetails] = useState({});
+
+    const {
+        isSuccess: isSuccessDataFeed,
+        data: vault,
+        refetch: refetchVault,
+    } = useQuery({
+        queryKey: ["userVault", userId],
+        queryFn: fetchVault,
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+        gcTime: 5 * 60 * 1000,
+        staleTime: 30 * 1000,
+    });
+
+    const { data: premiumData } = useQuery({
+        queryKey: ["premiumOwned", userId, tenantId],
+        queryFn: fetchStoreItemsOwned,
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+        gcTime: 5 * 60 * 1000,
+        staleTime: 60 * 1000,
+    });
+
+    const closeClaimModal = () => {
+        setClaimModal(false);
+        setTimeout(() => {
+            setClaimModalDetails({});
+        }, 400);
+    };
+    const openClaimModal = (data) => {
+        setClaimModalDetails(data);
+        setClaimModal(true);
+    };
+
+    const renderList = () => {
+        if (!vault) return;
+        return vault.map((el) => {
+            return <VaultItem item={el} key={el.name} passData={openClaimModal} />;
+        });
+    };
+
+    const placeHolder = () => {
+        if (!isSuccessDataFeed || vault === undefined) return <Loader />;
+        if (vault.length === 0)
+            return (
+                <div className="flex flex-1 flex-col justify-center">
+                    <EmptyVault />
+                </div>
+            );
+    };
+
+    const claimModalProps = {
+        ...claimModalDetails,
+        refetchVault,
+        vaultData: vault,
+    };
+
+    const title = `Vault - ${NAME}`;
     return (
         <>
             <Head>
-                <title>Dashboard - 3VC</title>
+                <title>{title}</title>
             </Head>
-            <div className="grid grid-cols-12  gap-y-5 mobile:gap-y-10 mobile:gap-10">
-                <div className="col-span-12 flex flex-col gap-10 custom:col-span-8">
-                    <RoundBanner title={'Swim safely!'} subtitle={'All our investments are insured!'}
-                                 action={<RoundButton text={'Learn more'} isWide={true} zoom={1.1}
-                                                      size={'text-sm sm'}
-                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}/>
-                    <Stats/>
-                </div>
-                <div className="col-span-12 flex custom:col-span-4">
-                    <Profile/>
-                </div>
-            </div>
-
-
-            <div className="grid grid-cols-12 flex flex-1 gap-y-10 mobile:gap-10">
-                <div className="col-span-12 flex flex-1 custom:col-span-8 ">
-                    <LatestInvestment/>
-                </div>
-                <div className="col-span-12 custom:col-span-4 flex">
-                    <Updates/>
-                </div>
-            </div>
+            <UserSummary vault={vault} session={session} premiumData={premiumData} />
+            <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">{renderList()}</div>
+            <div className="col-span-12 text-center contents">{placeHolder()}</div>
+            <DetailsSidebar
+                model={claimModal}
+                setter={closeClaimModal}
+                claimModalProps={claimModalProps}
+                userId={userId}
+            />
         </>
-
-    )
+    );
 }
 
+export const getServerSideProps = async ({ req, res }) => {
+    return await processServerSideData(req, res, routes.App);
+};
 
-AppDashboard.getLayout = function (page) {
+AppVault.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;
 };

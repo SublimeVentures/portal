@@ -1,161 +1,162 @@
-import LayoutApp from '@/components/Layout/LayoutApp';
-import RoundBanner from "@/components/App/RoundBanner";
-import {ButtonIconSize, RoundButton} from "@/components/Button/RoundButton";
-import ReadIcon from "@/assets/svg/Read.svg";
-import IconCart from "@/assets/svg/Cart.svg";
 import Head from "next/head";
-import {queryClient} from "@/lib/web3/queryCache";
-import {dehydrate, useQuery} from "@tanstack/react-query";
-import {fetchMarkets, fetchOffers} from "@/fetchers/otc.fetcher";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { AiOutlineRead as ReadIcon } from "react-icons/ai";
+import LayoutApp from "@/components/Layout/LayoutApp";
+import RoundBanner from "@/components/App/RoundBanner";
+import { ButtonIconSize, RoundButton } from "@/components/Button/RoundButton";
+import { fetchMarkets, fetchOffers } from "@/fetchers/otc.fetcher";
 import Empty from "@/components/App/Empty";
 import Loader from "@/components/App/Loader";
-import {useRouter} from "next/router";
-import {useEffect} from "react";
 import PAGE from "@/routes";
-import {fetchVault} from "@/fetchers/vault.fetcher";
-import {useSession} from "next-auth/react";
+import { fetchVault } from "@/fetchers/vault.fetcher";
 import OtcMarkets from "@/components/App/Otc/Markets";
 import OtcOffers from "@/components/App/Otc/Offers";
-import {ACL as ACLs} from "@/lib/acl";
-import {getToken} from "next-auth/jwt";
+import routes from "@/routes";
+import { processServerSideData } from "@/lib/serverSideHelpers";
+import { getTenantConfig } from "@/lib/tenantHelper";
 
+const {
+    seo: { NAME },
+    externalLinks,
+} = getTenantConfig();
 
-export default function AppOtc() {
-    const router = useRouter()
-    const { data: session } = useSession()
-    const ACL = session?.user?.ACL
-    const address = session?.user?.address
-    const ADDRESS = (ACL !==ACLs.PartnerInjected && ACL !== undefined) ? ACL : address
+export default function AppOtc({ session }) {
+    const router = useRouter();
+    const { market } = router.query;
+    const { userId: USER_ID } = session;
 
+    const { isSuccess: otcIsSuccess, data: otc } = useQuery({
+        queryKey: ["otcMarkets", USER_ID],
+        queryFn: fetchMarkets,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        cacheTime: 4 * 60 * 60 * 1000,
+        staleTime: 3 * 60 * 60 * 1000,
+    });
 
-    const {isSuccess: marketsIsSuccess, data: markets} = useQuery({
-            queryKey: ["otcMarkets", {ACL, ADDRESS}],
-            queryFn: () => fetchMarkets(ACL),
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 4 * 60 * 60 * 1000,
-            staleTime: 3 * 60 * 60 * 1000
-        }
-    );
+    const {
+        isSuccess: vaultIsSuccess,
+        data: vault,
+        refetch: refetchVault,
+    } = useQuery({
+        queryKey: ["userVault", USER_ID],
+        queryFn: fetchVault,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        cacheTime: 0,
+        staleTime: 0,
+    });
 
-    const {isSuccess: vaultIsSuccess, data: vault, refetch: refetchVault} = useQuery({
-            queryKey: ["userVault", {ACL, address}],
-            queryFn: () => fetchVault(ACL, address),
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 5 * 60 * 1000,
-            staleTime: 0,
-            enabled: ACL>=0
-        }
-    );
+    const currentMarket = otc?.find((el) => el.slug === market);
 
-    const {market} = router.query
-    const currentMarket = markets?.open.find(el => el.slug === market)
-
-
-    const {isSuccess: offersIsSuccess, data: offers, refetch: refetchOffers} = useQuery({
-            queryKey: ["otcOffers", currentMarket?.id],
-            queryFn: () => fetchOffers(currentMarket?.id),
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            cacheTime: 5 * 60 * 1000,
-            staleTime: 0,
-            enabled: !!currentMarket
-        }
-    );
+    const {
+        isSuccess: offersIsSuccess,
+        data: offers,
+        refetch: refetchOffers,
+    } = useQuery({
+        queryKey: ["otcOffers", currentMarket?.otc],
+        queryFn: () => fetchOffers(currentMarket?.otc),
+        refetchOnMount: true,
+        refetchOnWindowFocus: true,
+        cacheTime: 0,
+        staleTime: 0,
+        enabled: !!currentMarket?.offerId,
+    });
 
     const changeMarket = (slug) => {
-        router.push(`${PAGE.OTC}/?market=${slug}`, undefined, {shallow: true})
-    }
+        router.push(`${PAGE.OTC}/?market=${slug}`, undefined, {
+            shallow: true,
+        });
+    };
 
+    const openGuide = (e) => {
+        e?.preventDefault();
+        window.open(externalLinks.OTC, "_blank");
+    };
 
     useEffect(() => {
-        if (!!market && !!currentMarket) {
+        if (!!otc && !!currentMarket) {
         } else {
-            changeMarket(markets?.open[0]?.slug)
+            if (otc && otc[0]?.slug) {
+                changeMarket(otc[0]?.slug);
+            }
         }
-    }, [market, markets])
-
+    }, [otc, otc?.markets, market]);
 
     const propMarkets = {
-        markets,
+        otc,
         currentMarket,
-        changeMarket
-    }
+        changeMarket,
+    };
 
     const propOffers = {
-        refetchVault,
-        offers,
-        vault,
         refetchOffers,
-        session,
+        refetchVault,
+        vault,
+        offersIsSuccess,
+        vaultIsSuccess,
+        offers,
         currentMarket,
-        ...{otcFee:  markets?.otcFee},
-        ...{currencies:  markets?.currencies},
-        ...{multichain:  markets?.multichain}
-    }
-
+        session,
+    };
 
     const renderPage = () => {
-        if (!marketsIsSuccess || !vaultIsSuccess || !offersIsSuccess) return <Loader/>
-        if (markets.open.length === 0) return <Empty/>
-        return <div className="col-span-12">
-            <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10 ">
-                <div className="col-span-12 lg:col-span-4 flex flex-1">
-                    <OtcMarkets propMarkets={propMarkets}/>
+        if (!otcIsSuccess) return <Loader />;
+        if (!otcIsSuccess || !vaultIsSuccess) return <Loader />;
+        if (otc?.length === 0)
+            return (
+                <div className="col-span-12 max-h-[40vh]">
+                    <Empty />
                 </div>
-                <div className="col-span-12 lg:col-span-8 flex flex-1">
-                    <OtcOffers propOffers={propOffers}/>
+            );
+        return (
+            <div className="col-span-12">
+                <div className="grid grid-cols-12 flex gap-y-5 mobile:gap-y-10 mobile:gap-10">
+                    <div className="col-span-12 lg:col-span-4 flex flex-1">
+                        <OtcMarkets propMarkets={propMarkets} />
+                    </div>
+                    <div className="col-span-12 lg:col-span-8 flex flex-1 ">
+                        <OtcOffers propOffers={propOffers} />
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        );
+    };
+
+    const title = `OTC Market - ${NAME}`;
 
     return (
         <>
             <Head>
-                <title>OTC Market - 3VC</title>
+                <title>{title}</title>
             </Head>
             <div className="grid grid-cols-12 gap-y-5 mobile:gap-y-10 mobile:gap-10">
                 <div className="col-span-12 flex">
-                    <RoundBanner title={'Over the counter'} subtitle={'Need liquidity? Trade your allocation.'}
-                                 action={<RoundButton text={'Learn more'} isWide={true}
-                                                      size={'text-sm sm'}
-                                                      icon={<ReadIcon className={ButtonIconSize.hero}/>}/>}
+                    <RoundBanner
+                        title={"Over the counter"}
+                        subtitle={"Need liquidity? Trade your allocation."}
+                        action={
+                            <RoundButton
+                                text={"Learn more"}
+                                isWide={true}
+                                size={"text-sm sm"}
+                                handler={openGuide}
+                                icon={<ReadIcon className={ButtonIconSize.hero} />}
+                            />
+                        }
                     />
                 </div>
                 {renderPage()}
             </div>
-
         </>
-
-    )
+    );
 }
 
-export const getServerSideProps = async ({req}) => {
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        encryption: true
-    })
-
-    const ACL = token?.user?.ACL
-    const ADDRESS = ACL !== ACLs.PartnerInjected ? ACL : token?.user?.address
-
-    await queryClient.prefetchQuery({
-        queryKey: ["otcMarkets", {ACL, ADDRESS}],
-        queryFn: () => fetchMarkets(ACL),
-        cacheTime: 4 * 60 * 60 * 1000,
-        staleTime: 2 * 60 * 60 * 1000
-    })
-
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient)
-        }
-    }
-}
-
+export const getServerSideProps = async ({ req, res }) => {
+    return await processServerSideData(req, res, routes.OTC);
+};
 
 AppOtc.getLayout = function (page) {
     return <LayoutApp>{page}</LayoutApp>;

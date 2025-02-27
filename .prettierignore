@@ -1,0 +1,5 @@
+.github
+.aws
+.husky
+.next/
+node_modules/
