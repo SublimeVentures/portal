@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg"  enable-background="new 0 0 512 512"
+     viewBox="0 0 512 512" id="stars">
+    <polygon fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"
+             stroke-width="10"
+             points="256 135.039 301.38 206.309 383.184 227.448 329.43 292.629 334.604 376.961 256 345.984 177.397 376.961 182.571 292.629 128.817 227.448 210.619 206.309"></polygon>
+    <polyline fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"
+              stroke-width="10"
+              points="330.38 291.482 329.92 298.963 383.18 277.972 436.45 298.963 432.941 241.822 469.361 197.652 413.93 183.332 383.18 135.042 352.43 183.332 297 197.652 304.89 207.222"></polyline>
+    <polyline fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"
+              stroke-width="10"
+              points="207.11 207.222 215 197.652 159.57 183.332 128.82 135.042 98.07 183.332 42.64 197.652 79.06 241.822 75.55 298.963 128.82 277.972 182.08 298.963 181.62 291.482"></polyline>
+</svg>

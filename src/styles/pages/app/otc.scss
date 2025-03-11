@@ -1,0 +1,27 @@
+.maxHeight {
+    height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+}
+
+.sidebarOtc {
+    .nav {
+        ul,
+        li {
+            list-style: none;
+            margin: 0;
+            transition: border-color 0.2s ease;
+        }
+
+        ul {
+            display: flex;
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,20 @@
+@import "@glidejs/glide/dist/css/glide.core";
+//@import "@glidejs/glide/dist/css/glide.theme";
+
+.glide__slides-custom {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+}
+
+.glide__slide-custom {
+    background: theme("colors.slides") !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 220px;
+}
+
+.glide__track {
+    align-items: stretch;
+}
