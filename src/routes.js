@@ -16,6 +16,7 @@ const PAGE = {
     Mysterybox: "/app/mysterybox",
     Upgrades: "/app/upgrades",
     Settings: "/app/settings",
+    Mint: "https://mint.basedvc.fund",
 };
 
 export const API = {
