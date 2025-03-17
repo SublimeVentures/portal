@@ -26,16 +26,17 @@ export default function Hero({ account }) {
                     <div className="text-hero">DON'T BE EXIT LIQUIDITY</div>
                 </div>
 
-                <div className="flex mx-auto mt-10 md:mt-0 md:items-center md:p-10 md:left-0 md:right-0 md:absolute md:bottom-20 md:mx-auto md:justify-center gap-4">
+                <div className="flex flex-col sm:flex-row mx-auto mt-10 md:mt-0 md:items-center md:p-10 md:left-0 md:right-0 md:absolute md:bottom-20 md:mx-auto md:justify-center gap-4">
                     <RoundButton
                         text={"invest"}
                         is3d={true}
                         isPrimary={false}
                         isWider={true}
                         zoom={1.1}
-                        size={"text-2xl lg"}
+                        size={"text-xl md:text-2xl lg"}
                         handler={login}
                         icon={<PlayIcon className={ButtonIconSize.hero} />}
+                        className="w-full sm:w-auto mb-4 sm:mb-0"
                     />
 
                     <RoundButton
@@ -44,9 +45,11 @@ export default function Hero({ account }) {
                         isPrimary={true}
                         isWider={true}
                         zoom={1.1}
-                        size={"text-2xl lg"}
+                        size={"text-xl md:text-2xl lg"}
                         handler={mint}
                         icon={<CoinIcon className={ButtonIconSize.hero} />}
+                        className="w-full sm:w-auto"
+                        style={{ backgroundColor: "#E9A53F" }}
                     />
                 </div>
             </div>
